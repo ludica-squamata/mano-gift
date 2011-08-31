@@ -4,7 +4,7 @@ tamaño_cuadro=32
 velocidad = 16
 
 def cargarImagen(imagen):
-    return pygame.image.load('./grafs/'+imagen).convert_alpha()
+    return pygame.image.load(sys.path[0]+'/grafs/'+imagen).convert_alpha()
 
 class Globales():
     VELOCIDAD=1
@@ -50,8 +50,8 @@ class Enemy (pygame.sprite.DirtySprite):
         self.image=cargarImagen('Enemy.png')
         self.rect=self.image.get_rect()
         self.dirty=1
-        self.rect.y=16*tamaño_cuadro
-        self.rect.x=16*tamaño_cuadro
+        self.rect.y=50
+        self.rect.x=50
     def mover(self,direccion):
         delta=Globales.VELOCIDAD*self.variacion_velocidad
         if direccion==self.ARRIBA:
@@ -68,7 +68,7 @@ pygame.init()
 tamaño = ancho, alto = 512, 512
 blanco = 255, 255, 255
 pantalla = pygame.display.set_mode(tamaño)
-backImages=(cargarImagen('c1.gif'),cargarImagen('c2.gif'),cargarImagen('c3.gif'),cargarImagen('c4.gif'),cargarImagen('c5.gif'),cargarImagen('c6.gif'))
+backImages=(cargarImagen('c1.png'),cargarImagen('c2.png'),cargarImagen('c3.png'),cargarImagen('c4.png'),cargarImagen('c5.png'),cargarImagen('c6.png'))
 bg=(1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6)
 pantalla.fill(blanco)
 for i in range(len(bg)):
@@ -79,11 +79,25 @@ back=pantalla.convert()
 heroe=Hero()
 enemigo=Enemy()
 
-gSprites=pygame.sprite.RenderUpdates(heroe,enemigo)
-gSprites.draw(pantalla)
+gHeroe=pygame.sprite.LayeredDirty(heroe)
+gHeroe.clear(pantalla,back)
+pygame.display.update(gHeroe.draw(pantalla))
+
+gEnemigo=pygame.sprite.LayeredDirty(enemigo)
+gEnemigo.clear(pantalla,back)
+pygame.display.update(gEnemigo.draw(pantalla))
+
+FPSc=pygame.time.Clock()
 
 running=1
-while running==1:    
+while running==1:
+    FPSc.tick(30)
+    if enemigo.rect.x <= 50 <100:
+        enemigo.rect.x += 10
+    else:
+        enemigo.rect.x -=10
+    if enemigo.rect.x == 50:
+        enemigo.rect.x += 10
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running=0
         if event.type==pygame.KEYDOWN:
@@ -92,6 +106,9 @@ while running==1:
             if event.key==pygame.K_LEFT:heroe.mover(Hero.IZQUIERDA)
             if event.key==pygame.K_RIGHT:heroe.mover(Hero.DERECHA)
     
-    pygame.display.update()
+    enemigo.dirty=1
+    updateList = gHeroe.draw(pantalla)
+    updateList.extend(gEnemigo.draw(pantalla))
+    pygame.display.update(updateList)
 
-pygame.quit()
+#pygame.quit()
