@@ -1,7 +1,6 @@
 import sys, pygame
 
 tamaño_cuadro=32
-velocidad = 16
 
 def cargarImagen(imagen):
     return pygame.image.load(sys.path[0]+'/grafs/'+imagen).convert_alpha()
@@ -9,18 +8,30 @@ def cargarImagen(imagen):
 class Globales():
     VELOCIDAD=1
 
-class Hero(pygame.sprite.DirtySprite):
+class Mob (pygame.sprite.DirtySprite):
+    variacion_velocidad = 0
+    def __init__ (self):
+        pygame.sprite.DirtySprite.__init__(self)
+        self.dirty = 1
+        self.rect = self.image.get_rect()
+    def mover(self):
+        pass
+
+class MobGroup(pygame.sprite.LayeredDirty):
+    def __init__(self, *mobs):
+        super().__init__(self, mobs)
+
+        
+class Hero(Mob):
     ARRIBA =1
     DERECHA = 2
     ABAJO =3
     IZQUIERDA=4
     variacion_velocidad=16
     def __init__(self):
-        pygame.sprite.DirtySprite.__init__(self)
         self.images=(cargarImagen('heroeE.png'),cargarImagen('heroeF.png'),cargarImagen('heroeI.png'),cargarImagen('heroeD.png'))
-        self.dirty=1
         self.image=self.images[1]
-        self.rect=self.image.get_rect()
+        Mob.__init__(self)
         self.rect.y=8*tamaño_cuadro
         self.rect.x=8*tamaño_cuadro
     def mover(self,direccion):
@@ -39,30 +50,33 @@ class Hero(pygame.sprite.DirtySprite):
             self.image=self.images[3]
         self.dirty=1
 
-class Enemy (pygame.sprite.DirtySprite):
-    ARRIBA =1
-    DERECHA = 2
-    ABAJO =3
-    IZQUIERDA=4
-    variacion_velocidad=16
+class Enemy (Mob):
+    variacion_velocidad=10
+    direccion = 1
     def __init__(self):
-        pygame.sprite.DirtySprite.__init__(self)
         self.image=cargarImagen('Enemy.png')
-        self.rect=self.image.get_rect()
-        self.dirty=1
-        self.rect.y=50
+        Mob.__init__(self)
+        self.rect.y=70
         self.rect.x=50
-    def mover(self,direccion):
+    def mover(self):
         delta=Globales.VELOCIDAD*self.variacion_velocidad
-        if direccion==self.ARRIBA:
-            self.rect.y -= delta
-        if direccion==self.ABAJO:
-            self.rect.y += delta
-        if direccion==self.IZQUIERDA:
-            self.rect.x -= delta
-        if direccion==self.DERECHA:
+        if self.direccion==1:
             self.rect.x += delta
+        else:
+            self.rect.x -= delta
+
+        if self.rect.x >= 200:
+            self.direccion = -1
+        elif self.rect.x <=50:
+            self.direccion = 1
         self.dirty=1
+
+class Vendor (Mob):
+    def __init__(self):
+        self.image=cargarImagen('Vendor.png')
+        Mob.__init__(self)
+        self.rect.y=30
+        self.rect.x=150
 
 pygame.init()
 tamaño = ancho, alto = 512, 512
@@ -78,26 +92,26 @@ back=pantalla.convert()
 
 heroe=Hero()
 enemigo=Enemy()
+vendedor=Vendor()
 
-gHeroe=pygame.sprite.LayeredDirty(heroe)
+gHeroe=MobGroup(heroe)
 gHeroe.clear(pantalla,back)
 pygame.display.update(gHeroe.draw(pantalla))
 
-gEnemigo=pygame.sprite.LayeredDirty(enemigo)
+gEnemigo=MobGroup(enemigo)
 gEnemigo.clear(pantalla,back)
 pygame.display.update(gEnemigo.draw(pantalla))
+
+gVendedor=MobGroup(vendedor)
+gVendedor.clear(pantalla,back)
+pygame.display.update(gVendedor.draw(pantalla))
 
 FPSc=pygame.time.Clock()
 
 running=1
 while running==1:
     FPSc.tick(30)
-    if enemigo.rect.x <= 50 <100:
-        enemigo.rect.x += 10
-    else:
-        enemigo.rect.x -=10
-    if enemigo.rect.x == 50:
-        enemigo.rect.x += 10
+    enemigo.mover()
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running=0
         if event.type==pygame.KEYDOWN:
