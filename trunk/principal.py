@@ -12,7 +12,7 @@ class Mob (pygame.sprite.DirtySprite):
     variacion_velocidad = 0
     def __init__ (self):
         pygame.sprite.DirtySprite.__init__(self)
-        self.dirty = 1
+        self.dirty = 2
         self.rect = self.image.get_rect()
     def mover(self):
         pass
@@ -48,7 +48,6 @@ class Hero(Mob):
         if direccion==self.DERECHA:
             self.rect.x += delta
             self.image=self.images[3]
-        self.dirty=1
 
 class Enemy (Mob):
     variacion_velocidad=10
@@ -69,7 +68,6 @@ class Enemy (Mob):
             self.direccion = -1
         elif self.rect.x <=50:
             self.direccion = 1
-        self.dirty=1
 
 class Vendor (Mob):
     def __init__(self):
@@ -89,10 +87,19 @@ for i in range(len(bg)):
     if bg[i]!=0:
         pantalla.blit(backImages[bg[i]-1],(i%16*32,i//16*32))
 back=pantalla.convert()
+fondo=pantalla.get_rect()
 
 heroe=Hero()
 enemigo=Enemy()
 vendedor=Vendor()
+
+mapa=pygame.sprite.Sprite()
+mapa.image=pantalla
+mapa.rect=pantalla.get_rect
+
+gMapa=pygame.sprite.Group(mapa)
+gMapa.clear(pantalla,back)
+pygame.display.update(gMapa.draw(pantalla))
 
 gHeroe=MobGroup(heroe)
 gHeroe.clear(pantalla,back)
@@ -120,9 +127,11 @@ while running==1:
             if event.key==pygame.K_LEFT:heroe.mover(Hero.IZQUIERDA)
             if event.key==pygame.K_RIGHT:heroe.mover(Hero.DERECHA)
     
-    enemigo.dirty=1
-    updateList = gHeroe.draw(pantalla)
+    updateList = gMapa.draw()
+    updateList.extend(gHeroe.draw(pantalla))
     updateList.extend(gEnemigo.draw(pantalla))
+    updateList.extend(gVendedor.draw(pantalla))
+
     pygame.display.update(updateList)
 
-#pygame.quit()
+pygame.quit()
