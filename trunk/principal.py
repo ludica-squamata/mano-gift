@@ -10,16 +10,16 @@ class Globales():
 
 class Mob (pygame.sprite.DirtySprite):
     variacion_velocidad = 0
-    def __init__ (self):
-        pygame.sprite.DirtySprite.__init__(self)
+    def __init__ (self, *mobgroups):
+        super().__init__(mobgroups)
         self.dirty = 2
         self.rect = self.image.get_rect()
     def mover(self):
         pass
 
 class MobGroup(pygame.sprite.LayeredDirty):
-    def __init__(self, *mobs):
-        super().__init__(self, mobs)
+    def __init__(self, *mobs, **kwargs):
+        super().__init__(*mobs,**kwargs)
 
         
 class Hero(Mob):
@@ -31,7 +31,7 @@ class Hero(Mob):
     def __init__(self):
         self.images=(cargarImagen('heroeE.png'),cargarImagen('heroeF.png'),cargarImagen('heroeI.png'),cargarImagen('heroeD.png'))
         self.image=self.images[1]
-        Mob.__init__(self)
+        super().__init__()
         self.rect.y=8*tamaño_cuadro
         self.rect.x=8*tamaño_cuadro
     def mover(self,direccion):
@@ -54,7 +54,7 @@ class Enemy (Mob):
     direccion = 1
     def __init__(self):
         self.image=cargarImagen('Enemy.png')
-        Mob.__init__(self)
+        super().__init__()
         self.rect.y=70
         self.rect.x=50
     def mover(self):
@@ -72,7 +72,7 @@ class Enemy (Mob):
 class Vendor (Mob):
     def __init__(self):
         self.image=cargarImagen('Vendor.png')
-        Mob.__init__(self)
+        super().__init__()
         self.rect.y=30
         self.rect.x=150
 
@@ -85,20 +85,19 @@ bg=(1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6)
 pantalla.fill(blanco)
 for i in range(len(bg)):
     if bg[i]!=0:
-        pantalla.blit(backImages[bg[i]-1],(i%16*32,i//16*32))
+        back.blit(backImages[bg[i]-1],(i%16*32,i//16*32))
 back=pantalla.convert()
-fondo=pantalla.get_rect()
 
 heroe=Hero()
 enemigo=Enemy()
 vendedor=Vendor()
 
 mapa=pygame.sprite.Sprite()
-mapa.image=pantalla
-mapa.rect=pantalla.get_rect
+mapa.image=back
+mapa.rect=back.get_rect()
 
-gMapa=pygame.sprite.Group(mapa)
-gMapa.clear(pantalla,back)
+gMapa=pygame.sprite.RenderUpdates(mapa)
+#gMapa.clear(pantalla,back)
 pygame.display.update(gMapa.draw(pantalla))
 
 gHeroe=MobGroup(heroe)
@@ -122,12 +121,13 @@ while running==1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running=0
         if event.type==pygame.KEYDOWN:
+            mapa.rect.x=25
             if event.key==pygame.K_UP:heroe.mover(Hero.ARRIBA)
             if event.key==pygame.K_DOWN:heroe.mover(Hero.ABAJO)
             if event.key==pygame.K_LEFT:heroe.mover(Hero.IZQUIERDA)
             if event.key==pygame.K_RIGHT:heroe.mover(Hero.DERECHA)
     
-    updateList = gMapa.draw()
+    updateList = gMapa.draw(pantalla)
     updateList.extend(gHeroe.draw(pantalla))
     updateList.extend(gEnemigo.draw(pantalla))
     updateList.extend(gVendedor.draw(pantalla))
