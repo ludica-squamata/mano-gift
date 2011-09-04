@@ -13,7 +13,7 @@ class Mob (pygame.sprite.DirtySprite):
     map = {'x':0,'y':0}
     def __init__ (self, *mobgroups):
         super().__init__(mobgroups)
-        self.dirty = 2
+        self.dirty = 1
         self.rect = self.image.get_rect()
     def mover(self):
         pass
@@ -34,7 +34,7 @@ class Hero(Mob):
         super().__init__()
         self.rect.y=8*tamaño_cuadro
         self.rect.x=8*tamaño_cuadro
-        
+        self.dirty = 1
     def mover(self,direccion):
 #        delta=Globales.VELOCIDAD*self.variacion_velocidad
         if direccion==self.ARRIBA:
@@ -49,6 +49,7 @@ class Hero(Mob):
         if direccion==self.DERECHA:
 #            self.rect.x += delta
             self.image=self.images[3]
+        self.dirty=1
 
 class Enemy (Mob):
     variacion_velocidad=10
@@ -69,6 +70,7 @@ class Enemy (Mob):
             self.direccion = -1
         elif self.rect.x <=50:
             self.direccion = 1
+        self.dirty=1
 
 class Vendor (Mob):
     def __init__(self):
@@ -88,6 +90,10 @@ backImages=(cargarImagen('c1.png'),cargarImagen('c2.png'),cargarImagen('c3.png')
 bg=(1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6)
 pantalla.fill(blanco)
 back=pantalla.convert()
+
+reback = pygame.Surface((512,512)) # pantalla es un rect, este Surface hace que el fondo no se marque. 
+reback.fill(blanco) # no es lo que habias dicho, pero asi queda, por lo menos.
+
 for i in range(len(bg)):
     if bg[i]!=0:
         back.blit(backImages[bg[i]-1],(i%16*32,i//16*32))
@@ -101,19 +107,19 @@ mapa.image=back
 mapa.rect=back.get_rect()
 
 gMapa=pygame.sprite.LayeredDirty(mapa)
-gMapa.clear(pantalla,back)
+gMapa.clear(pantalla,reback)
 pygame.display.update(gMapa.draw(pantalla))
 
 gHeroe=MobGroup(heroe)
-# gHeroe.clear(pantalla,back)
+gHeroe.clear(pantalla,reback)
 pygame.display.update(gHeroe.draw(pantalla))
 
 gEnemigo=MobGroup(enemigo)
-# gEnemigo.clear(pantalla,back)
+gEnemigo.clear(pantalla,reback)
 pygame.display.update(gEnemigo.draw(pantalla))
 
 gVendedor=MobGroup(vendedor)
-# gVendedor.clear(pantalla,back)
+gVendedor.clear(pantalla,reback)
 pygame.display.update(gVendedor.draw(pantalla))
 
 FPSc=pygame.time.Clock()
@@ -127,27 +133,48 @@ while running==1:
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_UP:
                 heroe.mover(Hero.ARRIBA)
+                heroe.dirty=1
                 mapa.rect.y +=16
+                mapa.dirty = 1
                 vendedor.rect.y+=16
+                vendedor.dirty=1
                 enemigo.rect.y+=16
+                enemigo.dirty=1
+                heroe.dirty=1
             if event.key==pygame.K_DOWN:
                 heroe.mover(Hero.ABAJO)
+                heroe.dirty=1
                 mapa.rect.y -=16
+                mapa.dirty = 1
                 vendedor.rect.y-=16
+                vendedor.dirty=1
                 enemigo.rect.y-=16
+                enemigo.dirty=1
+
             if event.key==pygame.K_LEFT:
                 heroe.mover(Hero.IZQUIERDA)
+                heroe.dirty=1
                 mapa.rect.x +=16
+                mapa.dirty = 1
                 vendedor.rect.x+=16
+                vendedor.dirty=1
                 enemigo.rect.x+=16
+                enemigo.dirty=1
+                
             if event.key==pygame.K_RIGHT:
                 heroe.mover(Hero.DERECHA)
+                heroe.dirty=1
                 mapa.rect.x -=16
+                mapa.dirty = 1
                 vendedor.rect.x-=16
+                vendedor.dirty=1
                 enemigo.rect.x-=16
+                enemigo.dirty=1
+                
     
-    mapa.dirty = 1
+    
     pygame.display.update()
+    
     updateList = gMapa.draw(pantalla)
     updateList.extend(gHeroe.draw(pantalla))
     updateList.extend(gEnemigo.draw(pantalla))
