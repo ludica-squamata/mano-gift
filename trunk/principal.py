@@ -23,15 +23,24 @@ class Mob (pygame.sprite.DirtySprite):
     def mover(self):
         pass
 
+class Objeto:
+    pass
+
+class Tesoro (pygame.sprite.DirtySprite):
+    contenido = list
+
 class MobGroup(pygame.sprite.LayeredDirty):
     def __init__(self, *mobs, **kwargs):
         super().__init__(*mobs,**kwargs)
     def reubicar (self,x,y):
-        pass
+        for sprite in self:
+            sprite.rect.y += y
+            sprite.rect.x += x
+            sprite.dirty = 1
 
 class Hero (Mob):
     ARRIBA,ABAJO,IZQUIERDA,DERECHA = 0,1,2,3
-    variacion_velocidad=16
+    variacion_velocidad=2
     def __init__(self):
         self.images=(cargarImagen('heroeE.png'),cargarImagen('heroeF.png'),cargarImagen('heroeI.png'),cargarImagen('heroeD.png'))
         self.image=self.images[1]
@@ -39,16 +48,68 @@ class Hero (Mob):
         self.rect.y=8*tamaño_cuadro
         self.rect.x=8*tamaño_cuadro
         self.dirty = 1
+        self.delta = Globales.VELOCIDAD*self.variacion_velocidad
+        self.direccion = 0
     def mover(self,direccion):
-        if direccion==self.ARRIBA:self.image=self.images[self.ARRIBA]
-        if direccion==self.ABAJO:self.image=self.images[self.ABAJO]
-        if direccion==self.IZQUIERDA:self.image=self.images[self.IZQUIERDA]
-        if direccion==self.DERECHA:self.image=self.images[self.DERECHA]
-        self.dirty=1
+        dx = dy = 0
+        if direccion==self.ARRIBA:
+            self.image=self.images[self.ARRIBA]
+            dy = self.delta
+        if direccion==self.ABAJO:
+            self.image=self.images[self.ABAJO]
+            dy = -self.delta
+        if direccion==self.IZQUIERDA:
+            self.image=self.images[self.IZQUIERDA]
+            dx = self.delta
+        if direccion==self.DERECHA:
+            self.image=self.images[self.DERECHA]
+            dx = -self.delta
 
+        colisiona = True
+        self.rect.x -= dx
+        self.rect.y -= dy
+        if pygame.sprite.spritecollideany(self,gSolidos)==None:
+            colisiona=False
+        self.rect.x += dx
+        self.rect.y += dy
+
+        if not colisiona:
+            gMovibles.reubicar (dx,dy)
+
+        self.direccion = direccion
+        self.dirty=1
+    
+    def accion (self):
+        if self.direccion == 0:
+        # Mirando hacia arriba
+            self.rect.y -= 10
+            enRadio = pygame.sprite.spritecollideany(self,gNPC)
+            self.rect.y += 10
+        
+        elif self.direccion == 1:
+        # Mirando hacia abajo
+            self.rect.y += 10
+            enRadio = pygame.sprite.spritecollideany(self,gNPC)
+            self.rect.y -= 10
+        
+        # Mirando hacia la izquierda
+        elif self.direccion == 2:
+            self.rect.x -= 10
+            enRadio = pygame.sprite.spritecollideany(self,gNPC)
+            self.rect.x += 10
+        
+        # Mirando hacia la derecha
+        elif self.direccion == 3:
+            self.rect.x += 10
+            enRadio = pygame.sprite.spritecollideany(self,gNPC)
+            self.rect.x -= 10
+        
+        if enRadio != None:
+            enRadio.hablar()
+
+                
 class Enemy (Mob):
     variacion_velocidad=10
-    direccion = 1
     def __init__(self):
         self.image=cargarImagen('Enemy.png')
         super().__init__()
@@ -78,6 +139,8 @@ class Vendor (Mob):
         super().__init__()
         self.rect.y=30
         self.rect.x=150
+    def hablar(self):
+        print ('Bienvenido')
 
 class mapa (pygame.sprite.DirtySprite):
     pass
@@ -118,66 +181,42 @@ gEnemigo=MobGroup(enemigo)
 gEnemigo.clear(pantalla,reback)
 pygame.display.update(gEnemigo.draw(pantalla))
 
-gVendedor=MobGroup(vendedor)
+gNPC=MobGroup(vendedor) # grupo administrativo
 #gVendedor.clear(pantalla,reback)
-pygame.display.update(gVendedor.draw(pantalla))
+pygame.display.update(gNPC.draw(pantalla))
 
 FPSc=pygame.time.Clock()
+pygame.key.set_repeat(300,1) #150
 
 gSolidos=MobGroup(enemigo,vendedor)
-pygame.key.set_repeat(300,150) 
+gMovibles=MobGroup(enemigo,vendedor,mapa)
 
 running=1
 while running==1:
     FPSc.tick(30)
     enemigo.mover()
+    pantalla.blit(cuadro_dialogo.cuadro,(0,362))
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running=0
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_UP:
                 heroe.mover(Hero.ARRIBA)
-                heroe.dirty=1
-                mapa.rect.y +=16
-                mapa.dirty = 1
-                vendedor.rect.y+=16
-                vendedor.dirty=1
-                enemigo.rect.y+=16
-                enemigo.dirty=1
             if event.key==pygame.K_DOWN:
                 heroe.mover(Hero.ABAJO)
-                heroe.dirty=1
-                mapa.rect.y -=16
-                mapa.dirty = 1
-                vendedor.rect.y-=16
-                vendedor.dirty=1
-                enemigo.rect.y-=16
-                enemigo.dirty=1
             if event.key==pygame.K_LEFT:
                 heroe.mover(Hero.IZQUIERDA)
-                heroe.dirty=1
-                mapa.rect.x +=16
-                mapa.dirty = 1
-                vendedor.rect.x+=16
-                vendedor.dirty=1
-                enemigo.rect.x+=16
-                enemigo.dirty=1
             if event.key==pygame.K_RIGHT:
                 heroe.mover(Hero.DERECHA)
-                heroe.dirty=1
-                mapa.rect.x -=16
-                mapa.dirty = 1
-                vendedor.rect.x-=16
-                vendedor.dirty=1
-                enemigo.dirty=1
-                enemigo.rect.x-=16
-
+            if event.key==pygame.K_x:
+                heroe.accion()
+    
     pygame.display.update()
     
     updateList = gMapa.draw(pantalla)
     updateList.extend(gEnemigo.draw(pantalla))
-    updateList.extend(gVendedor.draw(pantalla))
+    updateList.extend(gNPC.draw(pantalla))
     updateList.extend(gHeroe.draw(pantalla))
-
+    
     pygame.display.update(updateList)
 
 pygame.quit()
