@@ -18,7 +18,7 @@ class Enemy (Mob):
         delta=Globales.VELOCIDAD*self.variacion_velocidad*self.direccion
         self.rect.x += delta
         self.pos.x += delta
-        if pygame.sprite.spritecollideany(self,Grupos.gHeroe) == None:
+        if pygame.sprite.spritecollideany(self,Grupos.gHeroe) is None:
             if (0 >= self.pos.x):
                 self.direccion = 1 # Derecha
             elif (self.pos.x >= 200):

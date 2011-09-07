@@ -33,7 +33,7 @@ class Hero (Mob):
         colisiona = True
         self.rect.x -= dx
         self.rect.y -= dy
-        if pygame.sprite.spritecollideany(self,Grupos.gSolidos) == None:
+        if pygame.sprite.spritecollideany(self,Grupos.gSolidos) is None:
             colisiona=False
         self.rect.x += dx
         self.rect.y += dy
@@ -61,5 +61,5 @@ class Hero (Mob):
         self.rect.y -= dy
         self.rect.x -= dx
 
-        if enRadio != None:
+        if enRadio is not None:
             enRadio.hablar()
