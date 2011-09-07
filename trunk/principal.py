@@ -1,11 +1,12 @@
 #coding: utf-8
 import pygame
 
-from gift_util import cargar_imagen, Grupos, Mapa
+from gift_util import cargar_imagen, Grupos, Mapa,Globales
 from mobs_base import MobGroup
 from hero import Hero
 from enemigos import Enemy
 from npcs import Vendor
+from objetos import Tesoro
 
 pygame.init()
 blanco = 255, 255, 255
@@ -30,6 +31,15 @@ mapa=pygame.sprite.DirtySprite()
 mapa.image=back
 mapa.rect=back.get_rect()
 
+cofre = Tesoro()
+cofre.rect.x = 300
+cofre.rect.y = 30
+cofre.contenido = ['Monedas']
+
+Grupos.gItems = MobGroup(cofre)
+#Grupos.gItems.clear(pantalla,reback)
+pygame.display.update(Grupos.gItems.draw(pantalla))
+
 Grupos.gMapa=pygame.sprite.LayeredDirty(mapa)
 Grupos.gMapa.clear(pantalla,reback)
 pygame.display.update(Grupos.gMapa.draw(pantalla))
@@ -43,37 +53,34 @@ Grupos.gEnemigo.clear(pantalla,reback)
 pygame.display.update(Grupos.gEnemigo.draw(pantalla))
 
 Grupos.gNPC=MobGroup(vendedor) # grupo administrativo
-#gVendedor.clear(pantalla,reback)
+#Grupos.gNPC.clear(pantalla,reback)
 pygame.display.update(Grupos.gNPC.draw(pantalla))
 
 FPSc=pygame.time.Clock()
 pygame.key.set_repeat(300,1) #150
 
-Grupos.gSolidos=MobGroup(enemigo,vendedor)
-Grupos.gMovibles=MobGroup(enemigo,vendedor,mapa)
+Grupos.gSolidos=MobGroup(enemigo,vendedor,cofre)
+Grupos.gMovibles=MobGroup(enemigo,vendedor,mapa,cofre)
+Grupos.gInteractivos = MobGroup (vendedor,cofre)
 
 running=1
 while running==1:
     FPSc.tick(30)
     enemigo.mover()
-    #pantalla.blit(cuadro_dialogo.cuadro,(0,362))
     for event in pygame.event.get():
         if event.type == pygame.QUIT: running=0
         if event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_UP:
-                heroe.mover(Hero.ARRIBA)
-            if event.key==pygame.K_DOWN:
-                heroe.mover(Hero.ABAJO)
-            if event.key==pygame.K_LEFT:
-                heroe.mover(Hero.IZQUIERDA)
-            if event.key==pygame.K_RIGHT:
-                heroe.mover(Hero.DERECHA)
-            if event.key==pygame.K_x:
-                heroe.accion()
+            if event.key==pygame.K_UP:heroe.mover(Hero.ARRIBA)
+            if event.key==pygame.K_DOWN:heroe.mover(Hero.ABAJO)
+            if event.key==pygame.K_LEFT:heroe.mover(Hero.IZQUIERDA)
+            if event.key==pygame.K_RIGHT:heroe.mover(Hero.DERECHA)
+            if event.key==pygame.K_x:heroe.accion()
+            if event.key==pygame.K_i:Globales.inventario.abrir()
 
     pygame.display.update()
 
     updateList = Grupos.gMapa.draw(pantalla)
+    updateList.extend(Grupos.gItems.draw(pantalla))
     updateList.extend(Grupos.gEnemigo.draw(pantalla))
     updateList.extend(Grupos.gNPC.draw(pantalla))
     updateList.extend(Grupos.gHeroe.draw(pantalla))

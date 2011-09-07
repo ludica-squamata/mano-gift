@@ -8,5 +8,5 @@ class Vendor (Mob):
         super().__init__()
         self.rect.y=30
         self.rect.x=150
-    def hablar(self):
+    def interactuar(self):
         print ('Bienvenido')

@@ -16,6 +16,7 @@ class Hero (Mob):
         self.rect.x=8*Globales.TAMANIO_CUADRO
         self.dirty = 1
         self.direccion = 0
+        
     def mover(self,direccion):
         delta = Globales.VELOCIDAD*self.variacion_velocidad
         dx = dy = 0
@@ -43,7 +44,7 @@ class Hero (Mob):
 
         self.direccion = direccion
         self.dirty=1
-
+    
     def accion (self):
         dx = dy = 0
         if self.direccion == Hero.ARRIBA:
@@ -57,9 +58,9 @@ class Hero (Mob):
 
         self.rect.y += dy
         self.rect.x += dx
-        enRadio = pygame.sprite.spritecollideany(self,Grupos.gNPC)
+        enRadio = pygame.sprite.spritecollideany(self,Grupos.gInteractivos)
         self.rect.y -= dy
         self.rect.x -= dx
 
         if enRadio is not None:
-            enRadio.hablar()
+            enRadio.interactuar()

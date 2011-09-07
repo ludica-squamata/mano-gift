@@ -3,10 +3,11 @@ from sys import path
 
 from pygame import image, sprite
 
-
 class Globales:
+    import objetos
     VELOCIDAD = 1
     TAMANIO_CUADRO = 32
+    inventario=objetos.Inventario()
 
 class Pos:
     x = 0
@@ -21,6 +22,8 @@ class Grupos:
     gSolidos = MobGroup()
     gMovibles = MobGroup()
     gMapa = sprite.LayeredDirty()
+    gItems = MobGroup()
+    gInteractivos = MobGroup()
 
 class Mapa (sprite.DirtySprite):
     pass
