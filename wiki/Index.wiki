@@ -1,0 +1,20 @@
+#summary Mano-gift: un proyecto de RPG usando Python y Pygame.
+#labels Featured,Phase-Design
+
+_Es un mundo gris e inhóspito. La naturaleza ha enloquecido. Las plantas mueren, y los animales atacan sin razón. Y extrañas criaturas mágicas vagan a su antojo por doquier._
+
+_El mundo de los espíritus es sombrío y deprimente. Los fantasmas se han convertido en espectros y sombras de gran pesar atormentan a los mortales que osen entrar en sus dominios._
+
+_En este contexto, un único dios, Mano, el creador de la humanidad, hace lo que puede por proteger a sus chiquillos de la vorágine en la que se ha convertido la realidad._
+
+_Y te ha elegido a ti,_ *Héroe*_, para devolver al equilibrio a todas las cosas._
+
+-----
+
+= Proyecto Mano-gift = 
+
+El proyecto Mano-gift propone un juego de rol (RPG) donde tú, el héroe, tendrá que restaurar el equilibrio de los dos planos de existencia, restaurando a los dioses que gobiernan la realidad, y destruyendo (o domando) a la salvaje magia que da forma a los más retorcidos monstruos que habitan la Tierra.
+
+Incluirá:
+  * Posibilidad de elegir entre *tres* clases de personaje: Guerrero, Mago o Pícaro
+  * Dos peligrosos y oscuros mundos para explorar
