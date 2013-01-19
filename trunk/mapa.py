@@ -1,3 +1,5 @@
+from pygame import sprite
+
 class Stage:
     capa_background = ''
     capa_background_colisiones = ''
@@ -25,7 +27,7 @@ class Stage:
     def render():
         pass
 
-class Props:
+class Props (sprite.DirtySprite):
     #la clase para los objetos de ground_items
     #basicamente, sprites que no se mueven
     #para las cosas en pantalla (tronco de arbol, puerta, piedras, loot)
