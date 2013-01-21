@@ -27,6 +27,9 @@ class Mob (sprite.DirtySprite):
 class PC (Mob):
     def __init__(self,ruta):
         super().__init__(ruta)
+        self.x = 256
+        self.y = 256
+        self.pos = self.x,self.y
 
 class Enemy (Mob):
     def __init__(self):
