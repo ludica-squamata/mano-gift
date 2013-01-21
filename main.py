@@ -1,17 +1,16 @@
-import pygame
-import sys
+import pygame,sys
 from mapa import Stage
 from mobs import PC
-import misc
+from misc import Resources as r
 
 pygame.init()
 
 tamanio = alto, ancho = 512,512
-blanco = 255,255,255
-pantalla = pygame.display
-fondo = pantalla.set_mode(tamanio)
-fondo.fill(blanco)
-fondo_r = fondo.get_rect()
+negro = pygame.Color('black')
+pantalla = pygame.display # screen
+fondo = pantalla.set_mode(tamanio) # surface
+fondo.fill(negro)
+mapa = Stage(r.abrir_json('maps/map1.json'),32)
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
@@ -20,33 +19,30 @@ fondo.blit(hero.sprite,hero.pos)
 
 
 while True:
-    try:
         FPS.tick(30)
-        fondo.fill(blanco)
+        rect_fondo = mapa.render(fondo)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                key = pygame.key.name(event.key)
-                if key == 'left':
+                if event.key == pygame.K_LEFT:
                     hero.reubicar(-1,0)
     
-                elif key == 'right':
+                elif event.key  == pygame.K_RIGHT:
                     hero.reubicar(+1,0)
     
-                elif key == 'up':
+                elif event.key  == pygame.K_UP:
                     hero.reubicar(0,-1)
     
-                elif key == 'down':
+                elif event.key  == pygame.K_DOWN:
                     hero.reubicar(0,+1)
                 
-                elif key == 'return': # debug
-                    print (hero.pos)    
+                elif event.key  == pygame.K_RETURN: # debug
+                    print (hero.pos)
+                
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
     
         fondo.blit(hero.sprite,hero.pos)
-        pantalla.update([hero.rect,fondo_r])
-    except Exception: # debug
-        file = open('error.txt','w')
-        file.write(Exception)
-        file.close()
-        sys.exit()
+        pantalla.update([hero.rect,rect_fondo])
