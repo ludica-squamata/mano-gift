@@ -69,10 +69,11 @@ class Stage:
             y = item[1][1]*CUADRO
             self.capa_ground_items.append(Tile(REF[item[0]],x,y))
             
-    def render(self,fondo):
-        fondo.blit(self.capa_background,[0,0])
+    def render(self,fondo,dx,dy):
+        
+        fondo.blit(self.capa_background,[dx,dy])
         for tile in self.capa_ground_items:
-            fondo.blit(tile.image,[tile.x,tile.y])
+            fondo.blit(tile.image,[tile.x+dx,tile.y+dy])
         
         return fondo.get_rect()
             

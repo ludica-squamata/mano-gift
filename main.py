@@ -15,27 +15,26 @@ FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
 hero = PC('grafs/hero_ph.png')
+rect_fondo = mapa.render(fondo,0,0)
 fondo.blit(hero.sprite,hero.pos)
-
 
 while True:
         FPS.tick(30)
-        rect_fondo = mapa.render(fondo)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    hero.reubicar(-1,0)
+                    mapa.render(fondo,+1,0)
     
                 elif event.key  == pygame.K_RIGHT:
-                    hero.reubicar(+1,0)
+                    mapa.render(fondo,-1,0)
     
                 elif event.key  == pygame.K_UP:
-                    hero.reubicar(0,-1)
+                    mapa.render(fondo,0,+1)
     
                 elif event.key  == pygame.K_DOWN:
-                    hero.reubicar(0,+1)
+                    mapa.render(fondo,0,-1)
                 
                 elif event.key  == pygame.K_RETURN: # debug
                     print (hero.pos)
@@ -43,6 +42,6 @@ while True:
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-    
+                
         fondo.blit(hero.sprite,hero.pos)
         pantalla.update([hero.rect,rect_fondo])
