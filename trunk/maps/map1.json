@@ -4,9 +4,9 @@
         "colisiones":"grafs/colisiones1024.png"
     },
     "capa_ground":{
-        "tiles": [["1",[3,3]],["1",[4,3]],["1",[5,3]],
+        "props": [["1",[3,3]],["1",[4,3]],["1",[5,3]],
                   ["1",[3,4]],["1",[4,4]],["1",[5,4]]],
-        "ref":{"1":"grafs/NonWalkable.png"},
-        "entradas":{"inicial":[16, 17]}
-    }
+        "ref":{"1":"grafs/NonWalkable.png"}
+    },
+    "entradas":{"inicial":[20, 20]}
 }

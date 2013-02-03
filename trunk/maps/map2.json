@@ -1,0 +1,12 @@
+{
+    "capa_background":{
+        "fondo":"grafs/arboles_y_castillo.png",
+        "colisiones":"grafs/arboles_y_castillo_colisiones.png"
+    },
+    "capa_ground":{
+        "items": {},
+        "mobs": ["mon"],
+        "ref":{"mon":"grafs/monstruo.png"}
+    },
+    "entradas":{"inicial":[16, 17]}
+}
