@@ -2,21 +2,22 @@ import pygame,sys
 from mapa import Stage
 from mobs import PC
 from misc import Resources as r
+from globs import Constants as C
 
 pygame.init()
 
-tamanio = alto, ancho = 512,512
+tamanio = C.ALTO, C.ANCHO
 negro = pygame.Color('black')
 pantalla = pygame.display # screen
 fondo = pantalla.set_mode(tamanio) # surface
-fondo.fill(negro)
-mapa = Stage(r.abrir_json('maps/map1.json'),32)
+mapa = Stage(r.abrir_json('maps/map1.json'),C.CUADRO)
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
 hero = PC('grafs/hero_ph.png')
-rect_fondo = mapa.render(fondo,0,0)
-fondo.blit(hero.sprite,hero.pos)
+rect_fondo = mapa.render(fondo)
+
+mapa.cargar_hero(hero, 'inicial')
 
 while True:
         FPS.tick(30)
@@ -25,23 +26,25 @@ while True:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    mapa.render(fondo,+1,0)
-    
-                elif event.key  == pygame.K_RIGHT:
-                    mapa.render(fondo,-1,0)
-    
-                elif event.key  == pygame.K_UP:
-                    mapa.render(fondo,0,+1)
-    
-                elif event.key  == pygame.K_DOWN:
-                    mapa.render(fondo,0,-1)
-                
-                elif event.key  == pygame.K_RETURN: # debug
-                    print (hero.pos)
-                
+                    mapa.mover(1,0)
+
+                elif event.key == pygame.K_RIGHT:
+                    mapa.mover(-1,0)
+
+                elif event.key == pygame.K_UP:
+                    mapa.mover(0,+1)
+
+                elif event.key == pygame.K_DOWN:
+                    mapa.mover(0,-1)
+
+                elif event.key == pygame.K_RETURN: # debug
+                    print (hero.mapX, hero.mapY)
+                    print (mapa.mapa.rect.topleft)
+
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-                
-        fondo.blit(hero.sprite,hero.pos)
-        pantalla.update([hero.rect,rect_fondo])
+
+        cambios = mapa.render(fondo)
+        #fondo.blit(hero.sprite,hero.pos)
+        pantalla.update(cambios)
