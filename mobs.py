@@ -5,7 +5,7 @@ from base import _giftSprite
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
-    velocidad = 0
+    velocidad = 4
 
 class PC (Mob):
     centroX = 0

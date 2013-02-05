@@ -24,26 +24,12 @@ class Stage:
     hero = None
     data = {}
 
-    #def __init__(self, id_mapa):
-    #    '''Busca los datos en la db, y carga los recursos que correspondan'''
-    #
-    #    #self.capa_background = back
-    #    #self.capa_background_colisiones = back_c
-    #    #self.capa_ground_items = grnd_i
-    #    #self.capa_ground_mobs = grnd_m
-    #    #self.capa_top_items = top_i
-    #    #self.capa_top_mobs = top_m
-    #    pass
-    #
-    #def render(self):
-    #    pass
-
     def __init__(self, data, entrada = None):
         self.data = data
         mapa = sprite.DirtySprite()
         mapa.image = r.cargar_imagen(data['capa_background']['fondo'])
         mapa.rect = mapa.image.get_rect()
-        mapa.mask = pygame.mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION)
+        mapa.mask = pygame.mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
         self.mapa = mapa
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props()
@@ -51,18 +37,12 @@ class Stage:
     def cargar_props (self):
         objetos = []
         return
-        #TILES = MAPA['capa_ground']['tiles']
-        #REF = MAPA['capa_ground']['ref']
-        #for item in TILES:
-        #    x = item[1][0]*CUADRO
-        #    y = item[1][1]*CUADRO
-        #    self.capa_ground_items.append(Tile(REF[item[0]],x,y))
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
         if entrada != None:
             if entrada in self.data['entradas']:
-                hero.ubicar(self.data['entradas'][entrada][0], self.data['entradas'][entrada][1])
+                hero.ubicar(self.data['entradas'][entrada][0]*C.CUADRO, self.data['entradas'][entrada][1]*C.CUADRO)
         self.contents.add(hero, layer=C.CAPA_GROUND_MOBS)
         self.centrar_camara()
 
@@ -70,26 +50,36 @@ class Stage:
         m = self.mapa
         h = self.hero
 
-        newPos = m.rect.x + dx * C.CUADRO
-        if newPos > 0 or newPos < -(m.rect.w - C.ANCHO) or h.rect.x != h.centroX:
-            #todos los controles contra posicion de hero restan, porque se mueve al reves que la pantalla
-            if C.ANCHO > h.rect.x - dx * C.CUADRO >=0:
-                h.reubicar(-dx, 0)
-                h.rect.x -= dx * C.CUADRO
-            dx = 0
+        dx *= h.velocidad
+        dy *= h.velocidad
 
-        newPos = m.rect.y + dy * C.CUADRO
-        if newPos > 0 or newPos < -(m.rect.h - C.ALTO) or h.rect.y != h.centroY:
-            if C.ALTO > h.rect.y - dy * C.CUADRO >=0:
-                h.reubicar(0, -dy)
-                h.rect.y -= dy * C.CUADRO
+        #todos los controles contra posicion de hero restan, porque se mueve al reves que la pantalla
+        if m.mask.overlap(h.mask,(h.mapX - dx, h.mapY)) is not None:
+            dx = 0
+        if m.mask.overlap(h.mask,(h.mapX, h.mapY - dy)) is not None:
             dy = 0
+
+        if dx != 0:
+            newPos = m.rect.x + dx
+            if newPos > 0 or newPos < -(m.rect.w - C.ANCHO) or h.rect.x != h.centroX:
+                if C.ANCHO > h.rect.x - dx  >=0:
+                    h.reubicar(-dx, 0)
+                    h.rect.x -= dx
+                dx = 0
+
+        if dy != 0:
+            newPos = m.rect.y + dy
+            if newPos > 0 or newPos < -(m.rect.h - C.ALTO) or h.rect.y != h.centroY:
+                if C.ALTO > h.rect.y - dy  >=0:
+                    h.reubicar(0, -dy)
+                    h.rect.y -= dy
+                dy = 0
 
         if dx != 0 or dy != 0:
             for spr in self.contents:
                 if spr != h:
-                    spr.rect.x += dx * C.CUADRO
-                    spr.rect.y += dy * C.CUADRO
+                    spr.rect.x += dx
+                    spr.rect.y += dy
                     if (0 <= spr.rect.x < C.ANCHO and 0 <= spr.rect.y < C.ALTO) or spr == m:
                         spr.dirty = 1
             h.reubicar(-dx, -dy)
@@ -100,8 +90,8 @@ class Stage:
         hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO
         hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO
         hero.centroX, hero.centroY = hero.rect.topleft
-        self.mapa.rect.x = hero.rect.x - hero.mapX * C.CUADRO
-        self.mapa.rect.y = hero.rect.y - hero.mapY * C.CUADRO
+        self.mapa.rect.x = hero.rect.x - hero.mapX
+        self.mapa.rect.y = hero.rect.y - hero.mapY
         self.mapa.dirty = 1
         pass
 
