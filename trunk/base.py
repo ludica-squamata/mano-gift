@@ -1,4 +1,4 @@
-from pygame import sprite
+from pygame import sprite,mask
 from misc import Resources as r
 from globs import Constants as C
 class _giftSprite(sprite.DirtySprite):
@@ -9,11 +9,12 @@ class _giftSprite(sprite.DirtySprite):
         super().__init__()
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
-        elif isinstance(image, python.Surface):
+        elif isinstance(imagen, python.Surface):
             self.image = imagen
         else:
             raise TypeError('Imagen debe ser una ruta o un Surface')
         self.rect = self.image.get_rect()
+        self.mask = mask.from_surface(self.image)
         self.mapX = x
         self.mapY = y
 

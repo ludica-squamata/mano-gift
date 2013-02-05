@@ -20,7 +20,7 @@ rect_fondo = mapa.render(fondo)
 mapa.cargar_hero(hero, 'inicial')
 
 while True:
-        FPS.tick(30)
+        FPS.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -39,7 +39,7 @@ while True:
 
                 elif event.key == pygame.K_RETURN: # debug
                     print (hero.mapX, hero.mapY)
-                    print (mapa.mapa.rect.topleft)
+                    print(mapa.mapa.mask.overlap(hero.mask,(hero.mapX,hero.mapY)))
 
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
