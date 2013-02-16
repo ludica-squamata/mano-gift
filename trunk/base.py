@@ -1,6 +1,8 @@
 from pygame import sprite,mask
 from misc import Resources as r
 from globs import Constants as C
+import pygame
+
 class _giftSprite(sprite.DirtySprite):
     #mapX y mapY estan en posiciones de grilla
     mapX = 0
@@ -9,7 +11,7 @@ class _giftSprite(sprite.DirtySprite):
         super().__init__()
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
-        elif isinstance(imagen, python.Surface):
+        elif isinstance(imagen, pygame.Surface):
             self.image = imagen
         else:
             raise TypeError('Imagen debe ser una ruta o un Surface')
@@ -24,6 +26,7 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY += dy
         #self.rect.topleft = dx*C.CUADRO, dy*C.CUADRO
         self.dirty = 1
+        
     def ubicar(self, x, y):
         '''mueve el sprite a una ubicacion especifica. tiene que ser valor positivo'''
         if x < 0 or y < 0:
