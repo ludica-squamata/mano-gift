@@ -1,5 +1,5 @@
 import pygame,sys
-from mapa import Stage
+from mapa import Stage,Prop
 from mobs import PC
 from misc import Resources as r
 from globs import Constants as C
@@ -7,10 +7,9 @@ from globs import Constants as C
 pygame.init()
 
 tamanio = C.ALTO, C.ANCHO
-negro = pygame.Color('black')
 pantalla = pygame.display # screen
 fondo = pantalla.set_mode(tamanio) # surface
-mapa = Stage(r.abrir_json('maps/map1.json'),C.CUADRO)
+mapa = Stage(r.abrir_json('maps/map1.json'))
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
@@ -48,3 +47,4 @@ while True:
         cambios = mapa.render(fondo)
         #fondo.blit(hero.sprite,hero.pos)
         pantalla.update(cambios)
+

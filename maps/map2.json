@@ -4,7 +4,7 @@
         "colisiones":"grafs/arboles_y_castillo_colisiones.png"
     },
     "capa_ground":{
-        "items": {},
+        "props": {},
         "mobs": ["mon"],
         "ref":{"mon":"grafs/monstruo.png"}
     },

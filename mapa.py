@@ -6,25 +6,17 @@ from base import _giftSprite
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
-
+    pass
     #basicamente, sprites que no se mueven
     #para las cosas en pantalla que tienen interaccion(tronco de arbol, puerta, piedras, loot)
     #como los árboles de pokemon que se pueden golpear
     #si solo son colisiones, conviene dibujarlo directo en el fondo
-    def __init__(self,imagen,x,y):
-        super().__init__()
-        self.x = x
-        self.y = y
-        self.image = r.cargar_imagen(imagen)
-        self.rect = self.image.get_rect()
 
+    
 class Stage:
     contents = sprite.LayeredDirty()
-    mapa = None
-    hero = None
-    data = {}
 
-    def __init__(self, data, entrada = None):
+    def __init__(self, data):
         self.data = data
         mapa = sprite.DirtySprite()
         mapa.image = r.cargar_imagen(data['capa_background']['fondo'])
@@ -35,14 +27,26 @@ class Stage:
         self.cargar_props()
 
     def cargar_props (self):
-        objetos = []
-        return
+        refs = self.data['capa_ground']['refs']
+        props = self.data['capa_ground']['props']
+        map_cache = {}
+        
+        for ref in refs:
+            if ref in props:
+                map_cache[ref] = r.cargar_imagen(refs[ref])
+        
+        for ref in props:
+            for x,y in props[ref]:
+                prop = Prop(map_cache[ref])
+                prop.ubicar(x*C.CUADRO,y*C.CUADRO)
+                self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
         if entrada != None:
             if entrada in self.data['entradas']:
-                hero.ubicar(self.data['entradas'][entrada][0]*C.CUADRO, self.data['entradas'][entrada][1]*C.CUADRO)
+                x,y = self.data['entradas'][entrada]
+                hero.ubicar(x*C.CUADRO, y*C.CUADRO)
         self.contents.add(hero, layer=C.CAPA_GROUND_MOBS)
         self.centrar_camara()
 
@@ -93,8 +97,6 @@ class Stage:
         self.mapa.rect.x = hero.rect.x - hero.mapX
         self.mapa.rect.y = hero.rect.y - hero.mapY
         self.mapa.dirty = 1
-        pass
-
+        
     def render(self,fondo):
-        #for spr in self.contents
         return self.contents.draw(fondo)
