@@ -4,7 +4,7 @@ from globs import Constants as C
 import pygame
 
 class _giftSprite(sprite.DirtySprite):
-    #mapX y mapY estan en posiciones de grilla
+    #mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
     def __init__(self, imagen, x = 0, y = 0):
