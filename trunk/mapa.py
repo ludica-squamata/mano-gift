@@ -64,7 +64,12 @@ class Stage:
             dx = 0
         if m.mask.overlap(h.mask,(h.mapX, h.mapY - dy)) is not None:
             dy = 0
-
+        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
+                dx = 0
+            if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
+                dy = 0
+                
         if dx != 0:
             newPos = m.rect.x + dx
             if newPos > 0 or newPos < -(m.rect.w - C.ANCHO) or h.rect.x != h.centroX:
