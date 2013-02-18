@@ -12,9 +12,11 @@ class Prop (_giftSprite):
     #como los árboles de pokemon que se pueden golpear
     #si solo son colisiones, conviene dibujarlo directo en el fondo
 
-    
+
 class Stage:
     contents = sprite.LayeredDirty()
+    hero = None
+    mapa = None
 
     def __init__(self, data):
         self.data = data
@@ -30,11 +32,11 @@ class Stage:
         refs = self.data['capa_ground']['refs']
         props = self.data['capa_ground']['props']
         map_cache = {}
-        
+
         for ref in refs:
             if ref in props:
                 map_cache[ref] = r.cargar_imagen(refs[ref])
-        
+
         for ref in props:
             for x,y in props[ref]:
                 prop = Prop(map_cache[ref])
@@ -97,6 +99,15 @@ class Stage:
         self.mapa.rect.x = hero.rect.x - hero.mapX
         self.mapa.rect.y = hero.rect.y - hero.mapY
         self.mapa.dirty = 1
-        
+        self.ajustar()
+
+    def ajustar(self):
+        h = self.hero
+        m = self.mapa
+        for spr in self.contents:
+            if spr != h and spr != m:
+                spr.rect.x = m.rect.x + spr.mapX
+                spr.rect.y = m.rect.y + spr.mapY
+
     def render(self,fondo):
         return self.contents.draw(fondo)
