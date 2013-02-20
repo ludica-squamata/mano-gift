@@ -13,7 +13,7 @@ mapa = Stage(r.abrir_json('maps/map1.json'))
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
-hero = PC('grafs/hero_ph.png')
+hero = PC('grafs/heroe_color.png')
 rect_fondo = mapa.render(fondo)
 
 mapa.cargar_hero(hero, 'inicial')

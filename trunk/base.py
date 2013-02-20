@@ -24,7 +24,7 @@ class _giftSprite(sprite.DirtySprite):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
         self.mapY += dy
-        #self.rect.topleft = dx*C.CUADRO, dy*C.CUADRO
+        self.rect.move_ip(dx*self.velocidad, dy*self.velocidad)
         self.dirty = 1
         
     def ubicar(self, x, y):

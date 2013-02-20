@@ -3,6 +3,7 @@ from pygame import sprite
 from misc import Resources as r
 from globs import Constants as C
 from base import _giftSprite
+from mobs import Enemy
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
@@ -27,21 +28,37 @@ class Stage:
         self.mapa = mapa
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props()
+        self.cargar_mobs()
 
     def cargar_props (self):
         refs = self.data['capa_ground']['refs']
         props = self.data['capa_ground']['props']
         map_cache = {}
-
+    
         for ref in refs:
             if ref in props:
                 map_cache[ref] = r.cargar_imagen(refs[ref])
-
+    
         for ref in props:
             for x,y in props[ref]:
                 prop = Prop(map_cache[ref])
                 prop.ubicar(x*C.CUADRO,y*C.CUADRO)
                 self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
+
+    def cargar_mobs(self):
+     refs = self.data['capa_ground']['refs']
+     mobs = self.data['capa_ground']['mobs']
+     map_cache = {}
+
+     for ref in refs:
+         if ref in mobs:
+             map_cache[ref] = r.cargar_imagen(refs[ref])
+
+     for ref in mobs:
+         for x,y in mobs[ref]:
+             mob = Enemy(map_cache[ref])
+             mob.ubicar(x*C.CUADRO,y*C.CUADRO)
+             self.contents.add(mob, layer=C.CAPA_GROUND_MOBS) 
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
@@ -49,9 +66,9 @@ class Stage:
             if entrada in self.data['entradas']:
                 x,y = self.data['entradas'][entrada]
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
-        self.contents.add(hero, layer=C.CAPA_GROUND_MOBS)
+        self.contents.add(hero, layer=C.CAPA_HERO)
         self.centrar_camara()
-
+    
     def mover(self,dx,dy):
         m = self.mapa
         h = self.hero
@@ -65,6 +82,11 @@ class Stage:
         if m.mask.overlap(h.mask,(h.mapX, h.mapY - dy)) is not None:
             dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
+                dx = 0
+            if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
+                dy = 0
+        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
                 dx = 0
             if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
@@ -113,6 +135,11 @@ class Stage:
             if spr != h and spr != m:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
-
+    
     def render(self,fondo):
+        for spr in self.contents:
+            if isinstance(spr,Enemy):
+                dx,dy = spr.mover()
+                spr.reubicar(dx, dy)
+        
         return self.contents.draw(fondo)

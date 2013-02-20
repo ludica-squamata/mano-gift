@@ -1,5 +1,6 @@
 #global information
 from pygame import Color
+
 class Constants(object):
     CUADRO = 32
     ALTO = 480
@@ -13,3 +14,7 @@ class Constants(object):
     CAPA_TOP_MOBS = 5
 
     COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
+    
+class Globales:
+    MAPA_ACTUAL = ''
+    
