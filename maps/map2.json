@@ -5,7 +5,7 @@
     },
     "capa_ground":{
         "props": {},
-        "mobs": ["mon"],
+        "mobs": {"mon":[[10,9]]},
         "refs":{"mon":"grafs/monstruo.png"}
     },
     "entradas":{"inicial":[16, 17]}

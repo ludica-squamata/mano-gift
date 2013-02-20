@@ -1,4 +1,5 @@
 from pygame import sprite
+from random import randint
 from misc import Resources as r
 from globs import Constants as C
 from base import _giftSprite
@@ -10,14 +11,21 @@ class Mob (_giftSprite):
 class PC (Mob):
     centroX = 0
     centroY = 0
+    
+    def reubicar(self, dx, dy):
+        '''mueve el sprite una cantidad de cuadros'''
+        self.mapX += dx
+        self.mapY += dy
+        self.dirty = 1
 
 class Enemy (Mob):
-    def __init__(self):
-        super().__init__()
+    def mover(self):
+        dx = randint(-1,1)*self.velocidad
+        dy = randint(-1,1)*self.velocidad
+        return dx,dy
 
 class NPC (Mob):
-    def __init__(self):
-        super().__init__()
+    pass
 
 class Inventory(object):
     # la mochila
