@@ -76,6 +76,8 @@ class Stage:
             x,y = salidas[salida][0][0:2]
             sld = Salida(*salidas[salida][0])
             sld.ubicar(x*C.CUADRO,y*C.CUADRO)
+            sld.dest = salidas[salida][1]
+            sld.link = salidas[salida][2]
             self.contents.add(sld,layer=C.CAPA_GROUND_ITEMS)
 
     def mover(self,dx,dy):
@@ -93,12 +95,14 @@ class Stage:
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
                 if isinstance(spr,Salida):
-                    print('Alcanzada una salida!')
+                    #print('Alcanzada una salida!:',spr.link,'en',spr.dest)
+                    pygame.event.post(pygame.event.Event(24,{'dest':spr.dest,'link':spr.link}))
                 else:
                     dx = 0
             if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
                 if isinstance(spr,Salida):
-                    print('Alcanzada una salida!')
+                    #print('Alcanzada una salida!:',spr.link,'en',spr.dest)
+                    pygame.event.post(pygame.event.Event(24,{'dest':spr.dest,'link':spr.link}))
                 else:
                     dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
@@ -148,8 +152,9 @@ class Stage:
         m = self.mapa
         for spr in self.contents:
             if spr != h and spr != m:
-                spr.rect.x = m.rect.x + spr.mapX
-                spr.rect.y = m.rect.y + spr.mapY
+                if not isinstance(spr,sprite.DirtySprite):
+                    spr.rect.x = m.rect.x + spr.mapX
+                    spr.rect.y = m.rect.y + spr.mapY
 
     def render(self,fondo):
         for spr in self.contents:
@@ -162,7 +167,7 @@ class Stage:
 class Salida (_giftSprite):
     def __init__(self,x,y,alto,ancho):
         image = pygame.Surface((alto, ancho))
-        image.fill((255,0,0))
+        #image.fill((255,0,0))
         super().__init__(image,x,y)
         self.mask.fill()
-        #self.image.set_colorkey((0,0,0))
+        self.image.set_colorkey((0,0,0))
