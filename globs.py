@@ -30,3 +30,4 @@ class World:
             World.mapas[mapa] = Stage(r.abrir_json('maps/'+mapa+'.json'))
         World.MAPA_ACTUAL = World.mapas[mapa]
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
+        World.MAPA_ACTUAL.mapa.dirty=1
