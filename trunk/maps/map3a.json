@@ -9,5 +9,5 @@
         "refs":{}
     },
     "entradas":{"inicial":[7, 7],
-                "puerta":[14,10]},
+                "puerta":[13,10]},
     "salidas":{"salida":[[14,10,32,32],"map3b","puerta"]}}

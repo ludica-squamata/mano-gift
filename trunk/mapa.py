@@ -15,9 +15,10 @@ class Prop (_giftSprite):
 
 
 class Stage:
-    contents = sprite.LayeredDirty()
+    contents = None
     hero = None
     mapa = None
+    data = {}
 
     def __init__(self, data):
         self.data = data
@@ -26,6 +27,7 @@ class Stage:
         mapa.rect = mapa.image.get_rect()
         mapa.mask = pygame.mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
         self.mapa = mapa
+        self.contents = sprite.LayeredDirty()
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props()
         self.cargar_mobs()
@@ -69,7 +71,7 @@ class Stage:
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
         self.contents.add(hero, layer=C.CAPA_HERO)
         self.centrar_camara()
-    
+
     def cargar_salidas(self):
         salidas = self.data['salidas']
         for salida in salidas:
@@ -139,12 +141,25 @@ class Stage:
 
     def centrar_camara(self):
         hero = self.hero
+        mapa = self.mapa
         hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO
         hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO
         hero.centroX, hero.centroY = hero.rect.topleft
-        self.mapa.rect.x = hero.rect.x - hero.mapX
-        self.mapa.rect.y = hero.rect.y - hero.mapY
-        self.mapa.dirty = 1
+
+        newPos = hero.rect.x - hero.mapX
+        if newPos > 0 or newPos < -(mapa.rect.w - C.ANCHO) or hero.rect.x != hero.centroX:
+            hero.rect.x -= newPos
+        else:
+            mapa.rect.x = newPos
+
+        newPos = hero.rect.y - hero.mapY
+        if newPos > 0 or newPos < -(mapa.rect.h - C.ALTO) or hero.rect.y != hero.centroY:
+            hero.rect.y -= newPos
+        else:
+            mapa.rect.x = newPos
+
+
+        mapa.dirty = 1
         self.ajustar()
 
     def ajustar(self):
@@ -165,6 +180,10 @@ class Stage:
         return self.contents.draw(fondo)
 
 class Salida (_giftSprite):
+    ##string, mapa de destino
+    dest = ''
+    ##string, nombre de la entrada en dest con la cual conecta
+    link = ''
     def __init__(self,x,y,alto,ancho):
         image = pygame.Surface((alto, ancho))
         #image.fill((255,0,0))

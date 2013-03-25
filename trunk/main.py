@@ -37,6 +37,9 @@ while True:
 
             elif event.key == pygame.K_RETURN: # debug
                 os.system(['clear','cls'][os.name == 'nt'])
+                print(W.mapas)
+                print(W.MAPA_ACTUAL)
+                print(W.MAPA_ACTUAL.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS))
                 print ("x:",W.HERO.mapX, "y:",W.HERO.mapY,'\n')
                 print ("Gx:",str(int(W.HERO.mapX/32)), "Gy:",str(int(W.HERO.mapY/32)),'\n')
                 print("Colisión:", str(W.MAPA_ACTUAL.mapa.mask.overlap(W.HERO.mask,(W.HERO.mapX,W.HERO.mapY))))
@@ -46,7 +49,7 @@ while True:
                 sys.exit()
 
             W.MAPA_ACTUAL.mover(dx,dy)
-        
+
         elif event.type == pygame.USEREVENT:
             W.setear_mapa(event.dict['dest'], event.dict['link'])
             #print('Alcanzada una salida!',event,sep = '\n')
