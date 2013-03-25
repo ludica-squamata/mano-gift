@@ -10,5 +10,6 @@
             "1":"grafs/NonWalkable.png",
             "mon":"grafs/monstruo.png"}
     },
-    "entradas":{"inicial":[20, 20]}
+    "entradas":{"inicial":[20, 20]},
+	"salidas":{}
 }

@@ -156,7 +156,7 @@ class Stage:
         if newPos > 0 or newPos < -(mapa.rect.h - C.ALTO) or hero.rect.y != hero.centroY:
             hero.rect.y -= newPos
         else:
-            mapa.rect.x = newPos
+            mapa.rect.y = newPos
 
 
         mapa.dirty = 1
