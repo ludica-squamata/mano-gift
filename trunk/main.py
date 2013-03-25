@@ -1,4 +1,4 @@
-import pygame,sys
+import pygame,sys,os
 from mapa import Stage,Prop
 from mobs import PC
 from misc import Resources as r
@@ -14,7 +14,7 @@ pygame.key.set_repeat(30,15)
 
 
 W.cargar_hero()
-W.setear_mapa('map1', 'inicial')
+W.setear_mapa('map3a', 'inicial')
 rect_fondo = W.MAPA_ACTUAL.render(fondo)
 
 while True:
@@ -38,8 +38,10 @@ while True:
                     dy -= 1
 
                 elif event.key == pygame.K_RETURN: # debug
-                    print (W.HERO.mapX, W.HERO.mapY)
-                    print(W.MAPA_ACTUAL.mapa.mask.overlap(W.HERO.mask,(W.HERO.mapX,W.HERO.mapY)))
+                    os.system(['clear','cls'][os.name == 'nt'])
+                    print ("x:",W.HERO.mapX, "y:",W.HERO.mapY,'\n')
+                    print ("Gx:",str(int(W.HERO.mapX/32)), "Gy:",str(int(W.HERO.mapY/32)),'\n')
+                    print("Colisión:", str(W.MAPA_ACTUAL.mapa.mask.overlap(W.HERO.mask,(W.HERO.mapX,W.HERO.mapY))))
 
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
