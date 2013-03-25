@@ -1,7 +1,6 @@
 from pygame import sprite
 from random import randint
 from misc import Resources as r
-from globs import Constants as C
 from base import _giftSprite
 
 class Mob (_giftSprite):
@@ -11,7 +10,7 @@ class Mob (_giftSprite):
 class PC (Mob):
     centroX = 0
     centroY = 0
-    
+
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx

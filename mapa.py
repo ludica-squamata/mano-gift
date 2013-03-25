@@ -34,11 +34,11 @@ class Stage:
         refs = self.data['capa_ground']['refs']
         props = self.data['capa_ground']['props']
         map_cache = {}
-    
+
         for ref in refs:
             if ref in props:
                 map_cache[ref] = r.cargar_imagen(refs[ref])
-    
+
         for ref in props:
             for x,y in props[ref]:
                 prop = Prop(map_cache[ref])
@@ -58,7 +58,7 @@ class Stage:
          for x,y in mobs[ref]:
              mob = Enemy(map_cache[ref])
              mob.ubicar(x*C.CUADRO,y*C.CUADRO)
-             self.contents.add(mob, layer=C.CAPA_GROUND_MOBS) 
+             self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
@@ -68,7 +68,7 @@ class Stage:
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
         self.contents.add(hero, layer=C.CAPA_HERO)
         self.centrar_camara()
-    
+
     def mover(self,dx,dy):
         m = self.mapa
         h = self.hero
@@ -91,7 +91,7 @@ class Stage:
                 dx = 0
             if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
                 dy = 0
-                
+
         if dx != 0:
             newPos = m.rect.x + dx
             if newPos > 0 or newPos < -(m.rect.w - C.ANCHO) or h.rect.x != h.centroX:
@@ -135,11 +135,11 @@ class Stage:
             if spr != h and spr != m:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
-    
+
     def render(self,fondo):
         for spr in self.contents:
             if isinstance(spr,Enemy):
                 dx,dy = spr.mover()
                 spr.reubicar(dx, dy)
-        
+
         return self.contents.draw(fondo)

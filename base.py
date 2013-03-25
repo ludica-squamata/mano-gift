@@ -1,6 +1,6 @@
 from pygame import sprite,mask
 from misc import Resources as r
-from globs import Constants as C
+#from globs import Constants as C
 import pygame
 
 class _giftSprite(sprite.DirtySprite):
@@ -26,7 +26,7 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY += dy
         self.rect.move_ip(dx*self.velocidad, dy*self.velocidad)
         self.dirty = 1
-        
+
     def ubicar(self, x, y):
         '''mueve el sprite a una ubicacion especifica. tiene que ser valor positivo'''
         if x < 0 or y < 0:
