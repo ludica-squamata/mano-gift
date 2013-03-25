@@ -2,21 +2,20 @@ import pygame,sys
 from mapa import Stage,Prop
 from mobs import PC
 from misc import Resources as r
-from globs import Constants as C
+from globs import Constants as C, World as W
 
 pygame.init()
 
 tamanio = C.ALTO, C.ANCHO
 pantalla = pygame.display # screen
 fondo = pantalla.set_mode(tamanio) # surface
-mapa = Stage(r.abrir_json('maps/map1.json'))
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
-hero = PC('grafs/heroe_color.png')
-rect_fondo = mapa.render(fondo)
 
-mapa.cargar_hero(hero, 'inicial')
+W.cargar_hero()
+W.setear_mapa('map1', 'inicial')
+rect_fondo = W.MAPA_ACTUAL.render(fondo)
 
 while True:
         FPS.tick(60)
@@ -24,27 +23,30 @@ while True:
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
+                dx = 0
+                dy = 0
                 if event.key == pygame.K_LEFT:
-                    mapa.mover(1,0)
+                    dx +=1
 
                 elif event.key == pygame.K_RIGHT:
-                    mapa.mover(-1,0)
+                    dx -= 1
 
                 elif event.key == pygame.K_UP:
-                    mapa.mover(0,+1)
+                    dy += 1
 
                 elif event.key == pygame.K_DOWN:
-                    mapa.mover(0,-1)
+                    dy -= 1
 
                 elif event.key == pygame.K_RETURN: # debug
-                    print (hero.mapX, hero.mapY)
-                    print(mapa.mapa.mask.overlap(hero.mask,(hero.mapX,hero.mapY)))
+                    print (W.HERO.mapX, W.HERO.mapY)
+                    print(W.MAPA_ACTUAL.mapa.mask.overlap(W.HERO.mask,(W.HERO.mapX,W.HERO.mapY)))
 
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
 
-        cambios = mapa.render(fondo)
+                W.MAPA_ACTUAL.mover(dx,dy)
+
+        cambios = W.MAPA_ACTUAL.render(fondo)
         #fondo.blit(hero.sprite,hero.pos)
         pantalla.update(cambios)
-
