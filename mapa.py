@@ -29,6 +29,7 @@ class Stage:
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props()
         self.cargar_mobs()
+        self.cargar_salidas()
 
     def cargar_props (self):
         refs = self.data['capa_ground']['refs']
@@ -68,6 +69,14 @@ class Stage:
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
         self.contents.add(hero, layer=C.CAPA_HERO)
         self.centrar_camara()
+    
+    def cargar_salidas(self):
+        salidas = self.data['salidas']
+        for salida in salidas:
+            x,y = salidas[salida][0][0:2]
+            sld = Salida(*salidas[salida][0])
+            sld.ubicar(x*C.CUADRO,y*C.CUADRO)
+            self.contents.add(sld,layer=C.CAPA_GROUND_ITEMS)
 
     def mover(self,dx,dy):
         m = self.mapa
@@ -143,3 +152,8 @@ class Stage:
                 spr.reubicar(dx, dy)
 
         return self.contents.draw(fondo)
+
+class Salida (_giftSprite):
+    image = pygame.Surface((32, 32))
+    super().__init__()
+    self.image.set_colorkey((0,0,0))
