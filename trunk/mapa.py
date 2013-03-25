@@ -92,9 +92,15 @@ class Stage:
             dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
-                dx = 0
+                if isinstance(spr,Salida):
+                    print('Alcanzada una salida!')
+                else:
+                    dx = 0
             if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
-                dy = 0
+                if isinstance(spr,Salida):
+                    print('Alcanzada una salida!')
+                else:
+                    dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
                 dx = 0
@@ -154,6 +160,9 @@ class Stage:
         return self.contents.draw(fondo)
 
 class Salida (_giftSprite):
-    image = pygame.Surface((32, 32))
-    super().__init__()
-    self.image.set_colorkey((0,0,0))
+    def __init__(self,x,y,alto,ancho):
+        image = pygame.Surface((alto, ancho))
+        image.fill((255,0,0))
+        super().__init__(image,x,y)
+        self.mask.fill()
+        #self.image.set_colorkey((0,0,0))
