@@ -8,5 +8,6 @@
         "mobs": {"mon":[[10,9]]},
         "refs":{"mon":"grafs/monstruo.png"}
     },
-    "entradas":{"inicial":[16, 17]}
+    "entradas":{"inicial":[16, 17]},
+    "salidas":{}
 }

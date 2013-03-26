@@ -7,7 +7,7 @@ class _giftSprite(sprite.DirtySprite):
     #mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
-    def __init__(self, imagen, x = 0, y = 0):
+    def __init__(self, imagen, stage = '', x = 0, y = 0):
         super().__init__()
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
@@ -19,12 +19,13 @@ class _giftSprite(sprite.DirtySprite):
         self.mask = mask.from_surface(self.image)
         self.mapX = x
         self.mapY = y
+        self.stage = stage
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
         self.mapY += dy
-        self.rect.move_ip(dx*self.velocidad, dy*self.velocidad)
+        self.rect.move_ip(dx,dy)
         self.dirty = 1
 
     def ubicar(self, x, y):
@@ -34,3 +35,4 @@ class _giftSprite(sprite.DirtySprite):
         self.mapX = x
         self.mapY = y
         self.dirty = 1
+
