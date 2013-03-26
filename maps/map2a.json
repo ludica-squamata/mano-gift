@@ -11,7 +11,7 @@
     "entradas":{
         "inicial":[16, 17],
         "derecha":[26,30],
-        "abajo":[30,15]
+        "abajo":[21,15]
     },
     "salidas":{
         "derecha":{
