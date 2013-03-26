@@ -91,16 +91,16 @@ class Stage:
         if m.mask.overlap(h.mask,(h.mapX, h.mapY - dy)) is not None:
             dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
+            if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None \
+              or h.mask.overlap(spr.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
                 if isinstance(spr,Salida):
                     World.setear_mapa(spr.dest,spr.link)
-                else:
-                    dx = 0
-            if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
+                dx = 0
+            if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None \
+              or h.mask.overlap(spr.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
                 if isinstance(spr,Salida):
                     World.setear_mapa(spr.dest,spr.link)
-                else:
-                    dy = 0
+                dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
                 dx = 0
@@ -141,13 +141,13 @@ class Stage:
         hero.centroX, hero.centroY = hero.rect.topleft
 
         newPos = hero.rect.x - hero.mapX
-        if newPos > 0 or newPos < -(mapa.rect.w - C.ANCHO) or hero.rect.x != hero.centroX:
+        if newPos > 0 or newPos < -(mapa.rect.w - C.ANCHO):
             hero.rect.x -= newPos
         else:
             mapa.rect.x = newPos
 
         newPos = hero.rect.y - hero.mapY
-        if newPos > 0 or newPos < -(mapa.rect.h - C.ALTO) or hero.rect.y != hero.centroY:
+        if newPos > 0 or newPos < -(mapa.rect.h - C.ALTO):
             hero.rect.y -= newPos
         else:
             mapa.rect.y = newPos
