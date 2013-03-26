@@ -11,5 +11,5 @@
             "mon":"grafs/monstruo.png"}
     },
     "entradas":{"inicial":[20, 20]},
-	"salidas":{}
+    "salidas":{}
 }

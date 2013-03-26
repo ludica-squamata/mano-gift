@@ -1,7 +1,7 @@
 import pygame
 from pygame import sprite
 from misc import Resources as r
-from globs import Constants as C
+from globs import Constants as C, World
 from base import _giftSprite
 from mobs import Enemy
 
@@ -12,7 +12,6 @@ class Prop (_giftSprite):
     #para las cosas en pantalla que tienen interaccion(tronco de arbol, puerta, piedras, loot)
     #como los árboles de pokemon que se pueden golpear
     #si solo son colisiones, conviene dibujarlo directo en el fondo
-
 
 class Stage:
     contents = None
@@ -59,7 +58,7 @@ class Stage:
 
      for ref in mobs:
          for x,y in mobs[ref]:
-             mob = Enemy(map_cache[ref])
+             mob = Enemy(map_cache[ref],self)
              mob.ubicar(x*C.CUADRO,y*C.CUADRO)
              self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
@@ -75,11 +74,8 @@ class Stage:
     def cargar_salidas(self):
         salidas = self.data['salidas']
         for salida in salidas:
-            x,y = salidas[salida][0][0:2]
-            sld = Salida(*salidas[salida][0])
-            sld.ubicar(x*C.CUADRO,y*C.CUADRO)
-            sld.dest = salidas[salida][1]
-            sld.link = salidas[salida][2]
+            sld = Salida(salidas[salida])
+            sld.ubicar(sld.x,sld.y)
             self.contents.add(sld,layer=C.CAPA_GROUND_ITEMS)
 
     def mover(self,dx,dy):
@@ -97,14 +93,12 @@ class Stage:
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
                 if isinstance(spr,Salida):
-                    #print('Alcanzada una salida!:',spr.link,'en',spr.dest)
-                    pygame.event.post(pygame.event.Event(24,{'dest':spr.dest,'link':spr.link}))
+                    World.setear_mapa(spr.dest,spr.link)
                 else:
                     dx = 0
             if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
                 if isinstance(spr,Salida):
-                    #print('Alcanzada una salida!:',spr.link,'en',spr.dest)
-                    pygame.event.post(pygame.event.Event(24,{'dest':spr.dest,'link':spr.link}))
+                    World.setear_mapa(spr.dest,spr.link)
                 else:
                     dy = 0
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
@@ -158,7 +152,6 @@ class Stage:
         else:
             mapa.rect.y = newPos
 
-
         mapa.dirty = 1
         self.ajustar()
 
@@ -167,26 +160,27 @@ class Stage:
         m = self.mapa
         for spr in self.contents:
             if spr != h and spr != m:
-                if not isinstance(spr,sprite.DirtySprite):
-                    spr.rect.x = m.rect.x + spr.mapX
-                    spr.rect.y = m.rect.y + spr.mapY
+                spr.rect.x = m.rect.x + spr.mapX
+                spr.rect.y = m.rect.y + spr.mapY
 
+    def detectar_colisiones(self,sprite):
+        pass
+    
     def render(self,fondo):
         for spr in self.contents:
             if isinstance(spr,Enemy):
-                dx,dy = spr.mover()
-                spr.reubicar(dx, dy)
+                spr.mover()
 
         return self.contents.draw(fondo)
 
 class Salida (_giftSprite):
-    ##string, mapa de destino
-    dest = ''
-    ##string, nombre de la entrada en dest con la cual conecta
-    link = ''
-    def __init__(self,x,y,alto,ancho):
+    def __init__(self,data):
+        self.x,self.y,alto,ancho = data[0]
+        self.dest,self.link = data[1:]
+        ##dest = string, mapa de destino.
+        ##link = string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
-        #image.fill((255,0,0))
-        super().__init__(image,x,y)
+        image.fill((255,0,0))
+        super().__init__(image,self.x,self.y)
         self.mask.fill()
-        self.image.set_colorkey((0,0,0))
+        #self.image.set_colorkey((0,0,0))

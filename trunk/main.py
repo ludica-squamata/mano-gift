@@ -20,19 +20,24 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+            
         elif event.type == pygame.KEYDOWN:
             dx = 0
             dy = 0
             if event.key == pygame.K_LEFT:
+                W.HERO.cambiar_direccion('derecha')
                 dx +=1
 
             elif event.key == pygame.K_RIGHT:
+                W.HERO.cambiar_direccion('izquierda')
                 dx -= 1
 
             elif event.key == pygame.K_UP:
+                W.HERO.cambiar_direccion('arriba')
                 dy += 1
 
             elif event.key == pygame.K_DOWN:
+                W.HERO.cambiar_direccion('abajo')
                 dy -= 1
 
             elif event.key == pygame.K_RETURN: # debug
@@ -49,10 +54,6 @@ while True:
                 sys.exit()
 
             W.MAPA_ACTUAL.mover(dx,dy)
-
-        elif event.type == pygame.USEREVENT:
-            W.setear_mapa(event.dict['dest'], event.dict['link'])
-            #print('Alcanzada una salida!',event,sep = '\n')
-
+            
     cambios = W.MAPA_ACTUAL.render(fondo)
     pantalla.update(cambios)

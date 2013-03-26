@@ -22,7 +22,7 @@ class World:
     MAPA_ACTUAL =''
     HERO =''
     def cargar_hero():
-        World.HERO = PC('grafs/heroe_color.png')
+        World.HERO = PC(World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
