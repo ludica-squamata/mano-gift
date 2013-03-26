@@ -22,7 +22,7 @@ class PC (Mob):
     def cambiar_direccion(self,direccion):
         self.image = self.images[direccion]
         self.direccion = direccion
-        self.mask = mask.from_surface(self.image)
+        #self.mask = mask.from_surface(self.image)
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''

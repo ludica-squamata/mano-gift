@@ -1,0 +1,27 @@
+{
+    "capa_background":{
+        "fondo":"grafs/claro_de_montana.png",
+        "colisiones":"grafs/claro_de_montana_colisiones.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {},
+        "refs":{}
+    },
+    "entradas":{
+        "arriba":[5,1],
+        "izquierda":[1,5]
+    },
+    "salidas":{
+        "arriba":{
+            "rect":[0,0,352,32],
+            "dest":"map2b",
+            "link":"abajo"
+        },
+        "izquierda":{
+            "rect":[0,1,32,352],
+            "dest":"map2d",
+            "link":"derecha"
+        }
+    }
+}
