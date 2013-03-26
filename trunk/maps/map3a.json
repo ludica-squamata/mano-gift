@@ -10,4 +10,11 @@
     },
     "entradas":{"inicial":[7, 7],
                 "puerta":[13,10]},
-    "salidas":{"salida":[[460,320,15,32],"map3b","puerta"]}}
+    "salidas":{
+        "salida":{
+            "rect":[460,320,15,32],
+            "dest": "map3b",
+            "link": "puerta"
+        }
+    }
+}

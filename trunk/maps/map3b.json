@@ -9,4 +9,11 @@
         "refs":{}
     },
     "entradas":{"puerta":[1, 10]},
-    "salidas":{"puerta":[[0,320,15,32],"map3a","puerta"]}}
+    "salidas":{
+        "puerta":{
+            "rect":[0,320,15,32],
+            "dest":"map3a",
+            "link":"puerta"
+        }
+    }
+}

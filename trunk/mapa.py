@@ -75,7 +75,7 @@ class Stage:
         salidas = self.data['salidas']
         for salida in salidas:
             sld = Salida(salidas[salida])
-            sld.ubicar(sld.x,sld.y)
+            sld.ubicar(sld.x*C.CUADRO,sld.y*C.CUADRO)
             self.contents.add(sld,layer=C.CAPA_GROUND_ITEMS)
 
     def mover(self,dx,dy):
@@ -175,10 +175,9 @@ class Stage:
 
 class Salida (_giftSprite):
     def __init__(self,data):
-        self.x,self.y,alto,ancho = data[0]
-        self.dest,self.link = data[1:]
-        ##dest = string, mapa de destino.
-        ##link = string, nombre de la entrada en dest con la cual conecta
+        self.x,self.y,alto,ancho = data['rect']
+        self.dest = data['dest']# string, mapa de destino.
+        self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
         image.fill((255,0,0))
         super().__init__(image,self.x,self.y)

@@ -1,0 +1,27 @@
+{
+    "capa_background":{
+        "fondo":"grafs/arboles_y_montana.png",
+        "colisiones":"grafs/arboles_y_montana_colisiones.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {},
+        "refs":{}
+    },
+    "entradas":{
+        "izquierda":[21,1],
+        "abajo":[31,2]
+    },
+    "salidas":{
+        "izquierda":{
+            "rect":[21,0,352,32],
+            "dest":"map2a",
+            "link":"derecha"
+        },
+        "abajo":{
+            "rect":[31,1,384,32],
+            "dest":"map2c",
+            "link":"arriba"
+        }
+    }
+}
