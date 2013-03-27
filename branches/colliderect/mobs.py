@@ -32,18 +32,22 @@ class PC (Mob):
 
 class Enemy (Mob):
     ticks = mov_ticks = 0
-    def mover(self):
+    def mover(self,hero):
+
         self.ticks += 1
         self.mov_ticks += 1
         dx,dy = 0,0
         if self.mov_ticks == 3:
-            pos = 10
+            pos = 100
             if randint(1,100) <= pos:
                 dx = randint(-1,1)*self.velocidad
                 dy = randint(-1,1)*self.velocidad
             self.mov_ticks = 0
         
-        self.reubicar(dx, dy)
+        if not self.colisiona(hero,dx,dy):
+            self.reubicar(dx, dy)
+        else:#este comportamiento podría variar
+            self.reubicar(-dx, -dy)
 
 class NPC (Mob):
     pass

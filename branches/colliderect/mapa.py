@@ -84,29 +84,44 @@ class Stage:
 
         dx *= h.velocidad
         dy *= h.velocidad
-
+        
         #todos los controles contra posicion de hero restan, porque se mueve al reves que la pantalla
         if m.mask.overlap(h.mask,(h.mapX - dx, h.mapY)) is not None:
             dx = 0
         if m.mask.overlap(h.mask,(h.mapX, h.mapY - dy)) is not None:
             dy = 0
+        
+        # chequea el que héroe no atraviese a los props
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None \
-              or h.mask.overlap(spr.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
+            if h.colisiona(spr,-dx,-dy):
                 if isinstance(spr,Salida):
                     World.setear_mapa(spr.dest,spr.link)
-                dx = 0
-            if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None \
-              or h.mask.overlap(spr.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
-                if isinstance(spr,Salida):
-                    World.setear_mapa(spr.dest,spr.link)
-                dy = 0
+                dx,dy = 0,0
+        
+        # chequea el que héroe no atraviese a los mobs
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-            if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
-                dx = 0
-            if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
-                dy = 0
-
+            if h.colisiona(spr,-dx,-dy):
+                dx,dy = 0,0
+        
+        #for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+        #    if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None \
+        #      or h.mask.overlap(spr.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
+        #        if isinstance(spr,Salida):
+        #            World.setear_mapa(spr.dest,spr.link)
+        #        dx = 0
+        #    if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None \
+        #      or h.mask.overlap(spr.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
+        #        if isinstance(spr,Salida):
+        #            World.setear_mapa(spr.dest,spr.link)
+        #        dy = 0
+        #for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+        #    if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
+        #        dx = 0
+        #    if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
+        #        dy = 0
+        #
+        
+        # congela la camara si el héroe se aproxima mucho a un limite horizontal
         if dx != 0:
             newPos = m.rect.x + dx
             if newPos > 0 or newPos < -(m.rect.w - C.ANCHO) or h.rect.x != h.centroX:
@@ -114,7 +129,8 @@ class Stage:
                     h.reubicar(-dx, 0)
                     h.rect.x -= dx
                 dx = 0
-
+        
+        # congela la camara si el héroe se aproxima mucho a un limite vertical
         if dy != 0:
             newPos = m.rect.y + dy
             if newPos > 0 or newPos < -(m.rect.h - C.ALTO) or h.rect.y != h.centroY:
@@ -122,7 +138,7 @@ class Stage:
                     h.reubicar(0, -dy)
                     h.rect.y -= dy
                 dy = 0
-
+        
         if dx != 0 or dy != 0:
             for spr in self.contents:
                 if spr != h:
@@ -163,13 +179,10 @@ class Stage:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
 
-    def detectar_colisiones(self,sprite):
-        pass
-    
     def render(self,fondo):
         for spr in self.contents:
             if isinstance(spr,Enemy):
-                spr.mover()
+                spr.mover(World.HERO)
 
         return self.contents.draw(fondo)
 
@@ -181,5 +194,5 @@ class Salida (_giftSprite):
         image = pygame.Surface((alto, ancho))
         image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
-        self.mask.fill()
+        #self.mask.fill()
         #self.image.set_colorkey((0,0,0))
