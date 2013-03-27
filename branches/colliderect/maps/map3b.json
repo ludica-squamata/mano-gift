@@ -1,0 +1,19 @@
+{
+    "capa_background":{
+        "fondo":"grafs/mapa_con_puerta_2.png",
+        "colisiones":"grafs/mapa_con_puerta_2_C.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {},
+        "refs":{}
+    },
+    "entradas":{"puerta":[1, 10]},
+    "salidas":{
+        "puerta":{
+            "rect":[0,320,15,32],
+            "dest":"map3a",
+            "link":"puerta"
+        }
+    }
+}

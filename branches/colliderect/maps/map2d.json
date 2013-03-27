@@ -1,0 +1,27 @@
+{
+    "capa_background":{
+        "fondo":"grafs/cadena_montanosa.png",
+        "colisiones":"grafs/cadena_montanosa_colisiones.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {},
+        "refs":{}
+    },
+    "entradas":{
+        "derecha":[25,5],
+        "arriba":[20,1]
+    },
+    "salidas":{
+        "derecha":{
+            "rect":[31,1,32,352],
+            "dest":"map2c",
+            "link":"izquierda"
+        },
+        "arriba":{
+            "rect":[1,0,960,32],
+            "dest":"map2a",
+            "link":"abajo"
+        }
+    }
+}

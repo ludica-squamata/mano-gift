@@ -1,0 +1,28 @@
+{
+    "capa_background":{
+        "fondo":"grafs/arboles_y_castillo.png",
+        "colisiones":"grafs/arboles_y_castillo_colisiones.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {},
+        "refs":{}
+    },
+    "entradas":{
+        "inicial":[16, 17],
+        "derecha":[26,30],
+        "abajo":[21,15]
+    },
+    "salidas":{
+        "derecha":{
+            "rect":[31,21,32,352],
+            "dest":"map2b",
+            "link":"izquierda"
+        },
+        "abajo":{
+            "rect":[0,31,1024,32],
+            "dest":"map2d",
+            "link":"arriba"
+        }
+    }
+}
