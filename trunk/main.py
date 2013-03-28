@@ -13,7 +13,7 @@ FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
 W.cargar_hero()
-W.setear_mapa('map2a', 'inicial')
+W.setear_mapa(r.abrir_json('config.json'), 'inicial')
 
 while True:
     FPS.tick(60)

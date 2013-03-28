@@ -35,4 +35,13 @@ class _giftSprite(sprite.DirtySprite):
         self.mapX = x
         self.mapY = y
         self.dirty = 1
+    
+    def colisiona(self, sprite, off_x = 0, off_y = 0):
+        rect = self.rect.copy()
+        rect.x += off_x
+        rect.y += off_y
+        
+        return rect.colliderect(sprite.rect)
+        
+    
 
