@@ -79,25 +79,25 @@ class Stage:
 
         dx *= h.velocidad
         dy *= h.velocidad
-        
+
         #todos los controles contra posicion de hero restan, porque se mueve al reves que la pantalla
         if m.mask.overlap(h.mask,(h.mapX - dx, h.mapY)) is not None:
             dx = 0
         if m.mask.overlap(h.mask,(h.mapX, h.mapY - dy)) is not None:
             dy = 0
-        
+
         # chequea el que héroe no atraviese a los props
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if h.colisiona(spr,-dx,-dy):
                 if isinstance(spr,Salida):
                     World.setear_mapa(spr.dest,spr.link)
                 dx,dy = 0,0
-        
+
         # chequea el que héroe no atraviese a los mobs
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if h.colisiona(spr,-dx,-dy):
                 dx,dy = 0,0
-        
+
         # congela la camara si el héroe se aproxima mucho a un limite horizontal
         if dx != 0:
             newPos = m.rect.x + dx
@@ -106,7 +106,7 @@ class Stage:
                     h.reubicar(-dx, 0)
                     h.rect.x -= dx
                 dx = 0
-        
+
         # congela la camara si el héroe se aproxima mucho a un limite vertical
         if dy != 0:
             newPos = m.rect.y + dy
@@ -115,7 +115,7 @@ class Stage:
                     h.reubicar(0, -dy)
                     h.rect.y -= dy
                 dy = 0
-        
+
         if dx != 0 or dy != 0:
             for spr in self.contents:
                 if spr != h:
@@ -159,7 +159,7 @@ class Stage:
     def render(self,fondo):
         for spr in self.contents:
             if isinstance(spr,Enemy):
-                spr.mover(World.HERO)
+                spr.mover()
 
         return self.contents.draw(fondo)
 
