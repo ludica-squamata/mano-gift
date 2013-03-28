@@ -1,6 +1,5 @@
 #global information
 from pygame import Color
-from mobs import PC
 from misc import Resources as r
 
 class Constants:
@@ -22,6 +21,7 @@ class World:
     MAPA_ACTUAL =''
     HERO =''
     def cargar_hero():
+        from mobs import PC
         World.HERO = PC('grafs/heroe_color4.png',World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
