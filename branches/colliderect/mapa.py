@@ -50,15 +50,10 @@ class Stage:
     def cargar_mobs(self):
      refs = self.data['capa_ground']['refs']
      mobs = self.data['capa_ground']['mobs']
-     map_cache = {}
-
-     for ref in refs:
-         if ref in mobs:
-             map_cache[ref] = r.cargar_imagen(refs[ref])
 
      for ref in mobs:
          for x,y in mobs[ref]:
-             mob = Enemy(map_cache[ref],self)
+             mob = Enemy(refs[ref],self)
              mob.ubicar(x*C.CUADRO,y*C.CUADRO)
              self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
@@ -102,24 +97,6 @@ class Stage:
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if h.colisiona(spr,-dx,-dy):
                 dx,dy = 0,0
-        
-        #for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-        #    if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None \
-        #      or h.mask.overlap(spr.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
-        #        if isinstance(spr,Salida):
-        #            World.setear_mapa(spr.dest,spr.link)
-        #        dx = 0
-        #    if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None \
-        #      or h.mask.overlap(spr.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
-        #        if isinstance(spr,Salida):
-        #            World.setear_mapa(spr.dest,spr.link)
-        #        dy = 0
-        #for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-        #    if spr.mask.overlap(h.mask,(spr.mapX - (h.mapX - dx), spr.mapY - h.mapY)) is not None:
-        #        dx = 0
-        #    if spr.mask.overlap(h.mask,(spr.mapX - h.mapX, spr.mapY - (h.mapY - dy))) is not None:
-        #        dy = 0
-        #
         
         # congela la camara si el héroe se aproxima mucho a un limite horizontal
         if dx != 0:
