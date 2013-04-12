@@ -6,11 +6,15 @@
     "capa_ground":{
         "props": {"casa":[[3,3]]},
         "mobs": {
-            "green":[[15,15]]
+            "red":[[13,13]],
+            "green":[[15,15]],
+            "blue":[[17,17]]
         },
         "refs":{
             "casa":"grafs/casa.png",
-            "green":"grafs/green4.png"}
+            "red":"grafs/red4.png",
+            "green":"grafs/green4.png",
+            "blue":"grafs/blue4.png"}
     },
     "entradas":{"inicial":[20, 20]},
     "salidas":{

@@ -53,7 +53,7 @@ class Stage:
 
      for ref in mobs:
          for x,y in mobs[ref]:
-             mob = Enemy(refs[ref],self)
+             mob = Enemy(ref,refs[ref],self,x*C.CUADRO,y*C.CUADRO)
              mob.ubicar(x*C.CUADRO,y*C.CUADRO)
              self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
