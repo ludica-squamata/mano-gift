@@ -1,0 +1,17 @@
+{
+    "green":{
+        "AI":null      
+    },
+    "red":{
+        "AI":{
+            "modo":"Patrulla",
+            "eje":"y",
+            "dist":50}
+    },
+    "blue":{
+        "AI":{
+            "modo":"Patrulla",
+            "eje":"x",
+            "dist":50}
+    }
+}
