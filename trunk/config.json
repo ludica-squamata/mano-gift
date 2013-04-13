@@ -1,1 +1,14 @@
-"map1"
+{
+    "mapa_inicial":"map1",
+    
+    "teclas":{
+        "arriba":273,
+        "abajo":274,
+        "derecha":275,
+        "izquierda":276,
+        
+        "accion":120,
+        "menu":13,
+        "salir":27
+    }
+}

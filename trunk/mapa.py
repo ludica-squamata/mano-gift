@@ -53,8 +53,7 @@ class Stage:
 
      for ref in mobs:
          for x,y in mobs[ref]:
-             mob = Enemy(ref,refs[ref],self,x*C.CUADRO,y*C.CUADRO)
-             mob.ubicar(x*C.CUADRO,y*C.CUADRO)
+             mob = Enemy(ref,refs[ref],self,x,y)
              self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
     def cargar_hero(self, hero, entrada = None):
@@ -70,7 +69,6 @@ class Stage:
         salidas = self.data['salidas']
         for salida in salidas:
             sld = Salida(salidas[salida])
-            sld.ubicar(sld.x*C.CUADRO,sld.y*C.CUADRO)
             self.contents.add(sld,layer=C.CAPA_GROUND_ITEMS)
 
     def mover(self,dx,dy):
@@ -171,5 +169,6 @@ class Salida (_giftSprite):
         image = pygame.Surface((alto, ancho))
         image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
+        self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
         #self.mask.fill()
         #self.image.set_colorkey((0,0,0))
