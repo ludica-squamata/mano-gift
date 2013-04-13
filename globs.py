@@ -1,6 +1,26 @@
 #global information
-from pygame import Color
+import pygame
 from misc import Resources as r
+
+class Teclas:
+    ARRIBA = pygame.K_UP
+    ABAJO = pygame.K_DOWN
+    IZQUIERDA= pygame.K_LEFT
+    DERECHA = pygame.K_RIGHT
+
+    ACCION = pygame.K_x
+    MENU = pygame.K_RETURN
+    SALIR = pygame.K_ESCAPE
+    
+    def asignar (self,data):
+        Teclas.ARRIBA = data['arriba']
+        Teclas.ABAJO = data['abajo']
+        Teclas.IZQUIERDA = data['izquierda']
+        Teclas.DERECHA = data['derecha']
+        
+        Teclas.ACCION = data['accion']
+        Teclas.MENU = data['menu']
+        Teclas.SALIR = data['salir']
 
 class Constants:
     CUADRO = 32
@@ -14,7 +34,9 @@ class Constants:
     CAPA_TOP_ITEMS = 4
     CAPA_TOP_MOBS = 5
 
-    COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
+    COLOR_COLISION = pygame.Color(255,0,255) #Fuchsia #FF00FF
+    
+    TECLAS = Teclas()
 
 class World:
     mapas = {}
