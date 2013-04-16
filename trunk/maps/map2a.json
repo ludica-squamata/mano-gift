@@ -1,7 +1,7 @@
 {
     "capa_background":{
-        "fondo":"grafs/fondos/arboles_y_castillo.png",
-        "colisiones":"grafs/colisones/arboles_y_castillo.png"
+        "fondo":"maps/fondos/arboles_y_castillo.png",
+        "colisiones":"maps/colisiones/arboles_y_castillo.png"
     },
     "capa_ground":{
         "props": {},

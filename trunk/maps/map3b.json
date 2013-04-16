@@ -1,7 +1,7 @@
 {
     "capa_background":{
-        "fondo":"grafs/fondos/mapa_con_puerta_2.png",
-        "colisiones":"grafs/colisones/mapa_con_puerta_2.png"
+        "fondo":"maps/fondos/mapa_con_puerta_2.png",
+        "colisiones":"maps/colisiones/mapa_con_puerta_2.png"
     },
     "capa_ground":{
         "props": {},

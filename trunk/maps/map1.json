@@ -1,7 +1,7 @@
 {
     "capa_background":{
         "fondo":"maps/fondos/mapa_1.png",
-        "colisiones":"maps/colisones/mapa_1.png"
+        "colisiones":"maps/colisiones/mapa_1.png"
     },
     "capa_ground":{
         "props": {"casa":[[3,3]]},

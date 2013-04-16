@@ -132,7 +132,7 @@ class Enemy (Mob):
         
         for layer in layers:
             for spr in self.stage.contents.get_sprites_from_layer(layer):
-                if self != spr:
+                if spr != self:
                     colisiona = self.colisiona(spr,dx,dy)
         
         newPos = self.mapX + dx
