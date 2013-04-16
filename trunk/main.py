@@ -24,8 +24,7 @@ while True:
             sys.exit()
 
         elif event.type == pygame.KEYDOWN:
-            dx = 0
-            dy = 0
+            dx,dy = 0,0
             if event.key == C.TECLAS.IZQUIERDA: 
                 W.HERO.cambiar_direccion('derecha')
                 dx +=1
@@ -43,7 +42,7 @@ while True:
                 dy -= 1
             
             elif event.key == C.TECLAS.ACCION:
-                print('Presionada la tecla de acción, oh yeah!')
+                W.HERO.atacar()
             
             elif event.key == C.TECLAS.MENU: # debug
                 os.system(['clear','cls'][os.name == 'nt'])

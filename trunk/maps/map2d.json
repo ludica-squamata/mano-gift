@@ -1,7 +1,7 @@
 {
     "capa_background":{
-        "fondo":"grafs/cadena_montanosa.png",
-        "colisiones":"grafs/cadena_montanosa_colisiones.png"
+        "fondo":"grafs/fondos/cadena_montanosa.png",
+        "colisiones":"grafs/colisones/cadena_montanosa.png"
     },
     "capa_ground":{
         "props": {},

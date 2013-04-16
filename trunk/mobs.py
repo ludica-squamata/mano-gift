@@ -33,6 +33,22 @@ class PC (Mob):
         self.mapX += dx
         self.mapY += dy
         self.dirty = 1
+    
+    def atacar(self):
+        rango = 15
+        for mob in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):                    
+            if self.direccion == 'arriba':
+                if self.colisiona(mob,0,-1*rango):
+                    mob.morir()
+            elif self.direccion == 'abajo':
+                if self.colisiona(mob,0,+1*rango):
+                    mob.morir()
+            elif self.direccion == 'derecha':
+                if self.colisiona(mob,+1*rango,0):
+                    mob.morir()
+            elif self.direccion == 'izquierda':
+                if self.colisiona(mob,-1*rango,0):
+                    mob.morir()
 
 class Enemy (Mob):
     ticks = 0
@@ -54,7 +70,7 @@ class Enemy (Mob):
         self.velocidad = data[key]['velocidad']
         self.modo_colision = data[key]['modo_colision']
         self.start_pos = x*C.CUADRO,y*C.CUADRO
-        self.ubicar(*self.start_pos)
+        self.reubicar(*self.start_pos)
 
     def mover(self):
         if self.AI == None:
@@ -98,7 +114,7 @@ class Enemy (Mob):
                         self.direccion_contraria()
                     
                 self._mover()
-                    
+                                
     def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
@@ -107,16 +123,35 @@ class Enemy (Mob):
                   C.CAPA_HERO]
         
         colisiona = False
+        
         if self.stage.mapa.mask.overlap(self.mask,(self.mapX + dx, self.mapY)) is not None:
             colisiona = True
+        
         if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
             colisiona = True
+        
         for layer in layers:
             for spr in self.stage.contents.get_sprites_from_layer(layer):
                 if self != spr:
-                    if self.colisiona(spr,dx,dy):
-                        #este comportamiento podría variar
-                        colisiona = True
+                    colisiona = self.colisiona(spr,dx,dy)
+        
+        newPos = self.mapX + dx
+
+        if newPos < 0 or newPos > self.stage.mapa.rect.w:
+            #if C.ANCHO > self.rect.x - dx  >=0:
+                #self.reubicar(-dx, 0)
+                #self.rect.x -= dx
+            colisiona = True
+            dx *= -1
+        
+        newPos = self.mapY + dy
+        #print("NewPos Y: "+str(newPos))
+        if newPos < 0 or newPos > self.stage.mapa.rect.h:
+            #if C.ALTO > self.rect.y - dy  >=0:
+                #self.reubicar(0, -dy)
+                #self.rect.y -= dy
+            colisiona = True
+            dy *= -1
         
         if colisiona == True:
             if self.modo_colision == 'aleatorio':
@@ -125,6 +160,8 @@ class Enemy (Mob):
             elif self.modo_colision == 'rebote':
                 self.direccion_contraria()
         
+            x,y = self.direcciones[self.direccion]
+            dx,dy = x*self.velocidad,y*self.velocidad
         self.reubicar(dx, dy)
 
     def direccion_aleatoria(self,direcciones):
@@ -142,6 +179,9 @@ class Enemy (Mob):
         
         elif self.direccion == 'derecha':
              self.cambiar_direccion('izquierda')
+    
+    def morir(self):
+        self.stage.contents.remove(self)
     
     
 class NPC (Mob):

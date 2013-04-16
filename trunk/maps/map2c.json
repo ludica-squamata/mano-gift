@@ -1,7 +1,7 @@
 {
     "capa_background":{
-        "fondo":"grafs/claro_de_montana.png",
-        "colisiones":"grafs/claro_de_montana_colisiones.png"
+        "fondo":"grafs/fondos/claro_de_montana.png",
+        "colisiones":"grafs/colisones/claro_de_montana.png"
     },
     "capa_ground":{
         "props": {},

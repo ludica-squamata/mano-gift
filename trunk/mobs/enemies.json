@@ -24,5 +24,11 @@
         "velocidad":1,
         "modo_colision":"rebote",
         "direccion":"izquierda"
+    },
+    "yellow":{
+        "AI":null,
+        "velocidad":1,
+        "modo_colision":"aleatorio",
+        "direccion":"arriba"
     }
 }

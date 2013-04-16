@@ -62,6 +62,7 @@ class Stage:
             if entrada in self.data['entradas']:
                 x,y = self.data['entradas'][entrada]
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
+        hero.stage = self
         self.contents.add(hero, layer=C.CAPA_HERO)
         self.centrar_camara()
 

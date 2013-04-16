@@ -9,7 +9,7 @@ class Util:
 class Resources:
     # aqui iria la carga de imagenes, sonidos, etc.
     def cargar_imagen(ruta):
-        ar = image.load(ruta).convert_alpha()
+        ar = image.load('grafs/'+ruta).convert_alpha()
         return ar
     
     def split_spritesheet(ruta):
