@@ -1,7 +1,7 @@
 {
     "capa_background":{
         "fondo":"maps/fondos/laberinto.png",
-        "colisiones":"maps/colisones/laberinto.png"
+        "colisiones":"maps/colisiones/laberinto.png"
     },
     "capa_ground":{
         "props": {},
