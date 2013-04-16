@@ -1,0 +1,13 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/laberinto.png",
+        "colisiones":"maps/colisones/laberinto.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {"yellow":[[1,14]]},
+        "refs":{"yellow":"mobs/yellow4.png"}
+    },
+    "entradas":{},
+    "salidas":{}
+}
