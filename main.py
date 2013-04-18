@@ -2,15 +2,15 @@ import pygame,sys,os
 from mapa import Stage,Prop
 from mobs import PC
 from misc import Resources as r
-from globs import Constants as C, World as W
+from globs import Constants as C, World as W, fondo, pantalla
 
 configs = r.abrir_json('config.json')
 
 pygame.init()
 
-tamanio = C.ALTO, C.ANCHO
-pantalla = pygame.display # screen
-fondo = pantalla.set_mode(tamanio) # surface
+#tamanio = C.ALTO, C.ANCHO
+#pantalla = pygame.display # screen
+#fondo = pantalla.set_mode(tamanio) # surface
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
@@ -42,7 +42,7 @@ while True:
                 dy -= 1
             
             elif event.key == C.TECLAS.ACCION:
-                W.HERO.atacar()
+                W.HERO.accion()
             
             elif event.key == C.TECLAS.MENU: # debug
                 os.system(['clear','cls'][os.name == 'nt'])
@@ -55,10 +55,10 @@ while True:
                 #    print(W.HERO.mask.overlap(x.mask,(x.mapX - W.HERO.mapX, x.mapY - (W.HERO.mapY - dy))))
                 #    print(x.rect, x.mask.get_size())
                 #
-                #print (W.HERO.rect)
-                #print ("x:",W.HERO.mapX, "y:",W.HERO.mapY,'\n')
-                #print ("Gx:",str(int(W.HERO.mapX/32)), "Gy:",str(int(W.HERO.mapY/32)),'\n')
-                #print("Colisión:", str(W.MAPA_ACTUAL.mapa.mask.overlap(W.HERO.mask,(W.HERO.mapX,W.HERO.mapY))))
+                print (W.HERO.rect)
+                print ("map_x:",W.HERO.mapX, "map_y:",W.HERO.mapY,'\n')
+                print ("Gx:",str(int(W.HERO.mapX/32)), "Gy:",str(int(W.HERO.mapY/32)),'\n')
+                
             
             elif event.key == C.TECLAS.SALIR:
                 pygame.quit()

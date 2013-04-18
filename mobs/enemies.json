@@ -2,7 +2,7 @@
     "green":{
         "AI":null,
         "velocidad":1,
-        "modo_colision":"aleatorio",
+        "modo_colision":"random",
         "direccion":"abajo"
     },
     "red":{
@@ -12,7 +12,7 @@
             "dist":50
         },
         "velocidad":1,
-        "modo_colision":"rebote",
+        "modo_colision":"contraria",
         "direccion":"abajo"
     },
     "blue":{
@@ -22,13 +22,13 @@
             "dist":50
         },
         "velocidad":1,
-        "modo_colision":"rebote",
+        "modo_colision":"contraria",
         "direccion":"izquierda"
     },
     "yellow":{
         "AI":null,
         "velocidad":1,
-        "modo_colision":"aleatorio",
+        "modo_colision":"random",
         "direccion":"arriba"
     }
 }

@@ -53,3 +53,7 @@ class World:
         World.MAPA_ACTUAL = World.mapas[mapa]
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
         World.MAPA_ACTUAL.mapa.dirty=1
+
+tamanio = Constants.ALTO, Constants.ANCHO
+pantalla = pygame.display # screen
+fondo = pantalla.set_mode(tamanio) # surface

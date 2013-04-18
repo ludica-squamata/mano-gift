@@ -3,7 +3,7 @@ from pygame import sprite
 from misc import Resources as r
 from globs import Constants as C, World
 from base import _giftSprite
-from mobs import Enemy
+from mobs import NPC,Enemy
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
@@ -29,7 +29,8 @@ class Stage:
         self.contents = sprite.LayeredDirty()
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props()
-        self.cargar_mobs()
+        self.cargar_mobs(Enemy)
+        self.cargar_mobs(NPC)
         self.cargar_salidas()
 
     def cargar_props (self):
@@ -47,14 +48,20 @@ class Stage:
                 prop.ubicar(x*C.CUADRO,y*C.CUADRO)
                 self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
 
-    def cargar_mobs(self):
-     refs = self.data['capa_ground']['refs']
-     mobs = self.data['capa_ground']['mobs']
-
-     for ref in mobs:
-         for x,y in mobs[ref]:
-             mob = Enemy(ref,refs[ref],self,x,y)
-             self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
+    def cargar_mobs(self,clase):
+        if clase == Enemy:
+            key = 'enemies'
+        elif clase == NPC:
+            key = 'npcs'
+        
+        imgs = self.data['capa_ground']['refs']
+        pos = self.data['capa_ground']['mobs'][key]
+        data = r.abrir_json('mobs/'+key+'.json')
+        
+        for ref in pos:
+            for x,y in pos[ref]:
+                mob = clase(imgs[ref],self,x,y,data[ref])
+                self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
@@ -62,9 +69,10 @@ class Stage:
             if entrada in self.data['entradas']:
                 x,y = self.data['entradas'][entrada]
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
-        hero.stage = self
-        self.contents.add(hero, layer=C.CAPA_HERO)
-        self.centrar_camara()
+                
+                hero.stage = self
+                self.contents.add(hero, layer=C.CAPA_HERO)
+                self.centrar_camara()
 
     def cargar_salidas(self):
         salidas = self.data['salidas']
@@ -128,8 +136,8 @@ class Stage:
     def centrar_camara(self):
         hero = self.hero
         mapa = self.mapa
-        hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO
-        hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO
+        hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO #256
+        hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO #256
         hero.centroX, hero.centroY = hero.rect.topleft
 
         newPos = hero.rect.x - hero.mapX
@@ -157,7 +165,7 @@ class Stage:
 
     def render(self,fondo):
         for spr in self.contents:
-            if isinstance(spr,Enemy):
+            if isinstance(spr,(NPC,Enemy)):
                 spr.mover()
 
         return self.contents.draw(fondo)
