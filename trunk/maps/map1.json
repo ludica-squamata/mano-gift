@@ -6,15 +6,20 @@
     "capa_ground":{
         "props": {"casa":[[3,3]]},
         "mobs": {
-            "red":[[13,13]],
-            "green":[[15,15]],
-            "blue":[[17,17]]
+            "enemies":{
+                "red":[[13,13]],
+                "green":[[15,15]],
+                "blue":[[17,17]]},
+            "npcs":{
+                "commoner":[[10,10]]
+            }
         },
         "refs":{
             "casa":"props/casa.png",
             "red":"mobs/red4.png",
             "green":"mobs/green4.png",
-            "blue":"mobs/blue4.png"}
+            "blue":"mobs/blue4.png",
+            "commoner":"mobs/commoner4.png"}
     },
     "entradas":{"inicial":[20, 20]},
     "salidas":{

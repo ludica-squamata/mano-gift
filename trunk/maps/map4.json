@@ -5,7 +5,11 @@
     },
     "capa_ground":{
         "props": {},
-        "mobs": {"yellow":[[1,14]]},
+        "mobs": {
+            "enemies":{
+                "yellow":[[1,14]]},
+            "npcs":{}
+        },
         "refs":{"yellow":"mobs/yellow4.png"}
     },
     "entradas":{},

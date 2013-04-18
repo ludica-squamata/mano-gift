@@ -5,12 +5,15 @@
     },
     "capa_ground":{
         "props": {},
-        "mobs": {},
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        },
         "refs":{}
     },
     "entradas":{
         "inicial":[16, 17],
-        "derecha":[26,30],
+        "derecha":[21,22],
         "abajo":[21,15]
     },
     "salidas":{

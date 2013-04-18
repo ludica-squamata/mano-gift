@@ -5,7 +5,10 @@
     },
     "capa_ground":{
         "props": {},
-        "mobs": {},
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        },
         "refs":{}
     },
     "entradas":{

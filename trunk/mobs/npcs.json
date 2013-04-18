@@ -1,0 +1,8 @@
+{
+    "commoner":{
+        "AI":null,
+        "velocidad":1,
+        "modo_colision":"aleatorio",
+        "direccion":"abajo"
+    }
+}

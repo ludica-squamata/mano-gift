@@ -3,12 +3,20 @@ from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
 from globs import World as W, Constants as C
+from UI import Dialog
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
     velocidad = 4
     images = {} #incluye todas las imagenes del mob, arriba abajo izquierda y derecha
-    def __init__(self, ruta_img,stage):
+    direcciones = {'abajo':[0,1],'izquierda':[1,0],'arriba':[0,-1],'derecha':[-1,0],'ninguna':[0,0]}
+    direccion = 'abajo'
+    ticks,mov_ticks = 0,0
+    AI = None # determina cómo se va a mover el mob
+    modo_colision = None# determina qué direccion tomará el mob al chocar con algo
+    start_pos = 0,0
+    
+    def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         keys = 'abajo,derecha,arriba,izquierda'.split(',')
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
@@ -16,62 +24,43 @@ class Mob (_giftSprite):
             self.images[key] = spritesheet[keys.index(key)]
         self.image = self.images[self.direccion]
         super().__init__(self.image,stage)
-
-    def cambiar_direccion(self,direccion):
-        self.image = self.images[direccion]
-        self.direccion = direccion
-
-class PC (Mob):
-    centroX = 0
-    centroY = 0
-    def __init__(self,ruta_imgs,stage):
-        self.direccion = 'abajo'
-        super().__init__(ruta_imgs,stage)
         
-    def reubicar(self, dx, dy):
-        '''mueve el sprite una cantidad de cuadros'''
-        self.mapX += dx
-        self.mapY += dy
-        self.dirty = 1
-    
-    def atacar(self):
-        rango = 15
-        for mob in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):                    
+        if data != None:
+            self.direccion = data['direccion']
+            self.AI = data['AI']
+            self.velocidad = data['velocidad']
+            self.modo_colision = data['modo_colision']
+        
+        if x != None and y != None:
+            self.start_pos = x*C.CUADRO,y*C.CUADRO
+            self.reubicar(*self.start_pos)
+
+    def cambiar_direccion(self, directo = None, modo = 'usuario'):
+        direccion = 'ninguna'
+        
+        if modo == 'random':
+            direccion = choice(list(self.direcciones.keys()))
+        
+        elif modo == 'contraria':
             if self.direccion == 'arriba':
-                if self.colisiona(mob,0,-1*rango):
-                    mob.morir()
+                direccion = 'abajo'
+            
             elif self.direccion == 'abajo':
-                if self.colisiona(mob,0,+1*rango):
-                    mob.morir()
-            elif self.direccion == 'derecha':
-                if self.colisiona(mob,+1*rango,0):
-                    mob.morir()
+                direccion = 'arriba'
+            
             elif self.direccion == 'izquierda':
-                if self.colisiona(mob,-1*rango,0):
-                    mob.morir()
-
-class Enemy (Mob):
-    ticks = 0
-    mov_ticks = 0
-    AI = None # determina cómo se va a mover el mob
-    modo_colision = None# determina qué direccion tomará el mob al chocar con algo
-    start_pos = 0,0 
-    direcciones = {
-        'abajo':[0,1],
-        'izquierda':[1,0],
-        'arriba':[0,-1],
-        'derecha':[-1,0]}
-
-    def __init__(self,key,ruta_imgs,stage,x,y):
-        data = r.abrir_json('mobs/enemies.json')#no deberia abrir toda la base por un solo mob
-        self.direccion = data[key]['direccion']
-        super().__init__(ruta_imgs,stage)
-        self.AI = data[key]['AI']
-        self.velocidad = data[key]['velocidad']
-        self.modo_colision = data[key]['modo_colision']
-        self.start_pos = x*C.CUADRO,y*C.CUADRO
-        self.reubicar(*self.start_pos)
-
+                direccion = 'derecha'
+            
+            elif self.direccion == 'derecha':
+                direccion = 'izquierda'
+        
+        elif modo == 'usuario':
+            direccion = directo
+         
+        if direccion != 'ninguna':
+            self.image = self.images[direccion]
+        self.direccion = direccion
+    
     def mover(self):
         if self.AI == None:
             self.ticks += 1
@@ -81,7 +70,7 @@ class Enemy (Mob):
                 self.mov_ticks = 0
                 pos = 10
                 if randint(1,101) <= pos:
-                    self.direccion_aleatoria(self.direcciones)
+                    self.cambiar_direccion(self,modo='random')
         
         else:
             START = self.start_pos
@@ -97,30 +86,22 @@ class Enemy (Mob):
                     pA = START[0]-round(dist/2)
                     pB = START[0]+round(dist/2)
 
-                    if CURR_X - self.velocidad == pA:
-                        self.direccion_contraria()
-
-                    if CURR_X + self.velocidad == pB:
-                        self.direccion_contraria()
+                    if CURR_X - self.velocidad == pA or CURR_X + self.velocidad == pB:
+                        self.cambiar_direccion(self,modo=self.modo_colision)
 
                 elif eje == 'y':
                     pA = START[1]-round(dist/2)
                     pB = START[1]+round(dist/2)
                     
-                    if CURR_Y - self.velocidad == pA:
-                        self.direccion_contraria()
-
-                    if CURR_Y + self.velocidad == pB:
-                        self.direccion_contraria()
+                    if CURR_Y - self.velocidad == pA or CURR_Y + self.velocidad == pB:
+                        self.cambiar_direccion(self,modo=self.modo_colision)
                     
                 self._mover()
                                 
     def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
-        layers = [C.CAPA_GROUND_ITEMS,
-                  C.CAPA_GROUND_MOBS,
-                  C.CAPA_HERO]
+        layers = [C.CAPA_GROUND_ITEMS,C.CAPA_GROUND_MOBS,C.CAPA_HERO]
         
         colisiona = False
         
@@ -131,62 +112,101 @@ class Enemy (Mob):
             colisiona = True
         
         for layer in layers:
-            for spr in self.stage.contents.get_sprites_from_layer(layer):
+            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+                    colisiona = self.colisiona(spr,dx,dy)
+        for layer in layers:
+            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if spr != self:
+                    colisiona = self.colisiona(spr,dx,dy)
+        for layer in layers:
+            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
                     colisiona = self.colisiona(spr,dx,dy)
         
         newPos = self.mapX + dx
-
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
-            #if C.ANCHO > self.rect.x - dx  >=0:
-                #self.reubicar(-dx, 0)
-                #self.rect.x -= dx
-            colisiona = True
-            dx *= -1
+            if C.ANCHO > self.rect.x - dx  >=0:
+                self.reubicar(-dx, 0)
+                self.rect.x -= dx
+                colisiona = True
+                #dx *= -1
         
         newPos = self.mapY + dy
-        #print("NewPos Y: "+str(newPos))
         if newPos < 0 or newPos > self.stage.mapa.rect.h:
-            #if C.ALTO > self.rect.y - dy  >=0:
-                #self.reubicar(0, -dy)
-                #self.rect.y -= dy
-            colisiona = True
-            dy *= -1
+            if C.ALTO > self.rect.y - dy  >=0:
+                self.reubicar(0, -dy)
+                self.rect.y -= dy
+                colisiona = True
+                #dy *= -1
         
         if colisiona == True:
-            if self.modo_colision == 'aleatorio':
-                self.direccion_aleatoria (self.direcciones)
-            
-            elif self.modo_colision == 'rebote':
-                self.direccion_contraria()
+            self.cambiar_direccion(self,modo=self.modo_colision)
         
             x,y = self.direcciones[self.direccion]
             dx,dy = x*self.velocidad,y*self.velocidad
+        
         self.reubicar(dx, dy)
 
-    def direccion_aleatoria(self,direcciones):
-        self.cambiar_direccion (choice(list(direcciones.keys())))
+class PC (Mob):
+    centroX = 0
+    centroY = 0
+    def __init__(self,ruta_imgs,stage):
+        self.direccion = 'abajo'
+        super().__init__(ruta_imgs,stage)
+        
+    def reubicar(self, dx, dy):
+        '''mueve el sprite una cantidad de cuadros'''
+        self.mapX += dx
+        self.mapY += dy
+        self.dirty = 1
     
-    def direccion_contraria (self):
-        if self.direccion == 'arriba':
-             self.cambiar_direccion('abajo')
+    def accion(self):
+        actuar = False
+        rango = 15
+        for mob in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):                    
+            if self.direccion == 'arriba':
+                if self.colisiona(mob,0,-1*rango):
+                    actuar = True
+                    objetivo = mob
+            elif self.direccion == 'abajo':
+                if self.colisiona(mob,0,+1*rango):
+                    actuar = True
+                    objetivo = mob
+            elif self.direccion == 'derecha':
+                if self.colisiona(mob,+1*rango,0):
+                    actuar = True
+                    objetivo = mob
+            elif self.direccion == 'izquierda':
+                if self.colisiona(mob,-1*rango,0):
+                    actuar = True
+                    objetivo = mob
+            
+        if actuar == True:
+            if isinstance(objetivo,Enemy):
+                objetivo.morir()
         
-        elif self.direccion == 'abajo':
-             self.cambiar_direccion('arriba')
-        
-        elif self.direccion == 'izquierda':
-             self.cambiar_direccion('derecha')
-        
-        elif self.direccion == 'derecha':
-             self.cambiar_direccion('izquierda')
+            elif isinstance(objetivo,NPC):
+                objetivo.interactuar()
+    
+    def atacar(self):
+        pass
+
+class NPC (Mob):
+    def __init__(self,ruta_img,stage,x,y,data):
+        super().__init__(ruta_img,stage,x,y,data)
+    
+    def interactuar(self):
+        texto = Dialog('hola, heroe!')
+        texto.show()
+        #print(texto.texto)
+
+class Enemy (Mob):
+    def __init__(self,ruta_img,stage,x,y,data):
+        super().__init__(ruta_img,stage,x,y,data)
     
     def morir(self):
         self.stage.contents.remove(self)
-    
-    
-class NPC (Mob):
-    pass
-
+        print('Mob eliminado!')
+  
 class Inventory(object):
     # la mochila
     pass
