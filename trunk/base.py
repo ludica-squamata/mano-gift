@@ -7,6 +7,7 @@ class _giftSprite(sprite.DirtySprite):
     #mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
+    nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     def __init__(self, imagen, stage = '', x = 0, y = 0):
         super().__init__()
         if isinstance(imagen, str):
@@ -37,11 +38,12 @@ class _giftSprite(sprite.DirtySprite):
         self.dirty = 1
     
     def colisiona(self, sprite, off_x = 0, off_y = 0):
-        rect = self.rect.copy()
-        rect.x += off_x
-        rect.y += off_y
-        
-        return rect.colliderect(sprite.rect)
+        if self.nombre != sprite.nombre:
+            rect = self.rect.copy()
+            rect.x += off_x
+            rect.y += off_y
+            
+            return rect.colliderect(sprite.rect)
         
     
 

@@ -33,6 +33,7 @@ class Constants:
     CAPA_HERO = 3
     CAPA_TOP_ITEMS = 4
     CAPA_TOP_MOBS = 5
+    CAPA_OVERLAYS = 6
 
     COLOR_COLISION = pygame.Color(255,0,255) #Fuchsia #FF00FF
     
@@ -44,7 +45,7 @@ class World:
     HERO =''
     def cargar_hero():
         from mobs import PC
-        World.HERO = PC('mobs/heroe_color4.png',World.MAPA_ACTUAL)
+        World.HERO = PC('heroe','mobs/heroe_color4.png',World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
@@ -54,6 +55,3 @@ class World:
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
         World.MAPA_ACTUAL.mapa.dirty=1
 
-tamanio = Constants.ALTO, Constants.ANCHO
-pantalla = pygame.display # screen
-fondo = pantalla.set_mode(tamanio) # surface
