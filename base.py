@@ -35,15 +35,22 @@ class _giftSprite(sprite.DirtySprite):
             raise ValueError('Coordenadas fuera de rango')
         self.mapX = x
         self.mapY = y
+        self.rect.move_ip(x,y)
         self.dirty = 1
     
     def colisiona(self, sprite, off_x = 0, off_y = 0):
         if self.nombre != sprite.nombre:
-            rect = self.rect.copy()
-            rect.x += off_x
-            rect.y += off_y
+            rectA = self.mask.get_bounding_rects()[0]
+            rectA.x = self.mapX+off_x
+            rectA.y = self.mapY+off_y
             
-            return rect.colliderect(sprite.rect)
+            rectB = sprite.mask.get_bounding_rects()[0]
+            rectB.x = sprite.mapX
+            rectB.y = sprite.mapY
+            
+            #if rectA.colliderect(rectB) == 1:
+            #    print(self.nombre+' colisiona con '+sprite.nombre)
+            return rectA.colliderect(rectB)
         
     
 
