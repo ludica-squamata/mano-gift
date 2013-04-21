@@ -17,8 +17,7 @@ class Stage:
     contents = None
     hero = None
     mapa = None
-    data = {}
-
+    data = {}    
     def __init__(self, data):
         self.data = data
         mapa = sprite.DirtySprite()
@@ -32,7 +31,7 @@ class Stage:
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_salidas()
-
+        
     def cargar_props (self):
         refs = self.data['capa_ground']['refs']
         props = self.data['capa_ground']['props']
@@ -60,7 +59,7 @@ class Stage:
         
         for ref in pos:
             for x,y in pos[ref]:
-                mob = clase(imgs[ref],self,x,y,data[ref])
+                mob = clase(ref,imgs[ref],self,x,y,data[ref])
                 self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
     def cargar_hero(self, hero, entrada = None):
@@ -71,7 +70,8 @@ class Stage:
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
                 
                 hero.stage = self
-                self.contents.add(hero, layer=C.CAPA_HERO)
+                #hero.nombre = 'heroe'
+                self.contents.add(hero,layer=C.CAPA_HERO)
                 self.centrar_camara()
 
     def cargar_salidas(self):

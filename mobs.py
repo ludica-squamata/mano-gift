@@ -33,7 +33,7 @@ class Mob (_giftSprite):
         
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
-            self.reubicar(*self.start_pos)
+            self.ubicar(*self.start_pos)
 
     def cambiar_direccion(self, directo = None, modo = 'usuario'):
         direccion = 'ninguna'
@@ -86,15 +86,15 @@ class Mob (_giftSprite):
                     pA = START[0]-round(dist/2)
                     pB = START[0]+round(dist/2)
 
-                    if CURR_X - self.velocidad == pA or CURR_X + self.velocidad == pB:
-                        self.cambiar_direccion(self,modo=self.modo_colision)
+                    if CURR_X - self.velocidad <= pA or CURR_X + self.velocidad >= pB:
+                        self.cambiar_direccion(self, modo=self.modo_colision)
 
                 elif eje == 'y':
                     pA = START[1]-round(dist/2)
                     pB = START[1]+round(dist/2)
                     
-                    if CURR_Y - self.velocidad == pA or CURR_Y + self.velocidad == pB:
-                        self.cambiar_direccion(self,modo=self.modo_colision)
+                    if CURR_Y - self.velocidad <= pA or CURR_Y + self.velocidad >= pB:
+                        self.cambiar_direccion(self, modo=self.modo_colision)
                     
                 self._mover()
                                 
@@ -103,42 +103,47 @@ class Mob (_giftSprite):
         dx,dy = x*self.velocidad,y*self.velocidad
         layers = [C.CAPA_GROUND_ITEMS,C.CAPA_GROUND_MOBS,C.CAPA_HERO]
         
-        colisiona = False
+        col_bordes = False #colision contra los bordes de la pantalla
+        col_mobs = False #colision contra otros mobs
+        col_heroe = False #colision contra el héroe
+        col_items = False # colision contra los props
+        col_mapa = False # colision contra las cajas de colision del propio mapa
         
         if self.stage.mapa.mask.overlap(self.mask,(self.mapX + dx, self.mapY)) is not None:
-            colisiona = True
+            col_mapa = True
+            #print(self.nombre+' colisiona con el mapa en X')
         
         if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
-            colisiona = True
+            col_mapa = True
+            #print(self.nombre+' colisiona con el mapa en Y')
         
-        for layer in layers:
-            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-                    colisiona = self.colisiona(spr,dx,dy)
-        for layer in layers:
-            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                if spr != self:
-                    colisiona = self.colisiona(spr,dx,dy)
-        for layer in layers:
-            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
-                    colisiona = self.colisiona(spr,dx,dy)
+        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            if self.colisiona(spr,dx,dy) == True:
+                col_items = True
+                #print(self.nombre+' colisiona con '+str(spr.nombre))
+                
+        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+            if self.colisiona(spr,dx,dy) == True:
+                col_mobs = True
+                #print(self.nombre+' colisiona con '+str(spr.nombre))
+                
+        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
+            if self.colisiona(spr,dx,dy) == True:
+                col_heroe = True
+                #print(self.nombre+' colisiona con '+str(spr.nombre))
         
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
             if C.ANCHO > self.rect.x - dx  >=0:
-                self.reubicar(-dx, 0)
-                self.rect.x -= dx
-                colisiona = True
-                #dx *= -1
+                col_bordes = True
         
         newPos = self.mapY + dy
         if newPos < 0 or newPos > self.stage.mapa.rect.h:
             if C.ALTO > self.rect.y - dy  >=0:
-                self.reubicar(0, -dy)
-                self.rect.y -= dy
-                colisiona = True
-                #dy *= -1
+                col_bordes = True
         
-        if colisiona == True:
+        colisiones = [col_bordes,col_mobs,col_items,col_mapa,col_heroe]
+        if any(colisiones):
             self.cambiar_direccion(self,modo=self.modo_colision)
         
             x,y = self.direcciones[self.direccion]
@@ -149,9 +154,10 @@ class Mob (_giftSprite):
 class PC (Mob):
     centroX = 0
     centroY = 0
-    def __init__(self,ruta_imgs,stage):
+    def __init__(self,nombre,ruta_imgs,stage):
         self.direccion = 'abajo'
         super().__init__(ruta_imgs,stage)
+        self.nombre = nombre
         
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -191,21 +197,22 @@ class PC (Mob):
         pass
 
 class NPC (Mob):
-    def __init__(self,ruta_img,stage,x,y,data):
+    def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
+        self.nombre = nombre
     
     def interactuar(self):
         texto = Dialog('hola, heroe!')
-        texto.show()
-        #print(texto.texto)
+        self.stage.contents.add(texto, layer=texto.layer)
 
 class Enemy (Mob):
-    def __init__(self,ruta_img,stage,x,y,data):
+    def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
+        self.nombre = nombre
     
     def morir(self):
         self.stage.contents.remove(self)
-        print('Mob eliminado!')
+        print('Mob '+self.nombre+' eliminado!')
   
 class Inventory(object):
     # la mochila

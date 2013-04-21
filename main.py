@@ -2,15 +2,15 @@ import pygame,sys,os
 from mapa import Stage,Prop
 from mobs import PC
 from misc import Resources as r
-from globs import Constants as C, World as W, fondo, pantalla
+from globs import Constants as C, World as W
 
 configs = r.abrir_json('config.json')
 
 pygame.init()
 
-#tamanio = C.ALTO, C.ANCHO
-#pantalla = pygame.display # screen
-#fondo = pantalla.set_mode(tamanio) # surface
+tamanio = C.ALTO, C.ANCHO
+pantalla = pygame.display # screen
+fondo = pantalla.set_mode(tamanio) # surface
 FPS = pygame.time.Clock()
 pygame.key.set_repeat(30,15)
 
