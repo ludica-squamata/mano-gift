@@ -1,4 +1,4 @@
-from pygame import sprite,mask
+from pygame import sprite,mask,Surface
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
@@ -26,7 +26,7 @@ class Mob (_giftSprite):
         super().__init__(self.image,stage)
         
         if data != None:
-            self.direccion = data['direccion']
+            self.cambiar_direccion(directo=data['direccion'])
             self.AI = data['AI']
             self.velocidad = data['velocidad']
             self.modo_colision = data['modo_colision']
@@ -39,7 +39,9 @@ class Mob (_giftSprite):
         direccion = 'ninguna'
         
         if modo == 'random':
-            direccion = choice(list(self.direcciones.keys()))
+            lista = list(self.direcciones.keys())
+            lista.remove(self.direccion)
+            direccion = choice(lista)
         
         elif modo == 'contraria':
             if self.direccion == 'arriba':
@@ -54,11 +56,12 @@ class Mob (_giftSprite):
             elif self.direccion == 'derecha':
                 direccion = 'izquierda'
         
-        elif modo == 'usuario':
+        elif modo == 'usuario' and directo != None:
             direccion = directo
          
         if direccion != 'ninguna':
             self.image = self.images[direccion]
+            self.mask = mask.from_surface(self.image,1)
         self.direccion = direccion
     
     def mover(self):
@@ -136,11 +139,13 @@ class Mob (_giftSprite):
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
             if C.ANCHO > self.rect.x - dx  >=0:
                 col_bordes = True
+                #print(self.nombre+' colisiona con borde horizontal')
         
         newPos = self.mapY + dy
         if newPos < 0 or newPos > self.stage.mapa.rect.h:
             if C.ALTO > self.rect.y - dy  >=0:
                 col_bordes = True
+                #print(self.nombre+' colisiona con borde vertical')
         
         colisiones = [col_bordes,col_mobs,col_items,col_mapa,col_heroe]
         if any(colisiones):
@@ -178,11 +183,11 @@ class PC (Mob):
                     actuar = True
                     objetivo = mob
             elif self.direccion == 'derecha':
-                if self.colisiona(mob,+1*rango,0):
+                if self.colisiona(mob,-1*rango,0):
                     actuar = True
                     objetivo = mob
             elif self.direccion == 'izquierda':
-                if self.colisiona(mob,-1*rango,0):
+                if self.colisiona(mob,+1*rango,0):
                     actuar = True
                     objetivo = mob
             
