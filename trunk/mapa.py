@@ -17,7 +17,8 @@ class Stage:
     contents = None
     hero = None
     mapa = None
-    data = {}    
+    data = {}
+    dialogs = None
     def __init__(self, data):
         self.data = data
         mapa = sprite.DirtySprite()
@@ -26,6 +27,7 @@ class Stage:
         mapa.mask = pygame.mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
         self.mapa = mapa
         self.contents = sprite.LayeredDirty()
+        self.dialogs = sprite.LayeredDirty()
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props()
         self.cargar_mobs(Enemy)
@@ -101,7 +103,7 @@ class Stage:
                 dx,dy = 0,0
 
         # chequea el que héroe no atraviese a los mobs
-        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS): 
             if h.colisiona(spr,-dx,-dy):
                 dx,dy = 0,0
 
@@ -168,7 +170,7 @@ class Stage:
             if isinstance(spr,(NPC,Enemy)):
                 spr.mover()
 
-        return self.contents.draw(fondo)
+        return self.contents.draw(fondo) + self.dialogs.draw(fondo)
 
 class Salida (_giftSprite):
     def __init__(self,data):

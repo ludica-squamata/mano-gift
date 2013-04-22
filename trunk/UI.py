@@ -13,4 +13,6 @@ class Dialog (_giftSprite):
         
         self.texto = render_textrect(texto,fuente,rect,fg_color,bg_color)
         super().__init__(self.texto,x=rect.x, y=rect.y)
+        self.dirty = 2
+        self.rect = pygame.Rect((0, 384, C.ANCHO, int(C.ALTO/5)))
         

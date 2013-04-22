@@ -18,8 +18,8 @@ class Resources:
         alto = spritesheet.get_height()
         tamanio = 32,32
         sprites = []
-        for x in range(int(ancho/32)):
-            for y in range(int(alto/32)):
+        for y in range(int(alto/32)):
+            for x in range(int(ancho/32)): 
                 sprites.append(spritesheet.subsurface(Rect(((int(ancho/(ancho/32))*x,
                                                             int(alto/(alto/32))*y),
                                                             tamanio))))
