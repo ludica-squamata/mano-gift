@@ -1,8 +1,8 @@
-from pygame import sprite,mask,Surface
+from pygame import mask,Surface,time
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
-from globs import World as W, Constants as C
+from globs import World as W, Constants as C,FPS
 from UI import Dialog
 
 class Mob (_giftSprite):
@@ -17,12 +17,22 @@ class Mob (_giftSprite):
     start_pos = 0,0
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
-        keys = 'abajo,derecha,arriba,izquierda'.split(',')
+        keys = 'abajo,arriba,derecha,izquierda'.split(',')
+        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
+                 'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda',
+                 'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda']
+        
+
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
-        for key in keys:
-            self.images[key] = spritesheet[keys.index(key)]
-        self.image = self.images[self.direccion]
+        if len(spritesheet) > 4:
+            for key in maskeys:
+                self.images[key] = spritesheet[maskeys.index(key)]
+            self.image = self.images['Sabajo']
+        else:
+            for key in keys:
+                self.images[key] = spritesheet[keys.index(key)]
+            self.image = self.images[self.direccion]
         super().__init__(self.image,stage)
         
         if data != None:
@@ -34,7 +44,7 @@ class Mob (_giftSprite):
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
             self.ubicar(*self.start_pos)
-
+        
     def cambiar_direccion(self, directo = None, modo = 'usuario'):
         direccion = 'ninguna'
         
@@ -62,6 +72,9 @@ class Mob (_giftSprite):
         if direccion != 'ninguna':
             self.image = self.images[direccion]
             self.mask = mask.from_surface(self.image,1)
+            #_rect_ = self.mask.get_bounding_rects()[0]
+            #img = Surface((_rect_.w,_rect_.h))
+            #self.image = img
         self.direccion = direccion
     
     def mover(self):
@@ -159,16 +172,62 @@ class Mob (_giftSprite):
 class PC (Mob):
     centroX = 0
     centroY = 0
+    timer_animacion = 0
+    frame_animacion = 1000/12
     def __init__(self,nombre,ruta_imgs,stage):
-        self.direccion = 'abajo'
+        self.direccion = 'Sabajo'
         super().__init__(ruta_imgs,stage)
         self.nombre = nombre
+        self.timer_animacion = 0
         
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
         self.mapY += dy
         self.dirty = 1
+        
+    def cambiar_direccion(self,direccion):
+        for key in self.images.keys():
+            if self.image == self.images[key]:
+                break
+        #if direccion == 'izquierda':
+        #reloj = time.Clock()
+        self.timer_animacion += FPS.get_time()
+        if self.timer_animacion >= self.frame_animacion:
+            self.timer_animacion = 0
+            if key == 'D'+direccion:
+                self.image = self.images['I'+direccion]
+            elif key == 'I'+direccion:
+                self.image = self.images['D'+direccion]
+            else:
+                self.image = self.images['D'+direccion]
+
+        #elif direccion == 'derecha':
+        #    if key == 'D'+'derecha':
+        #        self.image = self.images['I'+'derecha']
+        #    elif key == 'I'+'derecha':
+        #        self.image = self.images['D'+'derecha']
+        #    else:
+        #        self.image = self.images['D'+'derecha']
+        #
+        #elif direccion == 'arriba':
+        #    if key == 'D'+'arriba':
+        #        self.image = self.images['I'+'arriba']
+        #    elif key == 'I'+'arriba':
+        #        self.image = self.images['D'+'arriba']
+        #    else:
+        #        self.image = self.images['D'+'arriba']
+        #
+        #elif direccion == 'abajo':
+        #    if key == 'D'+'abajo':
+        #        self.image = self.images['I'+'abajo']
+        #    elif key == 'I'+'abajo':
+        #        self.image = self.images['D'+'abajo']
+        #    else:
+        #        self.image = self.images['D'+'abajo']
+
+        self.direccion = direccion
+    
     
     def accion(self):
         actuar = False
@@ -208,7 +267,7 @@ class NPC (Mob):
     
     def interactuar(self):
         texto = Dialog('hola, heroe!')
-        self.stage.contents.add(texto, layer=texto.layer)
+        self.stage.dialogs.add(texto, layer=texto.layer)
 
 class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):

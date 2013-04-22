@@ -45,7 +45,7 @@ class World:
     HERO =''
     def cargar_hero():
         from mobs import PC
-        World.HERO = PC('heroe','mobs/heroe_color4.png',World.MAPA_ACTUAL)
+        World.HERO = PC('heroe','mobs/heroe_color12.png',World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
@@ -55,3 +55,4 @@ class World:
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
         World.MAPA_ACTUAL.mapa.dirty=1
 
+FPS = pygame.time.Clock()
