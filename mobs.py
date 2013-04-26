@@ -176,10 +176,13 @@ class PC (Mob):
     centroY = 0
     timer_animacion = 0
     frame_animacion = 1000/12
+    inventario = {}
+    
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
         self.nombre = nombre
         self.timer_animacion = 0
+        self.inventario = Inventory()
         
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -221,7 +224,9 @@ class PC (Mob):
                         self.hablar(sprite)
                     
                     elif isinstance(sprite,Prop):
-                        self.interactuar(sprite)
+                        inst = self.interactuar(sprite)
+                        if inst != None:
+                            self.inventario.agregar(inst)
                         
                     break
     
@@ -232,9 +237,12 @@ class PC (Mob):
         sprite.hablar()
     
     def interactuar(self,prop):
-        prop.interaccion()
+        return prop.interaccion()
+
+    def ver_inventario(self):
+        self.inventario.ver()
     
-    
+      
 class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
@@ -253,10 +261,24 @@ class Enemy (Mob):
         self.stage.contents.remove(self)
         print('Mob '+self.nombre+' eliminado!')
   
-class Inventory(object):
+class Inventory:
+    contenido = {}
     # la mochila
-    pass
-
-class Items(object):
+    def __init__ (self):
+        self.contenido = {}
+    
+    def ver (self):
+        if len(self.contenido) < 1:
+            print ('El inventario está vacío')
+        else:
+            print(', '.join(self.contenido.keys()))
+    
+    def agregar(self,cosa):
+        self.contenido[cosa] = Item(cosa)
+    
+class Item:
+    data = ''
+    def __init__(self,data):
+        self.data = data
+    
     #para cosas que van en el inventario
-    pass
