@@ -1,11 +1,11 @@
 {
     "capa_background":{
-        "fondo":"maps/fondos/mapa_1.png",
-        "colisiones":"maps/colisiones/mapa_1.png"
+        "fondo":"maps/fondos/mapa_1a.png",
+        "colisiones":"maps/colisiones/mapa_1a.png"
     },
     "capa_ground":{
         "props": {
-            "casa":[[3,3]],
+            "puerta":[[4,4]],
             "star":[[11,11]]
         },
         "mobs": {
@@ -19,7 +19,7 @@
             }
         },
         "refs":{
-            "casa":"props/casa.png",
+            "puerta":"props/puerta.png",
             "red":"mobs/red4.png",
             "green":"mobs/green4.png",
             "blue":"mobs/blue4.png",
@@ -27,7 +27,15 @@
             "commoner":"mobs/commoner4.png",
             "star":"props/star.png"}
     },
-    "entradas":{"inicial":[10, 10]},
+    "entradas":{
+        "inicial":[10, 10],
+        "puerta":[4,5]
+    },
     "salidas":{
+        "puerta":{
+            "rect":[4,4,32,16],
+            "dest":"map1b",
+            "link":"puerta"
+        }
     }
 }
