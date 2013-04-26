@@ -10,10 +10,10 @@
         "mobs": {
             "enemies":{},
             "npcs":{}
-        },
-        "refs":{
-            "puerta":"props/puerta.png"
         }
+    },
+    "capa_top":{
+        "props":{}
     },
     "entradas":{
         "puerta":[7, 11]
@@ -24,5 +24,8 @@
             "dest":"map1a",
             "link":"puerta"
         }
+    },
+    "refs":{
+        "puerta":"props/puerta.png"
     }
 }

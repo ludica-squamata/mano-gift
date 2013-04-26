@@ -63,14 +63,20 @@ class Stage:
         self.cargar_salidas()
         
     def cargar_props (self):
-        imgs = self.data['capa_ground']['refs']
-        POS = self.data['capa_ground']['props']
+        imgs = self.data['refs']
+        POS_g = self.data['capa_ground']['props']
+        POS_t = self.data['capa_top']['props']
         data = r.abrir_json('scripts/props.json')
 
-        for ref in POS:
-            for x,y in POS[ref]:
+        for ref in POS_g:
+            for x,y in POS_g[ref]:
                 prop = Prop(ref,imgs[ref],self,x,y,data[ref])
                 self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
+        for ref in POS_t:
+            for x,y in POS_t[ref]:
+                prop = Prop(ref,imgs[ref],self,x,y,data[ref])
+                self.contents.add(prop, layer=C.CAPA_TOP_ITEMS)
+        
     
     def cargar_mobs(self,clase):
         if clase == Enemy:
@@ -78,7 +84,7 @@ class Stage:
         elif clase == NPC:
             key = 'npcs'
         
-        imgs = self.data['capa_ground']['refs']
+        imgs = self.data['refs']
         pos = self.data['capa_ground']['mobs'][key]
         data = r.abrir_json('scripts/'+key+'.json')
         

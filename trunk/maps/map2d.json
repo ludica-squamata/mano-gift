@@ -8,8 +8,10 @@
         "mobs": {
             "enemies":{},
             "npcs":{}
-        },
-        "refs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
     },
     "entradas":{
         "derecha":[20,5],
@@ -26,5 +28,6 @@
             "dest":"map2a",
             "link":"abajo"
         }
-    }
+    },
+    "refs":{}
 }

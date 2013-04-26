@@ -9,7 +9,9 @@
             "enemies":{},
             "npcs":{}
         },
-        "refs":{}
+    },
+    "capa_top":{
+        "props":{}
     },
     "entradas":{
         "inicial":[16, 17],
@@ -27,5 +29,6 @@
             "dest":"map2d",
             "link":"arriba"
         }
-    }
+    },
+    "refs":{}
 }

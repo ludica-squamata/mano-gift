@@ -9,9 +9,13 @@
             "enemies":{
                 "yellow":[[1,14]]},
             "npcs":{}
-        },
-        "refs":{"yellow":"mobs/yellow4.png"}
+        }
+    },
+    "capa_top":{
+        "props":{}
     },
     "entradas":{},
-    "salidas":{}
+    "salidas":{    
+    },
+    "refs":{"yellow":"mobs/yellow4.png"}
 }

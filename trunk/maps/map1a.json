@@ -17,15 +17,12 @@
             "npcs":{
                 "commoner":[[9,9]]
             }
-        },
-        "refs":{
-            "puerta":"props/puerta.png",
-            "red":"mobs/red4.png",
-            "green":"mobs/green4.png",
-            "blue":"mobs/blue4.png",
-            "yellow":"mobs/yellow4.png",
-            "commoner":"mobs/commoner4.png",
-            "star":"props/star.png"}
+        }
+    },
+    "capa_top":{
+        "props":{
+            "techo":[[3,3]]
+        }
     },
     "entradas":{
         "inicial":[10, 10],
@@ -37,5 +34,14 @@
             "dest":"map1b",
             "link":"puerta"
         }
-    }
+    },
+    "refs":{
+        "techo":"props/techo.png",
+        "puerta":"props/puerta.png",
+        "red":"mobs/red4.png",
+        "green":"mobs/green4.png",
+        "blue":"mobs/blue4.png",
+        "yellow":"mobs/yellow4.png",
+        "commoner":"mobs/commoner4.png",
+        "star":"props/star.png"}
 }
