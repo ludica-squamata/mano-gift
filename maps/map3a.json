@@ -8,8 +8,10 @@
         "mobs": {
             "enemies":{},
             "npcs":{}
-        },
-        "refs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
     },
     "entradas":{"inicial":[7, 7],
                 "puerta":[13,10]},
@@ -19,5 +21,6 @@
             "dest": "map3b",
             "link": "puerta"
         }
-    }
+    },
+    "refs":{}
 }
