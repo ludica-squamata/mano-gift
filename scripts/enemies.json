@@ -3,7 +3,8 @@
         "AI":null,
         "velocidad":1,
         "modo_colision":"random",
-        "direccion":"abajo"
+        "direccion":"abajo",
+        "solido":false
     },
     "red":{
         "AI":{
@@ -13,7 +14,8 @@
         },
         "velocidad":1,
         "modo_colision":"contraria",
-        "direccion":"abajo"
+        "direccion":"abajo",
+        "solido":true
     },
     "blue":{
         "AI":{
@@ -23,12 +25,14 @@
         },
         "velocidad":1,
         "modo_colision":"contraria",
-        "direccion":"izquierda"
+        "direccion":"izquierda",
+        "solido":true
     },
     "yellow":{
         "AI":null,
         "velocidad":1,
         "modo_colision":"random",
-        "direccion":"arriba"
+        "direccion":"arriba",
+        "solido":true
     }
 }

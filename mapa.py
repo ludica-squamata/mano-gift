@@ -1,5 +1,5 @@
 import pygame
-from pygame import sprite
+from pygame import sprite,Rect,Surface
 from misc import Resources as r
 from globs import Constants as C, World
 from base import _giftSprite
@@ -7,7 +7,35 @@ from mobs import NPC,Enemy
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
-    pass
+    propiedades = [] #indica si es agarrable, cortable, movible, etc.
+    estado = 0 
+    def __init__ (self,nombre, imagen, stage, x,y, data = None):
+        super().__init__(imagen,stage,x*C.CUADRO,y*C.CUADRO)
+        self.nombre = nombre
+        self.estado = 0
+        if data != None:
+            self.propiedades = data['propiedades']
+    
+    def interaccion(self):
+        if 'agarrable' in self.propiedades:
+            self.agarrame()
+        
+        if 'operable' in self.propiedades:
+            if self.estado == 0:
+                self.estado = 1
+            else:
+                self.estado = 0
+            
+            self.visible = self.propiedades['operable'][str(self.estado)]['visible']
+            self.solido = self.propiedades['operable'][str(self.estado)]['solido']            
+    
+    def agarrame(self): #añadir al inventario y quitar del mapa
+        self.stage.contents.remove(self)
+    
+    def cambia_estado(self, ): #abrir puerta, por ejemplo
+        pass
+    
+    
     #basicamente, sprites que no se mueven
     #para las cosas en pantalla que tienen interaccion(tronco de arbol, puerta, piedras, loot)
     #como los árboles de pokemon que se pueden golpear
@@ -35,20 +63,15 @@ class Stage:
         self.cargar_salidas()
         
     def cargar_props (self):
-        refs = self.data['capa_ground']['refs']
-        props = self.data['capa_ground']['props']
-        map_cache = {}
+        imgs = self.data['capa_ground']['refs']
+        POS = self.data['capa_ground']['props']
+        data = r.abrir_json('scripts/props.json')
 
-        for ref in refs:
-            if ref in props:
-                map_cache[ref] = r.cargar_imagen(refs[ref])
-
-        for ref in props:
-            for x,y in props[ref]:
-                prop = Prop(map_cache[ref])
-                prop.ubicar(x*C.CUADRO,y*C.CUADRO)
+        for ref in POS:
+            for x,y in POS[ref]:
+                prop = Prop(ref,imgs[ref],self,x,y,data[ref])
                 self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
-
+    
     def cargar_mobs(self,clase):
         if clase == Enemy:
             key = 'enemies'
@@ -57,7 +80,7 @@ class Stage:
         
         imgs = self.data['capa_ground']['refs']
         pos = self.data['capa_ground']['mobs'][key]
-        data = r.abrir_json('mobs/'+key+'.json')
+        data = r.abrir_json('scripts/'+key+'.json')
         
         for ref in pos:
             for x,y in pos[ref]:
@@ -100,12 +123,14 @@ class Stage:
             if h.colisiona(spr,-dx,-dy):
                 if isinstance(spr,Salida):
                     World.setear_mapa(spr.dest,spr.link)
-                dx,dy = 0,0
+                if spr.solido:
+                    dx,dy = 0,0
 
         # chequea el que héroe no atraviese a los mobs
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS): 
             if h.colisiona(spr,-dx,-dy):
-                dx,dy = 0,0
+                if spr.solido:
+                    dx,dy = 0,0
 
         # congela la camara si el héroe se aproxima mucho a un limite horizontal
         if dx != 0:
@@ -178,8 +203,10 @@ class Salida (_giftSprite):
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
-        image.fill((255,0,0))
+        #image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
-        #self.mask.fill()
-        #self.image.set_colorkey((0,0,0))
+        self.mask.fill()
+        self.image.set_colorkey((0,0,0))
+        self.solido = False
+

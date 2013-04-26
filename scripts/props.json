@@ -1,0 +1,19 @@
+{
+    "puerta":{
+        "propiedades":{
+            "operable":{
+                "0":{
+                    "visible":true,
+                    "solido":true
+                },
+                "1":{
+                    "visible":false,
+                    "solido":false
+                }
+            }
+        }
+    },
+    "star":{
+        "propiedades":["agarrable"]
+    }
+}

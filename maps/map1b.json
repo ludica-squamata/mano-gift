@@ -1,0 +1,28 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/mapa_1b.png",
+        "colisiones":"maps/colisiones/mapa_1b.png"
+    },
+    "capa_ground":{
+        "props": {
+            "puerta":[[7,12]]
+        },
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        },
+        "refs":{
+            "puerta":"props/puerta.png"
+        }
+    },
+    "entradas":{
+        "puerta":[7, 11]
+        },
+    "salidas":{
+        "puerta":{
+            "rect":[7,12,32,16],
+            "dest":"map1a",
+            "link":"puerta"
+        }
+    }
+}

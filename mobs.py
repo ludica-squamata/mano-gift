@@ -40,6 +40,7 @@ class Mob (_giftSprite):
             self.AI = data['AI']
             self.velocidad = data['velocidad']
             self.modo_colision = data['modo_colision']
+            self.solido = data['solido']
         
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
@@ -125,28 +126,29 @@ class Mob (_giftSprite):
         col_items = False # colision contra los props
         col_mapa = False # colision contra las cajas de colision del propio mapa
         
-        if self.stage.mapa.mask.overlap(self.mask,(self.mapX + dx, self.mapY)) is not None:
-            col_mapa = True
-            #print(self.nombre+' colisiona con el mapa en X')
-        
-        if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
-            col_mapa = True
-            #print(self.nombre+' colisiona con el mapa en Y')
-        
-        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if self.colisiona(spr,dx,dy) == True:
-                col_items = True
-                #print(self.nombre+' colisiona con '+str(spr.nombre))
-                
-        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-            if self.colisiona(spr,dx,dy) == True:
-                col_mobs = True
-                #print(self.nombre+' colisiona con '+str(spr.nombre))
-                
-        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
-            if self.colisiona(spr,dx,dy) == True:
-                col_heroe = True
-                #print(self.nombre+' colisiona con '+str(spr.nombre))
+        if self.solido:
+            if self.stage.mapa.mask.overlap(self.mask,(self.mapX + dx, self.mapY)) is not None:
+                col_mapa = True
+                #print(self.nombre+' colisiona con el mapa en X')
+            
+            if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
+                col_mapa = True
+                #print(self.nombre+' colisiona con el mapa en Y')
+            
+            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+                if self.colisiona(spr,dx,dy) == True:
+                    col_items = True
+                    #print(self.nombre+' colisiona con '+str(spr.nombre))
+                    
+            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+                if self.colisiona(spr,dx,dy) == True:
+                    col_mobs = True
+                    #print(self.nombre+' colisiona con '+str(spr.nombre))
+                    
+            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
+                if self.colisiona(spr,dx,dy) == True:
+                    col_heroe = True
+                    #print(self.nombre+' colisiona con '+str(spr.nombre))
         
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
@@ -175,7 +177,6 @@ class PC (Mob):
     timer_animacion = 0
     frame_animacion = 1000/12
     def __init__(self,nombre,ruta_imgs,stage):
-        self.direccion = 'Sabajo'
         super().__init__(ruta_imgs,stage)
         self.nombre = nombre
         self.timer_animacion = 0
@@ -190,8 +191,6 @@ class PC (Mob):
         for key in self.images.keys():
             if self.image == self.images[key]:
                 break
-        #if direccion == 'izquierda':
-        #reloj = time.Clock()
         self.timer_animacion += FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
@@ -202,70 +201,46 @@ class PC (Mob):
             else:
                 self.image = self.images['D'+direccion]
 
-        #elif direccion == 'derecha':
-        #    if key == 'D'+'derecha':
-        #        self.image = self.images['I'+'derecha']
-        #    elif key == 'I'+'derecha':
-        #        self.image = self.images['D'+'derecha']
-        #    else:
-        #        self.image = self.images['D'+'derecha']
-        #
-        #elif direccion == 'arriba':
-        #    if key == 'D'+'arriba':
-        #        self.image = self.images['I'+'arriba']
-        #    elif key == 'I'+'arriba':
-        #        self.image = self.images['D'+'arriba']
-        #    else:
-        #        self.image = self.images['D'+'arriba']
-        #
-        #elif direccion == 'abajo':
-        #    if key == 'D'+'abajo':
-        #        self.image = self.images['I'+'abajo']
-        #    elif key == 'I'+'abajo':
-        #        self.image = self.images['D'+'abajo']
-        #    else:
-        #        self.image = self.images['D'+'abajo']
-
         self.direccion = direccion
     
-    
     def accion(self):
-        actuar = False
+        from mapa import Prop
         rango = 15
-        for mob in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):                    
-            if self.direccion == 'arriba':
-                if self.colisiona(mob,0,-1*rango):
-                    actuar = True
-                    objetivo = mob
-            elif self.direccion == 'abajo':
-                if self.colisiona(mob,0,+1*rango):
-                    actuar = True
-                    objetivo = mob
-            elif self.direccion == 'derecha':
-                if self.colisiona(mob,-1*rango,0):
-                    actuar = True
-                    objetivo = mob
-            elif self.direccion == 'izquierda':
-                if self.colisiona(mob,+1*rango,0):
-                    actuar = True
-                    objetivo = mob
-            
-        if actuar == True:
-            if isinstance(objetivo,Enemy):
-                objetivo.morir()
         
-            elif isinstance(objetivo,NPC):
-                objetivo.interactuar()
+        x,y = self.direcciones[self.direccion]
+        x *= rango
+        y *= rango
+        
+        for sprite in self.stage.contents:
+            if sprite != self.stage.mapa:
+                if self.colisiona(sprite,x,y):
+                    if isinstance(sprite,Enemy):
+                        self.atacar(sprite)
+                        
+                    elif isinstance(sprite,NPC):
+                        self.hablar(sprite)
+                    
+                    elif isinstance(sprite,Prop):
+                        self.interactuar(sprite)
+                        
+                    break
     
-    def atacar(self):
-        pass
-
+    def atacar(self,sprite):
+        sprite.morir()
+    
+    def hablar(self,sprite):
+        sprite.hablar()
+    
+    def interactuar(self,prop):
+        prop.interaccion()
+    
+    
 class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
     
-    def interactuar(self):
+    def hablar(self):
         texto = Dialog('hola, heroe!')
         self.stage.dialogs.add(texto, layer=texto.layer)
 

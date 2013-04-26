@@ -8,6 +8,7 @@ class _giftSprite(sprite.DirtySprite):
     mapX = 0
     mapY = 0
     nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
+    solido = True # si es solido, colisiona; si no, no.
     def __init__(self, imagen, stage = '', x = 0, y = 0):
         super().__init__()
         if isinstance(imagen, str):
@@ -21,6 +22,7 @@ class _giftSprite(sprite.DirtySprite):
         self.mapX = x
         self.mapY = y
         self.stage = stage
+        self.solido = True
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
