@@ -9,6 +9,7 @@ class Teclas:
     DERECHA = pygame.K_RIGHT
 
     ACCION = pygame.K_x
+    INVENTARIO = pygame.K_z
     MENU = pygame.K_RETURN
     SALIR = pygame.K_ESCAPE
     
@@ -19,6 +20,7 @@ class Teclas:
         Teclas.DERECHA = data['derecha']
         
         Teclas.ACCION = data['accion']
+        Teclas.INVENTARIO = data['inventario']
         Teclas.MENU = data['menu']
         Teclas.SALIR = data['salir']
 

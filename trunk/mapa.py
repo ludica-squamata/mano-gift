@@ -18,9 +18,9 @@ class Prop (_giftSprite):
     
     def interaccion(self):
         if 'agarrable' in self.propiedades:
-            self.agarrame()
+            return self.agarrame()
         
-        if 'operable' in self.propiedades:
+        elif 'operable' in self.propiedades:
             if self.estado == 0:
                 self.estado = 1
             else:
@@ -31,6 +31,7 @@ class Prop (_giftSprite):
     
     def agarrame(self): #añadir al inventario y quitar del mapa
         self.stage.contents.remove(self)
+        return self.nombre
     
     def cambia_estado(self, ): #abrir puerta, por ejemplo
         pass

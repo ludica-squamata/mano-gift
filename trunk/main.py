@@ -22,11 +22,18 @@ while i > 0:
     FPS.tick(60)
     i-=1
 
+inAction = False
+	
 while True:
     FPS.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        
+        elif event.type == pygame.KEYUP:
+            if event.key == C.TECLAS.ACCION:
+                inAction = False
+                
 
         elif event.type == pygame.KEYDOWN:
             dx,dy = 0,0
@@ -47,8 +54,15 @@ while True:
                 dy -= 1
             
             elif event.key == C.TECLAS.ACCION:
-                W.HERO.accion()
+                if not inAction:
+                    W.HERO.accion()
+                    inAction = True
             
+            elif event.key == C.TECLAS.INVENTARIO:
+                if not inAction:
+                    W.HERO.ver_inventario()
+                    inAction = True
+                    
             elif event.key == C.TECLAS.MENU: # debug
                 os.system(['clear','cls'][os.name == 'nt'])
                 print('Este sería el menú :P')
