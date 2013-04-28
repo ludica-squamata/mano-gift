@@ -36,25 +36,26 @@ class Mob (_giftSprite):
         super().__init__(self.image,stage)
         
         if data != None:
-            self.cambiar_direccion(directo=data['direccion'])
+            self.cambiar_direccion(data['direccion'])
             self.AI = data['AI']
             self.velocidad = data['velocidad']
             self.modo_colision = data['modo_colision']
-            self.solido = data['solido']
+            if 'solido' in data:
+                self.solido = data['solido']
         
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
             self.ubicar(*self.start_pos)
         
-    def cambiar_direccion(self, directo = None, modo = 'usuario'):
+    def cambiar_direccion(self,arg):
         direccion = 'ninguna'
         
-        if modo == 'random':
+        if arg == 'random':
             lista = list(self.direcciones.keys())
             lista.remove(self.direccion)
             direccion = choice(lista)
         
-        elif modo == 'contraria':
+        elif arg == 'contraria':
             if self.direccion == 'arriba':
                 direccion = 'abajo'
             
@@ -67,8 +68,8 @@ class Mob (_giftSprite):
             elif self.direccion == 'derecha':
                 direccion = 'izquierda'
         
-        elif modo == 'usuario' and directo != None:
-            direccion = directo
+        elif arg in self.direcciones:
+            direccion = arg
          
         if direccion != 'ninguna':
             self.image = self.images[direccion]
@@ -87,7 +88,7 @@ class Mob (_giftSprite):
                 self.mov_ticks = 0
                 pos = 10
                 if randint(1,101) <= pos:
-                    self.cambiar_direccion(self,modo='random')
+                    self.cambiar_direccion('random')
         
         else:
             START = self.start_pos
@@ -104,14 +105,14 @@ class Mob (_giftSprite):
                     pB = START[0]+round(dist/2)
 
                     if CURR_X - self.velocidad <= pA or CURR_X + self.velocidad >= pB:
-                        self.cambiar_direccion(self, modo=self.modo_colision)
+                        self.cambiar_direccion(self.modo_colision)
 
                 elif eje == 'y':
                     pA = START[1]-round(dist/2)
                     pB = START[1]+round(dist/2)
                     
                     if CURR_Y - self.velocidad <= pA or CURR_Y + self.velocidad >= pB:
-                        self.cambiar_direccion(self, modo=self.modo_colision)
+                        self.cambiar_direccion(self.modo_colision)
                     
                 self._mover()
                                 
@@ -164,7 +165,7 @@ class Mob (_giftSprite):
         
         colisiones = [col_bordes,col_mobs,col_items,col_mapa,col_heroe]
         if any(colisiones):
-            self.cambiar_direccion(self,modo=self.modo_colision)
+            self.cambiar_direccion(self.modo_colision)
         
             x,y = self.direcciones[self.direccion]
             dx,dy = x*self.velocidad,y*self.velocidad
@@ -222,6 +223,7 @@ class PC (Mob):
                         
                     elif isinstance(sprite,NPC):
                         self.hablar(sprite)
+                        return True
                     
                     elif isinstance(sprite,Prop):
                         inst = self.interactuar(sprite)
@@ -244,13 +246,30 @@ class PC (Mob):
     
       
 class NPC (Mob):
+    onDialog = False
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
+        self.onDialog = False
     
     def hablar(self):
         texto = Dialog('hola, heroe!')
         self.stage.dialogs.add(texto, layer=texto.layer)
+        self.onDialog = True
+        for direccion in self.direcciones:
+            x,y = self.direcciones[direccion]
+            x,y = x*15,y*15
+            if self.colisiona(W.HERO,x,y):
+                self.cambiar_direccion(direccion)
+                break
+               
+    def mover(self):
+        if len(W.MAPA_ACTUAL.dialogs) == 0:
+            self.onDialog = False
+            
+        if not self.onDialog:
+            super().mover()
+    
 
 class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):

@@ -14,8 +14,7 @@
         },
         "velocidad":1,
         "modo_colision":"contraria",
-        "direccion":"abajo",
-        "solido":true
+        "direccion":"abajo"
     },
     "blue":{
         "AI":{
@@ -25,14 +24,12 @@
         },
         "velocidad":1,
         "modo_colision":"contraria",
-        "direccion":"izquierda",
-        "solido":true
+        "direccion":"izquierda"
     },
     "yellow":{
         "AI":null,
         "velocidad":1,
         "modo_colision":"random",
-        "direccion":"arriba",
-        "solido":true
+        "direccion":"arriba"
     }
 }

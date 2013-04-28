@@ -62,7 +62,7 @@ class Stage:
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_salidas()
-        
+
     def cargar_props (self):
         imgs = self.data['refs']
         POS_g = self.data['capa_ground']['props']
@@ -77,8 +77,7 @@ class Stage:
             for x,y in POS_t[ref]:
                 prop = Prop(ref,imgs[ref],self,x,y,data[ref])
                 self.contents.add(prop, layer=C.CAPA_TOP_ITEMS)
-        
-    
+
     def cargar_mobs(self,clase):
         if clase == Enemy:
             key = 'enemies'
