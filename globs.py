@@ -12,6 +12,7 @@ class Teclas:
     INVENTARIO = pygame.K_z
     MENU = pygame.K_RETURN
     SALIR = pygame.K_ESCAPE
+    CONTROL = pygame.K_LCTRL
     
     def asignar (self,data):
         Teclas.ARRIBA = data['arriba']
