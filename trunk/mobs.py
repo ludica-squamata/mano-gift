@@ -246,30 +246,13 @@ class PC (Mob):
     
       
 class NPC (Mob):
-    onDialog = False
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
-        self.onDialog = False
     
     def hablar(self):
         texto = Dialog('hola, heroe!')
         self.stage.dialogs.add(texto, layer=texto.layer)
-        self.onDialog = True
-        for direccion in self.direcciones:
-            x,y = self.direcciones[direccion]
-            x,y = x*15,y*15
-            if self.colisiona(W.HERO,x,y):
-                self.cambiar_direccion(direccion)
-                break
-               
-    def mover(self):
-        if len(W.MAPA_ACTUAL.dialogs) == 0:
-            self.onDialog = False
-            
-        if not self.onDialog:
-            super().mover()
-    
 
 class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):

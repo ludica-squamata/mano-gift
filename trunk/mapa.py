@@ -198,7 +198,10 @@ class Stage:
 
     def render(self,fondo):
         for spr in self.contents:
-            if isinstance(spr,(NPC,Enemy)):
+            if isinstance(spr,NPC):
+                if len(self.dialogs) == 0:
+                    spr.mover()
+            elif isinstance(spr,Enemy):
                 spr.mover()
 
         return self.contents.draw(fondo) + self.dialogs.draw(fondo)
