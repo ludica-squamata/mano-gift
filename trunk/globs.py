@@ -9,10 +9,12 @@ class Teclas:
     DERECHA = pygame.K_RIGHT
 
     ACCION = pygame.K_x
+    HABLAR = pygame.K_s
+    CANCELAR_DIALOGO = pygame.K_a
     INVENTARIO = pygame.K_z
     MENU = pygame.K_RETURN
     SALIR = pygame.K_ESCAPE
-    CONTROL = pygame.K_LCTRL
+    
     
     def asignar (self,data):
         Teclas.ARRIBA = data['arriba']

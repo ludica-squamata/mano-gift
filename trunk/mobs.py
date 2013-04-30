@@ -221,10 +221,6 @@ class PC (Mob):
                     if isinstance(sprite,Enemy):
                         self.atacar(sprite)
                         
-                    elif isinstance(sprite,NPC):
-                        self.hablar(sprite)
-                        return True
-                    
                     elif isinstance(sprite,Prop):
                         inst = self.interactuar(sprite)
                         if inst != None:
@@ -235,9 +231,19 @@ class PC (Mob):
     def atacar(self,sprite):
         sprite.morir()
     
-    def hablar(self,sprite):
-        sprite.hablar()
-    
+    def hablar(self):
+        rango = 15
+        
+        x,y = self.direcciones[self.direccion]
+        x,y = x*rango,y*rango
+        
+        for sprite in self.stage.contents:
+            if sprite != self.stage.mapa:
+                if self.colisiona(sprite,x,y):
+                    if isinstance(sprite,NPC):
+                        return sprite.hablar()   
+                    break
+        
     def interactuar(self,prop):
         return prop.interaccion()
 
@@ -249,10 +255,19 @@ class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
+        self.dialogos = data['dialogo']
+        self.pos_diag = -1
     
     def hablar(self):
-        texto = Dialog('hola, heroe!')
-        self.stage.dialogs.add(texto, layer=texto.layer)
+        self.pos_diag += 1
+        if self.pos_diag >= len(self.dialogos):
+            self.stage.dialogs.empty()
+            self.pos_diag = -1
+            return False
+        else:
+            texto = Dialog(self.dialogos[self.pos_diag])
+            self.stage.dialogs.add(texto,layer=texto.layer)
+            return True
 
 class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
