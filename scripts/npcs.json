@@ -4,6 +4,6 @@
         "velocidad":1,
         "modo_colision":"aleatorio",
         "direccion":"abajo",
-        "solido":true
+        "dialogo":["hola, heroe","¿avanza este diálogo?","pues me alegro","suerte"]
     }
 }

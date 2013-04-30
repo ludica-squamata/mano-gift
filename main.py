@@ -27,7 +27,9 @@ while True:
         elif event.type == pygame.KEYUP:
             if event.key == C.TECLAS.ACCION:
                 inAction = False
-                
+            elif event.key == C.TECLAS.HABLAR:
+                inAction = False
+
         elif event.type == pygame.KEYDOWN:
             dx,dy = 0,0
             if not onDialog:
@@ -49,8 +51,18 @@ while True:
             
             if event.key == C.TECLAS.ACCION:
                 if not inAction:
-                    onDialog = W.HERO.accion()
+                    W.HERO.accion()
                     inAction = True
+            
+            elif event.key == C.TECLAS.HABLAR:
+                if not inAction:
+                    onDialog = W.HERO.hablar()
+                    inAction = True
+            
+            elif event.key == C.TECLAS.CANCELAR_DIALOGO:
+                if onDialog:
+                    W.MAPA_ACTUAL.dialogs.empty()
+                    onDialog = False
             
             elif event.key == C.TECLAS.INVENTARIO:
                 if not inAction:
@@ -78,11 +90,6 @@ while True:
                     print('Saliendo...')
                     sys.exit()
             
-            elif event.key == C.TECLAS.CONTROL:
-                if onDialog:
-                    W.MAPA_ACTUAL.dialogs.empty()
-                    onDialog = False
-
             W.MAPA_ACTUAL.mover(dx,dy)
 
     cambios = W.MAPA_ACTUAL.render(fondo)
