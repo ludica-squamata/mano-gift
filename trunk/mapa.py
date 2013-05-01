@@ -1,42 +1,42 @@
 import pygame
 from pygame import sprite,Rect,Surface
 from misc import Resources as r
-from globs import Constants as C, World
+from globs import Constants as C, World as W
 from base import _giftSprite
 from mobs import NPC,Enemy
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
     propiedades = [] #indica si es agarrable, cortable, movible, etc.
-    estado = 0 
+    estado = 0
     def __init__ (self,nombre, imagen, stage, x,y, data = None):
         super().__init__(imagen,stage,x*C.CUADRO,y*C.CUADRO)
         self.nombre = nombre
         self.estado = 0
         if data != None:
             self.propiedades = data['propiedades']
-    
+
     def interaccion(self):
         if 'agarrable' in self.propiedades:
             return self.agarrame()
-        
+
         elif 'operable' in self.propiedades:
             if self.estado == 0:
                 self.estado = 1
             else:
                 self.estado = 0
-            
+
             self.visible = self.propiedades['operable'][str(self.estado)]['visible']
-            self.solido = self.propiedades['operable'][str(self.estado)]['solido']            
-    
+            self.solido = self.propiedades['operable'][str(self.estado)]['solido']
+
     def agarrame(self): #añadir al inventario y quitar del mapa
         self.stage.contents.remove(self)
         return self.nombre
-    
+
     def cambia_estado(self, ): #abrir puerta, por ejemplo
         pass
-    
-    
+
+
     #basicamente, sprites que no se mueven
     #para las cosas en pantalla que tienen interaccion(tronco de arbol, puerta, piedras, loot)
     #como los árboles de pokemon que se pueden golpear
@@ -71,14 +71,14 @@ class Stage:
 
         for ref in POS_g:
             for x,y in POS_g[ref]:
-                if ref in data: 
+                if ref in data:
                     prop = Prop(ref,imgs[ref],self,x,y,data[ref])
                 else:
                     prop = Prop(ref,imgs[ref],self,x,y)
                 self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
         for ref in POS_t:
             for x,y in POS_t[ref]:
-                if ref in data: 
+                if ref in data:
                     prop = Prop(ref,imgs[ref],self,x,y,data[ref])
                 else:
                     prop = Prop(ref,imgs[ref],self,x,y)
@@ -89,11 +89,11 @@ class Stage:
             key = 'enemies'
         elif clase == NPC:
             key = 'npcs'
-        
+
         imgs = self.data['refs']
         pos = self.data['capa_ground']['mobs'][key]
         data = r.abrir_json('scripts/'+key+'.json')
-        
+
         for ref in pos:
             for x,y in pos[ref]:
                 mob = clase(ref,imgs[ref],self,x,y,data[ref])
@@ -105,7 +105,7 @@ class Stage:
             if entrada in self.data['entradas']:
                 x,y = self.data['entradas'][entrada]
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
-                
+
                 hero.stage = self
                 #hero.nombre = 'heroe'
                 self.contents.add(hero,layer=C.CAPA_HERO)
@@ -134,12 +134,12 @@ class Stage:
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if h.colisiona(spr,-dx,-dy):
                 if isinstance(spr,Salida):
-                    World.setear_mapa(spr.dest,spr.link)
+                    W.setear_mapa(spr.dest,spr.link)
                 if spr.solido:
                     dx,dy = 0,0
 
         # chequea el que héroe no atraviese a los mobs
-        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS): 
+        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if h.colisiona(spr,-dx,-dy):
                 if spr.solido:
                     dx,dy = 0,0
@@ -202,14 +202,15 @@ class Stage:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
 
-    def render(self,fondo):
-        for spr in self.contents:
-            if isinstance(spr,NPC):
-                if len(self.dialogs) == 0:
-                    spr.mover()
-            elif isinstance(spr,Enemy):
-                spr.mover()
+    def endDialog(self):
+        self.dialogs.empty()
+        self.mapa.dirty = 1
 
+
+    def render(self,fondo):
+        if not W.onDialog:
+            for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+                spr.mover()
         return self.contents.draw(fondo) + self.dialogs.draw(fondo)
 
 class Salida (_giftSprite):
