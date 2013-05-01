@@ -265,7 +265,10 @@ class NPC (Mob):
             self.pos_diag = -1
             return False
         else:
-            texto = Dialog(self.dialogos[self.pos_diag])
+            if type(self.dialogos[self.pos_diag]) == dict:
+                pass
+            else:
+                texto = Dialog(self.dialogos[self.pos_diag])
             self.stage.dialogs.add(texto,layer=texto.layer)
             return True
 

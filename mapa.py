@@ -71,11 +71,17 @@ class Stage:
 
         for ref in POS_g:
             for x,y in POS_g[ref]:
-                prop = Prop(ref,imgs[ref],self,x,y,data[ref])
+                if ref in data: 
+                    prop = Prop(ref,imgs[ref],self,x,y,data[ref])
+                else:
+                    prop = Prop(ref,imgs[ref],self,x,y)
                 self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
         for ref in POS_t:
             for x,y in POS_t[ref]:
-                prop = Prop(ref,imgs[ref],self,x,y,data[ref])
+                if ref in data: 
+                    prop = Prop(ref,imgs[ref],self,x,y,data[ref])
+                else:
+                    prop = Prop(ref,imgs[ref],self,x,y)
                 self.contents.add(prop, layer=C.CAPA_TOP_ITEMS)
 
     def cargar_mobs(self,clase):
@@ -212,10 +218,10 @@ class Salida (_giftSprite):
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
-        #image.fill((255,0,0))
+        image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
         self.mask.fill()
-        self.image.set_colorkey((0,0,0))
+        #self.image.set_colorkey((0,0,0))
         self.solido = False
 

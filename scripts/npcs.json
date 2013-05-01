@@ -4,6 +4,12 @@
         "velocidad":1,
         "modo_colision":"aleatorio",
         "direccion":"abajo",
-        "dialogo":["hola, heroe","¿avanza este diálogo?","pues me alegro","suerte"]
+        "dialogo":["este es un mensaje\nde dos lineas","hola, heroe","¿avanza este diálogo?","pues me alegro","suerte"],
+        "diag2":[
+            "hola,heroe!",
+            "¿avanza este diálogo?",
+            {"Sí":"¡pues me alegro!",
+             "No":"¡oh, que pena!"}
+            ]
     }
 }

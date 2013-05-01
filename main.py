@@ -49,6 +49,13 @@ while True:
                     W.HERO.cambiar_direccion('abajo')
                     dy -= 1
             
+            else:
+                if event.key == C.TECLAS.ARRIBA:
+                    pass
+        
+                elif event.key == C.TECLAS.ABAJO:
+                    pass
+                
             if event.key == C.TECLAS.ACCION:
                 if not inAction:
                     W.HERO.accion()
