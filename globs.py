@@ -14,14 +14,14 @@ class Teclas:
     INVENTARIO = pygame.K_z
     MENU = pygame.K_RETURN
     SALIR = pygame.K_ESCAPE
-    
-    
+
+
     def asignar (self,data):
         Teclas.ARRIBA = data['arriba']
         Teclas.ABAJO = data['abajo']
         Teclas.IZQUIERDA = data['izquierda']
         Teclas.DERECHA = data['derecha']
-        
+
         Teclas.ACCION = data['accion']
         Teclas.INVENTARIO = data['inventario']
         Teclas.MENU = data['menu']
@@ -41,13 +41,14 @@ class Constants:
     CAPA_OVERLAYS = 6
 
     COLOR_COLISION = pygame.Color(255,0,255) #Fuchsia #FF00FF
-    
+
     TECLAS = Teclas()
 
 class World:
     mapas = {}
     MAPA_ACTUAL =''
     HERO =''
+    onDialog = False
     def cargar_hero():
         from mobs import PC
         World.HERO = PC('heroe','mobs/heroe_color12.png',World.MAPA_ACTUAL)

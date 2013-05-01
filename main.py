@@ -16,66 +16,63 @@ W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
 
 inAction = False
-onDialog = False
 
 while True:
     FPS.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        
+
         elif event.type == pygame.KEYUP:
-            if event.key == C.TECLAS.ACCION:
-                inAction = False
-            elif event.key == C.TECLAS.HABLAR:
+            if event.key == C.TECLAS.ACCION or event.key == C.TECLAS.HABLAR:
                 inAction = False
 
         elif event.type == pygame.KEYDOWN:
             dx,dy = 0,0
-            if not onDialog:
-                if event.key == C.TECLAS.IZQUIERDA: 
+            if not W.onDialog:
+                if event.key == C.TECLAS.IZQUIERDA:
                     W.HERO.cambiar_direccion('derecha')
                     dx +=1
-        
+
                 elif event.key == C.TECLAS.DERECHA:
                     W.HERO.cambiar_direccion('izquierda')
                     dx -= 1
-        
+
                 elif event.key == C.TECLAS.ARRIBA:
                     W.HERO.cambiar_direccion('arriba')
                     dy += 1
-        
+
                 elif event.key == C.TECLAS.ABAJO:
                     W.HERO.cambiar_direccion('abajo')
                     dy -= 1
-            
+
             else:
                 if event.key == C.TECLAS.ARRIBA:
                     pass
-        
+
                 elif event.key == C.TECLAS.ABAJO:
                     pass
-                
+
             if event.key == C.TECLAS.ACCION:
                 if not inAction:
                     W.HERO.accion()
                     inAction = True
-            
+
             elif event.key == C.TECLAS.HABLAR:
                 if not inAction:
-                    onDialog = W.HERO.hablar()
+                    W.onDialog = W.HERO.hablar()
                     inAction = True
-            
+
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                if onDialog:
-                    W.MAPA_ACTUAL.dialogs.empty()
-                    onDialog = False
-            
+                if W.onDialog:
+                    W.MAPA_ACTUAL.endDialog()
+                    W.onDialog = False
+
             elif event.key == C.TECLAS.INVENTARIO:
                 if not inAction:
                     W.HERO.ver_inventario()
                     inAction = True
-                    
+
             elif event.key == C.TECLAS.MENU: # debug
                 os.system(['clear','cls'][os.name == 'nt'])
                 print('Este sería el menú :P')
@@ -91,12 +88,12 @@ while True:
                 print ("map_x:",W.HERO.mapX, "map_y:",W.HERO.mapY,'\n')
                 print ("Gx:",str(int(W.HERO.mapX/32)), "Gy:",str(int(W.HERO.mapY/32)),'\n')
                 print(W.HERO.direccion)
-            
+
             elif event.key == C.TECLAS.SALIR:
                     pygame.quit()
                     print('Saliendo...')
                     sys.exit()
-            
+
             W.MAPA_ACTUAL.mover(dx,dy)
 
     cambios = W.MAPA_ACTUAL.render(fondo)
