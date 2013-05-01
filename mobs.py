@@ -3,7 +3,7 @@ from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
 from globs import World as W, Constants as C,FPS
-from UI import Dialog
+
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
@@ -268,9 +268,13 @@ class NPC (Mob):
             if type(self.dialogos[self.pos_diag]) == dict:
                 pass
             else:
-                texto = Dialog(self.dialogos[self.pos_diag])
-            self.stage.dialogs.add(texto,layer=texto.layer)
+                texto = self.dialogos[self.pos_diag]
+            self.stage.setDialog(texto)
             return True
+    def mover(self):
+        if self.pos_diag == -1:
+            super().mover()
+
 
 class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):

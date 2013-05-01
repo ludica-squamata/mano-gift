@@ -4,6 +4,7 @@ from misc import Resources as r
 from globs import Constants as C, World as W
 from base import _giftSprite
 from mobs import NPC,Enemy
+from UI import Dialog
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
@@ -202,16 +203,25 @@ class Stage:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
 
+    def render(self,fondo):
+        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+            spr.mover()
+        ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
+        return ret
+
+    def setDialog(self, texto):
+        dg = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
+        if len(dg) > 0:
+            dg = dg[0]
+            dg.setText(texto)
+        else:
+            dg = Dialog(texto)
+            self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
+
     def endDialog(self):
-        self.dialogs.empty()
+        self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
         self.mapa.dirty = 1
 
-
-    def render(self,fondo):
-        if not W.onDialog:
-            for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                spr.mover()
-        return self.contents.draw(fondo) + self.dialogs.draw(fondo)
 
 class Salida (_giftSprite):
     def __init__(self,data):
