@@ -38,7 +38,9 @@ class Constants:
     CAPA_HERO = 3
     CAPA_TOP_ITEMS = 4
     CAPA_TOP_MOBS = 5
-    CAPA_OVERLAYS = 6
+
+    CAPA_OVERLAYS_DIALOGO = 1
+    CAPA_OVERLAYS_INVENTARIO = 2
 
     COLOR_COLISION = pygame.Color(255,0,255) #Fuchsia #FF00FF
 

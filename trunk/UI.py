@@ -4,15 +4,16 @@ from globs import Constants as C
 from base import _giftSprite
 
 class Dialog (_giftSprite):
-    dirty = 2
-    layer = C.CAPA_OVERLAYS
+    fg_color = 0,255,0
+    bg_color = 0,0,0
+    fuente = None
     def __init__(self, texto):
-        fuente = pygame.font.Font(None, 22)
-        fg_color = 0,255,0
-        bg_color = 0,0,0
+        self.fuente = pygame.font.Font(None, 22)
         rect = pygame.Rect((30, 325, C.ANCHO, int(C.ALTO/5)))
-
-        self.texto = render_textrect(texto,fuente,rect,fg_color,bg_color)
-        super().__init__(self.texto,x=rect.x, y=rect.y)
+        texto = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
+        super().__init__(texto,x=rect.x, y=rect.y)
         self.rect = pygame.Rect((0, 384, C.ANCHO, int(C.ALTO/5)))
+        self.dirty = 2
 
+    def setText(self, texto):
+        self.image = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
