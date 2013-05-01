@@ -7,8 +7,12 @@
         "props": {},
         "mobs": {
             "enemies":{},
-            "npcs":{}
-        }
+            "npcs":{
+                "aldeano":[[15,15]],
+                "aldeanos":[[5,4],[3,3],[26,12],
+                            [19,14],[29,4],[2,15],
+                            [25,28],[13,25]]}
+            }
     },
     "capa_top":{
         "props":{"techo_choza":[[4,4],[8,2],[13,4],[25,3],[9,8],[13,8],
@@ -20,98 +24,98 @@
     "salidas":{
         "A":{
             "rect":[5,6,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "B":{
             "rect":[9,4,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "C":{
             "rect":[14,6,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "D":{
             "rect":[26,5,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "E":{
             "rect":[10,10,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "F":{
             "rect":[14,10,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "G":{
             "rect":[19,9,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "H":{
             "rect":[23,13,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "I":{
             "rect":[9,15,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "J":{
             "rect":[25,16,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "K":{
             "rect":[6,18,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "L":{
             "rect":[4,19,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "M":{
             "rect":[23,20,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "N":{
             "rect":[23,24,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "O":{
             "rect":[25,22,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "P":{
             "rect":[27,22,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "Q":{
             "rect":[5,23,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "R":{
             "rect":[8,23,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "S":{
             "rect":[6,26,32,10],
-            "dest":"aldea",
-            "link":"inicial"
+            "dest":"choza",
+            "link":"puerta"
         },
         "arriba":{
             "rect":[0,0,1024,32],
@@ -135,6 +139,8 @@
         }
     },
     "refs":{
-        "techo_choza":"props/techo_choza.png"
+        "techo_choza":"props/techo_choza.png",
+        "aldeano":"mobs/commoner4.png",
+        "aldeanos":"mobs/commoner4.png"
     }
 }

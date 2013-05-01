@@ -11,5 +11,19 @@
             {"Sí":"¡pues me alegro!",
              "No":"¡oh, que pena!"}
             ]
+    },
+    "aldeano":{
+        "AI":null,
+        "velocidad":1,
+        "modo_colision":"aleatorio",
+        "direccion":"abajo",
+        "dialogo":["Bienvenido a nuestra aldea, Heroe"]
+    },
+    "aldeanos":{
+        "AI":null,
+        "velocidad":1,
+        "modo_colision":"aleatorio",
+        "direccion":"abajo",
+        "dialogo":[]
     }
 }
