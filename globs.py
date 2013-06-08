@@ -34,10 +34,11 @@ class Constants:
 
     CAPA_BACKGROUND = 0
     CAPA_GROUND_ITEMS = 1
-    CAPA_GROUND_MOBS = 2
-    CAPA_HERO = 3
-    CAPA_TOP_ITEMS = 4
-    CAPA_TOP_MOBS = 5
+    CAPA_GROUND_SALIDAS = 2
+    CAPA_GROUND_MOBS = 3
+    CAPA_HERO = 4
+    CAPA_TOP_ITEMS = 5
+    CAPA_TOP_MOBS = 6
 
     CAPA_OVERLAYS_DIALOGO = 1
     CAPA_OVERLAYS_INVENTARIO = 2
@@ -64,6 +65,7 @@ class World:
         World.MAPA_ACTUAL.mapa.dirty=1
 
 FPS = pygame.time.Clock()
+
 i = 10
 while i > 0:
     FPS.tick(60)

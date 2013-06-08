@@ -116,7 +116,7 @@ class Stage:
         salidas = self.data['salidas']
         for salida in salidas:
             sld = Salida(salidas[salida])
-            self.contents.add(sld,layer=C.CAPA_GROUND_ITEMS)
+            self.contents.add(sld,layer=C.CAPA_GROUND_SALIDAS)
 
     def mover(self,dx,dy):
         m = self.mapa
@@ -134,10 +134,12 @@ class Stage:
         # chequea el que héroe no atraviese a los props
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if h.colisiona(spr,-dx,-dy):
-                if isinstance(spr,Salida):
-                    W.setear_mapa(spr.dest,spr.link)
                 if spr.solido:
                     dx,dy = 0,0
+        
+        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
+            if h.colisiona(spr,-dx,-dy):
+                W.setear_mapa(spr.dest,spr.link)
 
         # chequea el que héroe no atraviese a los mobs
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
@@ -229,10 +231,10 @@ class Salida (_giftSprite):
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
-        image.fill((255,0,0))
+        #image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
         self.mask.fill()
-        #self.image.set_colorkey((0,0,0))
+        self.image.set_colorkey((0,0,0))
         self.solido = False
 

@@ -80,7 +80,7 @@ class Mob (_giftSprite):
         self.direccion = direccion
 
     def mover(self):
-        if self.AI == None:
+        if self.AI == "wanderer":
             self.ticks += 1
             self.mov_ticks += 1
             self._mover()
@@ -89,8 +89,8 @@ class Mob (_giftSprite):
                 pos = 10
                 if randint(1,101) <= pos:
                     self.cambiar_direccion('random')
-
-        else:
+        
+        elif type(self.AI) == dict:
             START = self.start_pos
             CURR_X = self.mapX
             CURR_Y = self.mapY
@@ -115,11 +115,12 @@ class Mob (_giftSprite):
                         self.cambiar_direccion(self.modo_colision)
 
                 self._mover()
+        
+        
 
     def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
-        layers = [C.CAPA_GROUND_ITEMS,C.CAPA_GROUND_MOBS,C.CAPA_HERO]
 
         col_bordes = False #colision contra los bordes de la pantalla
         col_mobs = False #colision contra otros mobs
@@ -140,12 +141,12 @@ class Mob (_giftSprite):
                 if self.colisiona(spr,dx,dy) == True:
                     col_items = True
                     #print(self.nombre+' colisiona con '+str(spr.nombre))
-
+            
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if self.colisiona(spr,dx,dy) == True:
                     col_mobs = True
                     #print(self.nombre+' colisiona con '+str(spr.nombre))
-
+            
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
                 if self.colisiona(spr,dx,dy) == True:
                     col_heroe = True
