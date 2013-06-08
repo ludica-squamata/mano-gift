@@ -16,6 +16,7 @@ W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
 
 inAction = False
+#FPS_f = pygame.font.Font(pygame.font.match_font('Courier New,Arial'),20)
 
 while True:
     FPS.tick(60)
@@ -97,4 +98,5 @@ while True:
             W.MAPA_ACTUAL.mover(dx,dy)
 
     cambios = W.MAPA_ACTUAL.render(fondo)
+    #fondo.blit((FPS_f.render(str(int(FPS.get_fps())),False,(255,255,255,255))),(0,0))
     pantalla.update(cambios)

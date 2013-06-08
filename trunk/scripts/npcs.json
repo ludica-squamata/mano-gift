@@ -1,6 +1,6 @@
 {
     "commoner":{
-        "AI":null,
+        "AI":"wanderer",
         "velocidad":1,
         "modo_colision":"aleatorio",
         "direccion":"abajo",
@@ -13,16 +13,16 @@
             ]
     },
     "aldeano":{
-        "AI":null,
+        "AI":"wanderer",
         "velocidad":1,
         "modo_colision":"aleatorio",
         "direccion":"abajo",
         "dialogo":["Bienvenido a nuestra aldea, Heroe"]
     },
     "aldeanos":{
-        "AI":null,
+        "AI":"wanderer",
         "velocidad":1,
-        "modo_colision":"aleatorio",
+        "modo_colision":"contraria",
         "direccion":"abajo",
         "dialogo":[]
     }

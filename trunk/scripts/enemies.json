@@ -1,6 +1,6 @@
 {
     "green":{
-        "AI":null,
+        "AI":"wanderer",
         "velocidad":1,
         "modo_colision":"random",
         "direccion":"abajo",
@@ -27,7 +27,7 @@
         "direccion":"izquierda"
     },
     "yellow":{
-        "AI":null,
+        "AI":"wanderer",
         "velocidad":1,
         "modo_colision":"random",
         "direccion":"arriba"

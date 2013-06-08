@@ -4,7 +4,9 @@
         "colisiones":"maps/colisiones/aldea.png"
     },
     "capa_ground":{
-        "props": {},
+        "props": {"star":[[6,4],[4,3],[27,12],
+                          [20,14],[30,4],[3,15],
+                            [26,28],[14,25]]},
         "mobs": {
             "enemies":{},
             "npcs":{
@@ -141,6 +143,7 @@
     "refs":{
         "techo_choza":"props/techo_choza.png",
         "aldeano":"mobs/commoner4.png",
-        "aldeanos":"mobs/commoner4.png"
+        "aldeanos":"mobs/commoner4.png",
+        "star":"props/star.png"
     }
 }
