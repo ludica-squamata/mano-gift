@@ -17,7 +17,7 @@ W.setear_mapa(configs['mapa_inicial'], 'inicial')
 
 inAction = False
 #FPS_f = pygame.font.Font(pygame.font.match_font('Courier New,Arial'),20)
-
+onSelect = False
 while True:
     FPS.tick(60)
     for event in pygame.event.get():
@@ -30,30 +30,31 @@ while True:
 
         elif event.type == pygame.KEYDOWN:
             dx,dy = 0,0
-            if not W.onDialog:
+            if W.onDialog:
+                if W.onSelect:
+                    if event.key == C.TECLAS.ARRIBA:
+                        W.HERO.cambiar_opcion_dialogo(-1)
+        
+                    elif event.key == C.TECLAS.ABAJO:
+                        W.HERO.cambiar_opcion_dialogo(+1)
+                                        
+            else:
                 if event.key == C.TECLAS.IZQUIERDA:
                     W.HERO.cambiar_direccion('derecha')
                     dx +=1
-
+    
                 elif event.key == C.TECLAS.DERECHA:
                     W.HERO.cambiar_direccion('izquierda')
                     dx -= 1
-
+    
                 elif event.key == C.TECLAS.ARRIBA:
                     W.HERO.cambiar_direccion('arriba')
                     dy += 1
-
+    
                 elif event.key == C.TECLAS.ABAJO:
                     W.HERO.cambiar_direccion('abajo')
                     dy -= 1
-
-            else:
-                if event.key == C.TECLAS.ARRIBA:
-                    pass
-
-                elif event.key == C.TECLAS.ABAJO:
-                    pass
-
+                    
             if event.key == C.TECLAS.ACCION:
                 if not inAction:
                     W.HERO.accion()
@@ -61,7 +62,10 @@ while True:
 
             elif event.key == C.TECLAS.HABLAR:
                 if not inAction:
-                    W.onDialog = W.HERO.hablar()
+                    if W.onSelect:
+                        W.HERO.confirmar_seleccion()
+                    else:
+                        W.onDialog = W.HERO.hablar()
                     inAction = True
 
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
@@ -72,7 +76,9 @@ while True:
             elif event.key == C.TECLAS.INVENTARIO:
                 if not inAction:
                     W.HERO.ver_inventario()
+                    W.onDialog = True
                     inAction = True
+                        
 
             elif event.key == C.TECLAS.MENU: # debug
                 os.system(['clear','cls'][os.name == 'nt'])

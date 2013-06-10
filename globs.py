@@ -52,6 +52,8 @@ class World:
     MAPA_ACTUAL =''
     HERO =''
     onDialog = False
+    onSelect = False
+    
     def cargar_hero():
         from mobs import PC
         World.HERO = PC('heroe','mobs/heroe_color12.png',World.MAPA_ACTUAL)
