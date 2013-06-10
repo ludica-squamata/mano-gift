@@ -2,8 +2,7 @@ from pygame import mask,Surface,time
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
-from globs import World as W, Constants as C,FPS
-
+from globs import World as W, Constants as C, FPS
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
@@ -179,7 +178,8 @@ class PC (Mob):
     timer_animacion = 0
     frame_animacion = 1000/12
     inventario = {}
-
+    interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
+    
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
         self.nombre = nombre
@@ -193,6 +193,8 @@ class PC (Mob):
         self.dirty = 1
 
     def cambiar_direccion(self,direccion):
+        '''cambia la orientación del sprite y controla parte de la animación'''
+        
         for key in self.images.keys():
             if self.image == self.images[key]:
                 break
@@ -213,8 +215,7 @@ class PC (Mob):
         rango = 15
 
         x,y = self.direcciones[self.direccion]
-        x *= rango
-        y *= rango
+        x,y = x*rango,y*rango
 
         for sprite in self.stage.contents:
             if sprite != self.stage.mapa:
@@ -242,15 +243,27 @@ class PC (Mob):
             if sprite != self.stage.mapa:
                 if self.colisiona(sprite,x,y):
                     if isinstance(sprite,NPC):
-                        return sprite.hablar()
+                        self.interlocutor = sprite
+                        return self.interlocutor.hablar()
                     break
+    
+    def cambiar_opcion_dialogo(self,seleccion): #+1 ó -1
+        dialog = self.stage.dialogs.get_sprite(0)
+
+        mod = -seleccion
+        
+        return dialog.elegir_opcion(seleccion,mod)
+    
+    def confirmar_seleccion(self):
+        dialog = self.stage.dialogs.get_sprite(0)
+        self.interlocutor.hablar(dialog.sel)
 
     def interactuar(self,prop):
         return prop.interaccion()
 
     def ver_inventario(self):
-        self.inventario.ver()
-
+        self.stage.setDialog(self.inventario.ver())
+        return True
 
 class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
@@ -259,23 +272,42 @@ class NPC (Mob):
         self.dialogos = data['dialogo']
         self.pos_diag = -1
 
-    def hablar(self):
-        self.pos_diag += 1
+    def hablar(self, opcion=1):
+        if not W.onSelect:
+            self.pos_diag += 1
+        
         if self.pos_diag >= len(self.dialogos):
             self.stage.endDialog()
             self.pos_diag = -1
             return False
+        
         else:
-            if type(self.dialogos[self.pos_diag]) == dict:
-                pass
-            else:
+            if type(self.dialogos[self.pos_diag]) != dict:
                 texto = self.dialogos[self.pos_diag]
+                W.onSelect = False
+            
+            else:
+                if not W.onSelect:
+                    texto = '\n'.join(self.dialogos[self.pos_diag])
+                    W.onSelect = True
+                    
+                else:
+                    sel = list(self.dialogos[self.pos_diag].keys())[opcion-1]
+                    texto = self.dialogos[self.pos_diag][sel]
+                    W.onSelect = False
+                
             self.stage.setDialog(texto)
             return True
+    
+    def devolver_seleccion(self,sel):
+        dialog = self.stage.dialogs.get_sprite(0)
+        op = list(self.dialogos[self.pos_diag].keys())[dialog.sel-1]
+        
+        return self.dialogos[self.pos_diag][op]
+        
     def mover(self):
         if self.pos_diag == -1:
             super().mover()
-
 
 class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
@@ -290,20 +322,40 @@ class Inventory:
     contenido = {}
     # la mochila
     def __init__ (self):
-        self.contenido = {}
+        self.contenido = []
 
     def ver (self):
         if len(self.contenido) < 1:
-            print ('El inventario está vacío')
+            texto = 'El inventario está vacío'
         else:
-            print(', '.join(self.contenido.keys()))
+            toJoin = []
+            existe = []
+            for item in self.contenido:
+                Item = str(item)
+                if Item not in existe:
+                    existe.append(Item)
+                    toJoin.append(Item+' x'+str(self.contenido.count(item)))
+            
+            #toJoin = [str(item) for item in self.contenido]
+            texto = ', '.join(toJoin)
+        
+        return texto
 
     def agregar(self,cosa):
-        self.contenido[cosa] = Item(cosa)
+        self.contenido.append(Item(cosa))
 
 class Item:
     data = ''
-    def __init__(self,data):
-        self.data = data
+    nombre = ''#el nombre para mostrar del ítem en cuestión
+    def __init__(self,nombre):
+        self.nombre = nombre
+    
+    def __str__(self):
+        return self.nombre.capitalize()
+    
+    def __eq__(self,other):
+        if type(self) == type(other):
+            return True
+    
 
     #para cosas que van en el inventario

@@ -212,9 +212,9 @@ class Stage:
         return ret
 
     def setDialog(self, texto):
-        dg = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
-        if len(dg) > 0:
-            dg = dg[0]
+        diags = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
+        if len(diags) > 0:
+            dg = diags[0]
             dg.setText(texto)
         else:
             dg = Dialog(texto)
