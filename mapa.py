@@ -4,7 +4,7 @@ from misc import Resources as r
 from globs import Constants as C, World as W
 from base import _giftSprite
 from mobs import NPC,Enemy
-from UI import Dialog
+from UI import Dialog,Menu
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items'''
@@ -206,8 +206,9 @@ class Stage:
                 spr.rect.y = m.rect.y + spr.mapY
 
     def render(self,fondo):
-        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-            spr.mover()
+        if not W.onPause:
+            for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+                spr.mover()
         ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
         return ret
 
@@ -219,7 +220,18 @@ class Stage:
         else:
             dg = Dialog(texto)
             self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
-
+    
+    def popMenu (self, ):
+        diags = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
+        if len(diags) > 0:
+            menu = diags[0]
+            menu.setText(texto)
+        else:
+            menu = Menu()
+            W.onPause = True
+            W.onDialog = True
+            self.dialogs.add(menu, layer=C.CAPA_OVERLAYS_DIALOGO)
+    
     def endDialog(self):
         self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
         self.mapa.dirty = 1

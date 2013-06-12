@@ -53,6 +53,7 @@ class World:
     HERO =''
     onDialog = False
     onSelect = False
+    onPause = False
     
     def cargar_hero():
         from mobs import PC
