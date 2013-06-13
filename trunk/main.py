@@ -33,17 +33,26 @@ while True:
                     if not W.onDialog:
                         W.HERO.cambiar_direccion('derecha')
                         dx +=1
+                else:
+                    menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
+                    menu.selectOne(-1,+0)
 
             elif event.key == C.TECLAS.DERECHA:
                 if not W.onPause:
                     if not W.onDialog:
                         W.HERO.cambiar_direccion('izquierda')
                         dx -= 1
-
+                else:
+                    menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
+                    menu.selectOne(+1,+0)
+                    
             elif event.key == C.TECLAS.ARRIBA:
                 if W.onDialog:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(-1)
+                    elif W.onPause:
+                        menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
+                        menu.selectOne(+0,-1)
                 else:
                     if not W.onPause:
                         W.HERO.cambiar_direccion('arriba')
@@ -53,10 +62,14 @@ while True:
                 if W.onDialog:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(+1)
+                    elif W.onPause:
+                        menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
+                        menu.selectOne(+0,+1)
                 else:
                     if not W.onPause:
                         W.HERO.cambiar_direccion('abajo')
                         dy -= 1
+                    
                     
             elif event.key == C.TECLAS.ACCION:
                 if not inAction:
@@ -68,13 +81,17 @@ while True:
                     if W.onSelect:
                         W.HERO.confirmar_seleccion()
                     else:
-                        W.onDialog = W.HERO.hablar()
-                    inAction = True
+                        if not W.onPause:
+                            W.onDialog = W.HERO.hablar()
+                        else:
+                            pass #que esta tecla se la de 'confirmar seleccion'
+                        inAction = True
 
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                 if W.onDialog:
-                    W.MAPA_ACTUAL.endDialog()
-                    W.onDialog = False
+                    if not W.onPause:
+                        W.MAPA_ACTUAL.endDialog()
+                        W.onDialog = False
 
             elif event.key == C.TECLAS.INVENTARIO:
                 if not inAction:
