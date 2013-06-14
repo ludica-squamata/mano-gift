@@ -14,7 +14,7 @@ pygame.key.set_repeat(50,15)
 
 W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
-
+sel = 0
 inAction = False
 while True:
     FPS.tick(60)
@@ -34,8 +34,7 @@ while True:
                         W.HERO.cambiar_direccion('derecha')
                         dx +=1
                 else:
-                    menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
-                    menu.selectOne(-1,+0)
+                    W.MENU.selectOne(+0,-1)
 
             elif event.key == C.TECLAS.DERECHA:
                 if not W.onPause:
@@ -43,16 +42,14 @@ while True:
                         W.HERO.cambiar_direccion('izquierda')
                         dx -= 1
                 else:
-                    menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
-                    menu.selectOne(+1,+0)
+                    W.MENU.selectOne(+0,+1)
                     
             elif event.key == C.TECLAS.ARRIBA:
                 if W.onDialog:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(-1)
                     elif W.onPause:
-                        menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
-                        menu.selectOne(+0,-1)
+                        W.MENU.selectOne(-1,+0)
                 else:
                     if not W.onPause:
                         W.HERO.cambiar_direccion('arriba')
@@ -63,14 +60,12 @@ while True:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(+1)
                     elif W.onPause:
-                        menu = W.MAPA_ACTUAL.dialogs.get_sprite(0)
-                        menu.selectOne(+0,+1)
+                        W.MENU.selectOne(+1,+0)
                 else:
                     if not W.onPause:
                         W.HERO.cambiar_direccion('abajo')
                         dy -= 1
-                    
-                    
+                      
             elif event.key == C.TECLAS.ACCION:
                 if not inAction:
                     W.HERO.accion()
@@ -83,25 +78,25 @@ while True:
                     else:
                         if not W.onPause:
                             W.onDialog = W.HERO.hablar()
-                        else:
-                            pass #que esta tecla se la de 'confirmar seleccion'
                         inAction = True
+                else:
+                    W.MENU.cambiar_menu()
+                        
 
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                 if W.onDialog:
                     if not W.onPause:
                         W.MAPA_ACTUAL.endDialog()
-                        W.onDialog = False
 
             elif event.key == C.TECLAS.INVENTARIO:
                 if not inAction:
-                    W.HERO.ver_inventario()
-                    W.onDialog = True
-                    inAction = True
+                    if not W.onPause:
+                        W.HERO.ver_inventario()
+                        W.onDialog = True
+                        inAction = True
                 else:
                     if not W.onPause:
                         inAction = False
-                        W.onDialog = False
                         W.MAPA_ACTUAL.endDialog()
                     
             elif event.key == C.TECLAS.MENU:
@@ -112,7 +107,6 @@ while True:
                 else:
                     inAction = False
                     W.onPause = False
-                    W.onDialog = False
                     W.MAPA_ACTUAL.endDialog()
                 
             elif event.key == C.TECLAS.SALIR:

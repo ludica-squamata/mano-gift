@@ -49,8 +49,9 @@ class Constants:
 
 class World:
     mapas = {}
-    MAPA_ACTUAL =''
-    HERO =''
+    MAPA_ACTUAL = ''
+    HERO = ''
+    MENU = ''
     onDialog = False
     onSelect = False
     onPause = False
