@@ -63,7 +63,7 @@ class Stage:
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_salidas()
-
+        
     def cargar_props (self):
         imgs = self.data['refs']
         POS_g = self.data['capa_ground']['props']
@@ -221,19 +221,18 @@ class Stage:
             dg = Dialog(texto)
             self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
     
-    def popMenu (self, ):
-        diags = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
-        if len(diags) > 0:
-            menu = diags[0]
-            menu.setText(texto)
-        else:
-            menu = Menu()
-            W.onPause = True
-            W.onDialog = True
-            self.dialogs.add(menu, layer=C.CAPA_OVERLAYS_DIALOGO)
+    def popMenu (self):
+        W.onPause = True
+        W.onDialog = True
+        W.onPause = True
+        botones = r.abrir_json('menus.json')
+        W.MENU = Menu('Pausa',botones['Pausa'])
+        W.MENU.dirty = 2
+        self.dialogs.add(W.MENU, layer=C.CAPA_OVERLAYS_DIALOGO)
     
     def endDialog(self):
         self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
+        W.onDialog = False
         self.mapa.dirty = 1
 
 

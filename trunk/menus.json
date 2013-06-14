@@ -1,0 +1,33 @@
+{   
+    "Pausa":{
+        "botones":{
+            "Personaje":[7,93],
+            "Inventario":[260,93],
+            "Grupo":[7,253],
+            "Opciones":[260,253],
+            "Salir":[125,349]},
+        "orden":["Personaje",
+                 "Inventario",
+                 "Grupo",
+                 "Opciones",
+                 "Salir"]
+    },
+    "Personaje":{
+        "botones":{},
+        "orden":[]
+    },
+    "Inventario":{
+        "botones":{},
+        "orden":[]
+    },
+        
+    "Grupo":{
+        "botones":{},
+        "orden":[]
+    },
+        
+    "Opciones":{
+        "botones":{},
+        "orden":[]
+    }
+}
