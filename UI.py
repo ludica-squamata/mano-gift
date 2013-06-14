@@ -55,13 +55,18 @@ class Dialog (Ventana):
 class Menu (Ventana):
     botones = pygame.sprite.LayeredDirty()
     cur_pos = 0
+    current = ''
     
     def __init__(self,titulo,botones):
+        self.cur_pos = 0
+        self.botones.empty()
+        
         self.canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
         self.crear_titulo(titulo)
         self.establecer_botones(botones)
         super().__init__(self.canvas)
         self.ubicar(10,10)
+        self.dirty = 2
         
     def crear_titulo(self,titulo):
         clip = pygame.Rect(3,3,int(C.ANCHO)-27, int(C.ALTO)-27)
@@ -79,8 +84,11 @@ class Menu (Ventana):
             boton = self._crear_boton(btn,*botones['botones'][btn])
             self.botones.add(boton)
         
-        selected = self.botones.get_sprite(self.cur_pos)
-        selected.serElegido()
+        if len(self.botones) > 0:
+            selected = self.botones.get_sprite(self.cur_pos)
+            selected.serElegido()
+            self.current = selected.nombre
+            
         self.botones.draw(self.canvas)
         
     def _crear_boton(self,texto,x,y):
@@ -114,25 +122,14 @@ class Menu (Ventana):
             self.cur_pos = 0
                 
         self.DeselectAll()
-        selected = self.botones.get_sprite(self.cur_pos)
-        selected.serElegido()
         
+        if len(self.botones) > 0:
+            selected = self.botones.get_sprite(self.cur_pos)
+            selected.serElegido()
+            self.current = selected.nombre
+            
         self.botones.draw(self.canvas)
-        self.dirty = 2
-        print(self.cur_pos)
         return self.cur_pos
-    
-    def cambiar_menu(self):
-        selected = self.botones.get_sprite(self.cur_pos)
-        if selected.nombre == 'Salir':
-            W.onPause = False
-            W.MAPA_ACTUAL.endDialog()
-        else:
-            botones = {'botones':{},'orden':[]}
-            self.__init__(selected.nombre,botones)
-            self.dirty = 2
-        #print(self.cur_pos)
-    
     
 class _boton (_giftSprite):
     nombre = ''

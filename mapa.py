@@ -221,20 +221,21 @@ class Stage:
             dg = Dialog(texto)
             self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
     
-    def popMenu (self):
-        W.onPause = True
-        W.onDialog = True
-        W.onPause = True
+    def popMenu (self,titulo):
         botones = r.abrir_json('menus.json')
-        W.MENU = Menu('Pausa',botones['Pausa'])
-        W.MENU.dirty = 2
-        self.dialogs.add(W.MENU, layer=C.CAPA_OVERLAYS_DIALOGO)
+        if titulo == 'Salir':
+            self.endDialog()
+            W.onPause = False
+        else:
+            W.onPause = True
+            W.onDialog = True
+            W.MENU = Menu(titulo,botones[titulo])
+            self.dialogs.add(W.MENU, layer=C.CAPA_OVERLAYS_DIALOGO)
     
     def endDialog(self):
         self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
         W.onDialog = False
         self.mapa.dirty = 1
-
 
 class Salida (_giftSprite):
     def __init__(self,data):

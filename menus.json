@@ -13,21 +13,21 @@
                  "Salir"]
     },
     "Personaje":{
-        "botones":{},
-        "orden":[]
+        "botones":{"Salir":[125,349]},
+        "orden":["Salir"]
     },
     "Inventario":{
-        "botones":{},
-        "orden":[]
+        "botones":{"Salir":[125,349]},
+        "orden":["Salir"]
     },
         
     "Grupo":{
-        "botones":{},
-        "orden":[]
+        "botones":{"Salir":[125,349]},
+        "orden":["Salir"]
     },
         
     "Opciones":{
-        "botones":{},
-        "orden":[]
+        "botones":{"Salir":[125,349]},
+        "orden":["Salir"]
     }
 }

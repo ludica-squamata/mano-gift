@@ -14,7 +14,6 @@ pygame.key.set_repeat(50,15)
 
 W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
-sel = 0
 inAction = False
 while True:
     FPS.tick(60)
@@ -78,10 +77,10 @@ while True:
                     else:
                         if not W.onPause:
                             W.onDialog = W.HERO.hablar()
-                        inAction = True
+                    inAction = True
                 else:
-                    W.MENU.cambiar_menu()
-                        
+                    if W.onPause:
+                        W.MAPA_ACTUAL.popMenu(W.MENU.current)
 
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                 if W.onDialog:
@@ -102,7 +101,7 @@ while True:
             elif event.key == C.TECLAS.MENU:
                 if not inAction:
                     if not W.onPause:
-                        W.MAPA_ACTUAL.popMenu()
+                        W.MAPA_ACTUAL.popMenu('Pausa')
                         inAction = True
                 else:
                     inAction = False
