@@ -1,7 +1,7 @@
 import pygame
 from pygame import sprite,Rect,Surface
 from misc import Resources as r
-from globs import Constants as C, World as W
+from globs import Constants as C, World as W, Tiempo as T
 from base import _giftSprite
 from mobs import NPC,Enemy
 from UI import Dialog,Menu
@@ -63,7 +63,7 @@ class Stage:
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_salidas()
-        
+                
     def cargar_props (self):
         imgs = self.data['refs']
         POS_g = self.data['capa_ground']['props']
@@ -210,6 +210,7 @@ class Stage:
             for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 spr.mover()
         ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
+        if T.anochece(10): fondo.blit(T.noche(),(0,0))
         return ret
 
     def setDialog(self, texto):

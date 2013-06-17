@@ -1,8 +1,8 @@
-import pygame,sys,os
+import pygame,sys
 from mapa import Stage,Prop
 from mobs import PC
 from misc import Resources as r
-from globs import Constants as C, World as W,FPS
+from globs import Constants as C, World as W, Tiempo as T
 
 configs = r.abrir_json('config.json')
 
@@ -16,7 +16,8 @@ W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
 inAction = False
 while True:
-    FPS.tick(60)
+    T.FPS.tick(60)
+    T.contar_tiempo()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -117,3 +118,4 @@ while True:
 
     cambios = W.MAPA_ACTUAL.render(fondo)
     pantalla.update(cambios)
+

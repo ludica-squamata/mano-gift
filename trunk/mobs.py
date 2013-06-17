@@ -2,7 +2,7 @@ from pygame import mask,Surface,time
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
-from globs import World as W, Constants as C, FPS
+from globs import World as W, Constants as C, Tiempo as T
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
@@ -198,7 +198,7 @@ class PC (Mob):
         for key in self.images.keys():
             if self.image == self.images[key]:
                 break
-        self.timer_animacion += FPS.get_time()
+        self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if key == 'D'+direccion:
