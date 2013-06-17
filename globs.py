@@ -68,9 +68,37 @@ class World:
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
         World.MAPA_ACTUAL.mapa.dirty=1
 
-FPS = pygame.time.Clock()
-
-i = 10
-while i > 0:
-    FPS.tick(60)
-    i-=1
+class Tiempo:
+    FPS = pygame.time.Clock()
+    frames,segs,mins = 0,0,0
+    esNoche = False
+    _i = 10
+    while _i > 0:
+        FPS.tick(60)
+        _i -= 1
+        
+    def contar_tiempo ():
+        Tiempo.frames += 1
+        if Tiempo.frames == 60:
+            Tiempo.segs += 1
+            Tiempo.frames = 0
+            if Tiempo.segs == 60:
+                Tiempo.mins += 1
+                Tiempo.segs = 0
+    
+    def anochece(duracion):
+        if not Tiempo.esNoche:
+            if Tiempo.mins == duracion:
+                Tiempo.esNoche = True
+                Tiempo.mins = 0
+        else:
+            if Tiempo.mins == duracion:
+                Tiempo.esNoche = False
+                Tiempo.mins = 0
+        
+        return Tiempo.esNoche
+    
+    def noche():
+        osc_img = pygame.Surface((480,480))
+        osc_img.set_alpha(200)
+        return osc_img

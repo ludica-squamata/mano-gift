@@ -8,7 +8,7 @@
         "mobs": {
             "enemies":{},
             "npcs":{}
-        },
+        }
     },
     "capa_top":{
         "props":{}
