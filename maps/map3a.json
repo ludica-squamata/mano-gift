@@ -22,5 +22,6 @@
             "link": "puerta"
         }
     },
-    "refs":{}
+    "refs":{},
+    "ambiente":"exterior"
 }

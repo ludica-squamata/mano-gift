@@ -43,5 +43,7 @@
         "blue":"mobs/blue4.png",
         "yellow":"mobs/yellow4.png",
         "commoner":"mobs/commoner4.png",
-        "star":"props/star.png"}
+        "star":"props/star.png"
+    },
+    "ambiente":"exterior"
 }

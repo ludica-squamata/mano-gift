@@ -29,5 +29,6 @@
     "refs":{
         "esquina":"props/Rect1x1.png",
         "abajo":"props/Rect1x2.png",
-        "derecha":"props/Rect2x1.png"}
+        "derecha":"props/Rect2x1.png"},
+    "ambiente":"interior"
 }

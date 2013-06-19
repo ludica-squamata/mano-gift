@@ -30,5 +30,6 @@
             "link":"arriba"
         }
     },
-    "refs":{}
+    "refs":{},
+    "ambiente":"exterior"
 }

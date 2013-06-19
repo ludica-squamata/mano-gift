@@ -1,6 +1,7 @@
 #global information
 import pygame
 from misc import Resources as r
+from base import _giftSprite
 
 class Teclas:
     ARRIBA = pygame.K_UP
@@ -39,6 +40,7 @@ class Constants:
     CAPA_HERO = 4
     CAPA_TOP_ITEMS = 5
     CAPA_TOP_MOBS = 6
+    CAPA_TOP_CIELO = 7
 
     CAPA_OVERLAYS_DIALOGO = 1
     CAPA_OVERLAYS_INVENTARIO = 2
@@ -70,8 +72,17 @@ class World:
 
 class Tiempo:
     FPS = pygame.time.Clock()
-    frames,segs,mins = 0,0,0
+    frames,segs,mins,dias = 0,0,0,0
     esNoche = False
+    
+    contador = -1
+    
+    nch_img = pygame.Surface((480,480))
+    nch_img.set_alpha(125)
+    noche = _giftSprite(nch_img)
+    noche.ubicar(0,0)
+    noche.dirty = 2
+
     _i = 10
     while _i > 0:
         FPS.tick(60)
@@ -85,6 +96,8 @@ class Tiempo:
             if Tiempo.segs == 60:
                 Tiempo.mins += 1
                 Tiempo.segs = 0
+                if Tiempo.mins == 20:
+                    Tiempo.dias += 1
     
     def anochece(duracion):
         if not Tiempo.esNoche:
@@ -97,8 +110,3 @@ class Tiempo:
                 Tiempo.mins = 0
         
         return Tiempo.esNoche
-    
-    def noche():
-        osc_img = pygame.Surface((480,480))
-        osc_img.set_alpha(200)
-        return osc_img

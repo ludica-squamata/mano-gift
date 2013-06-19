@@ -204,13 +204,22 @@ class Stage:
             if spr != h and spr != m:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
-
+    
+    def anochecer(self):
+        if T.anochece(5):
+            if self.data['ambiente'] == 'exterior':
+                T.noche.rect.topleft = 0,0
+                self.contents.add(T.noche,layer=C.CAPA_TOP_CIELO)
+        else:
+            self.contents.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
+    
+    
     def render(self,fondo):
         if not W.onPause:
             for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 spr.mover()
+        self.anochecer()
         ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
-        if T.anochece(10): fondo.blit(T.noche(),(0,0))
         return ret
 
     def setDialog(self, texto):

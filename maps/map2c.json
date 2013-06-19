@@ -29,5 +29,6 @@
             "link":"derecha"
         }
     },
-    "refs":{}
+    "refs":{},
+        "ambiente":"exterior"
 }
