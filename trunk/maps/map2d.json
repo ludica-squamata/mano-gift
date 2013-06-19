@@ -29,5 +29,6 @@
             "link":"abajo"
         }
     },
-    "refs":{}
+    "refs":{},
+        "ambiente":"exterior"
 }

@@ -145,5 +145,6 @@
         "aldeano":"mobs/commoner4.png",
         "aldeanos":"mobs/commoner4.png",
         "star":"props/star.png"
-    }
+    },
+    "ambiente":"exterior"
 }

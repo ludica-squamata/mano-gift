@@ -27,5 +27,6 @@
     },
     "refs":{
         "puerta":"props/puerta.png"
-    }
+    },
+    "ambiente":"interior"
 }
