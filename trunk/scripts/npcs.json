@@ -11,20 +11,26 @@
              "No":"¡oh, qué pena!"},
             "Y ahora, ¿funciona?",
             {"Sí":"¡Bravo!",
-             "No":"¡Demonios!"}]
+             "No":"¡Demonios!"}],
+        "salud":2,
+        "actitud":"pasiva"
     },
     "aldeano":{
         "AI":"wanderer",
         "velocidad":1,
         "modo_colision":"aleatorio",
         "direccion":"abajo",
-        "dialogo":["Bienvenido a nuestra aldea, Heroe"]
+        "dialogo":["Bienvenido a nuestra aldea, Héroe"],
+        "salud":2,
+        "actitud":"pasiva"
     },
     "aldeanos":{
         "AI":"wanderer",
         "velocidad":1,
         "modo_colision":"contraria",
         "direccion":"abajo",
-        "dialogo":[]
+        "dialogo":[],
+        "salud":2,
+        "actitud":"pasiva"
     }
 }
