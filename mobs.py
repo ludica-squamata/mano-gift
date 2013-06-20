@@ -39,8 +39,10 @@ class Mob (_giftSprite):
             self.AI = data['AI']
             self.velocidad = data['velocidad']
             self.modo_colision = data['modo_colision']
+            self.salud = data['salud']
+            self.actitud = data['actitud']
             if 'solido' in data:
-                self.solido = data['solido']
+                self.solido = data['solido']                
 
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
@@ -114,9 +116,7 @@ class Mob (_giftSprite):
                         self.cambiar_direccion(self.modo_colision)
 
                 self._mover()
-        
-        
-
+    
     def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
@@ -137,19 +137,20 @@ class Mob (_giftSprite):
                 #print(self.nombre+' colisiona con el mapa en Y')
 
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-                if self.colisiona(spr,dx,dy) == True:
+                if self.colisiona(spr,dx,dy):
                     col_items = True
                     #print(self.nombre+' colisiona con '+str(spr.nombre))
             
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                if self.colisiona(spr,dx,dy) == True:
+                if self.colisiona(spr,dx,dy):
                     col_mobs = True
                     #print(self.nombre+' colisiona con '+str(spr.nombre))
             
-            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_HERO):
-                if self.colisiona(spr,dx,dy) == True:
-                    col_heroe = True
-                    #print(self.nombre+' colisiona con '+str(spr.nombre))
+            if self.colisiona(W.HERO,dx,dy):
+                col_heroe = True
+                if self.actitud == 'hostil':
+                    self.atacar()
+                #print(self.nombre+' colisiona con '+str(spr.nombre))
 
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
@@ -221,7 +222,7 @@ class PC (Mob):
             if sprite != self.stage.mapa:
                 if self.colisiona(sprite,x,y):
                     if isinstance(sprite,Enemy):
-                        self.atacar(sprite)
+                        self.atacar(sprite,x,y)
 
                     elif isinstance(sprite,Prop):
                         inst = self.interactuar(sprite,x,y)
@@ -230,8 +231,9 @@ class PC (Mob):
 
                     break
 
-    def atacar(self,sprite):
-        sprite.morir()
+    def atacar(self,sprite,x,y):
+        sprite.reubicar(x,y)
+        sprite.recibir_danio()
 
     def hablar(self):
         rango = 15
@@ -327,10 +329,26 @@ class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
+    
+    def recibir_danio(self):
+        self.salud -= 1
+        
+        if self.salud <= 0:
+            self.stage.contents.remove(self)
+            print('Mob '+self.nombre+' eliminado!')
+        else:
+            print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
+    
+    def atacar(self):
+        rango = 15
 
-    def morir(self):
-        self.stage.contents.remove(self)
-        print('Mob '+self.nombre+' eliminado!')
+        x,y = self.direcciones[self.direccion]
+        x,y = x*rango,y*rango
+
+        for sprite in self.stage.contents:
+            if sprite == W.HERO:
+                if self.colisiona(sprite,x,y):
+                    print('Mob '+self.nombre+' ataca al héroe!')
 
 class Inventory:
     contenido = {}
