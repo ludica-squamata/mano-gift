@@ -7,7 +7,12 @@ from mobs import NPC,Enemy
 from UI import Dialog,Menu
 
 class Prop (_giftSprite):
-    '''Clase para los objetos de ground_items'''
+    '''Clase para los objetos de ground_items.
+    
+    
+        Estos objetos no se pueden mover por si mismos, pero usualmente tienen
+        algún tipo de interacción (agarrar, mover, cortar, etc).'''
+        
     propiedades = [] #indica si es agarrable, cortable, movible, etc.
     estado = 0
     def __init__ (self,nombre, imagen, stage, x,y, data = None):
@@ -17,7 +22,7 @@ class Prop (_giftSprite):
         if data != None:
             self.propiedades = data['propiedades']
 
-    def interaccion(self):
+    def interaccion(self,**kwargs):
         if 'agarrable' in self.propiedades:
             return self.agarrame()
 
@@ -29,19 +34,25 @@ class Prop (_giftSprite):
 
             self.visible = self.propiedades['operable'][str(self.estado)]['visible']
             self.solido = self.propiedades['operable'][str(self.estado)]['solido']
+        
+        elif 'empujable' in self.propiedades:
+            x = kwargs['x']
+            y = kwargs['y']
+            self.empujame(x,y)
 
     def agarrame(self): #añadir al inventario y quitar del mapa
         self.stage.contents.remove(self)
         return self.nombre
-
-    def cambia_estado(self, ): #abrir puerta, por ejemplo
-        pass
-
-
-    #basicamente, sprites que no se mueven
-    #para las cosas en pantalla que tienen interaccion(tronco de arbol, puerta, piedras, loot)
-    #como los árboles de pokemon que se pueden golpear
-    #si solo son colisiones, conviene dibujarlo directo en el fondo
+    
+    def empujame(self,dx,dy): # desplazar a través del mapa. puede salirse de los margenes!
+        if 'pesado' in self.propiedades:
+            if dx > 0: dx -= 10
+            elif dx < 0: dx += 10
+            
+            if dy > 0: dy -= 10
+            elif dy < 0: dy += 10
+            
+        self.reubicar(dx,dy)
 
 class Stage:
     contents = None
@@ -205,8 +216,8 @@ class Stage:
                 spr.rect.x = m.rect.x + spr.mapX
                 spr.rect.y = m.rect.y + spr.mapY
     
-    def anochecer(self):
-        if T.anochece(5):
+    def anochecer(self,delay):
+        if T.anochece(delay):
             if self.data['ambiente'] == 'exterior':
                 T.noche.rect.topleft = 0,0
                 self.contents.add(T.noche,layer=C.CAPA_TOP_CIELO)
@@ -218,7 +229,7 @@ class Stage:
         if not W.onPause:
             for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 spr.mover()
-        self.anochecer()
+        self.anochecer(10)
         ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
         return ret
 

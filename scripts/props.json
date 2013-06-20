@@ -15,5 +15,8 @@
     },
     "star":{
         "propiedades":["agarrable"]
+    },
+    "crate":{
+        "propiedades":["empujable","pesado"]
     }
 }
