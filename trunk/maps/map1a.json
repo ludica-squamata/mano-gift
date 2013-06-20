@@ -6,7 +6,8 @@
     "capa_ground":{
         "props": {
             "puerta":[[4,4]],
-            "star":[[11,11]]
+            "star":[[11,11]],
+            "crate":[[14,14]]
         },
         "mobs": {
             "enemies":{
@@ -43,7 +44,8 @@
         "blue":"mobs/blue4.png",
         "yellow":"mobs/yellow4.png",
         "commoner":"mobs/commoner4.png",
-        "star":"props/star.png"
+        "star":"props/star.png",
+        "crate":"props/crate.png"
     },
     "ambiente":"exterior"
 }

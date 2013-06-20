@@ -224,7 +224,7 @@ class PC (Mob):
                         self.atacar(sprite)
 
                     elif isinstance(sprite,Prop):
-                        inst = self.interactuar(sprite)
+                        inst = self.interactuar(sprite,x,y)
                         if inst != None:
                             self.inventario.agregar(inst)
 
@@ -247,6 +247,20 @@ class PC (Mob):
                         return self.interlocutor.hablar()
                     break
     
+    def _interactuar(self,rango):
+        #la idea sería que esta función discriminara con qué está interactuando
+        #el heroe y que devolviera el método correspondiente.
+        #sugiero esto porque hablar() y accion() comparten características redundantes.
+
+        x,y = self.direcciones[self.direccion]
+        x,y = x*rango,y*rango
+
+        for sprite in self.stage.contents:
+            if sprite != self.stage.mapa:
+                if self.colisiona(sprite,x,y):
+                    clase = sprite.__clase__
+                    return clase # la idea es, luego, usar issubclass(clase,Mob) por ejemplo.
+    
     def cambiar_opcion_dialogo(self,seleccion): #+1 ó -1
         dialog = self.stage.dialogs.get_sprite(0)
 
@@ -258,8 +272,8 @@ class PC (Mob):
         dialog = self.stage.dialogs.get_sprite(0)
         self.interlocutor.hablar(dialog.sel)
 
-    def interactuar(self,prop):
-        return prop.interaccion()
+    def interactuar(self,prop,x,y):
+        return prop.interaccion(x=x,y=y)
 
     def ver_inventario(self):
         self.stage.setDialog(self.inventario.ver())
