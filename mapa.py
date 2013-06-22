@@ -22,7 +22,7 @@ class Prop (_giftSprite):
         if data != None:
             self.propiedades = data['propiedades']
 
-    def interaccion(self,**kwargs):
+    def interaccion(self,x=0,y=0):
         if 'agarrable' in self.propiedades:
             return self.agarrame()
 
@@ -36,8 +36,6 @@ class Prop (_giftSprite):
             self.solido = self.propiedades['operable'][str(self.estado)]['solido']
         
         elif 'empujable' in self.propiedades:
-            x = kwargs['x']
-            y = kwargs['y']
             self.empujame(x,y)
 
     def agarrame(self): #añadir al inventario y quitar del mapa
