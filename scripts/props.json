@@ -17,6 +17,6 @@
         "propiedades":["agarrable"]
     },
     "crate":{
-        "propiedades":["empujable","pesado"]
+        "propiedades":["empujable","pesado","solido"]
     }
 }

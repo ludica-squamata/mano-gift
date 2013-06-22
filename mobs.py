@@ -146,11 +146,11 @@ class Mob (_giftSprite):
                     col_mobs = True
                     #print(self.nombre+' colisiona con '+str(spr.nombre))
             
-            if self.colisiona(W.HERO,dx,dy):
-                col_heroe = True
-                if self.actitud == 'hostil':
-                    self.atacar()
-                #print(self.nombre+' colisiona con '+str(spr.nombre))
+        if self.colisiona(W.HERO,dx,dy):
+            col_heroe = True
+            if self.actitud == 'hostil':
+                self.atacar()
+            #print(self.nombre+' colisiona con '+str(spr.nombre))
 
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
@@ -190,6 +190,9 @@ class PC (Mob):
     inventario = {}
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     
+    fuerza = 15
+    alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
+    
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
         self.nombre = nombre
@@ -219,18 +222,27 @@ class PC (Mob):
                 self.image = self.images['D'+direccion]
 
         self.direccion = direccion
-
+    
+    def mover(self,dx,dy):
+        rango = 12
+        x,y = dx*rango,dy*rango
+        
+        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            if spr.solido and spr._eval_prop('empujable'):
+                if self.colisiona(spr,x,y):
+                    spr.interaccion(x,y)
+    
     def accion(self):
         from mapa import Prop
-        rango = 15
         x,y = self.direcciones[self.direccion]
-        x,y = x*rango,y*rango
         
-        sprite = self._interactuar(rango)
+        sprite = self._interactuar(self.fuerza)
         if  issubclass(sprite.__class__,Mob):
+            x,y = x*self.fuerza,y*self.fuerza
             self.atacar(sprite,x,y)
 
         elif isinstance(sprite,Prop):
+            x,y = x*self.fuerza*2,y*self.fuerza*2
             if sprite.interaccion(x,y) != None:
                 self.inventario.agregar(sprite)
 
@@ -247,15 +259,8 @@ class PC (Mob):
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
             return self.interlocutor.hablar()
-
-        x,y = self.direcciones[self.direccion]
-        x,y = x*rango,y*rango
     
     def _interactuar(self,rango):
-        #la idea sería que esta función discriminara con qué está interactuando
-        #el heroe y que devolviera el método correspondiente.
-        #sugiero esto porque hablar() y accion() comparten características redundantes.
-
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
 

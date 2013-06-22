@@ -20,37 +20,45 @@ class Prop (_giftSprite):
         self.nombre = nombre
         self.estado = 0
         if data != None:
-            self.propiedades = data['propiedades']
+            for prop in data['propiedades']:
+                if prop == 'operable':
+                    for var in data['propiedades'][prop][str(self.estado)]:
+                        exec('self.'+var+'=True')
+                exec('self.'+prop+'=True')
 
     def interaccion(self,x=0,y=0):
-        if 'agarrable' in self.propiedades:
-            return self.agarrame()
-
-        elif 'operable' in self.propiedades:
+        if self._eval_prop('agarrable'):
+            self.stage.contents.remove(self)
+            return self.nombre
+        
+        elif self._eval_prop('operable'):
             if self.estado == 0:
                 self.estado = 1
             else:
                 self.estado = 0
 
-            self.visible = self.propiedades['operable'][str(self.estado)]['visible']
-            self.solido = self.propiedades['operable'][str(self.estado)]['solido']
-        
-        elif 'empujable' in self.propiedades:
-            self.empujame(x,y)
+            self.visible = not self.visible
+            self.solido = not self.solido   
 
-    def agarrame(self): #añadir al inventario y quitar del mapa
-        self.stage.contents.remove(self)
-        return self.nombre
+        elif self._eval_prop('empujable'):
+            if self._eval_prop('pesado'):
+                if x > 0: x -= 10
+                elif x < 0: x += 10
     
-    def empujame(self,dx,dy): # desplazar a través del mapa. puede salirse de los margenes!
-        if 'pesado' in self.propiedades:
-            if dx > 0: dx -= 10
-            elif dx < 0: dx += 10
+                if y > 0: y -= 10
+                elif y < 0: y += 10
             
-            if dy > 0: dy -= 10
-            elif dy < 0: dy += 10
+            self.reubicar(x,y)
+    
+    def _eval_prop(self,propiedad):
+        try:
+            exec('self.'+propiedad)
+            return True
+            #pero, que ocurre si la propiedad es False?
             
-        self.reubicar(dx,dy)
+        except AttributeError:
+            return False
+    
 
 class Stage:
     contents = None

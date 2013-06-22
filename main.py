@@ -31,16 +31,19 @@ while True:
             if event.key == C.TECLAS.IZQUIERDA:
                 if not W.onPause:
                     if not W.onDialog:
-                        W.HERO.cambiar_direccion('derecha')
                         dx +=1
+                        W.HERO.cambiar_direccion('derecha')
+                        W.HERO.mover(-dx,-dy)
                 else:
                     W.MENU.selectOne(+0,-1)
 
             elif event.key == C.TECLAS.DERECHA:
                 if not W.onPause:
                     if not W.onDialog:
-                        W.HERO.cambiar_direccion('izquierda')
                         dx -= 1
+                        W.HERO.cambiar_direccion('izquierda')
+                        W.HERO.mover(-dx,-dy)
+                        
                 else:
                     W.MENU.selectOne(+0,+1)
                     
@@ -52,8 +55,9 @@ while True:
                         W.MENU.selectOne(-1,+0)
                 else:
                     if not W.onPause:
-                        W.HERO.cambiar_direccion('arriba')
                         dy += 1
+                        W.HERO.cambiar_direccion('arriba')
+                        W.HERO.mover(-dx,-dy)
 
             elif event.key == C.TECLAS.ABAJO:
                 if W.onDialog:
@@ -63,8 +67,9 @@ while True:
                         W.MENU.selectOne(+1,+0)
                 else:
                     if not W.onPause:
-                        W.HERO.cambiar_direccion('abajo')
                         dy -= 1
+                        W.HERO.cambiar_direccion('abajo')
+                        W.HERO.mover(-dx,-dy)
                       
             elif event.key == C.TECLAS.ACCION:
                 if not inAction:
