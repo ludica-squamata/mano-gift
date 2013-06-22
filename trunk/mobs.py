@@ -172,6 +172,15 @@ class Mob (_giftSprite):
             dx,dy = x*self.velocidad,y*self.velocidad
 
         self.reubicar(dx, dy)
+    
+    def recibir_danio(self):
+        self.salud -= 1
+        
+        if self.salud <= 0:
+            self.stage.contents.remove(self)
+            print('Mob '+self.nombre+' eliminado!')
+        else:
+            print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
 
 class PC (Mob):
     centroX = 0
@@ -214,22 +223,16 @@ class PC (Mob):
     def accion(self):
         from mapa import Prop
         rango = 15
-
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
+        
+        sprite = self._interactuar(rango)
+        if  issubclass(sprite.__class__,Mob):
+            self.atacar(sprite,x,y)
 
-        for sprite in self.stage.contents:
-            if sprite != self.stage.mapa:
-                if self.colisiona(sprite,x,y):
-                    if isinstance(sprite,Enemy):
-                        self.atacar(sprite,x,y)
-
-                    elif isinstance(sprite,Prop):
-                        inst = self.interactuar(sprite,x,y)
-                        if inst != None:
-                            self.inventario.agregar(inst)
-
-                    break
+        elif isinstance(sprite,Prop):
+            if sprite.interaccion(x,y) != None:
+                self.inventario.agregar(sprite)
 
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
@@ -237,17 +240,16 @@ class PC (Mob):
 
     def hablar(self):
         rango = 15
+        x,y = self.direcciones[self.direccion]
+        x,y = x*rango,y*rango
+        
+        sprite = self._interactuar(rango)
+        if isinstance(sprite,NPC):
+            self.interlocutor = sprite
+            return self.interlocutor.hablar()
 
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
-
-        for sprite in self.stage.contents:
-            if sprite != self.stage.mapa:
-                if self.colisiona(sprite,x,y):
-                    if isinstance(sprite,NPC):
-                        self.interlocutor = sprite
-                        return self.interlocutor.hablar()
-                    break
     
     def _interactuar(self,rango):
         #la idea sería que esta función discriminara con qué está interactuando
@@ -260,8 +262,7 @@ class PC (Mob):
         for sprite in self.stage.contents:
             if sprite != self.stage.mapa:
                 if self.colisiona(sprite,x,y):
-                    clase = sprite.__clase__
-                    return clase # la idea es, luego, usar issubclass(clase,Mob) por ejemplo.
+                    return sprite
     
     def cambiar_opcion_dialogo(self,seleccion): #+1 ó -1
         dialog = self.stage.dialogs.get_sprite(0)
@@ -273,9 +274,6 @@ class PC (Mob):
     def confirmar_seleccion(self):
         dialog = self.stage.dialogs.get_sprite(0)
         self.interlocutor.hablar(dialog.sel)
-
-    def interactuar(self,prop,x,y):
-        return prop.interaccion(x=x,y=y)
 
     def ver_inventario(self):
         self.stage.setDialog(self.inventario.ver())
@@ -329,16 +327,7 @@ class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
-    
-    def recibir_danio(self):
-        self.salud -= 1
         
-        if self.salud <= 0:
-            self.stage.contents.remove(self)
-            print('Mob '+self.nombre+' eliminado!')
-        else:
-            print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
-    
     def atacar(self):
         rango = 15
 
