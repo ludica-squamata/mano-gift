@@ -189,16 +189,27 @@ class PC (Mob):
     frame_animacion = 1000/12
     inventario = {}
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
+    cmb_pos_img = {} # combat position images.
     
     fuerza = 15
     alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
+        self.cargar_anim_combate('mobs/heroe_combate.png')
         self.nombre = nombre
         self.timer_animacion = 0
         self.inventario = Inventory()
-
+    
+    def cargar_anim_combate(self,ruta_imgs):
+        spritesheet = r.split_spritesheet(ruta_imgs)
+        keys = ['A'+'abajo','A'+'arriba','A'+'derecha','A'+'izquierda',
+                'B'+'abajo','B'+'arriba','B'+'derecha','B'+'izquierda',
+                'C'+'abajo','C'+'arriba','C'+'derecha','C'+'izquierda']
+        for key in keys:
+            self.cmb_pos_img[key] = spritesheet[keys.index(key)]
+                
+    
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
@@ -283,6 +294,10 @@ class PC (Mob):
     def ver_inventario(self):
         self.stage.setDialog(self.inventario.ver())
         return True
+    
+    def pos_combate(self):
+        self.image = self.cmb_pos_img['A'+self.direccion]
+    
 
 class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
