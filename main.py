@@ -118,6 +118,9 @@ while True:
                     pygame.quit()
                     print('Saliendo...')
                     sys.exit()
+            
+            elif event.key == pygame.K_LSHIFT:
+                W.HERO.pos_combate()
 
             W.MAPA_ACTUAL.mover(dx,dy)
 

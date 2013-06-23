@@ -60,7 +60,7 @@ class World:
     
     def cargar_hero():
         from mobs import PC
-        World.HERO = PC('heroe','mobs/heroe_color12.png',World.MAPA_ACTUAL)
+        World.HERO = PC('heroe','mobs/heroe_neutral.png',World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
