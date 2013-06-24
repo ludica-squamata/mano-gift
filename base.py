@@ -23,6 +23,8 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY = y
         self.stage = stage
         self.solido = True
+        
+        self.anim_counter = 0
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -53,6 +55,6 @@ class _giftSprite(sprite.DirtySprite):
             #if rectA.colliderect(rectB) == 1:
             #    print(self.nombre+' colisiona con '+sprite.nombre)
             return rectA.colliderect(rectB)
-        
+    
     
 
