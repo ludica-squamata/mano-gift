@@ -120,10 +120,10 @@ while True:
                     sys.exit()
             
             elif event.key == pygame.K_LSHIFT:
-                W.HERO.pos_combate()
+                W.HERO.cambiar_estado()
 
             W.MAPA_ACTUAL.mover(dx,dy)
 
-    cambios = W.MAPA_ACTUAL.render(fondo)
+    cambios = W.MAPA_ACTUAL.update(fondo)
     pantalla.update(cambios)
 

@@ -181,7 +181,11 @@ class Mob (_giftSprite):
             print('Mob '+self.nombre+' eliminado!')
         else:
             print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
-
+    
+    def update(self):
+        if not W.onPause:
+            self.mover()
+    
 class PC (Mob):
     centroX = 0
     centroY = 0
@@ -190,6 +194,7 @@ class PC (Mob):
     inventario = {}
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.
+    estado = '' #idle, o combate. Indica si puede atacar desde esta posición, o no.
     
     fuerza = 15
     alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
@@ -200,6 +205,7 @@ class PC (Mob):
         self.nombre = nombre
         self.timer_animacion = 0
         self.inventario = Inventory()
+        self.estado = 'idle'
     
     def cargar_anim_combate(self,ruta_imgs):
         spritesheet = r.split_spritesheet(ruta_imgs)
@@ -209,7 +215,6 @@ class PC (Mob):
         for key in keys:
             self.cmb_pos_img[key] = spritesheet[keys.index(key)]
                 
-    
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
@@ -249,13 +254,14 @@ class PC (Mob):
         
         sprite = self._interactuar(self.fuerza)
         if  issubclass(sprite.__class__,Mob):
-            x,y = x*self.fuerza,y*self.fuerza
-            self.atacar(sprite,x,y)
+            if self.estado == 'combate':
+                x,y = x*self.fuerza,y*self.fuerza
+                self.atacar(sprite,x,y)
 
         elif isinstance(sprite,Prop):
             x,y = x*self.fuerza*2,y*self.fuerza*2
             if sprite.interaccion(x,y) != None:
-                self.inventario.agregar(sprite)
+                self.inventario.agregar(sprite.nombre)
 
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
@@ -295,10 +301,18 @@ class PC (Mob):
         self.stage.setDialog(self.inventario.ver())
         return True
     
-    def pos_combate(self):
-        self.image = self.cmb_pos_img['A'+self.direccion]
+    def cambiar_estado(self):
+        if self.estado == 'idle':
+            self.image = self.cmb_pos_img['A'+self.direccion]
+            self.estado = 'combate'
+            
+        elif self.estado == 'combate':
+            self.image = self.images['S'+self.direccion]
+            self.estado = 'idle'
     
-
+    def update(self):
+        pass
+    
 class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
@@ -386,6 +400,8 @@ class Inventory:
         self.contenido.append(Item(cosa))
 
 class Item:
+    '''Para cosas que van en el inventario'''
+    
     data = ''
     nombre = ''#el nombre para mostrar del ítem en cuestión
     def __init__(self,nombre):
@@ -397,6 +413,3 @@ class Item:
     def __eq__(self,other):
         if type(self) == type(other):
             return True
-    
-
-    #para cosas que van en el inventario

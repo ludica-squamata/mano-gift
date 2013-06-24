@@ -59,7 +59,6 @@ class Prop (_giftSprite):
         except AttributeError:
             return False
     
-
 class Stage:
     contents = None
     hero = None
@@ -229,16 +228,7 @@ class Stage:
                 self.contents.add(T.noche,layer=C.CAPA_TOP_CIELO)
         else:
             self.contents.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
-    
-    
-    def render(self,fondo):
-        if not W.onPause:
-            for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                spr.mover()
-        self.anochecer(10)
-        ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
-        return ret
-
+      
     def setDialog(self, texto):
         diags = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
         if len(diags) > 0:
@@ -263,6 +253,12 @@ class Stage:
         self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
         W.onDialog = False
         self.mapa.dirty = 1
+    
+    def update(self,fondo):
+        self.anochecer(10)
+        self.contents.update()
+        ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
+        return ret
 
 class Salida (_giftSprite):
     def __init__(self,data):
