@@ -1,7 +1,5 @@
-from pygame import sprite,mask
+from pygame import sprite,mask,Surface
 from misc import Resources as r
-#from globs import Constants as C
-import pygame
 
 class _giftSprite(sprite.DirtySprite):
     #mapX y mapY estan medidas en pixeles y son relativas al mapa
@@ -13,7 +11,7 @@ class _giftSprite(sprite.DirtySprite):
         super().__init__()
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
-        elif isinstance(imagen, pygame.Surface):
+        elif isinstance(imagen, Surface):
             self.image = imagen
         else:
             raise TypeError('Imagen debe ser una ruta o un Surface')
@@ -25,6 +23,7 @@ class _giftSprite(sprite.DirtySprite):
         self.solido = True
         
         self.anim_counter = 0
+        self.anim_limit = 20
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''

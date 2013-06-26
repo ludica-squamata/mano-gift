@@ -183,6 +183,9 @@ class Mob (_giftSprite):
             print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
     
     def update(self):
+        self.anim_counter += 1
+        if self.anim_counter > self.anim_limit:
+            self.anim_counter = 0
         if not W.onPause:
             self.mover()
     
@@ -198,6 +201,8 @@ class PC (Mob):
     
     fuerza = 15
     alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
+    atq_counter = 0
+    atacando = False
     
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
@@ -264,8 +269,33 @@ class PC (Mob):
                 self.inventario.agregar(sprite.nombre)
 
     def atacar(self,sprite,x,y):
+        self.atacando = True
         sprite.reubicar(x,y)
         sprite.recibir_danio()
+    
+    def _anim_atk (self,limite):
+        # construir la animación
+        frames = []
+        for L in ['A','B','C']:
+            frame = self.cmb_pos_img[L+self.direccion]
+            frames.append(frame)
+        
+        # determinar el frame actual
+        for index in range(len(frames)):
+            if self.image == frames[index]:
+                break
+        
+        # iniciar la animación
+        self.atq_counter += 1
+        if self.atq_counter > limite:
+            self.atq_counter = 0
+            index += 1
+            if index > len(frames)-1:
+                index = 0
+                self.atacando = False
+            
+            self.image = frames[index]
+            self.dirty = 1
 
     def hablar(self):
         rango = 15
@@ -311,7 +341,9 @@ class PC (Mob):
             self.estado = 'idle'
     
     def update(self):
-        pass
+        if self.atacando:
+            self._anim_atk(5)
+            
     
 class NPC (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
