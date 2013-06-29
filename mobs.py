@@ -200,28 +200,35 @@ class PC (Mob):
     inventario = {}
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.
-    estado = '' #idle, o combate. Indica si puede atacar desde esta posición, o no.
+    cmb_walk_img = {} # combat walking images.
+    estado = '' #idle, o cmb. Indica si puede atacar desde esta posición, o no.
     
     fuerza = 15
     alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
-    atq_counter = 0
+    atk_counter = 0
+    atk_img_index = -1
     atacando = False
     
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
-        self.cargar_anim_combate('mobs/heroe_combate.png')
+        self.cargar_anims('mobs/heroe_cmb_walk.png',self.cmb_walk_img,['S','I','D'])
+        self.cargar_anims('mobs/heroe_cmb_atk.png',self.cmb_pos_img,['A','B','C'])
         self.nombre = nombre
         self.timer_animacion = 0
         self.inventario = Inventory()
         self.estado = 'idle'
     
-    def cargar_anim_combate(self,ruta_imgs):
+    def cargar_anims(self,ruta_imgs,dict_dest,seq):
         spritesheet = r.split_spritesheet(ruta_imgs)
-        keys = ['A'+'abajo','A'+'arriba','A'+'derecha','A'+'izquierda',
-                'B'+'abajo','B'+'arriba','B'+'derecha','B'+'izquierda',
-                'C'+'abajo','C'+'arriba','C'+'derecha','C'+'izquierda']
+        dires = ['abajo','arriba','derecha','izquierda']
+        keys = []
+        
+        for L in seq:
+            for D in dires:
+                keys.append(L+D)
+            
         for key in keys:
-            self.cmb_pos_img[key] = spritesheet[keys.index(key)]
+            dict_dest[key] = spritesheet[keys.index(key)]
                 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -231,22 +238,29 @@ class PC (Mob):
 
     def cambiar_direccion(self,direccion):
         '''cambia la orientación del sprite y controla parte de la animación'''
+        if self.estado == 'idle':
+            for key in self.images.keys():
+                if self.image == self.images[key]:
+                    break
         
-        for key in self.images.keys():
-            if self.image == self.images[key]:
-                break
+        elif self.estado == 'cmb':
+            for key in self.cmb_walk_img.keys():
+                if self.image == self.cmb_walk_img[key]:
+                    break
+                
         self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
-            if key == 'D'+direccion:
-                self.image = self.images['I'+direccion]
-            elif key == 'I'+direccion:
-                self.image = self.images['D'+direccion]
-            else:
-                self.image = self.images['D'+direccion]
-
+            if key == 'D'+direccion: img_dir = 'I'+direccion
+            elif key == 'I'+direccion: img_dir = 'D'+direccion
+            else: img_dir = 'D'+direccion
+            
+            if self.estado == 'idle':
+                self.image = self.images[img_dir]
+            elif self.estado == 'cmb':
+                self.image = self.cmb_walk_img[img_dir]
+                
         self.direccion = direccion
-        self.estado = 'idle'
     
     def mover(self,dx,dy):
         rango = 12
@@ -263,7 +277,7 @@ class PC (Mob):
         
         sprite = self._interactuar(self.fuerza)
         if  issubclass(sprite.__class__,Mob):
-            if self.estado == 'combate':
+            if self.estado == 'cmb':
                 x,y = x*self.fuerza,y*self.fuerza
                 self.atacar(sprite,x,y)
 
@@ -284,21 +298,16 @@ class PC (Mob):
             frame = self.cmb_pos_img[L+self.direccion]
             frames.append(frame)
         
-        # determinar el frame actual
-        for index in range(len(frames)):
-            if self.image == frames[index]:
-                break
-        
         # iniciar la animación
-        self.atq_counter += 1
-        if self.atq_counter > limite:
-            self.atq_counter = 0
-            index += 1
-            if index > len(frames)-1:
-                index = 0
+        self.atk_counter += 1
+        if self.atk_counter > limite:
+            self.atk_counter = 0
+            self.atk_img_index += 1
+            if self.atk_img_index > len(frames)-1:
+                self.atk_img_index = 0
                 self.atacando = False
             
-            self.image = frames[index]
+            self.image = frames[self.atk_img_index]
             self.dirty = 1
 
     def hablar(self):
@@ -337,10 +346,10 @@ class PC (Mob):
     
     def cambiar_estado(self):
         if self.estado == 'idle':
-            self.image = self.cmb_pos_img['A'+self.direccion]
-            self.estado = 'combate'
+            self.image = self.cmb_walk_img['S'+self.direccion]
+            self.estado = 'cmb'
             
-        elif self.estado == 'combate':
+        elif self.estado == 'cmb':
             self.image = self.images['S'+self.direccion]
             self.estado = 'idle'
     
