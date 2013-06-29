@@ -24,6 +24,8 @@ class _giftSprite(sprite.DirtySprite):
         
         self.anim_counter = 0
         self.anim_limit = 20
+        self.timer_animacion = 0
+        self.frame_animacion = 1000/12
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''

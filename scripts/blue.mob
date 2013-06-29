@@ -1,0 +1,12 @@
+{
+    "AI":{
+        "modo":"Patrulla",
+        "eje":"x",
+        "dist":100
+    },
+    "velocidad":1,
+    "modo_colision":"contraria",
+    "direccion":"izquierda",
+    "salud":3,
+    "actitud":"hostil"
+}

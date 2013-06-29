@@ -4,16 +4,14 @@
         "colisiones":"maps/colisiones/aldea.png"
     },
     "capa_ground":{
-        "props": {"star":[[6,4],[4,3],[27,12],
-                          [20,14],[30,4],[3,15],
-                            [26,28],[14,25]]},
+        "props": {"star":[[6,4],[4,3],[27,12],[20,14],[30,4],[3,15],[26,28],[14,25]]},
         "mobs": {
             "enemies":{},
             "npcs":{
                 "aldeano":[[15,15]],
-                "aldeanos":[[5,4],[3,3],[26,12],
-                            [19,14],[29,4],[2,15],
-                            [25,28],[13,25]]}
+                "aldeanos":[[5,4],[3,3],[26,12],[19,14]],
+                "girls":[[29,4],[2,15],[25,28],[13,25]]
+                }
             }
     },
     "capa_top":{
@@ -142,8 +140,9 @@
     },
     "refs":{
         "techo_choza":"props/techo_choza.png",
-        "aldeano":"mobs/commoner4.png",
-        "aldeanos":"mobs/commoner4.png",
+        "aldeano":"mobs/commoner12.png",
+        "aldeanos":"mobs/commoner12.png",
+        "girls":"mobs/green_girl.png",
         "star":"props/star.png"
     },
     "ambiente":"exterior"
