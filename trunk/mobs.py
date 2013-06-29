@@ -16,22 +16,15 @@ class Mob (_giftSprite):
     start_pos = 0,0
 
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
-        keys = 'abajo,arriba,derecha,izquierda'.split(',')
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda',
                  'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda']
 
-
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
-        if len(spritesheet) > 4:
-            for key in maskeys:
-                self.images[key] = spritesheet[maskeys.index(key)]
-            self.image = self.images['Sabajo']
-        else:
-            for key in keys:
-                self.images[key] = spritesheet[keys.index(key)]
-            self.image = self.images[self.direccion]
+        for key in maskeys:
+            self.images[key] = spritesheet[maskeys.index(key)]
+        self.image = self.images['Sabajo']
         super().__init__(self.image,stage)
 
         if data != None:
@@ -71,15 +64,26 @@ class Mob (_giftSprite):
 
         elif arg in self.direcciones:
             direccion = arg
-
-        if direccion != 'ninguna':
-            self.image = self.images[direccion]
-            self.mask = mask.from_surface(self.image,1)
-            #_rect_ = self.mask.get_bounding_rects()[0]
-            #img = Surface((_rect_.w,_rect_.h))
-            #self.image = img
         self.direccion = direccion
-
+        
+    def animar_caminar(self):
+        '''cambia la orientación del sprite y controla parte de la animación'''
+        
+        for key in self.images.keys():
+            if self.image == self.images[key]:
+                break
+        self.timer_animacion += T.FPS.get_time()
+        if self.timer_animacion >= self.frame_animacion:
+            self.timer_animacion = 0
+            if key == 'D'+self.direccion:
+                self.image = self.images['I'+self.direccion]
+            elif key == 'I'+self.direccion:
+                self.image = self.images['D'+self.direccion]
+            elif self.direccion == 'ninguna':
+                pass
+            else:
+                self.image = self.images['D'+self.direccion]
+    
     def mover(self):
         if self.AI == "wanderer":
             self.ticks += 1
@@ -170,7 +174,8 @@ class Mob (_giftSprite):
 
             x,y = self.direcciones[self.direccion]
             dx,dy = x*self.velocidad,y*self.velocidad
-
+        
+        self.animar_caminar ()
         self.reubicar(dx, dy)
     
     def recibir_danio(self):
@@ -192,8 +197,6 @@ class Mob (_giftSprite):
 class PC (Mob):
     centroX = 0
     centroY = 0
-    timer_animacion = 0
-    frame_animacion = 1000/12
     inventario = {}
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.
@@ -243,6 +246,7 @@ class PC (Mob):
                 self.image = self.images['D'+direccion]
 
         self.direccion = direccion
+        self.estado = 'idle'
     
     def mover(self,dx,dy):
         rango = 12

@@ -1,0 +1,9 @@
+{
+    "AI":"wanderer",
+    "velocidad":1,
+    "modo_colision":"contraria",
+    "direccion":"abajo",
+    "dialogo":[],
+    "salud":2,
+    "actitud":"pasiva"
+}
