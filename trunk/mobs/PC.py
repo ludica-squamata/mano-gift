@@ -1,5 +1,3 @@
-from pygame import mask,Surface,time
-from random import randint,choice
 from misc import Resources as r
 from mobs import Mob, NPC, Inventory
 from globs import World as W, Constants as C, Tiempo as T

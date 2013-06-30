@@ -1,4 +1,3 @@
-
 class Inventory:
     contenido = {}
     # la mochila

@@ -1,6 +1,4 @@
 import pygame,sys
-from mapa import Stage,Prop
-from mobs import PC
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T
 

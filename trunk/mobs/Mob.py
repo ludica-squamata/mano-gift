@@ -1,4 +1,4 @@
-from pygame import mask,Surface,time
+from pygame import mask,time
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
