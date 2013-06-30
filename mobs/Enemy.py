@@ -1,8 +1,5 @@
-from pygame import mask,Surface,time
-from random import randint,choice
-from misc import Resources as r
 from . import Mob
-from globs import World as W, Constants as C, Tiempo as T
+from globs import World as W
 
 
 class Enemy (Mob):

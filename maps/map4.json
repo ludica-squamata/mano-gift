@@ -17,7 +17,7 @@
     "entradas":{},
     "salidas":{    
     },
-    "refs":{"yellow":"mobs/yellow4.png"
+    "refs":{"yellow":"mobs/yellow12.png"
     },
     "ambiente":"interior"
 }

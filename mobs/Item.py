@@ -1,9 +1,3 @@
-from pygame import mask,Surface,time
-from random import randint,choice
-from misc import Resources as r
-from base import _giftSprite
-from globs import World as W, Constants as C, Tiempo as T
-
 class Item:
     '''Para cosas que van en el inventario'''
     
