@@ -5,6 +5,7 @@ from globs import Constants as C, World as W, Tiempo as T
 from base import _giftSprite
 from mobs import NPC,Enemy
 from UI import Dialog,Menu
+from quests import Quest
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items.
@@ -65,6 +66,8 @@ class Stage:
     mapa = None
     data = {}
     dialogs = None
+    quest = None
+    
     def __init__(self, data):
         self.data = data
         mapa = sprite.DirtySprite()
@@ -79,7 +82,9 @@ class Stage:
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_salidas()
-                
+        
+        self.quest = Quest(self, self.data['script'])
+        
     def cargar_props (self):
         imgs = self.data['refs']
         POS_g = self.data['capa_ground']['props']
@@ -125,7 +130,7 @@ class Stage:
                 #hero.nombre = 'heroe'
                 self.contents.add(hero,layer=C.CAPA_HERO)
                 self.centrar_camara()
-
+    
     def cargar_salidas(self):
         salidas = self.data['salidas']
         for salida in salidas:

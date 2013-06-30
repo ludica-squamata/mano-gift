@@ -1,0 +1,19 @@
+{
+    "tipo":"kill",
+    "objetivos":{
+        "mobs":[
+            "red","green","blue","yellow"
+        ],
+        "items":[]
+    },
+    "agente":"girl",
+    "dialogos":{
+        "on":[
+              "Héroe, por favor!",
+              "Sálvanos de los monstruos!"
+        ],
+        "off":[
+               "Oh! Muchas gracias, Héroe!"
+        ]
+    }
+}

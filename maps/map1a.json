@@ -49,5 +49,6 @@
         "star":"props/star.png",
         "crate":"props/crate.png"
     },
-    "ambiente":"exterior"
+    "ambiente":"exterior",
+    "script":"map1a.quest"
 }

@@ -184,6 +184,7 @@ class Mob (_giftSprite):
         if self.salud <= 0:
             self.stage.contents.remove(self)
             print('Mob '+self.nombre+' eliminado!')
+            self.stage.quest.actualizar(self.nombre)
         else:
             print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
     
