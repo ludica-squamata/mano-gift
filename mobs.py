@@ -271,6 +271,15 @@ class PC (Mob):
                 if self.colisiona(spr,x,y):
                     spr.interaccion(x,y)
     
+        d = 'abajo'
+        if dx == 1:
+            d = 'izquierda'
+        elif dx == -1:
+            d = 'derecha'
+        elif dy == -1:
+            d = 'arriba'
+        self.cambiar_direccion(d)
+    
     def accion(self):
         from mapa import Prop
         x,y = self.direcciones[self.direccion]
@@ -285,9 +294,11 @@ class PC (Mob):
             x,y = x*self.fuerza*2,y*self.fuerza*2
             if sprite.interaccion(x,y) != None:
                 self.inventario.agregar(sprite.nombre)
+                
+        if self.estado == 'cmb': #la animacion de ataque se hace siempre, sino pareciera que no pasa nada
+            self.atacando = True
 
     def atacar(self,sprite,x,y):
-        self.atacando = True
         sprite.reubicar(x,y)
         sprite.recibir_danio()
     
@@ -352,6 +363,8 @@ class PC (Mob):
         elif self.estado == 'cmb':
             self.image = self.images['S'+self.direccion]
             self.estado = 'idle'
+        self.cambiar_direccion(self.direccion)
+        self.dirty = 1
     
     def update(self):
         if self.atacando:
