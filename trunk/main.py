@@ -10,11 +10,14 @@ pygame.init()
 tamanio = C.ALTO, C.ANCHO
 pantalla = pygame.display # screen
 fondo = pantalla.set_mode(tamanio) # surface
-pygame.key.set_repeat(50,15)
+#pygame.key.set_repeat(50,15)
 
 W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
 inAction = False
+
+dx,dy = 0,0
+
 while True:
     T.FPS.tick(60)
     T.contar_tiempo()
@@ -25,25 +28,26 @@ while True:
         elif event.type == pygame.KEYUP:
             if event.key == C.TECLAS.ACCION or event.key == C.TECLAS.HABLAR:
                 inAction = False
+            
+            elif event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:
+                if not W.onPause and not W.onDialog:
+                    dx = 0
+            elif event.key == C.TECLAS.ABAJO or event.key == C.TECLAS.ARRIBA:
+                if not W.onPause and not W.onDialog:
+                    dy = 0
 
         elif event.type == pygame.KEYDOWN:
-            dx,dy = 0,0
             if event.key == C.TECLAS.IZQUIERDA:
                 if not W.onPause:
                     if not W.onDialog:
                         dx +=1
-                        W.HERO.cambiar_direccion('derecha')
-                        W.HERO.mover(-dx,-dy)
                 else:
                     W.MENU.selectOne(+0,-1)
 
             elif event.key == C.TECLAS.DERECHA:
                 if not W.onPause:
                     if not W.onDialog:
-                        dx -= 1
-                        W.HERO.cambiar_direccion('izquierda')
-                        W.HERO.mover(-dx,-dy)
-                        
+                        dx -= 1                        
                 else:
                     W.MENU.selectOne(+0,+1)
                     
@@ -56,8 +60,6 @@ while True:
                 else:
                     if not W.onPause:
                         dy += 1
-                        W.HERO.cambiar_direccion('arriba')
-                        W.HERO.mover(-dx,-dy)
 
             elif event.key == C.TECLAS.ABAJO:
                 if W.onDialog:
@@ -68,8 +70,6 @@ while True:
                 else:
                     if not W.onPause:
                         dy -= 1
-                        W.HERO.cambiar_direccion('abajo')
-                        W.HERO.mover(-dx,-dy)
                       
             elif event.key == C.TECLAS.ACCION:
                 if not inAction:
@@ -119,10 +119,12 @@ while True:
                     print('Saliendo...')
                     sys.exit()
             
-            elif event.key == pygame.K_LSHIFT:
+            elif event.key == C.TECLAS.POSICION_COMBATE:
                 W.HERO.cambiar_estado()
 
-            W.MAPA_ACTUAL.mover(dx,dy)
+    if dx != 0 or dy != 0:
+        W.HERO.mover(-dx,-dy)
+        W.MAPA_ACTUAL.mover(dx,dy)
 
     cambios = W.MAPA_ACTUAL.update(fondo)
     pantalla.update(cambios)

@@ -15,6 +15,7 @@ class Teclas:
     INVENTARIO = pygame.K_z
     MENU = pygame.K_RETURN
     SALIR = pygame.K_ESCAPE
+    POSICION_COMBATE = pygame.K_LSHIFT
 
 
     def asignar (self,data):
