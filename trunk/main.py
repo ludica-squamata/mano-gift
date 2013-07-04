@@ -1,6 +1,6 @@
 import pygame,sys
 from misc import Resources as r
-from globs import Constants as C, World as W, Tiempo as T
+from globs import Constants as C, World as W, Tiempo as T, QuestManager 
 
 configs = r.abrir_json('config.json')
 
@@ -19,6 +19,7 @@ dx,dy = 0,0
 while True:
     T.FPS.tick(60)
     T.contar_tiempo()
+    QuestManager.update()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()

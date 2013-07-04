@@ -1,11 +1,10 @@
 import pygame
 from pygame import sprite,Rect,Surface
 from misc import Resources as r
-from globs import Constants as C, World as W, Tiempo as T
+from globs import Constants as C, World as W, Tiempo as T, QuestManager
 from base import _giftSprite
-from mobs import NPC,Enemy
+from mobs import NPC, Enemy
 from UI import Dialog,Menu
-from quests import Quest
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items.
@@ -81,10 +80,9 @@ class Stage:
         self.cargar_props()
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
+        self.cargar_quests()
         self.cargar_salidas()
-        
-        self.quest = Quest(self, self.data['script'])
-        
+
     def cargar_props (self):
         imgs = self.data['refs']
         POS_g = self.data['capa_ground']['props']
@@ -114,7 +112,7 @@ class Stage:
         imgs = self.data['refs']
 
         for ref in pos:
-            data = r.abrir_json('scripts/'+ref+'.mob')
+            data = r.abrir_json('scripts/mobs/'+ref+'.mob')
             for x,y in pos[ref]:
                 mob = clase(ref,imgs[ref],self,x,y,data)
                 self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
@@ -131,6 +129,11 @@ class Stage:
                 self.contents.add(hero,layer=C.CAPA_HERO)
                 self.centrar_camara()
     
+    def cargar_quests(self):
+        if 'quests' in self.data:
+            for quest in self.data['quests']:
+                QuestManager.add(quest)
+            
     def cargar_salidas(self):
         salidas = self.data['salidas']
         for salida in salidas:

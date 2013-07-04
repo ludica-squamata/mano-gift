@@ -1,4 +1,5 @@
 from . import Mob
+from .MobGroup import MobGroup
 from globs import World as W
 
 
@@ -6,6 +7,7 @@ class Enemy (Mob):
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
+        MobGroup.addMob(self)
         
     def atacar(self):
         rango = 15
@@ -16,4 +18,5 @@ class Enemy (Mob):
         for sprite in self.stage.contents:
             if sprite == W.HERO:
                 if self.colisiona(sprite,x,y):
-                    print('Mob '+self.nombre+' ataca al héroe!')
+                    pass
+                    #print('Mob '+self.nombre+' ataca al héroe!')

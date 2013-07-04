@@ -1,45 +1,55 @@
 from misc import Resources as r
-from globs import Constants as C
+from globs import Constants as C, World as W
+from mobs.MobGroup import MobGroup as MG
 
 class Quest:
-    tipo = ''
     objetivos = {}
-    agente = ''
-    terminada = False
+    on_Dialogs = {}
+    off_Dialogs = {}
     
-    def __init__(self, stage, datafile):
-        data = r.abrir_json('scripts/'+datafile)
-        self.stage = stage
-        self.tipo = data['tipo']
-        objetivos = data['objetivos']
-        for cat in objetivos:
-            if objetivos[cat] != []:
-                self.objetivos[cat] = objetivos[cat]
-        agente = data['agente']
-        for mob in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-            if mob.nombre == agente:
-                self.agente = mob
-                break
-        self.on_Dialog = data['dialogos']['on']
-        self.off_Dialog = data['dialogos']['off']
+    def __init__(self, script):
+        self.objetivos = {}
+        self.on_Dialogs = {}
+        self.off_Dialogs = {}
+        # si no lo redefino, pasan cosas raras.
         
-        self.agente.dialogos = self.on_Dialog
-
-    def actualizar(self,obj):
-        if self.tipo == 'kill':
-            for cat in self.objetivos:
-                if obj in self.objetivos[cat]:
-                    self.objetivos[cat].remove(obj)
-                if len(self.objetivos[cat]) != 0:
-                    self.stage.setDialog(
-                        'objetivos actuales: '+', '.join(self.objetivos[cat]))
-                else:
-                    self.resolver()
-                    self.terminada = True
+        data = r.abrir_json('scripts/quests/'+script+'.quest')
+        self.nombre = script
+        for tipo in data['objetivos']:
+            self.objetivos[tipo] = data['objetivos'][tipo]
+        for mob in data['NPCs']:
+            self.on_Dialogs[mob] = data['NPCs'][mob]['on']
+            self.off_Dialogs[mob] = data['NPCs'][mob]['off']
+    
+    def update(self):
+        for objetivo in self.objetivos:
+            if objetivo == 'kill':
+                for mob in self.objetivos[objetivo]:
+                    if mob in MG.mobs:
+                        return False
+                self.resolver()
+                return True
+            
+            elif objetivo == 'talk':
+                for mob in self.objetivos[objetivo]:
+                    if W.HERO.interlocutor!= None:
+                        if W.HERO.interlocutor.nombre == mob:
+                            if W.HERO.interlocutor.pos_diag == -1:
+                                self.resolver()
+                                return True
+                return False
+            
+            elif objetivo == 'get':
+                for objeto in self.objetivos[objetivo]:
+                    for _obj in W.HERO.inventario.contenido:
+                        if objeto == _obj.nombre:
+                            self.resolver()
+                            return True
+                return False
     
     def resolver(self):
-        if not self.terminada:
-            self.stage.setDialog('Quest completada!')
-        
-        self.agente.dialogos = self.off_Dialog
+        print (self.nombre, "victoria")
+
+    def __repr__(self):
+        return 'Quest '+self.nombre+'Object'
     
