@@ -41,10 +41,9 @@ class Quest:
             
             elif objetivo == 'get':
                 for objeto in self.objetivos[objetivo]:
-                    for _obj in W.HERO.inventario.contenido:
-                        if objeto == _obj.nombre:
-                            self.resolver()
-                            return True
+                    if objeto in W.HERO.inventario:
+                        self.resolver()
+                        return True
                 return False
     
     def resolver(self):

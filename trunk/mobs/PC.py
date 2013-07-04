@@ -24,7 +24,7 @@ class PC (Mob):
         self.cargar_anims('mobs/heroe_cmb_atk.png',self.cmb_pos_img,['A','B','C'])
         self.nombre = nombre
         self.timer_animacion = 0
-        self.inventario = Inventory()
+        self.inventario = Inventory(10)
         self.estado = 'idle'
     
     def cargar_anims(self,ruta_imgs,dict_dest,seq):
@@ -102,7 +102,8 @@ class PC (Mob):
         elif isinstance(sprite,Prop):
             x,y = x*self.fuerza*2,y*self.fuerza*2
             if sprite.interaccion(x,y) != None:
-                self.inventario.agregar(sprite.nombre)
+                if self.inventario.agregar(sprite.nombre):
+                    self.stage.contents.remove(sprite)
                 
         if self.estado == 'cmb': #la animacion de ataque se hace siempre, sino pareciera que no pasa nada
             self.atacando = True

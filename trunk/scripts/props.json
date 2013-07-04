@@ -18,5 +18,8 @@
     },
     "crate":{
         "propiedades":["empujable","pesado","solido"]
+    },
+    "banana":{
+        "propiedades":["agarrable"]
     }
 }
