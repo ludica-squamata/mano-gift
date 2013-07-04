@@ -7,6 +7,7 @@
         "props": {
             "puerta":[[4,4]],
             "star":[[11,11]],
+            "banana":[[8,9]],
             "crate":[[14,14]]
         },
         "mobs": {
@@ -47,6 +48,7 @@
         "commoner":"mobs/commoner12.png",
         "girl":"mobs/green_girl.png",
         "star":"props/star.png",
+        "banana":"props/banana.png",
         "crate":"props/crate.png"
     },
     "ambiente":"exterior",

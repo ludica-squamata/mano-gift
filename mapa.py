@@ -28,7 +28,6 @@ class Prop (_giftSprite):
 
     def interaccion(self,x=0,y=0):
         if self._eval_prop('agarrable'):
-            self.stage.contents.remove(self)
             return self.nombre
         
         elif self._eval_prop('operable'):

@@ -4,7 +4,10 @@
         "colisiones":"maps/colisiones/aldea.png"
     },
     "capa_ground":{
-        "props": {"star":[[6,4],[4,3],[27,12],[20,14],[30,4],[3,15],[26,28],[14,25]]},
+        "props": {
+            "star":[[6,4],[4,3],[27,12],[20,14],[12,4],[2,2]],
+            "banana":[[30,4],[3,15],[26,28],[14,25],[16,9]]
+        },
         "mobs": {
             "enemies":{},
             "npcs":{
@@ -143,7 +146,8 @@
         "aldeano":"mobs/commoner12.png",
         "aldeanos":"mobs/commoner12.png",
         "girls":"mobs/green_girl.png",
-        "star":"props/star.png"
+        "star":"props/star.png",
+        "banana":"props/banana.png"
     },
     "ambiente":"exterior"
 }
