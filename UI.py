@@ -58,7 +58,6 @@ class Menu (Ventana):
     current = ''
     
     def __init__(self,titulo,botones):
-        self.cur_pos = 0
         self.botones.empty()
         
         self.canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
@@ -80,14 +79,23 @@ class Menu (Ventana):
         self.canvas.blit(ttl_txt,ttl_rect.topleft)
         
     def establecer_botones(self,botones):
-        for btn in botones['orden']:
-            boton = self._crear_boton(btn,*botones['botones'][btn])
+        for btn in botones:
+            nombre = btn['boton']
+            pos = btn['pos']
+            boton = self._crear_boton(nombre,*pos)
+            for direccion in ['arriba','abajo','izquierda','derecha']:
+                if direccion in btn:
+                    DEBUG =  btn[direccion]
+                    boton.direcciones[direccion] = btn[direccion]
+            
             self.botones.add(boton)
         
         if len(self.botones) > 0:
+            self.cur_pos = 0
             selected = self.botones.get_sprite(self.cur_pos)
             selected.serElegido()
             self.current = selected.nombre
+            
             
         self.botones.draw(self.canvas)
         
@@ -111,24 +119,27 @@ class Menu (Ventana):
     def DeselectAll(self):
         for boton in self.botones:
             boton.serDeselegido()
-            boton.dirty = 1
-    
-    def selectOne(self,x,y):
-        mod = x*2+y
-        self.cur_pos += mod
-        if self.cur_pos <= 0:
-            self.cur_pos = len(self.botones)-1
-        elif self.cur_pos >= len(self.botones):
-            self.cur_pos = 0
-                
-        self.DeselectAll()
-        
-        if len(self.botones) > 0:
-            selected = self.botones.get_sprite(self.cur_pos)
-            selected.serElegido()
-            self.current = selected.nombre
-            
+            boton.dirty = 2
         self.botones.draw(self.canvas)
+    
+    def selectOne(self,direccion):
+        self.DeselectAll()
+        self.current = self.botones.get_sprite(self.cur_pos)
+        if direccion in self.current.direcciones:
+            selected = self.current.direcciones[direccion]
+        else:
+            selected = self.current.nombre
+        
+        for i in range(len(self.botones)):
+            boton = self.botones.get_sprite(i)
+            if boton.nombre == selected:
+                boton.serElegido()
+                self.current = boton.nombre
+                self.cur_pos = i
+                break
+                    
+        self.botones.draw(self.canvas)
+        print(self.current)
         return self.cur_pos
     
 class _boton (_giftSprite):
@@ -137,13 +148,17 @@ class _boton (_giftSprite):
     img_uns = None
     isSelected = False
     pos = 0,0
+    direcciones = {}
+    
     def __init__(self,nombre,sel,uns,pos):
+        self.direcciones = {}
         self.nombre = nombre
         self.img_sel = sel
         self.img_uns = uns
         self.pos = pos
         super().__init__(self.img_uns)
         self.rect = self.img_sel.get_rect(topleft=self.pos)
+        self.dirty = 2
         
     def serElegido(self):
         self.image = self.img_sel
@@ -156,7 +171,7 @@ class _boton (_giftSprite):
         self.rect = self.img_sel.get_rect(topleft=self.pos)
     
     def __repr__(self):
-        return self.nombre+' _boton_ DirtySprite'
+        return self.nombre+' _boton DirtySprite'
     
     
     

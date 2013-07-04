@@ -41,21 +41,21 @@ while True:
                     if not W.onDialog:
                         dx +=1
                 else:
-                    W.MENU.selectOne(+0,-1)
+                    W.MENU.selectOne('izquierda')
 
             elif event.key == C.TECLAS.DERECHA:
                 if not W.onPause:
                     if not W.onDialog:
                         dx -= 1                        
                 else:
-                    W.MENU.selectOne(+0,+1)
+                    W.MENU.selectOne('derecha')
                     
             elif event.key == C.TECLAS.ARRIBA:
                 if W.onDialog:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(-1)
                     elif W.onPause:
-                        W.MENU.selectOne(-1,+0)
+                        W.MENU.selectOne('arriba')
                 else:
                     if not W.onPause:
                         dy += 1
@@ -65,7 +65,7 @@ while True:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(+1)
                     elif W.onPause:
-                        W.MENU.selectOne(+1,+0)
+                        W.MENU.selectOne('abajo')
                 else:
                     if not W.onPause:
                         dy -= 1
@@ -76,6 +76,9 @@ while True:
                     inAction = True
 
             elif event.key == C.TECLAS.HABLAR:
+                if W.onDialog:
+                    if W.onPause:
+                        W.MAPA_ACTUAL.popMenu(W.MENU.current)
                 if not inAction:
                     if W.onSelect:
                         W.HERO.confirmar_seleccion()
@@ -83,14 +86,11 @@ while True:
                         if not W.onPause:
                             W.onDialog = W.HERO.hablar()
                     inAction = True
-                else:
-                    if W.onPause:
-                        W.MAPA_ACTUAL.popMenu(W.MENU.current)
 
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                 if W.onDialog:
-                    if not W.onPause:
-                        W.MAPA_ACTUAL.endDialog()
+                    W.MAPA_ACTUAL.endDialog()
+                    W.onPause = False
 
             elif event.key == C.TECLAS.INVENTARIO:
                 if not inAction:
