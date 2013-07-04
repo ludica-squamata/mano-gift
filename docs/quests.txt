@@ -1,0 +1,24 @@
+cada quest tendrá objetivos. Los tipos de objetivos son:
+    "kill"
+        el jugador debe matar a los monstruos indicados
+    "get"
+        el jugador deber recolectar los items indicados
+    "talk"
+        el jugador debe hablar con los NPC específicos.
+    
+    Cada tipo está asociado a una lista de nombres. 'kill' y 'talk' se refieren a mobs, mientras que 'get' se refiere a items que se pueden agarrar.
+
+los objetivos de una quest podrán (a futuro) tener requisitos:
+    - ciertos items en el inventario
+    - conocimiento de un hecho o dicho
+    - conocimiento de un PNJ (no es lo mismo hablar con alguien sabiendo quien es)
+    - cumpliento de objetivos previos (quest encadenadas; prerrequisito)
+
+en cada archivo *.quest se incluyen también modificaciones a los diálogos de los NPC afectados, si los hubiere. Estos diálogos alternativos se subdividen en dos categorías:
+    - "on" incluye los diálogos que el NPC mostrará cuando la cuest esté activa.
+    - "off" incluye los diálogos que el NPC mostrará cuando la quest esté finalizada.
+
+TO DO:
+    - luego de que una quest haya finalizado, los diálogos de los NPC deberían volver a la normalidad.
+    - mecanismo de requisitos para los objetivos de una quest.
+    - más tipos de objetivos.

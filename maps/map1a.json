@@ -50,5 +50,5 @@
         "crate":"props/crate.png"
     },
     "ambiente":"exterior",
-    "script":"map1a.quest"
+    "quests":["intro","fetch"]
 }

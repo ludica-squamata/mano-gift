@@ -3,6 +3,7 @@ from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
 from globs import World as W, Constants as C, Tiempo as T
+from mobs.MobGroup import MobGroup
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
@@ -40,7 +41,7 @@ class Mob (_giftSprite):
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
             self.ubicar(*self.start_pos)
-
+        
     def cambiar_direccion(self,arg):
         direccion = 'ninguna'
 
@@ -175,7 +176,7 @@ class Mob (_giftSprite):
             x,y = self.direcciones[self.direccion]
             dx,dy = x*self.velocidad,y*self.velocidad
         
-        self.animar_caminar ()
+        self.animar_caminar()
         self.reubicar(dx, dy)
     
     def recibir_danio(self):
@@ -183,10 +184,10 @@ class Mob (_giftSprite):
         
         if self.salud <= 0:
             self.stage.contents.remove(self)
-            print('Mob '+self.nombre+' eliminado!')
-            self.stage.quest.actualizar(self.nombre)
-        else:
-            print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
+            MobGroup.removeMob(self)
+            #print('Mob '+self.nombre+' eliminado!')
+        #else:
+            #print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
     
     def update(self):
         self.anim_counter += 1

@@ -1,13 +1,19 @@
 from . import Mob
-from globs import World as W
+from .MobGroup import MobGroup
+from globs import World as W, QuestManager
 
 class NPC (Mob):
+    quest = None
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
+        self.data = data
         self.nombre = nombre
-        self.dialogos = data['dialogo']
+        self.dialogos = self.data['dialogo']
         self.pos_diag = -1
-
+        MobGroup.addMob(self)
+        if 'quest' in data:
+            QuestManager.add(data['quest'])
+    
     def hablar(self, opcion=1):
         if not W.onSelect:
             self.pos_diag += 1
