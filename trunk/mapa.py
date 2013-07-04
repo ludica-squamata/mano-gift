@@ -244,14 +244,14 @@ class Stage:
             self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
     
     def popMenu (self,titulo):
-        botones = r.abrir_json('menus.json')
+        menu = r.abrir_json('menus.json')
         if titulo == 'Salir':
             self.endDialog()
             W.onPause = False
         else:
             W.onPause = True
             W.onDialog = True
-            W.MENU = Menu(titulo,botones[titulo])
+            W.MENU = Menu(titulo,menu[titulo])
             self.dialogs.add(W.MENU, layer=C.CAPA_OVERLAYS_DIALOGO)
     
     def endDialog(self):
