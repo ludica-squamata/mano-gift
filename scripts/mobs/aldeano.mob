@@ -1,9 +1,3 @@
 {
-    "AI":"wanderer",
-    "velocidad":1,
-    "modo_colision":"aleatorio",
-    "direccion":"abajo",
-    "dialogo":["Bienvenido a nuestra aldea, Héroe"],
-    "salud":2,
-    "actitud":"pasiva"
+    "dialogo":["Bienvenido a nuestra aldea, Héroe"]
 }

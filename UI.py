@@ -139,7 +139,6 @@ class Menu (Ventana):
                 break
                     
         self.botones.draw(self.canvas)
-        print(self.current)
         return self.cur_pos
     
 class _boton (_giftSprite):

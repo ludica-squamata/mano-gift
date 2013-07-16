@@ -106,14 +106,21 @@ class Stage:
     def cargar_mobs(self,clase):
         if clase == Enemy:
             pos = self.data['capa_ground']['mobs']['enemies']
+            act = 'agressive'
         elif clase == NPC:
             pos = self.data['capa_ground']['mobs']['npcs']
+            act = 'passive'
         imgs = self.data['refs']
 
         for ref in pos:
-            data = r.abrir_json('scripts/mobs/'+ref+'.mob')
+            base = r.abrir_json('scripts/mobs/'+act+'.mob')
+            try:
+                data = r.abrir_json('scripts/mobs/'+ref+'.mob')
+            except IOError:
+                data = {}
+            base.update(data)
             for x,y in pos[ref]:
-                mob = clase(ref,imgs[ref],self,x,y,data)
+                mob = clase(ref,imgs[ref],self,x,y,base)
                 self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
 
     def cargar_hero(self, hero, entrada = None):
