@@ -1,9 +1,7 @@
 {
     "AI":"wanderer",
-    "velocidad":1,
     "modo_colision":"random",
     "direccion":"abajo",
     "solido":false,
-    "salud":1,
-    "actitud":"hostil"
+    "salud":1
 }

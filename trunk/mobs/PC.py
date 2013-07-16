@@ -93,6 +93,11 @@ class PC (Mob):
         from mapa import Prop
         x,y = self.direcciones[self.direccion]
         
+        if self.estado == 'cmb':
+            # la animacion de ataque se hace siempre,
+            # sino pareciera que no pasa nada
+            self.atacando = True
+            
         sprite = self._interactuar(self.fuerza)
         if  issubclass(sprite.__class__,Mob):
             if self.estado == 'cmb':
@@ -102,12 +107,10 @@ class PC (Mob):
         elif isinstance(sprite,Prop):
             x,y = x*self.fuerza*2,y*self.fuerza*2
             if sprite.interaccion(x,y) != None:
-                if self.inventario.agregar(sprite.nombre):
-                    self.stage.contents.remove(sprite)
+                if not self.atacando:
+                    if self.inventario.agregar(sprite.nombre):
+                        self.stage.contents.remove(sprite)
                 
-        if self.estado == 'cmb': #la animacion de ataque se hace siempre, sino pareciera que no pasa nada
-            self.atacando = True
-
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
         sprite.recibir_danio()

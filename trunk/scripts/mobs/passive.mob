@@ -3,7 +3,7 @@
     "velocidad":1,
     "modo_colision":"aleatorio",
     "direccion":"abajo",
-    "dialogo":[],
     "salud":2,
-    "actitud":"pasiva"
+    "actitud":"pasiva",
+    "dialogo":[]
 }
