@@ -23,4 +23,4 @@ La AI de los mobs puede ser indicada de las siguientes dos formas:
 
     - o un diccionario con dos claves: "puntos" y "seq".
         - "puntos" es una lista que indica las posiciones relativas al punto de entrada de la criatura (en pixeles).
-        - "seq" indica el recorrido que la criatura hará, pasando por los puntos. Esta secuencia debe ser palindrómica, pero prescindiendo del último eslabón (es decir, el primer punto de la secuencia no debe repetirse)
+        - "seq" indica el recorrido que la criatura hará, pasando por cada punto. Esta secuencia ha de ser palindrómica, pero prescindiendo del último eslabón (es decir, el primer punto de la secuencia no debe repetirse), si se quiere que el mob vaya y venga por el mismo camino. En cambio, la secuencia puede ser circular si se desea que el mob camine siempre en un mismo sentido (por ejemplo, como las agujas del reloj).
