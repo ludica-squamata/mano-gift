@@ -1,4 +1,5 @@
 from pygame import mask,time
+import pygame,sys
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
@@ -15,7 +16,9 @@ class Mob (_giftSprite):
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     start_pos = 0,0
-
+    patrol_p = []
+    punto_actual = 0
+    
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda',
@@ -23,6 +26,7 @@ class Mob (_giftSprite):
 
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
+        self.patrol_p = []
         for key in maskeys:
             self.images[key] = spritesheet[maskeys.index(key)]
         self.image = self.images['Sabajo']
@@ -41,15 +45,39 @@ class Mob (_giftSprite):
         if x != None and y != None:
             self.start_pos = x*C.CUADRO,y*C.CUADRO
             self.ubicar(*self.start_pos)
+            if type(self.AI) == dict:
+                for punto in self.AI['seq']:
+                    dx,dy = self.AI['puntos'][punto]
+                    dx += x*C.CUADRO
+                    dy += y*C.CUADRO
+                    self.patrol_p.append([dx,dy])
+                self.AI = 'patrol'
         
-    def cambiar_direccion(self,arg):
+    def cambiar_direccion(self,arg=None):
         direccion = 'ninguna'
 
-        if arg == 'random':
-            lista = list(self.direcciones.keys())
-            lista.remove(self.direccion)
-            direccion = choice(lista)
+        if arg == None:
+            if self.AI == 'wanderer':
+                lista = list(self.direcciones.keys())
+                lista.remove(self.direccion)
+                direccion = choice(lista)
 
+            elif self.AI == 'patrol':
+                curr_p = self.punto_actual
+                next_p = curr_p+1
+                if next_p >= len(self.patrol_p):
+                    next_p = 0
+                pX,pY = self.patrol_p[curr_p]
+                nX,nY = self.patrol_p[next_p]
+                
+                dx = pX-nX
+                dy = pY-nY
+                
+                if dx == 0 and dy > 0: direccion = 'arriba'
+                if dx == 0 and dy < 0: direccion = 'abajo'
+                if dx > 0 and dy == 0: direccion = 'derecha'
+                if dx < 0 and dy == 0: direccion = 'izquierda'
+            
         elif arg == 'contraria':
             if self.direccion == 'arriba':
                 direccion = 'abajo'
@@ -94,34 +122,39 @@ class Mob (_giftSprite):
                 self.mov_ticks = 0
                 pos = 10
                 if randint(1,101) <= pos:
-                    self.cambiar_direccion('random')
+                    self.cambiar_direccion()
         
-        elif type(self.AI) == dict:
-            START = self.start_pos
-            CURR_X = self.mapX
-            CURR_Y = self.mapY
-
-            modo = self.AI['modo']
-            eje  = self.AI['eje']
-            dist = self.AI['dist']
-
-            if modo == 'Patrulla':
-                if eje == 'x':
-                    pA = START[0]-round(dist/2)
-                    pB = START[0]+round(dist/2)
-
-                    if CURR_X - self.velocidad <= pA or CURR_X + self.velocidad >= pB:
-                        self.cambiar_direccion(self.modo_colision)
-
-                elif eje == 'y':
-                    pA = START[1]-round(dist/2)
-                    pB = START[1]+round(dist/2)
-
-                    if CURR_Y - self.velocidad <= pA or CURR_Y + self.velocidad >= pB:
-                        self.cambiar_direccion(self.modo_colision)
-
+        elif self.AI == 'patrol':
+            try:
+                CURR_X = self.mapX
+                CURR_Y = self.mapY
+                if [CURR_X,CURR_Y] == self.patrol_p[self.punto_actual]:
+                    self.punto_actual += 1
+                    if self.punto_actual >= len(self.patrol_p):
+                        self.punto_actual = 0
+                    
+                    pX,pY = self.patrol_p[self.punto_actual]
+                    #Este sistema esta bastante buggeado. Funciona, pero es muy delicado.
+                    x = CURR_X - pX
+                    y = CURR_Y - pY
+                    if x == 0 and y > 0: direccion = 'arriba'
+                    if x == 0 and y < 0: direccion = 'abajo'
+                    if x > 0 and y == 0: direccion = 'derecha'
+                    if x < 0 and y == 0: direccion = 'izquierda'
+                    ##################################################################
+                    self.cambiar_direccion(direccion)
+                
                 self._mover()
-    
+                
+            except UnboundLocalError as ULE:
+                print(self.nombre)
+                print('current: ',CURR_X,',',CURR_Y)
+                print('punto: ',pX,',',pY)
+                print('delta: ',CURR_X-pX,',',CURR_Y-pY)
+                print(self.patrol_p)
+                pygame.quit()
+                sys.exit()
+
     def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
@@ -135,39 +168,32 @@ class Mob (_giftSprite):
         if self.solido:
             if self.stage.mapa.mask.overlap(self.mask,(self.mapX + dx, self.mapY)) is not None:
                 col_mapa = True
-                #print(self.nombre+' colisiona con el mapa en X')
 
             if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
                 col_mapa = True
-                #print(self.nombre+' colisiona con el mapa en Y')
 
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
                 if self.colisiona(spr,dx,dy):
                     col_items = True
-                    #print(self.nombre+' colisiona con '+str(spr.nombre))
             
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if self.colisiona(spr,dx,dy):
                     col_mobs = True
-                    #print(self.nombre+' colisiona con '+str(spr.nombre))
             
         if self.colisiona(W.HERO,dx,dy):
             col_heroe = True
             if self.actitud == 'hostil':
                 self.atacar()
-            #print(self.nombre+' colisiona con '+str(spr.nombre))
 
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w:
             if C.ANCHO > self.rect.x - dx  >=0:
                 col_bordes = True
-                #print(self.nombre+' colisiona con borde horizontal')
 
         newPos = self.mapY + dy
         if newPos < 0 or newPos > self.stage.mapa.rect.h:
             if C.ALTO > self.rect.y - dy  >=0:
                 col_bordes = True
-                #print(self.nombre+' colisiona con borde vertical')
 
         colisiones = [col_bordes,col_mobs,col_items,col_mapa,col_heroe]
         if any(colisiones):
