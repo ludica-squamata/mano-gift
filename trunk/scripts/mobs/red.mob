@@ -1,10 +1,13 @@
 {
     "AI":{
-        "modo":"Patrulla",
-        "eje":"y",
-        "dist":100
-    },
+        "puntos":{
+            "A":[0,-50],
+            "B":[0,50],
+            "C":[-50,50],
+            "D":[-50,-50]},
+        "seq":["A","B","C","D"]
+        },
     "modo_colision":"contraria",
-    "direccion":"abajo",
+    "direccion":"arriba",
     "salud":4
 }
