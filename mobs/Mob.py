@@ -56,6 +56,20 @@ class Mob (_giftSprite):
     def cambiar_direccion(self,arg=None):
         direccion = 'ninguna'
 
+        def determinar_direccion(curr_p,next_p):
+            pX,pY = curr_p
+            nX,nY = next_p
+            
+            dx = pX-nX
+            dy = pY-nY
+            
+            if dx == 0 and dy > 0: direccion = 'arriba'
+            if dx == 0 and dy < 0: direccion = 'abajo'
+            if dx > 0 and dy == 0: direccion = 'derecha'
+            if dx < 0 and dy == 0: direccion = 'izquierda'
+            
+            return direccion
+
         if arg == None:
             if self.AI == 'wanderer':
                 lista = list(self.direcciones.keys())
@@ -63,36 +77,19 @@ class Mob (_giftSprite):
                 direccion = choice(lista)
 
             elif self.AI == 'patrol':
-                curr_p = self.punto_actual
-                next_p = curr_p+1
-                if next_p >= len(self.patrol_p):
-                    next_p = 0
-                pX,pY = self.patrol_p[curr_p]
-                nX,nY = self.patrol_p[next_p]
-                
-                dx = pX-nX
-                dy = pY-nY
-                
-                if dx == 0 and dy > 0: direccion = 'arriba'
-                if dx == 0 and dy < 0: direccion = 'abajo'
-                if dx > 0 and dy == 0: direccion = 'derecha'
-                if dx < 0 and dy == 0: direccion = 'izquierda'
+                curr_p = self.punto_actual-1
+                next_p = curr_p+1                
+                direccion = determinar_direccion(self.patrol_p[curr_p],self.patrol_p[next_p])
             
         elif arg == 'contraria':
-            if self.direccion == 'arriba':
-                direccion = 'abajo'
-
-            elif self.direccion == 'abajo':
-                direccion = 'arriba'
-
-            elif self.direccion == 'izquierda':
-                direccion = 'derecha'
-
-            elif self.direccion == 'derecha':
-                direccion = 'izquierda'
+            if self.direccion == 'arriba': direccion = 'abajo'
+            elif self.direccion == 'abajo': direccion = 'arriba'
+            elif self.direccion == 'izquierda': direccion = 'derecha'
+            elif self.direccion == 'derecha': direccion = 'izquierda'
 
         elif arg in self.direcciones:
             direccion = arg
+            
         self.direccion = direccion
         
     def animar_caminar(self):
@@ -125,36 +122,15 @@ class Mob (_giftSprite):
                     self.cambiar_direccion()
         
         elif self.AI == 'patrol':
-            try:
-                CURR_X = self.mapX
-                CURR_Y = self.mapY
-                if [CURR_X,CURR_Y] == self.patrol_p[self.punto_actual]:
-                    self.punto_actual += 1
-                    if self.punto_actual >= len(self.patrol_p):
-                        self.punto_actual = 0
-                    
-                    pX,pY = self.patrol_p[self.punto_actual]
-                    #Este sistema esta bastante buggeado. Funciona, pero es muy delicado.
-                    x = CURR_X - pX
-                    y = CURR_Y - pY
-                    if x == 0 and y > 0: direccion = 'arriba'
-                    if x == 0 and y < 0: direccion = 'abajo'
-                    if x > 0 and y == 0: direccion = 'derecha'
-                    if x < 0 and y == 0: direccion = 'izquierda'
-                    ##################################################################
-                    self.cambiar_direccion(direccion)
+            CURR_X = self.mapX
+            CURR_Y = self.mapY
+            if [CURR_X,CURR_Y] == self.patrol_p[self.punto_actual]:
+                self.punto_actual += 1
+                if self.punto_actual >= len(self.patrol_p):
+                    self.punto_actual = 0
+                self.cambiar_direccion()
+            self._mover()
                 
-                self._mover()
-                
-            except UnboundLocalError as ULE:
-                print(self.nombre)
-                print('current: ',CURR_X,',',CURR_Y)
-                print('punto: ',pX,',',pY)
-                print('delta: ',CURR_X-pX,',',CURR_Y-pY)
-                print(self.patrol_p)
-                pygame.quit()
-                sys.exit()
-
     def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
