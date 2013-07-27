@@ -17,7 +17,7 @@ class Mob (_giftSprite):
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     start_pos = 0,0
     patrol_p = []
-    punto_actual = 0
+    next_p = 0
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
@@ -52,23 +52,29 @@ class Mob (_giftSprite):
                     dy += y*C.CUADRO
                     self.patrol_p.append([dx,dy])
                 self.AI = 'patrol'
+
+    def _determinar_direccion(self,curr_p,next_p):
+        pX,pY = curr_p
+        nX,nY = next_p
         
+        dx = pX-nX
+        dy = pY-nY
+        
+        if dx > dy:
+            if dy < 0:
+                direccion = 'abajo'
+            else:
+                direccion = 'derecha'
+        else:
+            if dx < 0:
+                direccion = 'izquierda'
+            else:
+                direccion = 'arriba'
+        
+        return direccion
+    
     def cambiar_direccion(self,arg=None):
         direccion = 'ninguna'
-
-        def determinar_direccion(curr_p,next_p):
-            pX,pY = curr_p
-            nX,nY = next_p
-            
-            dx = pX-nX
-            dy = pY-nY
-            
-            if dx == 0 and dy > 0: direccion = 'arriba'
-            if dx == 0 and dy < 0: direccion = 'abajo'
-            if dx > 0 and dy == 0: direccion = 'derecha'
-            if dx < 0 and dy == 0: direccion = 'izquierda'
-            
-            return direccion
 
         if arg == None:
             if self.AI == 'wanderer':
@@ -77,9 +83,8 @@ class Mob (_giftSprite):
                 direccion = choice(lista)
 
             elif self.AI == 'patrol':
-                curr_p = self.punto_actual-1
-                next_p = curr_p+1                
-                direccion = determinar_direccion(self.patrol_p[curr_p],self.patrol_p[next_p])
+                curr_p = [self.mapX,self.mapY]    
+                direccion = self._determinar_direccion(curr_p,self.patrol_p[self.next_p])
             
         elif arg == 'contraria':
             if self.direccion == 'arriba': direccion = 'abajo'
@@ -122,13 +127,15 @@ class Mob (_giftSprite):
                     self.cambiar_direccion()
         
         elif self.AI == 'patrol':
-            CURR_X = self.mapX
-            CURR_Y = self.mapY
-            if [CURR_X,CURR_Y] == self.patrol_p[self.punto_actual]:
-                self.punto_actual += 1
-                if self.punto_actual >= len(self.patrol_p):
-                    self.punto_actual = 0
+            curr_p = [self.mapX,self.mapY]
+            if curr_p == self.patrol_p[self.next_p]:
+                self.next_p += 1
+                if self.next_p >= len(self.patrol_p):
+                    self.next_p = 0
                 self.cambiar_direccion()
+            else:
+                direccion = self._determinar_direccion(curr_p,self.patrol_p[self.next_p])
+                self.cambiar_direccion(direccion)
             self._mover()
                 
     def _mover(self):
