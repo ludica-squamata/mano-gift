@@ -9,6 +9,5 @@
         "seq":["A","B","C","D","C","B"]
     },
     "modo_colision":"contraria",
-    "direccion":"izquierda",
     "salud":3
 }

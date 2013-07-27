@@ -1,4 +1,5 @@
 {
     "velocidad":1,
-    "actitud":"hostil"
+    "actitud":"hostil",
+    "direccion":"abajo"
 }
