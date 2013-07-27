@@ -76,7 +76,7 @@ class PC (Mob):
         x,y = dx*rango,dy*rango
         
         for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.solido and spr._eval_prop('empujable'):
+            if spr.solido and spr.propiedades('empujable'):
                 if self.colisiona(spr,x,y):
                     spr.interaccion(x,y)
     
