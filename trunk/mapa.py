@@ -38,10 +38,8 @@ class Prop (_giftSprite):
                 self.estado = 1
             else:
                 self.estado = 0
-            print((self.solido,self.visible))
             self.solido = self._operable[self.estado][0]
             self.visible = self._operable[self.estado][1]
-            print((self.solido,self.visible))
 
         elif self.propiedades('empujable'):
             if self.propiedades('pesado'):

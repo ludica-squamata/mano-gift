@@ -15,7 +15,6 @@ class Mob (_giftSprite):
     ticks,mov_ticks = 0,0
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
-    start_pos = 0,0
     patrol_p = []
     next_p = 0
     
@@ -43,8 +42,7 @@ class Mob (_giftSprite):
                 self.solido = data['solido']                
 
         if x != None and y != None:
-            self.start_pos = x*C.CUADRO,y*C.CUADRO
-            self.ubicar(*self.start_pos)
+            self.ubicar(x*C.CUADRO,y*C.CUADRO)
             if type(self.AI) == dict:
                 for punto in self.AI['seq']:
                     dx,dy = self.AI['puntos'][punto]
@@ -119,7 +117,6 @@ class Mob (_giftSprite):
         if self.AI == "wanderer":
             self.ticks += 1
             self.mov_ticks += 1
-            self._mover()
             if self.mov_ticks == 3:
                 self.mov_ticks = 0
                 pos = 10
@@ -132,11 +129,12 @@ class Mob (_giftSprite):
                 self.next_p += 1
                 if self.next_p >= len(self.patrol_p):
                     self.next_p = 0
-                self.cambiar_direccion()
-            else:
-                direccion = self._determinar_direccion(curr_p,self.patrol_p[self.next_p])
-                self.cambiar_direccion(direccion)
-            self._mover()
+            punto_proximo = self.patrol_p[self.next_p]
+            
+            direccion = self._determinar_direccion(curr_p,punto_proximo)
+            self.cambiar_direccion(direccion)
+        
+        self._mover()
                 
     def _mover(self):
         x,y = self.direcciones[self.direccion]
@@ -160,8 +158,9 @@ class Mob (_giftSprite):
                     col_items = True
             
             for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                if self.colisiona(spr,dx,dy):
-                    col_mobs = True
+                if spr.solido:
+                    if self.colisiona(spr,dx,dy):
+                        col_mobs = True
             
         if self.colisiona(W.HERO,dx,dy):
             col_heroe = True

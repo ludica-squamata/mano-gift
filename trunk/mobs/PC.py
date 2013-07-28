@@ -98,7 +98,7 @@ class PC (Mob):
             # sino pareciera que no pasa nada
             self.atacando = True
             
-        sprite = self._interactuar(self.fuerza)
+        sprite = self._interactuar(self.alcance_cc)
         if  issubclass(sprite.__class__,Mob):
             if self.estado == 'cmb':
                 x,y = x*self.fuerza,y*self.fuerza
