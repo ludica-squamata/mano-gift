@@ -126,7 +126,7 @@ class Stage:
             if entrada in self.data['entradas']:
                 x,y = self.data['entradas'][entrada]
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
-
+                
                 hero.stage = self
                 #hero.nombre = 'heroe'
                 self.contents.add(hero,layer=C.CAPA_HERO)
@@ -165,6 +165,7 @@ class Stage:
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
             if h.colisiona(spr,-dx,-dy):
                 W.setear_mapa(spr.dest,spr.link)
+                dx,dy = 0,0
 
         # chequea el que héroe no atraviese a los mobs
         for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
@@ -203,22 +204,42 @@ class Stage:
     def centrar_camara(self):
         hero = self.hero
         mapa = self.mapa
-        hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO #256
-        hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO #256
+        hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO #224
+        hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO #224
         hero.centroX, hero.centroY = hero.rect.topleft
-
+        
         newPos = hero.rect.x - hero.mapX
-        if newPos > 0 or newPos < -(mapa.rect.w - C.ANCHO):
-            hero.rect.x -= newPos
+        offset = C.ANCHO - newPos - mapa.rect.w
+        if offset <= 0:
+            if newPos > 0:
+                hero.rect.x -= newPos
+            else:
+                mapa.rect.x = newPos
         else:
-            mapa.rect.x = newPos
+            if newPos > 0:
+                mapa.rect.x = newPos+offset
+                hero.rect.x += offset
+            else:
+                mapa.rect.x = newPos+offset
 
         newPos = hero.rect.y - hero.mapY
-        if newPos > 0 or newPos < -(mapa.rect.h - C.ALTO):
-            hero.rect.y -= newPos
+        offset = C.ALTO - newPos - mapa.rect.h
+        if offset <= 0:
+            if newPos > 0:
+                hero.rect.y -= newPos
+            else:
+                mapa.rect.y = newPos
         else:
-            mapa.rect.y = newPos
-
+            if newPos > 0:
+                mapa.rect.x = newPos+offset
+                hero.rect.x += offset
+            else:
+                mapa.rect.y = newPos+offset
+        
+        print(mapa)
+        print('hero:',hero.rect.x,hero.rect.y)
+        print('mapa:',mapa.rect.x,mapa.rect.y,'\n')
+        
         mapa.dirty = 1
         self.ajustar()
 
@@ -275,10 +296,10 @@ class Salida (_giftSprite):
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
-        #image.fill((255,0,0))
+        image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
         self.mask.fill()
-        self.image.set_colorkey((0,0,0))
+        #self.image.set_colorkey((0,0,0))
         self.solido = False
 

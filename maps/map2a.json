@@ -15,8 +15,8 @@
     },
     "entradas":{
         "inicial":[16, 17],
-        "derecha":[21,22],
-        "abajo":[21,15]
+        "derecha":[25,23],
+        "abajo":[21,30]
     },
     "salidas":{
         "derecha":{
