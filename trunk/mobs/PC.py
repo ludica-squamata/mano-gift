@@ -105,9 +105,9 @@ class PC (Mob):
                 self.atacar(sprite,x,y)
 
         elif isinstance(sprite,Prop):
-            x,y = x*self.fuerza*2,y*self.fuerza*2
-            if sprite.interaccion(x,y) != None:
-                if not self.atacando:
+            if not self.atacando:
+                x,y = x*self.fuerza*2,y*self.fuerza*2
+                if sprite.interaccion(x,y) != None:
                     if self.inventario.agregar(sprite.nombre):
                         self.stage.contents.remove(sprite)
                 
