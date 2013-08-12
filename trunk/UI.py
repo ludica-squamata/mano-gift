@@ -85,7 +85,6 @@ class Menu (Ventana):
             boton = self._crear_boton(nombre,*pos)
             for direccion in ['arriba','abajo','izquierda','derecha']:
                 if direccion in btn:
-                    DEBUG =  btn[direccion]
                     boton.direcciones[direccion] = btn[direccion]
             
             self.botones.add(boton)
