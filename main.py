@@ -41,21 +41,21 @@ while True:
                     if not W.onDialog:
                         dx +=1
                 else:
-                    W.MENU.selectOne('izquierda')
+                    W.menu_actual.selectOne('izquierda')
 
             elif event.key == C.TECLAS.DERECHA:
                 if not W.onPause:
                     if not W.onDialog:
                         dx -= 1                        
                 else:
-                    W.MENU.selectOne('derecha')
+                    W.menu_actual.selectOne('derecha')
                     
             elif event.key == C.TECLAS.ARRIBA:
                 if W.onDialog:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(-1)
                     elif W.onPause:
-                        W.MENU.selectOne('arriba')
+                        W.menu_actual.selectOne('arriba')
                 else:
                     if not W.onPause:
                         dy += 1
@@ -65,7 +65,7 @@ while True:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(+1)
                     elif W.onPause:
-                        W.MENU.selectOne('abajo')
+                        W.menu_actual.selectOne('abajo')
                 else:
                     if not W.onPause:
                         dy -= 1
@@ -78,7 +78,7 @@ while True:
             elif event.key == C.TECLAS.HABLAR:
                 if W.onDialog:
                     if W.onPause:
-                        W.MAPA_ACTUAL.popMenu(W.MENU.current)
+                        W.MAPA_ACTUAL.popMenu(W.menu_actual.current)
                 if not inAction:
                     if W.onSelect:
                         W.HERO.confirmar_seleccion()

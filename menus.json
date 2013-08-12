@@ -44,25 +44,49 @@
     "Personaje":[
         {
             "boton":"Salir",
-            "pos":[125,349]
+            "pos":[260,349],
+            "izquierda":"Volver"
+        },
+        {
+            "boton":"Volver",
+            "pos":[7,349],
+            "derecha":"Salir"
         }
     ],
     "Inventario":[
         {
-        "boton":"Salir",
-        "pos":[125,349]
+            "boton":"Salir",
+            "pos":[260,349],
+            "izquierda":"Volver"
+        },
+        {
+            "boton":"Volver",
+            "pos":[7,349],
+            "derecha":"Salir"
         }
     ],
     "Grupo":[
         {
             "boton":"Salir",
-            "pos":[125,349]
+            "pos":[260,349],
+            "izquierda":"Volver"
+        },
+        {
+            "boton":"Volver",
+            "pos":[7,349],
+            "derecha":"Salir"
         }
     ],
     "Opciones":[
         {
-        "boton":"Salir",
-        "pos":[125,349]
+            "boton":"Salir",
+            "pos":[260,349],
+            "izquierda":"Volver"
+        },
+        {
+            "boton":"Volver",
+            "pos":[7,349],
+            "derecha":"Salir"
         }
     ]
 }

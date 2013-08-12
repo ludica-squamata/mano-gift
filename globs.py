@@ -54,7 +54,8 @@ class World:
     mapas = {}
     MAPA_ACTUAL = ''
     HERO = ''
-    MENU = ''
+    menu_actual = ''
+    menu_previo = ''
     onDialog = False
     onSelect = False
     onPause = False

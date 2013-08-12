@@ -1,38 +1,29 @@
-from collections import UserDict
-from .Item import Item
+from collections import Counter
 
-class Inventory(UserDict):
+class Inventory(Counter):
     tamanio_max = 0
     
-    def __init__(self,maximo):
+    def __init__(self,maximo,pj):
         super().__init__()
         self.tamanio_max = maximo
+        self.hero = pj
     
     def ver (self):
         if len(self) < 1:
             texto = 'El inventario está vacío'
         else:
-            toJoin = []
-            for key in self:
-                if len(self[key]) > 0:
-                    toJoin.append(key.capitalize()+' x'+str(len(self[key])))
-            texto = ', '.join(toJoin)
+            texto = ', '.join(sorted([item.capitalize()+' x'+str(self[item]) for item in self]))
+        
         return texto
-
-    def contar_items(self):
-        cantidad = 0
-        for key in self:
-            cantidad += len(self[key])
-        return cantidad
-    
-    def agregar(self,cosa):
-        if self.contar_items()+1 <= self.tamanio_max:
-            if cosa in self:
-                self[cosa].append(Item(cosa))
+        
+    def agregar(self,nombre_item):
+        if sum(self.values())+1 <= self.tamanio_max:
+            if nombre_item in self:
+                self[nombre_item] += 1
             else:
-                self[cosa] = [Item(cosa)]
+                self[nombre_item] = 1
             return True
         else:
-            print('Cantidad máxima de items alcanzada')
+            self.hero.stage.setDialog('Cantidad máxima de items alcanzada')
             return False
 

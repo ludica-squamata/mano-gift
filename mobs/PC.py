@@ -1,5 +1,7 @@
 from misc import Resources as r
-from mobs import Mob, NPC, Inventory
+from .Mob import Mob
+from .NPC import NPC
+from .Inventory import Inventory
 from globs import World as W, Constants as C, Tiempo as T
 
 class PC (Mob):
@@ -18,13 +20,12 @@ class PC (Mob):
     atacando = False
     
     def __init__(self,nombre,ruta_imgs,stage):
-        from mobs import Inventory
         super().__init__(ruta_imgs,stage)
         self.cargar_anims('mobs/heroe_cmb_walk.png',self.cmb_walk_img,['S','I','D'])
         self.cargar_anims('mobs/heroe_cmb_atk.png',self.cmb_pos_img,['A','B','C'])
         self.nombre = nombre
         self.timer_animacion = 0
-        self.inventario = Inventory(10)
+        self.inventario = Inventory(10,self)
         self.estado = 'idle'
     
     def cargar_anims(self,ruta_imgs,dict_dest,seq):

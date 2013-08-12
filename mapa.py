@@ -257,17 +257,25 @@ class Stage:
         else:
             dg = Dialog(texto)
             self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
+        W.onDialog = True
     
     def popMenu (self,titulo):
-        menu = r.abrir_json('menus.json')
+        menues = r.abrir_json('menus.json')
         if titulo == 'Salir':
+            W.menu_previo = ''
             self.endDialog()
             W.onPause = False
+            
+        elif titulo == 'Volver':
+            W.MENU = self.popMenu(W.menu_previo)
+        
         else:
+            if W.menu_previo == '' and W.menu_previo != titulo:
+                W.menu_previo = titulo
             W.onPause = True
             W.onDialog = True
-            W.MENU = Menu(titulo,menu[titulo])
-            self.dialogs.add(W.MENU, layer=C.CAPA_OVERLAYS_DIALOGO)
+            W.menu_actual = Menu(titulo,menues[titulo])
+            self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_DIALOGO)
     
     def endDialog(self):
         self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
@@ -286,10 +294,10 @@ class Salida (_giftSprite):
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = pygame.Surface((alto, ancho))
-        image.fill((255,0,0))
+        #image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
         self.mask.fill()
-        #self.image.set_colorkey((0,0,0))
+        self.image.set_colorkey((0,0,0))
         self.solido = False
-
+        
