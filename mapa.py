@@ -207,38 +207,28 @@ class Stage:
         hero.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO #224
         hero.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO #224
         hero.centroX, hero.centroY = hero.rect.topleft
-        
-        newPos = hero.rect.x - hero.mapX
-        offset = C.ANCHO - newPos - mapa.rect.w
-        if offset <= 0:
-            if newPos > 0:
-                hero.rect.x -= newPos
-            else:
-                mapa.rect.x = newPos
-        else:
-            if newPos > 0:
-                mapa.rect.x = newPos+offset
-                hero.rect.x += offset
-            else:
-                mapa.rect.x = newPos+offset
 
-        newPos = hero.rect.y - hero.mapY
-        offset = C.ALTO - newPos - mapa.rect.h
-        if offset <= 0:
-            if newPos > 0:
-                hero.rect.y -= newPos
+        newPosX = hero.rect.x - hero.mapX
+        offsetX = C.ANCHO - newPosX - mapa.rect.w
+        if offsetX <= 0:
+            if newPosX > 0:
+                hero.rect.x -= newPosX
             else:
-                mapa.rect.y = newPos
+                mapa.rect.x = newPosX
         else:
-            if newPos > 0:
-                mapa.rect.x = newPos+offset
-                hero.rect.x += offset
-            else:
-                mapa.rect.y = newPos+offset
+            mapa.rect.x = newPosX+offsetX
+            hero.rect.x += offsetX
         
-        print(mapa)
-        print('hero:',hero.rect.x,hero.rect.y)
-        print('mapa:',mapa.rect.x,mapa.rect.y,'\n')
+        newPosY = hero.rect.y - hero.mapY
+        offsetY = C.ALTO - newPosY - mapa.rect.h
+        if offsetY <= 0:
+            if newPosY > 0:
+                hero.rect.y -= newPosY
+            else:
+                mapa.rect.y = newPosY
+        else:
+            mapa.rect.y = newPosY+offsetY
+            hero.rect.y += offsetY
         
         mapa.dirty = 1
         self.ajustar()
