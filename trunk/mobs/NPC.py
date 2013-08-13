@@ -42,8 +42,7 @@ class NPC (Mob):
             return True
     
     def devolver_seleccion(self,sel):
-        dialog = self.stage.dialogs.get_sprite(0)
-        op = list(self.dialogos[self.pos_diag].keys())[dialog.sel-1]
+        op = list(self.dialogos[self.pos_diag].keys())[W.DIALOG.sel-1]
         
         return self.dialogos[self.pos_diag][op]
         

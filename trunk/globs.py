@@ -56,6 +56,7 @@ class World:
     HERO = ''
     menu_actual = ''
     menu_previo = ''
+    DIALOG = ''
     onDialog = False
     onSelect = False
     onPause = False

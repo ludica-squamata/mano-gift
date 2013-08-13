@@ -1,10 +1,10 @@
 import pygame
-from pygame import sprite,Rect,Surface
+from pygame import sprite, Rect, Surface
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager
 from base import _giftSprite
 from mobs import NPC, Enemy
-from UI import Dialog,Menu
+from UI import Dialog, Menu, Menu_Inventario
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items.
@@ -250,13 +250,11 @@ class Stage:
             self.contents.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
       
     def setDialog(self, texto):
-        diags = self.dialogs.get_sprites_from_layer(C.CAPA_OVERLAYS_DIALOGO)
-        if len(diags) > 0:
-            dg = diags[0]
-            dg.setText(texto)
+        if W.DIALOG != '':
+            W.DIALOG.setText(texto)
         else:
-            dg = Dialog(texto)
-            self.dialogs.add(dg, layer=C.CAPA_OVERLAYS_DIALOGO)
+            W.DIALOG = Dialog(texto)
+            self.dialogs.add(W.DIALOG, layer=C.CAPA_OVERLAYS_DIALOGO)
         W.onDialog = True
     
     def popMenu (self,titulo):
@@ -274,12 +272,16 @@ class Stage:
                 W.menu_previo = titulo
             W.onPause = True
             W.onDialog = True
-            W.menu_actual = Menu(titulo,menues[titulo])
+            if titulo == 'Inventario':
+                W.menu_actual = Menu_Inventario(menues[titulo])
+            else:
+                W.menu_actual = Menu(titulo,menues[titulo])
             self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_DIALOGO)
     
     def endDialog(self):
         self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
         W.onDialog = False
+        W.DIALOG = ''
         self.mapa.dirty = 1
     
     def update(self,fondo):
