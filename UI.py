@@ -12,23 +12,24 @@ class Ventana (_giftSprite):
     posicion = x,y = 0,0
     tamanio = ancho,alto = 0,0
     sel = 1
+    opciones = 0
+    
     def __init__(self,image):
         super().__init__(image)
     
-    def elegir_opcion(self,j,m):
-        blanco = 255,255,255
-        negro = 0,0,0
-        self.sel += j
+    def elegir_opcion(self,i):
+        self.sel += i
         if self.sel < 1: self.sel = 1
-        elif self.sel > 2: self.sel = 2
-        pygame.draw.line(self.image,blanco,(3,self.sel*22),(C.ANCHO-5,self.sel*22))
-        pygame.draw.line(self.image,blanco,(3,(self.sel+m)*22),(C.ANCHO-5,(self.sel+m)*22))
+        elif self.sel > self.opciones: self.sel = self.opciones
+        pygame.draw.line(self.image,self.fg_color,(3,self.sel*22),(C.ANCHO-5,self.sel*22))
+        pygame.draw.line(self.image,self.bg_color,(3,(self.sel-i)*22),(C.ANCHO-5,(self.sel-i)*22))
 
         return self.sel
     
 class Dialog (Ventana):
     fuente = None
     posicion = x,y = 0,384
+    
     def __init__(self, texto):
         self.canvas = pygame.Surface((int(C.ANCHO), int(C.ALTO/5)))
         self.canvas.fill(self.bg_cnvs)
@@ -44,31 +45,24 @@ class Dialog (Ventana):
 
     def setText(self, texto):
         rect = pygame.Rect((3, 3, C.ANCHO-7, int(C.ALTO/5)-7))
+        render = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
+        self.canvas.blit(render,rect)
         if W.onSelect:
-            render = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
-            self.canvas.blit(render,rect)
-            pygame.draw.line(self.canvas,self.fg_color,(0,self.sel*22),(C.ANCHO-7,self.sel*22))
-            self.image = self.canvas
-        else:
-            render = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
-            self.canvas.blit(render,rect)
-            self.image = self.canvas
-
+            self.opciones = len(texto.split('\n'))
+            pygame.draw.line(self.canvas,self.fg_color,(0,self.sel*22),(C.ANCHO-7,self.sel*22))    
+        self.image = self.canvas
+        
 class Menu (Ventana):
     botones = pygame.sprite.LayeredDirty()
-    opciones = pygame.sprite.LayeredDirty()
-    cur_opt = 0
     cur_btn = 0
     current = ''
+    canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
     
     def __init__(self,titulo,contenido):
         self.botones.empty()
-        self.opciones.empty()
         
-        self.canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
         self.crear_titulo(titulo)
         self.establecer_botones(contenido['botones'])
-        self.crear_contenido(contenido['contenido'])
         super().__init__(self.canvas)
         self.ubicar(10,10)
         self.dirty = 2
@@ -144,25 +138,55 @@ class Menu (Ventana):
                 break
                     
         self.botones.draw(self.canvas)
-    
-    def crear_contenido(self,contenido):
-        if contenido == 'Inventario':
-            self.sel += 2
+        
+    def mover_cursor(self,item):
+        if type(item) == _boton:
+            for i in range(len(self.botones)):
+                spr = self.botones.get_sprite(i)
+                if  spr.nombre == item.nombre:
+                    self.cur_btn = i
+                    self.current = spr.nombre
+                    break
+            W.onVSel = False
+                    
+        elif type(item) == _item_inv:
+            for i in range(len(self.filas)):
+                spr = self.filas.get_sprite(i)
+                if item.nombre == spr.nombre:
+                    self.cur_opt = i
+                    self.current = spr.nombre
+                    break
             W.onVSel = True
-            count = 22
-            for key in W.HERO.inventario:
-                count += 22
-                fila = self._crear_filas_items(key.capitalize(),str(W.HERO.inventario[key]),(11,count))
-                
-                self.opciones.add(fila)
-            
-            if len(self.opciones) > 0:
-                self.current = self.opciones.get_sprite(self.cur_opt).nombre
-                self.DeselectAllButtons()
-                self.opciones.draw(self.canvas)
-                pygame.draw.line(self.canvas,self.fg_color,(10,66),(self.canvas.get_width()-10,66))
+        
+        return spr.nombre
+
+class Menu_Inventario (Menu):
+    cur_opt = 0
+    filas = pygame.sprite.LayeredDirty()
     
-    def _crear_filas_items(self,nombre,cant,pos):
+    def __init__(self,contenido):
+        self.filas.empty()
+        super().__init__('Inventario',contenido)
+        self.crear_contenido(contenido['contenido'])
+
+    def crear_contenido(self,contenido):
+        self.sel += 2
+        count = 22
+        for key in W.HERO.inventario:
+            count += 22
+            fila = self._crear_fila_items(key.capitalize(),str(W.HERO.inventario[key]),(11,count))
+            
+            self.filas.add(fila)
+        
+        if len(self.filas) > 0:
+            self.current = self.filas.get_sprite(self.cur_opt).nombre
+            self.opciones = len(self.filas)
+            self.DeselectAllButtons()
+            W.onVSel = True
+            self.filas.draw(self.canvas)
+            pygame.draw.line(self.canvas,self.fg_color,(10,66),(self.canvas.get_width()-10,66))
+    
+    def _crear_fila_items(self,nombre,cant,pos):
         fuente = pygame.font.SysFont('verdana', 16)
         rect = pygame.Rect(pos,((C.CUADRO*6)-6,22))
         
@@ -175,41 +199,19 @@ class Menu (Ventana):
         
         return _item_inv(nombre,canvas,rect.topleft)
     
-    def elegir_opcion(self,j):
-        if len(self.opciones) > 0:
+    def elegir_fila(self,j):
+        if self.opciones > 0:
             self.DeselectAllButtons()
             W.onVSel = True
-            m = -j
             self.sel += j
             if self.sel < 3: self.sel = 3
-            elif self.sel > len(self.opciones)+2: self.sel = len(self.opciones)+2
+            elif self.sel > self.opciones+2: self.sel = self.opciones+2
             
             pygame.draw.line(self.image,self.fg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-            pygame.draw.line(self.image,self.bg_color,(10,(self.sel+m)*22),(self.canvas.get_width()-10,(self.sel+m)*22))
+            pygame.draw.line(self.image,self.bg_color,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
             
-            return self.mover_cursor(self.opciones.get_sprite(self.sel-3))
-    
-    def mover_cursor(self,item):
-        if type(item) == _boton:
-            for i in range(len(self.botones)):
-                spr = self.botones.get_sprite(i)
-                if  spr.nombre == item.nombre:
-                    self.cur_btn = i
-                    self.current = spr.nombre
-                    break
-            W.onVSel = False
-                    
-        elif type(item) == _item_inv:
-            for i in range(len(self.opciones)):
-                spr = self.opciones.get_sprite(i)
-                if item.nombre == spr.nombre:
-                    self.cur_opt = i
-                    self.current = spr.nombre
-                    break
-            W.onVSel = True
-        
-        return spr.nombre
-    
+            return self.mover_cursor(self.filas.get_sprite(self.sel-3))
+
 class _boton (_giftSprite):
     nombre = ''
     img_sel = None

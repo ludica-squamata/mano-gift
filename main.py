@@ -53,12 +53,12 @@ while True:
             elif event.key == C.TECLAS.ARRIBA:
                 if W.onDialog:
                     if W.onSelect:
-                        W.HERO.cambiar_opcion_dialogo(-1)
+                        W.DIALOG.elegir_opcion(-1)
                     elif W.onPause:
                         if not W.onVSel:
                             W.menu_actual.selectOne('arriba')
                         else:
-                            W.menu_actual.elegir_opcion(-1)
+                            W.menu_actual.elegir_fila(-1)
                 else:
                     if not W.onPause:
                         dy += 1
@@ -66,12 +66,12 @@ while True:
             elif event.key == C.TECLAS.ABAJO:
                 if W.onDialog:
                     if W.onSelect:
-                        W.HERO.cambiar_opcion_dialogo(+1)
+                        W.DIALOG.elegir_opcion(+1)
                     elif W.onPause:
                         if not W.onVSel:
                             W.menu_actual.selectOne('abajo')
                         else:
-                            W.menu_actual.elegir_opcion(+1)
+                            W.menu_actual.elegir_fila(+1)
                 else:
                     if not W.onPause:
                         dy -= 1

@@ -154,16 +154,8 @@ class PC (Mob):
                 if self.colisiona(sprite,x,y):
                     return sprite
     
-    def cambiar_opcion_dialogo(self,seleccion): #+1 ó -1
-        dialog = self.stage.dialogs.get_sprite(0)
-
-        mod = -seleccion
-        
-        return dialog.elegir_opcion(seleccion,mod)
-    
     def confirmar_seleccion(self):
-        dialog = self.stage.dialogs.get_sprite(0)
-        self.interlocutor.hablar(dialog.sel)
+        self.interlocutor.hablar(W.DIALOG.sel)
 
     def ver_inventario(self):
         self.stage.setDialog(self.inventario.ver())
