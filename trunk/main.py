@@ -7,6 +7,7 @@ configs = r.abrir_json('config.json')
 pygame.init()
 tamanio = C.ALTO, C.ANCHO
 pantalla = pygame.display # screen
+pantalla.set_caption('Proyecto Mano-Gift')
 fondo = pantalla.set_mode(tamanio) # surface
 #pygame.key.set_repeat(50,15)
 
@@ -87,7 +88,7 @@ while True:
                         if not W.onVSel:
                             W.MAPA_ACTUAL.popMenu(W.menu_actual.current)
                         else:
-                            print("selected",W.menu_actual.current)
+                            W.menu_actual.confirmar_seleccion()
                 if not inAction:
                     if W.onSelect:
                         W.HERO.confirmar_seleccion()
