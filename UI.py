@@ -154,12 +154,14 @@ class Menu (Ventana):
                 spr = self.filas.get_sprite(i)
                 if item.nombre == spr.nombre:
                     self.cur_opt = i
-                    self.current = spr.nombre
+                    self.current = spr#.nombre
                     break
             W.onVSel = True
-        
-        return spr.nombre
-
+    
+    def update(self):
+        self.botones.update()
+    
+            
 class Menu_Inventario (Menu):
     cur_opt = 0
     filas = pygame.sprite.LayeredDirty()
@@ -168,36 +170,26 @@ class Menu_Inventario (Menu):
         self.filas.empty()
         super().__init__('Inventario',contenido)
         self.crear_contenido(contenido['contenido'])
+        self.dirty = 2
 
     def crear_contenido(self,contenido):
         self.sel += 2
         count = 22
+        i = 0
         for key in W.HERO.inventario:
+            i += 1
             count += 22
-            fila = self._crear_fila_items(key.capitalize(),str(W.HERO.inventario[key]),(11,count))
+            fila = _item_inv(key.capitalize(),W.HERO.inventario[key],(11,count))
             
             self.filas.add(fila)
         
         if len(self.filas) > 0:
-            self.current = self.filas.get_sprite(self.cur_opt).nombre
+            self.current = self.filas.get_sprite(self.cur_opt)
             self.opciones = len(self.filas)
             self.DeselectAllButtons()
             W.onVSel = True
             self.filas.draw(self.canvas)
             pygame.draw.line(self.canvas,self.fg_color,(10,66),(self.canvas.get_width()-10,66))
-    
-    def _crear_fila_items(self,nombre,cant,pos):
-        fuente = pygame.font.SysFont('verdana', 16)
-        rect = pygame.Rect(pos,((C.CUADRO*6)-6,22))
-        
-        txt_nmbr = render_textrect(nombre,fuente,rect,self.fg_color,self.bg_color,1)
-        txt_cant = render_textrect('x'+cant,fuente,rect,self.fg_color,self.bg_color,1)
-
-        canvas = pygame.Surface((self.canvas.get_width()-24,rect.h))
-        canvas.blit(txt_nmbr,(7,0))
-        canvas.blit(txt_cant,(260,0))
-        
-        return _item_inv(nombre,canvas,rect.topleft)
     
     def elegir_fila(self,j):
         if self.opciones > 0:
@@ -210,8 +202,25 @@ class Menu_Inventario (Menu):
             pygame.draw.line(self.image,self.fg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
             pygame.draw.line(self.image,self.bg_color,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
             
-            return self.mover_cursor(self.filas.get_sprite(self.sel-3))
-
+            self.mover_cursor(self.filas.get_sprite(self.sel-3))
+    
+    def confirmar_seleccion (self):
+        spr = self.current #sprite, item seleccionado actualmente
+        W.HERO.inventario[spr.nombre.lower()] -= 1
+        cant = W.HERO.inventario[spr.nombre.lower()] #cantidad de ese item en el iventario del heroe
+        spr.reducir_cant()
+        self.filas.draw(self.canvas)
+        if cant <= 0:
+            self.filas.remove(spr)
+            self.opciones -= 1
+            if self.opciones <= 0:
+                W.onVSel = False
+                pygame.draw.line(self.image,self.bg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+                
+    def update(self):
+        self.filas.update()
+    
+    
 class _boton (_giftSprite):
     nombre = ''
     img_sel = None
@@ -246,17 +255,43 @@ class _boton (_giftSprite):
 class _item_inv (_giftSprite):
     nombre = ''
     image = None
-    isSelected = False
     pos = 0,0
+    fuente = pygame.font.SysFont('verdana', 16)
+    rect = pygame.Rect(pos,((C.CUADRO*6)-6,22))
+    bg_color = 0,0,0
+    fg_color = 0,125,255
     
-    def __init__(self,nombre,canvas,pos):
+    def __init__(self,nombre,cant,pos):
+        self.img_nmbr = render_textrect(nombre,self.fuente,self.rect,self.fg_color,self.bg_color,1)
+        self.img_cant = render_textrect('x'+str(cant),self.fuente,self.rect,self.fg_color,self.bg_color,1)
         self.nombre = nombre
-        self.image = canvas
+        self.cant = cant
+        self.construir_fila()
         self.pos = pos
         super().__init__(self.image)
         self.rect = self.image.get_rect(topleft=self.pos)
         self.dirty = 2
     
+    def reducir_cant(self):
+        self.cant -= 1
+        if self.cant > 0:
+            self.img_cant = render_textrect('x'+str(self.cant),self.fuente,self.rect,self.fg_color,self.bg_color,1)
+            self.construir_fila()
+        else:
+            self.kill()
+        
+    def construir_fila(self):
+        image = pygame.Surface((int(C.ANCHO)-44,self.rect.h))
+        image.blit(self.img_nmbr,(7,0))
+        image.blit(self.img_cant,(260,0))
+        
+        self.image = image
+        self.rect = self.image.get_rect(topleft=self.pos)
+    
     def __repr__(self):
         return self.nombre+' _item_inv DirtySprite'
+    
+    def update(self):
+        self.construir_fila()
+    
     
