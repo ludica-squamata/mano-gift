@@ -55,7 +55,10 @@ while True:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(-1)
                     elif W.onPause:
-                        W.menu_actual.selectOne('arriba')
+                        if not W.onVSel:
+                            W.menu_actual.selectOne('arriba')
+                        else:
+                            W.menu_actual.elegir_opcion(-1)
                 else:
                     if not W.onPause:
                         dy += 1
@@ -65,7 +68,10 @@ while True:
                     if W.onSelect:
                         W.HERO.cambiar_opcion_dialogo(+1)
                     elif W.onPause:
-                        W.menu_actual.selectOne('abajo')
+                        if not W.onVSel:
+                            W.menu_actual.selectOne('abajo')
+                        else:
+                            W.menu_actual.elegir_opcion(+1)
                 else:
                     if not W.onPause:
                         dy -= 1
@@ -78,7 +84,10 @@ while True:
             elif event.key == C.TECLAS.HABLAR:
                 if W.onDialog:
                     if W.onPause:
-                        W.MAPA_ACTUAL.popMenu(W.menu_actual.current)
+                        if not W.onVSel:
+                            W.MAPA_ACTUAL.popMenu(W.menu_actual.current)
+                        else:
+                            print("selected",W.menu_actual.current)
                 if not inAction:
                     if W.onSelect:
                         W.HERO.confirmar_seleccion()

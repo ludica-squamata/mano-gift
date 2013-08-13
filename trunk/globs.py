@@ -59,6 +59,7 @@ class World:
     onDialog = False
     onSelect = False
     onPause = False
+    onVSel = False
     QUESTS = []
     
     def cargar_hero():
