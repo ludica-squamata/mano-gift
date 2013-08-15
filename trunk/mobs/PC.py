@@ -161,6 +161,10 @@ class PC (Mob):
         self.stage.setDialog(self.inventario.ver())
         return True
     
+    def usar_item (self,nombre_item):
+        print('Used',nombre_item) #acá iria el efecto del item utilizado.
+        return self.inventario.quitar(nombre_item)
+    
     def cambiar_estado(self):
         if self.estado == 'idle':
             self.image = self.cmb_walk_img['S'+self.direccion]

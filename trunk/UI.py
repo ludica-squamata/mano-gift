@@ -58,12 +58,12 @@ class Menu (Ventana):
     current = ''
     canvas = None
     
-    def __init__(self,titulo,contenido):
+    def __init__(self,titulo,botones):
         self.botones = pygame.sprite.LayeredDirty()
         self.botones.empty()
         self.canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
         self.crear_titulo(titulo)
-        self.establecer_botones(contenido['botones'])
+        self.establecer_botones(botones)
         super().__init__(self.canvas)
         self.ubicar(10,10)
         self.dirty = 2
@@ -166,12 +166,10 @@ class Menu (Ventana):
 class Menu_Inventario (Menu):
     cur_opt = 0
     filas = pygame.sprite.LayeredDirty()
-    contenido = None
     
-    def __init__(self,contenido):
+    def __init__(self,botones):
         self.filas.empty()
-        super().__init__('Inventario',contenido)
-        #self.contenido = contenido['contenido']
+        super().__init__('Inventario',botones)
         self.crear_contenido()
         self.dirty = 2
 
@@ -208,17 +206,16 @@ class Menu_Inventario (Menu):
             self.mover_cursor(self.filas.get_sprite(self.sel-3))
     
     def confirmar_seleccion (self):
-        spr = self.current #sprite, item seleccionado actualmente
-        W.HERO.inventario[spr.nombre.lower()] -= 1
-        cant = W.HERO.inventario[spr.nombre.lower()] #cantidad de ese item en el iventario del heroe
-        spr.reducir_cant()
-        self.filas.draw(self.canvas)
+        cant = W.HERO.usar_item(self.current.nombre.lower())
+        self.current.reducir_cant()
+        
         if cant <= 0:
-            self.filas.remove(spr)
+            self.filas.remove(self.current)
             self.opciones -= 1
             if self.opciones <= 0:
                 W.onVSel = False
                 pygame.draw.line(self.image,self.bg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+        self.filas.draw(self.canvas)
         self.crear_contenido()
                 
     def update(self):

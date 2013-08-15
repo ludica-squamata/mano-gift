@@ -15,7 +15,10 @@ class NPC (Mob):
             QuestManager.add(data['quest'])
     
     def hablar(self, opcion=1):
-        if not W.onSelect:
+        if len(self.dialogos) == 0:
+            return False
+        
+        elif not W.onSelect:
             self.pos_diag += 1
         
         if self.pos_diag >= len(self.dialogos):

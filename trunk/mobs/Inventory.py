@@ -26,4 +26,13 @@ class Inventory(Counter):
         else:
             self.hero.stage.setDialog('Cantidad máxima de items alcanzada')
             return False
+    
+    def quitar (self,nombre_item):
+        if self[nombre_item]-1 <= 0:
+            del self[nombre_item]
+            return 0
+        else:
+            self[nombre_item] -= 1
+            return self[nombre_item]
+    
 
