@@ -53,14 +53,15 @@ class Dialog (Ventana):
         self.image = self.canvas
         
 class Menu (Ventana):
-    botones = pygame.sprite.LayeredDirty()
+    botones = None
     cur_btn = 0
     current = ''
-    canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
+    canvas = None
     
     def __init__(self,titulo,contenido):
+        self.botones = pygame.sprite.LayeredDirty()
         self.botones.empty()
-        
+        self.canvas = pygame.Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
         self.crear_titulo(titulo)
         self.establecer_botones(contenido['botones'])
         super().__init__(self.canvas)
@@ -165,14 +166,16 @@ class Menu (Ventana):
 class Menu_Inventario (Menu):
     cur_opt = 0
     filas = pygame.sprite.LayeredDirty()
+    contenido = None
     
     def __init__(self,contenido):
         self.filas.empty()
         super().__init__('Inventario',contenido)
-        self.crear_contenido(contenido['contenido'])
+        #self.contenido = contenido['contenido']
+        self.crear_contenido()
         self.dirty = 2
 
-    def crear_contenido(self,contenido):
+    def crear_contenido(self):
         self.sel += 2
         count = 22
         i = 0
@@ -216,6 +219,7 @@ class Menu_Inventario (Menu):
             if self.opciones <= 0:
                 W.onVSel = False
                 pygame.draw.line(self.image,self.bg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+        self.crear_contenido()
                 
     def update(self):
         self.filas.update()
