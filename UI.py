@@ -157,36 +157,32 @@ class Menu (Ventana):
                     self.cur_opt = i
                     self.current = spr#.nombre
                     break
-            W.onVSel = True
-    
-    def update(self):
-        self.botones.update()
-    
+            W.onVSel = True    
             
 class Menu_Inventario (Menu):
     cur_opt = 0
     filas = pygame.sprite.LayeredDirty()
     
     def __init__(self,botones):
-        self.filas.empty()
         super().__init__('Inventario',botones)
         self.crear_contenido()
         self.dirty = 2
 
     def crear_contenido(self):
-        self.sel += 2
+        self.filas.empty()
+        erase = pygame.Surface((self.canvas.get_width()-20,300))
+        self.canvas.blit(erase,(11,44))
         count = 22
-        i = 0
         for key in W.HERO.inventario:
-            i += 1
             count += 22
             fila = _item_inv(key.capitalize(),W.HERO.inventario[key],(11,count))
             
             self.filas.add(fila)
         
         if len(self.filas) > 0:
-            self.current = self.filas.get_sprite(self.cur_opt)
+            self.sel = 3
             self.opciones = len(self.filas)
+            self.elegir_fila(0)
             self.DeselectAllButtons()
             W.onVSel = True
             self.filas.draw(self.canvas)
@@ -204,24 +200,19 @@ class Menu_Inventario (Menu):
             pygame.draw.line(self.image,self.bg_color,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
             
             self.mover_cursor(self.filas.get_sprite(self.sel-3))
-    
+            
     def confirmar_seleccion (self):
         cant = W.HERO.usar_item(self.current.nombre.lower())
+        altura = self.current.image.get_height()
         self.current.reducir_cant()
-        
         if cant <= 0:
-            self.filas.remove(self.current)
             self.opciones -= 1
             if self.opciones <= 0:
+                self.mover_cursor(self.botones.get_sprite(0))
                 W.onVSel = False
                 pygame.draw.line(self.image,self.bg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-        self.filas.draw(self.canvas)
         self.crear_contenido()
-                
-    def update(self):
-        self.filas.update()
-    
-    
+   
 class _boton (_giftSprite):
     nombre = ''
     img_sel = None
@@ -291,8 +282,4 @@ class _item_inv (_giftSprite):
     
     def __repr__(self):
         return self.nombre+' _item_inv DirtySprite'
-    
-    def update(self):
-        self.construir_fila()
-    
     
