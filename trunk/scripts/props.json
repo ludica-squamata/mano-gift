@@ -14,12 +14,14 @@
         }
     },
     "star":{
-        "propiedades":["agarrable"]
+        "propiedades":["agarrable"],
+        "image": "props/star.png"
     },
     "crate":{
         "propiedades":["empujable","pesado","solido"]
     },
     "banana":{
-        "propiedades":["agarrable"]
+        "propiedades":["agarrable"],
+        "image": "props/banana.png"
     }
 }

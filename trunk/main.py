@@ -9,7 +9,6 @@ tamanio = C.ALTO, C.ANCHO
 pantalla = pygame.display # screen
 pantalla.set_caption('Proyecto Mano-Gift')
 fondo = pantalla.set_mode(tamanio) # surface
-#pygame.key.set_repeat(50,15)
 
 W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')

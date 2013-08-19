@@ -10,6 +10,8 @@ class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
     velocidad = 4
     images = {} #incluye todas las imagenes del mob, arriba abajo izquierda y derecha
+    death_img = None #sprite del mob muerto.
+    dead = False
     direcciones = {'abajo':[0,1],'izquierda':[1,0],'arriba':[0,-1],'derecha':[-1,0],'ninguna':[0,0]}
     direccion = 'abajo'
     ticks,mov_ticks = 0,0
@@ -17,6 +19,7 @@ class Mob (_giftSprite):
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     patrol_p = []
     next_p = 0
+    
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
@@ -39,7 +42,10 @@ class Mob (_giftSprite):
             self.salud = data['salud']
             self.actitud = data['actitud']
             if 'solido' in data:
-                self.solido = data['solido']                
+                self.solido = data['solido']
+            #eliminar esto una vez que esté aplicado a todos los mobs
+            if 'death' in data:
+                self.death_img = r.cargar_imagen(data['death'])
 
         if x != None and y != None:
             self.ubicar(x*C.CUADRO,y*C.CUADRO)
@@ -191,15 +197,16 @@ class Mob (_giftSprite):
         self.salud -= 1
         
         if self.salud <= 0:
-            self.stage.contents.remove(self)
+            if self.death_img != None:
+                self.image = self.death_img
+            else: # esto queda hasta que haga sprites 'muertos' de los npcs
+                self.stage.contents.remove(self)
+            self.dead = True
             MobGroup.removeMob(self)
-            #print('Mob '+self.nombre+' eliminado!')
-        #else:
-            #print('Mob '+self.nombre+' ha recibido 1 daño, quedan '+str(self.salud))
     
     def update(self):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:
             self.anim_counter = 0
-        if not W.onPause:
+        if not W.onPause and not self.dead:
             self.mover()

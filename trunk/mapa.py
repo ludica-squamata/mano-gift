@@ -22,10 +22,10 @@ class Prop (_giftSprite):
         self.estado = 0
         self._propiedades = {}
         if data != None:
-            for prop in data['propiedades']:
+            for prop in data:
                 self._propiedades[prop] = True;
             if self.propiedades('operable'):
-                self._operable = [(data['propiedades'][prop]['0']['solido'],data['propiedades'][prop]['0']['visible']), (data['propiedades'][prop]['1']['solido'],data['propiedades'][prop]['1']['visible'])]
+                self._operable = [(data[prop]['0']['solido'],data[prop]['0']['visible']), (data[prop]['1']['solido'],data[prop]['1']['visible'])]
                 self.solido = self._operable[0][0]
                 self.visible = self._operable[0][1]
 
@@ -73,32 +73,34 @@ class Stage:
         self.contents = sprite.LayeredDirty()
         self.dialogs = sprite.LayeredDirty()
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
-        self.cargar_props()
+        self.cargar_props('ground')
+        self.cargar_props('top')
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_quests()
         self.cargar_salidas()
 
-    def cargar_props (self):
+    def cargar_props (self,capa):
         imgs = self.data['refs']
-        POS_g = self.data['capa_ground']['props']
-        POS_t = self.data['capa_top']['props']
+        POS = self.data['capa_'+capa]['props']
         data = r.abrir_json('scripts/props.json')
+        if capa == 'ground':
+            _layer = C.CAPA_GROUND_ITEMS
+        elif capa == 'top':
+            _layer = C.CAPA_TOP_ITEMS
 
-        for ref in POS_g:
-            for x,y in POS_g[ref]:
+        for ref in POS:
+            for x,y in POS[ref]:
                 if ref in data:
-                    prop = Prop(ref,imgs[ref],self,x,y,data[ref])
+                    if 'image' in data[ref]:
+                        imagen = data[ref]['image']
+                    else:
+                        imagen = imgs[ref]
+                    
+                    prop = Prop(ref,imagen,self,x,y,data[ref]['propiedades'])
                 else:
                     prop = Prop(ref,imgs[ref],self,x,y)
-                self.contents.add(prop, layer=C.CAPA_GROUND_ITEMS)
-        for ref in POS_t:
-            for x,y in POS_t[ref]:
-                if ref in data:
-                    prop = Prop(ref,imgs[ref],self,x,y,data[ref])
-                else:
-                    prop = Prop(ref,imgs[ref],self,x,y)
-                self.contents.add(prop, layer=C.CAPA_TOP_ITEMS)
+                self.contents.add(prop, layer=_layer)
 
     def cargar_mobs(self,clase):
         if clase == Enemy:
@@ -128,7 +130,6 @@ class Stage:
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
                 
                 hero.stage = self
-                #hero.nombre = 'heroe'
                 self.contents.add(hero,layer=C.CAPA_HERO)
                 self.centrar_camara()
     

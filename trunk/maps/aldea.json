@@ -145,9 +145,7 @@
         "techo_choza":"props/techo_choza.png",
         "aldeano":"mobs/commoner12.png",
         "aldeanos":"mobs/commoner12.png",
-        "girls":"mobs/green_girl.png",
-        "star":"props/star.png",
-        "banana":"props/banana.png"
+        "girls":"mobs/green_girl.png"
     },
     "ambiente":"exterior"
 }
