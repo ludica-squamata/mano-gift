@@ -1,12 +1,12 @@
 from collections import Counter
+from globs import World as W
 
 class Inventory(Counter):
     tamanio_max = 0
     
-    def __init__(self,maximo,pj):
+    def __init__(self,maximo):
         super().__init__()
         self.tamanio_max = maximo
-        self.hero = pj
     
     def ver (self):
         if len(self) < 1:
@@ -24,7 +24,7 @@ class Inventory(Counter):
                 self[nombre_item] = 1
             return True
         else:
-            self.hero.stage.setDialog('Cantidad máxima de items alcanzada')
+            W.MAPA_ACTUAL.setDialog('Cantidad máxima de items alcanzada')
             return False
     
     def quitar (self,nombre_item):

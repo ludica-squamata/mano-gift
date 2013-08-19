@@ -3,5 +3,6 @@
     "modo_colision":"random",
     "direccion":"abajo",
     "solido":false,
-    "salud":1
+    "salud":1,
+    "death":"mobs/green_death.png"
 }

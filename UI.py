@@ -167,6 +167,7 @@ class Menu_Inventario (Menu):
         super().__init__('Inventario',botones)
         self.crear_contenido()
         self.dirty = 2
+        self.sel = 3
 
     def crear_contenido(self):
         self.filas.empty()
@@ -180,13 +181,11 @@ class Menu_Inventario (Menu):
             self.filas.add(fila)
         
         if len(self.filas) > 0:
-            self.sel = 3
             self.opciones = len(self.filas)
             self.elegir_fila(0)
-            self.DeselectAllButtons()
             W.onVSel = True
             self.filas.draw(self.canvas)
-            pygame.draw.line(self.canvas,self.fg_color,(10,66),(self.canvas.get_width()-10,66))
+            pygame.draw.line(self.canvas,self.fg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
     
     def elegir_fila(self,j):
         if self.opciones > 0:

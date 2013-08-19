@@ -9,5 +9,6 @@
         "seq":["A","B","C","D","C","B"]
     },
     "modo_colision":"contraria",
-    "salud":3
+    "salud":3,
+    "death":"mobs/blue_death.png"
 }
