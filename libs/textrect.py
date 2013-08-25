@@ -29,7 +29,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
     Failure - raises a TextRectException if the text won't fit onto the surface.
     """
 
-    import pygame
+    from pygame import Surface
     
     final_lines = []
 
@@ -61,7 +61,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
 
     # Let's try to write the text out on the surface.
 
-    surface = pygame.Surface(rect.size)
+    surface = Surface(rect.size)
     surface.fill(background_color)
 
     accumulated_height = 0

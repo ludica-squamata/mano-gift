@@ -2,6 +2,7 @@ from misc import Resources as r
 from .Mob import Mob
 from .NPC import NPC
 from .Inventory import Inventory
+from .Item import Item
 from globs import World as W, Constants as C, Tiempo as T
 
 class PC (Mob):
@@ -77,7 +78,7 @@ class PC (Mob):
         x,y = dx*rango,dy*rango
         
         for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.solido and spr.propiedades('empujable'):
+            if spr.solido and spr.es('empujable'):
                 if self.colisiona(spr,x,y):
                     spr.interaccion(x,y)
     
@@ -108,8 +109,9 @@ class PC (Mob):
         elif isinstance(sprite,Prop):
             if not self.atacando:
                 x,y = x*self.fuerza*2,y*self.fuerza*2
-                if sprite.interaccion(x,y) != None:
-                    if self.inventario.agregar(sprite.nombre):
+                if sprite.interaccion(x,y):
+                    item = Item(sprite.nombre,sprite.es('stackable'))
+                    if self.inventario.agregar(item):
                         self.stage.contents.remove(sprite)
                 
     def atacar(self,sprite,x,y):
@@ -161,9 +163,9 @@ class PC (Mob):
         self.stage.setDialog(self.inventario.ver())
         return True
     
-    def usar_item (self,nombre_item):
-        print('Used',nombre_item) #acá iria el efecto del item utilizado.
-        return self.inventario.quitar(nombre_item)
+    def usar_item (self,item):
+        print('Used',item.nombre) #acá iria el efecto del item utilizado.
+        return self.inventario.quitar(item.ID)
     
     def cambiar_estado(self):
         if self.estado == 'idle':

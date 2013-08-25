@@ -1,5 +1,5 @@
-import pygame
-from pygame import sprite, Rect, Surface
+#import pygame
+from pygame import sprite, Rect, Surface, mask as MASK
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager
 from base import _giftSprite
@@ -22,27 +22,33 @@ class Prop (_giftSprite):
         self.estado = 0
         self._propiedades = {}
         if data != None:
-            for prop in data:
+            for prop in data['propiedades']:
                 self._propiedades[prop] = True;
-            if self.propiedades('operable'):
-                self._operable = [(data[prop]['0']['solido'],data[prop]['0']['visible']), (data[prop]['1']['solido'],data[prop]['1']['visible'])]
+            
+            if self.es('operable'):
+                self._operable = [
+                    (data['propiedades'][prop]['0']['solido'],
+                     data['propiedades'][prop]['0']['visible']),
+                    (data['propiedades'][prop]['1']['solido'],
+                     data['propiedades'][prop]['1']['visible'])]
                 self.solido = self._operable[0][0]
-                self.visible = self._operable[0][1]
+                self.visible = self._operable[0][1]            
 
     def interaccion(self,x=0,y=0):
-        if self.propiedades('agarrable'):
-            return self.nombre
+        if self.es('agarrable'):
+            return True
         
-        elif self.propiedades('operable'):
+        elif self.es('operable'):
             if self.estado == 0:
                 self.estado = 1
             else:
                 self.estado = 0
             self.solido = self._operable[self.estado][0]
             self.visible = self._operable[self.estado][1]
+            return False
 
-        elif self.propiedades('empujable'):
-            if self.propiedades('pesado'):
+        elif self.es('empujable'):
+            if self.es('pesado'):
                 if x > 0: x -= 10
                 elif x < 0: x += 10
     
@@ -50,9 +56,10 @@ class Prop (_giftSprite):
                 elif y < 0: y += 10
             
             self.reubicar(x,y)
+            return False
     
     #devuelve true o false
-    def propiedades(self,propiedad):
+    def es(self,propiedad):
         return(propiedad in self._propiedades and self._propiedades[propiedad])
     
 class Stage:
@@ -68,7 +75,7 @@ class Stage:
         mapa = sprite.DirtySprite()
         mapa.image = r.cargar_imagen(data['capa_background']['fondo'])
         mapa.rect = mapa.image.get_rect()
-        mapa.mask = pygame.mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
+        mapa.mask = MASK.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
         self.mapa = mapa
         self.contents = sprite.LayeredDirty()
         self.dialogs = sprite.LayeredDirty()
@@ -97,7 +104,7 @@ class Stage:
                     else:
                         imagen = imgs[ref]
                     
-                    prop = Prop(ref,imagen,self,x,y,data[ref]['propiedades'])
+                    prop = Prop(ref,imagen,self,x,y,data[ref])
                 else:
                     prop = Prop(ref,imgs[ref],self,x,y)
                 self.contents.add(prop, layer=_layer)
@@ -296,7 +303,7 @@ class Salida (_giftSprite):
         self.x,self.y,alto,ancho = data['rect']
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
-        image = pygame.Surface((alto, ancho))
+        image = Surface((alto, ancho))
         #image.fill((255,0,0))
         super().__init__(image,self.x,self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
