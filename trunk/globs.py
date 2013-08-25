@@ -1,21 +1,25 @@
 #global information
-import pygame
+#import pygame
+from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT
+from pygame import K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT
+from pygame import Color, time, Surface
+
 from misc import Resources as r
 from base import _giftSprite
 
 class Teclas:
-    ARRIBA = pygame.K_UP
-    ABAJO = pygame.K_DOWN
-    IZQUIERDA= pygame.K_LEFT
-    DERECHA = pygame.K_RIGHT
+    ARRIBA = K_UP
+    ABAJO = K_DOWN
+    IZQUIERDA= K_LEFT
+    DERECHA = K_RIGHT
 
-    ACCION = pygame.K_x
-    HABLAR = pygame.K_s
-    CANCELAR_DIALOGO = pygame.K_a
-    INVENTARIO = pygame.K_z
-    MENU = pygame.K_RETURN
-    SALIR = pygame.K_ESCAPE
-    POSICION_COMBATE = pygame.K_LSHIFT
+    ACCION = K_x
+    HABLAR = K_s
+    CANCELAR_DIALOGO = K_a
+    INVENTARIO = K_z
+    MENU = K_RETURN
+    SALIR = K_ESCAPE
+    POSICION_COMBATE = K_LSHIFT
 
 
     def asignar (self,data):
@@ -46,7 +50,7 @@ class Constants:
     CAPA_OVERLAYS_DIALOGO = 1
     CAPA_OVERLAYS_INVENTARIO = 2
 
-    COLOR_COLISION = pygame.Color(255,0,255) #Fuchsia #FF00FF
+    COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
 
     TECLAS = Teclas()
 
@@ -76,13 +80,13 @@ class World:
         World.MAPA_ACTUAL.mapa.dirty=1
 
 class Tiempo:
-    FPS = pygame.time.Clock()
+    FPS = time.Clock()
     frames,segs,mins,dias = 0,0,0,0
     esNoche = False
     
     contador = -1
     
-    nch_img = pygame.Surface((480,480))
+    nch_img = Surface((480,480))
     nch_img.set_alpha(125)
     noche = _giftSprite(nch_img)
     noche.ubicar(0,0)

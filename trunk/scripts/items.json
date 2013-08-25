@@ -1,0 +1,16 @@
+{
+    "star":{
+        "ID":0,
+        "peso":2,
+        "volumen":0,
+        "efecto":{
+            "des":"Te hace invencible por 10 segundos."}
+    },
+    "banana":{
+        "ID":1,
+        "peso":1,
+        "volumen":1,
+        "efecto":{
+            "des":"Restaura tu salud al máximo."}
+    }
+}

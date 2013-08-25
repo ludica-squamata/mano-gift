@@ -15,13 +15,17 @@
     },
     "star":{
         "propiedades":["agarrable"],
-        "image": "props/star.png"
+        "image": "props/star.png",
+        "efecto":{
+            "des":"Te hace invencible por 10 segundos."}
     },
     "crate":{
         "propiedades":["empujable","pesado","solido"]
     },
     "banana":{
-        "propiedades":["agarrable"],
-        "image": "props/banana.png"
+        "propiedades":["agarrable","stackable"],
+        "image": "props/banana.png",
+        "efecto":{
+            "des":"Restaura tu salud al máximo."}
     }
 }

@@ -1,38 +1,64 @@
-from collections import Counter
+from collections import UserList
 from globs import World as W
 
-class Inventory(Counter):
-    tamanio_max = 0
-    
-    def __init__(self,maximo):
+class Inventory(UserList):
+    volumen_max = 0
+    peso_max = 0
+
+    def __init__(self,maxvol):
         super().__init__()
-        self.tamanio_max = maximo
+        self.volumen_max = maxvol
+        self.peso_max = 1
     
     def ver (self):
         if len(self) < 1:
             texto = 'El inventario está vacío'
         else:
-            texto = ', '.join(sorted([item.capitalize()+' x'+str(self[item]) for item in self]))
+            texto = ', '.join(sorted([item.nombre.capitalize()+' x'+str(item.cantidad) for item in self]))
         
         return texto
+
+    def _calcular_limites(self,elemento):
+        volumen = 0
+        peso = 0
+        for item in self:
+            volumen += item.volumen*item.cantidad
+            peso += item.peso*item.cantidad
         
-    def agregar(self,nombre_item):
-        if sum(self.values())+1 <= self.tamanio_max:
-            if nombre_item in self:
-                self[nombre_item] += 1
+        if elemento.peso+peso > self.peso_max*W.HERO.fuerza:
+            W.MAPA_ACTUAL.setDialog('No puedes cargar más peso del que llevas.')
+            return False
+        
+        if elemento.volumen+volumen > self.volumen_max:
+            W.MAPA_ACTUAL.setDialog('El item no entra en la mochila.')
+            return False
+        
+        return True    
+
+    def agregar(self,item):
+        if self._calcular_limites (item):
+            if item in self:
+                if item.esStackable:
+                    self[self.index(item)].cantidad += 1
+                else:
+                    self.append(item)
             else:
-                self[nombre_item] = 1
+                self.append(item)
             return True
         else:
-            W.MAPA_ACTUAL.setDialog('Cantidad máxima de items alcanzada')
             return False
     
-    def quitar (self,nombre_item):
-        if self[nombre_item]-1 <= 0:
-            del self[nombre_item]
+    def quitar (self,item_id):
+        for item in self:
+            if item.ID == item_id:
+                index = self.index(item)
+                break
+        
+        if self[index].cantidad -1 <= 0:
+            del self[index]
             return 0
         else:
-            self[nombre_item] -= 1
-            return self[nombre_item]
-    
+            self[index].cantidad -= 1
+            return self[index]
+
 

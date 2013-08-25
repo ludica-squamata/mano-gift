@@ -1,5 +1,5 @@
+import sys
 from pygame import mask,time
-import pygame,sys
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite

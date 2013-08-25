@@ -1,12 +1,18 @@
-import pygame,sys
+import sys
+from pygame import display as pantalla # screen
+from pygame import event as EVENT, image, font
+from pygame import QUIT, KEYUP, KEYDOWN
+from pygame import quit as py_quit
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager 
 
 configs = r.abrir_json('config.json')
 
-pygame.init()
+#pygame.init()
 tamanio = C.ALTO, C.ANCHO
-pantalla = pygame.display # screen
+#pantalla = pygame.display
+font.init()
+pantalla.set_icon(image.load('D:/python/gift/favicon.png'))
 pantalla.set_caption('Proyecto Mano-Gift')
 fondo = pantalla.set_mode(tamanio) # surface
 
@@ -20,11 +26,11 @@ while True:
     T.FPS.tick(60)
     T.contar_tiempo()
     QuestManager.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for event in EVENT.get():
+        if event.type == QUIT:
             sys.exit()
 
-        elif event.type == pygame.KEYUP:
+        elif event.type == KEYUP:
             if event.key == C.TECLAS.ACCION or event.key == C.TECLAS.HABLAR:
                 inAction = False
             
@@ -35,7 +41,7 @@ while True:
                 if not W.onPause and not W.onDialog:
                     dy = 0
 
-        elif event.type == pygame.KEYDOWN:
+        elif event.type == KEYDOWN:
             if event.key == C.TECLAS.IZQUIERDA:
                 if not W.onPause:
                     if not W.onDialog:
@@ -123,7 +129,7 @@ while True:
                     W.MAPA_ACTUAL.endDialog()
                 
             elif event.key == C.TECLAS.SALIR:
-                    pygame.quit()
+                    py_quit()
                     print('Saliendo...')
                     sys.exit()
             
