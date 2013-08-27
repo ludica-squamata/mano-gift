@@ -60,5 +60,21 @@ class Inventory(UserList):
         else:
             self[index].cantidad -= 1
             return self[index]
+    
+    def __contains__(self,item):
+        if type(item) == str:
+            #item es el nombre de un item
+            for _item in self:
+                if _item.nombre == item:
+                    return True
+            return False
+        elif type(item) == int:
+            #item es el ID de un item
+            for _item in self:
+                if _item.ID == item:
+                    return True
+            return False
+            
+    
 
 

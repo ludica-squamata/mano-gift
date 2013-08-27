@@ -157,7 +157,7 @@ class Menu (Ventana):
                     self.cur_opt = i
                     self.current = spr#.nombre
                     break
-            W.onVSel = True    
+            W.onVSel = True
             
 class Menu_Inventario (Menu):
     cur_opt = 0
@@ -173,8 +173,8 @@ class Menu_Inventario (Menu):
 
     def crear_contenido(self):
         self.filas.empty()
-        erase = Surface((self.canvas.get_width()-20,300))
-        self.canvas.blit(erase,(11,44))
+        erase = Surface((self.canvas.get_width()-19,300))
+        self.canvas.blit(erase,(10,44))
         self.crear_espacio_descriptivo()
         count = 22
         for item in W.HERO.inventario:

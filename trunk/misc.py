@@ -12,16 +12,16 @@ class Resources:
         ar = image.load('grafs/'+ruta).convert_alpha()
         return ar
     
-    def split_spritesheet(ruta):
+    def split_spritesheet(ruta,w=32,h=32):
         spritesheet = Resources.cargar_imagen(ruta)
         ancho = spritesheet.get_width()
         alto = spritesheet.get_height()
-        tamanio = 32,32
+        tamanio = w,h
         sprites = []
-        for y in range(int(alto/32)):
-            for x in range(int(ancho/32)): 
-                sprites.append(spritesheet.subsurface(Rect(((int(ancho/(ancho/32))*x,
-                                                            int(alto/(alto/32))*y),
+        for y in range(int(alto/h)):
+            for x in range(int(ancho/w)):
+                sprites.append(spritesheet.subsurface(Rect(((int(ancho/(ancho/w))*x,
+                                                            int(alto/(alto/h))*y),
                                                             tamanio))))
         return sprites
                 
