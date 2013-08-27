@@ -4,6 +4,7 @@ from .NPC import NPC
 from .Inventory import Inventory
 from .Item import Item
 from globs import World as W, Constants as C, Tiempo as T
+from .MobGroup import MobGroup
 
 class PC (Mob):
     centroX = 0
@@ -28,6 +29,7 @@ class PC (Mob):
         self.timer_animacion = 0
         self.inventario = Inventory(10)
         self.estado = 'idle'
+        MobGroup.addMob(self)
     
     def cargar_anims(self,ruta_imgs,dict_dest,seq):
         spritesheet = r.split_spritesheet(ruta_imgs)

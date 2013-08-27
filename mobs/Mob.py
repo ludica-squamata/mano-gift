@@ -5,6 +5,7 @@ from misc import Resources as r
 from base import _giftSprite
 from globs import World as W, Constants as C, Tiempo as T
 from mobs.MobGroup import MobGroup
+from .Vision import area_vision
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
@@ -19,7 +20,8 @@ class Mob (_giftSprite):
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     patrol_p = []
     next_p = 0
-    
+    vision = None
+    cuenta = -1
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
@@ -36,6 +38,7 @@ class Mob (_giftSprite):
 
         if data != None:
             self.cambiar_direccion(data['direccion'])
+            self.vision = area_vision(self.direccion)
             self.AI = data['AI']
             self.velocidad = data['velocidad']
             self.modo_colision = data['modo_colision']
@@ -100,6 +103,7 @@ class Mob (_giftSprite):
             direccion = arg
             
         self.direccion = direccion
+        return direccion
         
     def animar_caminar(self):
         '''cambia la orientación del sprite y controla parte de la animación'''
@@ -123,11 +127,12 @@ class Mob (_giftSprite):
         if self.AI == "wanderer":
             self.ticks += 1
             self.mov_ticks += 1
+            direccion = self.direccion
             if self.mov_ticks == 3:
                 self.mov_ticks = 0
                 pos = 10
                 if randint(1,101) <= pos:
-                    self.cambiar_direccion()
+                    direccion = self.cambiar_direccion()
         
         elif self.AI == 'patrol':
             curr_p = [self.mapX,self.mapY]
@@ -140,6 +145,7 @@ class Mob (_giftSprite):
             direccion = self._determinar_direccion(curr_p,punto_proximo)
             self.cambiar_direccion(direccion)
         
+        self.vision.cambiar_direccion(direccion)
         self._mover()
                 
     def _mover(self):
@@ -167,6 +173,16 @@ class Mob (_giftSprite):
                 if spr.solido:
                     if self.colisiona(spr,dx,dy):
                         col_mobs = True
+            
+            for spr in MobGroup.mobs:
+                if MobGroup.mobs[spr] != self:
+                    spr = MobGroup.mobs[spr]
+                    v = self.vision
+                    if v.mask.overlap(spr.mask,(v.x(self) - spr.mapX,
+                                                v.y(self) - spr.mapY)):
+                        self.cuenta += 1
+                        print(self.nombre,'ve a',spr.nombre,'(',str(self.cuenta),')')
+                        self.cambiar_direccion('contraria')
             
         if self.colisiona(W.HERO,dx,dy):
             col_heroe = True
@@ -210,3 +226,4 @@ class Mob (_giftSprite):
             self.anim_counter = 0
         if not W.onPause and not self.dead:
             self.mover()
+            

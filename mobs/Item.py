@@ -21,10 +21,10 @@ class Item:
     def __repr__(self):
         return self.nombre+' Mob.Item'
     
-    def __eq__(self,other):
-        if self.ID == other.ID:
-            return True
-        else:
-            return False
+    #def __eq__(self,other):
+    #    if self.ID == other.ID:
+    #        return True
+    #    else:
+    #        return False
     
     
