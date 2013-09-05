@@ -82,7 +82,7 @@ class Stage:
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
         self.cargar_props('ground')
         self.cargar_props('top')
-        #self.cargar_mobs(Enemy)
+        self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
         self.cargar_quests()
         self.cargar_salidas()

@@ -140,11 +140,12 @@ class QuestManager:
         if nombre in QuestManager.quests:
             del QuestManager.quests[nombre]
             for NPC in quest.off_Dialogs:
-                npc = MobGroup.mobs[NPC]
-                if quest.off_Dialogs[NPC] != []:
-                    npc.dialogos = quest.off_Dialogs[NPC]
-                else:
-                    npc.dialogos = npc.data['dialogo']
+                if NPC in MobGroup.mobs:
+                    npc = MobGroup.mobs[NPC]
+                    if quest.off_Dialogs[NPC] != []:
+                        npc.dialogos = quest.off_Dialogs[NPC]
+                    else:
+                        npc.dialogos = npc.data['dialogo']
     
     def update():
         conds = {}

@@ -22,6 +22,8 @@ class Mob (_giftSprite):
     next_p = 0
     vision = None
     cuenta = -1
+    show = {}
+    hide = {}
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
@@ -31,6 +33,7 @@ class Mob (_giftSprite):
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
         self.patrol_p = []
+        self.generar_rasgos()
         for key in maskeys:
             self.images[key] = spritesheet[maskeys.index(key)]
         self.image = self.images['Sabajo']
@@ -59,7 +62,31 @@ class Mob (_giftSprite):
                     dy += y*C.CUADRO
                     self.patrol_p.append([dx,dy])
                 self.AI = 'patrol'
-
+        
+    def generar_rasgos(self):
+        rasgos = r.abrir_json('scripts/rasgos.json')
+        
+        for car in rasgos['cars']:
+            if rasgos['cars'][car]:
+                self.show[car] = {"tipo": "atributo", "nombre":car, "value": 0}
+            else:
+                self.hide[car] = {"tipo": "atributo", "nombre":car, "value": 0}
+        
+        for hab in rasgos['habs']:
+            if rasgos['habs'][hab]:
+                self.show[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
+            else:
+                self.hide[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
+                
+        #print(self.nombre)
+        #for car in self.cars:
+        #    if self.cars[car]['show']:
+        #        print(car, self.cars[car]["value"])
+        #for hab in self.habs:
+        #    if self.habs[hab]['show']:
+        #        print(hab, self.habs[hab]["value"])
+        #print()
+                    
     def _determinar_direccion(self,curr_p,next_p):
         pX,pY = curr_p
         nX,nY = next_p
@@ -173,17 +200,7 @@ class Mob (_giftSprite):
                 if spr.solido:
                     if self.colisiona(spr,dx,dy):
                         col_mobs = True
-            
-            for spr in MobGroup.mobs:
-                if MobGroup.mobs[spr] != self:
-                    spr = MobGroup.mobs[spr]
-                    v = self.vision
-                    if v.mask.overlap(spr.mask,(v.x(self) - spr.mapX,
-                                                v.y(self) - spr.mapY)):
-                        self.cuenta += 1
-                        print(self.nombre,'ve a',spr.nombre,'(',str(self.cuenta),')')
-                        self.cambiar_direccion('contraria')
-            
+                        
         if self.colisiona(W.HERO,dx,dy):
             col_heroe = True
             if self.actitud == 'hostil':
@@ -220,10 +237,24 @@ class Mob (_giftSprite):
             self.dead = True
             MobGroup.removeMob(self)
     
+    def ver(self):
+        for spr in MobGroup.mobs:
+            if MobGroup.mobs[spr] != self:
+                spr = MobGroup.mobs[spr]
+                v = self.vision
+                if v.mask.overlap(spr.mask,(spr.mapX - v.x(self),
+                                            spr.mapY - v.y(self))):
+                                        
+                    #self.cuenta += 1
+                    #print(self.nombre,'ve a',spr.nombre,'(',str(self.cuenta),')')
+                    #self.cambiar_direccion('contraria')
+                    pass
+                    
+
     def update(self):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:
             self.anim_counter = 0
         if not W.onPause and not self.dead:
             self.mover()
-            
+            self.ver()

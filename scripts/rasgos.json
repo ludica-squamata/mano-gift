@@ -1,0 +1,12 @@
+{
+    "cars":{
+        "car1":true,
+        "car2":true,
+        "car3":false
+    },
+    "habs":{
+        "hab1":true,
+        "hab2":true,
+        "hab3":false
+    }
+}
