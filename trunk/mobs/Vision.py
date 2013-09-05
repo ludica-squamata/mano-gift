@@ -1,5 +1,6 @@
 from pygame import mask
 from misc import Resources as r
+from globs import Constants as C
 
 class area_vision:
     _masks = {} # máscaras de visión ordenadas por direcciones.
@@ -15,8 +16,8 @@ class area_vision:
             {'x':-64, 'y': -32},
             {'x':  0, 'y': -32}]
         
-        for i  in range(len(direcciones)):
-            self._masks[direcciones[i]] = {'mask':mask.from_surface(visiones[i]),
+        for i  in range(len(direcciones)):            
+            self._masks[direcciones[i]] = {'mask':mask.from_threshold(visiones[i],C.COLOR_COLISION, (1,1,1,255)),
                                            'dpos':vis_pos[i]}
         
         self.cambiar_direccion(direccion)
