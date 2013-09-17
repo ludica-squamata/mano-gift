@@ -5,3 +5,4 @@ from .Enemy import Enemy
 from .Inventory import Inventory
 from .Item import Item
 from .MobGroup import MobGroup
+from .scripts import movimiento

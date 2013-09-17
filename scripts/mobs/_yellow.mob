@@ -1,0 +1,13 @@
+{
+    "AI":{
+        "puntos":{
+            "inicio":[1,14],
+            "destino":[0,2]
+        },
+        "seq":"camino"
+    },
+    "modo_colision":"contraria",
+    "direccion":"arriba",
+    "salud":2,
+    "death":"mobs/yellow_death.png"
+}

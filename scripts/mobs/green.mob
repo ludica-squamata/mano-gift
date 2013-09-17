@@ -1,6 +1,6 @@
 {
     "AI":"wanderer",
-    "modo_colision":"random",
+    "modo_colision":"izquierda",
     "direccion":"abajo",
     "solido":false,
     "salud":1,
