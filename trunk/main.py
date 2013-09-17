@@ -4,7 +4,8 @@ from pygame import event as EVENT, image, font
 from pygame import QUIT, KEYUP, KEYDOWN
 from pygame import quit as py_quit
 from misc import Resources as r
-from globs import Constants as C, World as W, Tiempo as T, QuestManager 
+from globs import Constants as C, World as W, Tiempo as T, QuestManager
+
 
 configs = r.abrir_json('config.json')
 
@@ -21,7 +22,6 @@ W.setear_mapa(configs['mapa_inicial'], 'inicial')
 inAction = False
 
 dx,dy = 0,0
-
 while True:
     T.FPS.tick(60)
     T.contar_tiempo()

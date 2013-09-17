@@ -1,6 +1,6 @@
 {
     "AI":"wanderer",
-    "modo_colision":"random",
+    "modo_colision":"contraria",
     "direccion":"arriba",
     "salud":2,
     "death":"mobs/yellow_death.png"

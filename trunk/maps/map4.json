@@ -7,7 +7,7 @@
         "props": {},
         "mobs": {
             "enemies":{
-                "yellow":[[1,14]]},
+                "_yellow":[[1,14]]},
             "npcs":{}
         }
     },
@@ -17,7 +17,7 @@
     "entradas":{},
     "salidas":{    
     },
-    "refs":{"yellow":"mobs/yellow12.png"
+    "refs":{"_yellow":"mobs/yellow12.png"
     },
     "ambiente":"interior"
 }

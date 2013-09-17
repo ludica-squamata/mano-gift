@@ -5,6 +5,7 @@ from globs import Constants as C, World as W, Tiempo as T, QuestManager
 from base import _giftSprite
 from mobs import NPC, Enemy
 from UI import Dialog, Menu, Menu_Inventario
+from mobs.scripts.a_star import generar_grilla
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items.
@@ -77,6 +78,7 @@ class Stage:
         mapa.rect = mapa.image.get_rect()
         mapa.mask = MASK.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
         self.mapa = mapa
+        self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.contents = sprite.LayeredDirty()
         self.dialogs = sprite.LayeredDirty()
         self.contents.add(mapa, layer=C.CAPA_BACKGROUND)

@@ -1,7 +1,7 @@
 {
     "AI":"wanderer",
     "velocidad":1,
-    "modo_colision":"aleatorio",
+    "modo_colision":"contraria",
     "direccion":"abajo",
     "salud":2,
     "actitud":"pasiva",
