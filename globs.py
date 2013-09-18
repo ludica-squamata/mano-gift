@@ -84,8 +84,6 @@ class Tiempo:
     frames,segs,mins,dias = 0,0,0,0
     esNoche = False
     
-    contador = -1
-    
     nch_img = Surface((480,480))
     nch_img.set_alpha(125)
     noche = _giftSprite(nch_img)

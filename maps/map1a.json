@@ -41,7 +41,7 @@
     "refs":{
         "techo":"props/techo.png",
         "puerta":"props/puerta.png",
-        "red":"mobs/red12.png",
+        "_red":"mobs/red12.png",
         "green":"mobs/green12.png",
         "blue":"mobs/blue12.png",
         "yellow":"mobs/yellow12.png",

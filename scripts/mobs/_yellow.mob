@@ -1,11 +1,6 @@
 {
-    "AI":{
-        "puntos":{
-            "inicio":[1,14],
-            "destino":[0,2]
-        },
-        "seq":"camino"
-    },
+    "AI":"patrol",
+    "camino":[[0,2]],
     "modo_colision":"contraria",
     "direccion":"arriba",
     "salud":2,
