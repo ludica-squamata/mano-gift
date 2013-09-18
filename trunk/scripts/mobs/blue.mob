@@ -1,13 +1,7 @@
 {
-    "AI":{
-        "puntos":{
-            "A":[50,0],
-            "B":[-50,0],
-            "C":[-50,50],
-            "D":[-100,50]
-        },
-        "seq":["A","B","C","D","C","B"]
-    },
+    "AI":"patrol",
+    "reversa":true,
+    "camino":[[19,17],[15,17],[15,19],[11,19]],
     "modo_colision":"contraria",
     "salud":3,
     "death":"mobs/blue_death.png"

@@ -11,21 +11,20 @@ from .scripts import movimiento
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
     velocidad = 4
-    images = {} #incluye todas las imagenes del mob, arriba abajo izquierda y derecha
-    death_img = None #sprite del mob muerto.
+    images = {} # incluye todas las imagenes del mob, arriba abajo izquierda y derecha
+    death_img = None # sprite del mob muerto.
     dead = False
     direcciones = {'abajo':[0,1],'izquierda':[1,0],'arriba':[0,-1],'derecha':[-1,0],'ninguna':[0,0]}
     direccion = 'abajo'
     ticks,mov_ticks = 0,0
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
-    patrol_p = []
-    next_p = 0
     vision = None
     show = {}
     hide = {}
-    punto_inicio = []
-    punto_destino = []
+    next_p = 0
+    camino = []
+    reversa = bool # indica si hay que dar media vuelta al llegar al final del camino, o no.
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
@@ -34,7 +33,7 @@ class Mob (_giftSprite):
 
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
-        self.patrol_p = []
+        self.camino = [] # si no lo redefino, pasan cosas raras...
         self.generar_rasgos()
         for key in maskeys:
             self.images[key] = spritesheet[maskeys.index(key)]
@@ -57,26 +56,21 @@ class Mob (_giftSprite):
 
         if x != None and y != None:
             self.ubicar(x*C.CUADRO,y*C.CUADRO)
-            if type(self.AI) == dict:
-                if self.AI['seq'] == 'camino':
-                    x,y = self.AI['puntos']['inicio']
-                    self.punto_inicio = [x*C.CUADRO,y*C.CUADRO]
-                    
-                    x,y = self.AI['puntos']['destino']
-                    self.punto_destino = [x*C.CUADRO,y*C.CUADRO]
-                    
-                    self.AI = movimiento.AI_caminar_por_ruta # function alias!
-                    self.camino = movimiento.generar_camino(self)
-                else:
-                    for punto in self.AI['seq']:
-                        dx,dy = self.AI['puntos'][punto]
-                        dx += x*C.CUADRO
-                        dy += y*C.CUADRO
-                        self.patrol_p.append([dx,dy])
-                    self.AI = movimiento.AI_patrol # function alias!
-            else:
+            if self.AI == "wanderer":
                 self.AI = movimiento.AI_wander # function alias!
-        
+                
+            elif self.AI == "patrol":
+                inicio = [x*C.CUADRO,y*C.CUADRO]
+                self.reversa = data['reversa']
+                for x,y in data['camino']:
+                    destino = [x*C.CUADRO,y*C.CUADRO]
+                    camino = movimiento.generar_camino(inicio,destino,self.stage.grilla)
+                    ruta = movimiento.simplificar_camino(camino)
+                    self.camino.extend(ruta)
+                    inicio = [x*C.CUADRO,y*C.CUADRO]
+                
+                self.AI = movimiento.AI_patrol # function alias!
+    
     def generar_rasgos(self):
         rasgos = r.abrir_json('scripts/rasgos.json')
         
