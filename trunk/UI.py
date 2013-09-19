@@ -6,9 +6,12 @@ from misc import Resources as r
 
 class Ventana (_giftSprite):
     canvas = None
-    bg_cnvs = 125,125,125 # gris
-    bg_color = 0,0,0
-    fg_color = 0,125,255
+    button_bg_color = 100,100,100
+    font_high_color = 255,255,255
+    font_none_color = 0,0,0
+    bg_cnvs = 125,125,125
+    bg_bisel_bg = 175,175,175
+    bg_bisel_fg = 100,100,100
     posicion = x,y = 0,0
     tamanio = ancho,alto = 0,0
     sel = 1
@@ -16,13 +19,41 @@ class Ventana (_giftSprite):
     
     def __init__(self,image):
         super().__init__(image)
+
+    def crear_canvas(self,ancho,alto):
+        canvas = Surface((ancho, alto))
+        
+        clip = Rect(0,0,ancho, alto)
+        canvas.fill(self.bg_bisel_bg,rect=clip)
+        
+        clip = Rect(3,3,ancho, alto)
+        canvas.fill(self.bg_bisel_fg,rect=clip)
+        
+        clip = Rect(3,3,ancho-7, alto-7)
+        canvas.fill(self.bg_cnvs,rect=clip)
+        
+        return canvas
     
+    def crear_inverted_canvas (self,ancho,alto):
+        canvas = Surface((ancho, alto))
+        
+        clip = Rect(0,0,ancho, alto)
+        canvas.fill(self.bg_bisel_fg,rect=clip)
+        
+        clip = Rect(3,3,ancho, alto)
+        canvas.fill(self.bg_bisel_bg,rect=clip)
+        
+        clip = Rect(3,3,ancho-7, alto-7)
+        canvas.fill(self.bg_cnvs,rect=clip)
+        
+        return canvas
+        
     def elegir_opcion(self,i):
         self.sel += i
         if self.sel < 1: self.sel = 1
         elif self.sel > self.opciones: self.sel = self.opciones
-        draw.line(self.image,self.fg_color,(3,self.sel*22),(C.ANCHO-5,self.sel*22))
-        draw.line(self.image,self.bg_color,(3,(self.sel-i)*22),(C.ANCHO-5,(self.sel-i)*22))
+        draw.line(self.image,self.font_high_color,(3,self.sel*22),(C.ANCHO-5,self.sel*22))
+        draw.line(self.image,self.bg_cnvs,(3,(self.sel-i)*22),(C.ANCHO-5,(self.sel-i)*22))
 
         return self.sel
     
@@ -31,12 +62,11 @@ class Dialog (Ventana):
     posicion = x,y = 0,384
     
     def __init__(self, texto):
-        self.canvas = Surface((int(C.ANCHO), int(C.ALTO/5)))
-        self.canvas.fill(self.bg_cnvs)
+        self.canvas = self.crear_canvas(int(C.ANCHO), int(C.ALTO/5))
         
         self.fuente = font.SysFont('verdana', 16)
         rect = Rect((self.posicion, (C.ANCHO-7, int(C.ALTO/5)-7)))
-        image = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
+        image = render_textrect(texto,self.fuente,rect,self.font_none_color,self.bg_cnvs)
         
         self.canvas.blit(image,(3,3))
         super().__init__(self.canvas)
@@ -45,11 +75,11 @@ class Dialog (Ventana):
 
     def setText(self, texto):
         rect = Rect((3, 3, C.ANCHO-7, int(C.ALTO/5)-7))
-        render = render_textrect(texto,self.fuente,rect,self.fg_color,self.bg_color)
+        render = render_textrect(texto,self.fuente,rect,self.font_none_color,self.bg_cnvs)
         self.canvas.blit(render,rect)
         if W.onSelect:
             self.opciones = len(texto.split('\n'))
-            draw.line(self.canvas,self.fg_color,(0,self.sel*22),(C.ANCHO-7,self.sel*22))    
+            draw.line(self.canvas,self.font_high_color,(3,self.sel*22),(C.ANCHO-7,self.sel*22))    
         self.image = self.canvas
         
 class Menu (Ventana):
@@ -61,22 +91,18 @@ class Menu (Ventana):
     def __init__(self,titulo,botones):
         self.botones = sprite.LayeredDirty()
         self.botones.empty()
-        self.canvas = Surface((int(C.ANCHO)-20, int(C.ALTO)-20))
-        self.crear_titulo(titulo)
+        self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
+        self.crear_titulo(titulo,self.font_high_color,self.bg_cnvs,C.ANCHO-20)
         self.establecer_botones(botones)
         super().__init__(self.canvas)
         self.ubicar(10,10)
-        self.dirty = 2
-        
-    def crear_titulo(self,titulo):
-        clip = Rect(3,3,int(C.ANCHO)-27, int(C.ALTO)-27)
-        self.canvas.fill(self.bg_cnvs)
-        self.canvas.fill(self.bg_color,rect=clip)
-        
+        self.dirty = 2    
+    
+    def crear_titulo(self,titulo,fg_color,bg_color,ancho):
         ttl_fuente = font.SysFont('verdana', 16)
         ttl_fuente.set_underline(True)
-        ttl_rect = Rect((3,3),(int(C.ANCHO)-27,30))
-        ttl_txt =  render_textrect(titulo,ttl_fuente,ttl_rect,self.fg_color,self.bg_color,1)
+        ttl_rect = Rect((3,3),(ancho-7,30))
+        ttl_txt =  render_textrect(titulo,ttl_fuente,ttl_rect,fg_color,bg_color,1)
         self.canvas.blit(ttl_txt,ttl_rect.topleft)
         
     def establecer_botones(self,botones):
@@ -101,15 +127,15 @@ class Menu (Ventana):
         
     def _crear_boton(self,texto,x,y):
         rect = Rect((x,y),((C.CUADRO*6)-6,C.CUADRO-6))
-        fnd_sel = Surface(((C.CUADRO*6),C.CUADRO))
-        fnd_sel.fill(self.bg_cnvs)
-        fnd_uns = fnd_sel.copy()
         
-        font_se = font.SysFont('verdana', 17, bold = True)
+        fnd_sel = self.crear_inverted_canvas((C.CUADRO*6),C.CUADRO)
+        fnd_uns = self.crear_canvas((C.CUADRO*6),C.CUADRO)
+        
+        font_se = font.SysFont('verdana', 16, bold = True)
         font_un = font.SysFont('verdana', 16)
         
-        btn_sel = render_textrect(texto,font_se,rect,self.fg_color,self.bg_color,1)
-        btn_uns = render_textrect(texto,font_un,rect,self.fg_color,self.bg_color,1)
+        btn_sel = render_textrect(texto,font_se,rect,self.font_high_color,self.bg_cnvs,1)
+        btn_uns = render_textrect(texto,font_un,rect,self.font_none_color,self.bg_cnvs,1)
         
         fnd_uns.blit(btn_uns,(3,3))
         fnd_sel.blit(btn_sel,(3,3))
@@ -124,7 +150,7 @@ class Menu (Ventana):
     
     def selectOne(self,direccion):
         self.DeselectAllButtons()
-        draw.line(self.image,self.bg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+        draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
         self.current = self.botones.get_sprite(self.cur_btn)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
@@ -163,9 +189,10 @@ class Menu_Inventario (Menu):
     cur_opt = 0
     filas = sprite.LayeredDirty()
     descripcion_area = None
-    fuente = font.SysFont('verdana', 16)
+    fuente = ''
     
     def __init__(self,botones):
+        self.fuente = font.SysFont('verdana', 16)
         super().__init__('Inventario',botones)
         self.crear_contenido()
         self.dirty = 2
@@ -173,7 +200,8 @@ class Menu_Inventario (Menu):
 
     def crear_contenido(self):
         self.filas.empty()
-        erase = Surface((self.canvas.get_width()-19,300))
+        erase = Surface((self.canvas.get_width()-19,270))
+        erase.fill(self.bg_cnvs)
         self.canvas.blit(erase,(10,44))
         self.crear_espacio_descriptivo()
         count = 22
@@ -188,15 +216,21 @@ class Menu_Inventario (Menu):
             self.elegir_fila(0)
             W.onVSel = True
             self.filas.draw(self.canvas)
-            draw.line(self.canvas,self.fg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+            draw.line(self.canvas,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
     
     def crear_espacio_descriptivo(self):
-        clip = Rect(3,3,self.canvas.get_width()-21, 47)
-        marco = Surface((self.canvas.get_width()-15,53))
-        blanco = 255,255,255
-        marco.fill(self.bg_cnvs)
-        marco.fill(self.bg_color,rect=clip)
-        self.descripcion_area = self.canvas.blit(marco,(7,350))
+        marco = self.crear_inverted_canvas((self.canvas.get_width()-15),53)
+        megacanvas = Surface((marco.get_width(),marco.get_height()+17))
+        megacanvas.fill(self.bg_cnvs)
+        
+        fuente = font.SysFont('verdana', 14)
+        texto = fuente.render('Efecto',True,self.font_none_color,self.bg_cnvs)
+        
+        megacanvas.blit(marco,(0,17))
+        megacanvas.blit(texto,(3,7))
+        
+        self.canvas.blit(megacanvas,(7,340))
+        self.descripcion_area = marco.get_rect()
         
     def elegir_fila(self,j):
         if self.opciones > 0:
@@ -206,16 +240,16 @@ class Menu_Inventario (Menu):
             if self.sel < 3: self.sel = 3
             elif self.sel > self.opciones+2: self.sel = self.opciones+2
             
-            draw.line(self.image,self.fg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-            draw.line(self.image,self.bg_color,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
+            draw.line(self.image,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+            draw.line(self.image,self.bg_cnvs,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
             
             self.mover_cursor(self.filas.get_sprite(self.sel-3))
             
-            render_area = Rect((-1,-1),(self.descripcion_area.w-7,self.descripcion_area.h-6))
+            render_area = Rect((-1,-1),(self.descripcion_area.w-12,self.descripcion_area.h-12))
             desc = render_textrect(self.current.item.efecto_des,
                                    self.fuente,render_area,
-                                   self.fg_color,self.bg_color)
-            self.canvas.blit(desc,(11,353))
+                                   self.font_high_color,self.bg_cnvs)
+            self.canvas.blit(desc,(12,363))
             
     def confirmar_seleccion (self):
         cant = W.HERO.usar_item(self.current.item)
@@ -226,7 +260,7 @@ class Menu_Inventario (Menu):
             if self.opciones <= 0:
                 self.mover_cursor(self.botones.get_sprite(0))
                 W.onVSel = False
-                draw.line(self.image,self.bg_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+                draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
         self.crear_contenido()
    
 class _boton (_giftSprite):
@@ -265,13 +299,16 @@ class _item_inv (_giftSprite):
     item_ID = 0
     image = None
     pos = 0,0
-    fuente = font.SysFont('verdana', 16)
-    rect = Rect(pos,((C.CUADRO*6)-6,22))
-    bg_color = 0,0,0
-    fg_color = 0,125,255
+    fuente = ''
+    rect = ''
+    bg_color = 125,125,125
+    fg_color = 255,255,255
     
     def __init__(self,item,pos):
         self.item = item
+        self.fuente = font.SysFont('verdana', 16)
+        self.rect = Rect(pos,((C.CUADRO*6)-6,22))
+        
         nombre = self.item.nombre.capitalize()
         cant = self.item.cantidad
         
@@ -295,6 +332,7 @@ class _item_inv (_giftSprite):
         
     def construir_fila(self):
         image = Surface((int(C.ANCHO)-44,self.rect.h))
+        image.fill(self.bg_color)
         image.blit(self.img_nmbr,(7,0))
         image.blit(self.img_cant,(260,0))
         
