@@ -5,17 +5,18 @@ from pygame import QUIT, KEYUP, KEYDOWN
 from pygame import quit as py_quit
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager
-
+from intro import introduccion
 
 configs = r.abrir_json('config.json')
 
-#pygame.init()
 tamanio = C.ALTO, C.ANCHO
-#pantalla = pygame.display
 font.init()
 pantalla.set_icon(image.load('D:/python/gift/favicon.png'))
 pantalla.set_caption('Proyecto Mano-Gift')
 fondo = pantalla.set_mode(tamanio) # surface
+
+init = introduccion(C.ANCHO-20,C.ALTO-20)
+init.ejecutar(fondo)
 
 W.cargar_hero()
 W.setear_mapa(configs['mapa_inicial'], 'inicial')
