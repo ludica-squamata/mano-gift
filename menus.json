@@ -10,7 +10,7 @@
         },
         {
             "boton":"Inventario",
-            "pos":[260,93],
+            "pos":[254,93],
             "abajo":"Opciones",
             "arriba":"Salir",
             "izquierda":"Personaje",
@@ -26,7 +26,7 @@
         },
         {
             "boton":"Opciones",
-            "pos":[260,253],
+            "pos":[254,253],
             "abajo":"Salir",
             "arriba":"Inventario",
             "izquierda":"Grupo",
@@ -34,7 +34,7 @@
         },
         {
             "boton":"Salir",
-            "pos":[125,349],
+            "pos":[127,349],
             "arriba":"Opciones",
             "izquierda":"Grupo",
             "derecha":"Opciones",
@@ -44,48 +44,48 @@
     "Personaje":[
         {
             "boton":"Salir",
-            "pos":[260,419],
+            "pos":[254,415],
             "izquierda":"Volver"
         },
         {
             "boton":"Volver",
-            "pos":[7,419],
+            "pos":[7,415],
             "derecha":"Salir"
         }
     ],
     "Inventario":[
         {
             "boton":"Salir",
-            "pos":[260,419],
+            "pos":[254,415],
             "izquierda":"Volver"
         },
         {
             "boton":"Volver",
-            "pos":[7,419],
+            "pos":[7,415],
             "derecha":"Salir"
         }
     ],
     "Grupo":[
         {
             "boton":"Salir",
-            "pos":[260,419],
+            "pos":[254,415],
             "izquierda":"Volver"
         },
         {
             "boton":"Volver",
-            "pos":[7,419],
+            "pos":[7,415],
             "derecha":"Salir"
         }
     ],
     "Opciones":[
         {
             "boton":"Salir",
-            "pos":[260,419],
+            "pos":[254,415],
             "izquierda":"Volver"
         },
         {
             "boton":"Volver",
-            "pos":[7,419],
+            "pos":[7,415],
             "derecha":"Salir"
         }
     ]
