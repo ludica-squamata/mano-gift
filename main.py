@@ -7,8 +7,6 @@ from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager
 from intro import introduccion
 
-configs = r.abrir_json('config.json')
-
 tamanio = C.ALTO, C.ANCHO
 font.init()
 pantalla.set_icon(image.load('D:/python/gift/favicon.png'))
@@ -18,8 +16,6 @@ fondo = pantalla.set_mode(tamanio) # surface
 init = introduccion(C.ANCHO-20,C.ALTO-20)
 init.ejecutar(fondo)
 
-W.cargar_hero()
-W.setear_mapa(configs['mapa_inicial'], 'inicial')
 inAction = False
 
 dx,dy = 0,0
@@ -141,7 +137,10 @@ while True:
     if dx != 0 or dy != 0:
         W.HERO.mover(-dx,-dy)
         W.MAPA_ACTUAL.mover(dx,dy)
-
+    
+    if W.onPause:
+        W.menu_actual.update()
+    
     cambios = W.MAPA_ACTUAL.update(fondo)
     pantalla.update(cambios)
 
