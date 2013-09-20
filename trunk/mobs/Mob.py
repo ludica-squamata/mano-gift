@@ -26,6 +26,8 @@ class Mob (_giftSprite):
     camino = []
     reversa = bool # indica si hay que dar media vuelta al llegar al final del camino, o no.
     
+    fuerza = 0 # capacidad del mob para empujar cosas.
+    
     def __init__(self, ruta_img,stage,x=None,y=None,data = None):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda',
@@ -48,6 +50,7 @@ class Mob (_giftSprite):
             self.modo_colision = data['modo_colision']
             self.salud = data['salud']
             self.actitud = data['actitud']
+            self.fuerza = data['fuerza']
             if 'solido' in data:
                 self.solido = data['solido']
             #eliminar esto una vez que esté aplicado a todos los mobs
@@ -130,8 +133,20 @@ class Mob (_giftSprite):
             else:
                 self.image = self.images['D'+self.direccion]
     
+    def empujar_props(self,dx=None,dy=None):
+        rango = 12
+        if dx == None and dy == None:
+            dx,dy = self.direcciones[self.direccion]
+        
+        x,y = dx*rango,dy*rango
+        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            if spr.solido and spr.es('empujable') and self.solido:
+                if self.colisiona(spr,x,y):
+                    spr.interaccion(x,y)
+    
     def mover(self):
         direccion = self.AI(self)
+        self.empujar_props()
         self.vision.cambiar_direccion(direccion)
         self.cambiar_direccion(direccion)
         self._mover()
