@@ -9,12 +9,9 @@ from intro import introduccion
 
 tamanio = C.ALTO, C.ANCHO
 font.init()
-pantalla.set_icon(image.load('D:/python/gift/favicon.png'))
-pantalla.set_caption('Proyecto Mano-Gift')
 fondo = pantalla.set_mode(tamanio) # surface
+pantalla.set_caption('Proyecto Mano-Gift')
 pantalla.set_icon(r.cargar_imagen('favicon.png'))
-pantalla.set_caption('Mano\'s Gift')
-#pygame.key.set_repeat(50,15)
 
 init = introduccion(C.ANCHO-20,C.ALTO-20)
 init.ejecutar(fondo)
