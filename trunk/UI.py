@@ -175,7 +175,6 @@ class Menu (Ventana):
     
     def selectOne(self,direccion):
         self.DeselectAllButtons()
-        draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
         self.current = self.botones.get_sprite(self.cur_btn)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
@@ -213,6 +212,10 @@ class Menu (Ventana):
                     self.current = spr#.nombre
                     break
             W.onVSel = True
+    
+    def update (self):
+        if not W.onVSel:
+            draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
             
 class Menu_Inventario (Menu):
     cur_opt = 0

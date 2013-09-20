@@ -1,10 +1,12 @@
 # intro.py
 # módulo de introducción y selección de modo.
-from pygame import Surface, Rect, QUIT, KEYDOWN
+from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite
 from pygame import display as pantalla, event as EVENT,quit as py_quit,font
-from globs import Tiempo as T, Constants as C
-from UI import Menu
-import sys 
+from globs import Tiempo as T, Constants as C, World as W
+from misc import Resources as r
+from UI import Menu_Inventario
+from libs.textrect import render_textrect
+import sys,os,os.path
 
 # tiene una duración
 # es previo al mainloop
@@ -21,18 +23,55 @@ import sys
 # # debug screen
 # # # seleccion de mapa.
 # # # play.
-class introduccion (Menu):
+class introduccion (Menu_Inventario):
     canvas = ''
     running = True
-    #bg_color = 0,0,0
-    #fg_color = 0,0,255
-    #bg_cnvs = 125,125,125
-    #bg_bisel_bg = 175,175,175
-    #bg_bisel_fg = 100,100,100
-    #
+    sel = 0
+    opciones = 0
+    mapas = []
     def __init__ (self,ancho,alto):
+        self.botones = sprite.LayeredDirty()
+        self.botones.empty()
         self.canvas = self.crear_canvas(ancho,alto)
+        
+        mapas = self.crear_espacio_mapas(ancho,200)
+        rect = self.canvas.blit(mapas,(7,40))
+        self.image = Surface((rect.w-8,rect.h-30))
+        self.image.fill(self.bg_cnvs)
+        self.canvas.blit(self.image,(10,66))
+        
         self.crear_titulo("Mano-Gift",self.font_high_color,self.bg_cnvs,ancho)
+        
+        botones = [{"boton":"Cargar","pos":[7,270],"derecha":"Salir"},
+                   {"boton":"Salir","pos":[254,270],"izquierda":"Cargar"}]
+        self.establecer_botones(botones)
+        
+        fuente = font.SysFont('verdana', 16)
+        self.mapas = self.cargar_mapas_iniciales() # lista
+        self.opciones = len(self.mapas)
+        texto = '\n'.join(self.mapas)
+        render = render_textrect(texto,fuente,rect,self.font_high_color,self.bg_cnvs)
+        self.image.blit(render,(3,0))
+    
+    def cargar_mapas_iniciales(self):
+        ok = []
+        for mapa in os.listdir('maps'):
+            ar = r.abrir_json('maps/'+mapa)
+            if 'inicial' in ar['entradas']:
+                ok.append(mapa.strip('.json'))
+        
+        return ok
+    
+    def crear_espacio_mapas (self,ancho,alto):
+        marco = self.crear_inverted_canvas(ancho-17,alto)
+        megacanvas = Surface((marco.get_width(),marco.get_height()+17))
+        megacanvas.fill(self.bg_cnvs)
+        fuente = font.SysFont('verdana', 14)
+        texto = fuente.render('Elija un mapa',True,self.font_none_color,self.bg_cnvs)
+        megacanvas.blit(marco,(0,17))
+        megacanvas.blit(texto,(3,7))
+        
+        return megacanvas
     
     def ejecutar (self,fondo):
         while self.running:
@@ -50,11 +89,36 @@ class introduccion (Menu):
                         py_quit()
                         print('Saliendo...')
                         sys.exit()
+                    
+                    elif event.key == C.TECLAS.IZQUIERDA:
+                        self.selectOne('izquierda')
                         
+                    elif event.key == C.TECLAS.DERECHA:
+                        self.selectOne('derecha')
+                    
+                    elif event.key == C.TECLAS.ARRIBA:
+                        self.DeselectAllButtons()
+                        self.sel = self.elegir_opcion(-1)
+                    
+                    elif event.key == C.TECLAS.ABAJO:
+                        self.DeselectAllButtons()
+                        self.sel = self.elegir_opcion(+1)
+                    
+                    elif event.key == C.TECLAS.HABLAR:
+                        self.PressOne()
+                    
+                elif event.type == KEYUP:
+                    if event.key == C.TECLAS.HABLAR:
+                        if self.current.nombre == "Cargar":
+                            self.running = False
+                            W.cargar_hero()
+                            W.setear_mapa(self.mapas[self.sel-1], 'inicial')
+                            
+                        elif self.current.nombre ==  "Salir":
+                            py_quit()
+                            print('Saliendo...')
+                            sys.exit()
+            
+            self.canvas.blit(self.image,(10,66))
             fondo.blit(self.canvas,(10,10))
             pantalla.update()
-            
-    def seleccion_mapa(self):
-        pass
-    def play (self):
-        pass
