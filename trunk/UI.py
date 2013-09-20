@@ -21,7 +21,7 @@ class Ventana (_giftSprite):
         super().__init__(image)
 
     def crear_canvas(self,ancho,alto):
-        canvas = Surface((ancho, alto))
+        canvas = Surface((ancho,alto))
         
         clip = Rect(0,0,ancho, alto)
         canvas.fill(self.bg_bisel_bg,rect=clip)
@@ -120,7 +120,7 @@ class Menu (Ventana):
             self.cur_btn = 0
             selected = self.botones.get_sprite(self.cur_btn)
             selected.serElegido()
-            self.current = selected.nombre
+            self.current = selected
             
             
         self.botones.draw(self.canvas)
@@ -128,19 +128,44 @@ class Menu (Ventana):
     def _crear_boton(self,texto,x,y):
         rect = Rect((x,y),((C.CUADRO*6)-6,C.CUADRO-6))
         
-        fnd_sel = self.crear_inverted_canvas((C.CUADRO*6),C.CUADRO)
+        cnvs_pre = Surface(((C.CUADRO*6)+6,C.CUADRO+6))
+        cnvs_pre.fill(self.bg_cnvs)
+        cnvs_sel = cnvs_pre.copy()
+        cnvs_uns = cnvs_pre.copy()
+        
+        fnd_pre = self.crear_inverted_canvas((C.CUADRO*6),C.CUADRO)
         fnd_uns = self.crear_canvas((C.CUADRO*6),C.CUADRO)
+        
+        blanco = 255,255,255
+        for i in range(round(((C.CUADRO*6)+6)/3)):
+            #linea punteada horizontal superior
+            draw.line(cnvs_sel,blanco,(i*7,0),((i*7)+5,0),2)
+            
+            #linea punteada horizontal inferior
+            draw.line(cnvs_sel,blanco,(i*7,C.CUADRO+4),((i*7)+5,C.CUADRO+4),2)
+        
+        for i in range(round((C.CUADRO+6)/3)):
+            #linea punteada vertical derecha
+            draw.line(cnvs_sel,blanco,(0,i*7),(0,(i*7)+5),2)
+            
+            #linea punteada vertical izquierda
+            draw.line(cnvs_sel,blanco,((C.CUADRO*6)+4,i*7),((C.CUADRO*6)+4,(i*7)+5),2)
+        
+        cnvs_sel.blit(fnd_uns,(3,3))
+        cnvs_uns.blit(fnd_uns,(3,3))
+        cnvs_pre.blit(fnd_pre,(3,3))
         
         font_se = font.SysFont('verdana', 16, bold = True)
         font_un = font.SysFont('verdana', 16)
         
         btn_sel = render_textrect(texto,font_se,rect,self.font_high_color,self.bg_cnvs,1)
-        btn_uns = render_textrect(texto,font_un,rect,self.font_none_color,self.bg_cnvs,1)
+        btn_uns = render_textrect(texto,font_un,rect,self.font_none_color,self.bg_cnvs,1)        
         
-        fnd_uns.blit(btn_uns,(3,3))
-        fnd_sel.blit(btn_sel,(3,3))
+        cnvs_uns.blit(btn_uns,(6,6))
+        cnvs_sel.blit(btn_sel,(6,6))
+        cnvs_pre.blit(btn_sel,(6,6))
         
-        return _boton(texto,fnd_sel,fnd_uns,rect.topleft)
+        return _boton(texto,cnvs_sel,cnvs_pre,cnvs_uns,rect.topleft)
     
     def DeselectAllButtons(self):
         for boton in self.botones:
@@ -165,6 +190,10 @@ class Menu (Ventana):
                 break
                     
         self.botones.draw(self.canvas)
+    
+    def PressOne(self):
+        self.current.serPresionado()
+        self.botones.draw(self.canvas)
         
     def mover_cursor(self,item):
         if type(item) == _boton:
@@ -172,7 +201,7 @@ class Menu (Ventana):
                 spr = self.botones.get_sprite(i)
                 if  spr.nombre == item.nombre:
                     self.cur_btn = i
-                    self.current = spr.nombre
+                    self.current = spr
                     break
             W.onVSel = False
                     
@@ -265,27 +294,33 @@ class Menu_Inventario (Menu):
    
 class _boton (_giftSprite):
     nombre = ''
-    img_sel = None
     img_uns = None
+    img_sel = None
     isSelected = False
     pos = 0,0
     direcciones = {}
     
-    def __init__(self,nombre,sel,uns,pos):
+    def __init__(self,nombre,sel,pre,uns,pos):
         self.direcciones = {}
         self.nombre = nombre
         self.img_sel = sel
+        self.img_pre = pre
         self.img_uns = uns
         self.pos = pos
         super().__init__(self.img_uns)
         self.rect = self.img_sel.get_rect(topleft=self.pos)
         self.dirty = 2
-        
+    
+    def serPresionado (self):
+        self.image = self.img_pre
+        self.isSelected = True
+        self.rect = self.img_pre.get_rect(topleft=self.pos)
+    
     def serElegido(self):
         self.image = self.img_sel
         self.isSelected = True
         self.rect = self.img_sel.get_rect(topleft=self.pos)
-    
+        
     def serDeselegido(self):
         self.image = self.img_uns
         self.isSelected = False

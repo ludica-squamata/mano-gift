@@ -34,6 +34,8 @@ while True:
         elif event.type == KEYUP:
             if event.key == C.TECLAS.ACCION or event.key == C.TECLAS.HABLAR:
                 inAction = False
+                if W.onDialog and W.onPause and not W.onVSel:
+                    W.MAPA_ACTUAL.popMenu(W.menu_actual.current.nombre)
             
             elif event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:
                 if not W.onPause and not W.onDialog:
@@ -89,12 +91,11 @@ while True:
                     inAction = True
 
             elif event.key == C.TECLAS.HABLAR:
-                if W.onDialog:
-                    if W.onPause:
-                        if not W.onVSel:
-                            W.MAPA_ACTUAL.popMenu(W.menu_actual.current)
-                        else:
-                            W.menu_actual.confirmar_seleccion()
+                if W.onDialog and W.onPause:
+                    if W.onVSel:
+                        W.menu_actual.confirmar_seleccion()
+                    else:
+                        W.menu_actual.PressOne()
                 if not inAction:
                     if W.onSelect:
                         W.HERO.confirmar_seleccion()
