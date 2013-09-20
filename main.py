@@ -12,6 +12,9 @@ font.init()
 pantalla.set_icon(image.load('D:/python/gift/favicon.png'))
 pantalla.set_caption('Proyecto Mano-Gift')
 fondo = pantalla.set_mode(tamanio) # surface
+pantalla.set_icon(r.cargar_imagen('favicon.png'))
+pantalla.set_caption('Mano\'s Gift')
+#pygame.key.set_repeat(50,15)
 
 init = introduccion(C.ANCHO-20,C.ALTO-20)
 init.ejecutar(fondo)
@@ -133,6 +136,9 @@ while True:
             
             elif event.key == C.TECLAS.POSICION_COMBATE:
                 W.HERO.cambiar_estado()
+            
+            elif event.key == C.TECLAS.DEBUG:
+                print((W.HERO.mapX, W.HERO.mapY))
 
     if dx != 0 or dy != 0:
         W.HERO.mover(-dx,-dy)
