@@ -20,6 +20,7 @@ class Teclas:
     MENU = K_RETURN
     SALIR = K_ESCAPE
     POSICION_COMBATE = K_LSHIFT
+    DEBUG = pygame.K_F1
 
 
     def asignar (self,data):

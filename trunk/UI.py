@@ -243,7 +243,7 @@ class Menu_Inventario (Menu):
             
             self.filas.add(fila)
         
-        if len(self.filas) > 0:
+        if len(self.filas) > 0:            
             self.opciones = len(self.filas)
             self.elegir_fila(0)
             W.onVSel = True
