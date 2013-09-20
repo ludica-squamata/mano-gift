@@ -1,9 +1,9 @@
 #global information
 #import pygame
-from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT, \
-					K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT, K_F1, \
-					Color, time, Surface
 
+from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT, \
+K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT, K_F1, \
+Color, time, Surface
 from misc import Resources as r
 from base import _giftSprite
 

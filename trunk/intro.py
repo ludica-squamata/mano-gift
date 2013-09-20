@@ -33,25 +33,11 @@ class introduccion (Menu_Inventario):
         self.botones = sprite.LayeredDirty()
         self.botones.empty()
         self.canvas = self.crear_canvas(ancho,alto)
-        
-        mapas = self.crear_espacio_mapas(ancho,200)
-        rect = self.canvas.blit(mapas,(7,40))
-        self.image = Surface((rect.w-8,rect.h-30))
-        self.image.fill(self.bg_cnvs)
-        self.canvas.blit(self.image,(10,66))
-        
-        self.crear_titulo("Mano-Gift",self.font_high_color,self.bg_cnvs,ancho)
-        
+        self.crear_espacio_de_seleccion_de_mapas(ancho)
+        self.crear_titulo("Mano-Gift:Debug Screen",self.font_high_color,self.bg_cnvs,ancho)
         botones = [{"boton":"Cargar","pos":[7,270],"derecha":"Salir"},
                    {"boton":"Salir","pos":[254,270],"izquierda":"Cargar"}]
         self.establecer_botones(botones)
-        
-        fuente = font.SysFont('verdana', 16)
-        self.mapas = self.cargar_mapas_iniciales() # lista
-        self.opciones = len(self.mapas)
-        texto = '\n'.join(self.mapas)
-        render = render_textrect(texto,fuente,rect,self.font_high_color,self.bg_cnvs)
-        self.image.blit(render,(3,0))
     
     def cargar_mapas_iniciales(self):
         ok = []
@@ -73,7 +59,20 @@ class introduccion (Menu_Inventario):
         
         return megacanvas
     
+    def crear_espacio_de_seleccion_de_mapas (self,ancho):
+        mapas = self.crear_espacio_mapas(ancho,200)
+        rect = self.canvas.blit(mapas,(7,40))
+        self.image = mapas.subsurface((0,0),(rect.w-8,rect.h-30))
+        self.image.fill(self.bg_cnvs)
+        fuente = font.SysFont('verdana', 16)
+        self.mapas = self.cargar_mapas_iniciales() # lista
+        self.opciones = len(self.mapas)
+        texto = '\n'.join(self.mapas)
+        render = render_textrect(texto,fuente,rect,self.font_high_color,self.bg_cnvs)
+        self.image.blit(render,(3,0))
+    
     def ejecutar (self,fondo):
+        elegir_uno = False
         while self.running:
             T.FPS.tick(60)
             for event in EVENT.get():
@@ -81,11 +80,8 @@ class introduccion (Menu_Inventario):
                     py_quit()
                     sys.exit()
                     
-                elif event.type == KEYDOWN:
-                    if event.key == C.TECLAS.MENU:
-                        self.running = False
-                        
-                    elif event.key == C.TECLAS.SALIR:
+                elif event.type == KEYDOWN:                 
+                    if event.key == C.TECLAS.SALIR:
                         py_quit()
                         print('Saliendo...')
                         sys.exit()
@@ -99,20 +95,28 @@ class introduccion (Menu_Inventario):
                     elif event.key == C.TECLAS.ARRIBA:
                         self.DeselectAllButtons()
                         self.sel = self.elegir_opcion(-1)
+                        elegir_uno = True
                     
                     elif event.key == C.TECLAS.ABAJO:
                         self.DeselectAllButtons()
                         self.sel = self.elegir_opcion(+1)
+                        elegir_uno = True
                     
                     elif event.key == C.TECLAS.HABLAR:
-                        self.PressOne()
+                        if self.current.nombre == "Cargar":
+                            if elegir_uno:
+                                self.PressOne()
+                        else:
+                            self.PressOne()
+                        
                     
                 elif event.type == KEYUP:
                     if event.key == C.TECLAS.HABLAR:
                         if self.current.nombre == "Cargar":
-                            self.running = False
-                            W.cargar_hero()
-                            W.setear_mapa(self.mapas[self.sel-1], 'inicial')
+                            if elegir_uno:
+                                self.running = False
+                                W.cargar_hero()
+                                W.setear_mapa(self.mapas[self.sel-1], 'inicial')
                             
                         elif self.current.nombre ==  "Salir":
                             py_quit()
