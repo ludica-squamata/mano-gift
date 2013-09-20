@@ -1,8 +1,8 @@
 #global information
 #import pygame
-from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT
-from pygame import K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT
-from pygame import Color, time, Surface
+from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT, \
+					K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT, K_F1, \
+					Color, time, Surface
 
 from misc import Resources as r
 from base import _giftSprite
@@ -20,7 +20,7 @@ class Teclas:
     MENU = K_RETURN
     SALIR = K_ESCAPE
     POSICION_COMBATE = K_LSHIFT
-    DEBUG = pygame.K_F1
+    DEBUG = K_F1
 
 
     def asignar (self,data):
