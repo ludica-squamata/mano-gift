@@ -1,5 +1,6 @@
 from collections import UserList
 from globs import World as W
+from .Item import Item
 
 class Inventory(UserList):
     volumen_max = 0
@@ -59,7 +60,7 @@ class Inventory(UserList):
             return 0
         else:
             self[index].cantidad -= 1
-            return self[index]
+            return self[index].cantidad
     
     def __contains__(self,item):
         if type(item) == str:
@@ -68,10 +69,17 @@ class Inventory(UserList):
                 if _item.nombre == item:
                     return True
             return False
+        
         elif type(item) == int:
             #item es el ID de un item
             for _item in self:
                 if _item.ID == item:
+                    return True
+            return False
+        
+        elif item.__class__ == Item:
+            for _item in self:
+                if _item.ID == item.ID:
                     return True
             return False
             
