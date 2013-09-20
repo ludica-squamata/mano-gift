@@ -76,13 +76,7 @@ class PC (Mob):
         self.direccion = direccion
     
     def mover(self,dx,dy):
-        rango = 12
-        x,y = dx*rango,dy*rango
-        
-        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.solido and spr.es('empujable'):
-                if self.colisiona(spr,x,y):
-                    spr.interaccion(x,y)
+        self.empujar_props(dx,dy)
     
         d = 'abajo'
         if dx == 1:

@@ -4,5 +4,6 @@
     "direccion":"abajo",
     "solido":false,
     "salud":1,
+    "fuerza":0,
     "death":"mobs/green_death.png"
 }
