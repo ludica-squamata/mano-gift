@@ -5,6 +5,7 @@ from .Inventory import Inventory
 from .Item import Item
 from globs import World as W, Constants as C, Tiempo as T
 from .MobGroup import MobGroup
+from UI import Inventario_rapido
 
 class PC (Mob):
     centroX = 0
@@ -156,7 +157,7 @@ class PC (Mob):
         self.interlocutor.hablar(W.DIALOG.sel)
 
     def ver_inventario(self):
-        self.stage.setDialog(self.inventario.ver())
+        W.DIALOG = Inventario_rapido()
         return True
     
     def usar_item (self,item):

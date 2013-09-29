@@ -29,12 +29,12 @@ class introduccion (Menu_Inventario):
     sel = 0
     opciones = 0
     mapas = []
-    def __init__ (self,ancho,alto):
+    def __init__ (self,ANCHO,ALTO):
         self.botones = sprite.LayeredDirty()
         self.botones.empty()
-        self.canvas = self.crear_canvas(ancho,alto)
-        self.crear_espacio_de_seleccion_de_mapas(ancho)
-        self.crear_titulo("Mano-Gift:Debug Screen",self.font_high_color,self.bg_cnvs,ancho)
+        self.canvas = self.crear_canvas(ANCHO,ALTO)
+        self.crear_espacio_de_seleccion_de_mapas(ANCHO-17)
+        self.crear_titulo("Mano-Gift:Debug Screen",self.font_high_color,self.bg_cnvs,ANCHO)
         botones = [{"boton":"Cargar","pos":[7,270],"derecha":"Salir"},
                    {"boton":"Salir","pos":[254,270],"izquierda":"Cargar"}]
         self.establecer_botones(botones)
@@ -48,19 +48,8 @@ class introduccion (Menu_Inventario):
         
         return ok
     
-    def crear_espacio_mapas (self,ancho,alto):
-        marco = self.crear_inverted_canvas(ancho-17,alto)
-        megacanvas = Surface((marco.get_width(),marco.get_height()+17))
-        megacanvas.fill(self.bg_cnvs)
-        fuente = font.SysFont('verdana', 14)
-        texto = fuente.render('Elija un mapa',True,self.font_none_color,self.bg_cnvs)
-        megacanvas.blit(marco,(0,17))
-        megacanvas.blit(texto,(3,7))
-        
-        return megacanvas
-    
     def crear_espacio_de_seleccion_de_mapas (self,ancho):
-        mapas = self.crear_espacio_mapas(ancho,200)
+        mapas = self.crear_espacio_titulado(ancho,200,'Elija un mapa')
         rect = self.canvas.blit(mapas,(7,40))
         self.image = mapas.subsurface((0,0),(rect.w-8,rect.h-30))
         self.image.fill(self.bg_cnvs)
@@ -70,6 +59,8 @@ class introduccion (Menu_Inventario):
         texto = '\n'.join(self.mapas)
         render = render_textrect(texto,fuente,rect,self.font_high_color,self.bg_cnvs)
         self.image.blit(render,(3,0))
+                
+        return mapas
     
     def ejecutar (self,fondo):
         elegir_uno = False

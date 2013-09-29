@@ -47,7 +47,18 @@ class Ventana (_giftSprite):
         canvas.fill(self.bg_cnvs,rect=clip)
         
         return canvas
+
+    def crear_espacio_titulado(self,ancho,alto,titulo):
+        marco = self.crear_inverted_canvas(ancho,alto)
+        megacanvas = Surface((marco.get_width(),marco.get_height()+17))
+        megacanvas.fill(self.bg_cnvs)
+        fuente = font.SysFont('verdana', 14)
+        texto = fuente.render(titulo,True,self.font_none_color,self.bg_cnvs)
+        megacanvas.blit(marco,(0,17))
+        megacanvas.blit(texto,(3,7))
         
+        return megacanvas
+    
     def elegir_opcion(self,i):
         self.sel += i
         if self.sel < 1: self.sel = 1
@@ -71,7 +82,7 @@ class Dialog (Ventana):
         self.canvas.blit(image,(3,3))
         super().__init__(self.canvas)
         self.ubicar(*rect.topleft)
-        self.dirty = 2
+        self.dirty = 1
 
     def setText(self, texto):
         rect = Rect((3, 3, C.ANCHO-7, int(C.ALTO/5)-7))
@@ -81,12 +92,16 @@ class Dialog (Ventana):
             self.opciones = len(texto.split('\n'))
             draw.line(self.canvas,self.font_high_color,(3,self.sel*22),(C.ANCHO-7,self.sel*22))    
         self.image = self.canvas
+    
+    def update (self):
+        self.dirty = 1
         
 class Menu (Ventana):
-    botones = None
+    botones = []
     cur_btn = 0
     current = ''
     canvas = None
+    _onVSel = {}
     
     def __init__(self,titulo,botones):
         self.botones = sprite.LayeredDirty()
@@ -94,9 +109,15 @@ class Menu (Ventana):
         self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
         self.crear_titulo(titulo,self.font_high_color,self.bg_cnvs,C.ANCHO-20)
         self.establecer_botones(botones)
+        self._onVSel = {
+            "arriba":False,
+            "abajo":False,
+            "izquierda":False,
+            "derecha":False}
         super().__init__(self.canvas)
         self.ubicar(10,10)
-        self.dirty = 2    
+        self.dirty = 1
+        W.MAPA_ACTUAL.dialogs.add(self,layer=C.CAPA_OVERLAYS_MENUS)
     
     def crear_titulo(self,titulo,fg_color,bg_color,ancho):
         ttl_fuente = font.SysFont('verdana', 16)
@@ -168,10 +189,11 @@ class Menu (Ventana):
         return _boton(texto,cnvs_sel,cnvs_pre,cnvs_uns,rect.topleft)
     
     def DeselectAllButtons(self):
-        for boton in self.botones:
-            boton.serDeselegido()
-            boton.dirty = 2
-        self.botones.draw(self.canvas)
+        if self.botones != []:
+            for boton in self.botones:
+                boton.serDeselegido()
+                boton.dirty = 2
+            self.botones.draw(self.canvas)
     
     def selectOne(self,direccion):
         self.DeselectAllButtons()
@@ -208,12 +230,16 @@ class Menu (Ventana):
             for i in range(len(self.filas)):
                 spr = self.filas.get_sprite(i)
                 if item.nombre == spr.nombre:
-                    self.cur_opt = i
+                    self.cur_opt = self.filas.get_sprite(i)
                     self.current = spr#.nombre
                     break
             W.onVSel = True
     
+    def _onVSel_(self,direccion):
+        return self._onVSel[direccion]
+    
     def update (self):
+        self.dirty = 1
         if not W.onVSel:
             draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
             
@@ -222,79 +248,121 @@ class Menu_Inventario (Menu):
     filas = sprite.LayeredDirty()
     descripcion_area = None
     fuente = ''
+    draw_space = None
+    draw_space_rect = None
+    nombre = 'Inventario'
     
     def __init__(self,botones):
         self.fuente = font.SysFont('verdana', 16)
-        super().__init__('Inventario',botones)
-        self.crear_contenido()
-        self.dirty = 2
-        self.sel = 3
+        super().__init__(self.nombre,botones)
+        self.draw_space_rect = Rect((10,44),(self.canvas.get_width()-19,270))
+        self.crear_contenido(self.draw_space_rect)
+        self.dirty = 1
+        self.sel = 1
+        self._onVSel = {
+            "arriba":True,
+            "abajo":True,
+            "izquierda":False,
+            "derecha":False}
 
-    def crear_contenido(self):
+    def crear_contenido(self,draw_area_rect):
         self.filas.empty()
-        erase = Surface((self.canvas.get_width()-19,270))
-        erase.fill(self.bg_cnvs)
-        self.canvas.blit(erase,(10,44))
-        self.crear_espacio_descriptivo()
-        count = 22
+        self.draw_space = Surface(draw_area_rect.size)
+        self.draw_space.fill(self.bg_cnvs)
+        self.canvas.blit(self.draw_space,draw_area_rect.topleft)
+        self.crear_espacio_descriptivo((self.canvas.get_width()-15),53)
+        y = -22
         for item in W.HERO.inventario:
-            count += 22
-            fila = _item_inv(item,(11,count))
+            y += 22
+            fila = _item_inv(item,(11,y))
             
             self.filas.add(fila)
         
         if len(self.filas) > 0:            
             self.opciones = len(self.filas)
             self.elegir_fila(0)
-            W.onVSel = True
-            self.filas.draw(self.canvas)
-            draw.line(self.canvas,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+            self.filas.draw(self.draw_space)
+            draw.line(self.draw_space,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+        
+        self.canvas.blit(self.draw_space,draw_area_rect.topleft)
     
-    def crear_espacio_descriptivo(self):
-        marco = self.crear_inverted_canvas((self.canvas.get_width()-15),53)
-        megacanvas = Surface((marco.get_width(),marco.get_height()+17))
-        megacanvas.fill(self.bg_cnvs)
-        
-        fuente = font.SysFont('verdana', 14)
-        texto = fuente.render('Efecto',True,self.font_none_color,self.bg_cnvs)
-        
-        megacanvas.blit(marco,(0,17))
-        megacanvas.blit(texto,(3,7))
-        
-        self.canvas.blit(megacanvas,(7,340))
-        self.descripcion_area = marco.get_rect()
+    def crear_espacio_descriptivo(self,ancho,alto):
+        marco = self.crear_espacio_titulado(ancho,alto,'Efecto')
+        rect = self.canvas.blit(marco,(7,340))
+        self.descripcion_area = Rect((0,0),(rect.w-20,rect.h-42))
         
     def elegir_fila(self,j):
         if self.opciones > 0:
             self.DeselectAllButtons()
             W.onVSel = True
             self.sel += j
-            if self.sel < 3: self.sel = 3
-            elif self.sel > self.opciones+2: self.sel = self.opciones+2
+            if self.sel < 1: self.sel = 1
+            if self.sel > self.opciones: self.sel = self.opciones
             
-            draw.line(self.image,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-            draw.line(self.image,self.bg_cnvs,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
+            draw.line(self.draw_space,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+            draw.line(self.draw_space,self.bg_cnvs,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
             
-            self.mover_cursor(self.filas.get_sprite(self.sel-3))
+            self.mover_cursor(self.filas.get_sprite(self.sel-1))
             
-            render_area = Rect((-1,-1),(self.descripcion_area.w-12,self.descripcion_area.h-12))
-            desc = render_textrect(self.current.item.efecto_des,
-                                   self.fuente,render_area,
-                                   self.font_high_color,self.bg_cnvs)
-            self.canvas.blit(desc,(12,363))
+            self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
             
     def confirmar_seleccion (self):
         cant = W.HERO.usar_item(self.current.item)
-        altura = self.current.image.get_height()
         self.current.reducir_cant()
         if cant <= 0:
             self.opciones -= 1
             if self.opciones <= 0:
-                self.mover_cursor(self.botones.get_sprite(0))
+                self.current = self
                 W.onVSel = False
                 draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-        self.crear_contenido()
-   
+        self.dirty = 1
+    
+    def update (self):
+        self.crear_contenido(self.draw_space_rect)
+        if self.opciones > 0:
+            
+            desc = render_textrect(self.cur_opt.item.efecto_des,
+                                   self.fuente,self.descripcion_area,
+                                   self.font_high_color,self.bg_cnvs)
+            W.onVSel = True
+        else:
+            W.onVSel = False
+            desc = Surface((32,32))
+            desc.fill(self.bg_cnvs)
+        
+        self.canvas.blit(desc,(12,363))
+        self.dirty = 1
+    
+class Inventario_rapido (Menu_Inventario,Ventana):
+    posicion = 0,384
+    canvas = ''
+    sel = 0
+    
+    def __init__(self):
+        self.canvas = self.crear_inverted_canvas(int(C.ANCHO), int(C.ALTO/5))
+        self.draw_space_rect = Rect (3,3,int(C.ANCHO)-7,int(C.ALTO/5)-7)
+        self.crear_contenido(self.draw_space_rect)
+        Ventana.__init__(self,self.canvas)
+        W.MAPA_ACTUAL.dialogs.add(self,layer=C.CAPA_OVERLAYS_DIALOGOS)
+        self.rect = Rect((self.posicion, (C.ANCHO, int(C.ALTO/5))))
+        self.dirty = 1
+        W.onDialog = True
+    
+    def confirmar_seleccion (self):
+        cant = W.HERO.usar_item(self.current.item)
+        self.current.reducir_cant()
+        if cant <= 0:
+            self.opciones -= 1
+            if self.opciones <= 0:
+                W.MAPA_ACTUAL.endDialog()
+                self.visible = False
+            else:
+                self.crear_contenido(self.draw_space_rect)
+                self.dirty = 1
+        
+    def update (self):
+        self.dirty = 1
+    
 class _boton (_giftSprite):
     nombre = ''
     img_uns = None
