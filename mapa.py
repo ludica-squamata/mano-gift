@@ -264,7 +264,7 @@ class Stage:
             W.DIALOG.setText(texto)
         else:
             W.DIALOG = Dialog(texto)
-            self.dialogs.add(W.DIALOG, layer=C.CAPA_OVERLAYS_DIALOGO)
+            self.dialogs.add(W.DIALOG, layer=C.CAPA_OVERLAYS_DIALOGOS)
         W.onDialog = True
     
     def popMenu (self,titulo):
@@ -286,10 +286,11 @@ class Stage:
                 W.menu_actual = Menu_Inventario(menues[titulo])
             else:
                 W.menu_actual = Menu(titulo,menues[titulo])
-            self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_DIALOGO)
+            self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_DIALOGOS)
     
     def endDialog(self):
-        self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGO)
+        self.dialogs.empty()
+        #self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGOS)
         W.onDialog = False
         W.DIALOG = ''
         self.mapa.dirty = 1
@@ -297,6 +298,7 @@ class Stage:
     def update(self,fondo):
         self.anochecer(10)
         self.contents.update()
+        self.dialogs.update()
         ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
         return ret
 

@@ -16,8 +16,6 @@ fondo = pantalla.set_mode(tamanio) # surface
 init = introduccion(C.ANCHO-20,C.ALTO-20)
 init.ejecutar(fondo)
 
-inAction = False
-
 dx,dy = 0,0
 while True:
     T.FPS.tick(60)
@@ -29,7 +27,6 @@ while True:
 
         elif event.type == KEYUP:
             if event.key == C.TECLAS.ACCION or event.key == C.TECLAS.HABLAR:
-                inAction = False
                 if W.onDialog and W.onPause and not W.onVSel:
                     W.MAPA_ACTUAL.popMenu(W.menu_actual.current.nombre)
             
@@ -46,6 +43,7 @@ while True:
                     if not W.onDialog:
                         dx +=1
                 else:
+                    W.onVSel = W.menu_actual._onVSel_('izquierda')
                     W.menu_actual.selectOne('izquierda')
 
             elif event.key == C.TECLAS.DERECHA:
@@ -53,6 +51,7 @@ while True:
                     if not W.onDialog:
                         dx -= 1                        
                 else:
+                    W.onVSel = W.menu_actual._onVSel_('derecha')
                     W.menu_actual.selectOne('derecha')
                     
             elif event.key == C.TECLAS.ARRIBA:
@@ -60,10 +59,13 @@ while True:
                     if W.onSelect:
                         W.DIALOG.elegir_opcion(-1)
                     elif W.onPause:
+                        W.onVSel = W.menu_actual._onVSel_('arriba')
                         if not W.onVSel:
                             W.menu_actual.selectOne('arriba')
                         else:
                             W.menu_actual.elegir_fila(-1)
+                    else:
+                        W.DIALOG.elegir_fila(-1)
                 else:
                     if not W.onPause:
                         dy += 1
@@ -73,32 +75,36 @@ while True:
                     if W.onSelect:
                         W.DIALOG.elegir_opcion(+1)
                     elif W.onPause:
+                        W.onVSel = W.menu_actual._onVSel_('abajo')
                         if not W.onVSel:
                             W.menu_actual.selectOne('abajo')
                         else:
                             W.menu_actual.elegir_fila(+1)
+                    else:
+                        W.DIALOG.elegir_fila(+1)
                 else:
                     if not W.onPause:
                         dy -= 1
                       
             elif event.key == C.TECLAS.ACCION:
-                if not inAction:
-                    W.HERO.accion()
-                    inAction = True
+                W.HERO.accion()
 
             elif event.key == C.TECLAS.HABLAR:
-                if W.onDialog and W.onPause:
-                    if W.onVSel:
-                        W.menu_actual.confirmar_seleccion()
-                    else:
-                        W.menu_actual.PressOne()
-                if not inAction:
-                    if W.onSelect:
+                if W.onDialog:
+                    if W.onPause:
+                        if W.onVSel:
+                            W.menu_actual.confirmar_seleccion()
+                        else:
+                            W.menu_actual.PressOne()
+                    elif W.onSelect:
                         W.HERO.confirmar_seleccion()
                     else:
-                        if not W.onPause:
+                        if W.onVSel:
+                            W.DIALOG.confirmar_seleccion()
+                        else:
                             W.onDialog = W.HERO.hablar()
-                    inAction = True
+                else:
+                    W.onDialog = W.HERO.hablar()
 
             elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                 if W.onDialog:
@@ -106,23 +112,17 @@ while True:
                     W.onPause = False
 
             elif event.key == C.TECLAS.INVENTARIO:
-                if not inAction:
-                    if not W.onPause:
-                        W.HERO.ver_inventario()
-                        W.onDialog = True
-                        inAction = True
-                else:
-                    if not W.onPause:
-                        inAction = False
+                if not W.onPause:
+                    if not W.onDialog:
+                        W.onDialog = W.HERO.ver_inventario()
+                    else:    
                         W.MAPA_ACTUAL.endDialog()
                     
             elif event.key == C.TECLAS.MENU:
-                if not inAction:
-                    if not W.onPause:
-                        W.MAPA_ACTUAL.popMenu('Pausa')
-                        inAction = True
+                if not W.onPause:
+                    W.MAPA_ACTUAL.popMenu('Pausa')
+                    W.onPause = True
                 else:
-                    inAction = False
                     W.onPause = False
                     W.MAPA_ACTUAL.endDialog()
                 
