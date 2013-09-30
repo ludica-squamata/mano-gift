@@ -65,7 +65,7 @@ while True:
                         else:
                             W.menu_actual.elegir_fila(-1)
                     elif W.onVSel:
-                        W.DIALOG.elegir_fila(+1)
+                        W.DIALOG.elegir_fila(-1)
                 else:
                     if not W.onPause:
                         dy += 1
