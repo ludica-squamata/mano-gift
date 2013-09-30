@@ -286,7 +286,7 @@ class Stage:
                 W.menu_actual = Menu_Inventario(menues[titulo])
             else:
                 W.menu_actual = Menu(titulo,menues[titulo])
-            self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_DIALOGOS)
+            self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
     
     def endDialog(self):
         self.dialogs.empty()
