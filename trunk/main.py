@@ -64,8 +64,8 @@ while True:
                             W.menu_actual.selectOne('arriba')
                         else:
                             W.menu_actual.elegir_fila(-1)
-                    else:
-                        W.DIALOG.elegir_fila(-1)
+                    elif W.onVSel:
+                        W.DIALOG.elegir_fila(+1)
                 else:
                     if not W.onPause:
                         dy += 1
@@ -80,7 +80,7 @@ while True:
                             W.menu_actual.selectOne('abajo')
                         else:
                             W.menu_actual.elegir_fila(+1)
-                    else:
+                    elif W.onVSel:
                         W.DIALOG.elegir_fila(+1)
                 else:
                     if not W.onPause:

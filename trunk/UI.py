@@ -117,7 +117,6 @@ class Menu (Ventana):
         super().__init__(self.canvas)
         self.ubicar(10,10)
         self.dirty = 1
-        W.MAPA_ACTUAL.dialogs.add(self,layer=C.CAPA_OVERLAYS_MENUS)
     
     def crear_titulo(self,titulo,fg_color,bg_color,ancho):
         ttl_fuente = font.SysFont('verdana', 16)
@@ -250,13 +249,13 @@ class Menu_Inventario (Menu):
     fuente = ''
     draw_space = None
     draw_space_rect = None
-    nombre = 'Inventario'
     
     def __init__(self,botones):
         self.fuente = font.SysFont('verdana', 16)
-        super().__init__(self.nombre,botones)
+        super().__init__('Inventario',botones)
         self.draw_space_rect = Rect((10,44),(self.canvas.get_width()-19,270))
         self.crear_contenido(self.draw_space_rect)
+        self.crear_espacio_descriptivo((self.canvas.get_width()-15),53)
         self.dirty = 1
         self.sel = 1
         self._onVSel = {
@@ -264,17 +263,15 @@ class Menu_Inventario (Menu):
             "abajo":True,
             "izquierda":False,
             "derecha":False}
-
+        
     def crear_contenido(self,draw_area_rect):
         self.filas.empty()
         self.draw_space = Surface(draw_area_rect.size)
         self.draw_space.fill(self.bg_cnvs)
         self.canvas.blit(self.draw_space,draw_area_rect.topleft)
-        self.crear_espacio_descriptivo((self.canvas.get_width()-15),53)
-        y = -22
-        for item in W.HERO.inventario:
-            y += 22
-            fila = _item_inv(item,(11,y))
+
+        for i in range(len(W.HERO.inventario)):
+            fila = _item_inv(W.HERO.inventario[i],draw_area_rect.w-6,(3,(i*22)+1+(i-1)))
             
             self.filas.add(fila)
         
@@ -282,7 +279,7 @@ class Menu_Inventario (Menu):
             self.opciones = len(self.filas)
             self.elegir_fila(0)
             self.filas.draw(self.draw_space)
-            draw.line(self.draw_space,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*22)+1+(self.sel-2)),(draw_area_rect.w-4,(self.sel*22)+1+(self.sel-2)))
         
         self.canvas.blit(self.draw_space,draw_area_rect.topleft)
     
@@ -299,8 +296,8 @@ class Menu_Inventario (Menu):
             if self.sel < 1: self.sel = 1
             if self.sel > self.opciones: self.sel = self.opciones
             
-            draw.line(self.draw_space,self.font_high_color,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-            draw.line(self.draw_space,self.bg_cnvs,(10,(self.sel-j)*22),(self.canvas.get_width()-10,(self.sel-j)*22))
+            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*22)+1+(self.sel-2)),(self.draw_space.get_width()-4,(self.sel*22)+1+(self.sel-2)))
+            draw.line(self.draw_space,self.bg_cnvs,(3,((self.sel-j)*22)+1+((self.sel-j)-2)),(self.draw_space.get_width()-4,((self.sel-j)*22)+1+((self.sel-j)-2))) #
             
             self.mover_cursor(self.filas.get_sprite(self.sel-1))
             
@@ -402,48 +399,44 @@ class _boton (_giftSprite):
 
 class _item_inv (_giftSprite):
     nombre = ''
-    item_ID = 0
-    image = None
-    pos = 0,0
+    item = None
     fuente = ''
-    rect = ''
     bg_color = 125,125,125
     fg_color = 255,255,255
     
-    def __init__(self,item,pos):
+    def __init__(self,item,ancho,pos):
         self.item = item
         self.fuente = font.SysFont('verdana', 16)
-        self.rect = Rect(pos,((C.CUADRO*6)-6,22))
+        self._rect = Rect((-1,-1),((C.CUADRO*6),22))
         
         nombre = self.item.nombre.capitalize()
         cant = self.item.cantidad
         
-        self.img_nmbr = render_textrect(nombre,self.fuente,self.rect,self.fg_color,self.bg_color,1)
-        self.img_cant = render_textrect('x'+str(cant),self.fuente,self.rect,self.fg_color,self.bg_color,1)
+        self.img_nmbr = render_textrect(nombre,self.fuente,self._rect,self.fg_color,self.bg_color,1)
+        self.img_cant = render_textrect('x'+str(cant),self.fuente,self._rect,self.fg_color,self.bg_color,1)
         self.nombre = nombre
         self.cant = cant
-        self.construir_fila()
-        self.pos = pos
-        super().__init__(self.image)
-        self.rect = self.image.get_rect(topleft=self.pos)
-        self.dirty = 2
+        imagen = self.construir_fila(ancho,self._rect.h)
+        super().__init__(imagen)
+        self.rect = self.image.get_rect(topleft=pos)
+        self.dirty = 1
     
     def reducir_cant(self):
         self.cant -= 1
         if self.cant > 0:
-            self.img_cant = render_textrect('x'+str(self.cant),self.fuente,self.rect,self.fg_color,self.bg_color,1)
-            self.construir_fila()
+            self.img_cant = render_textrect('x'+str(self.cant),self.fuente,self._rect,self.fg_color,self.bg_color,1)
+            self.construir_fila((C.CUADRO*6),22)
         else:
             self.kill()
+        self.dirty = 1
         
-    def construir_fila(self):
-        image = Surface((int(C.ANCHO)-44,self.rect.h))
+    def construir_fila(self,ancho,alto):
+        image = Surface((ancho,alto))
         image.fill(self.bg_color)
-        image.blit(self.img_nmbr,(7,0))
-        image.blit(self.img_cant,(260,0))
+        image.blit(self.img_nmbr,(0,0))
+        image.blit(self.img_cant,((ancho-(C.CUADRO*6)),0))
         
-        self.image = image
-        self.rect = self.image.get_rect(topleft=self.pos)
+        return image
     
     def __repr__(self):
         return self.nombre+' _item_inv DirtySprite'
