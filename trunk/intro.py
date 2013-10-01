@@ -4,7 +4,7 @@ from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite
 from pygame import display as pantalla, event as EVENT,quit as py_quit,font
 from globs import Tiempo as T, Constants as C, World as W
 from misc import Resources as r
-from UI import Menu_Inventario
+from UI import Menu_Inventario, _opcion
 from libs.textrect import render_textrect
 import sys,os,os.path
 
@@ -29,8 +29,10 @@ class introduccion (Menu_Inventario):
     sel = 0
     opciones = 0
     mapas = []
+    filas = None
     def __init__ (self,ANCHO,ALTO):
         self.botones = sprite.LayeredDirty()
+        self.filas = sprite.LayeredDirty()
         self.botones.empty()
         self.canvas = self.crear_canvas(ANCHO,ALTO)
         self.crear_espacio_de_seleccion_de_mapas(ANCHO-17)
@@ -51,17 +53,20 @@ class introduccion (Menu_Inventario):
     def crear_espacio_de_seleccion_de_mapas (self,ancho):
         mapas = self.crear_espacio_titulado(ancho,200,'Elija un mapa')
         rect = self.canvas.blit(mapas,(7,40))
-        self.image = mapas.subsurface((0,0),(rect.w-8,rect.h-30))
+        self.image = Surface((rect.w-8,rect.h-30))
         self.image.fill(self.bg_cnvs)
+        self.draw_space = self.image.get_rect(topleft=(8,120))
+        
         fuente = font.SysFont('verdana', 16)
+        self.altura_del_texto = fuente.get_height()+1
         self.mapas = self.cargar_mapas_iniciales() # lista
         self.opciones = len(self.mapas)
-        texto = '\n'.join(self.mapas)
-        render = render_textrect(texto,fuente,rect,self.font_high_color,self.bg_cnvs)
-        self.image.blit(render,(3,0))
-                
-        return mapas
-    
+        for i in range(len(self.mapas)):
+            opcion = _opcion(self.mapas[i],self.draw_space.w,(3,(i*22)+1+(i-1)))
+            self.filas.add(opcion)
+        
+        self.filas.draw(self.image)
+        
     def ejecutar (self,fondo):
         elegir_uno = False
         while self.running:
