@@ -62,37 +62,48 @@ class Ventana (Colores,_giftSprite):
         return megacanvas
     
     def elegir_opcion(self,i):
+        h = self.altura_del_texto
         self.sel += i
         if self.sel < 1: self.sel = 1
         elif self.sel > self.opciones: self.sel = self.opciones
-        draw.line(self.image,self.font_high_color,(3,self.sel*22),(C.ANCHO-5,self.sel*22))
-        draw.line(self.image,self.bg_cnvs,(3,(self.sel-i)*22),(C.ANCHO-5,(self.sel-i)*22))
+        
+        draw.line(self.image,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(self.draw_space.w-4,(self.sel*h)+1+(self.sel-2)))
+        draw.line(self.image,self.bg_cnvs,(3,((self.sel-i)*h)+1+((self.sel-i)-2)),(self.draw_space.w-4,((self.sel-i)*h)+1+((self.sel-i)-2))) #
 
         return self.sel
     
 class Dialog (Ventana):
     fuente = None
-    posicion = x,y = 0,384
+    posicion = 0,384
+    filas = sprite.LayeredDirty()
     
     def __init__(self, texto):
         self.canvas = self.crear_canvas(int(C.ANCHO), int(C.ALTO/5))
-        
         self.fuente = font.SysFont('verdana', 16)
-        rect = Rect((self.posicion, (C.ANCHO-7, int(C.ALTO/5)-7)))
-        image = render_textrect(texto,self.fuente,rect,self.font_none_color,self.bg_cnvs)
+        self.altura_del_texto = self.fuente.get_height()+1
+        self.draw_space = Rect((3,3), (self.canvas.get_width()-7, int(self.canvas.get_height())-7))
         
-        self.canvas.blit(image,(3,3))
+        self.setText(texto)
+        
         super().__init__(self.canvas)
-        self.ubicar(*rect.topleft)
+        self.ubicar(*self.posicion)
         self.dirty = 1
 
     def setText(self, texto):
-        rect = Rect((3, 3, C.ANCHO-7, int(C.ALTO/5)-7))
-        render = render_textrect(texto,self.fuente,rect,self.font_none_color,self.bg_cnvs)
-        self.canvas.blit(render,rect)
+        h = self.altura_del_texto
         if W.onSelect:
-            self.opciones = len(texto.split('\n'))
-            draw.line(self.canvas,self.font_high_color,(3,self.sel*22),(C.ANCHO-7,self.sel*22))    
+            ops = texto.split('\n')
+            self.opciones = len(ops)
+            for i in range(len(ops)):
+                opcion = _opcion(ops[i],self.draw_space.w,(3,(i*22)+1+(i-1)+2))
+                self.filas.add(opcion)
+            
+            self.filas.draw(self.canvas)
+            draw.line(self.canvas,self.font_high_color,(3,self.sel*h),(C.ANCHO-7,self.sel*h)) 
+        else:
+            render = render_textrect(texto,self.fuente,self.draw_space,self.font_none_color,self.bg_cnvs)
+            self.canvas.blit(render,self.draw_space)
+            
         self.image = self.canvas
     
     def update (self):
@@ -427,3 +438,12 @@ class _item_inv (Colores,_giftSprite):
     def __repr__(self):
         return self.nombre+' _item_inv DirtySprite'
     
+class _opcion (Colores,_giftSprite):
+    def __init__(self,texto,ancho,pos):
+        fuente = font.SysFont('verdana', 16)
+        _rect = Rect((-1,-1),(ancho,fuente.get_height()+1))
+        
+        image = render_textrect(texto,fuente,_rect,self.font_none_color,self.bg_cnvs)
+        super().__init__(image)
+        self.rect = self.image.get_rect(topleft=pos)
+        self.dirty = 1
