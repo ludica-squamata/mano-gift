@@ -1,6 +1,7 @@
 from .Menu import Menu
 from ._item_inv import _item_inv
 from globs import World as W
+from libs.textrect import render_textrect
 from pygame import sprite, font, Rect, draw, Surface
 
 class Menu_Inventario (Menu):
