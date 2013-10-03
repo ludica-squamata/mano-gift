@@ -55,29 +55,26 @@ class Menu_Inventario (Menu):
         
     def elegir_fila(self,j):
         if self.opciones > 0:
-            h = self.altura_del_texto
             self.DeselectAllButtons()
             W.onVSel = True
-            self.sel += j
-            if self.sel < 1: self.sel = 1
-            if self.sel > self.opciones: self.sel = self.opciones
-            
-            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(self.draw_space.get_width()-4,(self.sel*h)+1+(self.sel-2)))
-            draw.line(self.draw_space,self.bg_cnvs,(3,((self.sel-j)*h)+1+((self.sel-j)-2)),(self.draw_space.get_width()-4,((self.sel-j)*h)+1+((self.sel-j)-2))) #
+            self.sel = self.dibujar_lineas_cursor(j,self.draw_space,
+                                       self.draw_space.get_width()-4,
+                                       self.sel,self.opciones)
             
             self.mover_cursor(self.filas.get_sprite(self.sel-1))
             
             self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
             
     def confirmar_seleccion (self):
-        cant = W.HERO.usar_item(self.current.item)
-        if cant <= 0:
-            self.opciones -= 1
-            if self.opciones <= 0:
-                self.current = self
-                W.onVSel = False
-                draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
-        self.dirty = 1
+        if self.opciones > 0:
+            cant = W.HERO.usar_item(self.current.item)
+            if cant <= 0:
+                self.opciones -= 1
+                if self.opciones <= 0:
+                    self.current = self
+                    W.onVSel = False
+                    draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+            self.dirty = 1
     
     def update (self):
         self.crear_contenido(self.draw_space_rect)
@@ -85,10 +82,8 @@ class Menu_Inventario (Menu):
             desc = render_textrect(self.cur_opt.item.efecto_des,
                                    self.fuente,self.descripcion_area,
                                    self.font_high_color,self.bg_cnvs)
-            W.onVSel = True
         else:
-            W.onVSel = False
-            desc = Surface((32,32))
+            desc = Surface(self.descripcion_area.size)
             desc.fill(self.bg_cnvs)
         
         self.canvas.blit(desc,(12,363))

@@ -1,6 +1,7 @@
 from .Colores import Colores
 from base.base import _giftSprite
 from pygame import Surface, Rect, font, draw
+from libs.textrect import render_textrect
 
 class Ventana (Colores,_giftSprite):
     canvas = None
@@ -51,13 +52,23 @@ class Ventana (Colores,_giftSprite):
         
         return megacanvas
     
-    def elegir_opcion(self,i):
+    def dibujar_lineas_cursor (self,i,img_dest,ancho,cursor,max_opciones):
         h = self.altura_del_texto
-        self.sel += i
-        if self.sel < 1: self.sel = 1
-        elif self.sel > self.opciones: self.sel = self.opciones
+        cursor += i
+        if cursor < 1: cursor = 1
+        elif cursor > max_opciones: cursor = max_opciones
         
-        draw.line(self.image,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(self.draw_space.w-4,(self.sel*h)+1+(self.sel-2)))
-        draw.line(self.image,self.bg_cnvs,(3,((self.sel-i)*h)+1+((self.sel-i)-2)),(self.draw_space.w-4,((self.sel-i)*h)+1+((self.sel-i)-2))) #
+        y1 = (cursor*h)+1+(cursor-2)
+        y2 = ((cursor-i)*h)+1+((cursor-i)-2)
+        
+        draw.line(img_dest,self.font_high_color,(3,y1),(ancho,y1))
+        draw.line(img_dest,self.bg_cnvs,(3,y2),(ancho,y2))
+        
+        return cursor
 
-        return self.sel
+    def crear_titulo(self,titulo,fg_color,bg_color,ancho):
+        ttl_fuente = font.SysFont('verdana', 16)
+        ttl_fuente.set_underline(True)
+        ttl_rect = Rect((3,3),(ancho-7,30))
+        ttl_txt =  render_textrect(titulo,ttl_fuente,ttl_rect,fg_color,bg_color,1)
+        self.canvas.blit(ttl_txt,ttl_rect.topleft)

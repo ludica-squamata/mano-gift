@@ -4,6 +4,7 @@ from ._item_inv import _item_inv
 from pygame import sprite, font, Rect, Surface, draw
 from libs.textrect import render_textrect
 from globs import Constants as C, World as W
+from .modos import modo
 
 class Menu (Ventana):
     botones = []
@@ -13,6 +14,8 @@ class Menu (Ventana):
     _onVSel = {}
     
     def __init__(self,titulo,botones):
+        self.nombre = titulo
+        self.current = self
         self.botones = sprite.LayeredDirty()
         self.botones.empty()
         self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
@@ -26,13 +29,6 @@ class Menu (Ventana):
         super().__init__(self.canvas)
         self.ubicar(10,10)
         self.dirty = 1
-    
-    def crear_titulo(self,titulo,fg_color,bg_color,ancho):
-        ttl_fuente = font.SysFont('verdana', 16)
-        ttl_fuente.set_underline(True)
-        ttl_rect = Rect((3,3),(ancho-7,30))
-        ttl_txt =  render_textrect(titulo,ttl_fuente,ttl_rect,fg_color,bg_color,1)
-        self.canvas.blit(ttl_txt,ttl_rect.topleft)
         
     def establecer_botones(self,botones):
         for btn in botones:
@@ -50,7 +46,6 @@ class Menu (Ventana):
             selected = self.botones.get_sprite(self.cur_btn)
             selected.serElegido()
             self.current = selected
-            
             
         self.botones.draw(self.canvas)
         
@@ -96,7 +91,7 @@ class Menu (Ventana):
         return _boton(texto,cnvs_sel,cnvs_pre,cnvs_uns,rect.topleft)
     
     def DeselectAllButtons(self):
-        if self.botones != []:
+        if len(self.botones) > 0:
             for boton in self.botones:
                 boton.serDeselegido()
                 boton.dirty = 2
@@ -104,26 +99,30 @@ class Menu (Ventana):
     
     def selectOne(self,direccion):
         self.DeselectAllButtons()
-        self.current = self.botones.get_sprite(self.cur_btn)
-        if direccion in self.current.direcciones:
-            selected = self.current.direcciones[direccion]
-        else:
-            selected = self.current.nombre
-
-        for i in range(len(self.botones)):
-            boton = self.botones.get_sprite(i)
-            if boton.nombre == selected:
-                boton.serElegido()
-                self.mover_cursor(boton)
-                break
-                    
-        self.botones.draw(self.canvas)
+        if len(self.botones) > 0:
+            self.current = self.botones.get_sprite(self.cur_btn)
+            if direccion in self.current.direcciones:
+                selected = self.current.direcciones[direccion]
+            else:
+                selected = self.current.nombre
+    
+            for i in range(len(self.botones)):
+                boton = self.botones.get_sprite(i)
+                if boton.nombre == selected:
+                    boton.serElegido()
+                    onVSel = self.mover_cursor(boton)
+                    break
+                        
+            self.botones.draw(self.canvas)
+            return onVSel
     
     def PressOne(self):
-        self.current.serPresionado()
-        self.botones.draw(self.canvas)
+        if len(self.botones) > 0:
+            self.current.serPresionado()
+            self.botones.draw(self.canvas)
         
     def mover_cursor(self,item):
+        onVSel = False
         if type(item) == _boton:
             for i in range(len(self.botones)):
                 spr = self.botones.get_sprite(i)
@@ -131,7 +130,7 @@ class Menu (Ventana):
                     self.cur_btn = i
                     self.current = spr
                     break
-            W.onVSel = False
+            onVSel = False
                     
         elif type(item) == _item_inv:
             for i in range(len(self.filas)):
@@ -140,12 +139,14 @@ class Menu (Ventana):
                     self.cur_opt = self.filas.get_sprite(i)
                     self.current = spr#.nombre
                     break
-            W.onVSel = True
+            onVSel = True
+        
+        return onVSel
     
     def _onVSel_(self,direccion):
         return self._onVSel[direccion]
     
     def update (self):
         self.dirty = 1
-        if not W.onVSel:
+        if not modo.onVSel:
             draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))

@@ -4,7 +4,7 @@ from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite
 from pygame import display as pantalla, event as EVENT,quit as py_quit,font
 from globs import Tiempo as T, Constants as C, World as W
 from misc import Resources as r
-from UI import Menu_Inventario, _opcion
+from UI import Menu, _opcion
 from libs.textrect import render_textrect
 import sys,os,os.path
 
@@ -23,7 +23,7 @@ import sys,os,os.path
 # # debug screen
 # # # seleccion de mapa.
 # # # play.
-class introduccion (Menu_Inventario):
+class introduccion (Menu):
     canvas = ''
     running = True
     sel = 0
@@ -66,7 +66,10 @@ class introduccion (Menu_Inventario):
             self.filas.add(opcion)
         
         self.filas.draw(self.image)
-        
+    
+    def elegir_opcion(self,i):
+        return self.dibujar_lineas_cursor (i,self.image,self.draw_space.w,self.sel,self.opciones)
+    
     def ejecutar (self,fondo):
         elegir_uno = False
         while self.running:
