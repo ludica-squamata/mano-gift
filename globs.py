@@ -62,10 +62,8 @@ class World:
     menu_actual = ''
     menu_previo = ''
     DIALOG = ''
-    onDialog = False
-    onSelect = False
+    MODO = 'Aventura'
     onPause = False
-    onVSel = False
     QUESTS = []
     
     def cargar_hero():

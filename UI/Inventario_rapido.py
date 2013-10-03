@@ -19,14 +19,17 @@ class Inventario_rapido (Menu_Inventario,Ventana):
         W.MAPA_ACTUAL.dialogs.add(self,layer=C.CAPA_OVERLAYS_DIALOGOS)
         self.rect = Rect((self.posicion, (C.ANCHO, int(C.ALTO/5))))
         self.dirty = 1
-        W.onDialog = True
     
     def confirmar_seleccion (self):
-        cant = W.HERO.usar_item(self.current.item)        
-        if cant <= 0:
-            self.opciones -= 1
-            if self.opciones <= 0:
-                W.MAPA_ACTUAL.endDialog()
+        if self.opciones > 0:
+            cant = W.HERO.usar_item(self.current.item)        
+            if cant <= 0:
+                self.opciones -= 1
+                if self.opciones <= 0:
+                    W.MAPA_ACTUAL.endDialog()
+    
+    def elegir_opcion (self,i):
+        self.sel = self.dibujar_lineas_cursor(i,self.canvas,self.draw_space.get_width(),self.sel,self.opciones)
         
     def update (self):
         self.crear_contenido(self.draw_space_rect)

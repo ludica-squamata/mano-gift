@@ -259,40 +259,32 @@ class Stage:
         else:
             self.contents.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
       
-    def setDialog(self, texto):
+    def setDialog(self, texto,onSelect=False):
         if W.DIALOG != '':
-            W.DIALOG.setText(texto)
+            W.DIALOG.setText(texto,onSelect)
         else:
-            W.DIALOG = Dialog(texto)
+            W.DIALOG = Dialog(texto,onSelect)
             self.dialogs.add(W.DIALOG, layer=C.CAPA_OVERLAYS_DIALOGOS)
-        W.onDialog = True
     
     def popMenu (self,titulo):
         menues = r.abrir_json('menus.json')
-        if titulo == 'Salir':
-            W.menu_previo = ''
-            self.endDialog()
-            W.onPause = False
-            
-        elif titulo == 'Volver':
-            W.MENU = self.popMenu(W.menu_previo)
+        if W.menu_previo == '' and W.menu_previo != titulo:
+            W.menu_previo = titulo
         
+        if titulo == 'Inventario':
+            W.menu_actual = Menu_Inventario(menues[titulo])
+            onVSel = True
         else:
-            if W.menu_previo == '' and W.menu_previo != titulo:
-                W.menu_previo = titulo
-            W.onPause = True
-            W.onDialog = True
-            if titulo == 'Inventario':
-                W.menu_actual = Menu_Inventario(menues[titulo])
-            else:
-                W.menu_actual = Menu(titulo,menues[titulo])
-            self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
+            W.menu_actual = Menu(titulo,menues[titulo])
+            onVSel = False
+        
+        self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
+        return onVSel
     
     def endDialog(self):
         self.dialogs.empty()
-        #self.dialogs.remove_sprites_of_layer(C.CAPA_OVERLAYS_DIALOGOS)
-        W.onDialog = False
         W.DIALOG = ''
+        W.MODO = 'Aventura'
         self.mapa.dirty = 1
     
     def update(self,fondo):

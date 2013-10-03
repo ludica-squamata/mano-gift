@@ -134,7 +134,7 @@ class PC (Mob):
             self.image = frames[self.atk_img_index]
             self.dirty = 1
 
-    def hablar(self):
+    def hablar(self,onSelect):
         rango = 15
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
@@ -142,7 +142,9 @@ class PC (Mob):
         sprite = self._interactuar(rango)
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
-            return self.interlocutor.hablar()
+            return self.interlocutor.hablar(onSelect)
+        else:
+            W.MODO = 'Aventura'
     
     def _interactuar(self,rango):
         x,y = self.direcciones[self.direccion]
@@ -158,7 +160,6 @@ class PC (Mob):
 
     def ver_inventario(self):
         W.DIALOG = Inventario_rapido()
-        return True
     
     def usar_item (self,item):
         print('Used',item.nombre) #acá iria el efecto del item utilizado.

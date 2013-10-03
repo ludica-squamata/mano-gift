@@ -31,62 +31,10 @@
             "arriba":"Inventario",
             "izquierda":"Grupo",
             "derecha":"Grupo"
-        },
-        {
-            "boton":"Salir",
-            "pos":[127,349],
-            "arriba":"Opciones",
-            "izquierda":"Grupo",
-            "derecha":"Opciones",
-            "abajo":"Grupo"
         }
     ],
-    "Personaje":[
-        {
-            "boton":"Volver",
-            "pos":[7,415],
-            "derecha":"Salir"
-        },
-        {
-            "boton":"Salir",
-            "pos":[254,415],
-            "izquierda":"Volver"
-        }
-    ],
-    "Inventario":[
-        {
-            "boton":"Volver",
-            "pos":[7,415],
-            "derecha":"Salir"
-        },
-        {
-            "boton":"Salir",
-            "pos":[254,415],
-            "izquierda":"Volver"
-        }
-    ],
-    "Grupo":[
-        {
-            "boton":"Volver",
-            "pos":[7,415],
-            "derecha":"Salir"
-        },
-        {
-            "boton":"Salir",
-            "pos":[254,415],
-            "izquierda":"Volver"
-        }
-    ],
-    "Opciones":[
-        {
-            "boton":"Volver",
-            "pos":[7,415],
-            "derecha":"Salir"
-        },
-        {
-            "boton":"Salir",
-            "pos":[254,415],
-            "izquierda":"Volver"
-        }
-    ]
+    "Personaje":[],
+    "Inventario":[],
+    "Grupo":[],
+    "Opciones":[]
 }

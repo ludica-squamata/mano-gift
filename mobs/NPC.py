@@ -14,11 +14,12 @@ class NPC (Mob):
         if 'quest' in data:
             QuestManager.add(data['quest'])
     
-    def hablar(self, opcion=1):
+    def hablar(self, onSelect, opcion=1):
         if len(self.dialogos) == 0:
+            self.stage.endDialog()
             return False
         
-        elif not W.onSelect:
+        elif not onSelect:
             self.pos_diag += 1
         
         if self.pos_diag >= len(self.dialogos):
@@ -29,20 +30,20 @@ class NPC (Mob):
         else:
             if type(self.dialogos[self.pos_diag]) != dict:
                 texto = self.dialogos[self.pos_diag]
-                W.onSelect = False
+                onSelect = False
             
             else:
-                if not W.onSelect:
+                if not onSelect:
                     texto = '\n'.join(self.dialogos[self.pos_diag])
-                    W.onSelect = True
+                    onSelect = True
                     
                 else:
                     sel = list(self.dialogos[self.pos_diag].keys())[opcion-1]
                     texto = self.dialogos[self.pos_diag][sel]
-                    W.onSelect = False
+                    onSelect = False
                 
-            self.stage.setDialog(texto)
-            return True
+            self.stage.setDialog(texto,onSelect)
+            return onSelect
     
     def devolver_seleccion(self,sel):
         op = list(self.dialogos[self.pos_diag].keys())[W.DIALOG.sel-1]
