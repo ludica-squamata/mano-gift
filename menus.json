@@ -1,40 +1,37 @@
 {   
     "Pausa":[
         {
-            "boton":"Personaje",
-            "pos":[7,93],
-            "arriba":"Salir",
-            "abajo":"Grupo",
-            "derecha":"Inventario",
-            "izquierda":"Inventario"
+            "boton":"Items",
+            "pos":[254,93],
+            "abajo":"Equipo"
         },
         {
-            "boton":"Inventario",
-            "pos":[254,93],
-            "abajo":"Opciones",
-            "arriba":"Salir",
-            "izquierda":"Personaje",
-            "derecha":"Personaje"
+            "boton":"Equipo",
+            "pos":[254,132],
+            "arriba":"Items",
+            "abajo":"Personaje"
+        },
+        {
+            "boton":"Personaje",
+            "pos":[254,171],
+            "arriba":"Equipo",
+            "abajo":"Grupo"
         },
         {
             "boton":"Grupo",
-            "pos":[7,253],
-            "abajo":"Salir",
+            "pos":[254,210],
             "arriba":"Personaje",
-            "derecha":"Opciones",
-            "izquierda":"Opciones"
+            "abajo":"Opciones"
         },
         {
             "boton":"Opciones",
-            "pos":[254,253],
-            "abajo":"Salir",
-            "arriba":"Inventario",
-            "izquierda":"Grupo",
-            "derecha":"Grupo"
+            "pos":[254,249],
+            "arriba":"Grupo"
         }
     ],
+    "Items":[],
+    "Equipo":[],
     "Personaje":[],
-    "Inventario":[],
     "Grupo":[],
     "Opciones":[]
 }

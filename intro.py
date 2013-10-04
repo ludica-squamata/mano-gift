@@ -39,7 +39,7 @@ class introduccion (Menu):
         self.crear_titulo("Mano-Gift:Debug Screen",self.font_high_color,self.bg_cnvs,ANCHO)
         botones = [{"boton":"Cargar","pos":[7,270],"derecha":"Salir"},
                    {"boton":"Salir","pos":[254,270],"izquierda":"Cargar"}]
-        self.establecer_botones(botones)
+        self.establecer_botones(botones,6)
     
     def cargar_mapas_iniciales(self):
         ok = []

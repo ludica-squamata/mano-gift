@@ -20,7 +20,7 @@ class Menu (Ventana):
         self.botones.empty()
         self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
         self.crear_titulo(titulo,self.font_high_color,self.bg_cnvs,C.ANCHO-20)
-        self.establecer_botones(botones)
+        self.establecer_botones(botones,6)
         self._onVSel = {
             "arriba":False,
             "abajo":False,
@@ -30,11 +30,11 @@ class Menu (Ventana):
         self.ubicar(10,10)
         self.dirty = 1
         
-    def establecer_botones(self,botones):
+    def establecer_botones(self,botones,ancho_mod):
         for btn in botones:
             nombre = btn['boton']
             pos = btn['pos']
-            boton = self._crear_boton(nombre,*pos)
+            boton = self._crear_boton(nombre,ancho_mod,*pos)
             for direccion in ['arriba','abajo','izquierda','derecha']:
                 if direccion in btn:
                     boton.direcciones[direccion] = btn[direccion]
@@ -49,18 +49,20 @@ class Menu (Ventana):
             
         self.botones.draw(self.canvas)
         
-    def _crear_boton(self,texto,x,y):
-        rect = Rect((x,y),((C.CUADRO*6)-6,C.CUADRO-6))
+    def _crear_boton(self,texto,ancho_mod,x,y):
+        ancho = C.CUADRO*ancho_mod
         
-        cnvs_pre = Surface(((C.CUADRO*6)+6,C.CUADRO+6))
+        rect = Rect((x,y),((ancho)-6,C.CUADRO-6))
+        
+        cnvs_pre = Surface(((ancho)+6,C.CUADRO+6))
         cnvs_pre.fill(self.bg_cnvs)
         cnvs_sel = cnvs_pre.copy()
         cnvs_uns = cnvs_pre.copy()
         
-        fnd_pre = self.crear_inverted_canvas((C.CUADRO*6),C.CUADRO)
-        fnd_uns = self.crear_canvas((C.CUADRO*6),C.CUADRO)
+        fnd_pre = self.crear_inverted_canvas(ancho,C.CUADRO)
+        fnd_uns = self.crear_canvas((ancho),C.CUADRO)
         
-        for i in range(round(((C.CUADRO*6)+6)/3)):
+        for i in range(round(((C.CUADRO*ancho)+6)/3)):
             #linea punteada horizontal superior
             draw.line(cnvs_sel,self.font_high_color,(i*7,0),((i*7)+5,0),2)
             
@@ -72,7 +74,7 @@ class Menu (Ventana):
             draw.line(cnvs_sel,self.font_high_color,(0,i*7),(0,(i*7)+5),2)
             
             #linea punteada vertical izquierda
-            draw.line(cnvs_sel,self.font_high_color,((C.CUADRO*6)+4,i*7),((C.CUADRO*6)+4,(i*7)+5),2)
+            draw.line(cnvs_sel,self.font_high_color,(ancho+4,i*7),(ancho+4,(i*7)+5),2)
         
         cnvs_sel.blit(fnd_uns,(3,3))
         cnvs_uns.blit(fnd_uns,(3,3))

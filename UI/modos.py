@@ -81,6 +81,7 @@ class modo:
                 elif event.key == C.TECLAS.INVENTARIO:
                     W.MAPA_ACTUAL.endDialog()
                     W.MODO = 'Aventura'
+                    modo.onVSel = False
                 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                     W.MAPA_ACTUAL.endDialog()

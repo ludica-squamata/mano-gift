@@ -1,10 +1,10 @@
-from .Menu_Inventario import Menu_Inventario
+from .Menu_Items import Menu_Items
 from .Ventana import Ventana
 from globs import World as W, Constants as C
 from pygame import Rect, font
 
 
-class Inventario_rapido (Menu_Inventario,Ventana):
+class Inventario_rapido (Menu_Items,Ventana):
     posicion = 0,384
     canvas = ''
     sel = 0
