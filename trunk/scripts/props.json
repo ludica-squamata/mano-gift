@@ -22,6 +22,9 @@
     "crate":{
         "propiedades":["empujable","pesado","solido"]
     },
+    "_crate":{
+        "propiedades":["pesado","solido"]
+    },
     "banana":{
         "propiedades":["agarrable","stackable"],
         "image": "props/banana.png",
