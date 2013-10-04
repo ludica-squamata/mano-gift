@@ -4,7 +4,7 @@ from globs import World as W
 from libs.textrect import render_textrect
 from pygame import sprite, font, Rect, draw, Surface
 
-class Menu_Inventario (Menu):
+class Menu_Items (Menu):
     cur_opt = 0
     filas = sprite.LayeredDirty()
     descripcion_area = None
@@ -16,10 +16,10 @@ class Menu_Inventario (Menu):
     def __init__(self,botones):
         self.fuente = font.SysFont('verdana', 16)
         self.altura_del_texto = self.fuente.get_height()+1
-        super().__init__('Inventario',botones)
+        super().__init__('Items',botones)
         self.draw_space_rect = Rect((10,44),(self.canvas.get_width()-19,270))
         self.crear_contenido(self.draw_space_rect)
-        self.crear_espacio_descriptivo((self.canvas.get_width()-15),53)
+        self.crear_espacio_descriptivo((self.canvas.get_width()-15),93)
         self.dirty = 1
         self.sel = 1
         self._onVSel = {
