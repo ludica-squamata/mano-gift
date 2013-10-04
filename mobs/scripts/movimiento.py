@@ -29,7 +29,20 @@ def AI_patrol(mob):
     direccion = _determinar_direccion(curr_p,punto_proximo)
     return direccion
 
+def AI_pursue(mob):
+    curr_p = [mob.mapX,mob.mapY]
+    if curr_p == mob.camino[mob.next_p]:
+        mob.next_p += 1
+        if mob.next_p >= len(mob.camino):
+            mob.next_p = 0
+    punto_proximo = mob.camino[mob.next_p]
+    direccion = _determinar_direccion(curr_p,punto_proximo)
+    return direccion
+    
+
 def generar_camino (inicio,destino,grilla):
+    inicio = list(inicio)
+    destino = list(destino)
     inicial,final = '',''
     for i in range(len(grilla)):
         punto = [grilla[i].x*C.CUADRO,grilla[i].y*C.CUADRO]
@@ -76,3 +89,4 @@ def _determinar_direccion(curr_p,next_p):
         else: direccion = 'arriba'
     
     return direccion
+

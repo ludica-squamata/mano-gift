@@ -287,9 +287,20 @@ class Stage:
         W.MODO = 'Aventura'
         self.mapa.dirty = 1
     
+    def actualizar_grilla(self):
+        for prop in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            if prop.es('solido') and not prop.es('empujable'):
+                x = int(prop.mapX/32)*32
+                y = int(prop.mapY/32)*32
+                for i in range(len(self.grilla)):
+                    punto = [self.grilla[i].x*C.CUADRO,self.grilla[i].y*C.CUADRO]
+                    if punto == [x,y]:
+                        self.grilla[i].transitable = False
+    
     def update(self,fondo):
         self.anochecer(10)
         self.contents.update()
+        self.actualizar_grilla()
         self.dialogs.update()
         ret = self.contents.draw(fondo) + self.dialogs.draw(fondo)
         return ret

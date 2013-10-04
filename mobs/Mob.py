@@ -218,13 +218,14 @@ class Mob (_giftSprite):
             if MobGroup.mobs[spr] != self:
                 spr = MobGroup.mobs[spr]
                 v = self.vision
-                if v.mask.overlap(spr.mask,(spr.mapX - v.x(self),
-                                            spr.mapY - v.y(self))):
+                if v.mask.overlap(spr.mask,(spr.mapX - v.x(self),spr.mapY - v.y(self))):
                                         
-                    #print(self.nombre,'ve a',spr.nombre)
-                    #self.cambiar_direccion('contraria')
-                    
-                    return spr # devuelve el mob a la vista.
+                    CURR_POS = [int(self.mapX/32)*32,int(self.mapY/32)*32]
+                    OBJ_POS = [int(spr.mapX/32)*32,int(spr.mapY/32)*32]
+                    camino = movimiento.generar_camino(CURR_POS,OBJ_POS,self.stage.grilla)
+                    self.camino = movimiento.simplificar_camino(camino)
+                    self.next_p = 0
+                    self.AI = movimiento.AI_pursue
                     
     def update(self):
         self.anim_counter += 1
