@@ -11,7 +11,7 @@ class nodo:
         self.y = y
         self.transitable = boole
     def __repr__(self):
-        return str((self.x,self.y,self.transitable))
+        return 'Nodo '+str(self.x)+','+str(self.y)+'('+str(self.transitable)+')'
     def __str__(self):
         return str((self.x,self.y))
     
@@ -23,15 +23,13 @@ def generar_grilla(mascara,imagen):
     _test = mask.Mask(tamanio)
     _test.fill()
     
-    cuadros = []
+    cuadros = {}
     for y in range(int(alto/h)):
         for x in range(int(ancho/w)):
             if mascara.overlap(_test,(x*32,y*32)):
-                cuadro = nodo(x,y,False)
+                cuadros[x,y] = nodo(x,y,False)
             else:
-                cuadro = nodo(x,y,True)
-            cuadros.append(cuadro)
-    
+                cuadros[x,y] = nodo(x,y,True)    
     return cuadros
 
 def Astar(inicio,destino,mapa):
@@ -88,12 +86,11 @@ def mirar_vecinos(nodo,grilla):
     cuadros = []
     direcciones = ((0,-1),(0,1),(-1,0),(1,0))
     for dx,dy in direcciones:
-        for n in grilla:
-            if n.x == nodo.x+dx and \
-               n.y == nodo.y+dy and \
-               n.transitable:
-                    cuadros.append(n)
-                    break
+        x,y = nodo.x+dx,nodo.y+dy
+        if (x,y) in grilla:
+            n = grilla[x,y]
+            if n.transitable:
+                cuadros.append(n)
         
     return cuadros
 

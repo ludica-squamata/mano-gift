@@ -1,5 +1,6 @@
 {
     "velocidad":1,
     "actitud":"hostil",
-    "direccion":"abajo"
+    "direccion":"abajo",
+    "tipo":"monstruo"
 }

@@ -6,5 +6,6 @@
     "salud":2,
     "fuerza":2,
     "actitud":"pasiva",
-    "dialogo":[]
+    "dialogo":[],
+    "tipo":"victima"
 }
