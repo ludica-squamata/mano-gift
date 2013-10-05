@@ -30,6 +30,7 @@ class PC (Mob):
         self.timer_animacion = 0
         self.inventario = Inventory(10)
         self.estado = 'idle'
+        self.tipo = 'victima'
         MobGroup.addMob(self)
     
     def cargar_anims(self,ruta_imgs,dict_dest,seq):

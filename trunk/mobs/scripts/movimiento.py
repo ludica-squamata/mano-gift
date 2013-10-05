@@ -38,26 +38,26 @@ def AI_pursue(mob):
     punto_proximo = mob.camino[mob.next_p]
     direccion = _determinar_direccion(curr_p,punto_proximo)
     return direccion
-    
 
-def generar_camino (inicio,destino,grilla):
-    inicio = list(inicio)
-    destino = list(destino)
-    inicial,final = '',''
-    for i in range(len(grilla)):
-        punto = [grilla[i].x*C.CUADRO,grilla[i].y*C.CUADRO]
-        if punto == inicio:
-           inicial = i
-        elif punto == destino:
-           final = i
-        
-        if inicial != '' and final != '':
-            break
-            
-    ruta = Astar(grilla[inicial],grilla[final],grilla)
-    camino = [[int(i)*C.CUADRO for i in punto.strip('()').split(',')] for punto in ruta.split(';')]
+def iniciar_persecucion(mob,objetivo):
+    CURR_POS = int(mob.mapX/32),int(mob.mapY/32)
+    OBJ_POS = int(objetivo.mapX/32),int(objetivo.mapY/32)
+    ruta = generar_camino(CURR_POS,OBJ_POS,mob.stage.grilla)
+    if type(ruta) == list:
+        camino = simplificar_camino(ruta)
+    else:
+        camino = [[ruta.x,ruta.y]]
     return camino
 
+def generar_camino (inicio,destino,grilla):
+    '''Genera un camino de puntos de grilla.
+    inicio y destino deben ser un tuple Gx,Gy'''        
+    ruta = Astar(grilla[inicio],grilla[destino],grilla)
+    if type(ruta) == str:
+        camino = [[int(i)*C.CUADRO for i in punto.strip('()').split(',')] for punto in ruta.split(';')]
+        return camino
+    return ruta
+    
 def simplificar_camino(camino):
     x,y = camino[0]
     fin = camino[-1]

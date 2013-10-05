@@ -24,6 +24,7 @@ class Mob (_giftSprite):
     hide = {}
     next_p = 0
     camino = []
+    tipo = '' # determina si es una victima o un monstruo
     reversa = bool # indica si hay que dar media vuelta al llegar al final del camino, o no.
     
     fuerza = 0 # capacidad del mob para empujar cosas.
@@ -50,6 +51,7 @@ class Mob (_giftSprite):
             self.modo_colision = data['modo_colision']
             self.salud = data['salud']
             self.actitud = data['actitud']
+            self.tipo = data['tipo']
             self.fuerza = data['fuerza']
             if 'solido' in data:
                 self.solido = data['solido']
@@ -63,16 +65,18 @@ class Mob (_giftSprite):
                 self.AI = movimiento.AI_wander # function alias!
                 
             elif self.AI == "patrol":
-                inicio = [x*C.CUADRO,y*C.CUADRO]
+                inicio = x,y
                 self.reversa = data['reversa']
                 for x,y in data['camino']:
-                    destino = [x*C.CUADRO,y*C.CUADRO]
+                    destino = x,y
                     camino = movimiento.generar_camino(inicio,destino,self.stage.grilla)
                     ruta = movimiento.simplificar_camino(camino)
                     self.camino.extend(ruta)
-                    inicio = [x*C.CUADRO,y*C.CUADRO]
+                    inicio = x,y
                 
                 self.AI = movimiento.AI_patrol # function alias!
+            
+            self._AI = self.AI #copia de la AI original
     
     def generar_rasgos(self):
         rasgos = r.abrir_json('scripts/rasgos.json')
@@ -218,14 +222,14 @@ class Mob (_giftSprite):
             if MobGroup.mobs[spr] != self:
                 spr = MobGroup.mobs[spr]
                 v = self.vision
-                if v.mask.overlap(spr.mask,(spr.mapX - v.x(self),spr.mapY - v.y(self))):
-                                        
-                    CURR_POS = [int(self.mapX/32)*32,int(self.mapY/32)*32]
-                    OBJ_POS = [int(spr.mapX/32)*32,int(spr.mapY/32)*32]
-                    camino = movimiento.generar_camino(CURR_POS,OBJ_POS,self.stage.grilla)
-                    self.camino = movimiento.simplificar_camino(camino)
-                    self.next_p = 0
-                    self.AI = movimiento.AI_pursue
+                if self.actitud == 'hostil':
+                    if spr.tipo == 'victima':
+                        self.AI = movimiento.AI_pursue # function alias!
+                        self.next_p = 0
+                        if v.mask.overlap(spr.mask,(spr.mapX - v.x(self),spr.mapY - v.y(self))):
+                            self.camino = movimiento.iniciar_persecucion(self,spr)
+                        else:
+                            self.AI = self._AI
                     
     def update(self):
         self.anim_counter += 1
