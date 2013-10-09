@@ -23,7 +23,7 @@
         "unica":[7,7]
     },
     "salidas":{
-        "nombre":{
+        "com2":{
             "rect":[6,0,32,480],
             "dest":"pasto_1",
             "link":"retorno"

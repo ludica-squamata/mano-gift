@@ -77,6 +77,10 @@ class World:
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
+        World.Mobs = {}
+        World.Items = {}
+        World.Salidas = {}
+        World.Props = {}
         if mapa not in World.mapas:
             World.mapas[mapa] = Stage(r.abrir_json('maps/'+mapa+'.json'))
         World.MAPA_ACTUAL = World.mapas[mapa]
