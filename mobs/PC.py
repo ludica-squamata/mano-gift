@@ -4,7 +4,6 @@ from .NPC import NPC
 from .Inventory import Inventory
 from .Item import Item
 from globs import World as W, Constants as C, Tiempo as T
-from .MobGroup import MobGroup
 from UI import Inventario_rapido
 
 class PC (Mob):
@@ -20,30 +19,16 @@ class PC (Mob):
     alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     atk_counter = 0
     atk_img_index = -1
-    atacando = False
     
     def __init__(self,nombre,ruta_imgs,stage):
         super().__init__(ruta_imgs,stage)
-        self.cargar_anims('mobs/heroe_cmb_walk.png',self.cmb_walk_img,['S','I','D'])
-        self.cargar_anims('mobs/heroe_cmb_atk.png',self.cmb_pos_img,['A','B','C'])
+        self.cmb_walk_img = self.cargar_anims('mobs/heroe_cmb_walk.png',['S','I','D'])
+        self.cmb_pos_img = self.cargar_anims('mobs/heroe_cmb_atk.png',['A','B','C'])
         self.nombre = nombre
         self.timer_animacion = 0
         self.inventario = Inventory(10)
         self.estado = 'idle'
         self.tipo = 'victima'
-        MobGroup.addMob(self)
-    
-    def cargar_anims(self,ruta_imgs,dict_dest,seq):
-        spritesheet = r.split_spritesheet(ruta_imgs)
-        dires = ['abajo','arriba','derecha','izquierda']
-        keys = []
-        
-        for L in seq:
-            for D in dires:
-                keys.append(L+D)
-            
-        for key in keys:
-            dict_dest[key] = spritesheet[keys.index(key)]
                 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -152,7 +137,7 @@ class PC (Mob):
         x,y = x*rango,y*rango
 
         for sprite in self.stage.contents:
-            if sprite != self.stage.mapa:
+            if sprite != self and sprite != self.stage.mapa:
                 if self.colisiona(sprite,x,y):
                     return sprite
     

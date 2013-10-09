@@ -1,7 +1,7 @@
 {
     "capa_background":{
-        "fondo":"maps/fondos/pasto_liso.png",
-        "colisiones":"maps/colisiones/pasto.png"
+        "fondo":"maps/fondos/pasto_grande.png",
+        "colisiones":"maps/colisiones/pasto_grande.png"
     },
     "capa_ground":{
         "props": {},

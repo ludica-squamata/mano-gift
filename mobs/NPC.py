@@ -1,5 +1,4 @@
 from . import Mob
-from .MobGroup import MobGroup
 from globs import World as W, QuestManager
 
 class NPC (Mob):
@@ -10,7 +9,7 @@ class NPC (Mob):
         self.nombre = nombre
         self.dialogos = self.data['dialogo']
         self.pos_diag = -1
-        MobGroup.addMob(self)
+        W.Mobs[self.nombre] = self
         if 'quest' in data:
             QuestManager.add(data['quest'])
     

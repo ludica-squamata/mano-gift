@@ -81,7 +81,7 @@ class Stage:
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.contents = sprite.LayeredDirty()
         self.dialogs = sprite.LayeredDirty()
-        self.contents.add(mapa, layer=C.CAPA_BACKGROUND)
+        self.contents.add(mapa)
         self.cargar_props('ground')
         self.cargar_props('top')
         self.cargar_mobs(Enemy)
@@ -109,7 +109,8 @@ class Stage:
                     prop = Prop(ref,imagen,self,x,y,data[ref])
                 else:
                     prop = Prop(ref,imgs[ref],self,x,y)
-                self.contents.add(prop, layer=_layer)
+                self.contents.add(prop, layer= prop.rect.bottom)
+                W.Props[ref] = prop
 
     def cargar_mobs(self,clase):
         if clase == Enemy:
@@ -129,7 +130,8 @@ class Stage:
             base.update(data)
             for x,y in pos[ref]:
                 mob = clase(ref,imgs[ref],self,x,y,base)
-                self.contents.add(mob, layer=C.CAPA_GROUND_MOBS)
+                self.contents.add(mob, layer=mob.rect.bottom)
+                W.Mobs[ref] = mob
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
@@ -139,7 +141,7 @@ class Stage:
                 hero.ubicar(x*C.CUADRO, y*C.CUADRO)
                 
                 hero.stage = self
-                self.contents.add(hero,layer=C.CAPA_HERO)
+                self.contents.add(hero,layer=hero.rect.bottom)
                 self.centrar_camara()
     
     def cargar_quests(self):
@@ -151,7 +153,8 @@ class Stage:
         salidas = self.data['salidas']
         for salida in salidas:
             sld = Salida(salidas[salida])
-            self.contents.add(sld,layer=C.CAPA_GROUND_SALIDAS)
+            self.contents.add(sld,layer=sld.rect.bottom)
+            W.Salidas[salida] = sld
 
     def mover(self,dx,dy):
         m = self.mapa
@@ -167,18 +170,21 @@ class Stage:
             dy = 0
 
         # chequea el que héroe no atraviese a los props
-        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+        for spr in W.Items:
+            spr = W.Items[spr]
             if h.colisiona(spr,-dx,-dy):
                 if spr.solido:
                     dx,dy = 0,0
         
-        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
+        for spr in W.Salidas:
+            spr = W.Salidas[spr]
             if h.colisiona(spr,-dx,-dy):
                 W.setear_mapa(spr.dest,spr.link)
                 dx,dy = 0,0
 
         # chequea el que héroe no atraviese a los mobs
-        for spr in self.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+        for spr in W.Mobs:
+            spr = W.Mobs[spr]
             if h.colisiona(spr,-dx,-dy):
                 if spr.solido:
                     dx,dy = 0,0
@@ -203,14 +209,21 @@ class Stage:
 
         if dx != 0 or dy != 0:
             for spr in self.contents:
-                if spr != h:
+                if spr == m:
+                    m.rect.x += dx
+                    m.rect.y += dy
+                    m.dirty = 1
+                elif spr != h:
                     spr.rect.x += dx
                     spr.rect.y += dy
-                    if (0 <= spr.rect.x < C.ANCHO and 0 <= spr.rect.y < C.ALTO) or spr == m:
+                    self.contents.change_layer(spr, spr.rect.bottom) 
+                else:
+                    self.contents.change_layer(spr, spr.rect.bottom) 
+                    if (0 <= spr.rect.x < C.ANCHO and 0 <= spr.rect.y < C.ALTO):
                         spr.dirty = 1
             h.reubicar(-dx, -dy)
         h.dirty = 1
-
+        
     def centrar_camara(self):
         hero = self.hero
         mapa = self.mapa
@@ -255,9 +268,10 @@ class Stage:
         if T.anochece(delay):
             if self.data['ambiente'] == 'exterior':
                 T.noche.rect.topleft = 0,0
-                self.contents.add(T.noche,layer=C.CAPA_TOP_CIELO)
+                #self.contents.add(T.noche,layer=C.CAPA_TOP_CIELO)
+                T.noche.add(self.contents)
         else:
-            self.contents.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
+            T.noche.remove(self.contents)
       
     def setDialog(self, texto,onSelect=False):
         if W.DIALOG != '':
@@ -288,10 +302,11 @@ class Stage:
         self.mapa.dirty = 1
     
     def actualizar_grilla(self):
-        for prop in self.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if prop.es('solido') and not prop.es('empujable'):
-                x = int(prop.mapX/32)
-                y = int(prop.mapY/32)
+        for spr in W.Props:
+            spr = W.Props[spr]
+            if spr.es('solido') and not spr.es('empujable'):
+                x = int(spr.mapX/32)
+                y = int(spr.mapY/32)
                 
                 self.grilla[x,y].transitable = False
     

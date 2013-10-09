@@ -41,10 +41,10 @@
     "refs":{
         "techo":"props/techo.png",
         "puerta":"props/puerta.png",
-        "red":"mobs/red12.png",
-        "green":"mobs/green12.png",
-        "blue":"mobs/blue12.png",
-        "yellow":"mobs/yellow12.png",
+        "red":"mobs/red.png",
+        "green":"mobs/green.png",
+        "blue":"mobs/blue.png",
+        "yellow":"mobs/yellow.png",
         "commoner":"mobs/commoner12.png",
         "girl":"mobs/green_girl.png",
         "crate":"props/crate.png"

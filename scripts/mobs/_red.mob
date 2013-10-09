@@ -3,5 +3,6 @@
     "modo_colision":"rodear",
     "salud":4,
     "fuerza":4,
-    "death":"mobs/red_death.png"
+    "death":"mobs/red_death.png",
+    "atack":"mobs/red_atk.png"
 }

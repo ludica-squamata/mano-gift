@@ -4,7 +4,6 @@ from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
 from globs import World as W, Constants as C, Tiempo as T
-from .MobGroup import MobGroup
 from .Vision import area_vision
 from .scripts import movimiento
 
@@ -20,6 +19,7 @@ class Mob (_giftSprite):
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     vision = None
+    atacando = False
     show = {}
     hide = {}
     next_p = 0
@@ -137,13 +137,29 @@ class Mob (_giftSprite):
             else:
                 self.image = self.images['D'+self.direccion]
     
+    def cargar_anims(self,ruta_imgs,seq):
+        dicc = {}
+        spritesheet = r.split_spritesheet(ruta_imgs)
+        dires = ['abajo','arriba','derecha','izquierda']
+        keys = []
+        
+        for L in seq:
+            for D in dires:
+                keys.append(L+D)
+            
+        for key in keys:
+            dicc[key] = spritesheet[keys.index(key)]
+        
+        return dicc
+    
     def empujar_props(self,dx=None,dy=None):
         rango = 12
         if dx == None and dy == None:
             dx,dy = self.direcciones[self.direccion]
         
         x,y = dx*rango,dy*rango
-        for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+        for spr in W.Props:
+            spr = W.Props[spr]
             if spr.solido and spr.es('empujable') and self.solido:
                 if self.colisiona(spr,x,y):
                     spr.interaccion(x,y)
@@ -172,19 +188,19 @@ class Mob (_giftSprite):
             if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
                 col_mapa = True
 
-            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            for spr in W.Items:
+                spr = W.items[spr]
                 if self.colisiona(spr,dx,dy):
                     col_props = True
             
-            for spr in self.stage.contents.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+            for spr in W.Mobs:
+                spr = W.Mobs[spr]
                 if spr.solido:
                     if self.colisiona(spr,dx,dy):
                         col_mobs = True
                         
         if self.colisiona(W.HERO,dx,dy):
             col_heroe = True
-            if self.actitud == 'hostil':
-                self.atacar()
 
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w-32:
@@ -215,12 +231,12 @@ class Mob (_giftSprite):
             else: # esto queda hasta que haga sprites 'muertos' de los npcs
                 self.stage.contents.remove(self)
             self.dead = True
-            MobGroup.removeMob(self)
+            del W.Mobs[self.nombre]
     
     def ver(self):
-        for spr in MobGroup.mobs:
-            if MobGroup.mobs[spr] != self:
-                spr = MobGroup.mobs[spr]
+        for spr in W.Mobs:
+            spr = W.Mobs[spr]
+            if spr != self:
                 v = self.vision
                 if self.actitud == 'hostil':
                     if spr.tipo == 'victima':
