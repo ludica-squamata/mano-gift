@@ -97,7 +97,8 @@ class Stage:
             _layer = C.CAPA_GROUND_ITEMS
         elif capa == 'top':
             _layer = C.CAPA_TOP_ITEMS
-
+        
+        i = -1
         for ref in POS:
             for x,y in POS[ref]:
                 if ref in data:
@@ -110,7 +111,11 @@ class Stage:
                 else:
                     prop = Prop(ref,imgs[ref],self,x,y)
                 self.contents.add(prop, layer= prop.rect.bottom)
-                W.Props[ref] = prop
+                if ref not in W.Props:
+                    i+=1
+                    nom = ref + str(i)
+                W.Props[nom] = prop
+        print(W.Props)
 
     def cargar_mobs(self,clase):
         if clase == Enemy:
@@ -173,7 +178,7 @@ class Stage:
         for spr in W.Items:
             spr = W.Items[spr]
             if h.colisiona(spr,-dx,-dy):
-                if spr.solido:
+                if spr.es('solido'):
                     dx,dy = 0,0
         
         for spr in W.Salidas:
@@ -207,21 +212,21 @@ class Stage:
                     h.rect.y -= dy
                 dy = 0
 
-        if dx != 0 or dy != 0:
-            for spr in self.contents:
-                if spr == m:
-                    m.rect.x += dx
-                    m.rect.y += dy
-                    m.dirty = 1
-                elif spr != h:
-                    spr.rect.x += dx
-                    spr.rect.y += dy
-                    self.contents.change_layer(spr, spr.rect.bottom) 
-                else:
-                    self.contents.change_layer(spr, spr.rect.bottom) 
-                    if (0 <= spr.rect.x < C.ANCHO and 0 <= spr.rect.y < C.ALTO):
-                        spr.dirty = 1
-            h.reubicar(-dx, -dy)
+        #if dx != 0 or dy != 0:
+        for spr in self.contents:
+            if spr == m: # el mapa
+                m.rect.x += dx
+                m.rect.y += dy
+                m.dirty = 1
+            elif spr != h: # todo el resto de los sprites, excepto el heroe
+                spr.rect.x += dx
+                spr.rect.y += dy
+                self.contents.change_layer(spr, spr.rect.bottom) 
+            else: # el héroe
+                self.contents.change_layer(spr, spr.rect.bottom) 
+                if (0 <= spr.rect.x < C.ANCHO and 0 <= spr.rect.y < C.ALTO):
+                    spr.dirty = 1
+        h.reubicar(-dx, -dy)
         h.dirty = 1
         
     def centrar_camara(self):

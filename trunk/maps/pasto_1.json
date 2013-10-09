@@ -30,7 +30,7 @@
         "retorno":[23,7]
     },
     "salidas":{
-        "nombre":{
+        "com1":{
             "rect":[24,0,32,480],
             "dest":"pasto_2",
             "link":"unica"
