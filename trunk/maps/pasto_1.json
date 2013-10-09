@@ -1,7 +1,7 @@
 {
     "capa_background":{
-        "fondo":"maps/fondos/pasto_liso.png",
-        "colisiones":"maps/colisiones/pasto.png"
+        "fondo":"maps/fondos/pasto_grande.png",
+        "colisiones":"maps/colisiones/pasto_grande.png"
     },
     "capa_ground":{
         "props": {
@@ -12,7 +12,9 @@
                        [14,10],[15,10],[16,10],[17,10],[18,10],[19,10],
                        [20,10],[21,10],[22,10],[23,10],[24,10],[25,10],
                        [26,10],[27,10],[28,10],[29,10],[30,10],[31,10]],
-            "_crate":[[10,6]]},
+            "_crate":[[10,6]],
+            "casa":[[1,1]]
+        },
         "mobs": {
             "enemies":{"_red":[[10,5]]},
             "npcs":{}
@@ -36,8 +38,9 @@
     },
     "refs":{
         "palotes":"props/palotes.png",
-        "_red":"mobs/red12.png",
-        "_crate":"props/crate.png"
+        "_red":"mobs/red.png",
+        "_crate":"props/crate.png",
+        "casa":"props/casa.png"
     },
     "ambiente":"exterior"
 }

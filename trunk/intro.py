@@ -46,7 +46,7 @@ class introduccion (Menu):
         for mapa in os.listdir('maps'):
             ar = r.abrir_json('maps/'+mapa)
             if 'inicial' in ar['entradas']:
-                ok.append(mapa.strip('.json'))
+                ok.append(mapa[0:-5])
         
         return ok
     

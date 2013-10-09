@@ -66,6 +66,11 @@ class World:
     onPause = False
     QUESTS = []
     
+    Mobs = {}
+    Items = {}
+    Salidas = {}
+    Props = {}
+    
     def cargar_hero():
         from mobs import PC
         World.HERO = PC('heroe','mobs/heroe_idle_walk.png',World.MAPA_ACTUAL)
@@ -122,23 +127,20 @@ class QuestManager:
     
     def add(script):
         from quests import Quest
-        from mobs.MobGroup import MobGroup
         
         if script not in QuestManager.quests:
             quest = Quest(script)
             QuestManager.quests[script] = quest
             for NPC in quest.on_Dialogs:
-                MobGroup.mobs[NPC].dialogos = quest.on_Dialogs[NPC]
+                World.Mobs[NPC].dialogos = quest.on_Dialogs[NPC]
                 
-    def remove(quest):
-        from mobs.MobGroup import MobGroup
-        
+    def remove(quest):    
         nombre = quest.nombre
         if nombre in QuestManager.quests:
             del QuestManager.quests[nombre]
             for NPC in quest.off_Dialogs:
-                if NPC in MobGroup.mobs:
-                    npc = MobGroup.mobs[NPC]
+                if NPC in World.Mobs:
+                    npc = World.Mobs[NPC]
                     if quest.off_Dialogs[NPC] != []:
                         npc.dialogos = quest.off_Dialogs[NPC]
                     else:
