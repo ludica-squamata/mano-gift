@@ -3,13 +3,13 @@ from pygame import mask,time
 from random import randint,choice
 from misc import Resources as r
 from base import _giftSprite
-from globs import World as W, Constants as C, Tiempo as T
+from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from .Vision import area_vision
 from .scripts import movimiento
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
-    velocidad = 4
+    velocidad = 1
     images = {} # incluye todas las imagenes del mob, arriba abajo izquierda y derecha
     death_img = None # sprite del mob muerto.
     dead = False
@@ -29,19 +29,29 @@ class Mob (_giftSprite):
     
     fuerza = 0 # capacidad del mob para empujar cosas.
     
-    def __init__(self, ruta_img,stage,x=None,y=None,data = None):
+    def __init__(self, ruta_img,stage,x=None,y=None,data = None,alpha = False):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda',
                  'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda']
 
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
+        self.mascaras = {}
+        if alpha:
+            _mascaras = r.split_spritesheet(alpha)
+            for key in maskeys:
+                _alpha = _mascaras[maskeys.index(key)]
+                self.mascaras[key] = mask.from_threshold(_alpha, C.COLOR_COLISION, (1,1,1,255))
+            self.mask  = self.mascaras['Sabajo']
         self.camino = [] # si no lo redefino, pasan cosas raras...
         self.generar_rasgos()
         for key in maskeys:
             self.images[key] = spritesheet[maskeys.index(key)]
         self.image = self.images['Sabajo']
-        super().__init__(self.image,stage)
+        if alpha:
+            super().__init__(self.image,alpha=self.mask,stage=stage)
+        else:
+            super().__init__(self.image,stage=stage)
 
         if data != None:
             self.direccion = data['direccion']
@@ -137,7 +147,7 @@ class Mob (_giftSprite):
             else:
                 self.image = self.images['D'+self.direccion]
     
-    def cargar_anims(self,ruta_imgs,seq):
+    def cargar_anims(self,ruta_imgs,seq,alpha=False):
         dicc = {}
         spritesheet = r.split_spritesheet(ruta_imgs)
         dires = ['abajo','arriba','derecha','izquierda']
@@ -146,10 +156,13 @@ class Mob (_giftSprite):
         for L in seq:
             for D in dires:
                 keys.append(L+D)
-            
-        for key in keys:
-            dicc[key] = spritesheet[keys.index(key)]
         
+        for key in keys:
+            if not alpha:
+                dicc[key] = spritesheet[keys.index(key)]
+            else:
+                _alpha = mask.from_threshold(spritesheet[keys.index(key)], C.COLOR_COLISION, (1,1,1,255))
+                dicc[key] = _alpha
         return dicc
     
     def empujar_props(self,dx=None,dy=None):
@@ -158,8 +171,7 @@ class Mob (_giftSprite):
             dx,dy = self.direcciones[self.direccion]
         
         x,y = dx*rango,dy*rango
-        for spr in W.Props:
-            spr = W.Props[spr]
+        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if spr.solido and spr.es('empujable') and self.solido:
                 if self.colisiona(spr,x,y):
                     spr.interaccion(x,y)
@@ -188,13 +200,11 @@ class Mob (_giftSprite):
             if self.stage.mapa.mask.overlap(self.mask,(self.mapX, self.mapY + dy)) is not None:
                 col_mapa = True
 
-            for spr in W.Items:
-                spr = W.items[spr]
+            for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
                 if self.colisiona(spr,dx,dy):
                     col_props = True
             
-            for spr in W.Mobs:
-                spr = W.Mobs[spr]
+            for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if spr.solido:
                     if self.colisiona(spr,dx,dy):
                         col_mobs = True
@@ -230,12 +240,13 @@ class Mob (_giftSprite):
                 self.image = self.death_img
             else: # esto queda hasta que haga sprites 'muertos' de los npcs
                 self.stage.contents.remove(self)
+                self.stage.properties.remove(self)
             self.dead = True
-            del W.Mobs[self.nombre]
+            MobGroup.remove(self)
+            
     
     def ver(self):
-        for spr in W.Mobs:
-            spr = W.Mobs[spr]
+        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
             if spr != self:
                 v = self.vision
                 if self.actitud == 'hostil':

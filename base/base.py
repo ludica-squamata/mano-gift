@@ -1,5 +1,6 @@
 from pygame import sprite,mask,Surface
 from misc import Resources as r
+from collections import UserDict
 
 class _giftSprite(sprite.DirtySprite):
     #mapX y mapY estan medidas en pixeles y son relativas al mapa
@@ -7,7 +8,7 @@ class _giftSprite(sprite.DirtySprite):
     mapY = 0
     nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True # si es solido, colisiona; si no, no.
-    def __init__(self, imagen, stage = '', x = 0, y = 0):
+    def __init__(self, imagen, alpha = False, stage = '', x = 0, y = 0):
         super().__init__()
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
@@ -16,7 +17,10 @@ class _giftSprite(sprite.DirtySprite):
         else:
             raise TypeError('Imagen debe ser una ruta o un Surface')
         self.rect = self.image.get_rect()
-        self.mask = mask.from_surface(self.image)
+        if alpha:
+            self.mask = alpha
+        else:
+            self.mask = mask.from_surface(self.image)
         self.mapX = x
         self.mapY = y
         self.stage = stage
@@ -49,6 +53,9 @@ class _giftSprite(sprite.DirtySprite):
             rectA.x = self.mapX+off_x
             rectA.y = self.mapY+off_y
             
+            img = Surface(rectA.size)
+            self.image.blit(img,rectA)
+            
             rectB = sprite.mask.get_bounding_rects()[0]
             rectB.x = sprite.mapX
             rectB.y = sprite.mapY
@@ -56,6 +63,19 @@ class _giftSprite(sprite.DirtySprite):
             #if rectA.colliderect(rectB) == 1:
             #    print(self.nombre+' colisiona con '+sprite.nombre)
             return rectA.colliderect(rectB)
+        return False
     
+
+class _giftGroup(UserDict):
     
+    def add(self,spr):
+        nombre = spr.nombre
+        self[nombre]= spr
+    
+    def remove(self,spr):
+        nombre = spr.nombre
+        if nombre in self:
+            del self[nombre]
+        
+
 

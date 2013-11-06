@@ -1,0 +1,27 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/casa_con_arboles.png",
+        "colisiones":"maps/colisiones/casa_con_arboles.png"
+    },
+    "capa_ground":{
+        "props": {
+            "casa":[[1,6]]
+        },
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
+    },
+    "entradas":{
+        "inicial":[10,10]
+    },
+    "salidas":{
+    },
+    "refs":{
+        "casa":"props/casa.png"
+        },
+    "ambiente":"exterior"
+}

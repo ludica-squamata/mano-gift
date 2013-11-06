@@ -1,11 +1,9 @@
 #global information
-#import pygame
-
 from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT, \
 K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT, K_F1, \
 Color, time, Surface
 from misc import Resources as r
-from base import _giftSprite
+from base import _giftSprite, _giftGroup
 
 class Teclas:
     ARRIBA = K_UP
@@ -66,21 +64,12 @@ class World:
     onPause = False
     QUESTS = []
     
-    Mobs = {}
-    Items = {}
-    Salidas = {}
-    Props = {}
-    
     def cargar_hero():
         from mobs import PC
-        World.HERO = PC('heroe','mobs/heroe_idle_walk.png',World.MAPA_ACTUAL)
+        World.HERO = PC('heroe',r.abrir_json('scripts/mobs/hero.mob'),World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
-        World.Mobs = {}
-        World.Items = {}
-        World.Salidas = {}
-        World.Props = {}
         if mapa not in World.mapas:
             World.mapas[mapa] = Stage(r.abrir_json('maps/'+mapa+'.json'))
         World.MAPA_ACTUAL = World.mapas[mapa]
@@ -136,15 +125,15 @@ class QuestManager:
             quest = Quest(script)
             QuestManager.quests[script] = quest
             for NPC in quest.on_Dialogs:
-                World.Mobs[NPC].dialogos = quest.on_Dialogs[NPC]
+                MobGroup[NPC].dialogos = quest.on_Dialogs[NPC]
                 
     def remove(quest):    
         nombre = quest.nombre
         if nombre in QuestManager.quests:
             del QuestManager.quests[nombre]
             for NPC in quest.off_Dialogs:
-                if NPC in World.Mobs:
-                    npc = World.Mobs[NPC]
+                if NPC in MobGroup:
+                    npc = MobGroup[NPC]
                     if quest.off_Dialogs[NPC] != []:
                         npc.dialogos = quest.off_Dialogs[NPC]
                     else:
@@ -159,3 +148,4 @@ class QuestManager:
             if conds[quest]:
                 QuestManager.remove(QuestManager.quests[quest])
 
+MobGroup = _giftGroup()
