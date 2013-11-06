@@ -16,7 +16,7 @@
             "casa":[[1,1]]
         },
         "mobs": {
-            "enemies":{"_red":[[10,5]]},
+            "enemies":{},
             "npcs":{}
         }
     },
@@ -38,7 +38,6 @@
     },
     "refs":{
         "palotes":"props/palotes.png",
-        "_red":"mobs/red.png",
         "_crate":"props/crate.png",
         "casa":"props/casa.png"
     },

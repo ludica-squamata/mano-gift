@@ -1,7 +1,7 @@
 #import pygame
 from pygame import sprite, Rect, Surface, mask as MASK
 from misc import Resources as r
-from globs import Constants as C, World as W, Tiempo as T, QuestManager
+from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
 from base import _giftSprite
 from mobs import NPC, Enemy
 from UI import Dialog, Menu, Menu_Items
@@ -18,7 +18,7 @@ class Prop (_giftSprite):
     _operable = None
     estado = 0
     def __init__ (self,nombre, imagen, stage, x,y, data = None):
-        super().__init__(imagen,stage,x*C.CUADRO,y*C.CUADRO)
+        super().__init__(imagen,stage=stage,x=x*C.CUADRO,y=y*C.CUADRO)
         self.nombre = nombre
         self.estado = 0
         self._propiedades = {}
@@ -65,6 +65,7 @@ class Prop (_giftSprite):
     
 class Stage:
     contents = None
+    properties = None
     hero = None
     mapa = None
     data = {}
@@ -81,6 +82,7 @@ class Stage:
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.contents = sprite.LayeredDirty()
         self.dialogs = sprite.LayeredDirty()
+        self.properties = sprite.LayeredDirty()
         self.contents.add(mapa)
         self.cargar_props('ground')
         self.cargar_props('top')
@@ -109,13 +111,9 @@ class Stage:
                     
                     prop = Prop(ref,imagen,self,x,y,data[ref])
                 else:
-                    prop = Prop(ref,imgs[ref],self,x,y)
+                    prop = Prop(ref,imgs[ref],stage=self,x=x,y=y)
                 self.contents.add(prop, layer= prop.rect.bottom)
-                if ref not in W.Props:
-                    i+=1
-                    nom = ref + str(i)
-                W.Props[nom] = prop
-        print(W.Props)
+                self.properties.add(prop,layer = _layer)
 
     def cargar_mobs(self,clase):
         if clase == Enemy:
@@ -136,7 +134,8 @@ class Stage:
             for x,y in pos[ref]:
                 mob = clase(ref,imgs[ref],self,x,y,base)
                 self.contents.add(mob, layer=mob.rect.bottom)
-                W.Mobs[ref] = mob
+                self.properties.add(mob,layer = C.CAPA_GROUND_MOBS)
+                MobGroup.add(mob)
 
     def cargar_hero(self, hero, entrada = None):
         self.hero = hero
@@ -147,6 +146,7 @@ class Stage:
                 
                 hero.stage = self
                 self.contents.add(hero,layer=hero.rect.bottom)
+                self.properties.add(hero,layer = C.CAPA_HERO)
                 self.centrar_camara()
     
     def cargar_quests(self):
@@ -159,7 +159,7 @@ class Stage:
         for salida in salidas:
             sld = Salida(salidas[salida])
             self.contents.add(sld,layer=sld.rect.bottom)
-            W.Salidas[salida] = sld
+            self.properties.add(sld,layer=C.CAPA_GROUND_SALIDAS)
 
     def mover(self,dx,dy):
         m = self.mapa
@@ -175,25 +175,22 @@ class Stage:
             dy = 0
 
         # chequea el que héroe no atraviese a los props
-        for spr in W.Items:
-            spr = W.Items[spr]
+        for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if h.colisiona(spr,-dx,-dy):
                 if spr.es('solido'):
                     dx,dy = 0,0
         
-        for spr in W.Salidas:
-            spr = W.Salidas[spr]
+        for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
             if h.colisiona(spr,-dx,-dy):
                 W.setear_mapa(spr.dest,spr.link)
                 dx,dy = 0,0
 
         # chequea el que héroe no atraviese a los mobs
-        for spr in W.Mobs:
-            spr = W.Mobs[spr]
-            if h.colisiona(spr,-dx,-dy):
+        for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+            if h.mask.overlap(spr.mask,(spr.mapX-(h.mapX-dx),spr.mapY-(h.mapY-dx)))!=None:
                 if spr.solido:
                     dx,dy = 0,0
-
+                    
         # congela la camara si el héroe se aproxima mucho a un limite horizontal
         if dx != 0:
             newPos = m.rect.x + dx
@@ -273,7 +270,7 @@ class Stage:
         if T.anochece(delay):
             if self.data['ambiente'] == 'exterior':
                 T.noche.rect.topleft = 0,0
-                #self.contents.add(T.noche,layer=C.CAPA_TOP_CIELO)
+                self.properties.add(T.noche,layer=C.CAPA_TOP_CIELO)
                 T.noche.add(self.contents)
         else:
             T.noche.remove(self.contents)
@@ -307,8 +304,7 @@ class Stage:
         self.mapa.dirty = 1
     
     def actualizar_grilla(self):
-        for spr in W.Props:
-            spr = W.Props[spr]
+        for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if spr.es('solido') and not spr.es('empujable'):
                 x = int(spr.mapX/32)
                 y = int(spr.mapY/32)
@@ -329,10 +325,10 @@ class Salida (_giftSprite):
         self.dest = data['dest']# string, mapa de destino.
         self.link = data['link']# string, nombre de la entrada en dest con la cual conecta
         image = Surface((alto, ancho))
-        #image.fill((255,0,0))
-        super().__init__(image,self.x,self.y)
+        image.fill((255,0,0))
+        super().__init__(image,x = self.x, y= self.y)
         self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
         self.mask.fill()
-        self.image.set_colorkey((0,0,0))
+        #self.image.set_colorkey((0,0,0))
         self.solido = False
         

@@ -45,6 +45,8 @@ def iniciar_persecucion(mob,objetivo):
     ruta = generar_camino(CURR_POS,OBJ_POS,mob.stage.grilla)
     if type(ruta) == list:
         camino = simplificar_camino(ruta)
+    elif type(ruta) == None:
+        iniciar_persecucion(mob,objetivo)
     else:
         camino = [[ruta.x,ruta.y]]
     return camino

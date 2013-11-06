@@ -1,1 +1,1 @@
-from .base import _giftSprite
+from .base import _giftSprite, _giftGroup

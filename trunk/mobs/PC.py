@@ -5,6 +5,7 @@ from .Inventory import Inventory
 from .Item import Item
 from globs import World as W, Constants as C, Tiempo as T
 from UI import Inventario_rapido
+from pygame import Surface,Rect
 
 class PC (Mob):
     centroX = 0
@@ -12,23 +13,34 @@ class PC (Mob):
     inventario = {}
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.
+    cmb_pos_alpha = {} # combat position images's alpha.
     cmb_walk_img = {} # combat walking images.
+    cmb_walk_alpha = {} # combat walking images's alpha.
     estado = '' #idle, o cmb. Indica si puede atacar desde esta posición, o no.
     
-    fuerza = 15
-    alcance_cc = 16 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
+    alcance_cc = 0 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     atk_counter = 0
     atk_img_index = -1
     
-    def __init__(self,nombre,ruta_imgs,stage):
-        super().__init__(ruta_imgs,stage)
-        self.cmb_walk_img = self.cargar_anims('mobs/heroe_cmb_walk.png',['S','I','D'])
-        self.cmb_pos_img = self.cargar_anims('mobs/heroe_cmb_atk.png',['A','B','C'])
+    def __init__(self,nombre,data,stage):
+        imgs = data['imagenes']
+        super().__init__(imgs['idle']['graph'],stage,alpha=imgs['idle']['alpha'])
+        
+        self.cmb_walk_img = self.cargar_anims(imgs['cmb']['graph'],['S','I','D'])
+        self.cmb_walk_alpha = self.cargar_anims(imgs['cmb']['alpha'],['S','I','D'],True)
+        
+        self.cmb_pos_img = self.cargar_anims(imgs['atk']['graph'],['A','B','C'])
+        self.cmb_pos_alpha = self.cargar_anims(imgs['atk']['alpha'],['A','B','C'],True)
+        
+        self.fuerza = data['fuerza']
+        self.alcance_cc = data['alcance_cc']
+        self.tipo = data['tipo']
+        self.velocidad = 2
+        
         self.nombre = nombre
         self.timer_animacion = 0
         self.inventario = Inventory(10)
         self.estado = 'idle'
-        self.tipo = 'victima'
                 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -73,7 +85,7 @@ class PC (Mob):
         elif dy == -1:
             d = 'arriba'
         self.cambiar_direccion(d)
-    
+      
     def accion(self):
         from mapa import Prop
         x,y = self.direcciones[self.direccion]
@@ -84,7 +96,7 @@ class PC (Mob):
             self.atacando = True
             
         sprite = self._interactuar(self.alcance_cc)
-        if  issubclass(sprite.__class__,Mob):
+        if issubclass(sprite.__class__,Mob):
             if self.estado == 'cmb':
                 x,y = x*self.fuerza,y*self.fuerza
                 self.atacar(sprite,x,y)
@@ -103,11 +115,11 @@ class PC (Mob):
     
     def _anim_atk (self,limite):
         # construir la animación
-        frames = []
+        frames,alphas = [],[]
         for L in ['A','B','C']:
-            frame = self.cmb_pos_img[L+self.direccion]
-            frames.append(frame)
-        
+            frames.append(self.cmb_pos_img[L+self.direccion])
+            alphas.append(self.cmb_pos_alpha[L+self.direccion])
+            
         # iniciar la animación
         self.atk_counter += 1
         if self.atk_counter > limite:
@@ -118,6 +130,7 @@ class PC (Mob):
                 self.atacando = False
             
             self.image = frames[self.atk_img_index]
+            self.mask = alphas[self.atk_img_index]
             self.dirty = 1
 
     def hablar(self,onSelect):
@@ -136,7 +149,7 @@ class PC (Mob):
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
 
-        for sprite in self.stage.contents:
+        for sprite in self.stage.properties:
             if sprite != self and sprite != self.stage.mapa:
                 if self.colisiona(sprite,x,y):
                     return sprite

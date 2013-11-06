@@ -1,6 +1,5 @@
 from misc import Resources as r
-from globs import Constants as C, World as W
-from mobs.MobGroup import MobGroup as MG
+from globs import Constants as C, World as W, MobGroup
 
 class Quest:
     objetivos = {}
@@ -25,7 +24,7 @@ class Quest:
         for objetivo in self.objetivos:
             if objetivo == 'kill':
                 for mob in self.objetivos[objetivo]:
-                    if mob in MG.mobs:
+                    if mob in MobGroup:
                         return False
                 self.resolver()
                 return True
