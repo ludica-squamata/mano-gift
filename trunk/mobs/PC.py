@@ -41,7 +41,8 @@ class PC (Mob):
         self.timer_animacion = 0
         self.inventario = Inventory(10)
         self.estado = 'idle'
-                
+        self.generar_rasgos()
+        
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
@@ -69,8 +70,10 @@ class PC (Mob):
             
             if self.estado == 'idle':
                 self.image = self.images[img_dir]
+                self.mask = self.mascaras[img_dir]
             elif self.estado == 'cmb':
                 self.image = self.cmb_walk_img[img_dir]
+                self.mask = self.cmb_walk_alpha[img_dir]
                 
         self.direccion = direccion
     
@@ -128,6 +131,7 @@ class PC (Mob):
             if self.atk_img_index > len(frames)-1:
                 self.atk_img_index = 0
                 self.atacando = False
+                self.mask = self.cmb_walk_alpha['S'+self.direccion]
             
             self.image = frames[self.atk_img_index]
             self.mask = alphas[self.atk_img_index]
@@ -167,10 +171,12 @@ class PC (Mob):
     def cambiar_estado(self):
         if self.estado == 'idle':
             self.image = self.cmb_walk_img['S'+self.direccion]
+            self.mask = self.cmb_walk_alpha['S'+self.direccion]
             self.estado = 'cmb'
             
         elif self.estado == 'cmb':
             self.image = self.images['S'+self.direccion]
+            self.mask = self.mascaras['S'+self.direccion]
             self.estado = 'idle'
         self.cambiar_direccion(self.direccion)
         self.dirty = 1

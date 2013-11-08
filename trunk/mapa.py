@@ -100,7 +100,6 @@ class Stage:
         elif capa == 'top':
             _layer = C.CAPA_TOP_ITEMS
         
-        i = -1
         for ref in POS:
             for x,y in POS[ref]:
                 if ref in data:
@@ -187,7 +186,7 @@ class Stage:
 
         # chequea el que héroe no atraviese a los mobs
         for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-            if h.mask.overlap(spr.mask,(spr.mapX-(h.mapX-dx),spr.mapY-(h.mapY-dx)))!=None:
+            if h.mask.overlap(spr.mask,(spr.mapX-(h.mapX-dx),spr.mapY-(h.mapY-dy)))!=None:
                 if spr.solido:
                     dx,dy = 0,0
                     

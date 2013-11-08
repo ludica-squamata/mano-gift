@@ -1,5 +1,6 @@
 {
     "cars":{
+        "Fuerza":true,
         "car1":true,
         "car2":true,
         "car3":false
