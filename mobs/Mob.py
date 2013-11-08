@@ -30,9 +30,9 @@ class Mob (_giftSprite):
     fuerza = 0 # capacidad del mob para empujar cosas.
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None,alpha = False):
-        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda',
-                 'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda',
-                 'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda']
+        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
+                 'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
+                 'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda'] # paso Derecho
 
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
@@ -44,7 +44,6 @@ class Mob (_giftSprite):
                 self.mascaras[key] = mask.from_threshold(_alpha, C.COLOR_COLISION, (1,1,1,255))
             self.mask  = self.mascaras['Sabajo']
         self.camino = [] # si no lo redefino, pasan cosas raras...
-        self.generar_rasgos()
         for key in maskeys:
             self.images[key] = spritesheet[maskeys.index(key)]
         self.image = self.images['Sabajo']
@@ -93,7 +92,10 @@ class Mob (_giftSprite):
         
         for car in rasgos['cars']:
             if rasgos['cars'][car]:
-                self.show[car] = {"tipo": "atributo", "nombre":car, "value": 0}
+                if car == "Fuerza":
+                    self.show[car] = {"tipo": "atributo", "nombre":car, "value": self.fuerza}
+                else:
+                    self.show[car] = {"tipo": "atributo", "nombre":car, "value": 0}
             else:
                 self.hide[car] = {"tipo": "atributo", "nombre":car, "value": 0}
         
@@ -104,14 +106,14 @@ class Mob (_giftSprite):
                 self.hide[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
                 
         #print(self.nombre)
-        #for car in self.cars:
-        #    if self.cars[car]['show']:
-        #        print(car, self.cars[car]["value"])
-        #for hab in self.habs:
-        #    if self.habs[hab]['show']:
-        #        print(hab, self.habs[hab]["value"])
+        #for rasgo in self.show:
+        #    if self.show[rasgo]['tipo'] == "atributo":
+        #        print(self.show[rasgo]['nombre'],self.show[rasgo]["value"])
         #print()
-        
+        #for rasgo in self.show:
+        #    if self.show[rasgo]['tipo'] == "habilidad":
+        #        print(self.show[rasgo]['nombre'],self.show[rasgo]["value"])
+        #print()
         pass # just a hook to fold the function
 
     def cambiar_direccion(self,arg):

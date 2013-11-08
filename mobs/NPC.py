@@ -12,6 +12,7 @@ class NPC (Mob):
         MobGroup.add(self)
         if 'quest' in data:
             QuestManager.add(data['quest'])
+        self.generar_rasgos()
     
     def hablar(self, onSelect, opcion=1):
         if len(self.dialogos) == 0:

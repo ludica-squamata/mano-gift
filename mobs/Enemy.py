@@ -8,6 +8,7 @@ class Enemy (Mob):
         super().__init__(ruta_img,stage,x,y,data)
         self.nombre = nombre
         #self.atk_img = self.cargar_anims('mobs/'+nombre+'_atk.png',['A','B','C'])
+        self.generar_rasgos()
         
     def atacar(self):
         pass
