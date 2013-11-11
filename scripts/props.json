@@ -30,5 +30,13 @@
         "image": "props/banana.png",
         "efecto":{
             "des":"Restaura tu salud al máximo."}
+    },
+    "casa":{
+        "image":"props/casa.png",
+        "sombra":"props/sombra/casa.png"
+    },
+    "arbol":{
+        "image":"props/arbol_escalado.png",
+        "sombra":"props/sombra/arbol_escalado.png"
     }
 }

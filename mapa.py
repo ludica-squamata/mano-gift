@@ -17,23 +17,29 @@ class Prop (_giftSprite):
     _propiedades = None #indica si es agarrable, cortable, movible, etc.
     _operable = None
     estado = 0
+    sombra = None
     def __init__ (self,nombre, imagen, stage, x,y, data = None):
         super().__init__(imagen,stage=stage,x=x*C.CUADRO,y=y*C.CUADRO)
         self.nombre = nombre
         self.estado = 0
         self._propiedades = {}
         if data != None:
-            for prop in data['propiedades']:
-                self._propiedades[prop] = True;
+            if "propiedades" in data:
+                for prop in data['propiedades']:
+                    self._propiedades[prop] = True;
+                
+                if self.es('operable'):
+                    self._operable = [
+                        (data['propiedades'][prop]['0']['solido'],
+                         data['propiedades'][prop]['0']['visible']),
+                        (data['propiedades'][prop]['1']['solido'],
+                         data['propiedades'][prop]['1']['visible'])]
+                    self.solido = self._operable[0][0]
+                    self.visible = self._operable[0][1]
             
-            if self.es('operable'):
-                self._operable = [
-                    (data['propiedades'][prop]['0']['solido'],
-                     data['propiedades'][prop]['0']['visible']),
-                    (data['propiedades'][prop]['1']['solido'],
-                     data['propiedades'][prop]['1']['visible'])]
-                self.solido = self._operable[0][0]
-                self.visible = self._operable[0][1]            
+            if 'sombra' in data:
+                self.sombra = r.cargar_imagen(data['sombra'])
+                
 
     def interaccion(self,x=0,y=0):
         if self.es('agarrable'):
@@ -113,6 +119,11 @@ class Stage:
                     prop = Prop(ref,imgs[ref],stage=self,x=x,y=y)
                 self.contents.add(prop, layer= prop.rect.bottom)
                 self.properties.add(prop,layer = _layer)
+                if prop.sombra != None:
+                    self.cargar_sombras(prop.sombra,x*C.CUADRO,y*C.CUADRO)
+    
+    def cargar_sombras(self,imagen,x,y):
+        self.mapa.image.blit(imagen,[x,y])
 
     def cargar_mobs(self,clase):
         if clase == Enemy:
@@ -311,7 +322,7 @@ class Stage:
                 self.grilla[x,y].transitable = False
     
     def update(self,fondo):
-        self.anochecer(10)
+        self.anochecer(12)
         self.contents.update()
         self.actualizar_grilla()
         self.dialogs.update()

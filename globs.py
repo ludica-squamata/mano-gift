@@ -100,7 +100,7 @@ class Tiempo:
             if Tiempo.segs == 60:
                 Tiempo.mins += 1
                 Tiempo.segs = 0
-                if Tiempo.mins == 20:
+                if Tiempo.mins == 24:
                     Tiempo.dias += 1
     
     def anochece(duracion):
