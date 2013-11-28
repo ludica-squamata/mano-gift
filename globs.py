@@ -75,10 +75,14 @@ class World:
         World.MAPA_ACTUAL = World.mapas[mapa]
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
         World.MAPA_ACTUAL.mapa.dirty=1
-
+        World.MAPA_ACTUAL.contents.add(Tiempo.noche)
+        World.MAPA_ACTUAL.properties.add(Tiempo.noche,layer=Constants.CAPA_TOP_CIELO)
+        
 class Tiempo:
     FPS = time.Clock()
-    frames,segs,mins,dias = 0,0,0,0
+    _frames,_segs,_mins = 0,0,0 # valores internos
+    hora,dia = 0,0 # valores con efecto en el juego.
+    angulo_sol = 0
     esNoche = False
     
     nch_img = Surface((480,480))
@@ -86,32 +90,35 @@ class Tiempo:
     noche = _giftSprite(nch_img)
     noche.ubicar(0,0)
     noche.dirty = 2
-
-    _i = 10
-    while _i > 0:
-        FPS.tick(60)
-        _i -= 1
+    noche.visible = False
         
     def contar_tiempo ():
-        Tiempo.frames += 1
-        if Tiempo.frames == 60:
-            Tiempo.segs += 1
-            Tiempo.frames = 0
-            if Tiempo.segs == 60:
-                Tiempo.mins += 1
-                Tiempo.segs = 0
-                if Tiempo.mins == 24:
-                    Tiempo.dias += 1
+        Tiempo._frames += 1
+        if Tiempo._frames == 60:
+            Tiempo._segs += 1
+            Tiempo._frames = 0
+            if Tiempo._segs == 60:
+                Tiempo._mins += 1
+                Tiempo.hora += 1
+                Tiempo._segs = 0
+                if Tiempo.hora < 12:
+                    Tiempo.angulo_sol = Tiempo.hora*15
+                    # 15 = 90º/6; 6 = 12 horas de luz/2 por el abs de sombra
+                if Tiempo.hora == 24:
+                    Tiempo.dia += 1
+                    Tiempo.hora = 0
     
     def anochece(duracion):
         if not Tiempo.esNoche:
-            if Tiempo.mins == duracion:
+            if Tiempo._mins == duracion:
                 Tiempo.esNoche = True
-                Tiempo.mins = 0
+                Tiempo.noche.visible = True
+                Tiempo._mins = 0
         else:
-            if Tiempo.mins == duracion:
+            if Tiempo._mins == duracion:
                 Tiempo.esNoche = False
-                Tiempo.mins = 0
+                Tiempo.noche.visible = False
+                Tiempo._mins = 0
         
         return Tiempo.esNoche
 

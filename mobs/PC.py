@@ -35,7 +35,7 @@ class PC (Mob):
         self.fuerza = data['fuerza']
         self.alcance_cc = data['alcance_cc']
         self.tipo = data['tipo']
-        self.velocidad = 2
+        self.velocidad = 3
         
         self.nombre = nombre
         self.timer_animacion = 0

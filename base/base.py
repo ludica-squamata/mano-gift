@@ -52,10 +52,10 @@ class _giftSprite(sprite.DirtySprite):
             rectA = self.mask.get_bounding_rects()[0]
             rectA.x = self.mapX+off_x
             rectA.y = self.mapY+off_y
-            
-            img = Surface(rectA.size)
-            self.image.blit(img,rectA)
-            
+            #
+            #img = Surface(rectA.size)
+            #self.image.blit(img,rectA)
+            #
             rectB = sprite.mask.get_bounding_rects()[0]
             rectB.x = sprite.mapX
             rectB.y = sprite.mapY

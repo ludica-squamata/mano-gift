@@ -280,10 +280,7 @@ class Stage:
         if T.anochece(delay):
             if self.data['ambiente'] == 'exterior':
                 T.noche.rect.topleft = 0,0
-                self.properties.add(T.noche,layer=C.CAPA_TOP_CIELO)
-                T.noche.add(self.contents)
-        else:
-            T.noche.remove(self.contents)
+                self.contents.move_to_front(T.noche)
       
     def setDialog(self, texto,onSelect=False):
         if W.DIALOG != '':
