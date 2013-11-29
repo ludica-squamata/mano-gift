@@ -1,5 +1,5 @@
 #import pygame
-from pygame import sprite, Rect, Surface, mask as MASK
+from pygame import sprite, Rect, Surface, mask as MASK, PixelArray
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
 from base import _giftSprite
@@ -39,6 +39,17 @@ class Prop (_giftSprite):
             
             if 'sombra' in data:
                 self.sombra = r.cargar_imagen(data['sombra'])
+            elif not self.es('sinsombra'):
+                pxarray = PixelArray(self.image.copy())
+                for x in range(self.image.get_width()):
+                    for y in range(self.image.get_height()):
+                        if self.mask.get_at((x,y)):
+                            pxarray[x,y] = (125,125,125,125)
+                        else:
+                            pxarray[x,y] = (0,0,0,0)
+                
+                self.sombra = pxarray.make_surface()
+                del pxarray
                 
 
     def interaccion(self,x=0,y=0):

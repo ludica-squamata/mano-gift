@@ -111,6 +111,7 @@ class PC (Mob):
                     item = Item(sprite.nombre,sprite.es('stackable'))
                     if self.inventario.agregar(item):
                         self.stage.contents.remove(sprite)
+                        self.stage.properties.remove(sprite)
                 
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)

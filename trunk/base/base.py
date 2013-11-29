@@ -49,22 +49,11 @@ class _giftSprite(sprite.DirtySprite):
     
     def colisiona(self, sprite, off_x = 0, off_y = 0):
         if self.nombre != sprite.nombre:
-            rectA = self.mask.get_bounding_rects()[0]
-            rectA.x = self.mapX+off_x
-            rectA.y = self.mapY+off_y
-            #
-            #img = Surface(rectA.size)
-            #self.image.blit(img,rectA)
-            #
-            rectB = sprite.mask.get_bounding_rects()[0]
-            rectB.x = sprite.mapX
-            rectB.y = sprite.mapY
-            
-            #if rectA.colliderect(rectB) == 1:
-            #    print(self.nombre+' colisiona con '+sprite.nombre)
-            return rectA.colliderect(rectB)
+            x = self.mapX-(sprite.mapX-off_x)
+            y = self.mapY-(sprite.mapY-off_y)
+            if sprite.mask.overlap(self.mask,(x,y)):
+                return True
         return False
-    
 
 class _giftGroup(UserDict):
     
