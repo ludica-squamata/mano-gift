@@ -22,11 +22,12 @@ class Menu_Items (Menu):
         self.crear_espacio_descriptivo((self.canvas.get_width()-15),93)
         self.dirty = 1
         self.sel = 1
-        self._onVSel = {
-            "arriba":True,
-            "abajo":True,
-            "izquierda":False,
-            "derecha":False}
+        self.funciones = {
+            "arriba":self.elegir_fila,
+            "abajo":self.elegir_fila,
+            "izquierda":self.selectOne,
+            "derecha":self.selectOne,
+            "hablar":self.confirmar_seleccion}
         
     def crear_contenido(self,draw_area_rect):
         self.filas.empty()
@@ -54,6 +55,9 @@ class Menu_Items (Menu):
         self.descripcion_area = Rect((0,0),(rect.w-20,rect.h-42))
         
     def elegir_fila(self,j):
+        if j == 'arriba': j=-1
+        elif j =='abajo': j=+1
+        
         if self.opciones > 0:
             self.DeselectAllButtons()
             W.onVSel = True

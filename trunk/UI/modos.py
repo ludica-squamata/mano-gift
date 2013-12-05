@@ -6,7 +6,7 @@ import sys
 class modo:
     dx,dy = 0,0
     onSelect = False
-    onVSel = False
+    newMenu = False
     def Juego (events):
         for event in events:
             if event.type == QUIT:
@@ -93,46 +93,31 @@ class modo:
         for event in events:
             if event.type == KEYDOWN:
                 if event.key == C.TECLAS.IZQUIERDA:
-                    modo.onVSel = W.menu_actual._onVSel_('izquierda')
-                    if not modo.onVSel:
-                        W.menu_actual.selectOne('izquierda')
+                    W.menu_actual.usar_funcion('izquierda')
                 
                 elif event.key == C.TECLAS.DERECHA:
-                    modo.onVSel = W.menu_actual._onVSel_('derecha')
-                    if not modo.onVSel:
-                        W.menu_actual.selectOne('derecha')
+                    W.menu_actual.usar_funcion('derecha')
                 
                 elif event.key == C.TECLAS.ARRIBA:
-                    modo.onVSel = W.menu_actual._onVSel_('arriba')
-                    if not modo.onVSel:
-                        W.menu_actual.selectOne('arriba')
-                    else:
-                        W.menu_actual.elegir_fila(-1)
+                    W.menu_actual.usar_funcion('arriba')
                         
                 elif event.key == C.TECLAS.ABAJO:
-                    modo.onVSel = W.menu_actual._onVSel_('abajo')
-                    if not modo.onVSel:
-                        W.menu_actual.selectOne('abajo')
-                    else:
-                        W.menu_actual.elegir_fila(+1)
+                    W.menu_actual.usar_funcion('abajo')
                 
                 elif event.key == C.TECLAS.HABLAR:
-                    if modo.onVSel:
-                        W.menu_actual.confirmar_seleccion()
-                    else:
-                        W.menu_actual.PressOne()
+                    modo.newMenu = W.menu_actual.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    'Retrocede al menù anterior, o sale del modo'
+                    'Retrocede al menú anterior, o sale del modo'
                     if W.menu_actual.nombre == 'Pausa':
                         W.MAPA_ACTUAL.endDialog()
                         W.onPause = False
                     else:
-                        modo.onVSel = W.MAPA_ACTUAL.popMenu(W.menu_previo)
+                        W.MAPA_ACTUAL.popMenu(W.menu_previo)
             
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.HABLAR:
-                    if not modo.onVSel:
-                        modo.onVSel = W.MAPA_ACTUAL.popMenu(W.menu_actual.current.nombre)
+                    if modo.newMenu:
+                        W.MAPA_ACTUAL.popMenu(W.menu_actual.current.nombre)
                 
         return W.MAPA_ACTUAL.update(fondo)
