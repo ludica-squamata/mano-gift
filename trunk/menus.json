@@ -9,10 +9,10 @@
             "boton":"Equipo",
             "pos":[254,132],
             "arriba":"Items",
-            "abajo":"Personaje"
+            "abajo":"Status"
         },
         {
-            "boton":"Personaje",
+            "boton":"Status",
             "pos":[254,171],
             "arriba":"Equipo",
             "abajo":"Grupo"
@@ -20,7 +20,7 @@
         {
             "boton":"Grupo",
             "pos":[254,210],
-            "arriba":"Personaje",
+            "arriba":"Status",
             "abajo":"Opciones"
         },
         {
@@ -31,7 +31,7 @@
     ],
     "Items":[],
     "Equipo":[],
-    "Personaje":[],
+    "Status":[],
     "Grupo":[],
     "Opciones":[]
 }

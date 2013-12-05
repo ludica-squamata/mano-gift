@@ -17,22 +17,24 @@ class _boton (_giftSprite):
         self.pos = pos
         super().__init__(self.img_uns)
         self.rect = self.img_sel.get_rect(topleft=self.pos)
-        self.dirty = 2
     
     def serPresionado (self):
         self.image = self.img_pre
         self.isSelected = True
         self.rect = self.img_pre.get_rect(topleft=self.pos)
+        self.dirty = 1
     
     def serElegido(self):
         self.image = self.img_sel
         self.isSelected = True
         self.rect = self.img_sel.get_rect(topleft=self.pos)
+        self.dirty = 1
         
     def serDeselegido(self):
         self.image = self.img_uns
         self.isSelected = False
         self.rect = self.img_sel.get_rect(topleft=self.pos)
+        self.dirty = 1
     
     def __repr__(self):
         return self.nombre+' _boton DirtySprite'

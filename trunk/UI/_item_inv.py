@@ -2,7 +2,7 @@ from .Colores import Colores
 from base.base import _giftSprite
 from pygame import font, Rect, Surface
 from libs.textrect import render_textrect
-from globs import Constants as C
+#from globs import Constants as C
 
 class _item_inv (Colores,_giftSprite):
     nombre = ''
@@ -19,14 +19,14 @@ class _item_inv (Colores,_giftSprite):
         
     def construir_fila(self,ancho,nombre,cantidad):
         fuente = font.SysFont('verdana', 16)
-        _rect = Rect((-1,-1),((C.CUADRO*6),fuente.get_height()+1))
+        _rect = Rect((-1,-1),(int(ancho/2),fuente.get_height()+1))
         img_nmbr = render_textrect(nombre,fuente,_rect,self.font_high_color,self.bg_cnvs,1)
         img_cant = render_textrect('x'+str(cantidad),fuente,_rect,self.font_high_color,self.bg_cnvs,1)
         
         image = Surface((ancho,_rect.h))
         image.fill(self.bg_cnvs)
         image.blit(img_nmbr,(0,0))
-        image.blit(img_cant,((ancho-(C.CUADRO*6)),0))
+        image.blit(img_cant,((ancho-(int(ancho/2))),0))
         
         return image
     

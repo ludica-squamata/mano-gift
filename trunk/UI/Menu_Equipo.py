@@ -1,19 +1,25 @@
-from .Menu import Menu
+from .Menu_Items import Menu_Items
 from pygame import Surface, Rect, font, draw
 from pygame.sprite import LayeredDirty
 from misc import Resources as r
 from base.base import _giftSprite
 from libs.textrect import render_textrect
 from .Colores import Colores as  C
+from globs import World as W
+from ._item_inv import _item_inv
 
-class Menu_Equipo(Menu):
+class Menu_Equipo(Menu_Items):
     espacios = None
+    filas = None
     current = ''
     cur_esp = 0
+    foco = None
     
     def __init__(self):
-        super().__init__('Equipo',[])
+        super(Menu_Items,self).__init__('Equipo',[])
         self.espacios = LayeredDirty()
+        self.filas = LayeredDirty()
+        #crear los espacios equipables.
         esp = {
             'yelmo':{       'e_pos':[96,64],  't_pos':[93,48],  'direcciones':{'izquierda':'aro 1','derecha':'cuello'}},
             'aro 1':{       'e_pos':[32,64],  't_pos':[32,48],  'direcciones':{'abajo':'peto','derecha':'yelmo'}},
@@ -36,26 +42,30 @@ class Menu_Equipo(Menu):
         }
         
         for e in esp:
-            cuadro = _espacio(e,esp[e]['direcciones'],*esp[e]['e_pos'])
+            cuadro = _espacio_equipable(e,esp[e]['direcciones'],*esp[e]['e_pos'])
             titulo = self.titular(e)
             self.canvas.blit(titulo,esp[e]['t_pos'])
             self.espacios.add(cuadro)
         
+        # seleccionar uno por default
         self.cur_esp = 5
         selected = self.espacios.get_sprite(self.cur_esp)
         selected.serElegido()
         self.current = selected
         
+        #dibujar todo
         self.espacios.draw(self.canvas)
         self.hombre = r.cargar_imagen('hombre_mimbre.png')
         self.canvas.blit(self.hombre,(96,96))
+        self.crear_espacio_selectivo(188,self.canvas.get_height()-64)
         
+        #determinar qué tecla activa qué función.
         self.funciones = {
             "arriba":self.selectOne,
             "abajo":self.selectOne,
             "izquierda":self.selectOne,
             "derecha":self.selectOne,
-            'hablar':lambda : False
+            "hablar":lambda : False
         }
     
     def titular(self,titulo):
@@ -77,7 +87,7 @@ class Menu_Equipo(Menu):
         return render
     
     def selectOne(self,direccion):
-        self.DeselectAll()
+        self.DeselectAll(self.espacios)
         self.current = self.espacios.get_sprite(self.cur_esp)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
@@ -94,16 +104,36 @@ class Menu_Equipo(Menu):
                     
         self.espacios.draw(self.canvas)
     
-    def DeselectAll(self):
-        for espacio in self.espacios:
-            espacio.serDeselegido()
-            espacio.dirty = 1
-        self.espacios.draw(self.canvas)
+    def crear_espacio_selectivo(self,ancho,alto):
+        marco = self.crear_espacio_titulado(ancho,alto,'Inventario')
+        rect = self.canvas.blit(marco,(266,39))
+        self.draw_space_rect = Rect((rect.x+4,rect.y+26),(rect.w-9,rect.h-31))
+        self.draw_space = Surface(self.draw_space_rect.size)
+        self.draw_space.fill(C.bg_cnvs)
+        
+        self.llenar_espacio_selectivo(self.draw_space_rect)
+    
+    def llenar_espacio_selectivo(self,draw_area_rect):
+        self.fuente = font.SysFont('Verdana',12)
+        self.altura_del_texto = self.fuente.get_height()+1
+        for i in range(len(W.HERO.inventario)):
+            fila = _item_inv(W.HERO.inventario[i],188,(0,(i*22)+1+(i-1)))
+            
+            self.filas.add(fila)
+        
+        if len(self.filas) > 0:
+            h = self.altura_del_texto
+            self.opciones = len(self.filas)
+            self.elegir_fila(0)
+            self.filas.draw(self.draw_space)
+            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)+1+(self.sel+3)),(draw_area_rect.w-4,(self.sel*h)+1+(self.sel+3)))
+
+        self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
     
     def update(self):
         self.dirty = 1
         
-class _espacio(_giftSprite):
+class _espacio_equipable (_giftSprite):
     isSelected = False
     direcciones = {}
     

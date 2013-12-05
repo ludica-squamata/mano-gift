@@ -16,11 +16,12 @@ class Menu (Ventana):
     def __init__(self,titulo,botones):
         self.nombre = titulo
         self.current = self
-        self.botones = sprite.LayeredDirty()
-        self.botones.empty()
         self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
+        if len(botones) != 0:
+            self.botones = sprite.LayeredDirty()
+            self.botones.empty()
+            self.establecer_botones(botones,6)
         self.crear_titulo(titulo,self.font_high_color,self.bg_cnvs,C.ANCHO-20)
-        self.establecer_botones(botones,6)
         self.funciones = {
             "arriba":self.selectOne,
             "abajo":self.selectOne,
@@ -93,15 +94,15 @@ class Menu (Ventana):
         
         return _boton(texto,cnvs_sel,cnvs_pre,cnvs_uns,rect.topleft)
     
-    def DeselectAllButtons(self):
-        if len(self.botones) > 0:
-            for boton in self.botones:
-                boton.serDeselegido()
-                boton.dirty = 2
-            self.botones.draw(self.canvas)
+    def DeselectAll(self,lista):
+        if len(lista) > 0:
+            for item in lista:
+                item.serDeselegido()
+                item.dirty = 1
+            lista.draw(self.canvas)
     
     def selectOne(self,direccion):
-        self.DeselectAllButtons()
+        self.DeselectAll(self.botones)
         if len(self.botones) > 0:
             self.current = self.botones.get_sprite(self.cur_btn)
             if direccion in self.current.direcciones:
