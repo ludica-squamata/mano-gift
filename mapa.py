@@ -4,7 +4,7 @@ from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
 from base import _giftSprite
 from mobs import NPC, Enemy
-from UI import Dialog, Menu, Menu_Items
+from UI import Dialog, Menu, Menu_Items, Menu_Equipo
 from mobs.scripts.a_star import generar_grilla
 
 class Prop (_giftSprite):
@@ -302,12 +302,15 @@ class Stage:
     
     def popMenu (self,titulo):
         menues = r.abrir_json('menus.json')
+        onVSel = False
         if W.menu_previo == '' and W.menu_previo != titulo:
             W.menu_previo = titulo
         
         if titulo == 'Items':
             W.menu_actual = Menu_Items(menues[titulo])
             onVSel = True
+        elif titulo == 'Equipo':
+            W.menu_actual = Menu_Equipo()
         else:
             W.menu_actual = Menu(titulo,menues[titulo])
             onVSel = False
