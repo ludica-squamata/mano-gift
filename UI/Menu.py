@@ -21,11 +21,12 @@ class Menu (Ventana):
         self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
         self.crear_titulo(titulo,self.font_high_color,self.bg_cnvs,C.ANCHO-20)
         self.establecer_botones(botones,6)
-        self._onVSel = {
-            "arriba":False,
-            "abajo":False,
-            "izquierda":False,
-            "derecha":False}
+        self.funciones = {
+            "arriba":self.selectOne,
+            "abajo":self.selectOne,
+            "izquierda":self.selectOne,
+            "derecha":self.selectOne,
+            "hablar":self.PressOne}
         super().__init__(self.canvas)
         self.ubicar(10,10)
         self.dirty = 1
@@ -123,6 +124,8 @@ class Menu (Ventana):
             self.current.serPresionado()
             self.botones.draw(self.canvas)
         
+        return True
+        
     def mover_cursor(self,item):
         onVSel = False
         if type(item) == _boton:
@@ -145,8 +148,11 @@ class Menu (Ventana):
         
         return onVSel
     
-    def _onVSel_(self,direccion):
-        return self._onVSel[direccion]
+    def usar_funcion(self,tecla):
+        if tecla in ('arriba','abajo','izquierda','derecha'):
+            return self.funciones[tecla](tecla)
+        else:
+            return self.funciones[tecla]()
     
     def update (self):
         self.dirty = 1

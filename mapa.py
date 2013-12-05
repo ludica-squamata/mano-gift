@@ -302,21 +302,17 @@ class Stage:
     
     def popMenu (self,titulo):
         menues = r.abrir_json('menus.json')
-        onVSel = False
         if W.menu_previo == '' and W.menu_previo != titulo:
             W.menu_previo = titulo
         
         if titulo == 'Items':
             W.menu_actual = Menu_Items(menues[titulo])
-            onVSel = True
         elif titulo == 'Equipo':
             W.menu_actual = Menu_Equipo()
         else:
             W.menu_actual = Menu(titulo,menues[titulo])
-            onVSel = False
         
         self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
-        return onVSel
     
     def endDialog(self):
         self.dialogs.empty()
