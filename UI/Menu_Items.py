@@ -59,7 +59,7 @@ class Menu_Items (Menu):
         elif j =='abajo': j=+1
         
         if self.opciones > 0:
-            self.DeselectAllButtons()
+            self.DeselectAll(self.botones)
             W.onVSel = True
             self.sel = self.dibujar_lineas_cursor(j,self.draw_space,
                                        self.draw_space.get_width()-4,
@@ -76,7 +76,6 @@ class Menu_Items (Menu):
                 self.opciones -= 1
                 if self.opciones <= 0:
                     self.current = self
-                    W.onVSel = False
                     draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
             self.dirty = 1
     

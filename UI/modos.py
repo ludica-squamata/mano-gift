@@ -7,6 +7,7 @@ class modo:
     dx,dy = 0,0
     onSelect = False
     newMenu = False
+    onVSel = False
     def Juego (events):
         for event in events:
             if event.type == QUIT:
