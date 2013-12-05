@@ -204,7 +204,8 @@ class Mob (_giftSprite):
 
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
                 if self.colisiona(spr,dx,dy):
-                    col_props = True
+                    if spr.solido:
+                        col_props = True
             
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if spr.solido:

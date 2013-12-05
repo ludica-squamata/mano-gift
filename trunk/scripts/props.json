@@ -14,7 +14,7 @@
         }
     },
     "star":{
-        "propiedades":["agarrable","solido","sinsombra"],
+        "propiedades":["agarrable","sinsombra"],
         "image": "props/star.png",
         "efecto":{
             "des":"Te hace invencible por 10 segundos."}
