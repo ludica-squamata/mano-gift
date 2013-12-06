@@ -11,8 +11,8 @@ class Prop (_giftSprite):
     '''Clase para los objetos de ground_items.
     
     
-        Estos objetos no se pueden mover por si mismos, pero usualmente tienen
-        algún tipo de interacción (agarrar, mover, cortar, etc).'''
+    Estos objetos no se pueden mover por si mismos, pero usualmente tienen
+    algún tipo de interacción (agarrar, mover, cortar, etc).'''
         
     _propiedades = None #indica si es agarrable, cortable, movible, etc.
     _operable = None
@@ -301,17 +301,11 @@ class Stage:
             self.dialogs.add(W.DIALOG, layer=C.CAPA_OVERLAYS_DIALOGOS)
     
     def popMenu (self,titulo):
-        #menues = r.abrir_json('menus.json')
         if W.menu_previo == '' and W.menu_previo != titulo:
             W.menu_previo = titulo
-        
-        if titulo == 'Pausa':
-            W.menu_actual = Menu_Pausa()
-        elif titulo == 'Items':
-            W.menu_actual = Menu_Items()
-        elif titulo == 'Equipo':
-            W.menu_actual = Menu_Equipo()
-        else:
+        try:
+            W.menu_actual = eval('Menu_'+titulo+'()')
+        except:
             W.menu_actual = Menu(titulo)
         
         self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
