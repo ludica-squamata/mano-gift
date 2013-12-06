@@ -17,13 +17,17 @@ class Menu_Equipo(Menu_Items):
     foco = None
     
     def __init__(self):
+        '''Crea e inicaliza las varibales del menú Equipo.'''
+        
         super(Menu_Items,self).__init__('Equipo',[])
-        self.espacios = LayeredDirty()
-        self.filas = LayeredDirty()
-        self.fuente = font.SysFont('Verdana',12)
-        self.altura_del_texto = self.fuente.get_height()+1
-        self.foco = 'espacios'
-        #crear los espacios equipables.
+        self.espacios = LayeredDirty() # grupo de espacios equipables.
+        self.filas = LayeredDirty() # grupo de items del espacio de selección.
+        self.fuente = font.SysFont('Verdana',12) # fuente por default
+        self.altura_del_texto = self.fuente.get_height()+1 # se utiliza para trazar lineas
+        self.foco = 'espacios' # setea el foco por default
+        # Crear los espacios equipables.
+        # "e_pos" es la posicion del espacio. "t_pos" es la posicion de su titulo.
+        # "direcciones" indica a qué espacio se salta cuando se presiona qué tecla de dirección.
         esp = {
             'yelmo':{       'e_pos':[96,64],  't_pos':[93,48],  'direcciones':{'izquierda':'aro 1','derecha':'cuello'}},
             'aro 1':{       'e_pos':[32,64],  't_pos':[32,48],  'direcciones':{'abajo':'peto','derecha':'yelmo'}},
@@ -52,7 +56,7 @@ class Menu_Equipo(Menu_Items):
             self.canvas.blit(titulo,esp[e]['t_pos'])
             self.espacios.add(cuadro)
         
-        # seleccionar uno por default
+        # seleccionar un espacio por default
         self.cur_esp = 5
         selected = self.espacios.get_sprite(self.cur_esp)
         selected.serElegido()
@@ -80,8 +84,13 @@ class Menu_Equipo(Menu_Items):
             "hablar":self.equipar_item}
         
     def titular(self,titulo):
-        fuente = font.SysFont('Verdana',12)
-        w,h = fuente.size(titulo)
+        '''Agrega un titulo descriptivo a cada espacio equipable.
+        
+        Si el nombre tiene dos partes de texto (por ejemplo 'mano buena'),
+        se separa en dos lineas mediante un \\n. Si, en cambio, tras el espacio
+        hay un numero (como en 'aro 1') se deja como está.'''
+        
+        w,h = self.fuente.size(titulo)
         just = 0
         if ' ' in titulo:
             titulo = titulo.split(' ')
@@ -98,6 +107,8 @@ class Menu_Equipo(Menu_Items):
         return render
     
     def selectOne(self,direccion):
+        '''Desplaza la selección al espacio equipable actual, y lo resalta.'''
+        
         self.DeselectAll(self.espacios)
         self.draw_space.fill(self.bg_cnvs)
         self.current = self.espacios.get_sprite(self.cur_esp)
@@ -117,6 +128,9 @@ class Menu_Equipo(Menu_Items):
         self.espacios.draw(self.canvas)
     
     def crear_espacio_selectivo(self,ancho,alto):
+        '''Crea el marco donde aparecerán las listas de items que se correspondan
+        con el espacio actualmente seleccionado'''
+        
         marco = self.crear_espacio_titulado(ancho,alto,'Inventario')
         rect = self.canvas.blit(marco,(266,39))
         self.draw_space_rect = Rect((rect.x+4,rect.y+26),(rect.w-9,rect.h-31))
@@ -124,10 +138,13 @@ class Menu_Equipo(Menu_Items):
         self.draw_space.fill(self.bg_cnvs)
     
     def llenar_espacio_selectivo(self,draw_area_rect):
+        '''Llena el espacio selectivo con los items que se correspondan con el espacio
+        actualmente seleccionado. Esta función se llama en cada bucle.'''
+        
         i = -1
         h = self.altura_del_texto
         self.filas.empty()
-        espacio = self.espacios.get_sprite(self.cur_esp)
+        espacio = self.espacios.get_sprite(self.cur_esp) # por ejemplo: peto
         for item in W.HERO.inventario:
             if item.esEquipable and item.esEquipable == espacio.nombre:
                 i += 1
@@ -140,6 +157,9 @@ class Menu_Equipo(Menu_Items):
         self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
         
     def cambiar_foco(self):
+        '''Cambia el foco (las funciones que se utilizarán segun el imput)
+        variando entre los espacios equipables y la lista de selección.'''
+        
         if self.foco == 'espacios':
             if self.opciones > 0:
                 self.foco = 'items'
@@ -152,6 +172,9 @@ class Menu_Equipo(Menu_Items):
             self.foco = 'espacios'
     
     def equipar_item(self):
+        '''Cuando un espacio esta seleccionado, y el foco está en la lista de items
+        usar esta función tralada el item de la lista al espacio seleccionado.'''
+        
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
         if espacio.nombre == item.esEquipable:
@@ -162,6 +185,8 @@ class Menu_Equipo(Menu_Items):
             self.cambiar_foco()
     
     def usar_funcion(self,tecla):
+        '''Determina qué grupo de funciones se van a usar según el foco actual.'''
+        
         if self.foco == 'espacios':
             funciones = self.funciones_espacios
         elif self.foco == 'items':
@@ -184,6 +209,8 @@ class _espacio_equipable (_giftSprite):
     direcciones = {}
     
     def __init__(self,nombre,item,direcciones,x,y):
+        '''Inicializa las variables de un espacio equipable.'''
+        
         self.img_uns = self.crear(False)
         self.img_sel = self.crear(True)
         self.direcciones = {}
@@ -196,6 +223,8 @@ class _espacio_equipable (_giftSprite):
         self.dirty = 1
     
     def crear(self,seleccionar):
+        '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
+        
         macro = Rect(0,0,36,36)
         img = Surface(macro.size)
         img.fill(C.bg_cnvs)
@@ -206,7 +235,7 @@ class _espacio_equipable (_giftSprite):
         
         img.blit(base,(2,2))
         
-        if seleccionar:
+        if seleccionar: # corresponde a la imagen selecionada.
             sel = img.copy()
             w,h = sel.get_size()
             for i in range(round(38/3)):
@@ -227,22 +256,32 @@ class _espacio_equipable (_giftSprite):
         return img
     
     def serElegido(self):
+        '''Cambia la imagen del espacio por su versión seleccionada.'''
+        
         self.image = self.img_sel
         self.isSelected = True
         self.dirty = 1
     
     def serDeselegido(self):
+        '''Cambia la imagen del espacio por su versión deseleccionada.'''
+        
         self.image = self.img_uns
         self.isSelected = False
         self.dirty = 1
     
     def ocupar(self,item):
+        '''Inserta un item en ambas imagenes del espacio.'''
+        
         self.item = item
         self.img_sel.blit(item.image,(4,7))
         self.img_uns.blit(item.image,(4,7))
         self.dirty = 1
     
     def desocupar (self):
+        '''Restaura las imágenes del espacio a su version sin item.
+        
+        No está implementada.'''
+        
         self.item = None
         if self.isSelected:
             self.image = self.img_sel

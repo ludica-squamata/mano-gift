@@ -25,8 +25,8 @@ class Menu_Items (Menu):
         self.funciones = {
             "arriba":self.elegir_fila,
             "abajo":self.elegir_fila,
-            "izquierda":self.selectOne,
-            "derecha":self.selectOne,
+            "izquierda":lambda dummy: None, # no hay ninguna funcionalidad
+            "derecha":lambda dummy: None,   # aún para estas teclas.
             "hablar":self.confirmar_seleccion}
         
     def crear_contenido(self,draw_area_rect):
