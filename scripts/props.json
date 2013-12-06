@@ -41,6 +41,6 @@
     },
     "armor":{
         "image":"props/armor.png",
-        "propiedades":["equipable","peto","agarrable","sinsombra"]
+        "propiedades":["equipable","peto","agarrable","sinsombra","stackable"]
     }
 }

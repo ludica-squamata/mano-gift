@@ -16,7 +16,6 @@ class Menu_Equipo(Menu_Items):
     cur_itm = 0
     foco = None
     
-    
     def __init__(self):
         super(Menu_Items,self).__init__('Equipo',[])
         self.espacios = LayeredDirty()
@@ -122,29 +121,30 @@ class Menu_Equipo(Menu_Items):
         rect = self.canvas.blit(marco,(266,39))
         self.draw_space_rect = Rect((rect.x+4,rect.y+26),(rect.w-9,rect.h-31))
         self.draw_space = Surface(self.draw_space_rect.size)
-        self.draw_space.fill(C.bg_cnvs)
-        self.llenar_espacio_selectivo(self.draw_space_rect)    
+        self.draw_space.fill(self.bg_cnvs)
     
     def llenar_espacio_selectivo(self,draw_area_rect):
         i = -1
         h = self.altura_del_texto
         self.filas.empty()
+        espacio = self.espacios.get_sprite(self.cur_esp)
         for item in W.HERO.inventario:
-            if item.esEquipable and item.esEquipable == self.current.nombre:
+            if item.esEquipable and item.esEquipable == espacio.nombre:
                 i += 1
                 fila = _item_inv(item,188,(0,(i*h)+1+(i-1)),self.fuente)
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
+        self.canvas.fill(self.bg_cnvs,self.draw_space_rect)
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
-        self.dirty = 1
-    
+        
     def cambiar_foco(self):
         if self.foco == 'espacios':
             if self.opciones > 0:
                 self.foco = 'items'
                 h = self.altura_del_texto
+                self.opciones = len(self.filas)
                 self.elegir_fila(0)
                 draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
 
@@ -159,7 +159,6 @@ class Menu_Equipo(Menu_Items):
             W.HERO.equipar_item(item)
             self.draw_space.fill(self.bg_cnvs)
             self.espacios.draw(self.canvas)
-            self.llenar_espacio_selectivo(self.draw_space_rect)
             self.cambiar_foco()
     
     def usar_funcion(self,tecla):
