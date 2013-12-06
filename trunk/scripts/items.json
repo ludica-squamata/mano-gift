@@ -12,5 +12,13 @@
         "volumen":1,
         "efecto":{
             "des":"Restaura tu salud al máximo."}
+    },
+    "armor":{
+        "ID":2,
+        "peso":4,
+        "volumen":4,
+        "efecto":{
+            "des":"Es un peto de hierro.",
+            "equipo":"peto"}
     }
 }

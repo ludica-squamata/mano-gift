@@ -54,17 +54,15 @@ class Menu_Items (Menu):
         rect = self.canvas.blit(marco,(7,340))
         self.descripcion_area = Rect((0,0),(rect.w-20,rect.h-42))
         
-    def elegir_fila(self,j):
-        if j == 'arriba': j=-1
-        elif j =='abajo': j=+1
-        
+    def elegir_fila(self,direccion):
+        if direccion == 'arriba': j=-1
+        elif direccion =='abajo': j=+1
         if self.opciones > 0:
             self.DeselectAll(self.botones)
-            W.onVSel = True
             self.sel = self.dibujar_lineas_cursor(j,self.draw_space,
                                        self.draw_space.get_width()-4,
                                        self.sel,self.opciones)
-            
+
             self.mover_cursor(self.filas.get_sprite(self.sel-1))
             
             self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)

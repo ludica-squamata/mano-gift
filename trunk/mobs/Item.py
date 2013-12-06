@@ -6,6 +6,7 @@ class Item:
     nombre = ''#el nombre para mostrar del ítem en cuestión
     prop_id = None
     esStackable = False
+    esEquipable = False
     cantidad = 1
     def __init__(self,nombre,esStackable):
         self.nombre = nombre
@@ -16,6 +17,8 @@ class Item:
         if 'efecto' in data:
             if 'des' in data['efecto']:
                 self.efecto_des = data['efecto']['des']
+            if 'equipo' in data['efecto']:
+                self.esEquipable = data['efecto']['equipo']
         self.esStackable = esStackable
     
     def __repr__(self):

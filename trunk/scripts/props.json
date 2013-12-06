@@ -38,5 +38,9 @@
     "arbol":{
         "image":"props/arbol_escalado.png",
         "sombra":"props/sombra/arbol_escalado.png"
+    },
+    "armor":{
+        "image":"props/armor.png",
+        "propiedades":["equipable","peto","agarrable","sinsombra"]
     }
 }

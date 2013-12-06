@@ -13,12 +13,16 @@ class Menu_Equipo(Menu_Items):
     filas = None
     current = ''
     cur_esp = 0
+    cur_itm = 0
     foco = None
     
     def __init__(self):
         super(Menu_Items,self).__init__('Equipo',[])
         self.espacios = LayeredDirty()
         self.filas = LayeredDirty()
+        self.fuente = font.SysFont('Verdana',16)
+        self.altura_del_texto = self.fuente.get_height()+1
+        self.foco = 'espacios'
         #crear los espacios equipables.
         esp = {
             'yelmo':{       'e_pos':[96,64],  't_pos':[93,48],  'direcciones':{'izquierda':'aro 1','derecha':'cuello'}},
@@ -60,14 +64,20 @@ class Menu_Equipo(Menu_Items):
         self.crear_espacio_selectivo(188,self.canvas.get_height()-64)
         
         #determinar qué tecla activa qué función.
-        self.funciones = {
+        self.funciones_espacios = {
             "arriba":self.selectOne,
             "abajo":self.selectOne,
             "izquierda":self.selectOne,
             "derecha":self.selectOne,
-            "hablar":lambda : False
-        }
-    
+            "hablar":self.cambiar_foco}
+        
+        self.funciones_lista = {
+            "arriba":self.elegir_fila,
+            "abajo":self.elegir_fila,
+            "izquierda":lambda dummy: False,
+            "derecha":lambda dummy: False,
+            "hablar":lambda: False}
+        
     def titular(self,titulo):
         fuente = font.SysFont('Verdana',12)
         w,h = fuente.size(titulo)
@@ -88,6 +98,7 @@ class Menu_Equipo(Menu_Items):
     
     def selectOne(self,direccion):
         self.DeselectAll(self.espacios)
+        self.draw_space.fill(self.bg_cnvs)
         self.current = self.espacios.get_sprite(self.cur_esp)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
@@ -110,28 +121,49 @@ class Menu_Equipo(Menu_Items):
         self.draw_space_rect = Rect((rect.x+4,rect.y+26),(rect.w-9,rect.h-31))
         self.draw_space = Surface(self.draw_space_rect.size)
         self.draw_space.fill(C.bg_cnvs)
-        
-        self.llenar_espacio_selectivo(self.draw_space_rect)
+        self.opciones = len(self.filas)
+        self.llenar_espacio_selectivo(self.draw_space_rect)    
+        self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
     
     def llenar_espacio_selectivo(self,draw_area_rect):
-        self.fuente = font.SysFont('Verdana',12)
-        self.altura_del_texto = self.fuente.get_height()+1
-        for i in range(len(W.HERO.inventario)):
-            fila = _item_inv(W.HERO.inventario[i],188,(0,(i*22)+1+(i-1)))
-            
-            self.filas.add(fila)
-        
-        if len(self.filas) > 0:
-            h = self.altura_del_texto
-            self.opciones = len(self.filas)
-            self.elegir_fila(0)
-            self.filas.draw(self.draw_space)
-            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)+1+(self.sel+3)),(draw_area_rect.w-4,(self.sel*h)+1+(self.sel+3)))
-
+        i = -1
+        self.filas.empty()
+        for item in W.HERO.inventario:
+            if item.esEquipable and item.esEquipable == self.current.nombre:
+                i += 1
+                fila = _item_inv(item,188,(0,(i*22)+1+(i-1)))
+                self.filas.add(fila)
+                
+        self.opciones = len(self.filas)
+        self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
+        self.dirty = 1
+    
+    def cambiar_foco(self):
+        if self.foco == 'espacios':
+            self.foco = 'items'
+            h = self.altura_del_texto
+            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
+
+        elif self.foco == 'items':
+            self.foco = 'espacios'
+
+        return False
+    
+    def usar_funcion(self,tecla):
+        if self.foco == 'espacios':
+            funciones = self.funciones_espacios
+        elif self.foco == 'items':
+            funciones = self.funciones_lista
+            
+        if tecla in ('arriba','abajo','izquierda','derecha'):
+            return funciones[tecla](tecla)
+        else:
+            return funciones[tecla]()
     
     def update(self):
         self.dirty = 1
+        self.llenar_espacio_selectivo(self.draw_space_rect)
         
 class _espacio_equipable (_giftSprite):
     isSelected = False
@@ -145,7 +177,7 @@ class _espacio_equipable (_giftSprite):
         super().__init__(self.img_uns)
         self.nombre = nombre
         self.rect = self.image.get_rect(topleft = (x,y))
-        self.dirty = 2
+        self.dirty = 1
     
     def crear(self,seleccionar):
         macro = Rect(0,0,36,36)
