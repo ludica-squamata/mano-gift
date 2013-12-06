@@ -8,8 +8,9 @@ class Item:
     esStackable = False
     esEquipable = False
     cantidad = 1
-    def __init__(self,nombre,esStackable):
+    def __init__(self,nombre,esStackable,imagen):
         self.nombre = nombre
+        self.image = imagen
         data = r.abrir_json('scripts/items.json')[nombre]
         self.ID = data['ID']
         self.volumen = data['volumen']

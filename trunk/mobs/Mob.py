@@ -27,6 +27,10 @@ class Mob (_giftSprite):
     tipo = '' # determina si es una victima o un monstruo
     reversa = bool # indica si hay que dar media vuelta al llegar al final del camino, o no.
     
+    equipo = {'yelmo':None,'aro 1':None,'aro 2':None,'cuello':None,'peto':None,
+              'guardabrazos':None,'brazales':None,'faldar':None,'quijotes':None,
+              'grebas':None,'mano buena':None,'mano mala':None,'botas':None,'capa':None,
+              'cinto':None,'guantes':None,'anillo 1':None,'anillo 2':None}
     fuerza = 0 # capacidad del mob para empujar cosas.
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None,alpha = False):
@@ -37,6 +41,8 @@ class Mob (_giftSprite):
         spritesheet = r.split_spritesheet(ruta_img)
         self.images = {} # si no lo redefino, pasan cosas raras...
         self.mascaras = {}
+        for e in self.equipo:
+            self.equipo[e] = None
         if alpha:
             _mascaras = r.split_spritesheet(alpha)
             for key in maskeys:
@@ -115,7 +121,11 @@ class Mob (_giftSprite):
         #        print(self.show[rasgo]['nombre'],self.show[rasgo]["value"])
         #print()
         pass # just a hook to fold the function
-
+    
+    def equipar_item(self,item):
+        self.equipo[item.esEquipable] = item
+        self.inventario.quitar(item.ID)
+        
     def cambiar_direccion(self,arg):
         direccion = 'ninguna'
     

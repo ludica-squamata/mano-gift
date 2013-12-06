@@ -108,7 +108,7 @@ class PC (Mob):
             if not self.atacando:
                 x,y = x*self.fuerza*2,y*self.fuerza*2
                 if sprite.interaccion(x,y):
-                    item = Item(sprite.nombre,sprite.es('stackable'))
+                    item = Item(sprite.nombre,sprite.es('stackable'),sprite.image)
                     if self.inventario.agregar(item):
                         self.stage.contents.remove(sprite)
                         self.stage.properties.remove(sprite)
@@ -170,7 +170,7 @@ class PC (Mob):
             print('Used',item.nombre) #acá iria el efecto del item utilizado.
             return self.inventario.quitar(item.ID)
         return item.cantidad
-    
+            
     def cambiar_estado(self):
         if self.estado == 'idle':
             self.image = self.cmb_walk_img['S'+self.direccion]

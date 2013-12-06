@@ -16,6 +16,7 @@ class Menu_Equipo(Menu_Items):
     cur_itm = 0
     foco = None
     
+    
     def __init__(self):
         super(Menu_Items,self).__init__('Equipo',[])
         self.espacios = LayeredDirty()
@@ -46,7 +47,8 @@ class Menu_Equipo(Menu_Items):
         }
         
         for e in esp:
-            cuadro = _espacio_equipable(e,esp[e]['direcciones'],*esp[e]['e_pos'])
+            item = W.HERO.equipo[e]
+            cuadro = _espacio_equipable(e,item,esp[e]['direcciones'],*esp[e]['e_pos'])
             titulo = self.titular(e)
             self.canvas.blit(titulo,esp[e]['t_pos'])
             self.espacios.add(cuadro)
@@ -74,9 +76,9 @@ class Menu_Equipo(Menu_Items):
         self.funciones_lista = {
             "arriba":self.elegir_fila,
             "abajo":self.elegir_fila,
-            "izquierda":lambda dummy: False,
-            "derecha":lambda dummy: False,
-            "hablar":lambda: False}
+            "izquierda":lambda dummy: None,
+            "derecha":lambda dummy: None,
+            "hablar":self.equipar_item}
         
     def titular(self,titulo):
         fuente = font.SysFont('Verdana',12)
@@ -140,14 +142,25 @@ class Menu_Equipo(Menu_Items):
     
     def cambiar_foco(self):
         if self.foco == 'espacios':
-            self.foco = 'items'
-            h = self.altura_del_texto
-            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
+            if self.opciones > 0:
+                self.foco = 'items'
+                h = self.altura_del_texto
+                self.elegir_fila(0)
+                draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
 
         elif self.foco == 'items':
             self.foco = 'espacios'
-
-        return False
+    
+    def equipar_item(self):
+        espacio = self.espacios.get_sprite(self.cur_esp)
+        item = self.current.item
+        if espacio.nombre == item.esEquipable:
+            espacio.ocupar(item)
+            W.HERO.equipar_item(item)
+            self.draw_space.fill(self.bg_cnvs)
+            self.espacios.draw(self.canvas)
+            self.llenar_espacio_selectivo(self.draw_space_rect)
+            self.cambiar_foco()
     
     def usar_funcion(self,tecla):
         if self.foco == 'espacios':
@@ -156,23 +169,28 @@ class Menu_Equipo(Menu_Items):
             funciones = self.funciones_lista
             
         if tecla in ('arriba','abajo','izquierda','derecha'):
-            return funciones[tecla](tecla)
+            funciones[tecla](tecla)
         else:
-            return funciones[tecla]()
+            funciones[tecla]()
+        
+        return self.newMenu
     
     def update(self):
-        self.dirty = 1
         self.llenar_espacio_selectivo(self.draw_space_rect)
+        self.dirty = 1
         
 class _espacio_equipable (_giftSprite):
     isSelected = False
+    item = None
     direcciones = {}
     
-    def __init__(self,nombre,direcciones,x,y):
+    def __init__(self,nombre,item,direcciones,x,y):
         self.img_uns = self.crear(False)
         self.img_sel = self.crear(True)
         self.direcciones = {}
         self.direcciones.update(direcciones)
+        if item:
+            self.ocupar(item)
         super().__init__(self.img_uns)
         self.nombre = nombre
         self.rect = self.image.get_rect(topleft = (x,y))
@@ -218,3 +236,19 @@ class _espacio_equipable (_giftSprite):
         self.image = self.img_uns
         self.isSelected = False
         self.dirty = 1
+    
+    def ocupar(self,item):
+        self.item = item
+        self.img_sel.blit(item.image,(4,7))
+        self.img_uns.blit(item.image,(4,7))
+        self.dirty = 1
+    
+    def desocupar (self):
+        self.item = None
+        if self.isSelected:
+            self.image = self.img_sel
+        else:
+            self.image = self.img_uns
+        
+        self.dirty = 1
+    
