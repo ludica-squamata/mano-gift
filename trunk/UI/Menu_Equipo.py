@@ -20,7 +20,7 @@ class Menu_Equipo(Menu_Items):
         super(Menu_Items,self).__init__('Equipo',[])
         self.espacios = LayeredDirty()
         self.filas = LayeredDirty()
-        self.fuente = font.SysFont('Verdana',16)
+        self.fuente = font.SysFont('Verdana',12)
         self.altura_del_texto = self.fuente.get_height()+1
         self.foco = 'espacios'
         #crear los espacios equipables.
@@ -121,17 +121,16 @@ class Menu_Equipo(Menu_Items):
         self.draw_space_rect = Rect((rect.x+4,rect.y+26),(rect.w-9,rect.h-31))
         self.draw_space = Surface(self.draw_space_rect.size)
         self.draw_space.fill(C.bg_cnvs)
-        self.opciones = len(self.filas)
         self.llenar_espacio_selectivo(self.draw_space_rect)    
-        self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
     
     def llenar_espacio_selectivo(self,draw_area_rect):
         i = -1
+        h = self.altura_del_texto
         self.filas.empty()
         for item in W.HERO.inventario:
             if item.esEquipable and item.esEquipable == self.current.nombre:
                 i += 1
-                fila = _item_inv(item,188,(0,(i*22)+1+(i-1)))
+                fila = _item_inv(item,188,(0,(i*h)+1+(i-1)),self.fuente)
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
