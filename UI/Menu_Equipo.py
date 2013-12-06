@@ -19,7 +19,7 @@ class Menu_Equipo(Menu_Items):
     def __init__(self):
         '''Crea e inicaliza las varibales del menú Equipo.'''
         
-        super(Menu_Items,self).__init__('Equipo',[])
+        super(Menu_Items,self).__init__('Equipo')
         self.espacios = LayeredDirty() # grupo de espacios equipables.
         self.filas = LayeredDirty() # grupo de items del espacio de selección.
         self.fuente = font.SysFont('Verdana',12) # fuente por default
@@ -102,7 +102,7 @@ class Menu_Equipo(Menu_Items):
                 titulo = ' '.join(titulo)
         
         rect = Rect(-1,-1,w+5,h+1)
-        render = render_textrect(titulo.title(),fuente,rect,self.font_none_color,self.bg_cnvs,just)
+        render = render_textrect(titulo.title(),self.fuente,rect,self.font_none_color,self.bg_cnvs,just)
         
         return render
     
