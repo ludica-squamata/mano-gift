@@ -11,7 +11,7 @@ class Menu (Ventana):
     cur_btn = 0
     current = ''
     canvas = None
-    _onVSel = {}
+    newMenu = False
     
     def __init__(self,titulo,botones):
         self.nombre = titulo
@@ -114,18 +114,17 @@ class Menu (Ventana):
                 boton = self.botones.get_sprite(i)
                 if boton.nombre == selected:
                     boton.serElegido()
-                    onVSel = self.mover_cursor(boton)
+                    self.mover_cursor(boton)
                     break
                         
             self.botones.draw(self.canvas)
-            return onVSel
     
     def PressOne(self):
         if len(self.botones) > 0:
             self.current.serPresionado()
             self.botones.draw(self.canvas)
         
-        return True
+        self.newMenu = True
         
     def mover_cursor(self,item):
         onVSel = False
@@ -136,7 +135,6 @@ class Menu (Ventana):
                     self.cur_btn = i
                     self.current = spr
                     break
-            onVSel = False
                     
         elif type(item) == _item_inv:
             for i in range(len(self.filas)):
@@ -145,17 +143,17 @@ class Menu (Ventana):
                     self.cur_opt = self.filas.get_sprite(i)
                     self.current = spr#.nombre
                     break
-            onVSel = True
-        
-        return onVSel
     
     def usar_funcion(self,tecla):
         if tecla in ('arriba','abajo','izquierda','derecha'):
-            return self.funciones[tecla](tecla)
+            self.funciones[tecla](tecla)
         else:
-            return self.funciones[tecla]()
+            self.funciones[tecla]()
+        
+        return self.newMenu
     
     def update (self):
+        self.newMenu = False
         self.dirty = 1
         if not modo.onVSel:
             draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
