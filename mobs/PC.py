@@ -166,8 +166,10 @@ class PC (Mob):
         W.DIALOG = Inventario_rapido()
     
     def usar_item (self,item):
-        print('Used',item.nombre) #acá iria el efecto del item utilizado.
-        return self.inventario.quitar(item.ID)
+        if not item.esEquipable:
+            print('Used',item.nombre) #acá iria el efecto del item utilizado.
+            return self.inventario.quitar(item.ID)
+        return item.cantidad
     
     def cambiar_estado(self):
         if self.estado == 'idle':

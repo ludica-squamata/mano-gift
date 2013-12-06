@@ -31,17 +31,17 @@ class Menu_Items (Menu):
         
     def crear_contenido(self,draw_area_rect):
         self.filas.empty()
+        h = self.altura_del_texto
         self.draw_space = Surface(draw_area_rect.size)
         self.draw_space.fill(self.bg_cnvs)
         self.canvas.blit(self.draw_space,draw_area_rect.topleft)
 
         for i in range(len(W.HERO.inventario)):
-            fila = _item_inv(W.HERO.inventario[i],draw_area_rect.w-6,(3,(i*22)+1+(i-1)))
+            fila = _item_inv(W.HERO.inventario[i],draw_area_rect.w-6,(3,(i*h)+1+(i-1)),self.fuente)
             
             self.filas.add(fila)
         
         if len(self.filas) > 0:
-            h = self.altura_del_texto
             self.opciones = len(self.filas)
             self.elegir_fila(0)
             self.filas.draw(self.draw_space)
@@ -57,6 +57,7 @@ class Menu_Items (Menu):
     def elegir_fila(self,direccion):
         if direccion == 'arriba': j=-1
         elif direccion =='abajo': j=+1
+        else: j = 0
         if self.opciones > 0:
             self.DeselectAll(self.botones)
             self.sel = self.dibujar_lineas_cursor(j,self.draw_space,
@@ -68,13 +69,14 @@ class Menu_Items (Menu):
             self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
             
     def confirmar_seleccion (self):
+        h = self.altura_del_texto
         if self.opciones > 0:
             cant = W.HERO.usar_item(self.current.item)
             if cant <= 0:
                 self.opciones -= 1
                 if self.opciones <= 0:
                     self.current = self
-                    draw.line(self.image,self.bg_cnvs,(10,self.sel*22),(self.canvas.get_width()-10,self.sel*22))
+                    draw.line(self.image,self.bg_cnvs,(10,self.sel*h),(self.canvas.get_width()-10,self.sel*h))
             self.dirty = 1
     
     def update (self):
