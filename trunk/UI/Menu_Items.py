@@ -13,10 +13,10 @@ class Menu_Items (Menu):
     draw_space = None
     draw_space_rect = None
     
-    def __init__(self,botones):
+    def __init__(self):
         self.fuente = font.SysFont('verdana', 16)
         self.altura_del_texto = self.fuente.get_height()+1
-        super().__init__('Items',botones)
+        super().__init__('Items')
         self.draw_space_rect = Rect((10,44),(self.canvas.get_width()-19,270))
         self.crear_contenido(self.draw_space_rect)
         self.crear_espacio_descriptivo((self.canvas.get_width()-15),93)

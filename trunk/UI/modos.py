@@ -50,7 +50,7 @@ class modo:
                 elif event.key == C.TECLAS.MENU:
                     W.onPause = True
                     W.MODO = 'Menu'
-                    modo.onVSel = W.MAPA_ACTUAL.popMenu('Pausa')
+                    W.MAPA_ACTUAL.popMenu('Pausa')
                     
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:

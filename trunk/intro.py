@@ -4,7 +4,7 @@ from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite, Color
 from pygame import display as pantalla, event as EVENT,quit as py_quit,font
 from globs import Tiempo as T, Constants as C, World as W
 from misc import Resources as r
-from UI import Menu, _opcion
+from UI import Menu_Pausa, _opcion
 from libs.textrect import render_textrect
 import sys,os,os.path
 
@@ -16,7 +16,7 @@ import sys,os,os.path
 # # # seleccion de mapa.
 # # # play.
 
-class introduccion (Menu):
+class introduccion (Menu_Pausa):
     canvas = ''
     running = True
     sel = 0
@@ -30,8 +30,8 @@ class introduccion (Menu):
         self.canvas = self.crear_canvas(ANCHO,ALTO)
         self.crear_espacio_de_seleccion_de_mapas(ANCHO-17)
         self.crear_titulo("Mano-Gift:Debug Screen",self.font_high_color,self.bg_cnvs,ANCHO)
-        botones = [{"boton":"Cargar","pos":[7,270],"derecha":"Salir"},
-                   {"boton":"Salir","pos":[254,270],"izquierda":"Cargar"}]
+        botones = {"Cargar":{"pos":[7,270],"direcciones":{"derecha":"Salir"}},
+                  "Salir":{"pos":[254,270],"direcciones":{"izquierda":"Cargar"}}}
         self.establecer_botones(botones,6)
     
     def cargar_mapas_iniciales(self):
