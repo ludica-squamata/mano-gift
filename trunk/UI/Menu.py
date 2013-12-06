@@ -127,7 +127,6 @@ class Menu (Ventana):
         self.newMenu = True
         
     def mover_cursor(self,item):
-        onVSel = False
         if type(item) == _boton:
             for i in range(len(self.botones)):
                 spr = self.botones.get_sprite(i)

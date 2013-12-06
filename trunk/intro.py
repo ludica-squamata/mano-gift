@@ -6,7 +6,7 @@ from globs import Tiempo as T, Constants as C, World as W
 from misc import Resources as r
 from UI import Menu, _opcion
 from libs.textrect import render_textrect
-import sys,os,os.path,time
+import sys,os,os.path
 
 ###TODO###
 # menu de selección (opciones):
