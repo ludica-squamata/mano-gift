@@ -151,18 +151,17 @@ class Mob (_giftSprite):
         self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
-            if self.direccion == 'ninguna':
-                return
-            elif key == 'D'+self.direccion:
-                key = 'I'+self.direccion
-            elif key == 'I'+self.direccion:
-                key = 'D'+self.direccion
-            else:
-                key = 'D'+self.direccion
-            t_image = self.images[key]
-            self.__key_anim = key
-            self.image = U.crear_sombra(t_image)
-            self.image.blit(t_image,[0,0])
+            if self.direccion != 'ninguna':
+                if key == 'D'+self.direccion:
+                    key = 'I'+self.direccion
+                elif key == 'I'+self.direccion:
+                    key = 'D'+self.direccion
+                else:
+                    key = 'D'+self.direccion
+                t_image = self.images[key]
+                self.__key_anim = key
+                self.image = U.crear_sombra(t_image)
+                self.image.blit(t_image,[0,0])
     
     def cargar_anims(self,ruta_imgs,seq,alpha=False):
         dicc = {}
