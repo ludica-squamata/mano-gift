@@ -1,5 +1,5 @@
 #import pygame
-from pygame import sprite, Rect, Surface, mask as MASK, PixelArray
+from pygame import sprite, Rect, Surface, mask as MASK, PixelArray, transform, locals as l
 from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
 from base import _giftSprite
@@ -39,16 +39,18 @@ class Prop (_giftSprite):
             
             if 'sombra' in data:
                 self.sombra = r.cargar_imagen(data['sombra'])
+                self.sombra.set_alpha(0)
             elif not self.es('sinsombra'):
-                pxarray = PixelArray(self.image.copy())
-                for x in range(self.image.get_width()):
-                    for y in range(self.image.get_height()):
+                h = self.image.get_height()
+                w = self.image.get_width()
+                pxarray = PixelArray(Surface((int(w+h/2), h), 0, self.image))
+                for x in range(w):
+                    for y in range(h): #estaba pensando que invertir este array seria dibujar de abajo hacia arriba y capaz seria mas graficable
                         if self.mask.get_at((x,y)):
-                            pxarray[x,y] = (125,125,125,125)
+                            pxarray[int(x+(h-y)/2),y] = (0,0,0,150)
                         else:
-                            pxarray[x,y] = (0,0,0,0)
-                
-                self.sombra = pxarray.make_surface()
+                            pxarray[int(x+(h-y)/2),y] = (0,0,0,0)
+                self.sombra = pxarray.make_surface().convert_alpha()
                 del pxarray
                 
 
