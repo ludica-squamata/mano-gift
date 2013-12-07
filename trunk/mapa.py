@@ -37,10 +37,7 @@ class Prop (_giftSprite):
                     self.solido = self._operable[0][0]
                     self.visible = self._operable[0][1]
             
-            if 'sombra' in data:
-                self.sombra = r.cargar_imagen(data['sombra'])
-                self.sombra.set_alpha(0)
-            elif not self.es('sinsombra'):
+            if not self.es('sinsombra'):
                 self.sombra = U.crear_sombra(self.image, self.mask)
 
     def interaccion(self,x=0,y=0):
@@ -63,6 +60,10 @@ class Prop (_giftSprite):
     
                 if y > 0: y -= 10
                 elif y < 0: y += 10
+            
+            image = self.sombra
+            image.blit(self.image,[0,0])
+            self.image = image
             
             self.reubicar(x,y)
             return False
