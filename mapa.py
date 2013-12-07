@@ -1,6 +1,6 @@
 #import pygame
-from pygame import sprite, Rect, Surface, mask as MASK, PixelArray, transform, locals as l
-from misc import Resources as r
+from pygame import sprite, Rect, Surface, mask as MASK, PixelArray
+from misc import Resources as r, Util as U
 from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
 from base import _giftSprite
 from mobs import NPC, Enemy
@@ -41,18 +41,7 @@ class Prop (_giftSprite):
                 self.sombra = r.cargar_imagen(data['sombra'])
                 self.sombra.set_alpha(0)
             elif not self.es('sinsombra'):
-                h = self.image.get_height()
-                w = self.image.get_width()
-                pxarray = PixelArray(Surface((int(w+h/2), h), 0, self.image))
-                for x in range(w):
-                    for y in range(h): #estaba pensando que invertir este array seria dibujar de abajo hacia arriba y capaz seria mas graficable
-                        if self.mask.get_at((x,y)):
-                            pxarray[int(x+(h-y)/2),y] = (0,0,0,150)
-                        else:
-                            pxarray[int(x+(h-y)/2),y] = (0,0,0,0)
-                self.sombra = pxarray.make_surface().convert_alpha()
-                del pxarray
-                
+                self.sombra = U.crear_sombra(self.image, self.mask)
 
     def interaccion(self,x=0,y=0):
         if self.es('agarrable'):

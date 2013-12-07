@@ -1,7 +1,7 @@
 import sys
 from pygame import mask,time
 from random import randint,choice
-from misc import Resources as r
+from misc import Resources as r, Util as U
 from base import _giftSprite
 from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from .Vision import area_vision
@@ -15,6 +15,7 @@ class Mob (_giftSprite):
     dead = False
     direcciones = {'abajo':[0,1],'izquierda':[1,0],'arriba':[0,-1],'derecha':[-1,0],'ninguna':[0,0]}
     direccion = 'abajo'
+    __key_anim = '' #para uso interno de animar_caminar
     ticks,mov_ticks = 0,0
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
@@ -144,20 +145,22 @@ class Mob (_giftSprite):
     def animar_caminar(self):
         '''cambia la orientación del sprite y controla parte de la animación'''
         
-        for key in self.images.keys():
-            if self.image == self.images[key]:
-                break
+        key = self.__key_anim
+        t_image = None
+        
         self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
-            if key == 'D'+self.direccion:
-                self.image = self.images['I'+self.direccion]
+            if self.direccion == 'ninguna':
+                return
+            elif key == 'D'+self.direccion:
+                t_image = self.images['I'+self.direccion]
             elif key == 'I'+self.direccion:
-                self.image = self.images['D'+self.direccion]
-            elif self.direccion == 'ninguna':
-                pass
+                t_image = self.images['D'+self.direccion]
             else:
-                self.image = self.images['D'+self.direccion]
+                t_image = self.images['D'+self.direccion]
+            self.image = U.crear_sombra(t_image)
+            self.image.blit(t_image,[0,0])
     
     def cargar_anims(self,ruta_imgs,seq,alpha=False):
         dicc = {}

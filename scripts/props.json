@@ -32,12 +32,10 @@
             "des":"Restaura tu salud al máximo."}
     },
     "casa":{
-        "image":"props/casa.png",
-        "sombra":"props/sombra/casa.png"
+        "image":"props/casa.png"
     },
     "arbol":{
-        "image":"props/arbol_escalado.png",
-        "asombra":"props/sombra/arbol_escalado.png"
+        "image":"props/arbol_escalado.png"
     },
     "armor":{
         "image":"props/armor.png",
