@@ -112,8 +112,11 @@ class PC (Mob):
                 self.atacando = False
                 self.mask = self.cmb_walk_alpha['S'+self.direccion]
             
-            self.image = frames[self.atk_img_index]
+            t_image = frames[self.atk_img_index]
             self.mask = alphas[self.atk_img_index]
+            
+            self.image = U.crear_sombra(t_image)
+            self.image.blit(t_image,[0,0])
             self.dirty = 1
 
     def hablar(self,onSelect):
