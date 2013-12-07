@@ -10,7 +10,7 @@ class Util:
     def crear_sombra(surface, mask = None):
         if mask == None:
             mask = MASK.from_surface(surface)
-        h = int(surface.get_height() *.9)
+        h = surface.get_height()
         w = surface.get_width()
         pxarray = PixelArray(Surface((int(w+h/2), h), 0, surface))
         for x in range(w):
