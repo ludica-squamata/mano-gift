@@ -154,11 +154,13 @@ class Mob (_giftSprite):
             if self.direccion == 'ninguna':
                 return
             elif key == 'D'+self.direccion:
-                t_image = self.images['I'+self.direccion]
+                key = 'I'+self.direccion
             elif key == 'I'+self.direccion:
-                t_image = self.images['D'+self.direccion]
+                key = 'D'+self.direccion
             else:
-                t_image = self.images['D'+self.direccion]
+                key = 'D'+self.direccion
+            t_image = self.images[key]
+            self.__key_anim = key
             self.image = U.crear_sombra(t_image)
             self.image.blit(t_image,[0,0])
     
