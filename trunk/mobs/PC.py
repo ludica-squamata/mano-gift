@@ -1,4 +1,4 @@
-from misc import Resources as r
+from misc import Resources as r, Util as U
 from .Mob import Mob
 from .NPC import NPC
 from .Inventory import Inventory
@@ -16,6 +16,8 @@ class PC (Mob):
     cmb_pos_alpha = {} # combat position images's alpha.
     cmb_walk_img = {} # combat walking images.
     cmb_walk_alpha = {} # combat walking images's alpha.
+    idle_walk_img = {} #imagenes normales
+    idle_walk_alpha = {}
     estado = '' #idle, o cmb. Indica si puede atacar desde esta posición, o no.
     
     alcance_cc = 0 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
@@ -25,6 +27,9 @@ class PC (Mob):
     def __init__(self,nombre,data,stage):
         imgs = data['imagenes']
         super().__init__(imgs['idle']['graph'],stage,alpha=imgs['idle']['alpha'])
+        
+        self.idle_walk_img = self.images
+        self.idle_walk_alpha = self.mascaras
         
         self.cmb_walk_img = self.cargar_anims(imgs['cmb']['graph'],['S','I','D'])
         self.cmb_walk_alpha = self.cargar_anims(imgs['cmb']['alpha'],['S','I','D'],True)
@@ -49,34 +54,6 @@ class PC (Mob):
         self.mapY += dy
         self.dirty = 1
 
-    def cambiar_direccion(self,direccion):
-        '''cambia la orientación del sprite y controla parte de la animación'''
-        if self.estado == 'idle':
-            for key in self.images.keys():
-                if self.image == self.images[key]:
-                    break
-        
-        elif self.estado == 'cmb':
-            for key in self.cmb_walk_img.keys():
-                if self.image == self.cmb_walk_img[key]:
-                    break
-                
-        self.timer_animacion += T.FPS.get_time()
-        if self.timer_animacion >= self.frame_animacion:
-            self.timer_animacion = 0
-            if key == 'D'+direccion: img_dir = 'I'+direccion
-            elif key == 'I'+direccion: img_dir = 'D'+direccion
-            else: img_dir = 'D'+direccion
-            
-            if self.estado == 'idle':
-                self.image = self.images[img_dir]
-                self.mask = self.mascaras[img_dir]
-            elif self.estado == 'cmb':
-                self.image = self.cmb_walk_img[img_dir]
-                self.mask = self.cmb_walk_alpha[img_dir]
-                
-        self.direccion = direccion
-    
     def mover(self,dx,dy):
         self.empujar_props(dx,dy)
     
@@ -88,6 +65,7 @@ class PC (Mob):
         elif dy == -1:
             d = 'arriba'
         self.cambiar_direccion(d)
+        self.animar_caminar()
       
     def accion(self):
         from mapa import Prop
@@ -173,15 +151,22 @@ class PC (Mob):
             
     def cambiar_estado(self):
         if self.estado == 'idle':
-            self.image = self.cmb_walk_img['S'+self.direccion]
-            self.mask = self.cmb_walk_alpha['S'+self.direccion]
+            self.images = self.cmb_walk_img
+            self.mascaras = self.cmb_walk_alpha
             self.estado = 'cmb'
             
         elif self.estado == 'cmb':
-            self.image = self.images['S'+self.direccion]
-            self.mask = self.mascaras['S'+self.direccion]
+            self.images = self.idle_walk_img
+            self.mascaras = self.idle_walk_alpha
             self.estado = 'idle'
+        
+        t_image = self.images['S'+self.direccion]
+        self.image = U.crear_sombra(t_image)
+        self.image.blit(t_image,[0,0])
+        self.mask = self.mascaras['S'+self.direccion]
+            
         self.cambiar_direccion(self.direccion)
+        self.animar_caminar()
         self.dirty = 1
     
     def update(self):
