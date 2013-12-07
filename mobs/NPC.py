@@ -14,7 +14,7 @@ class NPC (Mob):
             QuestManager.add(data['quest'])
         self.generar_rasgos()
     
-    def hablar(self, onSelect, opcion=1):
+    def hablar(self, onSelect):
         if len(self.dialogos) == 0:
             self.stage.endDialog()
             return False
@@ -38,7 +38,7 @@ class NPC (Mob):
                     onSelect = True
                     
                 else:
-                    sel = list(self.dialogos[self.pos_diag].keys())[opcion-1]
+                    sel = list(self.dialogos[self.pos_diag].keys())[onSelect-1]
                     texto = self.dialogos[self.pos_diag][sel]
                     onSelect = False
                 

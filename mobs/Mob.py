@@ -146,7 +146,7 @@ class Mob (_giftSprite):
         '''cambia la orientación del sprite y controla parte de la animación'''
         
         key = self.__key_anim
-        t_image = None
+        self.t_image = None
         
         self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
@@ -158,10 +158,14 @@ class Mob (_giftSprite):
                     key = 'D'+self.direccion
                 else:
                     key = 'D'+self.direccion
-                t_image = self.images[key]
+                self.t_image = self.images[key]
+                self.calcular_sombra()
                 self.__key_anim = key
-                self.image = U.crear_sombra(t_image)
-                self.image.blit(t_image,[0,0])
+                
+    def calcular_sombra(self):
+        image = U.crear_sombra(self.t_image)
+        image.blit(self.t_image,[0,0])
+        self.image = image
     
     def cargar_anims(self,ruta_imgs,seq,alpha=False):
         dicc = {}
