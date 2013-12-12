@@ -297,7 +297,8 @@ class Stage:
             W.menu_previo = titulo
         try:
             W.menu_actual = eval('Menu_'+titulo+'()')
-        except:
+        except Exception as Description:
+            print('No se pudo abrir el menu porque:',Description)
             W.menu_actual = Menu(titulo)
         
         self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
