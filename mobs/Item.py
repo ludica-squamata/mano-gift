@@ -26,7 +26,9 @@ class Item:
         return self.nombre+' Mob.Item'
     
     def __eq__(self,other):
-        if self.ID == other.ID:
+        if other.__class__!= self.__class__:
+            return False
+        elif self.ID == other.ID:
             return True
         else:
             return False

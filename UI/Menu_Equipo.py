@@ -160,7 +160,7 @@ class Menu_Equipo(Menu_Items):
         '''Cambia el foco (las funciones que se utilizarán segun el imput)
         variando entre los espacios equipables y la lista de selección.'''
         
-        if self.foco == 'espacios':
+        if self.current.item == None:
             if self.opciones > 0:
                 self.foco = 'items'
                 h = self.altura_del_texto
@@ -168,8 +168,8 @@ class Menu_Equipo(Menu_Items):
                 self.elegir_fila(0)
                 draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
 
-        elif self.foco == 'items':
-            self.foco = 'espacios'
+        else:
+            self.desequipar_espacio()
     
     def equipar_item(self):
         '''Cuando un espacio esta seleccionado, y el foco está en la lista de items
@@ -182,7 +182,16 @@ class Menu_Equipo(Menu_Items):
             W.HERO.equipar_item(item)
             self.draw_space.fill(self.bg_cnvs)
             self.espacios.draw(self.canvas)
-            self.cambiar_foco()
+            self.foco = 'espacios'
+            self.current = espacio
+    
+    def desequipar_espacio(self):
+        espacio = self.espacios.get_sprite(self.cur_esp)
+        item = self.current.item
+        
+        espacio.desocupar()
+        W.HERO.desequipar_item(item)
+        self.espacios.draw(self.canvas)
     
     def usar_funcion(self,tecla):
         '''Determina qué grupo de funciones se van a usar según el foco actual.'''
@@ -211,18 +220,23 @@ class _espacio_equipable (_giftSprite):
     def __init__(self,nombre,item,direcciones,x,y):
         '''Inicializa las variables de un espacio equipable.'''
         
-        self.img_uns = self.crear(False)
-        self.img_sel = self.crear(True)
+        self.img_uns = self.crear_base()
+        super().__init__(self.img_uns)
+        self.img_sel = self.dibujar_seleccion(self.img_uns)
+        
+        self.draw_area = Surface((28,28))
+        self.draw_area.fill((153,153,153))
+        self.draw_area_rect = Rect((4,4),self.draw_area.get_size())
+        
         self.direcciones = {}
         self.direcciones.update(direcciones)
         if item:
             self.ocupar(item)
-        super().__init__(self.img_uns)
         self.nombre = nombre
         self.rect = self.image.get_rect(topleft = (x,y))
         self.dirty = 1
     
-    def crear(self,seleccionar):
+    def crear_base(self):
         '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
         
         macro = Rect(0,0,36,36)
@@ -232,28 +246,27 @@ class _espacio_equipable (_giftSprite):
         rect = Rect(2,2,28,28)
         base = Surface((32,32))
         base.fill((153,153,153),rect)
-        
+
         img.blit(base,(2,2))
-        
-        if seleccionar: # corresponde a la imagen selecionada.
-            sel = img.copy()
-            w,h = sel.get_size()
-            for i in range(round(38/3)):
-                #linea punteada horizontal superior
-                draw.line(sel,C.font_high_color,(i*7,0),((i*7)+5,0),2)
-                
-                #linea punteada horizontal inferior
-                draw.line(sel,C.font_high_color,(i*7,h-2),((i*7)+5,h-2),2)
-            
-            for i in range(round(38/3)):
-                #linea punteada vertical derecha
-                draw.line(sel,C.font_high_color,(w-2,i*7),(w-2,(i*7)+5),2)
-                
-                #linea punteada vertical izquierda
-                draw.line(sel,C.font_high_color,(0,i*7),(0,(i*7)+5),2)
-            return sel
-        
         return img
+    
+    def dibujar_seleccion (self,img):
+        sel = img.copy()
+        w,h = sel.get_size()
+        for i in range(round(38/3)):
+            #linea punteada horizontal superior
+            draw.line(sel,C.font_high_color,(i*7,0),((i*7)+5,0),2)
+            
+            #linea punteada horizontal inferior
+            draw.line(sel,C.font_high_color,(i*7,h-2),((i*7)+5,h-2),2)
+        
+        for i in range(round(38/3)):
+            #linea punteada vertical derecha
+            draw.line(sel,C.font_high_color,(w-2,i*7),(w-2,(i*7)+5),2)
+            
+            #linea punteada vertical izquierda
+            draw.line(sel,C.font_high_color,(0,i*7),(0,(i*7)+5),2)
+        return sel
     
     def serElegido(self):
         '''Cambia la imagen del espacio por su versión seleccionada.'''
@@ -273,20 +286,16 @@ class _espacio_equipable (_giftSprite):
         '''Inserta un item en ambas imagenes del espacio.'''
         
         self.item = item
-        self.img_sel.blit(item.image,(4,7))
-        self.img_uns.blit(item.image,(4,7))
+        self.draw_area.blit(item.image,(1,5))
+        self.img_uns.blit(self.draw_area,self.draw_area_rect)
+        self.img_sel.blit(self.draw_area,self.draw_area_rect)
         self.dirty = 1
     
     def desocupar (self):
-        '''Restaura las imágenes del espacio a su version sin item.
-        
-        No está implementada.'''
-        
+        '''Restaura las imágenes del espacio a su version sin item.'''
+
         self.item = None
-        if self.isSelected:
-            self.image = self.img_sel
-        else:
-            self.image = self.img_uns
-        
+        self.draw_area.fill((153,153,153))
+        self.img_uns.blit(self.draw_area,self.draw_area_rect)
+        self.img_sel.blit(self.draw_area,self.draw_area_rect)
         self.dirty = 1
-    

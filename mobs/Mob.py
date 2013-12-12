@@ -127,6 +127,10 @@ class Mob (_giftSprite):
         self.equipo[item.esEquipable] = item
         self.inventario.quitar(item.ID)
         
+    def desequipar_item(self,item):
+        self.equipo[item.esEquipable] = None
+        self.inventario.agregar(item)
+        
     def cambiar_direccion(self,arg):
         direccion = 'ninguna'
     
