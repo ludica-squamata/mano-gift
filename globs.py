@@ -67,7 +67,8 @@ class World:
     
     def cargar_hero():
         from mobs import PC
-        World.HERO = PC('heroe',r.abrir_json('scripts/mobs/hero.mob'),World.MAPA_ACTUAL)
+        if World.HERO == '':
+            World.HERO = PC('heroe',r.abrir_json('scripts/mobs/hero.mob'),World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage

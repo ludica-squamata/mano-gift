@@ -57,7 +57,7 @@ class Menu_Debug (Menu):
     def cargar_mapa(self):
         W.cargar_hero()
         W.setear_mapa(self.mapas[self.sel-1], 'inicial')
-        W.MODO = 'Aventura'
+        W.MAPA_ACTUAL.endDialog()
         W.onPause = False
     
     def update(self):
