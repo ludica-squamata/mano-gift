@@ -295,14 +295,21 @@ class Stage:
     def popMenu (self,titulo):
         if W.menu_previo == '' and W.menu_previo != titulo:
             W.menu_previo = titulo
-        try:
-            W.menu_actual = eval('Menu_'+titulo+'()')
-        except Exception as Description:
-            print('No se pudo abrir el menu porque:',Description)
-            W.menu_actual = Menu(titulo)
+
+        if titulo not in W.MENUS:
+            try:
+                menu = eval('Menu_'+titulo+'()')
+            except Exception as Description:
+                print('No se pudo abrir el menu porque:',Description)
+                menu = Menu(titulo)
+        else:
+            menu = W.MENUS[titulo]
+            menu.Reset(True)
         
-        self.dialogs.add(W.menu_actual, layer=C.CAPA_OVERLAYS_MENUS)
-    
+        W.menu_actual = menu
+        self.dialogs.add(menu)
+        self.dialogs.move_to_front(menu)
+            
     def endDialog(self):
         self.dialogs.empty()
         W.DIALOG = ''
