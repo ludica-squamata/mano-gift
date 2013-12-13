@@ -1,4 +1,5 @@
 from .Menu import Menu
+from .Colores import Colores as C
 from ._item_inv import _item_inv
 from globs import World as W
 from libs.textrect import render_textrect
@@ -37,7 +38,10 @@ class Menu_Items (Menu):
         self.canvas.blit(self.draw_space,draw_area_rect.topleft)
 
         for i in range(len(W.HERO.inventario)):
-            fila = _item_inv(W.HERO.inventario[i],draw_area_rect.w-6,(3,(i*h)+1+(i-1)),self.fuente)
+            item = W.HERO.inventario[i]
+            if item.esEquipable: color = C.font_low_color
+            else: color = C.font_high_color
+            fila = _item_inv(item,draw_area_rect.w-6,(3,(i*h)+1+(i-1)),self.fuente,color)
             
             self.filas.add(fila)
         

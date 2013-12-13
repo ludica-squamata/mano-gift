@@ -148,7 +148,7 @@ class Menu_Equipo(Menu_Items):
         for item in W.HERO.inventario:
             if item.esEquipable and item.esEquipable == espacio.nombre:
                 i += 1
-                fila = _item_inv(item,188,(0,(i*h)+1+(i-1)),self.fuente)
+                fila = _item_inv(item,188,(0,(i*h)+1+(i-1)),self.fuente,C.font_high_color)
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
