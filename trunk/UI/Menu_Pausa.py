@@ -11,7 +11,8 @@ class Menu_Pausa (Menu):
                    "Equipo":{"pos":[254,132],"direcciones":{"arriba":"Items","abajo":"Status"}},
                    "Status":{"pos":[254,171],"direcciones":{"arriba":"Equipo","abajo":"Grupo"}},
                    "Grupo": {"pos":[254,210],"direcciones":{"arriba":"Status","abajo":"Opciones"}},
-                   "Opciones":{"pos":[254,249],"direcciones":{"arriba":"Grupo"}}}
+                   "Opciones":{"pos":[254,249],"direcciones":{"arriba":"Grupo","abajo":"Debug"}},
+                   "Debug":{"pos":[254,288],"direcciones":{'arriba':'Opciones'}}}
         
         super().__init__("Pausa")
         self.funciones = {
@@ -32,7 +33,7 @@ class Menu_Pausa (Menu):
             
             self.botones.add(boton)
 
-        self.cur_btn = 1
+        self.cur_btn = 2
         self.Reset()
                 
     def _crear_boton(self,texto,ancho_mod,x,y):
@@ -108,7 +109,7 @@ class Menu_Pausa (Menu):
         el que haya sido elegido anteriormente. Esto deberia ser seteable.'''
         self.DeselectAll(self.botones)
         if not recordar: # podría ser W.recordar.. o un seteo de config
-            self.cur_btn = 1
+            self.cur_btn = 2
         selected = self.botones.get_sprite(self.cur_btn)
         selected.serElegido()
         self.current = selected
