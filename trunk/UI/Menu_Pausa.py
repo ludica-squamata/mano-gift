@@ -31,14 +31,9 @@ class Menu_Pausa (Menu):
                     boton.direcciones[direccion] = botones[btn]['direcciones'][direccion]
             
             self.botones.add(boton)
-        
-        if len(self.botones) > 0:
-            self.cur_btn = 1
-            selected = self.botones.get_sprite(self.cur_btn)
-            selected.serElegido()
-            self.current = selected
-        
-        self.botones.draw(self.canvas)
+
+        self.cur_btn = 1
+        self.Reset()
                 
     def _crear_boton(self,texto,ancho_mod,x,y):
         ancho = C.CUADRO*ancho_mod
@@ -107,3 +102,15 @@ class Menu_Pausa (Menu):
             self.botones.draw(self.canvas)
         
         self.newMenu = True
+    
+    def Reset(self,recordar=False):
+        '''Reseta el presionado de todos los botones, y deja seleccionado
+        el que haya sido elegido anteriormente. Esto deberia ser seteable.'''
+        self.DeselectAll(self.botones)
+        if not recordar: # podría ser W.recordar.. o un seteo de config
+            self.cur_btn = 1
+        selected = self.botones.get_sprite(self.cur_btn)
+        selected.serElegido()
+        self.current = selected
+        self.botones.draw(self.canvas)
+        self.dirty = 1

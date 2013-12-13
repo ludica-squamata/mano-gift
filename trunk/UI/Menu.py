@@ -1,5 +1,5 @@
 from .Ventana import Ventana
-from globs import Constants as C
+from globs import Constants as C, World as W
 from ._boton import _boton
 from ._item_inv import _item_inv
 
@@ -24,6 +24,8 @@ class Menu (Ventana):
         super().__init__(self.canvas)
         self.ubicar(10,10)
         self.dirty = 1
+        
+        W.MENUS[titulo] = self
 
     def DeselectAll(self,lista):
         if len(lista) > 0:
@@ -60,3 +62,10 @@ class Menu (Ventana):
     def update (self):
         self.newMenu = False
         self.dirty = 1
+    
+    def Reset(self,*args):
+        '''Resetea el estado de la ventana. Esta función es solo un hook.'''
+        pass
+    
+    def __repr__(self):
+        return 'Menu_'+self.nombre+' (en '+str(len(self.groups()))+' grupos)'

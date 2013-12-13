@@ -59,6 +59,7 @@ class World:
     HERO = ''
     menu_actual = ''
     menu_previo = ''
+    MENUS = {}
     DIALOG = ''
     MODO = 'Aventura'
     onPause = False
