@@ -20,6 +20,7 @@ class Mob (_giftSprite):
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     vision = None
+    flee_counter = 0
     atacando = False
     show = {}
     hide = {}
@@ -93,6 +94,7 @@ class Mob (_giftSprite):
                 self.AI = movimiento.AI_patrol # function alias!
             
             self._AI = self.AI #copia de la AI original
+            self._camino = self.camino
     
     def generar_rasgos(self):
         rasgos = r.abrir_json('scripts/rasgos.json')
@@ -268,25 +270,33 @@ class Mob (_giftSprite):
                 self.stage.properties.remove(self)
             self.dead = True
             MobGroup.remove(self)
-            
     
     def ver(self):
-        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-            if spr != self:
+        for key in MobGroup:
+            mob = MobGroup[key]
+            if mob != self:
                 v = self.vision
-                if self.actitud == 'hostil':
-                    if spr.tipo == 'victima':
+                if self.actitud == 'hostil' and mob.tipo == 'victima':
+                    if v.mask.overlap(mob.mask,(mob.mapX - v.x(self),mob.mapY - v.y(self))):
                         self.AI = movimiento.AI_pursue # function alias!
                         self.next_p = 0
-                        if v.mask.overlap(spr.mask,(spr.mapX - v.x(self),spr.mapY - v.y(self))):
-                            self.camino = movimiento.iniciar_persecucion(self,spr)
-                        else:
-                            self.AI = self._AI
+                        self.camino = movimiento.iniciar_persecucion(self,mob)
+                    else:
+                        self.AI = self._AI
+                        self.camino = self._camino
+
+                elif self.actitud == 'pasiva' and mob.tipo == 'monstruo':
+                    if v.mask.overlap(mob.mask,(mob.mapX - v.x(self),mob.mapY - v.y(self))) \
+                    or self.flee_counter < 200:
+                        self.AI = movimiento.AI_flee
+                    else:
+                        self.AI = self._AI
+
                     
     def update(self):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:
             self.anim_counter = 0
         if not W.onPause and not self.dead:
-            self.ver()
+            #self.ver()
             self.mover()

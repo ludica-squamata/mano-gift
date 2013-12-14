@@ -27,7 +27,7 @@ class Dialog (Ventana):
             ops = texto.split('\n')
             self.opciones = len(ops)
             for i in range(len(ops)):
-                opcion = _opcion(ops[i],self.draw_space.w,(3,(i*22)+1+(i-1)+2))
+                opcion = _opcion(ops[i],self.draw_space.w,(3,i*h+i+2))
                 self.filas.add(opcion)
             
             self.filas.draw(self.canvas)
