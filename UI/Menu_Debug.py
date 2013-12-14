@@ -42,7 +42,7 @@ class Menu_Debug (Menu):
         self.mapas = self.cargar_mapas_iniciales() # lista
         self.opciones = len(self.mapas)
         for i in range(len(self.mapas)):
-            opcion = _opcion(self.mapas[i],self.draw_space_rect.w,(0,(i*h)+1+(i-1)))
+            opcion = _opcion(self.mapas[i],self.draw_space_rect.w,(0,i*h+i+2))
             self.filas.add(opcion)
         
         self.filas.draw(self.draw_space)

@@ -39,13 +39,26 @@ def AI_pursue(mob):
     direccion = _determinar_direccion(curr_p,punto_proximo)
     return direccion
 
+def AI_flee(mob):
+    from math import sqrt
+    cX,cY = [mob.mapX,mob.mapY]
+    rutas_escape = [[0,0],[480,0],[0,480],[480,480]]
+    dists= []
+    dirs = []
+    for dx,dy in rutas_escape:
+        dirs.append(_determinar_direccion([cX,cY],[dx,dy]))
+        dists.append(sqrt((dx-cX)**2+(dy-cY)**2))
+    
+    direccion = dirs[dists.index(min(dists))]
+    return direccion
+
 def iniciar_persecucion(mob,objetivo):
     CURR_POS = int(mob.mapX/32),int(mob.mapY/32)
     OBJ_POS = int(objetivo.mapX/32),int(objetivo.mapY/32)
     ruta = generar_camino(CURR_POS,OBJ_POS,mob.stage.grilla)
     if type(ruta) == list:
         camino = simplificar_camino(ruta)
-    elif type(ruta) == None:
+    elif ruta == None:
         iniciar_persecucion(mob,objetivo)
     else:
         camino = [[ruta.x,ruta.y]]

@@ -3,7 +3,7 @@ from .Mob import Mob
 from .NPC import NPC
 from .Inventory import Inventory
 from .Item import Item
-from globs import World as W, Constants as C, Tiempo as T
+from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from UI import Inventario_rapido
 from pygame import Surface,Rect
 
@@ -47,6 +47,8 @@ class PC (Mob):
         self.inventario = Inventory(10)
         self.estado = 'idle'
         self.generar_rasgos()
+        
+        MobGroup.add(self)
         
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''

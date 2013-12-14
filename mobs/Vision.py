@@ -1,8 +1,9 @@
 from pygame import mask
 from misc import Resources as r
 from globs import Constants as C
+from base import _giftSprite
 
-class area_vision:
+class area_vision(_giftSprite):
     _masks = {} # máscaras de visión ordenadas por direcciones.
     mask = None # máscara de visión actual
     _direccion = None 
