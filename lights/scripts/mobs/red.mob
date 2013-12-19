@@ -1,0 +1,9 @@
+{
+    "AI":"patrol",
+    "reversa":false,
+    "camino":[[13,12],[13,15],[10,15],[10,12],[13,12]],
+    "modo_colision":"rodear",
+    "salud":4,
+    "fuerza":4,
+    "death":"mobs/red_death.png"
+}

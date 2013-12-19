@@ -1,0 +1,10 @@
+{
+    "dialogo":[
+        "hola, héroe!",
+        "¿avanza este diálogo?",
+        {"Sí":"¡pues me alegro!",
+         "No":"¡oh, qué pena!"},
+        "Y ahora, ¿funciona?",
+        {"Sí":"¡Bravo!",
+         "No":"¡Demonios!"}]
+}

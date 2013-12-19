@@ -1,0 +1,35 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/arboles_y_castillo.png",
+        "colisiones":"maps/colisiones/arboles_y_castillo.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
+    },
+    "entradas":{
+        "inicial":[16, 17],
+        "derecha":[30,26],
+        "abajo":[21,30]
+    },
+    "salidas":{
+        "derecha":{
+            "rect":[31,21,32,352],
+            "dest":"map2b",
+            "link":"izquierda"
+        },
+        "abajo":{
+            "rect":[0,31,1024,32],
+            "dest":"map2d",
+            "link":"arriba"
+        }
+    },
+    "refs":{},
+    "ambiente":"exterior"
+}

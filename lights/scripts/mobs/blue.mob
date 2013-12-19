@@ -1,0 +1,9 @@
+{
+    "AI":"patrol",
+    "reversa":true,
+    "camino":[[19,17],[15,17],[15,19],[11,19]],
+    "modo_colision":"contraria",
+    "salud":3,
+    "fuerza":3,
+    "death":"mobs/blue_death.png"
+}

@@ -1,0 +1,44 @@
+{
+    "puerta":{
+        "propiedades":{
+            "operable":{
+                "0":{
+                    "visible":true,
+                    "solido":true
+                },
+                "1":{
+                    "visible":false,
+                    "solido":false
+                }
+            }
+        }
+    },
+    "star":{
+        "propiedades":["agarrable","sinsombra"],
+        "image": "props/star.png",
+        "efecto":{
+            "des":"Te hace invencible por 10 segundos."}
+    },
+    "crate":{
+        "propiedades":["empujable","pesado","solido"]
+    },
+    "_crate":{
+        "propiedades":["pesado","solido"]
+    },
+    "banana":{
+        "propiedades":["agarrable","stackable","sinsombra"],
+        "image": "props/banana.png",
+        "efecto":{
+            "des":"Restaura tu salud al máximo."}
+    },
+    "casa":{
+        "image":"props/casa.png"
+    },
+    "arbol":{
+        "image":"props/arbol_escalado.png"
+    },
+    "armor":{
+        "image":"props/armor.png",
+        "propiedades":["equipable","peto","agarrable","sinsombra","stackable"]
+    }
+}

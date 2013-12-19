@@ -1,0 +1,34 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/arboles_y_montana.png",
+        "colisiones":"maps/colisiones/arboles_y_montana.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
+    },
+    "entradas":{
+        "izquierda":[1,26],
+        "abajo":[7,30]
+    },
+    "salidas":{
+        "izquierda":{
+            "rect":[0,21,32,352],
+            "dest":"map2a",
+            "link":"derecha"
+        },
+        "abajo":{
+            "rect":[1,31,384,32],
+            "dest":"map2c",
+            "link":"arriba"
+        }
+    },
+    "refs":{},
+    "ambiente":"exterior"
+}

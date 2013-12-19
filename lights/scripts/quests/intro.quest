@@ -1,0 +1,18 @@
+{
+    "objetivos":{
+        "talk":["commoner"]
+    },
+    "NPCs":{
+        "commoner":{
+            "on":[
+                "Bienvenido, Héroe",
+                "Esta es tu primera aventura",
+                "Solo debes hablar conmigo para completarla.",
+                "Es sencillo, verdad?",
+                {"Sí":"Felicitaciones",
+                 "No":"Te acostumbrarás con el tiempo"}
+            ],
+            "off":[]
+        }
+    }
+}

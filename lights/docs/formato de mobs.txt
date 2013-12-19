@@ -1,0 +1,26 @@
+Ciertos aspectos comunes a todos los mobs se incluyen en dos archivos genéricos denominados agressive.mob y passive.mob. Aquí pueden aparecer las siguientes especificadores:
+    - "AI" indica cómo se moverá el mob a través del mapa, puede ser un string o un diccionario (ver más adelante)
+    
+    - "velocidad" es un integrer que determina a cuántos pixeles por frame se desplaza el mob.
+    
+    - "modo_colision" determina qué dirección tomará el mob cuando choque con algo sólido, sea otro mob, una parte del mapa, un prop, o cualquier otra cosa.
+    
+    - "direccion" establece el sprite y la dirección inicial del mob.
+    
+    - "salud" es un integrer que mide la cantidad de golpes que hay que darle a este mob para eliminarlo.
+    
+    - "actitud" puede ser "hostil" o "pasiva". "hostil" implica que el mob atacará al héroe, y "pasiva" lo contrario. Normalmente los mobs pasivos son NPCs y los hostiles Enemies.
+    
+    - "dialogo" es una lista que contiene los mensajes por defecto que dirá el mob cuando interactúe con el héroe.
+    
+    Algunas de estas características se sobrescriben en los archivos *.mob específicos. Otras sólo aparecen en ellos. Ésta última categoría incluye:
+    - "quest" es un string que hace referencia al script *.quest. Este apartado implica que el mob es agente de esa quest y normalmente será quien otorgue la recompensa o de aviso al héroe.
+    
+********* Sobre la AI *********
+La AI de los mobs puede ser indicada de las siguientes dos formas:
+    - mediante un string; "wanderer"
+        El monstruo vagará libremente por el mapa, sin niguna ruta establecida.
+
+    - o un diccionario con dos claves: "puntos" y "seq".
+        - "puntos" es una lista que indica las posiciones relativas al punto de entrada de la criatura (en pixeles).
+        - "seq" indica el recorrido que la criatura hará, pasando por cada punto. Esta secuencia ha de ser palindrómica, pero prescindiendo del último eslabón (es decir, el primer punto de la secuencia no debe repetirse), si se quiere que el mob vaya y venga por el mismo camino. En cambio, la secuencia puede ser circular si se desea que el mob camine siempre en un mismo sentido (por ejemplo, como las agujas del reloj).

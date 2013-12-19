@@ -1,0 +1,24 @@
+{
+    "star":{
+        "ID":0,
+        "peso":2,
+        "volumen":0,
+        "efecto":{
+            "des":"Te hace invencible por 10 segundos."}
+    },
+    "banana":{
+        "ID":1,
+        "peso":1,
+        "volumen":1,
+        "efecto":{
+            "des":"Restaura tu salud al máximo."}
+    },
+    "armor":{
+        "ID":2,
+        "peso":4,
+        "volumen":4,
+        "efecto":{
+            "des":"Es un peto de hierro.",
+            "equipo":"peto"}
+    }
+}

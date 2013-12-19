@@ -1,0 +1,39 @@
+** Formato de mapas **
+
+Dentro de proyecto Mano-Gift, los mapas se componen de tres archivos elementales. En este documento, explicaremos el formato, especificaciones y contenidos de esos tres tipos de archivo, a saber:
+    A) imagen de fondo
+    B) mapa de colisiones
+    C) archivo de metadatos
+
+Parte (A): Imagen de fondo
+La parte visible del mapa, el área recorrida por el héroe y lo que se muestra en pantalla, es una imagen de fondo. Las características de esta imagen son:
+
+    Estará en formato PNG de 24 bits y no contará con alpha layer (no es necesaria la transparecia, pues es el fondo).
+
+    Está dividia en una grila no visible (lógica), siendo cada casillero de 32 pixeles de lado. Cada elemento de la imagen (árboles, rocas, edificios, etc) debe estar circunscripto a uno o más casilleros de esta grilla
+    El tamaño minimo de esta imagen debe ser de 512x512 pixeles. No hay un tamaño máximo establecido.
+
+
+Parte (B): Mapa de colisiones
+El mapa de colisiones es una imagen 'sombra' de la imagen de fondo, que se muestra en solo 2 colores, y que le indicará al engine qué elementos de la imagen de fondo son sólidos e imposibles de atravezar.
+Las características de esta imagen son:
+
+    Ha de tener exactamente las mismas dimensiones que la imagen de fondo.
+    El color designado para la detección de colisiones es el magenta: RGB 255,0,255
+    El color designado para el terreno transitable es el negro: RGB 0,0,0
+    Está también dividida en una grilla de 32 pixeles de lado por cuadro.
+    Debido a su reducida paleta de colores, esta imagen debiera pesar pocos bytes.
+    Normalmente su nombre de archivo se corresponderá con el de la imagen de fondo a la que está asociada, formando pares.
+
+
+Parte (C): Archivo de metadatos
+Finalmente, cada mapa cuenta con un archivo de texto plano, llamdo de ‘metadatos’ que contiene información sobre las mecánicas de juego que funcionan en dicho mapa. Las características de este archivo son:
+
+    Es de texto plano. De momento, su tipo de archivo es json.
+    Contiene una referencia a la imagen de fondo y a su correspondiente mapa de colisiones, con el siguiente formato:
+
+
+"capa_background":{
+       "fondo":"grafs/<imagen_de_fondo>.png",
+       "colisiones":"grafs/<mapa de colisiones>.png"
+

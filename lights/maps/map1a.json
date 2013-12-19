@@ -1,0 +1,54 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/mapa_1a.png",
+        "colisiones":"maps/colisiones/mapa_1a.png"
+    },
+    "capa_ground":{
+        "props": {
+            "puerta":[[4,4]],
+            "star":[[11,11]],
+            "banana":[[8,9]],
+            "crate":[[14,14]]
+        },
+        "mobs": {
+            "enemies":{
+                "red":[[13,13]],
+                "green":[[15,15]],
+                "blue":[[17,17]],
+                "yellow":[[4,6]]},
+            "npcs":{
+                "commoner":[[9,9]],
+                "girl":[[12,12]]
+            }
+        }
+    },
+    "capa_top":{
+        "props":{
+            "techo":[[3,3]]
+        }
+    },
+    "entradas":{
+        "inicial":[10, 10],
+        "puerta":[4,5]
+    },
+    "salidas":{
+        "puerta":{
+            "rect":[4,4,32,16],
+            "dest":"map1b",
+            "link":"puerta"
+        }
+    },
+    "refs":{
+        "techo":"props/techo.png",
+        "puerta":"props/puerta.png",
+        "red":"mobs/red.png",
+        "green":"mobs/green.png",
+        "blue":"mobs/blue.png",
+        "yellow":"mobs/yellow.png",
+        "commoner":"mobs/commoner12.png",
+        "girl":"mobs/green_girl.png",
+        "crate":"props/crate.png"
+    },
+    "ambiente":"exterior",
+    "quests":["intro","fetch"]
+}

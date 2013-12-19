@@ -1,0 +1,19 @@
+{
+    "imagenes":{
+        "idle":{
+            "graph":"mobs/heroe_idle_walk.png",
+            "alpha":"mobs/colisiones/heroe_idle_walk.png"
+        },
+        "cmb":{
+            "graph":"mobs/heroe_cmb_walk.png",
+            "alpha":"mobs/colisiones/heroe_idle_walk.png"
+        },
+        "atk":{
+            "graph":"mobs/heroe_cmb_atk.png",
+            "alpha":"mobs/colisiones/heroe_cmb_atk.png"
+        }
+    },
+    "fuerza":15,
+    "alcance_cc":16,
+    "tipo":"victima"
+}
