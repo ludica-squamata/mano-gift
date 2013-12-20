@@ -6,7 +6,7 @@ from UI.modos import modo
 tamanio = C.ALTO, C.ANCHO
 font.init()
 pantalla.set_caption('Proyecto Mano-Gift')
-pantalla.set_icon(image.load('grafs/favicon.png'))
+pantalla.set_icon(image.load('data/grafs/favicon.png'))
 fondo = pantalla.set_mode(tamanio) # surface
 
 anim = intro(fondo)

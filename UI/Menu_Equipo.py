@@ -239,8 +239,7 @@ class _espacio_equipable (_giftSprite):
     def crear_base(self):
         '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
         
-        macro = Rect(0,0,36,36)
-        img = Surface(macro.size)
+        img = Surface((36,36))
         img.fill(C.bg_cnvs)
         
         rect = Rect(2,2,28,28)

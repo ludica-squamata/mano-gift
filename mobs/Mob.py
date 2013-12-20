@@ -97,7 +97,7 @@ class Mob (_giftSprite):
             self._camino = self.camino
     
     def generar_rasgos(self):
-        rasgos = r.abrir_json('scripts/rasgos.json')
+        rasgos = r.abrir_json('data/scripts/rasgos.json')
         
         for car in rasgos['cars']:
             if rasgos['cars'][car]:
