@@ -22,8 +22,8 @@ class Menu_Debug (Menu):
     
     def cargar_mapas_iniciales(self):
         ok = []
-        for mapa in os.listdir('maps'):
-            ar = r.abrir_json('maps/'+mapa)
+        for mapa in os.listdir('data/maps'):
+            ar = r.abrir_json('data/maps/'+mapa)
             if 'inicial' in ar['entradas']:
                 ok.append(mapa[0:-5])
         

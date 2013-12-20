@@ -68,12 +68,12 @@ class World:
     def cargar_hero():
         from mobs import PC
         if World.HERO == '':
-            World.HERO = PC('heroe',r.abrir_json('scripts/mobs/hero.mob'),World.MAPA_ACTUAL)
+            World.HERO = PC('heroe',r.abrir_json('data/mobs/hero.mob'),World.MAPA_ACTUAL)
 
     def setear_mapa(mapa, entrada):
         from mapa import Stage
         if mapa not in World.mapas:
-            World.mapas[mapa] = Stage(r.abrir_json('maps/'+mapa+'.json'))
+            World.mapas[mapa] = Stage(r.abrir_json('data/maps/'+mapa+'.json'))
         World.MAPA_ACTUAL = World.mapas[mapa]
         World.MAPA_ACTUAL.cargar_hero(World.HERO, entrada)
         World.MAPA_ACTUAL.mapa.dirty=1

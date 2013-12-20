@@ -37,7 +37,7 @@ class Stage:
     def cargar_props (self,capa):
         imgs = self.data['refs']
         POS = self.data['capa_'+capa]['props']
-        data = r.abrir_json('scripts/props.json')
+        data = r.abrir_json('data/scripts/props.json')
         if capa == 'ground':
             _layer = C.CAPA_GROUND_ITEMS
         elif capa == 'top':
@@ -72,9 +72,9 @@ class Stage:
         imgs = self.data['refs']
 
         for ref in pos:
-            base = r.abrir_json('scripts/mobs/'+act+'.mob')
+            base = r.abrir_json('data/mobs/'+act+'.mob')
             try:
-                data = r.abrir_json('scripts/mobs/'+ref+'.mob')
+                data = r.abrir_json('data/mobs/'+ref+'.mob')
             except IOError:
                 data = {}
             base.update(data)
