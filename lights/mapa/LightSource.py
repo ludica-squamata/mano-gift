@@ -1,5 +1,6 @@
 from globs import World as W
 from misc import Resources as r
+from base import _giftSprite
 
 class LightSource(_giftSprite): #o combinar esto con prop?, no estoy seguro. probablemente de esta forma pueda tener mas flexibilidad
     '''Los objetos de esta clase tienen un area de luz, que permite ver y genera sombras'''
@@ -17,3 +18,4 @@ class LightSource(_giftSprite): #o combinar esto con prop?, no estoy seguro. pro
         
     def update(self):
         #revisar todos los Mob y Prop con sombra dentro del area de luz y setearles sus respectivas sombras
+        pass

@@ -1,12 +1,9 @@
-#import pygame
-from pygame import sprite, Rect, Surface, mask as MASK, PixelArray
-from misc import Resources as r, Util as U
+from pygame import sprite, mask as MASK
+from misc import Resources as r
 from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
-from base import _giftSprite
 from mobs import NPC, Enemy
-from UI import Dialog, Menu, Menu_Items, Menu_Equipo,Menu_Pausa,Menu_Debug
+from UI import *
 from mobs.scripts.a_star import generar_grilla
-
 from . import Prop, Salida
     
 class Stage:

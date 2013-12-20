@@ -1,10 +1,6 @@
-from pygame import sprite, Rect, Surface, mask as MASK, PixelArray
-from misc import Resources as r, Util as U
-from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
+from misc import Util as U
+from globs import Constants as C
 from base import _giftSprite
-from mobs import NPC, Enemy
-from UI import Dialog, Menu, Menu_Items, Menu_Equipo,Menu_Pausa,Menu_Debug
-from mobs.scripts.a_star import generar_grilla
 
 class Prop (_giftSprite):
     '''Clase para los objetos de ground_items.
