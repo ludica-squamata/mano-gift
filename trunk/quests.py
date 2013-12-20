@@ -12,7 +12,7 @@ class Quest:
         self.off_Dialogs = {}
         # si no lo redefino, pasan cosas raras.
         
-        data = r.abrir_json('scripts/quests/'+script+'.quest')
+        data = r.abrir_json('data/quests/'+script+'.quest')
         self.nombre = script
         for tipo in data['objetivos']:
             self.objetivos[tipo] = data['objetivos'][tipo]

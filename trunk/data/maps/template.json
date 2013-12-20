@@ -1,0 +1,22 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/filename.png",
+        "colisiones":"maps/colisiones/filename.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
+    },
+    "entradas":{
+    },
+    "salidas":{
+    },
+    "refs":{},
+    "ambiente":""
+}

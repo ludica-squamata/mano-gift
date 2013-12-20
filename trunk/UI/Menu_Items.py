@@ -41,7 +41,7 @@ class Menu_Items (Menu):
             item = W.HERO.inventario[i]
             if item.esEquipable: color = C.font_low_color
             else: color = C.font_high_color
-            fila = _item_inv(item,draw_area_rect.w-6,(3,(i*h)+1+(i-1)),self.fuente,color)
+            fila = _item_inv(item,draw_area_rect.w-6,(3,i*h+i),self.fuente,color)
             
             self.filas.add(fila)
         
