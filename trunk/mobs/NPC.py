@@ -34,7 +34,7 @@ class NPC (Mob):
             
             else:
                 if not onSelect:
-                    texto = '\n'.join(self.dialogos[self.pos_diag])
+                    texto = list(self.dialogos[self.pos_diag].keys())
                     onSelect = True
                     
                 else:
@@ -42,14 +42,14 @@ class NPC (Mob):
                     texto = self.dialogos[self.pos_diag][sel]
                     onSelect = False
                 
+            
             self.stage.setDialog(texto,onSelect)
             return onSelect
     
-    def devolver_seleccion(self,sel):
-        op = list(self.dialogos[self.pos_diag].keys())[W.DIALOG.sel-1]
-        
-        return self.dialogos[self.pos_diag][op]
-        
+    def _hablar():
+        self.hablando = True
+        W.DIALOG = _dialogo(self.dialogs) #self.data['dialogos']
+    
     def mover(self):
-        if self.pos_diag == -1:
+        if self.pos_diag == -1: # not hablando
             super().mover()

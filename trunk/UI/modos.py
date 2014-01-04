@@ -72,6 +72,7 @@ class modo:
                 elif event.key == C.TECLAS.ABAJO: W.DIALOG.elegir_opcion(+1)
                 
                 elif event.key == C.TECLAS.HABLAR:
+                    #W.DIALOG.confirmar_seleccion()
                     if modo.onSelect:
                         modo.onSelect = W.HERO.confirmar_seleccion()
                     elif modo.onVSel:

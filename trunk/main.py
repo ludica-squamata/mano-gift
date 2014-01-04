@@ -3,7 +3,7 @@ from globs import Constants as C, World as W, Tiempo as T, QuestManager
 from intro import introduccion,intro
 from UI.modos import modo
 
-tamanio = C.ALTO, C.ANCHO
+tamanio = C.ANCHO, C.ALTO
 font.init()
 pantalla.set_caption('Proyecto Mano-Gift')
 pantalla.set_icon(image.load('data/grafs/favicon.png'))

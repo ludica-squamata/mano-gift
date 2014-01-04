@@ -220,7 +220,7 @@ class Stage:
                 self.contents.move_to_front(T.noche)
       
     def setDialog(self, texto,onSelect=False):
-        if W.DIALOG != '':
+        if W.DIALOG != None:
             W.DIALOG.setText(texto,onSelect)
         else:
             W.DIALOG = Dialog(texto,onSelect)
@@ -246,7 +246,7 @@ class Stage:
             
     def endDialog(self):
         self.dialogs.empty()
-        W.DIALOG = ''
+        W.DIALOG = None
         W.MODO = 'Aventura'
         self.mapa.dirty = 1
     

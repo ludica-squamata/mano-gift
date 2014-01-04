@@ -11,7 +11,7 @@ class Item:
     def __init__(self,nombre,esStackable,imagen):
         self.nombre = nombre
         self.image = imagen
-        data = r.abrir_json('scripts/items.json')[nombre]
+        data = r.abrir_json('data/scripts/items.json')[nombre]
         self.ID = data['ID']
         self.volumen = data['volumen']
         self.peso = data['peso']
