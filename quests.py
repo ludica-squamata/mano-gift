@@ -1,5 +1,5 @@
 from misc import Resources as r
-from globs import Constants as C, World as W, MobGroup
+from globs import World as W, MobGroup
 
 class Quest:
     objetivos = {}

@@ -60,7 +60,7 @@ class World:
     menu_actual = ''
     menu_previo = ''
     MENUS = {}
-    DIALOG = ''
+    DIALOG = None
     MODO = 'Aventura'
     onPause = False
     QUESTS = []

@@ -120,16 +120,13 @@ class PC (Mob):
             self.dirty = 1
 
     def hablar(self,onSelect):
-        rango = 15
-        x,y = self.direcciones[self.direccion]
-        x,y = x*rango,y*rango
-        
-        sprite = self._interactuar(rango)
+        sprite = self._interactuar(self.alcance_cc)
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
             return self.interlocutor.hablar(onSelect)
         else:
             W.MODO = 'Aventura'
+            return False
     
     def _interactuar(self,rango):
         x,y = self.direcciones[self.direccion]

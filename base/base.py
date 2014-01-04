@@ -8,19 +8,34 @@ class _giftSprite(sprite.DirtySprite):
     mapY = 0
     nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True # si es solido, colisiona; si no, no.
-    def __init__(self, imagen, alpha = False, stage = '', x = 0, y = 0):
+    def __init__(self, imagen=None, rect = None, alpha = False, stage = '', x = 0, y = 0):
         super().__init__()
+        if imagen == None and rect == None:
+            raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
         elif isinstance(imagen, Surface):
             self.image = imagen
+        elif imagen != None:
+            raise TypeError('Imagen debe ser una ruta, un Surface o None')
         else:
-            raise TypeError('Imagen debe ser una ruta o un Surface')
-        self.rect = self.image.get_rect()
+            self.image = None
+            self.visible = 0 # no funciona con dirty
+            
+        
+        if self.image != None:
+            self.rect = self.image.get_rect()
+        else:
+            self.rect = rect
+        
         if alpha:
             self.mask = alpha
         else:
-            self.mask = mask.from_surface(self.image)
+            if self.image != None:
+                self.mask = mask.from_surface(self.image)
+            else:
+                self.mask = mask.Mask(self.rect.size)
+        
         self.mapX = x
         self.mapY = y
         self.stage = stage
@@ -36,7 +51,8 @@ class _giftSprite(sprite.DirtySprite):
         self.mapX += dx
         self.mapY += dy
         self.rect.move_ip(dx,dy)
-        self.dirty = 1
+        if self.image != None:
+            self.dirty = 1
 
     def ubicar(self, x, y):
         '''mueve el sprite a una ubicacion especifica. tiene que ser valor positivo'''
@@ -45,7 +61,9 @@ class _giftSprite(sprite.DirtySprite):
         self.mapX = x
         self.mapY = y
         self.rect.move_ip(x,y)
-        self.dirty = 1
+        if self.image != None:
+            self.dirty = 1
+
     
     def colisiona(self, sprite, off_x = 0, off_y = 0):
         if self.nombre != sprite.nombre:

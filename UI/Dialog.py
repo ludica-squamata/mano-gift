@@ -21,17 +21,16 @@ class Dialog (Ventana):
         self.ubicar(*self.posicion)
         self.dirty = 1
 
-    def setText(self, texto,onSelect=False):
+    def setText(self,texto,onSelect=False):
         h = self.altura_del_texto
         if onSelect:
-            ops = texto.split('\n')
-            self.opciones = len(ops)
-            for i in range(len(ops)):
-                opcion = _opcion(ops[i],self.draw_space.w,(3,i*h+i+2))
+            self.opciones = len(texto)
+            for i in range(len(texto)):
+                opcion = _opcion(texto[i],self.draw_space.w,(3,i*h+i+2))
                 self.filas.add(opcion)
             
             self.filas.draw(self.canvas)
-            draw.line(self.canvas,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(C.ANCHO-7,(self.sel*h)+1+(self.sel-2)))
+            self.elegir_opcion(-1)
         else:
             render = render_textrect(texto,self.fuente,self.draw_space,self.font_none_color,self.bg_cnvs)
             self.canvas.blit(render,self.draw_space)
@@ -40,6 +39,10 @@ class Dialog (Ventana):
     
     def elegir_opcion (self,i):
         self.sel = self.dibujar_lineas_cursor(i,self.canvas,self.draw_space.w,self.sel,self.opciones)
+    
+    def confirmar_seleccion(self):
+        pass
+    
     
     def update (self):
         self.dirty = 1
