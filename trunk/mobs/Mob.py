@@ -4,7 +4,6 @@ from random import randint,choice
 from misc import Resources as r, Util as U
 from base import _giftSprite
 from globs import World as W, Constants as C, Tiempo as T, MobGroup
-from .Vision import area_vision
 from .scripts import movimiento
 
 class Mob (_giftSprite):
@@ -19,13 +18,13 @@ class Mob (_giftSprite):
     ticks,mov_ticks = 0,0
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
-    vision = None
     flee_counter = 0
     atacando = False
     show = {}
     hide = {}
     next_p = 0
     camino = []
+    contador = 0
     tipo = '' # determina si es una victima o un monstruo
     reversa = bool # indica si hay que dar media vuelta al llegar al final del camino, o no.
     
@@ -62,7 +61,6 @@ class Mob (_giftSprite):
 
         if data != None:
             self.direccion = data['direccion']
-            self.vision = area_vision(self.direccion)
             self.AI = data['AI']
             self.velocidad = data['velocidad']
             self.modo_colision = data['modo_colision']
@@ -113,18 +111,7 @@ class Mob (_giftSprite):
                 self.show[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
             else:
                 self.hide[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
-                
-        #print(self.nombre)
-        #for rasgo in self.show:
-        #    if self.show[rasgo]['tipo'] == "atributo":
-        #        print(self.show[rasgo]['nombre'],self.show[rasgo]["value"])
-        #print()
-        #for rasgo in self.show:
-        #    if self.show[rasgo]['tipo'] == "habilidad":
-        #        print(self.show[rasgo]['nombre'],self.show[rasgo]["value"])
-        #print()
-        pass # just a hook to fold the function
-    
+
     def equipar_item(self,item):
         self.equipo[item.esEquipable] = item
         self.inventario.quitar(item.ID)
@@ -205,7 +192,6 @@ class Mob (_giftSprite):
     def mover(self):
         direccion = self.AI(self)
         self.empujar_props()
-        self.vision.cambiar_direccion(direccion)
         self.cambiar_direccion(direccion)
         self._mover()
                 
@@ -271,32 +257,34 @@ class Mob (_giftSprite):
             self.dead = True
             MobGroup.remove(self)
     
-    def ver(self):
+    def ver (self):
+        self.contador += 1
+        direcciones = {
+            'arriba':[-32,32],
+            'abajo':[-32,-96],
+            'derecha':[32,-32],
+            'izquierda':[-96,-32]}
+        if self.direccion != 'ninguna':
+            self.vx,self.vy = direcciones[self.direccion]
         for key in MobGroup:
-            mob = MobGroup[key]
+            mob =  MobGroup[key]
             if mob != self:
-                v = self.vision
-                if self.actitud == 'hostil' and mob.tipo == 'victima':
-                    if v.mask.overlap(mob.mask,(mob.mapX - v.x(self),mob.mapY - v.y(self))):
-                        self.AI = movimiento.AI_pursue # function alias!
-                        self.next_p = 0
-                        self.camino = movimiento.iniciar_persecucion(self,mob)
-                    else:
-                        self.AI = self._AI
-                        self.camino = self._camino
-
-                elif self.actitud == 'pasiva' and mob.tipo == 'monstruo':
-                    if v.mask.overlap(mob.mask,(mob.mapX - v.x(self),mob.mapY - v.y(self))) \
-                    or self.flee_counter < 200:
-                        self.AI = movimiento.AI_flee
-                    else:
-                        self.AI = self._AI
-
+                x = mob.mapX-(self.mapX-self.vx)
+                y = mob.mapY-(self.mapY-self.vy)
+                mob_mask = mask.from_surface(mob.image)
+                self_mask = mask.Mask((96,96))
+                self_mask.fill()
+                mob_mask.overlap(self_mask,(x,y))
+                if mob_mask.overlap(self_mask,(x,y)):
+                    if self.actitud == 'hostil' and mob.tipo == 'victima':
+                        pass
+                    elif self.actitud == 'pasiva' and mob.tipo == 'monstruo':
+                        pass
                     
     def update(self):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:
             self.anim_counter = 0
         if not W.onPause and not self.dead:
-            #self.ver()
+            self.ver()
             self.mover()
