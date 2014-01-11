@@ -34,6 +34,8 @@ class modo:
                     
                 elif event.key == C.TECLAS.HABLAR:
                     W.MODO = 'Dialogo'
+                    # W.HERO.hablar()
+                    # W.DIALOG.usar_funcion()
                     modo.onSelect = W.HERO.hablar(modo.onSelect)
                     
                 elif event.key == C.TECLAS.INVENTARIO:
