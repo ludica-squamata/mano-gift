@@ -123,6 +123,7 @@ class PC (Mob):
         sprite = self._interactuar(self.alcance_cc)
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
+            # W.DIALOG = dialogo(self.interlocutor.dialogos)
             return self.interlocutor.hablar(onSelect)
         else:
             W.MODO = 'Aventura'
