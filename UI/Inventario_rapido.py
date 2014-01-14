@@ -5,7 +5,7 @@ from pygame import Rect, font
 
 
 class Inventario_rapido (Menu_Items,Ventana):
-    posicion = 0,384
+    posicion = 0,C.ALTO-int(C.ALTO/5)
     canvas = ''
     sel = 0
     
