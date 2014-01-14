@@ -7,14 +7,14 @@ from libs.textrect import render_textrect
 
 class Menu_Pausa (Menu):
     def __init__(self):
-        botones = {"Items": {"pos":[254,93] ,"direcciones":{"abajo":"Equipo"}},
-                   "Equipo":{"pos":[254,132],"direcciones":{"arriba":"Items","abajo":"Status"}},
-                   "Status":{"pos":[254,171],"direcciones":{"arriba":"Equipo","abajo":"Grupo"}},
-                   "Grupo": {"pos":[254,210],"direcciones":{"arriba":"Status","abajo":"Opciones"}},
-                   "Opciones":{"pos":[254,249],"direcciones":{"arriba":"Grupo","abajo":"Debug"}},
-                   "Debug":{"pos":[254,288],"direcciones":{'arriba':'Opciones'}}}
-        
         super().__init__("Pausa")
+        x = self.canvas.get_width()-(C.CUADRO*6)-14 # 460-192-14 = 254
+        botones = {"Items": {"pos":[x,93] ,"direcciones":{"abajo":"Equipo"}},
+                   "Equipo":{"pos":[x,132],"direcciones":{"arriba":"Items","abajo":"Status"}},
+                   "Status":{"pos":[x,171],"direcciones":{"arriba":"Equipo","abajo":"Grupo"}},
+                   "Grupo": {"pos":[x,210],"direcciones":{"arriba":"Status","abajo":"Opciones"}},
+                   "Opciones":{"pos":[x,249],"direcciones":{"arriba":"Grupo","abajo":"Debug"}},
+                   "Debug":{"pos":[x,288],"direcciones":{'arriba':'Opciones'}}}        
         self.funciones = {
             "arriba":self.selectOne,
             "abajo":self.selectOne,

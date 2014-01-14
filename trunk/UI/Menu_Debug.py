@@ -1,7 +1,7 @@
 from .Menu import Menu
 from ._opcion import _opcion
 from misc import Resources as r
-from globs import World as W
+from globs import World as W, Constants as C
 from pygame import Surface, font, sprite
 import os
 
@@ -18,7 +18,7 @@ class Menu_Debug (Menu):
             'derecha':lambda dummy:None,
             'hablar':self.cargar_mapa}
         self.filas = sprite.LayeredDirty()
-        self.crear_espacio_de_mapas(443,200)
+        self.crear_espacio_de_mapas(C.ANCHO-37,200)
     
     def cargar_mapas_iniciales(self):
         ok = []

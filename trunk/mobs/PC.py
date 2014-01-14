@@ -5,12 +5,12 @@ from .Inventory import Inventory
 from .Item import Item
 from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from UI import Inventario_rapido
-from pygame import Surface,Rect
+from pygame import Surface,Rect,mask
 
 class PC (Mob):
     centroX = 0
     centroY = 0
-    inventario = {}
+    inventario = None
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.
     cmb_pos_alpha = {} # combat position images's alpha.
@@ -70,22 +70,21 @@ class PC (Mob):
         self.animar_caminar()
       
     def accion(self):
-        from mapa import Prop
         x,y = self.direcciones[self.direccion]
         
         if self.estado == 'cmb':
             # la animacion de ataque se hace siempre,
             # sino pareciera que no pasa nada
             self.atacando = True
-            
-        sprite = self._interactuar(self.alcance_cc)
-        if issubclass(sprite.__class__,Mob):
-            if self.estado == 'cmb':
-                x,y = x*self.fuerza,y*self.fuerza
-                self.atacar(sprite,x,y)
-
-        elif isinstance(sprite,Prop):
-            if not self.atacando:
+            sprite = self._interactuar_mobs(self.alcance_cc)
+            if issubclass(sprite.__class__,Mob):
+                if self.estado == 'cmb':
+                    x,y = x*self.fuerza,y*self.fuerza
+                    self.atacar(sprite,x,y)
+        else:
+            from mapa import Prop
+            sprite = self._interactuar_props(x,y)
+            if isinstance(sprite,Prop):
                 x,y = x*self.fuerza*2,y*self.fuerza*2
                 if sprite.interaccion(x,y):
                     item = Item(sprite.nombre,sprite.es('stackable'),sprite.image)
@@ -120,7 +119,7 @@ class PC (Mob):
             self.dirty = 1
 
     def hablar(self,onSelect):
-        sprite = self._interactuar(self.alcance_cc)
+        sprite = self._interactuar_mobs(self.alcance_cc)
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
             # W.DIALOG = dialogo(self.interlocutor.dialogos)
@@ -129,7 +128,7 @@ class PC (Mob):
             W.MODO = 'Aventura'
             return False
     
-    def _interactuar(self,rango):
+    def _interactuar_mobs(self,rango):
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
 
@@ -137,6 +136,20 @@ class PC (Mob):
             if sprite != self and sprite != self.stage.mapa:
                 if self.colisiona(sprite,x,y):
                     return sprite
+    
+    def _interactuar_props(self,x,y):
+        "Utiliza una máscara propia para seleccionar mejor a los props"
+        self_mask = mask.Mask((32,32))
+        self_mask.fill()
+        dx,dy = x*32,y*32
+    
+        for prop in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            x = prop.mapX-(self.mapX+dx)
+            y = prop.mapY-(self.mapY+dy)
+            if prop.image != None:
+                prop_mask = mask.from_surface(prop.image)
+                if prop_mask.overlap(self_mask,(-x,-y)):
+                    return prop
     
     def confirmar_seleccion(self):
         self.interlocutor.hablar(W.DIALOG.sel)

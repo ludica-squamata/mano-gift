@@ -3,9 +3,9 @@ from .teclas import Teclas
 
 class Constants:
     CUADRO = 32
-    ALTO = 480
     ANCHO = 480
-
+    ALTO = 480
+    
     CAPA_BACKGROUND = 0
     CAPA_GROUND_ITEMS = 1
     CAPA_GROUND_SALIDAS = 2
