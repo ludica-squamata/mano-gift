@@ -17,7 +17,7 @@ class Teclas:
     DEBUG = K_F1
 
 
-    def asignar (self,data):
+    def asignar (self,data): #porque no estamos usando este metodo para cargar desde un config?
         Teclas.ARRIBA = data['arriba']
         Teclas.ABAJO = data['abajo']
         Teclas.IZQUIERDA = data['izquierda']

@@ -3,7 +3,7 @@ from .teclas import Teclas
 
 class Constants:
     CUADRO = 32
-    ANCHO = 480
+    ANCHO = 480 #estas medidas podriamos ponerlas en config 
     ALTO = 480
     
     CAPA_BACKGROUND = 0
