@@ -193,6 +193,14 @@ class Menu_Equipo(Menu_Items):
         W.HERO.desequipar_item(item)
         self.espacios.draw(self.canvas)
     
+    def cancelar(self):
+        if self.foco == 'espacios':
+            return super().cancelar()
+        else:
+            h = self.altura_del_texto
+            draw.line(self.draw_space,self.bg_cnvs,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
+            self.foco = 'espacios'
+        
     def usar_funcion(self,tecla):
         '''Determina qué grupo de funciones se van a usar según el foco actual.'''
         

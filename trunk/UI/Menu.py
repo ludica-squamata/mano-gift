@@ -51,6 +51,10 @@ class Menu (Ventana):
                     self.current = spr#.nombre
                     break
     
+    def cancelar(self):
+        '''Esta funcion es un hook para otras funciones del mismo nombre.'''
+        return True
+    
     def usar_funcion(self,tecla):
         if tecla in ('arriba','abajo','izquierda','derecha'):
             self.funciones[tecla](tecla)

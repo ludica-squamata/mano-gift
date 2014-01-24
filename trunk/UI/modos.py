@@ -112,12 +112,13 @@ class modo:
                     modo.newMenu = W.menu_actual.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    'Retrocede al menú anterior, o sale del modo'
-                    if W.menu_actual.nombre == 'Pausa':
-                        W.MAPA_ACTUAL.endDialog()
-                        W.onPause = False
-                    else:
-                        W.MAPA_ACTUAL.popMenu(W.menu_previo)
+                    if W.menu_actual.cancelar():
+                        'Retrocede al menú anterior, o sale del modo'
+                        if W.menu_actual.nombre == 'Pausa':
+                            W.MAPA_ACTUAL.endDialog()
+                            W.onPause = False
+                        else:
+                            W.MAPA_ACTUAL.popMenu(W.menu_previo)
             
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.HABLAR:
