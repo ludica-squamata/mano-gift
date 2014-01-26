@@ -1,10 +1,14 @@
 from pygame import Color
 from .teclas import Teclas
+from misc import Resources as r
 
 class Constants:
-    CUADRO = 32
-    ANCHO = 480 #estas medidas podriamos ponerlas en config 
-    ALTO = 480
+    _config = r.abrir_json('config.json')
+    
+    CUADRO = _config['resolucion']['CUADRO']
+    ANCHO = _config['resolucion']['ANCHO']
+    ALTO = _config['resolucion']['ALTO']
+    TECLAS = Teclas(_config['teclas'])
     
     CAPA_BACKGROUND = 0
     CAPA_GROUND_ITEMS = 1
@@ -19,5 +23,3 @@ class Constants:
     CAPA_OVERLAYS_MENUS = 2 # ocupan toda o gran parte de la pantalla
 
     COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
-
-    TECLAS = Teclas()

@@ -1,7 +1,10 @@
 from pygame import display as pantalla,font,image,event as EVENT
 from globs import Constants as C, World as W, Tiempo as T, QuestManager
-from intro import introduccion,intro
+from intro import introduccion, intro
 from UI.modos import modo
+from misc import Resources as r
+
+config = r.abrir_json('config.json')
 
 tamanio = C.ANCHO, C.ALTO
 font.init()
@@ -9,7 +12,7 @@ pantalla.set_caption('Proyecto Mano-Gift')
 pantalla.set_icon(image.load('data/grafs/favicon.png'))
 fondo = pantalla.set_mode(tamanio) # surface
 
-anim = intro(fondo)
+if config['mostrar_intro']: anim = intro(fondo)
 init = introduccion()
 init.ejecutar(fondo)
 

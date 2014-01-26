@@ -16,14 +16,12 @@ class _giftSprite(sprite.DirtySprite):
             self.image = r.cargar_imagen(imagen)
         elif isinstance(imagen, Surface):
             self.image = imagen
-        elif imagen = None: 
+        elif imagen == None: 
             self.image = None
             self.visible = 0 # no funciona con dirty
         else:
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
             
-        #queda mejor que el caso =None y el raise en else    
-        
         if self.image != None:
             self.rect = self.image.get_rect()
         else:

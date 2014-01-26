@@ -1,29 +1,32 @@
-from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT, \
-K_x, K_s, K_a, K_z, K_RETURN, K_ESCAPE, K_LSHIFT, K_F1
 
 class Teclas:
-    ARRIBA = K_UP
-    ABAJO = K_DOWN
-    IZQUIERDA= K_LEFT
-    DERECHA = K_RIGHT
+    ARRIBA, ABAJO, IZQUIERDA, DERECHA = 0,0,0,0
+    ACCION, HABLAR,CANCELAR_DIALOGO = 0,0,0
+    INVENTARIO, POSICION_COMBATE = 0,0
+    MENU, SALIR, DEBUG = 0,0,0
+    
+    def __init__(self,data):
+        '''No es que vaya a haber más de uno,
+        pero mirá lo que hacemos en constantes...'''
+        
+        self.asignar(data)
+        # podría ser __init__ en lugar de asignar,
+        # pero lo dejo así por las dudas.
 
-    ACCION = K_x
-    HABLAR = K_s
-    CANCELAR_DIALOGO = K_a
-    INVENTARIO = K_z
-    MENU = K_RETURN
-    SALIR = K_ESCAPE
-    POSICION_COMBATE = K_LSHIFT
-    DEBUG = K_F1
+    def asignar (self,data):
+        '''Usamos este metodo para cargar desde config.json'''
+        
+        self.ARRIBA = data['arriba']
+        self.ABAJO = data['abajo']
+        self.IZQUIERDA = data['izquierda']
+        self.DERECHA = data['derecha']
 
-
-    def asignar (self,data): #porque no estamos usando este metodo para cargar desde un config?
-        Teclas.ARRIBA = data['arriba']
-        Teclas.ABAJO = data['abajo']
-        Teclas.IZQUIERDA = data['izquierda']
-        Teclas.DERECHA = data['derecha']
-
-        Teclas.ACCION = data['accion']
-        Teclas.INVENTARIO = data['inventario']
-        Teclas.MENU = data['menu']
-        Teclas.SALIR = data['salir']
+        self.ACCION = data['accion']
+        self.HABLAR = data['hablar']
+        self.CANCELAR_DIALOGO = data['cancelar']
+        self.INVENTARIO = data['inventario']
+        self.POSICION_COMBATE = data['posicion']
+        
+        self.MENU = data['menu']
+        self.SALIR = data['salir']
+        self.DEBUG = data['debug']
