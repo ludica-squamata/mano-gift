@@ -108,7 +108,6 @@ class intro:
                     else:
                         running = 0
             self.timer += 1
-            timer = self.timer
             if self.timer <= 60:
                 fondo.fill(self.negro)
             

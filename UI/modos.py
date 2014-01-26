@@ -1,4 +1,4 @@
-from pygame import event as EVENT, quit as py_quit
+from pygame import quit as py_quit
 from pygame import QUIT, KEYUP, KEYDOWN
 from globs import Constants as C, World as W
 import sys
