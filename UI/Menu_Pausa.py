@@ -1,5 +1,6 @@
 from .Menu import Menu
 from globs import Constants as C
+from misc import Config as cfg
 from ._boton import _boton
 from pygame import Rect, Surface, font, draw
 from pygame.sprite import LayeredDirty
@@ -9,12 +10,12 @@ class Menu_Pausa (Menu):
     def __init__(self):
         super().__init__("Pausa")
         x = self.canvas.get_width()-(C.CUADRO*6)-14 # 460-192-14 = 254
-        botones = {"Items": {"pos":[x,93] ,"direcciones":{"abajo":"Equipo"}},
-                   "Equipo":{"pos":[x,132],"direcciones":{"arriba":"Items","abajo":"Status"}},
-                   "Status":{"pos":[x,171],"direcciones":{"arriba":"Equipo","abajo":"Grupo"}},
-                   "Grupo": {"pos":[x,210],"direcciones":{"arriba":"Status","abajo":"Opciones"}},
-                   "Opciones":{"pos":[x,249],"direcciones":{"arriba":"Grupo","abajo":"Debug"}},
-                   "Debug":{"pos":[x,288],"direcciones":{'arriba':'Opciones'}}}        
+        botones = [{"nombre":"Items","pos":[x,93] ,"direcciones":{"abajo":"Equipo"}},
+                   {"nombre":"Equipo","pos":[x,132],"direcciones":{"arriba":"Items","abajo":"Status"}},
+                   {"nombre":"Status","pos":[x,171],"direcciones":{"arriba":"Equipo","abajo":"Grupo"}},
+                   {"nombre":"Grupo","pos":[x,210],"direcciones":{"arriba":"Status","abajo":"Opciones"}},
+                   {"nombre":"Opciones","pos":[x,249],"direcciones":{"arriba":"Grupo","abajo":"Debug"}},
+                   {"nombre":"Debug","pos":[x,288],"direcciones":{'arriba':'Opciones'}}]
         self.funciones = {
             "arriba":self.selectOne,
             "abajo":self.selectOne,
@@ -26,14 +27,14 @@ class Menu_Pausa (Menu):
         
     def establecer_botones(self,botones,ancho_mod):
         for btn in botones:
-            boton = self._crear_boton(btn,ancho_mod,*botones[btn]['pos'])
+            boton = self._crear_boton(btn['nombre'],ancho_mod,*btn['pos'])
             for direccion in ['arriba','abajo','izquierda','derecha']:
-                if direccion in botones[btn]['direcciones']:
-                    boton.direcciones[direccion] = botones[btn]['direcciones'][direccion]
+                if direccion in btn['direcciones']:
+                    boton.direcciones[direccion] = btn['direcciones'][direccion]
             
             self.botones.add(boton)
 
-        self.cur_btn = 2
+        self.cur_btn = 0
         self.Reset()
                 
     def _crear_boton(self,texto,ancho_mod,x,y):
@@ -98,18 +99,15 @@ class Menu_Pausa (Menu):
             self.botones.draw(self.canvas)
 
     def PressOne(self):
-        if len(self.botones) > 0:
-            self.current.serPresionado()
-            self.botones.draw(self.canvas)
-        
+        super().PressButton()
         self.newMenu = True
     
-    def Reset(self,recordar=False):
+    def Reset(self):
         '''Reseta el presionado de todos los botones, y deja seleccionado
-        el que haya sido elegido anteriormente. Esto deberia ser seteable.'''
+        el que haya sido elegido anteriormente.'''
         self.DeselectAll(self.botones)
-        if not recordar: # podría ser W.recordar.. o un seteo de config
-            self.cur_btn = 2
+        if not cfg.recordar:
+            self.cur_btn = 0
         selected = self.botones.get_sprite(self.cur_btn)
         selected.serElegido()
         self.current = selected

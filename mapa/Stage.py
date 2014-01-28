@@ -1,5 +1,5 @@
 from pygame import sprite, mask as MASK
-from misc import Resources as r
+from misc import Resources as r, Config as cfg
 from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
 from mobs import NPC, Enemy
 from UI import *
@@ -238,7 +238,7 @@ class Stage:
                 menu = Menu(titulo)
         else:
             menu = W.MENUS[titulo]
-            menu.Reset(True)
+            menu.Reset()
         
         W.menu_actual = menu
         self.dialogs.add(menu)

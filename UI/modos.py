@@ -124,5 +124,7 @@ class modo:
                 if event.key == C.TECLAS.HABLAR:
                     if modo.newMenu:
                         W.MAPA_ACTUAL.popMenu(W.menu_actual.current.nombre)
-                
+                    else:
+                        W.menu_actual.keyup_function('hablar')
+                                        
         return W.MAPA_ACTUAL.update(fondo)
