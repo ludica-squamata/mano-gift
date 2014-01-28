@@ -1,6 +1,6 @@
 import json
 from pygame import image,Rect,mask as MASK,PixelArray,Surface
-
+from globs.teclas import Teclas
 
 class Util:
     ##
@@ -39,12 +39,49 @@ class Resources:
         return sprites
                 
     def abrir_json (archivo):
-        ex = open(archivo)
+        ex = open(archivo,'r')
         data = json.load(ex)
         ex.close()
         return data
+    
+    def guardar_json (archivo,datos):
+        ex = open(archivo,'w')
+        json.dump(datos,ex)
+        ex.close()
 
 class Config:
-    #configuraciones
-    pass
-
+    # configuraciones
+    recordar = False
+    intro = True
+    
+    def cargar():
+        data = Resources.abrir_json('config.json')
+        Config.asignar(data)
+        
+    def guardar():
+        from globs.constantes import Constants as C
+        from globs.teclas import Teclas as T
+        
+        data = {
+            "mostrar_intro":True,"recordar_menus":True, #próximamente cofigurables
+            "resolucion":{"CUADRO":C.CUADRO,"ANCHO":C.ANCHO,"ALTO":C.ALTO},
+            "teclas":{"arriba":T.ARRIBA,"abajo":T.ABAJO,
+                      "derecha":T.DERECHA,"izquierda":T.IZQUIERDA,
+                      "accion":T.ACCION,"hablar":T.HABLAR,
+                      "cancelar":T.CANCELAR_DIALOGO,"inventario":T.INVENTARIO,
+                      "posicion":T.CAMBIAR_POSICION,
+                      "menu":T.MENU,"debug":T.DEBUG,"salir":T.SALIR}}
+        
+        Resources.guardar_json('config.json',data)
+    
+    def asignar(self,data):
+        from globs.constantes import Constants as C
+        from globs.teclas import Teclas as T
+        
+        Config.recordar = data['recordar_menus']
+        Config.intro = data['mostrar_intro']
+        C.CUADRO = data['resolucion']['CUADRO']
+        C.ANCHO = data['resolucion']['ANCHO']
+        C.ALTO = data['resolucion']['ALTO']
+        T.asignar(data['teclas'])
+    

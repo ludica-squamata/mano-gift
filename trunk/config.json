@@ -1,5 +1,6 @@
 {
     "mostrar_intro":true,
+    "recordar_menus":true,
     
     "resolucion":{
         "CUADRO":32,

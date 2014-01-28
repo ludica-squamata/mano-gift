@@ -5,6 +5,7 @@ from ._item_inv import _item_inv
 
 class Menu (Ventana):
     botones = []
+    keyup = {}
     cur_btn = 0
     current = ''
     canvas = None
@@ -63,11 +64,25 @@ class Menu (Ventana):
         
         return self.newMenu
     
+    def keyup_function(self,tecla):
+        if tecla in self.keyup:
+            self.keyup[tecla]()
+    
     def update (self):
         self.newMenu = False
         self.dirty = 1
     
-    def Reset(self,*args):
+    def PressButton(self):
+        if len(self.botones) > 0:
+            self.current.serPresionado()
+            self.botones.draw(self.canvas)
+    
+    def ReleaseButton(self):
+        self.DeselectAll(self.botones)
+        self.current.serElegido()
+        self.botones.draw(self.canvas)
+          
+    def Reset(self):
         '''Resetea el estado de la ventana. Esta función es solo un hook.'''
         pass
     
