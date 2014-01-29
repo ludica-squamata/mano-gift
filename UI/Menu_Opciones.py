@@ -65,6 +65,8 @@ class Menu_Opciones (Menu_Pausa,Menu):
         return TECLAS
     
     def setTecla (self):
+        '''Prepara la tecla elegida para ser cambiada'''
+        
         for tcl in self.esp_teclas:
             tcl.serDeselegido()
             
@@ -78,6 +80,8 @@ class Menu_Opciones (Menu_Pausa,Menu):
         modo.setKey = True
     
     def cambiarTecla (self,tcl):
+        '''Cambia la tecla elgida por el nuevo input'''
+        
         tecla = self.esp_teclas.get_sprite(self.cur_btn)
         tecla.serDeselegido()
         tecla.setText(key_name(tcl))
