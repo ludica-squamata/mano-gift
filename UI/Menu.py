@@ -61,15 +61,12 @@ class Menu (Ventana):
             self.funciones[tecla](tecla)
         else:
             self.funciones[tecla]()
-        
-        return self.newMenu
     
     def keyup_function(self,tecla):
         if tecla in self.keyup:
             self.keyup[tecla]()
     
     def update (self):
-        self.newMenu = False
         self.dirty = 1
     
     def PressButton(self):
