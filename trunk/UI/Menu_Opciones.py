@@ -1,12 +1,11 @@
 from .Menu import Menu
+from .modos import modo
 from .Menu_Pausa import Menu_Pausa
-from .Colores import Colores
-from misc import Config as c
 from ._boton import _boton
 from ._opcion import _opcion
 from globs.constantes import Constants as K
 from pygame.sprite import LayeredDirty
-from pygame import key
+from pygame.key import name as  key_name
 
 class Menu_Opciones (Menu_Pausa,Menu):
     def __init__(self):
@@ -16,7 +15,7 @@ class Menu_Opciones (Menu_Pausa,Menu):
             "abajo":self.selectOne,
             "izquierda":self.selectOne,
             "derecha":self.selectOne,
-            "hablar":self.PressButton}
+            "hablar":self.setTecla}
         
         self.keyup = {
             "hablar":self.ReleaseButton}
@@ -28,14 +27,11 @@ class Menu_Opciones (Menu_Pausa,Menu):
         self.esp_teclas.add(self.crear_espacios_teclas())
         self.esp_teclas.draw(self.canvas)
         
-        print(self.botones.get_sprite(1).nombre,
-              self.esp_teclas.get_sprite(1).nombre)
-    
     def crear_botones_teclas (self):
         #abreviaturas para hacer más legible el código
         m, k,p = 'nombre','direcciones','pos'
         a,b,i,d = 'arriba','abajo','izquierda','derecha'
-        dx, dy, n = 226,220,38 # constantes numéricas de posicion
+        dx, dy, n = 226,185,38 # constantes numéricas de posicion
         botones = [
             {m:"Arriba",p:[5,n*0+dy],k:{b:"Abajo",d:"Cancelar"}},
             {m:"Abajo",p:[5,n*1+dy],k:{b:"Derecha",a:"Arriba",d:"Inventario"}},
@@ -57,10 +53,10 @@ class Menu_Opciones (Menu_Pausa,Menu):
         teclas = ["ARRIBA","ABAJO","DERECHA","IZQUIERDA",
                   "ACCION","HABLAR","CANCELAR_DIALOGO","INVENTARIO",
                   "POSICION_COMBATE","MENU","DEBUG","SALIR"]
-        x, y, n = 144,230,38 # constantes numéricas de posicion
+        x, y, n = 144,195,38 # constantes numéricas de posicion
         dx = x+32*7
         for t in range(len(teclas)):
-            texto = key.name(eval('K.TECLAS.'+teclas[t]))
+            texto = key_name(eval('K.TECLAS.'+teclas[t]))
             if t > 5:
                 t -= 6
                 x = dx
@@ -68,4 +64,25 @@ class Menu_Opciones (Menu_Pausa,Menu):
         
         return TECLAS
     
+    def setTecla (self):
+        for tcl in self.esp_teclas:
+            tcl.serDeselegido()
+            
+        n = self.cur_btn
+        tecla = self.esp_teclas.get_sprite(n)
+        boton = self.botones.get_sprite(n)
+        
+        boton.serPresionado()
+        tecla.serElegido()
+        
+        modo.setKey = True
     
+    def cambiarTecla (self,tcl):
+        tecla = self.esp_teclas.get_sprite(self.cur_btn)
+        tecla.serDeselegido()
+        tecla.setText(key_name(tcl))
+    
+    def update(self):
+        self.botones.draw(self.canvas)
+        self.esp_teclas.draw(self.canvas)
+        self.dirty = 1

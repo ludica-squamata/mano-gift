@@ -1,4 +1,5 @@
 from .Menu import Menu
+from .modos import modo
 from globs import Constants as C
 from misc import Config as cfg
 from ._boton import _boton
@@ -100,7 +101,7 @@ class Menu_Pausa (Menu):
 
     def PressOne(self):
         super().PressButton()
-        self.newMenu = True
+        modo.newMenu = True
     
     def Reset(self):
         '''Reseta el presionado de todos los botones, y deja seleccionado
