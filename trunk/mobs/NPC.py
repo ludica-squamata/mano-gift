@@ -1,5 +1,6 @@
 from . import Mob
-from globs import World as W, QuestManager, MobGroup
+from globs import World as W, MobGroup
+from quests import QuestManager
 
 class NPC (Mob):
     quest = None

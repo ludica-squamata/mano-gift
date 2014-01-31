@@ -1,5 +1,6 @@
 from pygame import display as pantalla,init as py_init,image,event as EVENT
-from globs import Constants as C, World as W, Tiempo as T, QuestManager
+from globs import Constants as C, World as W, Tiempo as T
+from quests import QuestManager
 from intro import introduccion, intro
 from UI.modos import modo
 from misc import Resources as r
