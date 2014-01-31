@@ -1,4 +1,4 @@
-from .giftgroups import MobGroup
+from globs import MobGroup
 
 class QuestManager:
     quests = {}

@@ -23,44 +23,45 @@ class Menu_Opciones (Menu_Pausa,Menu):
         self.botones = LayeredDirty()
         self.esp_teclas = LayeredDirty()
         #las imagenes del boton y la tecla estan vinculados por index
-        self.establecer_botones(self.crear_botones_teclas(),4)
-        self.esp_teclas.add(self.crear_espacios_teclas())
+        self.establecer_botones(self.crear_botones_teclas(6,228),4)
+        self.esp_teclas.add(self.crear_espacios_teclas(140,362,2.75))
         self.esp_teclas.draw(self.canvas)
         
-    def crear_botones_teclas (self):
+    def crear_botones_teclas (self,x1,x2):
         #abreviaturas para hacer más legible el código
         m, k,p = 'nombre','direcciones','pos'
         a,b,i,d = 'arriba','abajo','izquierda','derecha'
-        dx, dy, n = 226,185,38 # constantes numéricas de posicion
+        dy, f = 185,38 # constantes numéricas de posicion # f = fila
         botones = [
-            {m:"Arriba",p:[5,n*0+dy],k:{b:"Abajo",d:"Cancelar"}},
-            {m:"Abajo",p:[5,n*1+dy],k:{b:"Derecha",a:"Arriba",d:"Inventario"}},
-            {m:"Derecha",p:[5,n*2+dy],k:{b:"Izquierda",a:"Abajo",d:"Posicion"}},
-            {m:"Izquierda",p:[5,n*3+dy],k:{b:"Accion",a:"Derecha",d:"Menu"}},
-            {m:"Accion",p:[5,n*4+dy],k:{b:"Hablar",a:"Izquierda",d:"Debug"}},
-            {m:"Hablar",p:[5,n*5+dy],k:{b:"Cancelar",a:"Accion",d:"Salir"}},
-            {m:"Cancelar",p:[dx,n*0+dy],k:{b:"Inventario",a:"Hablar",i:"Arriba"}},
-            {m:"Inventario",p:[dx,n*1+dy],k:{b:"Posicion",a:"Cancelar",i:"Abajo"}},
-            {m:"Posicion",p:[dx,n*2+dy],k:{b:"Menu",a:"Inventario",i:"Derecha"}},
-            {m:"Menu",p:[dx,n*3+dy],k:{b:"Debug",a:"Posicion",i:"Izquierda"}},
-            {m:"Debug",p:[dx,n*4+dy],k:{b:"Salir",a:"Menu",i:"Accion"}},
-            {m:"Salir",p:[dx,n*5+dy],k:{a:"Debug",i:"Hablar"}}]
+            # primera columna
+            {m:"Arriba",    p:[x1,f*0+dy],k:{b:"Abajo",a:"Salir",d:"Cancelar"}},
+            {m:"Abajo",     p:[x1,f*1+dy],k:{b:"Derecha",a:"Arriba",d:"Inventario"}},
+            {m:"Derecha",   p:[x1,f*2+dy],k:{b:"Izquierda",a:"Abajo",d:"Posicion"}},
+            {m:"Izquierda", p:[x1,f*3+dy],k:{b:"Accion",a:"Derecha",d:"Menu"}},
+            {m:"Accion",    p:[x1,f*4+dy],k:{b:"Hablar",a:"Izquierda",d:"Debug"}},
+            {m:"Hablar",    p:[x1,f*5+dy],k:{b:"Cancelar",a:"Accion",d:"Salir"}},
+            # segunda columna
+            {m:"Cancelar",  p:[x2,f*0+dy],k:{b:"Inventario",a:"Hablar",i:"Arriba"}},
+            {m:"Inventario",p:[x2,f*1+dy],k:{b:"Posicion",a:"Cancelar",i:"Abajo"}},
+            {m:"Posicion",  p:[x2,f*2+dy],k:{b:"Menu",a:"Inventario",i:"Derecha"}},
+            {m:"Menu",      p:[x2,f*3+dy],k:{b:"Debug",a:"Posicion",i:"Izquierda"}},
+            {m:"Debug",     p:[x2,f*4+dy],k:{b:"Salir",a:"Menu",i:"Accion"}},
+            {m:"Salir",     p:[x2,f*5+dy],k:{b:"Arriba",a:"Debug",i:"Hablar"}}]
         
         return botones
     
-    def crear_espacios_teclas (self):
+    def crear_espacios_teclas (self,x,x1,ancho_mod):
         TECLAS = []
         teclas = ["ARRIBA","ABAJO","DERECHA","IZQUIERDA",
                   "ACCION","HABLAR","CANCELAR_DIALOGO","INVENTARIO",
                   "POSICION_COMBATE","MENU","DEBUG","SALIR"]
-        x, y, n = 144,195,38 # constantes numéricas de posicion
-        dx = x+32*7
+        y, n =195,38 # constantes numéricas de posicion
         for t in range(len(teclas)):
             texto = key_name(eval('K.TECLAS.'+teclas[t]))
             if t > 5:
                 t -= 6
-                x = dx
-            TECLAS.append(_opcion(texto,32*2,[x,n*t+y],14,1))
+                x = x1
+            TECLAS.append(_opcion(texto,int(32*ancho_mod),[x,n*t+y],14,1))
         
         return TECLAS
     

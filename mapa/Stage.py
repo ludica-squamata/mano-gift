@@ -1,6 +1,7 @@
 from pygame import sprite, mask as MASK
 from misc import Resources as r, Config as cfg
-from globs import Constants as C, World as W, Tiempo as T, QuestManager, MobGroup
+from globs import Constants as C, World as W, Tiempo as T, MobGroup
+from quests import QuestManager
 from mobs import NPC, Enemy
 from UI import *
 from mobs.scripts.a_star import generar_grilla
