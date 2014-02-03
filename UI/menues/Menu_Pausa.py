@@ -2,7 +2,7 @@ from .Menu import Menu
 from UI.modos import modo
 from globs import Constants as C
 from misc import Config as cfg
-from UI._boton import _boton
+from UI.widgets import _boton
 from pygame import Rect, Surface, font, draw
 from pygame.sprite import LayeredDirty
 from libs.textrect import render_textrect

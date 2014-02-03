@@ -1,6 +1,6 @@
-from .Colores import Colores
+from UI.Colores import Colores
 from libs.textrect import TextRectException
-from base.base import _giftSprite
+from base import _giftSprite
 from pygame import font, Rect
 from libs.textrect import render_textrect
 

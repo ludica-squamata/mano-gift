@@ -4,7 +4,7 @@ from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite, Color
 from pygame import display as pantalla, event as EVENT,font
 from globs import Tiempo as T, Constants as C, World as W
 from misc import Resources as r, Util
-from UI import Menu_Debug, _opcion
+from UI import Menu_Debug
 from libs.textrect import render_textrect
 import os,os.path
 
