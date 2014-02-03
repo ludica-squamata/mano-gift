@@ -4,9 +4,9 @@ from pygame.sprite import LayeredDirty
 from misc import Resources as r
 from base.base import _giftSprite
 from libs.textrect import render_textrect
-from .Colores import Colores as  C
+from UI.Colores import Colores as  C
 from globs import World as W
-from ._item_inv import _item_inv
+from UI._item_inv import _item_inv
 
 class Menu_Equipo(Menu_Items):
     espacios = None

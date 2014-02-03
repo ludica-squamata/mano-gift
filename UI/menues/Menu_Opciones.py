@@ -1,11 +1,14 @@
 from .Menu import Menu
-from .modos import modo
 from .Menu_Pausa import Menu_Pausa
-from ._boton import _boton
-from ._opcion import _opcion
+from UI.modos import modo
+from UI._boton import _boton
+from UI._opcion import _opcion
 from globs.constantes import Constants as K
 from pygame.sprite import LayeredDirty
-from pygame.key import name as  key_name
+from pygame.key import name as key_name
+from pygame import Rect,font
+from misc.config import Config as C
+from libs.textrect import render_textrect
 
 class Menu_Opciones (Menu_Pausa,Menu):
     def __init__(self):
@@ -34,27 +37,28 @@ class Menu_Opciones (Menu_Pausa,Menu):
         dy, f = 185,38 # constantes numéricas de posicion # f = fila
         botones = [
             # primera columna
-            {m:"Arriba",    p:[x1,f*0+dy],k:{b:"Abajo",a:"Salir",d:"Cancelar"}},
-            {m:"Abajo",     p:[x1,f*1+dy],k:{b:"Derecha",a:"Arriba",d:"Inventario"}},
-            {m:"Derecha",   p:[x1,f*2+dy],k:{b:"Izquierda",a:"Abajo",d:"Posicion"}},
-            {m:"Izquierda", p:[x1,f*3+dy],k:{b:"Accion",a:"Derecha",d:"Menu"}},
-            {m:"Accion",    p:[x1,f*4+dy],k:{b:"Hablar",a:"Izquierda",d:"Debug"}},
-            {m:"Hablar",    p:[x1,f*5+dy],k:{b:"Cancelar",a:"Accion",d:"Salir"}},
+            {m:"Arriba",    p:[x1,f*0+dy],k:{b:"Abajo",a:"Salir",d:"Accion"}},
+            {m:"Abajo",     p:[x1,f*1+dy],k:{b:"Derecha",a:"Arriba",d:"Hablar"}},
+            {m:"Derecha",   p:[x1,f*2+dy],k:{b:"Izquierda",a:"Abajo",d:"Inventario"}},
+            {m:"Izquierda", p:[x1,f*3+dy],k:{b:"Menu",a:"Derecha",d:"Cancelar"}},
+            {m:"Menu",      p:[x1,f*4+dy],k:{b:"Debug",a:"Izquierda",d:"Posicion"}},
+            {m:"Debug",     p:[x1,f*5+dy],k:{b:"Accion",a:"Menu",d:"Salir"}},
             # segunda columna
-            {m:"Cancelar",  p:[x2,f*0+dy],k:{b:"Inventario",a:"Hablar",i:"Arriba"}},
-            {m:"Inventario",p:[x2,f*1+dy],k:{b:"Posicion",a:"Cancelar",i:"Abajo"}},
-            {m:"Posicion",  p:[x2,f*2+dy],k:{b:"Menu",a:"Inventario",i:"Derecha"}},
-            {m:"Menu",      p:[x2,f*3+dy],k:{b:"Debug",a:"Posicion",i:"Izquierda"}},
-            {m:"Debug",     p:[x2,f*4+dy],k:{b:"Salir",a:"Menu",i:"Accion"}},
-            {m:"Salir",     p:[x2,f*5+dy],k:{b:"Arriba",a:"Debug",i:"Hablar"}}]
+            {m:"Accion",    p:[x2,f*0+dy],k:{b:"Hablar",a:"Debug",i:"Arriba"}},
+            {m:"Hablar",    p:[x2,f*1+dy],k:{b:"Inventario",a:"Accion",i:"Abajo"}},
+            {m:"Inventario",p:[x2,f*2+dy],k:{b:"Cancelar",a:"Hablar",i:"Derecha"}},
+            {m:"Cancelar",  p:[x2,f*3+dy],k:{b:"Posicion",a:"Inventario",i:"Izquierda"}},
+            {m:"Posicion",  p:[x2,f*4+dy],k:{b:"Salir",a:"Cancelar",i:"Menu"}},
+            {m:"Salir",     p:[x2,f*5+dy],k:{b:"Arriba",a:"Posicion",i:"Debug"}}]
         
         return botones
     
     def crear_espacios_teclas (self,x,x1,ancho_mod):
         TECLAS = []
         teclas = ["ARRIBA","ABAJO","DERECHA","IZQUIERDA",
-                  "ACCION","HABLAR","CANCELAR_DIALOGO","INVENTARIO",
-                  "POSICION_COMBATE","MENU","DEBUG","SALIR"]
+                  "MENU","DEBUG","ACCION","HABLAR","INVENTARIO",
+                  "CANCELAR_DIALOGO","POSICION_COMBATE","SALIR"]
+        
         y, n =195,38 # constantes numéricas de posicion
         for t in range(len(teclas)):
             texto = key_name(eval('K.TECLAS.'+teclas[t]))
@@ -84,8 +88,24 @@ class Menu_Opciones (Menu_Pausa,Menu):
         '''Cambia la tecla elgida por el nuevo input'''
         
         tecla = self.esp_teclas.get_sprite(self.cur_btn)
+        boton = self.botones.get_sprite(self.cur_btn)
+        
         tecla.serDeselegido()
         tecla.setText(key_name(tcl))
+        C.asignar('teclas/'+boton.nombre.lower(),tcl)
+        C.guardar()
+        self.mostrar_aviso()
+    
+    def mostrar_aviso(self):
+        '''Muestra el aviso de que la configuración cambiará al reiniciar'''
+        
+        texto = 'Los cambios tendrán efecto al reiniciar el juego'
+        fuente = font.SysFont('verdana',14)
+        w,h = fuente.size(texto)
+        x,y = self.canvas.get_width()-w-15,self.canvas.get_height()-h-15
+        rect = Rect(x,y,w,h+1)
+        render = render_textrect(texto,fuente,rect,self.font_low_color,self.bg_cnvs)
+        self.canvas.blit(render,rect)
     
     def update(self):
         self.botones.draw(self.canvas)
