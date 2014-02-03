@@ -3,9 +3,7 @@ from globs import Constants as C, World as W, Tiempo as T
 from quests import QuestManager
 from intro import introduccion, intro
 from UI.modos import modo
-from misc import Resources as r
-
-config = r.abrir_json('config.json')
+from misc import Resources as r, Config
 
 tamanio = C.ANCHO, C.ALTO
 py_init()
@@ -13,7 +11,7 @@ pantalla.set_caption('Proyecto Mano-Gift')
 pantalla.set_icon(image.load('data/grafs/favicon.png'))
 fondo = pantalla.set_mode(tamanio) # surface
 
-if config['mostrar_intro']: anim = intro(fondo)
+if Config.dato('mostrar_intro'): anim = intro(fondo)
 init = introduccion()
 init.ejecutar(fondo)
 

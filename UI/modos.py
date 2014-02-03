@@ -1,7 +1,6 @@
-from pygame import quit as py_quit
 from pygame import QUIT, KEYUP, KEYDOWN
 from globs import Constants as C, World as W
-import sys
+from misc import Util
 
 class modo:
     dx,dy = 0,0
@@ -12,14 +11,11 @@ class modo:
     def Juego (events):
         for event in events:
             if event.type == QUIT:
-                py_quit()
-                sys.exit()
+                Util.salir()
             
             elif event.type == KEYDOWN:
                 if event.key == C.TECLAS.SALIR:
-                    py_quit()
-                    print('Saliendo...')
-                    sys.exit()
+                    Util.salir()
                 
                 elif event.key == C.TECLAS.DEBUG:
                     print((W.HERO.mapX, W.HERO.mapY))

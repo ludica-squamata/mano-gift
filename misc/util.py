@@ -1,4 +1,6 @@
-from pygame import mask as MASK,PixelArray,Surface
+from pygame import mask as MASK,PixelArray,Surface,quit as py_quit
+from .config import Config
+import sys
 
 class Util:
     ##
@@ -16,3 +18,11 @@ class Util:
                 if mask.get_at((x,y)):
                     pxarray[int(x+(h-y)/2),y] = (0,0,0,150)
         return pxarray.make_surface().convert_alpha()
+
+    ##
+    #una funcion unificada para cerrar todo
+    def salir():
+        py_quit()
+        print('Saliendo...')
+        Config.guardar()
+        sys.exit()

@@ -1,14 +1,13 @@
 from pygame import Color
 from .teclas import Teclas
-from misc import Resources as r
+from misc import Resources as r, Config as C
 
 class Constants:
-    _config = r.abrir_json('config.json')
     
-    CUADRO = _config['resolucion']['CUADRO']
-    ANCHO = _config['resolucion']['ANCHO']
-    ALTO = _config['resolucion']['ALTO']
-    TECLAS = Teclas(_config['teclas'])
+    CUADRO = 32
+    ANCHO = C.dato('resolucion/ANCHO')
+    ALTO = C.dato('resolucion/ALTO')
+    TECLAS = Teclas(C.dato('teclas'))
     
     CAPA_BACKGROUND = 0
     CAPA_GROUND_ITEMS = 1
