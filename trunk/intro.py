@@ -1,12 +1,12 @@
 # intro.py
 # módulo de introducción y selección de modo.
 from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite, Color
-from pygame import display as pantalla, event as EVENT,quit as py_quit,font
+from pygame import display as pantalla, event as EVENT,font
 from globs import Tiempo as T, Constants as C, World as W
-from misc import Resources as r
+from misc import Resources as r, Util
 from UI import Menu_Debug, _opcion
 from libs.textrect import render_textrect
-import sys,os,os.path
+import os,os.path
 
 ###TODO###
 # menu de selección (opciones):
@@ -26,14 +26,11 @@ class introduccion (Menu_Debug):
             T.FPS.tick(60)
             for event in EVENT.get():
                 if event.type == QUIT:
-                    py_quit()
-                    sys.exit()
+                    Util.salir()
                     
-                elif event.type == KEYDOWN:                 
+                elif event.type == KEYDOWN:
                     if event.key == C.TECLAS.SALIR:
-                        py_quit()
-                        print('Saliendo...')
-                        sys.exit()
+                        Util.salir()
                     
                     elif event.key == C.TECLAS.IZQUIERDA:
                         self.usar_funcion('izquierda')
@@ -102,9 +99,7 @@ class intro:
                 
                 if event.type == KEYDOWN:
                     if event.key == C.TECLAS.SALIR:
-                        py_quit()
-                        print('Saliendo...')
-                        sys.exit()
+                        Util.salir()
                     else:
                         running = 0
             self.timer += 1

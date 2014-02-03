@@ -28,5 +28,5 @@ class Resources:
     
     def guardar_json (archivo,datos):
         ex = open(archivo,'w')
-        json.dump(datos,ex)
+        json.dump(datos,ex, sort_keys=True,indent=4, separators=(',', ': '))
         ex.close()
