@@ -1,4 +1,4 @@
-from base.base import _giftSprite
+from base import _giftSprite
 
 class _boton (_giftSprite):
     nombre = ''

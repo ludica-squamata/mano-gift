@@ -1,6 +1,6 @@
 from .Menu import Menu
 from UI.Colores import Colores as C
-from UI._item_inv import _item_inv
+from UI.widgets import _item_inv
 from globs import World as W
 from libs.textrect import render_textrect
 from pygame import sprite, font, Rect, draw, Surface

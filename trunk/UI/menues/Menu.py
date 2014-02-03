@@ -1,7 +1,6 @@
 from UI.Ventana import Ventana
 from globs import Constants as C, World as W
-from UI._boton import _boton
-from UI._item_inv import _item_inv
+from UI.widgets import _boton, _item_inv
 
 class Menu (Ventana):
     botones = []

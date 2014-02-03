@@ -1,5 +1,5 @@
-from .Colores import Colores
-from base.base import _giftSprite
+from UI.Colores import Colores
+from base import _giftSprite
 from pygame import font, Rect, Surface
 from libs.textrect import render_textrect
 

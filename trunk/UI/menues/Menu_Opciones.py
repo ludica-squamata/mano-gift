@@ -1,8 +1,7 @@
 from .Menu import Menu
 from .Menu_Pausa import Menu_Pausa
 from UI.modos import modo
-from UI._boton import _boton
-from UI._opcion import _opcion
+from UI.widgets import _boton, _opcion
 from globs.constantes import Constants as K
 from pygame.sprite import LayeredDirty
 from pygame.key import name as key_name

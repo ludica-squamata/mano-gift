@@ -1,5 +1,5 @@
 from .Ventana import Ventana
-from ._opcion import _opcion
+from UI.widgets import _opcion
 from pygame import font, sprite, Rect, draw
 from globs import Constants as C, World as W
 from libs.textrect import render_textrect

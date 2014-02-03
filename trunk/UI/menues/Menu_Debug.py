@@ -1,5 +1,5 @@
 from .Menu import Menu
-from UI._opcion import _opcion
+from UI.widgets import _opcion
 from misc import Resources as r
 from globs import World as W, Constants as C
 from pygame import Surface, font, sprite
