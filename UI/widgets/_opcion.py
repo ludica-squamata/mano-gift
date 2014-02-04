@@ -12,7 +12,7 @@ class _opcion (Colores,_giftSprite):
     isSelected = False
     
     def __init__(self,texto,ancho,pos,size=16,aling=0):
-        self.nombre = texto
+        
         self.pos = pos
         self.size = size
         self.fuente = font.SysFont('verdana', size)
@@ -59,3 +59,5 @@ class _opcion (Colores,_giftSprite):
                 
         if self.isSelected: self.serElegido()
         else: self.serDeselegido()
+        
+        self.nombre = texto
