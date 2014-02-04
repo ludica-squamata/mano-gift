@@ -92,7 +92,6 @@ class Menu_Opciones (Menu_Pausa,Menu):
         tecla.serDeselegido()
         tecla.setText(key_name(tcl))
         C.asignar('teclas/'+boton.nombre.lower(),tcl)
-        C.guardar()
         self.mostrar_aviso()
     
     def mostrar_aviso(self):
@@ -105,6 +104,10 @@ class Menu_Opciones (Menu_Pausa,Menu):
         rect = Rect(x,y,w,h+1)
         render = render_textrect(texto,fuente,rect,self.font_low_color,self.bg_cnvs)
         self.canvas.blit(render,rect)
+    
+    def cancelar(self):
+        K.TECLAS.asignar(C.dato('teclas'))
+        return True
     
     def update(self):
         self.botones.draw(self.canvas)
