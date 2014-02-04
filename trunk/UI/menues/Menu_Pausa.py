@@ -3,7 +3,6 @@ from UI.modos import modo
 from globs import Constants as C
 from misc import Config as cfg
 from UI.widgets import _boton
-from pygame import Rect, Surface, font, draw
 from pygame.sprite import LayeredDirty
 from libs.textrect import render_textrect
 
@@ -11,24 +10,30 @@ class Menu_Pausa (Menu):
     def __init__(self):
         super().__init__("Pausa")
         x = self.canvas.get_width()-(C.CUADRO*6)-14 # 460-192-14 = 254
-        botones = [{"nombre":"Items","pos":[x,93] ,"direcciones":{"abajo":"Equipo"}},
-                   {"nombre":"Equipo","pos":[x,132],"direcciones":{"arriba":"Items","abajo":"Status"}},
-                   {"nombre":"Status","pos":[x,171],"direcciones":{"arriba":"Equipo","abajo":"Grupo"}},
-                   {"nombre":"Grupo","pos":[x,210],"direcciones":{"arriba":"Status","abajo":"Opciones"}},
-                   {"nombre":"Opciones","pos":[x,249],"direcciones":{"arriba":"Grupo","abajo":"Debug"}},
-                   {"nombre":"Debug","pos":[x,288],"direcciones":{'arriba':'Opciones'}}]
+        m,k,p,c = 'nombre','direcciones','pos','comando'
+        a,b,i,d = 'arriba','abajo','izquierda','derecha'
+        cmd = lambda:print('anda')
+        botones = [
+            {m:"Items",   p:[x,93] ,k:{b:"Equipo"},             c:self.PressOne},
+            {m:"Equipo",  p:[x,132],k:{a:"Items",b:"Status"},   c:self.PressOne},
+            {m:"Status",  p:[x,171],k:{a:"Equipo",b:"Grupo"},   c:self.PressOne},
+            {m:"Grupo",   p:[x,210],k:{a:"Status",b:"Opciones"},c:self.PressOne},
+            {m:"Opciones",p:[x,249],k:{a:"Grupo",b:"Debug"},    c:self.PressOne},
+            {m:"Debug",   p:[x,288],k:{a:'Opciones'},           c:self.PressOne}]
+        
+        self.botones = LayeredDirty()
+        self.establecer_botones(botones,6)
+        self.selectOne('arriba')
         self.funciones = {
             "arriba":self.selectOne,
             "abajo":self.selectOne,
             "izquierda":self.selectOne,
             "derecha":self.selectOne,
-            "hablar":self.PressOne}
-        self.botones = LayeredDirty()
-        self.establecer_botones(botones,6)
-        
+            "hablar":self.current.comando}
+
     def establecer_botones(self,botones,ancho_mod):
         for btn in botones:
-            boton = self._crear_boton(btn['nombre'],ancho_mod,*btn['pos'])
+            boton = _boton(btn['nombre'],ancho_mod,btn['comando'],btn['pos'])
             for direccion in ['arriba','abajo','izquierda','derecha']:
                 if direccion in btn['direcciones']:
                     boton.direcciones[direccion] = btn['direcciones'][direccion]
@@ -38,49 +43,6 @@ class Menu_Pausa (Menu):
         self.cur_btn = 0
         self.Reset()
                 
-    def _crear_boton(self,texto,ancho_mod,x,y):
-        ancho = C.CUADRO*ancho_mod
-        
-        rect = Rect((x,y),((ancho)-6,C.CUADRO-6))
-        
-        cnvs_pre = Surface(((ancho)+6,C.CUADRO+6))
-        cnvs_pre.fill(self.bg_cnvs)
-        cnvs_sel = cnvs_pre.copy()
-        cnvs_uns = cnvs_pre.copy()
-        
-        fnd_pre = self.crear_inverted_canvas(ancho,C.CUADRO)
-        fnd_uns = self.crear_canvas((ancho),C.CUADRO)
-        
-        for i in range(round(((C.CUADRO*ancho)+6)/3)):
-            #linea punteada horizontal superior
-            draw.line(cnvs_sel,self.font_high_color,(i*7,0),((i*7)+5,0),2)
-            
-            #linea punteada horizontal inferior
-            draw.line(cnvs_sel,self.font_high_color,(i*7,C.CUADRO+4),((i*7)+5,C.CUADRO+4),2)
-        
-        for i in range(round((C.CUADRO+6)/3)):
-            #linea punteada vertical derecha
-            draw.line(cnvs_sel,self.font_high_color,(0,i*7),(0,(i*7)+5),2)
-            
-            #linea punteada vertical izquierda
-            draw.line(cnvs_sel,self.font_high_color,(ancho+4,i*7),(ancho+4,(i*7)+5),2)
-        
-        cnvs_sel.blit(fnd_uns,(3,3))
-        cnvs_uns.blit(fnd_uns,(3,3))
-        cnvs_pre.blit(fnd_pre,(3,3))
-        
-        font_se = font.SysFont('verdana', 16, bold = True)
-        font_un = font.SysFont('verdana', 16)
-        
-        btn_sel = render_textrect(texto,font_se,rect,self.font_high_color,self.bg_cnvs,1)
-        btn_uns = render_textrect(texto,font_un,rect,self.font_none_color,self.bg_cnvs,1)        
-        
-        cnvs_uns.blit(btn_uns,(6,6))
-        cnvs_sel.blit(btn_sel,(6,6))
-        cnvs_pre.blit(btn_sel,(6,6))
-        
-        return _boton(texto,cnvs_sel,cnvs_pre,cnvs_uns,rect.topleft)
-
     def selectOne(self,direccion):
         self.DeselectAll(self.botones)
         if len(self.botones) > 0:
@@ -107,7 +69,7 @@ class Menu_Pausa (Menu):
         '''Reseta el presionado de todos los botones, y deja seleccionado
         el que haya sido elegido anteriormente.'''
         self.DeselectAll(self.botones)
-        if not cfg.recordar:
+        if not cfg.dato('recordar_menus'):
             self.cur_btn = 0
         selected = self.botones.get_sprite(self.cur_btn)
         selected.serElegido()
