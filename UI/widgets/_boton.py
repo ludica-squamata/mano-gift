@@ -1,9 +1,9 @@
-from UI.Ventana import Ventana
+from UI.basewidget import BaseWidget
 from globs import Constants as C
-from pygame import Rect, Surface, font, draw
+from pygame import Rect, Surface, draw
 from libs.textrect import render_textrect
 
-class _boton (Ventana):
+class _boton (BaseWidget):
     nombre = ''
     img_uns = None
     img_sel = None
@@ -29,21 +29,8 @@ class _boton (Ventana):
     def serPresionado (self):
         self.image = self.img_pre
         self.isSelected = True
-        self.rect = self.img_pre.get_rect(topleft=self.pos)
         self.dirty = 1
-    
-    def serElegido(self):
-        self.image = self.img_sel
-        self.isSelected = True
-        self.rect = self.img_sel.get_rect(topleft=self.pos)
-        self.dirty = 1
-        
-    def serDeselegido(self):
-        self.image = self.img_uns
-        self.isSelected = False
-        self.rect = self.img_sel.get_rect(topleft=self.pos)
-        self.dirty = 1
-    
+      
     def crear(self,texto,ancho_mod):
         ancho = C.CUADRO*ancho_mod
         
@@ -57,7 +44,7 @@ class _boton (Ventana):
         fnd_pre = self.crear_inverted_canvas(ancho,C.CUADRO)
         fnd_uns = self.crear_canvas((ancho),C.CUADRO)
         
-        for i in range(round(((C.CUADRO*ancho)+6)/3)):
+        for i in range(round((ancho+6)/3)):
             #linea punteada horizontal superior
             draw.line(cnvs_sel,self.font_high_color,(i*7,0),((i*7)+5,0),2)
             
@@ -74,12 +61,9 @@ class _boton (Ventana):
         cnvs_sel.blit(fnd_uns,(3,3))
         cnvs_uns.blit(fnd_uns,(3,3))
         cnvs_pre.blit(fnd_pre,(3,3))
-        
-        font_se = font.SysFont('verdana', 16, bold = True)
-        font_un = font.SysFont('verdana', 16)
-        
-        btn_sel = render_textrect(texto,font_se,rect,self.font_high_color,self.bg_cnvs,1)
-        btn_uns = render_textrect(texto,font_un,rect,self.font_none_color,self.bg_cnvs,1)        
+             
+        btn_sel = render_textrect(texto,self.fuente_Mb,rect,self.font_high_color,self.bg_cnvs,1)
+        btn_uns = render_textrect(texto,self.fuente_M,rect,self.font_none_color,self.bg_cnvs,1)        
         
         cnvs_uns.blit(btn_uns,(6,6))
         cnvs_sel.blit(btn_sel,(6,6))

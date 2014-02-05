@@ -5,14 +5,12 @@ from globs import Constants as C, World as W
 from libs.textrect import render_textrect
 
 class Dialog (Ventana):
-    fuente = None
     posicion = 0,384
     filas = sprite.LayeredDirty()
     
     def __init__(self, texto,onSelect):
         self.canvas = self.crear_canvas(int(C.ANCHO), int(C.ALTO/5))
-        self.fuente = font.SysFont('verdana', 16)
-        self.altura_del_texto = self.fuente.get_height()+1
+        self.altura_del_texto = self.fuente_M.get_height()+1
         self.draw_space = Rect((3,3), (self.canvas.get_width()-7, int(self.canvas.get_height())-7))
         
         self.setText(texto,onSelect)
@@ -32,7 +30,7 @@ class Dialog (Ventana):
             self.filas.draw(self.canvas)
             self.elegir_opcion(-1)
         else:
-            render = render_textrect(texto,self.fuente,self.draw_space,self.font_none_color,self.bg_cnvs)
+            render = render_textrect(texto,self.fuente_M,self.draw_space,self.font_none_color,self.bg_cnvs)
             self.canvas.blit(render,self.draw_space)
             
         self.image = self.canvas

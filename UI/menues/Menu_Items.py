@@ -1,5 +1,4 @@
 from .Menu import Menu
-from UI.Colores import Colores as C
 from UI.widgets import _item_inv
 from globs import World as W
 from libs.textrect import render_textrect
@@ -9,14 +8,12 @@ class Menu_Items (Menu):
     cur_opt = 0
     filas = sprite.LayeredDirty()
     descripcion_area = None
-    fuente = ''
     altura_del_texto = 0 # altura de los glifos
     draw_space = None
     draw_space_rect = None
     
     def __init__(self):
-        self.fuente = font.SysFont('verdana', 16)
-        self.altura_del_texto = self.fuente.get_height()+1
+        self.altura_del_texto = self.fuente_M.get_height()+1
         super().__init__('Items')
         self.draw_space_rect = Rect((10,44),(self.canvas.get_width()-19,270))
         self.crear_contenido(self.draw_space_rect)
@@ -39,9 +36,9 @@ class Menu_Items (Menu):
 
         for i in range(len(W.HERO.inventario)):
             item = W.HERO.inventario[i]
-            if item.esEquipable: color = C.font_low_color
-            else: color = C.font_high_color
-            fila = _item_inv(item,draw_area_rect.w-6,(3,i*h+i),self.fuente,color)
+            if item.esEquipable: color = self.font_low_color
+            else: color = self.font_high_color
+            fila = _item_inv(item,draw_area_rect.w-6,(3,i*h+i),self.fuente_M,color)
             
             self.filas.add(fila)
         
@@ -87,7 +84,7 @@ class Menu_Items (Menu):
         self.crear_contenido(self.draw_space_rect)
         if self.opciones > 0:
             desc = render_textrect(self.cur_opt.item.efecto_des,
-                                   self.fuente,self.descripcion_area,
+                                   self.fuente_M,self.descripcion_area,
                                    self.font_high_color,self.bg_cnvs)
         else:
             desc = Surface(self.descripcion_area.size)

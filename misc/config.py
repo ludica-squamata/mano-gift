@@ -2,8 +2,6 @@ from .resources import Resources as r
 
 class Config:
     # configuraciones
-    recordar = False
-    intro = True
     data = None # {}
     __changed = False
     

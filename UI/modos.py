@@ -50,6 +50,9 @@ class modo:
                     W.onPause = True
                     W.MODO = 'Menu'
                     W.MAPA_ACTUAL.popMenu('Pausa')
+                
+                elif event.key == C.TECLAS.CANCELAR_DIALOGO:
+                    W.MAPA_ACTUAL.endDialog()
                     
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:

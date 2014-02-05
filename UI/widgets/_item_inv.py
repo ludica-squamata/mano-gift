@@ -1,15 +1,17 @@
-from UI.Colores import Colores
+from UI.estilo import Estilo
 from base import _giftSprite
 from pygame import font, Rect, Surface
 from libs.textrect import render_textrect
 
-class _item_inv (Colores,_giftSprite):
+class _item_inv (Estilo,_giftSprite):
+    '''Representación de los items del Inventario en la internface'''
     nombre = ''
     item = None
     
     def __init__(self,item,ancho,pos,fuente,color):
         self.item = item
         self.nombre = self.item.nombre.capitalize()
+        self.stack = self.item.esStackable
         cant = self.item.cantidad
         imagen = self.construir_fila(ancho,self.nombre,cant,fuente,color)
         super().__init__(imagen)
@@ -27,6 +29,12 @@ class _item_inv (Colores,_giftSprite):
         image.blit(img_cant,((ancho-(int(ancho/2))),0))
         
         return image
+    
+    def serElegido(self):
+        pass
+    
+    def serDeselegido(self):
+        pass
     
     def __repr__(self):
         return self.nombre+' _item_inv DirtySprite'

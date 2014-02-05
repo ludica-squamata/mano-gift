@@ -3,7 +3,6 @@ from pygame import Surface, Rect, font, draw
 from pygame.sprite import LayeredDirty
 from misc import Resources as r
 from libs.textrect import render_textrect
-from UI.Colores import Colores as  C
 from globs import World as W
 from UI.widgets import _item_inv, _espacio_equipable
 
@@ -21,8 +20,8 @@ class Menu_Equipo(Menu_Items):
         super(Menu_Items,self).__init__('Equipo')
         self.espacios = LayeredDirty() # grupo de espacios equipables.
         self.filas = LayeredDirty() # grupo de items del espacio de selección.
-        self.fuente = font.SysFont('Verdana',12) # fuente por default
-        self.altura_del_texto = self.fuente.get_height()+1 # se utiliza para trazar lineas
+        #self.fuente = font.SysFont('Verdana',12) # fuente por default
+        self.altura_del_texto = self.fuente_MP.get_height()+1 # se utiliza para trazar lineas
         self.foco = 'espacios' # setea el foco por default
         # Crear los espacios equipables.
         # "e_pos" es la posicion del espacio. "t_pos" es la posicion de su titulo.
@@ -89,7 +88,7 @@ class Menu_Equipo(Menu_Items):
         se separa en dos lineas mediante un \\n. Si, en cambio, tras el espacio
         hay un numero (como en 'aro 1') se deja como está.'''
         
-        w,h = self.fuente.size(titulo)
+        w,h = self.fuente_MP.size(titulo)
         just = 0
         if ' ' in titulo:
             titulo = titulo.split(' ')
@@ -101,7 +100,7 @@ class Menu_Equipo(Menu_Items):
                 titulo = ' '.join(titulo)
         
         rect = Rect(-1,-1,w+5,h+1)
-        render = render_textrect(titulo.title(),self.fuente,rect,self.font_none_color,self.bg_cnvs,just)
+        render = render_textrect(titulo.title(),self.fuente_MP,rect,self.font_none_color,self.bg_cnvs,just)
         
         return render
     
@@ -147,7 +146,7 @@ class Menu_Equipo(Menu_Items):
         for item in W.HERO.inventario:
             if item.esEquipable and item.esEquipable == espacio.nombre:
                 i += 1
-                fila = _item_inv(item,188,(0,i*h+i),self.fuente,C.font_high_color)
+                fila = _item_inv(item,188,(0,i*h+i),self.fuente_MP,self.font_high_color)
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
