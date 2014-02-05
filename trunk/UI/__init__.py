@@ -1,6 +1,6 @@
+from .menues import *
 from .Dialog import Dialog
 from .Inventario_rapido import Inventario_rapido
-from .menues import *
 from . import modos
 
 __all__ = [

@@ -1,10 +1,9 @@
-from UI.Colores import Colores
+from UI.basewidget import BaseWidget
 from libs.textrect import TextRectException
-from base import _giftSprite
 from pygame import font, Rect
 from libs.textrect import render_textrect
 
-class _opcion (Colores,_giftSprite):
+class _opcion (BaseWidget):
     '''Opción única que es parte de una lista más grande.
     No tiene cantidad, pero puede ser seleccionada (resaltando)
     mediante serElegido.'''
@@ -20,24 +19,9 @@ class _opcion (Colores,_giftSprite):
         self.aling = aling
         
         self.setText(texto)
-        super().__init__(self.img_none)
-        self.serDeselegido()
+        super().__init__(self.img_uns)
+        self.rect = self.img_uns.get_rect(topleft=self.pos)
         
-    def serElegido(self):
-        '''Cambia la imagen a la versión resaltada'''
-        self.image = self.img_high
-        self.isSelected = True
-        self.rect = self.img_high.get_rect(topleft=self.pos)
-        self.dirty = 1
-        
-    def serDeselegido(self):
-        '''Cambia la imagen a la versión no elegida'''
-        
-        self.image = self.img_none
-        self.isSelected = False
-        self.rect = self.img_none.get_rect(topleft=self.pos)
-        self.dirty = 1
-    
     def setText(self,texto):
         '''Cambia y asigna el texto de la opción'''
         
@@ -49,8 +33,8 @@ class _opcion (Colores,_giftSprite):
         while True:
             try:
                 #Si el texto es muy grande para el rect...
-                self.img_none = render_textrect(texto,f,r,self.font_none_color,bg,a)
-                self.img_high = render_textrect(texto,f,r,self.font_high_color,bg,a)
+                self.img_uns = render_textrect(texto,f,r,self.font_none_color,bg,a)
+                self.img_sel = render_textrect(texto,f,r,self.font_high_color,bg,a)
                 break
             except TextRectException:
                 # Acá se achica.

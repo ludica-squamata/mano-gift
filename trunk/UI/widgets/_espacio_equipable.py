@@ -1,8 +1,7 @@
-from base import _giftSprite
 from pygame import Surface, Rect, font, draw
-from UI.Colores import Colores as  C
+from UI.basewidget import BaseWidget
 
-class _espacio_equipable (_giftSprite):
+class _espacio_equipable (BaseWidget):
     isSelected = False
     item = None
     direcciones = {}
@@ -30,7 +29,7 @@ class _espacio_equipable (_giftSprite):
         '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
         
         img = Surface((36,36))
-        img.fill(C.bg_cnvs)
+        img.fill(self.bg_cnvs)
         
         rect = Rect(2,2,28,28)
         base = Surface((32,32))
@@ -44,32 +43,18 @@ class _espacio_equipable (_giftSprite):
         w,h = sel.get_size()
         for i in range(round(38/3)):
             #linea punteada horizontal superior
-            draw.line(sel,C.font_high_color,(i*7,0),((i*7)+5,0),2)
+            draw.line(sel,self.font_high_color,(i*7,0),((i*7)+5,0),2)
             
             #linea punteada horizontal inferior
-            draw.line(sel,C.font_high_color,(i*7,h-2),((i*7)+5,h-2),2)
+            draw.line(sel,self.font_high_color,(i*7,h-2),((i*7)+5,h-2),2)
         
         for i in range(round(38/3)):
             #linea punteada vertical derecha
-            draw.line(sel,C.font_high_color,(w-2,i*7),(w-2,(i*7)+5),2)
+            draw.line(sel,self.font_high_color,(w-2,i*7),(w-2,(i*7)+5),2)
             
             #linea punteada vertical izquierda
-            draw.line(sel,C.font_high_color,(0,i*7),(0,(i*7)+5),2)
+            draw.line(sel,self.font_high_color,(0,i*7),(0,(i*7)+5),2)
         return sel
-    
-    def serElegido(self):
-        '''Cambia la imagen del espacio por su versión seleccionada.'''
-        
-        self.image = self.img_sel
-        self.isSelected = True
-        self.dirty = 1
-    
-    def serDeselegido(self):
-        '''Cambia la imagen del espacio por su versión deseleccionada.'''
-        
-        self.image = self.img_uns
-        self.isSelected = False
-        self.dirty = 1
     
     def ocupar(self,item):
         '''Inserta un item en ambas imagenes del espacio.'''
