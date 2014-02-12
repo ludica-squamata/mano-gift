@@ -32,7 +32,7 @@ class Stage:
         self.cargar_props('top')
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
-        #self.cargar_quests()
+        self.cargar_quests()
         self.cargar_salidas()
 
     def cargar_props (self,capa):

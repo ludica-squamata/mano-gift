@@ -19,7 +19,6 @@ class Mob (_giftSprite):
     ticks,mov_ticks = 0,0
     AI = None # determina cómo se va a mover el mob
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
-    flee_counter = 0
     atacando = False
     show,hide = {},{}
     next_p = 0
@@ -69,7 +68,7 @@ class Mob (_giftSprite):
             self.actitud = data['actitud']
             self.tipo = data['tipo']
             self.fuerza = data['fuerza']
-            self.vision = self.generar_tri_vision(32*3) #data[vision]
+            self.vision = self.generar_tri_vision(32*3) #(data[vision])
             if 'solido' in data:
                 self.solido = data['solido']
             #eliminar esto una vez que esté aplicado a todos los mobs
@@ -246,7 +245,7 @@ class Mob (_giftSprite):
             dx,dy = x*self.velocidad,y*self.velocidad
         
         self.animar_caminar()
-        #self.reubicar(dx, dy) #comentado para controlar mejor las cosas
+        self.reubicar(dx, dy)
     
     def recibir_danio(self):
         self.salud -= 1
@@ -312,18 +311,17 @@ class Mob (_giftSprite):
         '''Realiza detecciones con la visión del mob'''
         
         if self.direccion != 'ninguna':
-            img,vx,vy = self.girar_vision(self.direccion)
+            vision,vx,vy = self.girar_vision(self.direccion)
             for key in MobGroup:
                 mob =  MobGroup[key]
                 if mob != self:
-                    #acá esta mi problema.. 
-                    vis_mask = mask.from_surface(self.vision)
+                    vis_mask = mask.from_surface(vision)
                     x,y = vx-mob.mapX, vy-mob.mapY
                     if mob.mask.overlap(vis_mask,(x,y)):
-                        self.stage.mapa.image.blit(img,(vx,vy)) # chapuza
-                        # lo que sigue es para ver si detecta algo
-                        print()
-                        print(self.nombre,'ve a',mob.nombre,self.direccion)
+                        if self.actitud == 'hostil' and mob.tipo == 'victima':
+                            pass
+                        elif self.actitud == 'pasiva' and mob.tipo == 'monstruo':
+                            pass
                     
     def update(self):
         self.anim_counter += 1
