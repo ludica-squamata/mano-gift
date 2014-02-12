@@ -32,7 +32,7 @@ class Stage:
         self.cargar_props('top')
         self.cargar_mobs(Enemy)
         self.cargar_mobs(NPC)
-        self.cargar_quests()
+        #self.cargar_quests()
         self.cargar_salidas()
 
     def cargar_props (self,capa):
@@ -260,6 +260,7 @@ class Stage:
                 self.grilla[x,y].transitable = False
     
     def update(self,fondo):
+        fondo.blit(self.mapa.image,(0,0))
         self.anochecer(12)
         self.contents.update()
         self.actualizar_grilla()

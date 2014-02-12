@@ -1,10 +1,11 @@
 import sys
-from pygame import mask,time
+from pygame import mask,time,draw,Surface,transform,Color
 from random import randint,choice
 from misc import Resources as r, Util as U
 from base import _giftSprite
 from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from .scripts import movimiento
+from math import tan, radians
 
 class Mob (_giftSprite):
     '''Clase base para todos los Mobs'''
@@ -20,11 +21,9 @@ class Mob (_giftSprite):
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     flee_counter = 0
     atacando = False
-    show = {}
-    hide = {}
+    show,hide = {},{}
     next_p = 0
     camino = []
-    contador = 0
     tipo = '' # determina si es una victima o un monstruo
     reversa = bool # indica si hay que dar media vuelta al llegar al final del camino, o no.
     
@@ -33,6 +32,8 @@ class Mob (_giftSprite):
               'grebas':None,'mano buena':None,'mano mala':None,'botas':None,'capa':None,
               'cinto':None,'guantes':None,'anillo 1':None,'anillo 2':None}
     fuerza = 0 # capacidad del mob para empujar cosas.
+    
+    vision = None
     
     def __init__(self, ruta_img,stage,x=None,y=None,data = None,alpha = False):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
@@ -68,12 +69,14 @@ class Mob (_giftSprite):
             self.actitud = data['actitud']
             self.tipo = data['tipo']
             self.fuerza = data['fuerza']
+            self.vision = self.generar_tri_vision(32*3) #data[vision]
             if 'solido' in data:
                 self.solido = data['solido']
             #eliminar esto una vez que esté aplicado a todos los mobs
             if 'death' in data:
                 self.death_img = r.cargar_imagen(data['death'])
-
+            
+        
         if x != None and y != None:
             self.ubicar(x*C.CUADRO,y*C.CUADRO)
             if self.AI == "wanderer":
@@ -93,7 +96,7 @@ class Mob (_giftSprite):
             
             self._AI = self.AI #copia de la AI original
             self._camino = self.camino
-    
+            
     def generar_rasgos(self):
         rasgos = r.abrir_json('data/scripts/rasgos.json')
         
@@ -243,7 +246,7 @@ class Mob (_giftSprite):
             dx,dy = x*self.velocidad,y*self.velocidad
         
         self.animar_caminar()
-        self.reubicar(dx, dy)
+        #self.reubicar(dx, dy) #comentado para controlar mejor las cosas
     
     def recibir_danio(self):
         self.salud -= 1
@@ -257,29 +260,79 @@ class Mob (_giftSprite):
             self.dead = True
             MobGroup.remove(self)
     
+    def generar_tri_vision(self,largo):
+        '''Crea el triangulo de la visión (fg azul, bg transparente).
+        
+        Devuelve un surface.'''
+        
+        def _ancho(largo):
+            an = radians(40)
+            return round(largo*round(tan(an),2))
+        ancho = _ancho(largo)
+
+        negro = Color(0,0,0)
+        azul = Color(0,0,255)
+
+        surf_d = Surface((ancho,largo))
+        surf_i = Surface((ancho,largo))
+        megasurf = Surface((ancho*2,largo))
+        
+        draw.polygon(surf_d,azul,[[0,0],[ancho,0],[0,largo]]) # derecha
+        draw.polygon(surf_i,azul,[[0,0],[ancho,0],[ancho,largo]]) # izquierda
+        surf_d.set_colorkey(negro)
+        surf_i.set_colorkey(negro)
+    
+        megasurf.blit(surf_i,[0,0])
+        megasurf.blit(surf_d,[ancho,0])
+        megasurf.set_colorkey(negro)
+    
+        return megasurf
+    
+    def girar_vision(self,direccion):
+        '''Gira el triangulo de la visión.
+        
+        Devuelve el surface del triangulo rotado, y la posicion en x e y
+        '''
+        tx,ty,tw,th = self.mapX,self.mapY,self.rect.w,self.rect.h
+        img = self.vision
+        if direccion == 'abajo':
+            surf = transform.flip(img,False,True)
+            w,h = surf.get_size()
+            y = ty+th
+            x = tx+(tw/2)-w/2
+        elif direccion == 'izquierda':
+            surf = transform.rotate(img,-90.0)
+            w,h = surf.get_size()
+            x = tx+tw
+            y = ty+(th/2)-h/2
+        elif direccion == 'derecha':
+            surf = transform.rotate(img,+90.0)
+            w,h = surf.get_size()
+            x = tx-w
+            y = ty+(th/2)-h/2
+        else:
+            surf = img
+            w,h = surf.get_size()
+            y = ty-h
+            x = tx+(tw/2)-w/2
+        return surf,int(x),int(y)
+    
     def ver (self):
-        self.contador += 1
-        direcciones = {
-            'arriba':[-32,32],
-            'abajo':[-32,-96],
-            'derecha':[32,-32],
-            'izquierda':[-96,-32]}
+        '''Realiza detecciones con la visión del mob'''
+        
         if self.direccion != 'ninguna':
-            self.vx,self.vy = direcciones[self.direccion]
-        for key in MobGroup:
-            mob =  MobGroup[key]
-            if mob != self:
-                x = mob.mapX-(self.mapX-self.vx)
-                y = mob.mapY-(self.mapY-self.vy)
-                mob_mask = mask.from_surface(mob.image)
-                self_mask = mask.Mask((96,96))
-                self_mask.fill()
-                mob_mask.overlap(self_mask,(x,y))
-                if mob_mask.overlap(self_mask,(x,y)):
-                    if self.actitud == 'hostil' and mob.tipo == 'victima':
-                        pass
-                    elif self.actitud == 'pasiva' and mob.tipo == 'monstruo':
-                        pass
+            img,vx,vy = self.girar_vision(self.direccion)
+            for key in MobGroup:
+                mob =  MobGroup[key]
+                if mob != self:
+                    #acá esta mi problema.. 
+                    vis_mask = mask.from_surface(self.vision)
+                    x,y = vx-mob.mapX, vy-mob.mapY
+                    if mob.mask.overlap(vis_mask,(x,y)):
+                        self.stage.mapa.image.blit(img,(vx,vy)) # chapuza
+                        # lo que sigue es para ver si detecta algo
+                        print()
+                        print(self.nombre,'ve a',mob.nombre,self.direccion)
                     
     def update(self):
         self.anim_counter += 1

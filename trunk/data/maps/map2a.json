@@ -6,7 +6,7 @@
     "capa_ground":{
         "props": {},
         "mobs": {
-            "enemies":{},
+            "enemies":{"green":[[13,13]]},
             "npcs":{}
         }
     },
@@ -14,7 +14,7 @@
         "props":{}
     },
     "entradas":{
-        "inicial":[16, 17],
+        "inicial":[13, 15],
         "derecha":[30,26],
         "abajo":[21,30]
     },
@@ -30,6 +30,7 @@
             "link":"arriba"
         }
     },
-    "refs":{},
+    "refs":{
+        "green":"mobs/green.png"},
     "ambiente":"exterior"
 }
