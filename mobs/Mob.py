@@ -272,18 +272,9 @@ class Mob (_giftSprite):
 
         negro = Color(0,0,0)
         azul = Color(0,0,255)
-
-        surf_d = Surface((ancho,largo))
-        surf_i = Surface((ancho,largo))
-        megasurf = Surface((ancho*2,largo))
         
-        draw.polygon(surf_d,azul,[[0,0],[ancho,0],[0,largo]]) # derecha
-        draw.polygon(surf_i,azul,[[0,0],[ancho,0],[ancho,largo]]) # izquierda
-        surf_d.set_colorkey(negro)
-        surf_i.set_colorkey(negro)
-    
-        megasurf.blit(surf_i,[0,0])
-        megasurf.blit(surf_d,[ancho,0])
+        megasurf = Surface((ancho*2,largo))
+        draw.polygon(megasurf,azul,[[0,0],[ancho,largo],[ancho*2,0]]) 
         megasurf.set_colorkey(negro)
     
         return megasurf
