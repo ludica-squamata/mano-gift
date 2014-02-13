@@ -30,12 +30,9 @@ def AI_patrol(mob):
     return direccion
 
 def AI_pursue(mob):
+    objetivo = mob.objetivo
     curr_p = [mob.mapX,mob.mapY]
-    if curr_p == mob.camino[mob.next_p]:
-        mob.next_p += 1
-        if mob.next_p >= len(mob.camino):
-            mob.next_p = 0
-    punto_proximo = mob.camino[mob.next_p]
+    punto_proximo = [objetivo.mapX,objetivo.mapY]
     direccion = _determinar_direccion(curr_p,punto_proximo)
     return direccion
 

@@ -10,5 +10,8 @@ class _giftGroup(UserDict):
         nombre = spr.nombre
         if nombre in self:
             del self[nombre]
+    
+    def get (self,nombre):
+        return self[nombre]
 
 MobGroup = _giftGroup()
