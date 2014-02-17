@@ -20,42 +20,43 @@ class Menu_Equipo(Menu_Items):
         super(Menu_Items,self).__init__('Equipo')
         self.espacios = LayeredDirty() # grupo de espacios equipables.
         self.filas = LayeredDirty() # grupo de items del espacio de selección.
-        #self.fuente = font.SysFont('Verdana',12) # fuente por default
         self.altura_del_texto = self.fuente_MP.get_height()+1 # se utiliza para trazar lineas
         self.foco = 'espacios' # setea el foco por default
         # Crear los espacios equipables.
         # "e_pos" es la posicion del espacio. "t_pos" es la posicion de su titulo.
         # "direcciones" indica a qué espacio se salta cuando se presiona qué tecla de dirección.
-        esp = {
-            'yelmo':{       'e_pos':[96,64],  't_pos':[93,48],  'direcciones':{'izquierda':'aro 1','derecha':'cuello'}},
-            'aro 1':{       'e_pos':[32,64],  't_pos':[32,48],  'direcciones':{'abajo':'peto','derecha':'yelmo'}},
-            'aro 2':{       'e_pos':[224,64], 't_pos':[224,48], 'direcciones':{'abajo':'faldar','izquierda':'cuello'}},
-            'cuello':{      'e_pos':[160,64], 't_pos':[157,48], 'direcciones':{'izquierda':'yelmo','derecha':'aro 2'}},
-            'peto':{        'e_pos':[32,128], 't_pos':[34,112], 'direcciones':{'arriba':'aro 1','abajo':'guardabrazos','derecha':'faldar'}},
-            'guardabrazos':{'e_pos':[32,192], 't_pos':[7,176],  'direcciones':{'arriba':'peto','abajo':'brazales','derecha':'quijotes'}},
-            'brazales':{    'e_pos':[32,256], 't_pos':[23,240], 'direcciones':{'arriba':'guardabrazos','abajo':'capa','derecha':'grebas'}},
-            'faldar':{      'e_pos':[224,128],'t_pos':[222,112],'direcciones':{'arriba':'aro 2','abajo':'quijotes','izquierda':'peto'}},
-            'quijotes':{    'e_pos':[224,192],'t_pos':[213,176],'direcciones':{'arriba':'faldar','abajo':'grebas','izquierda':'guardabrazos'}},
-            'grebas':{      'e_pos':[224,256],'t_pos':[217,240],'direcciones':{'arriba':'quijotes','abajo':'cinto','izquierda':'brazales'}},
-            'mano buena':{  'e_pos':[96,352], 't_pos':[50,320], 'direcciones':{'arriba':'capa','abajo':'anillo 1','izquierda':'capa','derecha':'mano mala'}},
-            'mano mala':{   'e_pos':[160,352],'t_pos':[165,320],'direcciones':{'arriba':'cinto','abajo':'anillo 2','izquierda':'mano buena','derecha':'cinto'}},
-            'botas':{       'e_pos':[224,384],'t_pos':[223,368],'direcciones':{'arriba':'cinto','abajo':'anillo 2','izquierda':'anillo 2'}},
-            'capa':{        'e_pos':[32,320], 't_pos':[32,304], 'direcciones':{'arriba':'brazales','abajo':'guantes','derecha':'mano buena'}},
-            'cinto':{       'e_pos':[224,320],'t_pos':[224,304],'direcciones':{'arriba':'grebas','abajo':'botas','izquierda':'mano mala',}},
-            'guantes':{     'e_pos':[32,384], 't_pos':[22,368], 'direcciones':{'arriba':'capa','abajo':'anillo 1','derecha':'anillo 1'}},
-            'anillo 1':{    'e_pos':[96,416], 't_pos':[90,400], 'direcciones':{'arriba':'mano buena','izquierda':'guantes','derecha':'anillo 2'}},
-            'anillo 2':{    'e_pos':[160,416],'t_pos':[154,400],'direcciones':{'arriba':'mano mala','izquierda':'anillo 1','derecha':'botas'}},
-        }
+        n,e,t,k = 'nom','e_pos','t_pos','direcciones'
+        a,b,i,d = 'arriba','abajo','izquierda','derecha' 
+        esp = [
+            {n:'yelmo',      e:[96,64]  ,t:[93,48]  ,k:{i:'aro 1',d:'cuello'}},
+            {n:'aro 1',      e:[32,64]  ,t:[32,48]  ,k:{b:'peto',d:'yelmo'}},
+            {n:'aro 2',      e:[224,64] ,t:[224,48] ,k:{b:'faldar',i:'cuello'}},
+            {n:'cuello',     e:[160,64] ,t:[157,48] ,k:{i:'yelmo',d:'aro 2'}},
+            {n:'peto',       e:[32,128] ,t:[34,112] ,k:{a:'aro 1',b:'guardabrazos',d:'faldar'}},
+            {n:'guardabrazos',e:[32,192],t:[7,176]  ,k:{a:'peto',b:'brazales',d:'quijotes'}},
+            {n:'brazales',   e:[32,256] ,t:[23,240] ,k:{a:'guardabrazos',b:'capa',d:'grebas'}},
+            {n:'faldar',     e:[224,128],t:[222,112],k:{a:'aro 2',b:'quijotes',i:'peto'}},
+            {n:'quijotes',   e:[224,192],t:[213,176],k:{a:'faldar',b:'grebas',i:'guardabrazos'}},
+            {n:'grebas',     e:[224,256],t:[217,240],k:{a:'quijotes',b:'cinto',i:'brazales'}},
+            {n:'mano buena', e:[96,352] ,t:[50,320] ,k:{a:'capa',b:'anillo 1',i:'capa',d:'mano mala'}},
+            {n:'mano mala',  e:[160,352],t:[165,320],k:{a:'cinto',b:'anillo 2',i:'mano buena',d:'cinto'}},
+            {n:'botas',      e:[224,384],t:[223,368],k:{a:'cinto',b:'anillo 2',i:'anillo 2'}},
+            {n:'capa',       e:[32,320] ,t:[32,304] ,k:{a:'brazales',b:'guantes',d:'mano buena'}},
+            {n:'cinto',      e:[224,320],t:[224,304],k:{a:'grebas',b:'botas',i:'mano mala',}},
+            {n:'guantes',    e:[32,384] ,t:[22,368] ,k:{a:'capa',b:'anillo 1',d:'anillo 1'}},
+            {n:'anillo 1',   e:[96,416] ,t:[90,400] ,k:{a:'mano buena',i:'guantes',d:'anillo 2'}},
+            {n:'anillo 2',   e:[160,416],t:[154,400],k:{a:'mano mala',i:'anillo 1',d:'botas'}},
+        ]
         
         for e in esp:
-            item = W.HERO.equipo[e]
-            cuadro = _espacio_equipable(e,item,esp[e]['direcciones'],*esp[e]['e_pos'])
-            titulo = self.titular(e)
-            self.canvas.blit(titulo,esp[e]['t_pos'])
+            item = W.HERO.equipo[e['nom']]
+            cuadro = _espacio_equipable(e['nom'],item,e['direcciones'],*e['e_pos'])
+            titulo = self.titular(e['nom'])
+            self.canvas.blit(titulo,e['t_pos'])
             self.espacios.add(cuadro)
         
         # seleccionar un espacio por default
-        self.cur_esp = 5
+        self.cur_esp = 1
         selected = self.espacios.get_sprite(self.cur_esp)
         selected.serElegido()
         self.current = selected
