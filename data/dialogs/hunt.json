@@ -1,0 +1,13 @@
+{
+    "tree":{"0":1,"1":2},
+    "textos":{
+        "0":{"type":"S","loc":"NPC",
+        "txt": "Héroe, por favor!"},
+        
+        "1":{"type":"S","loc":"NPC",
+        "txt": "Sálvanos de los monstruos"},
+        
+        "2":{"type":"E","loc":"NPC",
+        "txt": "Te lo ruego!"}
+    }
+}

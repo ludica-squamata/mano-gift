@@ -187,27 +187,20 @@ class Mob (_giftSprite):
                 dicc[key] = _alpha
         return dicc
     
-    def empujar_props(self,dx=None,dy=None):
-        rango = 12
-        if dx == None and dy == None:
-            dx,dy = self.direcciones[self.direccion]
-        
-        x,y = dx*rango,dy*rango
-        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.solido and spr.es('empujable') and self.solido:
-                if self.colisiona(spr,x,y):
-                    spr.interaccion(x,y)
-    
     def mover(self):
         direccion = self.AI(self)
-        self.empujar_props()
         self.cambiar_direccion(direccion)
-        self._mover()
-                
-    def _mover(self):
         x,y = self.direcciones[self.direccion]
         dx,dy = x*self.velocidad,y*self.velocidad
 
+        if self.detectar_colisiones(dx,dy):
+            self.cambiar_direccion(self.modo_colision)
+            x,y = self.direcciones[self.direccion]
+            dx,dy = x*self.velocidad,y*self.velocidad
+        self.animar_caminar()
+        self.reubicar(dx, dy)
+
+    def detectar_colisiones(self,dx,dy):
         col_bordes = False #colision contra los bordes de la pantalla
         col_mobs = False #colision contra otros mobs
         col_heroe = False #colision contra el héroe
@@ -224,15 +217,18 @@ class Mob (_giftSprite):
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
                 if self.colisiona(spr,dx,dy):
                     if spr.solido:
-                        col_props = True
-            
+                        if spr.es('empujable'): spr.interaccion(dx,dy)
+                        else: col_props = True
+                        
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if spr.solido:
                     if self.colisiona(spr,dx,dy):
                         col_mobs = True
                         
-        if self.colisiona(W.HERO,dx,dy):
-            col_heroe = True
+        #if self.colisiona(W.HERO,dx,dy):
+        #    col_heroe = True
+        #    if self.actitud == 'hostil':
+        #        self.atacar(W.HERO)
 
         newPos = self.mapX + dx
         if newPos < 0 or newPos > self.stage.mapa.rect.w-32:
@@ -244,15 +240,7 @@ class Mob (_giftSprite):
             if C.ALTO > self.rect.y - dy  >=0:
                 col_bordes = True
 
-        colisiones = [col_bordes,col_mobs,col_props,col_mapa,col_heroe]
-        if any(colisiones):
-            self.cambiar_direccion(self.modo_colision)
-
-            x,y = self.direcciones[self.direccion]
-            dx,dy = x*self.velocidad,y*self.velocidad
-        
-        self.animar_caminar()
-        self.reubicar(dx, dy)
+        return any([col_bordes,col_mobs,col_props,col_mapa])
     
     def recibir_danio(self):
         self.salud -= 1

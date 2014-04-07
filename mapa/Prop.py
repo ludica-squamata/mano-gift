@@ -23,17 +23,19 @@ class Prop (_giftSprite):
                 for prop in data['propiedades']:
                     self._propiedades[prop] = True;
                 
-                if self.es('operable'):
-                    self._operable = [
-                        (data['propiedades'][prop]['0']['solido'],
-                         data['propiedades'][prop]['0']['visible']),
-                        (data['propiedades'][prop]['1']['solido'],
-                         data['propiedades'][prop]['1']['visible'])]
-                    self.solido = self._operable[0][0]
-                    self.visible = self._operable[0][1]
-            
-            if not self.es('sinsombra'):
-                self.sombra = U.crear_sombra(self.image, self.mask)
+        if self.es('operable'):
+            self._operable = [
+                (data['propiedades'][prop]['0']['solido'],
+                 data['propiedades'][prop]['0']['visible']),
+                (data['propiedades'][prop]['1']['solido'],
+                 data['propiedades'][prop]['1']['visible'])]
+            self.solido = self._operable[0][0]
+            self.visible = self._operable[0][1]
+    
+        if not self.es('sinsombra'):
+            self.sombra = U.crear_sombra(self.image, self.mask)
+        if not self.es('solido'):
+            self.solido = False
 
     def interaccion(self,x=0,y=0):
         if self.es('agarrable'):
@@ -49,12 +51,12 @@ class Prop (_giftSprite):
             return False
 
         elif self.es('empujable'):
-            if self.es('pesado'):
-                if x > 0: x -= 10
-                elif x < 0: x += 10
-    
-                if y > 0: y -= 10
-                elif y < 0: y += 10
+            #if self.es('pesado'):
+            #    if x > 0: x -= 10
+            #    elif x < 0: x += 10
+            #
+            #    if y > 0: y -= 10
+            #    elif y < 0: y += 10
             
             image = self.sombra
             image.blit(self.image,[0,0])

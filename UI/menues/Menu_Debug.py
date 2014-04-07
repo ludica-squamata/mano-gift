@@ -37,8 +37,7 @@ class Menu_Debug (Menu):
         self.draw_space_rect = mapas.get_rect(topleft=(11,65))
         self.canvas.blit(self.draw_space,self.draw_space_rect)
         
-        fuente = font.SysFont('verdana', 16)
-        self.altura_del_texto = h = fuente.get_height()+1
+        self.altura_del_texto = h = self.fuente_M.get_height()+1
         self.mapas = self.cargar_mapas_iniciales() # lista
         self.opciones = len(self.mapas)
         for i in range(len(self.mapas)):
@@ -55,7 +54,6 @@ class Menu_Debug (Menu):
         self.sel = self.dibujar_lineas_cursor (i,self.draw_space,self.draw_space_rect.w-12,self.sel,self.opciones)
     
     def cargar_mapa(self):
-        W.cargar_hero()
         W.setear_mapa(self.mapas[self.sel-1], 'inicial')
         W.MAPA_ACTUAL.endDialog()
         W.onPause = False

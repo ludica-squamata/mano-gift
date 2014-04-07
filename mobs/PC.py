@@ -3,6 +3,7 @@ from .Mob import Mob
 from .NPC import NPC
 from .Inventory import Inventory
 from .Item import Item
+from .scripts import Dialogo
 from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from UI import Inventario_rapido
 from pygame import Surface,Rect,mask
@@ -23,7 +24,8 @@ class PC (Mob):
     alcance_cc = 0 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     atk_counter = 0
     atk_img_index = -1
-    
+    iniciativa = 3
+    conversaciones = [] # registro de los temas conversados
     def __init__(self,nombre,data,stage):
         imgs = data['imagenes']
         super().__init__(imgs['idle']['graph'],stage,alpha=imgs['idle']['alpha'])
@@ -48,7 +50,11 @@ class PC (Mob):
         self.estado = 'idle'
         self.generar_rasgos()
         
+        self.temas_para_hablar = {}
+        self.tema_preferido = ''
+        
         MobGroup.add(self)
+        W.RENDERER.camara.setFocus(self)
         
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -57,8 +63,8 @@ class PC (Mob):
         self.dirty = 1
 
     def mover(self,dx,dy):
-        self.empujar_props(dx,dy)
-    
+        #self.empujar_props(dx,dy)
+        
         d = 'abajo'
         if dx == 1:
             d = 'izquierda'
@@ -66,9 +72,19 @@ class PC (Mob):
             d = 'derecha'
         elif dy == -1:
             d = 'arriba'
-        self.cambiar_direccion(d)
+        dx,dy = dx*self.velocidad,dy*self.velocidad
         self.animar_caminar()
-      
+        self.cambiar_direccion(d)   
+        if not self.detectar_colisiones(dx,dy):
+            self.reubicar(dx,dy) # el heroe se mueve en el mapa, no en la camara
+        self.dirty = 1
+        
+        # POR ACA DEBERIA DETECTAR LAS SALIDAS
+        #for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
+        #    if h.colisiona(spr,-dx,-dy):
+        #        W.setear_mapa(spr.dest,spr.link)
+        #        dx,dy = 0,0
+        return dx,dy
     def accion(self):
         x,y = self.direcciones[self.direccion]
         
@@ -89,8 +105,8 @@ class PC (Mob):
                 if sprite.interaccion(x,y):
                     item = Item(sprite.nombre,sprite.es('stackable'),sprite.image)
                     if self.inventario.agregar(item):
-                        self.stage.contents.remove(sprite)
                         self.stage.properties.remove(sprite)
+                        W.RENDERER.camara.delObj(sprite)
                 
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
@@ -118,14 +134,14 @@ class PC (Mob):
             self.calcular_sombra()
             self.dirty = 1
 
-    def hablar(self,onSelect):
+    def hablar(self):
         sprite = self._interactuar_mobs(self.alcance_cc)
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
-            # W.DIALOG = dialogo(self.interlocutor.dialogos)
-            return self.interlocutor.hablar(onSelect)
+            self.interlocutor.responder()
+            W.DIALOG = Dialogo(self,self.interlocutor)
+            return True
         else:
-            W.MODO = 'Aventura'
             return False
     
     def _interactuar_mobs(self,rango):
@@ -150,9 +166,6 @@ class PC (Mob):
                 prop_mask = mask.from_surface(prop.image)
                 if prop_mask.overlap(self_mask,(-x,-y)):
                     return prop
-    
-    def confirmar_seleccion(self):
-        self.interlocutor.hablar(W.DIALOG.sel)
 
     def ver_inventario(self):
         W.DIALOG = Inventario_rapido()

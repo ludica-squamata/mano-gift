@@ -3,14 +3,15 @@ from pygame import Color,font
 font.init()
 
 class Estilo:
-    fuente_Mi = font.SysFont('Verdana',16,italic=True)
-    fuente_Mb = font.SysFont('Verdana',16,bold=True)
-    fuente_M = font.SysFont('Verdana',16)
-    fuente_P = font.SysFont('Verdana',14)
-    fuente_Pi = font.SysFont('Verdana',14,italic=True)
-    fuente_MP = font.SysFont('Verdana',12)
+    __fuente = 'verdana'
+    fuente_Mi = font.SysFont(__fuente,16,italic=True)
+    fuente_Mb = font.SysFont(__fuente,16,bold=True)
+    fuente_M = font.SysFont(__fuente,16)
+    fuente_P = font.SysFont(__fuente,14)
+    fuente_Pi = font.SysFont(__fuente,14,italic=True)
+    fuente_MP = font.SysFont(__fuente,12)
     
-    fuente_Mu = font.SysFont('Verdana',16)
+    fuente_Mu = font.SysFont(__fuente,16)
     fuente_Mu.set_underline(True)
     
     font_high_color = Color(255,255,255)

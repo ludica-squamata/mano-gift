@@ -20,7 +20,7 @@
             "des":"Te hace invencible por 10 segundos."}
     },
     "crate":{
-        "propiedades":["empujable","pesado","solido"]
+        "propiedades":["empujable","solido"]
     },
     "_crate":{
         "propiedades":["pesado","solido"]

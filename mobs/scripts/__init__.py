@@ -1,1 +1,1 @@
-#dummy file to make this folder a package
+from .dialogo import Dialogo

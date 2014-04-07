@@ -7,5 +7,7 @@
     "fuerza":2,
     "actitud":"pasiva",
     "dialogo":[],
-    "tipo":"victima"
+    "tipo":"victima",
+    "temas_para_hablar":{},
+    "tema_preferido":""
 }

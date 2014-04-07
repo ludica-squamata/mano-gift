@@ -18,22 +18,23 @@ class modo:
                     Util.salir()
                 
                 elif event.key == C.TECLAS.DEBUG:
-                    print((W.HERO.mapX, W.HERO.mapY))
+                    print('map: ',(W.HERO.mapX, W.HERO.mapY))
+                    print('rect: ',(W.HERO.rect.x,W.HERO.rect.y))
     
     def Aventura(events,fondo):
         dx, dy = modo.dx, modo.dy
         for event in events:
             if event.type == KEYDOWN:
-                if event.key == C.TECLAS.IZQUIERDA: dx += 1
-                elif event.key == C.TECLAS.DERECHA: dx -= 1
-                elif event.key == C.TECLAS.ARRIBA:  dy += 1
-                elif event.key == C.TECLAS.ABAJO:   dy -= 1
+                if event.key == C.TECLAS.IZQUIERDA: dx -= 1
+                elif event.key == C.TECLAS.DERECHA: dx += 1
+                elif event.key == C.TECLAS.ARRIBA:  dy -= 1
+                elif event.key == C.TECLAS.ABAJO:   dy += 1
                     
                 elif event.key == C.TECLAS.HABLAR:
-                    W.MODO = 'Dialogo'
-                    # W.HERO.hablar()
-                    # W.DIALOG.usar_funcion()
-                    modo.onSelect = W.HERO.hablar(modo.onSelect)
+                    if W.HERO.hablar():
+                        W.MODO = 'Dialogo'
+                    else:
+                        W.MODO = 'Aventura'                   
                     
                 elif event.key == C.TECLAS.INVENTARIO:
                     W.MODO = 'Dialogo'
@@ -61,11 +62,11 @@ class modo:
                     dy = 0
         
         if dx != 0 or dy != 0:
-            W.HERO.mover(-dx,-dy)
-            W.MAPA_ACTUAL.mover(dx,dy)
+            cameraX,cameraY = W.HERO.mover(dx,dy)
+            W.RENDERER.camara.panear(-cameraX,-cameraY)
         modo.dx, modo.dy = dx, dy
         
-        return W.MAPA_ACTUAL.update(fondo)
+        return W.RENDERER.update(fondo)
     
     def Dialogo(events,fondo):
         for event in events:
@@ -74,13 +75,7 @@ class modo:
                 elif event.key == C.TECLAS.ABAJO: W.DIALOG.elegir_opcion(+1)
                 
                 elif event.key == C.TECLAS.HABLAR:
-                    #W.DIALOG.confirmar_seleccion()
-                    if modo.onSelect:
-                        modo.onSelect = W.HERO.confirmar_seleccion()
-                    elif modo.onVSel:
-                        W.DIALOG.confirmar_seleccion()
-                    else:
-                        modo.onSelect = W.HERO.hablar(modo.onSelect)
+                    W.DIALOG.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.INVENTARIO:
                     W.MAPA_ACTUAL.endDialog()
@@ -90,8 +85,8 @@ class modo:
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                     W.MAPA_ACTUAL.endDialog()
                     pass # cancelaria el dialogo como lo hace ahora.
-        
-        return W.MAPA_ACTUAL.update(fondo)
+
+        return W.RENDERER.update(fondo)
     
     def Menu(events,fondo):
         for event in events:
@@ -132,4 +127,4 @@ class modo:
                     else:
                         W.menu_actual.keyup_function('hablar')
                                         
-        return W.MAPA_ACTUAL.update(fondo)
+        return W.RENDERER.update(fondo)

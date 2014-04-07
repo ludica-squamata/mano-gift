@@ -1,10 +1,7 @@
 {
-    "dialogo":[
-        "hola, héroe!",
-        "¿avanza este diálogo?",
-        {"Sí":"¡pues me alegro!",
-         "No":"¡oh, qué pena!"},
-        "Y ahora, ¿funciona?",
-        {"Sí":"¡Bravo!",
-         "No":"¡Demonios!"}]
+    "temas_para_hablar":{
+        "demo":"demo.json",
+        "girl":"girl.json",
+        "monstruos":"monstruos.json"},
+    "tema_preferido":"demo"
 }

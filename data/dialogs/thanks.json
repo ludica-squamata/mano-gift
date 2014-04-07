@@ -1,0 +1,10 @@
+{
+    "tree":{"0":1},
+    "textos":{
+        "0":{"type":"S","loc":"NPC",
+        "txt": "Oh, muchas gracias héroe"},
+        
+        "1":{"type":"E","loc":"NPC",
+        "txt": "Esos monstruos eran peligrosos"}
+    }
+}
