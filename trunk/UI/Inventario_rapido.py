@@ -19,6 +19,9 @@ class Inventario_rapido (Menu_Items,Ventana):
         W.MAPA_ACTUAL.dialogs.add(self,layer=C.CAPA_OVERLAYS_DIALOGOS)
         self.rect = Rect((self.posicion, (C.ANCHO, int(C.ALTO/5))))
         self.dirty = 1
+        self.funciones = {
+            'hablar':self.confirmar_seleccion
+        }
     
     def confirmar_seleccion (self):
         if self.opciones > 0:

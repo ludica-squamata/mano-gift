@@ -10,6 +10,7 @@ class Enemy (Mob):
         #self.atk_img = self.cargar_anims('mobs/'+nombre+'_atk.png',['A','B','C'])
         self.generar_rasgos()
         
-    def atacar(self):
+    def atacar(self,mob):
+        #print('Mob '+self.nombre+' ataca a '+mob.nombre+'!')
+        #mob.recibir_danio()
         pass
-        #print('Mob '+self.nombre+' ataca al héroe!')

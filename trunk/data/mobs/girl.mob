@@ -1,3 +1,5 @@
 {
-    "quest":"hunt"
+    "quest":"hunt",
+    "temas_para_hablar":{"hunt":"hunt.json"},
+    "tema_preferido":"hunt"
 }

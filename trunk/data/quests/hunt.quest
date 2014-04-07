@@ -4,13 +4,8 @@
     },
     "NPCs":{
         "girl":{
-            "on":[
-                "Héroe, por favor!",
-                "Sálvanos de los monstruos!"
-                ],
-            "off":[
-                "Oh! Muchas gracias, Héroe!"
-                ]
+            "on":"hunt.json",
+            "off":"thanks.json"
             }
     }
 }

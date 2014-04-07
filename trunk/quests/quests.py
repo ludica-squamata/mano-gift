@@ -17,8 +17,15 @@ class Quest:
         for tipo in data['objetivos']:
             self.objetivos[tipo] = data['objetivos'][tipo]
         for mob in data['NPCs']:
-            self.on_Dialogs[mob] = data['NPCs'][mob]['on']
-            self.off_Dialogs[mob] = data['NPCs'][mob]['off']
+            if data['NPCs'][mob]['on'] != '':
+                self.on_Dialogs[mob] = r.abrir_json('data/dialogs/'+data['NPCs'][mob]['on'])
+            else:
+                self.on_Dialogs[mob] = ""
+            
+            if data['NPCs'][mob]['off'] != '':
+                self.off_Dialogs[mob] = r.abrir_json('data/dialogs/'+data['NPCs'][mob]['off'])
+            else:
+                self.off_Dialogs[mob] = ""
     
     def update(self):
         for objetivo in self.objetivos:
@@ -30,13 +37,11 @@ class Quest:
                 return True
             
             elif objetivo == 'talk':
-                for mob in self.objetivos[objetivo]:
-                    if W.HERO.interlocutor!= None:
-                        if W.HERO.interlocutor.nombre == mob:
-                            if W.HERO.interlocutor.pos_diag == -1:
-                                self.resolver()
-                                return True
-                return False
+                if self.nombre in W.HERO.conversaciones:
+                    self.resolver()
+                    return True
+                else:
+                    return False
             
             elif objetivo == 'get':
                 for objeto in self.objetivos[objetivo]:

@@ -1,56 +1,28 @@
 from . import Mob
 from globs import World as W, MobGroup
 from quests import QuestManager
+from misc import Resources as r
 
 class NPC (Mob):
     quest = None
+    iniciativa = 2
+    hablando = False
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
         self.data = data
         self.nombre = nombre
-        self.dialogos = self.data['dialogo']
-        self.pos_diag = -1
         MobGroup.add(self)
+        self.generar_rasgos()
+        self.tema_preferido = data['tema_preferido']
+        self.temas_para_hablar = {}
+        for tema in data['temas_para_hablar']:
+            self.temas_para_hablar[tema] = r.abrir_json('data/dialogs/'+data['temas_para_hablar'][tema])
         if 'quest' in data:
             QuestManager.add(data['quest'])
-        self.generar_rasgos()
     
-    def hablar(self, onSelect):
-        if len(self.dialogos) == 0:
-            self.stage.endDialog()
-            return False
-        
-        elif not onSelect:
-            self.pos_diag += 1
-        
-        if self.pos_diag >= len(self.dialogos):
-            self.stage.endDialog()
-            self.pos_diag = -1
-            return False
-        
-        else:
-            if type(self.dialogos[self.pos_diag]) != dict:
-                texto = self.dialogos[self.pos_diag]
-                onSelect = False
-            
-            else:
-                if not onSelect:
-                    texto = list(self.dialogos[self.pos_diag].keys())
-                    onSelect = True
-                    
-                else:
-                    sel = list(self.dialogos[self.pos_diag].keys())[onSelect-1]
-                    texto = self.dialogos[self.pos_diag][sel]
-                    onSelect = False
-                
-            
-            self.stage.setDialog(texto,onSelect)
-            return onSelect
-    
-    def _hablar():
+    def responder(self):
         self.hablando = True
-        W.DIALOG = _dialogo(self.dialogs) #self.data['dialogos']
     
     def mover(self):
-        if self.pos_diag == -1: # not hablando
+        if not self.hablando:
             super().mover()

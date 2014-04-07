@@ -10,7 +10,8 @@ class QuestManager:
             quest = Quest(script)
             QuestManager.quests[script] = quest
             for NPC in quest.on_Dialogs:
-                MobGroup[NPC].dialogos = quest.on_Dialogs[NPC]
+                MobGroup[NPC].temas_para_hablar[script] = quest.on_Dialogs[NPC]
+                MobGroup[NPC].tema_preferido = script
                 
     def remove(quest):    
         nombre = quest.nombre
@@ -19,10 +20,10 @@ class QuestManager:
             for NPC in quest.off_Dialogs:
                 if NPC in MobGroup:
                     npc = MobGroup[NPC]
-                    if quest.off_Dialogs[NPC] != []:
-                        npc.dialogos = quest.off_Dialogs[NPC]
+                    if quest.off_Dialogs[NPC] != "":
+                        npc.temas_para_hablar[nombre] = quest.off_Dialogs[NPC]
                     else:
-                        npc.dialogos = npc.data['dialogo']
+                        npc.tema_preferido = npc.data['tema_preferido']
     
     def update():
         conds = {}
