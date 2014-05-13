@@ -1,4 +1,4 @@
-from .basewidget import BaseWidget
+from UI.widgets import BaseWidget
 from pygame import Surface, Rect, font, draw
 from libs.textrect import render_textrect
 
@@ -21,17 +21,10 @@ class Ventana (BaseWidget):
         
         return megacanvas
     
-    def dibujar_lineas_cursor (self,i,img_dest,ancho,cursor,max_opciones):
-        h = self.altura_del_texto
+    def posicionar_cursor (self,i,cursor,max_opciones):
         cursor += i
         if cursor < 1: cursor = 1
         elif cursor > max_opciones: cursor = max_opciones
-        
-        y1 = (cursor*h)+1+(cursor-2)
-        y2 = ((cursor-i)*h)+1+((cursor-i)-2)
-        
-        draw.line(img_dest,self.font_high_color,(3,y1),(ancho,y1))
-        draw.line(img_dest,self.bg_cnvs,(3,y2),(ancho,y2))
         
         return cursor
 

@@ -1,4 +1,4 @@
-from UI.basewidget import BaseWidget
+from .basewidget import BaseWidget
 from libs.textrect import TextRectException
 from pygame import font, Rect
 from libs.textrect import render_textrect
@@ -34,7 +34,7 @@ class _opcion (BaseWidget):
             try:
                 #Si el texto es muy grande para el rect...
                 self.img_uns = render_textrect(texto,f,r,self.font_none_color,bg,a)
-                self.img_sel = render_textrect(texto,f,r,self.font_high_color,bg,a)
+                self.img_sel = render_textrect(texto,f,r,self.font_none_color,self.font_low_color,a)
                 break
             except TextRectException:
                 # Acá se achica.
@@ -45,3 +45,6 @@ class _opcion (BaseWidget):
         else: self.serDeselegido()
         
         self.nombre = texto
+    
+    def __repr__(self):
+        return self.nombre

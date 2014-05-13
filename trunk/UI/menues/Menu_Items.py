@@ -32,12 +32,16 @@ class Menu_Items (Menu):
         h = self.altura_del_texto
         self.draw_space = Surface(draw_area_rect.size)
         self.draw_space.fill(self.bg_cnvs)
-        self.canvas.blit(self.draw_space,draw_area_rect.topleft)
+        #self.canvas.blit(self.draw_space,draw_area_rect.topleft)
 
         for i in range(len(W.HERO.inventario)):
             item = W.HERO.inventario[i]
-            if item.esEquipable: color = self.font_low_color
-            else: color = self.font_high_color
+            if item.esEquipable:
+                color = self.font_high_color
+                
+            else:
+                color = self.font_none_color
+                
             fila = _item_inv(item,draw_area_rect.w-6,(3,i*h+i),self.fuente_M,color)
             
             self.filas.add(fila)
@@ -46,7 +50,7 @@ class Menu_Items (Menu):
             self.opciones = len(self.filas)
             self.elegir_fila(0)
             self.filas.draw(self.draw_space)
-            draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(draw_area_rect.w-4,(self.sel*h)+1+(self.sel-2)))
+            #draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(draw_area_rect.w-4,(self.sel*h)+1+(self.sel-2)))
         
         self.canvas.blit(self.draw_space,draw_area_rect.topleft)
     
@@ -55,33 +59,30 @@ class Menu_Items (Menu):
         rect = self.canvas.blit(marco,(7,340))
         self.descripcion_area = Rect((0,0),(rect.w-20,rect.h-42))
         
-    def elegir_fila(self,direccion):
+    def elegir_fila(self,direccion=None):
         if direccion == 'arriba': j=-1
         elif direccion =='abajo': j=+1
         else: j = 0
         if self.opciones > 0:
-            self.DeselectAll(self.botones)
-            self.sel = self.dibujar_lineas_cursor(j,self.draw_space,
-                                       self.draw_space.get_width()-4,
-                                       self.sel,self.opciones)
-
+            #self.DeselectAll(self.botones)
+            self.sel = self.posicionar_cursor(j,self.sel,self.opciones)
             self.mover_cursor(self.filas.get_sprite(self.sel-1))
-            
-            self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
-            
+            self.current.serElegido()
+        
     def confirmar_seleccion (self):
-        h = self.altura_del_texto
+        #h = self.altura_del_texto
         if self.opciones > 0:
-            cant = W.HERO.usar_item(self.current.item)
-            if cant <= 0:
+            #cant = 
+            if W.HERO.usar_item(self.current.item) <= 0:
                 self.opciones -= 1
                 if self.opciones <= 0:
                     self.current = self
-                    draw.line(self.image,self.bg_cnvs,(10,self.sel*h),(self.canvas.get_width()-10,self.sel*h))
-            self.dirty = 1
+                    #draw.line(self.image,self.bg_cnvs,(10,self.sel*h),(self.canvas.get_width()-10,self.sel*h))
+            #self.dirty = 1
     
     def update (self):
         self.crear_contenido(self.draw_space_rect)
+        self.canvas.blit(self.draw_space,self.draw_space_rect)
         if self.opciones > 0:
             desc = render_textrect(self.cur_opt.item.efecto_des,
                                    self.fuente_M,self.descripcion_area,

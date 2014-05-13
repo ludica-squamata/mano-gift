@@ -22,7 +22,9 @@ class Renderer:
     def update(self,fondo):
         fondo.fill((0,0,0))
         self.camara.update()
-        self.overlays.update()
+        for over in self.overlays:
+            if over.active:
+                over.update()
         ret = self.camara.draw(fondo) + self.overlays.draw(fondo)
         
         return ret

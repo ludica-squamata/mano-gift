@@ -9,7 +9,7 @@ class Config:
         "mostrar_intro":True,
         "recordar_menus":True, 
         "resolucion":{
-            "ANCHO":480,
+            "ANCHO":640,
             "ALTO":480
         },
         

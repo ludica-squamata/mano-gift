@@ -117,6 +117,7 @@ class modo:
                                 W.MAPA_ACTUAL.endDialog()
                                 W.onPause = False
                             else:
+                                W.menu_actual.active = False
                                 W.MAPA_ACTUAL.popMenu(W.menu_previo)
             
             elif event.type == KEYUP:

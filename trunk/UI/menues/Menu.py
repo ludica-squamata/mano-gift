@@ -26,13 +26,14 @@ class Menu (Ventana):
         self.dirty = 1
         
         W.MENUS[titulo] = self
-
-    def DeselectAll(self,lista):
+    
+    @staticmethod
+    def DeselectAll(lista):
         if len(lista) > 0:
             for item in lista:
                 item.serDeselegido()
                 item.dirty = 1
-            lista.draw(self.canvas)
+            #lista.draw(fondo)
             
     def mover_cursor(self,item):
         if type(item) == _boton:
