@@ -151,9 +151,8 @@ class Menu_Equipo(Menu_Items):
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
-        self.canvas.fill(self.bg_cnvs,self.draw_space_rect)
-        self.filas.draw(self.draw_space)
-        self.canvas.blit(self.draw_space,self.draw_space_rect.topleft)
+        #self.canvas.fill(self.bg_cnvs,self.draw_space_rect)
+        
         
     def cambiar_foco(self):
         '''Cambia el foco (las funciones que se utilizarán segun el imput)
@@ -161,18 +160,18 @@ class Menu_Equipo(Menu_Items):
         
         if self.current.item == None:
             if self.opciones > 0:
-                self.foco = 'items'
                 h = self.altura_del_texto
+                self.foco = 'items'
                 self.opciones = len(self.filas)
-                self.elegir_fila(0)
-                draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
+                self.elegir_fila()                
+                #draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
 
         else:
             self.desequipar_espacio()
     
     def equipar_item(self):
         '''Cuando un espacio esta seleccionado, y el foco está en la lista de items
-        usar esta función tralada el item de la lista al espacio seleccionado.'''
+        usar esta función traslada el item de la lista al espacio seleccionado.'''
         
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
@@ -187,7 +186,6 @@ class Menu_Equipo(Menu_Items):
     def desequipar_espacio(self):
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
-        
         espacio.desocupar()
         W.HERO.desequipar_item(item)
         self.espacios.draw(self.canvas)
@@ -197,7 +195,7 @@ class Menu_Equipo(Menu_Items):
             return super().cancelar()
         else:
             h = self.altura_del_texto
-            draw.line(self.draw_space,self.bg_cnvs,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
+            self.current.serDeselegido()
             self.foco = 'espacios'
         
     def usar_funcion(self,tecla):
@@ -216,5 +214,8 @@ class Menu_Equipo(Menu_Items):
         return self.newMenu
     
     def update(self):
-        self.llenar_espacio_selectivo(self.draw_space_rect)
+        if self.foco == 'espacios':
+            self.llenar_espacio_selectivo(self.draw_space_rect)
+        self.filas.draw(self.draw_space)
+        self.canvas.blit(self.draw_space,self.draw_space_rect)
         self.dirty = 1

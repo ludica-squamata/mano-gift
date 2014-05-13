@@ -37,8 +37,8 @@ class Menu_Opciones (Menu_Pausa,Menu):
         cmd2 = self.PressButton
         botones = [
             {m:"Mostrar Intro", c:cmd1,p:[6,f*0+dy],k:{b:"Recordar Menus",a:"Salir"}},
-            {m:"Recordar Menus",c:cmd1,p:[6,f*1+dy],k:{b:"Resolucion",a:"Mostrar Intro"}},
-            {m:"Resolucion",    c:cmd2,p:[6,f*2+dy],k:{b:"Arriba",a:"Recordar Menus"}}
+            {m:"Recordar Menus",c:cmd1,p:[6,f*1+dy],k:{b:"Resolución",a:"Mostrar Intro"}},
+            {m:"Resolución",    c:cmd2,p:[6,f*2+dy],k:{b:"Arriba",a:"Recordar Menus"}}
         ]
         
         return botones
@@ -52,7 +52,7 @@ class Menu_Opciones (Menu_Pausa,Menu):
         cmd = self.setTecla
         botones = [
             # primera columna
-            {m:"Arriba",    c:cmd,p:[x1,f*0+dy],k:{b:"Abajo",a:"Resolucion",d:"Accion"}},
+            {m:"Arriba",    c:cmd,p:[x1,f*0+dy],k:{b:"Abajo",a:"Resolución",d:"Accion"}},
             {m:"Abajo",     c:cmd,p:[x1,f*1+dy],k:{b:"Derecha",a:"Arriba",d:"Hablar"}},
             {m:"Derecha",   c:cmd,p:[x1,f*2+dy],k:{b:"Izquierda",a:"Abajo",d:"Inventario"}},
             {m:"Izquierda", c:cmd,p:[x1,f*3+dy],k:{b:"Menu",a:"Derecha",d:"Cancelar"}},
@@ -79,7 +79,8 @@ class Menu_Opciones (Menu_Pausa,Menu):
                 esp = _opcion(opt,88,[x,y+9],14,1)
                 self.espacios.add(esp)
             
-            elif nom == 'resolucion':
+            elif nom == 'resolución':
+                nom = nom.replace('ó','o')
                 ANCHO = self.data[nom]['ANCHO']
                 ALTO = self.data[nom]['ALTO']
                 esp = _opcion(str(ANCHO)+'x'+str(ALTO),88,[x,y+9],14,1)
@@ -87,7 +88,7 @@ class Menu_Opciones (Menu_Pausa,Menu):
             elif nom in self.data['teclas']:
                 texto = self.data['teclas'][nom]
                 nom = key_name(texto)
-                esp = _opcion(nom,88,[x,y+9],14,1)
+                esp = _opcion(nom,75,[x+3,y+9],14,1)
             
             self.espacios.add(esp)
     

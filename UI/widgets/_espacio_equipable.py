@@ -1,5 +1,5 @@
 from pygame import Surface, Rect, font, draw
-from UI.basewidget import BaseWidget
+from .basewidget import BaseWidget
 
 class _espacio_equipable (BaseWidget):
     isSelected = False

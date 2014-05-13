@@ -113,6 +113,7 @@ class Stage:
             menu.Reset()
         
         W.menu_actual = menu
+        W.menu_actual.active = True
         W.RENDERER.overlays.add(menu)
         W.RENDERER.overlays.move_to_front(menu)
             

@@ -11,6 +11,7 @@ class BaseWidget(Estilo,_giftSprite):
     
     def serElegido(self):
         '''Cambia la imagen a la versión resaltada'''
+        
         self.image = self.img_sel
         self.isSelected = True
         self.dirty = 1

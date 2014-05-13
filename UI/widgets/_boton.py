@@ -1,4 +1,4 @@
-from UI.basewidget import BaseWidget
+from .basewidget import BaseWidget
 from globs import Constants as C
 from pygame import Rect, Surface, draw
 from libs.textrect import render_textrect
