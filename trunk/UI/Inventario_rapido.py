@@ -6,6 +6,7 @@ from pygame import Rect, font
 
 class Inventario_rapido (Menu_Items,Ventana):
     posicion = 0,C.ALTO-int(C.ALTO/5)
+    active = True
     canvas = ''
     sel = 0
     
@@ -16,7 +17,7 @@ class Inventario_rapido (Menu_Items,Ventana):
         self.altura_del_texto = self.fuente.get_height()+1
         self.crear_contenido(self.draw_space_rect)
         Ventana.__init__(self,self.canvas)
-        W.MAPA_ACTUAL.dialogs.add(self,layer=C.CAPA_OVERLAYS_DIALOGOS)
+        W.RENDERER.overlays.add(self,layer=C.CAPA_OVERLAYS_DIALOGOS)
         self.rect = Rect((self.posicion, (C.ANCHO, int(C.ALTO/5))))
         self.dirty = 1
         self.funciones = {
@@ -25,14 +26,13 @@ class Inventario_rapido (Menu_Items,Ventana):
     
     def confirmar_seleccion (self):
         if self.opciones > 0:
-            cant = W.HERO.usar_item(self.current.item)        
-            if cant <= 0:
+            if W.HERO.usar_item(self.current.item) <= 0:
                 self.opciones -= 1
                 if self.opciones <= 0:
                     W.MAPA_ACTUAL.endDialog()
     
     def elegir_opcion (self,i):
-        self.sel = self.dibujar_lineas_cursor(i,self.canvas,self.draw_space.get_width(),self.sel,self.opciones)
+        self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
         
     def update (self):
         self.crear_contenido(self.draw_space_rect)
