@@ -4,7 +4,7 @@ from quests import QuestManager
 from intro import introduccion, intro
 from UI.modos import modo
 from misc import Resources as r, Config
-
+from script import run
 tamanio = C.ANCHO, C.ALTO
 py_init()
 pantalla.set_caption('Proyecto Mano-Gift')
@@ -18,6 +18,7 @@ init.ejecutar(fondo)
 while True:
     T.FPS.tick(60)
     T.contar_tiempo()
+    run()
     QuestManager.update()
     events = EVENT.get()
     modo.Juego(events)

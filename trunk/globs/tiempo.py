@@ -32,6 +32,7 @@ class Tiempo:
                     Tiempo.hora = 0
     
     def anochece(duracion):
+        t = Tiempo.esNoche #debug
         if not Tiempo.esNoche:
             if Tiempo._mins == duracion:
                 Tiempo.esNoche = True

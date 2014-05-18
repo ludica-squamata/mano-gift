@@ -22,7 +22,7 @@
         },
         "mobs": {
             "enemies":{},
-            "npcs":{}
+            "npcs":{"commoner":[[22,4]]}
         }
     },
     "capa_top":{
@@ -41,7 +41,8 @@
         "PVI_fila":"props/palote_vertical_fila_izquierda.png",
         "PVD_fila":"props/palote_vertical_fila_derecha.png",
         "Palotes_H_bottom":"props/palotes_horizontales.png",
-        "Palotes_H_top":"props/palotes_horizontales.png"
+        "Palotes_H_top":"props/palotes_horizontales.png",
+        "commoner":"mobs/commoner12.png"
         },
     "ambiente":"exterior"
 }

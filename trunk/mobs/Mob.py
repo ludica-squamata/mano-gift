@@ -36,6 +36,9 @@ class Mob (_giftSprite):
     vx,vy = 0,0 # posicion de la visión, puesta acá por si el mob no se mueve
     objetivo = None # el mob al que este cazador está persiguiendo
     
+    centroX = 0
+    centroY = 0
+    
     def __init__(self, ruta_img,stage,x=None,y=None,data = None,alpha = False):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo

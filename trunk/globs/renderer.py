@@ -20,7 +20,7 @@ class Renderer:
         self.camara.addFgObj(obj,layer)
     
     def update(self,fondo):
-        fondo.fill((0,0,0))
+        #fondo.fill((0,0,0))
         self.camara.update()
         for over in self.overlays:
             if over.active:
@@ -74,6 +74,27 @@ class Camara:
                 spr.dirty = 1
         
         self.centrar()
+        self.bg.dirty = 1
+    
+    def paneolibre(self,dx,dy):
+        
+        newPos = self.bg.rect.x + dx
+        if newPos > 0 or newPos < -(self.bg.rect.w - C.ANCHO):
+            dx = 0
+                
+        newPos = self.bg.rect.y + dy
+        if newPos > 0 or newPos < -(self.bg.rect.h - C.ALTO):
+            dy = 0
+        
+        self.bg.rect.x += dx
+        self.bg.rect.y += dy
+        for spr in self.contents:
+            if spr != self.bg:
+                spr.rect.x += dx
+                spr.rect.y += dy
+                self.contents.change_layer(spr, spr.rect.bottom)
+                spr.dirty = 1
+        
         self.bg.dirty = 1
         
     def centrar(self):

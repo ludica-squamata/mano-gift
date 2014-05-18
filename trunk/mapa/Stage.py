@@ -132,7 +132,7 @@ class Stage:
                 self.grilla[x,y].transitable = False
     
     def update(self):
-        self.anochecer(12)
+        self.anochecer(1)
         self.actualizar_grilla()
 
 class ChunkMap(DirtySprite):
