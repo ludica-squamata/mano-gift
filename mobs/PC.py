@@ -9,8 +9,6 @@ from UI import Inventario_rapido
 from pygame import Surface,Rect,mask
 
 class PC (Mob):
-    centroX = 0
-    centroY = 0
     inventario = None
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.

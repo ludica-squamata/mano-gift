@@ -9,6 +9,7 @@ class Dialog (Ventana):
     posicion = 0,384
     filas = sprite.LayeredDirty()
     text_pos = 3,3
+    active = True
     
     def __init__(self):
         self.canvas = self.crear_canvas(int(C.ANCHO), int(C.ALTO/5))
@@ -35,7 +36,7 @@ class Dialog (Ventana):
             self.filas.add(opcion)
         
         self.filas.draw(self.canvas)
-        self.elegir_opcion(-1)
+        #self.elegir_opcion(-1)
     
     def setLocImg(self,locutor):
         '''carga y dibuja la imagen de quien está hablando. También setea
@@ -52,7 +53,9 @@ class Dialog (Ventana):
         self.canvas.blit(img,dest)
     
     def elegir_opcion (self,i):
-        self.sel = self.dibujar_lineas_cursor(i,self.canvas,self.draw_space.w,self.sel,self.opciones)
+        self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
+        current = self.filas.get_sprite(self.sel-1)
+        current.serElegido()
         return self.sel
     
     def borrar_todo(self):
