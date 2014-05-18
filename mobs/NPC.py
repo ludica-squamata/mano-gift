@@ -25,4 +25,4 @@ class NPC (Mob):
     
     def mover(self):
         if not self.hablando:
-            super().mover()
+            return super().mover()
