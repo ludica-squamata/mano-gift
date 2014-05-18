@@ -62,8 +62,7 @@ class modo:
                     dy = 0
         
         if dx != 0 or dy != 0:
-            cameraX,cameraY = W.HERO.mover(dx,dy)
-            W.RENDERER.camara.panear(-cameraX,-cameraY)
+            W.HERO.mover(dx,dy)
         modo.dx, modo.dy = dx, dy
         
         return W.RENDERER.update(fondo)

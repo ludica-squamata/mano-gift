@@ -200,8 +200,11 @@ class Mob (_giftSprite):
             self.cambiar_direccion(self.modo_colision)
             x,y = self.direcciones[self.direccion]
             dx,dy = x*self.velocidad,y*self.velocidad
-        self.animar_caminar()
+        
+        self.animar_caminar()        
         self.reubicar(dx, dy)
+        
+        return dx,dy
 
     def detectar_colisiones(self,dx,dy):
         col_bordes = False #colision contra los bordes de la pantalla
@@ -363,4 +366,4 @@ class Mob (_giftSprite):
             self.anim_counter = 0
         if not W.onPause and not self.dead:
             self.determinar_accion(self.ver())
-            self.mover()
+            return self.mover()

@@ -1,6 +1,7 @@
 from pygame.sprite import LayeredDirty
 from .constantes import Constants as C
 
+
 class Renderer:
     camara = None
     overlays = None
@@ -53,6 +54,12 @@ class Camara:
     def setFocus(self,spr):
         self.focus = spr
     
+    def isFocus(self,spr):
+        if self.focus == spr:
+            return True
+        else:
+            return False
+        
     def panear(self,dx,dy):
         newPos = self.bg.rect.x + dx
         if newPos > 0 or newPos < -(self.bg.rect.w - C.ANCHO) or self.focus.rect.x != self.focus.centroX:
@@ -132,8 +139,13 @@ class Camara:
     
     def update(self):
         self.bg.update()
-        self.contents.update()
-    
+        #self.contents.update()
+        for spr in self.contents:
+            pan = spr.update()
+            if self.isFocus(spr) and pan != None:
+                dx,dy = pan
+                self.panear(dx,dy)
+                
     def draw(self,fondo):
         return self.contents.draw(fondo)
     

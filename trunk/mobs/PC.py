@@ -54,25 +54,15 @@ class PC (Mob):
         MobGroup.add(self)
         W.RENDERER.camara.setFocus(self)
         
-    def reubicar(self, dx, dy):
-        '''mueve el sprite una cantidad de cuadros'''
-        self.mapX += dx
-        self.mapY += dy
-        self.dirty = 1
-
     def mover(self,dx,dy):
-        #self.empujar_props(dx,dy)
         
-        d = 'abajo'
-        if dx == 1:
-            d = 'izquierda'
-        elif dx == -1:
-            d = 'derecha'
-        elif dy == -1:
-            d = 'arriba'
-        dx,dy = dx*self.velocidad,dy*self.velocidad
         self.animar_caminar()
-        self.cambiar_direccion(d)   
+        if dx == 1: self.cambiar_direccion('izquierda')
+        elif dx == -1: self.cambiar_direccion('derecha')
+        elif dy == -1: self.cambiar_direccion('arriba')
+        else: self.cambiar_direccion('abajo')
+        
+        dx,dy = dx*self.velocidad,dy*self.velocidad
         if not self.detectar_colisiones(dx,dy):
             self.reubicar(dx,dy) # el heroe se mueve en el mapa, no en la camara
         self.dirty = 1
@@ -82,7 +72,9 @@ class PC (Mob):
         #    if h.colisiona(spr,-dx,-dy):
         #        W.setear_mapa(spr.dest,spr.link)
         #        dx,dy = 0,0
+        
         return dx,dy
+    
     def accion(self):
         x,y = self.direcciones[self.direccion]
         
