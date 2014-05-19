@@ -1,6 +1,7 @@
 from pygame import QUIT, KEYUP, KEYDOWN
 from globs import Constants as C, World as W
 from misc import Util
+from UI.menues import *
 
 class modo:
     dx,dy = 0,0
@@ -50,10 +51,10 @@ class modo:
                 elif event.key == C.TECLAS.MENU:
                     W.onPause = True
                     W.MODO = 'Menu'
-                    W.MAPA_ACTUAL.popMenu('Pausa')
+                    modo._popMenu('Pausa')
                 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    W.MAPA_ACTUAL.endDialog()
+                    modo.endDialog()
                     
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:
@@ -84,7 +85,7 @@ class modo:
                     modo.onVSel = False
                 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    W.MAPA_ACTUAL.endDialog()
+                    modo.endDialog()
                     pass # cancelaria el dialogo como lo hace ahora.
 
         return W.RENDERER.update(fondo)
@@ -115,18 +116,44 @@ class modo:
                         if W.menu_actual.cancelar():
                             'Retrocede al menú anterior, o sale del modo'
                             if W.menu_actual.nombre == 'Pausa':
-                                W.MAPA_ACTUAL.endDialog()
+                                modo.endDialog()
                                 W.onPause = False
                             else:
                                 W.menu_actual.active = False
-                                W.MAPA_ACTUAL.popMenu(W.menu_previo)
+                                modo._popMenu(W.menu_previo)
             
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.HABLAR:
                     if modo.newMenu:
-                        W.MAPA_ACTUAL.popMenu(W.menu_actual.current.nombre)
+                        modo._popMenu(W.menu_actual.current.nombre)
                         modo.newMenu = False
                     else:
                         W.menu_actual.keyup_function('hablar')
                                         
         return W.RENDERER.update(fondo)
+    
+    @staticmethod
+    def _popMenu (titulo):
+        if W.menu_previo == '' and W.menu_previo != titulo:
+            W.menu_previo = titulo
+
+        if titulo not in W.MENUS:
+            try:
+                menu = eval('Menu_'+titulo+'()')
+            except Exception as Description:
+                print('No se pudo abrir el menu porque:',Description)
+                menu = Menu(titulo)
+        else:
+            menu = W.MENUS[titulo]
+            menu.Reset()
+        
+        W.menu_actual = menu
+        W.menu_actual.active = True
+        W.RENDERER.overlays.add(menu)
+        W.RENDERER.overlays.move_to_front(menu)
+    
+    @staticmethod
+    def endDialog():
+        W.RENDERER.overlays.empty()
+        W.DIALOG = None
+        W.MODO = 'Aventura'

@@ -1,4 +1,4 @@
-from .Menu_Items import Menu_Items
+from .menu_Items import Menu_Items
 from pygame import Surface, Rect, font, draw
 from pygame.sprite import LayeredDirty
 from misc import Resources as r

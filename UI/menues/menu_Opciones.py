@@ -1,6 +1,6 @@
-from .Menu import Menu
-from .Menu_Pausa import Menu_Pausa
-from UI.modos import modo
+from .menu import Menu
+from .menu_Pausa import Menu_Pausa
+#from UI.modos import modo
 from UI.widgets import _boton, _opcion
 from globs.constantes import Constants as K
 from pygame.sprite import LayeredDirty
@@ -112,6 +112,7 @@ class Menu_Opciones (Menu_Pausa,Menu):
             C.asignar('recordar_menus',not C.dato('recordar_menus'))
     
     def setTecla (self):
+        from UI.modos import modo
         '''Prepara la tecla elegida para ser cambiada'''
         
         boton,tecla = self.elegir_botonYespacio()

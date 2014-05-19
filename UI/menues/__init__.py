@@ -1,9 +1,9 @@
-from .Menu_Pausa import Menu_Pausa
-from .Menu_Items import Menu_Items
-from .Menu_Equipo import Menu_Equipo
-from .Menu_Opciones import Menu_Opciones
-from .Menu_Debug import Menu_Debug
-from .Menu import Menu
+from .menu_Pausa import Menu_Pausa
+from .menu_Items import Menu_Items
+from .menu_Equipo import Menu_Equipo
+from .menu_Opciones import Menu_Opciones
+from .menu_Debug import Menu_Debug
+from .menu import Menu
 
 __all__ = [
     'Menu',

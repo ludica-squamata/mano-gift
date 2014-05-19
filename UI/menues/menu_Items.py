@@ -1,4 +1,4 @@
-from .Menu import Menu
+from .menu import Menu
 from UI.widgets import _item_inv
 from globs import World as W
 from libs.textrect import render_textrect

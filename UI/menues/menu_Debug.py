@@ -1,4 +1,4 @@
-from .Menu import Menu
+from .menu import Menu
 from UI.widgets import _opcion
 from misc import Resources as r
 from globs import World as W, Constants as C
@@ -54,7 +54,7 @@ class Menu_Debug (Menu):
     
     def cargar_mapa(self):
         W.setear_mapa(self.mapas[self.sel-1], 'inicial')
-        W.MAPA_ACTUAL.endDialog()
+        #W.MAPA_ACTUAL.endDialog()
         W.onPause = False
     
     def update(self):

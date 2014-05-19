@@ -1,5 +1,5 @@
-from .Menu import Menu
-from UI.modos import modo
+from .menu import Menu
+#from UI.modos import modo
 from globs import Constants as C
 from misc import Config as cfg
 from UI.widgets import _boton
@@ -62,6 +62,7 @@ class Menu_Pausa (Menu):
             self.botones.draw(self.canvas)
 
     def PressOne(self):
+        from UI.modos import modo
         super().PressButton()
         modo.newMenu = True
     
