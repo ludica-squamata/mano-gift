@@ -12,6 +12,9 @@ class _giftGroup(UserDict):
             del self[nombre]
     
     def get (self,nombre):
-        return self[nombre]
+        try:
+            return self[nombre]
+        except KeyError:
+            return None
 
 MobGroup = _giftGroup()

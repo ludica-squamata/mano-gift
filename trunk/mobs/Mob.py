@@ -255,8 +255,8 @@ class Mob (_giftSprite):
             if self.death_img != None:
                 self.image = self.death_img
             else: # esto queda hasta que haga sprites 'muertos' de los npcs
-                self.stage.contents.remove(self)
-                self.stage.properties.remove(self)
+                W.RENDERER.delObj(self)
+                self.stage.delProperty(self)
             self.dead = True
             MobGroup.remove(self)
     

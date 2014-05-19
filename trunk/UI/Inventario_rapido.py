@@ -1,8 +1,7 @@
-from .menues.Menu_Items import Menu_Items
+from .menues.menu_Items import Menu_Items
 from .Ventana import Ventana
 from globs import World as W, Constants as C
 from pygame import Rect, font
-
 
 class Inventario_rapido (Menu_Items,Ventana):
     posicion = 0,C.ALTO-int(C.ALTO/5)

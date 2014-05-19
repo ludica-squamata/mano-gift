@@ -4,6 +4,7 @@ from globs.giftgroups import MobGroup
 i = 0
 
 def run():
+    W.RENDERER.camara.setFocus(None)
     if T._segs < 1:
         W.RENDERER.camara.paneolibre(1,0)
     elif T._segs < 2:

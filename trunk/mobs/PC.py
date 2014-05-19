@@ -95,7 +95,7 @@ class PC (Mob):
                 if sprite.interaccion(x,y):
                     item = Item(sprite.nombre,sprite.es('stackable'),sprite.image)
                     if self.inventario.agregar(item):
-                        self.stage.properties.remove(sprite)
+                        self.stage.delProperty(sprite)
                         W.RENDERER.camara.delObj(sprite)
                 
     def atacar(self,sprite,x,y):

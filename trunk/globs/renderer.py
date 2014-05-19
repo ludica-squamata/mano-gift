@@ -20,6 +20,10 @@ class Renderer:
     def addObj(self,obj,layer):
         self.camara.addFgObj(obj,layer)
     
+    def delObj(self,obj):
+        if obj in self.camara.contents:
+            self.camara.contents.remove(obj)
+            
     def update(self,fondo):
         #fondo.fill((0,0,0))
         self.camara.update()
