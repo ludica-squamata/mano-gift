@@ -1,20 +1,24 @@
 from pygame import time, Surface
 from base import _giftSprite
 
+class Noche(_giftSprite):
+    def __init__(self,size):
+        img = Surface(size)
+        img.set_alpha(230)
+        self.rect = img.get_rect()
+        super().__init__(img)
+        self.ubicar(0,0)
+        self.dirty = 2
+
 class Tiempo:
     FPS = time.Clock()
     _frames,_segs,_mins = 0,0,0 # valores internos
     hora,dia = 0,0 # valores con efecto en el juego.
     angulo_sol = 0
     esNoche = False
+    noche = None
     
-    nch_img = Surface((480,480))
-    nch_img.set_alpha(125)
-    noche = _giftSprite(nch_img)
-    noche.ubicar(0,0)
-    noche.dirty = 2
-    noche.visible = False
-        
+    @staticmethod
     def contar_tiempo ():
         Tiempo._frames += 1
         if Tiempo._frames == 60:
@@ -31,6 +35,7 @@ class Tiempo:
                     Tiempo.dia += 1
                     Tiempo.hora = 0
     
+    @staticmethod
     def anochece(duracion):
         t = Tiempo.esNoche #debug
         if not Tiempo.esNoche:
@@ -45,3 +50,8 @@ class Tiempo:
                 Tiempo._mins = 0
         
         return Tiempo.esNoche
+    
+    @staticmethod
+    def crear_noche(tamanio):
+        Tiempo.noche = Noche(tamanio)
+    

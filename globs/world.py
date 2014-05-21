@@ -1,6 +1,4 @@
 from misc import Resources as r
-from .tiempo import Tiempo as T
-from .constantes import Constants as C
 from .renderer import Renderer
 
 class World:
