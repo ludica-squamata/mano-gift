@@ -18,7 +18,7 @@ init.ejecutar(fondo)
 while True:
     T.FPS.tick(60)
     T.contar_tiempo()
-    run()
+    #run()
     QuestManager.update()
     events = EVENT.get()
     modo.Juego(events)

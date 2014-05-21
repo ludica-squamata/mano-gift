@@ -80,7 +80,7 @@ class modo:
                     W.DIALOG.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    W.MAPA_ACTUAL.endDialog()
+                    modo.endDialog()
                     W.MODO = 'Aventura'
                     modo.onVSel = False
                 
