@@ -1,4 +1,4 @@
-from .CompoMob import Mob
+from .mob import Mob
 from .NPC import NPC
 from .PC import PC
 from .Enemy import Enemy

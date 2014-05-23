@@ -1,12 +1,29 @@
-from pygame import time, Surface
+from pygame import time, Surface, draw, PixelArray, SRCALPHA
 from base import _giftSprite
 
 class Noche(_giftSprite):
     def __init__(self,size):
+        #############################
         img = Surface(size)
-        img.set_alpha(0)#(230)
+        img.set_alpha(0)
         self.rect = img.get_rect()
         super().__init__(img)
+        #############################
+        #img = Surface(size,SRCALPHA)
+        #pxArray = PixelArray(img)
+        #for y in range(img.get_width()):
+        #    for x in range(img.get_height()):
+        #        pxArray[x,y] = 0,0,0,230
+        #for y in range(600,800):
+        #    for x in range(400,700):
+        #        r,g,b = 255,0,0 # color de la luz, rojo.
+        #        alpha = 0 # cambiar este valor para colorear de rojo.
+        #        pxArray[x,y] = r,g,b,alpha
+        #nch = pxArray.make_surface()
+        #self.rect = nch.get_rect()
+        #super().__init__(nch)
+        ##############################
+        
         self.ubicar(0,0)
         self.dirty = 2
 

@@ -1,11 +1,11 @@
-from . import Equipado,Atribuido,Animado,Sensitivo,Inteligente,Movil
+from .CompoMob import Equipado,Atribuido,Animado,Movil
 from base import _giftSprite
 from misc import Resources as r
 from globs import Constants as C, World as W
 from mobs.scripts import movimiento
 from pygame import mask
 
-class Mob(Equipado,Atribuido,Animado,Sensitivo,Inteligente,Movil,_giftSprite):
+class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
     images = {}
     mascaras = {}
     camino = []
@@ -64,6 +64,31 @@ class Mob(Equipado,Atribuido,Animado,Sensitivo,Inteligente,Movil,_giftSprite):
         self._AI = self.AI #copia de la AI original
         self._camino = self.camino
     
+    def PC__init__(self,ruta_img,stage,ruta_alpha):
+        # esta función se utiliza solo porque hay diferencias entre
+        # lo que hay producido para el Hero y lo que hay para los NPC
+        # cuando las capacidades se hayan igualado, PC utilizará el __init__
+        # normal, igual que el resto de los Mobs.
+        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
+        'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
+        'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda'] # paso Derecho
+
+        _images = r.split_spritesheet(ruta_img)
+        _mascaras = r.split_spritesheet(ruta_alpha)
+        self.images = {} # si no lo redefino, pasan cosas raras...
+        self.mascaras = {}       
+        
+        for key in maskeys:
+            _alpha = _mascaras[maskeys.index(key)]
+            self.mascaras[key] = mask.from_threshold(_alpha, C.COLOR_COLISION, (1,1,1,255))
+            self.images[key] = _images[maskeys.index(key)]
+        self.mask  = self.mascaras['Sabajo']
+        self.image = self.images['Sabajo']
+        
+        for e in self.equipo:
+            self.equipo[e] = None
+        super().__init__(self.image,alpha=self.mask,stage=stage)
+
     def update(self):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:

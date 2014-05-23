@@ -1,9 +1,10 @@
-from .CompoMob import Mob
+from .CompoMob import Sensitivo,Autonomo
+from .mob import Mob
 from globs import World as W, MobGroup
 from quests import QuestManager
 from misc import Resources as r
 
-class NPC (Mob):
+class NPC (Mob,Sensitivo,Autonomo):
     quest = None
     iniciativa = 2
     hablando = False

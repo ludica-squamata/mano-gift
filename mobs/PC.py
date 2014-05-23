@@ -1,5 +1,5 @@
 from misc import Resources as r, Util as U
-from .CompoMob import Animado,Equipado,Atribuido,Movil
+from .mob import Mob
 from base import _giftSprite
 from .NPC import NPC
 from .Inventory import Inventory
@@ -9,7 +9,7 @@ from globs import World as W, Constants as C, Tiempo as T, MobGroup
 from UI import Inventario_rapido
 from pygame import Surface,Rect,mask
 
-class PC(Animado,Equipado,Atribuido,Movil,_giftSprite):
+class PC(Mob):
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
     cmb_pos_img = {} # combat position images.
     cmb_pos_alpha = {} # combat position images's alpha.
@@ -26,7 +26,7 @@ class PC(Animado,Equipado,Atribuido,Movil,_giftSprite):
     conversaciones = [] # registro de los temas conversados
     def __init__(self,nombre,data,stage):
         imgs = data['imagenes']
-        self.PreInit(imgs['idle']['graph'],stage,imgs['idle']['alpha'])
+        super().PC__init__(imgs['idle']['graph'],stage,imgs['idle']['alpha'])
         
         self.idle_walk_img = self.images
         self.idle_walk_alpha = self.mascaras
@@ -53,28 +53,7 @@ class PC(Animado,Equipado,Atribuido,Movil,_giftSprite):
         
         MobGroup.add(self)
         W.RENDERER.camara.setFocus(self)
-    
-    def PreInit(self,ruta_img,stage,ruta_alpha):
-        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
-        'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
-        'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda'] # paso Derecho
-
-        _images = r.split_spritesheet(ruta_img)
-        _mascaras = r.split_spritesheet(ruta_alpha)
-        self.images = {} # si no lo redefino, pasan cosas raras...
-        self.mascaras = {}       
         
-        for key in maskeys:
-            _alpha = _mascaras[maskeys.index(key)]
-            self.mascaras[key] = mask.from_threshold(_alpha, C.COLOR_COLISION, (1,1,1,255))
-            self.images[key] = _images[maskeys.index(key)]
-        self.mask  = self.mascaras['Sabajo']
-        self.image = self.images['Sabajo']
-        
-        for e in self.equipo:
-            self.equipo[e] = None
-        super().__init__(self.image,alpha=self.mask,stage=stage)
-    
     def mover(self,dx,dy):
         
         self.animar_caminar()
