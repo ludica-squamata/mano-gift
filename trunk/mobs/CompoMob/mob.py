@@ -6,7 +6,9 @@ from mobs.scripts import movimiento
 from pygame import mask
 
 class Mob(Equipado,Atribuido,Animado,Sensitivo,Inteligente,Movil,_giftSprite):
-    
+    images = {}
+    mascaras = {}
+    camino = []
     def __init__(self,ruta_img,stage,x,y,data):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
@@ -61,27 +63,6 @@ class Mob(Equipado,Atribuido,Animado,Sensitivo,Inteligente,Movil,_giftSprite):
         
         self._AI = self.AI #copia de la AI original
         self._camino = self.camino
-
-    def PC__init__(self,ruta_img,stage,ruta_alpha):
-        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
-        'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
-        'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda'] # paso Derecho
-
-        _images = r.split_spritesheet(ruta_img)
-        _mascaras = r.split_spritesheet(ruta_alpha)
-        self.images = {} # si no lo redefino, pasan cosas raras...
-        self.mascaras = {}       
-        
-        for key in maskeys:
-            _alpha = _mascaras[maskeys.index(key)]
-            self.mascaras[key] = mask.from_threshold(_alpha, C.COLOR_COLISION, (1,1,1,255))
-            self.images[key] = _images[maskeys.index(key)]
-        self.mask  = self.mascaras['Sabajo']
-        self.image = self.images['Sabajo']
-        
-        for e in self.equipo:
-            self.equipo[e] = None
-        super().__init__(self.image,alpha=self.mask,stage=stage)
     
     def update(self):
         self.anim_counter += 1
