@@ -1,5 +1,5 @@
 from misc import Resources as r, Util as U
-from .Mob import Mob
+from .CompoMob import Mob
 from .NPC import NPC
 from .Inventory import Inventory
 from .Item import Item
@@ -26,7 +26,7 @@ class PC (Mob):
     conversaciones = [] # registro de los temas conversados
     def __init__(self,nombre,data,stage):
         imgs = data['imagenes']
-        super().__init__(imgs['idle']['graph'],stage,alpha=imgs['idle']['alpha'])
+        super().PC__init__(imgs['idle']['graph'],stage,imgs['idle']['alpha'])
         
         self.idle_walk_img = self.images
         self.idle_walk_alpha = self.mascaras

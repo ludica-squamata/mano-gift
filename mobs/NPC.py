@@ -1,4 +1,4 @@
-from . import Mob
+from .CompoMob import Mob
 from globs import World as W, MobGroup
 from quests import QuestManager
 from misc import Resources as r
