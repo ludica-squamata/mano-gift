@@ -1,4 +1,4 @@
-class Inteligente:
+class Autonomo:
     AI = None # determina cómo se va a mover el mob
     objetivo = None # el mob al que este cazador está persiguiendo
             

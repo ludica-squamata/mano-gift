@@ -1,4 +1,4 @@
-from .CompoMob import Mob
+from .mob import Mob
 from globs import World as W
 
 
