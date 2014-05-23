@@ -4,7 +4,7 @@ from base import _giftSprite
 class Noche(_giftSprite):
     def __init__(self,size):
         img = Surface(size)
-        img.set_alpha(230)
+        img.set_alpha(0)#(230)
         self.rect = img.get_rect()
         super().__init__(img)
         self.ubicar(0,0)
