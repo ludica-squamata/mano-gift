@@ -1,27 +1,70 @@
 from pygame import time, Surface, draw, PixelArray, SRCALPHA
 from base import _giftSprite
+from misc import Resources
 
 class Noche(_giftSprite):
     def __init__(self,size):
         #############################
-        img = Surface(size)
-        img.set_alpha(0)
-        self.rect = img.get_rect()
-        super().__init__(img)
+        if(1): #cambiar a 0 para prueba de luces
+            img = Surface(size)
+            img.fill((0,0,0))
+            img.set_alpha(230)
+            self.rect = img.get_rect()
+            super().__init__(img)
         #############################
-        #img = Surface(size,SRCALPHA)
-        #pxArray = PixelArray(img)
-        #for y in range(img.get_width()):
-        #    for x in range(img.get_height()):
-        #        pxArray[x,y] = 0,0,0,230
-        #for y in range(600,800):
-        #    for x in range(400,700):
-        #        r,g,b = 255,0,0 # color de la luz, rojo.
-        #        alpha = 0 # cambiar este valor para colorear de rojo.
-        #        pxArray[x,y] = r,g,b,alpha
-        #nch = pxArray.make_surface()
-        #self.rect = nch.get_rect()
-        #super().__init__(nch)
+        else:
+            img = Surface(size, SRCALPHA)
+            img.fill((0,0,0,230)) #llenamos con color rgba. como es srcalpha funciona bien
+            pxArray = PixelArray(img)
+            
+            lights = []
+            colorIgnorado = (1,1,1) #este es el color para las secciones que no se renderean, sino siempre se borra un cuadrado. el alpha no importa
+                                    #deberiamos definirlo en documentacion
+            surf = Surface((80,80), SRCALPHA)
+            surf.fill(colorIgnorado)
+            draw.circle(surf, (127,0,127,127), (40,40) ,40)
+            
+            lights.append([{"x":400,"y":600}, surf])
+            
+            surf = Resources.cargar_imagen('degrade.png')
+            rect = surf.get_rect()
+            rect.x = 600
+            rect.y = 600
+            
+            lights.append([rect, surf])
+            
+            surf = Surface((100,100), SRCALPHA) #luz de dia, 0,0,0,0. probe y sin SRCALPHA no funciona
+            surf.set_alpha(0)
+            lights.append([{"x":500,"y":800}, surf])
+            
+            def clamp(n):
+                return 0 if n<0 else 255 if n>255 else n
+            
+            imap = img.unmap_rgb #cache para velocidad
+            
+            for l in lights:
+                lightArray = PixelArray(l[1])
+                if type(l[0]) is dict:
+                    lx = l[0]["x"]
+                    ly = l[0]["y"]
+                else: #suponemos Rect
+                    lx = l[0].x
+                    ly = l[0].y
+                lmap = l[1].unmap_rgb
+                for y in range(0, l[1].get_width()):
+                    for x in range(0, l[1].get_height()):
+                        ox, oy = lx + x, ly + y
+                        r,g,b,a = lmap(lightArray[x,y]) #hay que usar el motodo unmap_rgb de la instancia de surface que corresponde
+                        if ((r,g,b) != colorIgnorado):
+                            _r,_g,_b,_a = imap(pxArray[ox, oy])
+                            r = clamp(r+_r)
+                            g = clamp(g+_g)
+                            b = clamp(b+_b)
+                            a = clamp(_a -(255-a))
+                            pxArray[ox,oy] = r,g,b,a
+            nch = pxArray.make_surface()
+            self.rect = nch.get_rect()
+            super().__init__(nch)
         ##############################
         
         self.ubicar(0,0)
