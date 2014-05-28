@@ -5,10 +5,10 @@ from misc import Resources
 class Noche(_giftSprite):
     def __init__(self,size):
         #############################
-        if(1): #cambiar a 0 para prueba de luces
+        if 1: #cambiar a 0 para prueba de luces
             img = Surface(size)
             img.fill((0,0,0))
-            img.set_alpha(230)
+            img.set_alpha(0)
             self.rect = img.get_rect()
             super().__init__(img)
         #############################
