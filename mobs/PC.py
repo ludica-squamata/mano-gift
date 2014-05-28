@@ -24,6 +24,8 @@ class PC(Mob):
     atk_img_index = -1
     iniciativa = 3
     conversaciones = [] # registro de los temas conversados
+    
+    dx,dy = 0,0
     def __init__(self,nombre,data,stage):
         imgs = data['imagenes']
         super().PC__init__(imgs['idle']['graph'],stage,imgs['idle']['alpha'])
@@ -72,8 +74,8 @@ class PC(Mob):
         #    if h.colisiona(spr,-dx,-dy):
         #        W.setear_mapa(spr.dest,spr.link)
         #        dx,dy = 0,0
+        self.dx,self.dy = -dx,-dy
         
-        return dx,dy
     
     def accion(self):
         x,y = self.direcciones[self.direccion]
@@ -189,3 +191,6 @@ class PC(Mob):
     def update(self):
         if self.atacando:
             self._anim_atk(5)
+        dx,dy = self.dx,self.dy
+        self.dx,self.dy = 0,0
+        return dx,dy
