@@ -32,8 +32,7 @@ class Menu_Items (Menu):
         h = self.altura_del_texto
         self.draw_space = Surface(draw_area_rect.size)
         self.draw_space.fill(self.bg_cnvs)
-        #self.canvas.blit(self.draw_space,draw_area_rect.topleft)
-
+        
         for i in range(len(W.HERO.inventario)):
             item = W.HERO.inventario[i]
             if item.esEquipable:
@@ -48,38 +47,30 @@ class Menu_Items (Menu):
         
         if len(self.filas) > 0:
             self.opciones = len(self.filas)
-            self.elegir_fila(0)
+            self.elegir_fila()
             self.filas.draw(self.draw_space)
-            #draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)+1+(self.sel-2)),(draw_area_rect.w-4,(self.sel*h)+1+(self.sel-2)))
-        
-        self.canvas.blit(self.draw_space,draw_area_rect.topleft)
-    
+            
     def crear_espacio_descriptivo(self,ancho,alto):
         marco = self.crear_espacio_titulado(ancho,alto,'Efecto')
         rect = self.canvas.blit(marco,(7,340))
-        self.descripcion_area = Rect((0,0),(rect.w-20,rect.h-42))
+        self.descripcion_area = Rect((12,363),(rect.w-20,rect.h-42))
         
     def elegir_fila(self,direccion=None):
         if direccion == 'arriba': j=-1
         elif direccion =='abajo': j=+1
         else: j = 0
         if self.opciones > 0:
-            #self.DeselectAll(self.botones)
             self.sel = self.posicionar_cursor(j,self.sel,self.opciones)
-            self.mover_cursor(self.filas.get_sprite(self.sel-1))
+            self.mover_cursor(self.filas.get_sprite(self.sel))
             self.current.serElegido()
         
     def confirmar_seleccion (self):
-        #h = self.altura_del_texto
         if self.opciones > 0:
-            #cant = 
             if W.HERO.usar_item(self.current.item) <= 0:
                 self.opciones -= 1
                 if self.opciones <= 0:
                     self.current = self
-                    #draw.line(self.image,self.bg_cnvs,(10,self.sel*h),(self.canvas.get_width()-10,self.sel*h))
-            #self.dirty = 1
-    
+
     def update (self):
         self.crear_contenido(self.draw_space_rect)
         self.canvas.blit(self.draw_space,self.draw_space_rect)
@@ -91,5 +82,5 @@ class Menu_Items (Menu):
             desc = Surface(self.descripcion_area.size)
             desc.fill(self.bg_cnvs)
         
-        self.canvas.blit(desc,(12,363))
+        self.canvas.blit(desc,self.descripcion_area.topleft)
         self.dirty = 1

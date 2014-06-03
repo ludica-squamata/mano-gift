@@ -60,7 +60,10 @@ class Menu_Pausa (Menu):
                     break
                         
             self.botones.draw(self.canvas)
-
+    
+    def cancelar(self):
+        return False
+        
     def PressOne(self):
         from UI.modos import modo
         super().PressButton()
@@ -76,4 +79,5 @@ class Menu_Pausa (Menu):
         selected.serElegido()
         self.current = selected
         self.botones.draw(self.canvas)
+        self.active = True
         self.dirty = 1

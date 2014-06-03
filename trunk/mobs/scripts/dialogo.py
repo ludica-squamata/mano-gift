@@ -1,4 +1,4 @@
-from UI import Dialog
+from UI import DialogInterface
 from globs import World as W
 from random import randint
 
@@ -18,7 +18,7 @@ class Dialogo:
     cursor_sel_tema = 0
     
     def __init__(self,*participantes): # type (participantes) == list
-        self.frontend = Dialog()
+        self.frontend = DialogInterface()
         self.temas = {}
         self.txt = str(0)
         self._txt = 0
@@ -35,6 +35,11 @@ class Dialogo:
         else:
             self.establecer_tema(tema)
             
+        self.funciones = {
+            'hablar':self.funcion_siguiente,
+            'cancelar':self.frontend.destruir
+        }
+            
     def establecer_tema(self,tema):
         self.tema_actual = self.temas[tema]
         self.nombre_tema_act = tema
@@ -47,7 +52,7 @@ class Dialogo:
         if self.fin_de_tema:
             self.txt = str(0)
             self._txt = 0
-            W.MAPA_ACTUAL.endDialog()
+            self.frontend.Destruir()
         self.fin_de_tema = self.hablar()
         self.frontend.setLocImg(self.locutor)
         if self.mostrar != None:
@@ -58,6 +63,7 @@ class Dialogo:
             for p in self.participantes:
                 if hasattr(p,'hablando'):
                     p.hablando = False
+                    self.usar_funcion('cancelar')
         else:
             return True
         
@@ -86,7 +92,7 @@ class Dialogo:
                 self.onSelect = True
                 print('bucle Q consigna')
             else:
-                self.elegir_opcion(-1)
+                self.elegir_opcion(0)
                 self.locutor = textos[str(tree[str(self.txt)][0])]['loc']
                 #chapuza: que pasa si las respuestas se dan por multiples personajes?
                 opciones = [textos[str(n)]['txt'] for n in tree[str(self.txt)]]
@@ -113,20 +119,19 @@ class Dialogo:
     def elegir_tema(self):
         temas = list(self.temas.keys())
         self.frontend.setSelMode(temas)
-        self.frontend.dirty = 1
     
     def elegir_opcion(self,dy):
         if self.tema_actual != None:
             if self.tema_actual['textos'][self.txt]['type'] != 'E':
                 tree = self.tema_actual['tree']
                 if type(tree[str(self.txt)]) != int:
-                    d = self.frontend.elegir_opcion(dy)-1
+                    d = self.frontend.elegir_opcion(dy)
                     h = tree[str(self.txt)]
                     self._txt = h[d]
         else:
             self.cursor_sel_tema = self.frontend.elegir_opcion(dy)-1
     
-    def usar_funcion(self,dummy):
+    def funcion_siguiente(self):    
         if self.tema_actual != None:
             if self.onOptions:
                 self.confirmar_seleccion()
@@ -135,7 +140,7 @@ class Dialogo:
         else:
             temas = list(self.temas.keys())
             tema = temas[self.cursor_sel_tema]
-            self.establecer_tema(tema)
+            self.establecer_tema(tema)    
     
     def confirmar_seleccion(self):
         self.txt = str(self._txt)
@@ -143,3 +148,7 @@ class Dialogo:
         self.onOptions = False
         self.onSelect = False
         self.update()
+    
+    def usar_funcion(self,tecla):
+        if tecla in self.funciones:
+            self.funciones[tecla]()

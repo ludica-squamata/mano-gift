@@ -5,9 +5,7 @@ from UI.menues import *
 
 class modo:
     dx,dy = 0,0
-    onSelect = False
     newMenu = False
-    onVSel = False
     setKey = False
     def Juego (events):
         for event in events:
@@ -39,7 +37,6 @@ class modo:
                     
                 elif event.key == C.TECLAS.INVENTARIO:
                     W.MODO = 'Dialogo'
-                    modo.onVSel = True
                     W.HERO.ver_inventario()
                 
                 elif event.key == C.TECLAS.POSICION_COMBATE:
@@ -52,9 +49,6 @@ class modo:
                     W.onPause = True
                     W.MODO = 'Menu'
                     modo._popMenu('Pausa')
-                
-                elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    modo.endDialog()
                     
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:
@@ -78,14 +72,11 @@ class modo:
                     W.DIALOG.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    modo.endDialog()
-                    W.MODO = 'Aventura'
-                    modo.onVSel = False
-                
+                    W.DIALOG.usar_funcion('cerrar')
+                    
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    modo.endDialog()
-                    pass # cancelaria el dialogo como lo hace ahora.
-
+                    W.DIALOG.usar_funcion('cancelar')
+        
         return W.RENDERER.update(fondo)
     
     def Menu(events,fondo):
@@ -111,14 +102,11 @@ class modo:
                         W.menu_actual.usar_funcion('hablar')
                     
                     elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                        if W.menu_actual.cancelar():
-                            'Retrocede al menú anterior, o sale del modo'
-                            if W.menu_actual.nombre == 'Pausa':
-                                modo.endDialog()
-                                W.onPause = False
-                            else:
-                                W.menu_actual.active = False
-                                modo._popMenu(W.menu_previo)
+                        previo = W.menu_actual.cancelar()#podría ser usar_funcion
+                        if previo:
+                            modo._popMenu(W.menu_previo)
+                        elif previo != None:
+                            modo.endDialog()
             
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.HABLAR:
@@ -146,8 +134,7 @@ class modo:
             menu.Reset()
         
         W.menu_actual = menu
-        W.menu_actual.active = True
-        W.RENDERER.overlays.add(menu)
+        W.RENDERER.setOverlay(menu,C.CAPA_OVERLAYS_MENUS)
         W.RENDERER.overlays.move_to_front(menu)
     
     @staticmethod

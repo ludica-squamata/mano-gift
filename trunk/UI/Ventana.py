@@ -5,7 +5,7 @@ from libs.textrect import render_textrect
 class Ventana (BaseWidget):
     posicion = x,y = 0,0
     tamanio = ancho,alto = 0,0
-    sel = 1
+    sel = 0
     opciones = 0
     
     def __init__(self,image):
@@ -23,8 +23,8 @@ class Ventana (BaseWidget):
     
     def posicionar_cursor (self,i,cursor,max_opciones):
         cursor += i
-        if cursor < 1: cursor = 1
-        elif cursor > max_opciones: cursor = max_opciones
+        if cursor < 0: cursor = 0
+        elif cursor > max_opciones-1: cursor = max_opciones-1
         
         return cursor
 

@@ -151,7 +151,6 @@ class Menu_Equipo(Menu_Items):
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
-        #self.canvas.fill(self.bg_cnvs,self.draw_space_rect)
         
         
     def cambiar_foco(self):
@@ -163,9 +162,7 @@ class Menu_Equipo(Menu_Items):
                 h = self.altura_del_texto
                 self.foco = 'items'
                 self.opciones = len(self.filas)
-                self.elegir_fila()                
-                #draw.line(self.draw_space,self.font_high_color,(3,(self.sel*h)),(self.draw_space_rect.w-4,(self.sel*h)))
-
+                self.elegir_fila()
         else:
             self.desequipar_espacio()
     
@@ -210,8 +207,6 @@ class Menu_Equipo(Menu_Items):
             funciones[tecla](tecla)
         else:
             funciones[tecla]()
-        
-        return self.newMenu
     
     def update(self):
         if self.foco == 'espacios':
