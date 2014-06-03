@@ -23,7 +23,14 @@ class Renderer:
     def delObj(self,obj):
         if obj in self.camara.contents:
             self.camara.contents.remove(obj)
-            
+    
+    def setOverlay(self,obj,_layer):
+        self.overlays.add(obj,layer=_layer)
+    
+    def delOverlay(self,obj):
+        if obj in self.overlays:
+            self.overlays.remove(obj)
+
     def update(self,fondo):
         #fondo.fill((0,0,0))
         self.camara.update()

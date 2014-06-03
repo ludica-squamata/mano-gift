@@ -7,8 +7,6 @@ import os
 
 class Menu_Debug (Menu):
     mapas = []
-    #elegir_uno = False
-    sel = 0
     def __init__ (self):
         super().__init__("Mano-Gift: Debug Screen")
         self.funciones = {
@@ -19,6 +17,7 @@ class Menu_Debug (Menu):
             'hablar':self.cargar_mapa}
         self.filas = sprite.LayeredDirty()
         self.crear_espacio_de_mapas(C.ANCHO-37,200)
+        self.elegir_opcion('arriba')
     
     @staticmethod
     def cargar_mapas_iniciales():
@@ -44,17 +43,17 @@ class Menu_Debug (Menu):
             opcion = _opcion(self.mapas[i],self.draw_space_rect.w-10,(0,i*h+i+2))
             self.filas.add(opcion)
         
+        
     def elegir_opcion(self,direccion):
         if direccion == 'arriba': i = -1
         elif direccion == 'abajo': i = +1
         self.DeselectAll(self.filas)
         self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
-        elegido = self.filas.get_sprite(self.sel-1)
+        elegido = self.filas.get_sprite(self.sel)
         elegido.serElegido()
     
     def cargar_mapa(self):
-        W.setear_mapa(self.mapas[self.sel-1], 'inicial')
-        #W.MAPA_ACTUAL.endDialog()
+        W.setear_mapa(self.mapas[self.sel], 'inicial')
         W.onPause = False
     
     def update(self):

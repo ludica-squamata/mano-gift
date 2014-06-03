@@ -1,29 +1,18 @@
-from .Ventana import Ventana
+from .dialogFrontEnd import DialogFrontEnd
 from UI.widgets import _opcion
 from pygame import font, sprite, Rect, draw
 from globs import Constants as C, World as W
 from misc import Resources as r
 from libs.textrect import render_textrect
 
-class Dialog (Ventana):
-    posicion = 0,384
-    filas = sprite.LayeredDirty()
-    text_pos = 3,3
-    active = True
-    
+class DialogInterface (DialogFrontEnd):  
     def __init__(self):
-        self.canvas = self.crear_canvas(int(C.ANCHO), int(C.ALTO/5))
-        self.altura_del_texto = self.fuente_M.get_height()+1
-        self.draw_space = Rect((-1,-1),(self.canvas.get_width()-96, int(self.canvas.get_height())-7))
-        super().__init__(self.canvas)
-        self.ubicar(*self.posicion)
-        self.dirty = 1
-        
-        #registrar en el Renderer
-        W.RENDERER.overlays.add(self)#,layer=C.CAPA_OVERLAYS_DIALOGOS)
+        super().__init__('RAISED')
+        w,h = self.canvas.get_size()
+        self.draw_space_rect = Rect((-1,-1),(w-96, h-7))
     
     def setText(self,texto):
-        render = render_textrect(texto,self.fuente_M,self.draw_space,self.font_none_color,self.bg_cnvs)
+        render = render_textrect(texto,self.fuente_M,self.draw_space_rect,self.font_none_color,self.bg_cnvs)
         self.canvas.blit(render,self.text_pos)
         self.image = self.canvas
     
@@ -32,11 +21,11 @@ class Dialog (Ventana):
         h = self.altura_del_texto
         self.opciones = len(opciones)
         for i in range(self.opciones):
-            opcion = _opcion(opciones[i],self.draw_space.w,(3,i*h+i+3))
+            opcion = _opcion(opciones[i],self.draw_space_rect.w,(3,i*h+i+3))
             self.filas.add(opcion)
         
-        self.filas.draw(self.canvas)
-        #self.elegir_opcion(-1)
+        #self.filas.draw(self.canvas)
+        self.elegir_opcion(0)
     
     def setLocImg(self,locutor):
         '''carga y dibuja la imagen de quien está hablando. También setea
@@ -53,15 +42,18 @@ class Dialog (Ventana):
         self.canvas.blit(img,dest)
     
     def elegir_opcion (self,i):
+        for fila in self.filas:
+            fila.serDeselegido()
         self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
-        current = self.filas.get_sprite(self.sel-1)
+        current = self.filas.get_sprite(self.sel)
         current.serElegido()
         return self.sel
     
     def borrar_todo(self):
-        self.canvas.fill(self.bg_cnvs,((3,3),self.draw_space.size))
+        self.canvas.fill(self.bg_cnvs,((3,3),self.draw_space_rect.size))
         self.filas.empty()
         self.sel = 1
         
     def update (self):
+        self.filas.draw(self.canvas)
         self.dirty = 1

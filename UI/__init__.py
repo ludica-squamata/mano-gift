@@ -1,6 +1,7 @@
 from .menues import *
-from .Dialog import Dialog
+from .Dialog import DialogInterface
 from .Inventario_rapido import Inventario_rapido
+from .dialogFrontEnd import DialogFrontEnd
 from . import modos
 
 __all__ = [

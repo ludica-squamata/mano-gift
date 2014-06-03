@@ -9,6 +9,7 @@ class Menu (Ventana):
     current = ''
     canvas = None
     newMenu = False
+    active = True
     
     def __init__(self,titulo):
         self.nombre = titulo
@@ -33,7 +34,6 @@ class Menu (Ventana):
             for item in lista:
                 item.serDeselegido()
                 item.dirty = 1
-            #lista.draw(fondo)
             
     def mover_cursor(self,item):
         if type(item) == _boton:
@@ -54,6 +54,7 @@ class Menu (Ventana):
     
     def cancelar(self):
         '''Esta funcion es un hook para otras funciones del mismo nombre.'''
+        self.active = False
         return True
     
     def usar_funcion(self,tecla):
@@ -81,7 +82,7 @@ class Menu (Ventana):
           
     def Reset(self):
         '''Resetea el estado de la ventana. Esta función es solo un hook.'''
-        pass
+        self.active = True
     
     def __repr__(self):
         return 'Menu_'+self.nombre+' (en '+str(len(self.groups()))+' grupos)'
