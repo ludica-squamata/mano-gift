@@ -1,24 +1,32 @@
 from pygame import display as pantalla,init as py_init,image,event as EVENT
-from globs import Constants as C, World as W, Tiempo as T
-from quests import QuestManager
-from intro import introduccion, intro
-from UI.modos import modo
-from misc import Resources as r, Config
-from script import run
-tamanio = C.ANCHO, C.ALTO
-py_init()
-pantalla.set_caption('Proyecto Mano-Gift')
-pantalla.set_icon(image.load('data/grafs/favicon.png'))
-fondo = pantalla.set_mode(tamanio) # surface
+from engine.globs import Constants as C, World as W, Tiempo as T
+from engine.quests import QuestManager
+from engine.UI.modos import modo
+from engine.misc import Resources as r, Config, Util as U
+from os import getcwd as cwd, path
 
-if Config.dato('mostrar_intro'): anim = intro(fondo)
-init = introduccion()
-init.ejecutar(fondo)
+py_init()
+tamanio = C.ANCHO, C.ALTO
+ini = r.abrir_json("engine.ini")
+folder = path.normpath(path.join(cwd(),ini['folder']))
+if not path.exists(folder):
+    folder = path.normpath(ini['folder'])
+    if not path.exists(folder):
+        U.salir("la ruta no existe")
+W.m = folder
+mod = r.abrir_json(folder+'/mod.json')
+
+pantalla.set_caption(mod['nombre'])
+pantalla.set_icon(image.load(mod['icono']))
+fondo = pantalla.set_mode(tamanio)
+W.setear_mapa(mod['inicial'], 'inicial')
+#if Config.dato('mostrar_intro'): anim = intro(fondo)
+#init = introduccion()
+#init.ejecutar(fondo)
 
 while True:
     T.FPS.tick(60)
     T.contar_tiempo()
-    #run()
     QuestManager.update()
     events = EVENT.get()
     modo.Juego(events)
