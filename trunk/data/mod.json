@@ -1,5 +1,13 @@
 {
     "nombre":"Proyecto Mano-Gift",
     "icono":"data/grafs/favicon.png",
-    "inicial":"casas y arboles"
+    "inicial":"casas y arboles",
+    "folders":{
+        "graficos":"grafs",
+        "dialogos":"dialogs",
+        "mapas":"maps",
+        "mobs":"mobs",
+        "quest":"quests",
+        "scripts":"scripts"
+    }
 }

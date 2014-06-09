@@ -1,4 +1,5 @@
 from engine.misc import Resources as r
+from engine.globs import ModData as MD
 
 class Atribuido:
     fuerza = 0 # capacidad del mob para empujar cosas.
@@ -6,7 +7,7 @@ class Atribuido:
     show,hide = {},{}
     
     def generar_rasgos(self):
-        rasgos = r.abrir_json('data/scripts/rasgos.json')
+        rasgos = r.abrir_json(MD.scripts+'rasgos.json')
         
         for car in rasgos['cars']:
             if rasgos['cars'][car]:

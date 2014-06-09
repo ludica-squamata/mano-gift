@@ -1,4 +1,4 @@
-from engine.globs import EngineData as ED, Constants as C, MobGroup
+from engine.globs import EngineData as ED, Constants as C, MobGroup, ModData as MD
 from engine.misc import Resources as r
 from engine.mobs import NPC, PC
 from engine.quests import QuestManager
@@ -24,7 +24,7 @@ class _loader:
     def cargar_props (capa):
         imgs = _loader.STAGE.data['refs']
         POS = _loader.STAGE.data['capa_'+capa]['props']
-        data = r.abrir_json('data/scripts/props.json')
+        data = r.abrir_json(MD.scripts+'props.json')
         if capa == 'ground':
             layer = C.CAPA_GROUND_ITEMS
         elif capa == 'top':
@@ -37,7 +37,7 @@ class _loader:
                         imagen = data[ref]['image']
                     else:
                         imagen = imgs[ref]
-                    
+                        
                     prop = Prop(ref,imagen,_loader.STAGE,x,y,data[ref])
                 else:
                     prop = Prop(ref,imgs[ref],stage=_loader.STAGE,x=x,y=y)
@@ -56,9 +56,9 @@ class _loader:
         imgs = _loader.STAGE.data['refs']
 
         for ref in pos:
-            base = r.abrir_json('data/mobs/'+act+'.mob')
+            base = r.abrir_json(MD.mobs+act+'.mob')
             try:
-                data = r.abrir_json('data/mobs/'+ref+'.mob')
+                data = r.abrir_json(MD.mobs+ref+'.mob')
             except IOError:
                 data = {}
             base.update(data)
@@ -69,7 +69,7 @@ class _loader:
     
     @staticmethod
     def cargar_hero(entrada = None):
-        ED.HERO = PC('heroe',r.abrir_json('data/mobs/hero.mob'),_loader.STAGE)
+        ED.HERO = PC('heroe',r.abrir_json(MD.mobs+'hero.mob'),_loader.STAGE)
         if entrada != None:
             if entrada in _loader.STAGE.data['entradas']:
                 x,y = _loader.STAGE.data['entradas'][entrada]

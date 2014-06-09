@@ -1,7 +1,7 @@
 from .menu import Menu
 from engine.UI.widgets import _opcion
 from engine.misc import Resources as r
-from engine.globs import EngineData as ED, Constants as C
+from engine.globs import EngineData as ED, Constants as C, ModData as MD
 from pygame import Surface, font, sprite
 import os
 
@@ -22,8 +22,8 @@ class Menu_Debug (Menu):
     @staticmethod
     def cargar_mapas_iniciales():
         ok = []
-        for mapa in os.listdir('data/maps'):
-            ar = r.abrir_json('data/maps/'+mapa)
+        for mapa in os.listdir(MD.mapas):
+            ar = r.abrir_json(MD.mapas+mapa)
             if 'inicial' in ar['entradas']:
                 ok.append(mapa[0:-5])
         

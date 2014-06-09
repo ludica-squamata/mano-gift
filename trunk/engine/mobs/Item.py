@@ -1,4 +1,5 @@
 from engine.misc import Resources as r
+from engine.globs import ModData as MD
 
 class Item:
     '''Para cosas que van en el inventario'''
@@ -11,7 +12,7 @@ class Item:
     def __init__(self,nombre,esStackable,imagen):
         self.nombre = nombre
         self.image = imagen
-        data = r.abrir_json('data/scripts/items.json')[nombre]
+        data = r.abrir_json(MD.scripts+'items.json')[nombre]
         self.ID = data['ID']
         self.volumen = data['volumen']
         self.peso = data['peso']

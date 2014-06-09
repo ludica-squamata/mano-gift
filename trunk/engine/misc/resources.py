@@ -1,12 +1,16 @@
 from pygame import image,Rect
 import json
+from engine.globs.mod_data import ModData as MD
 
 class Resources:
-    # aqui iria la carga de imagenes, sonidos, etc.
+    '''Los métodos de esta clase permiten cargar imágenes, sonidos, etc.'''
+    
+    @staticmethod
     def cargar_imagen(ruta):
-        ar = image.load('data/grafs/'+ruta).convert_alpha()
+        ar = image.load(MD.graphs+ruta).convert_alpha()
         return ar
     
+    @staticmethod
     def split_spritesheet(ruta,w=32,h=32):
         spritesheet = Resources.cargar_imagen(ruta)
         ancho = spritesheet.get_width()
@@ -19,13 +23,15 @@ class Resources:
                                                             int(alto/(alto/h))*y),
                                                             tamanio))))
         return sprites
-                
+    
+    @staticmethod
     def abrir_json (archivo):
         ex = open(archivo,'r')
         data = json.load(ex)
         ex.close()
         return data
     
+    @staticmethod
     def guardar_json (archivo,datos):
         ex = open(archivo,'w')
         json.dump(datos,ex, sort_keys=True,indent=4, separators=(',', ': '))
