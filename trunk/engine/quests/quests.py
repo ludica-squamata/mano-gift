@@ -54,5 +54,5 @@ class Quest:
         print (self.nombre, "victoria")
 
     def __repr__(self):
-        return 'Quest '+self.nombre+'Object'
+        return 'Quest '+self.nombre+' Object'
     

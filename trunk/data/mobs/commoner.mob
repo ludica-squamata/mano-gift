@@ -3,5 +3,6 @@
         "demo":"demo.json",
         "girl":"girl.json",
         "monstruos":"monstruos.json"},
-    "tema_preferido":"demo"
+    "tema_preferido":"demo",
+    "quest":"intro"
 }

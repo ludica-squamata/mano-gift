@@ -6,4 +6,3 @@ from .misc import *
 from .mobs import *
 from .quests import *
 from .UI import *
-from .mod_loader import *
