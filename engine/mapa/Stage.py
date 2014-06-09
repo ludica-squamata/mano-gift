@@ -5,7 +5,6 @@ from engine.globs import Constants as C, Tiempo as T, MobGroup
 from .loader import _loader
 from engine.mobs.scripts.a_star import generar_grilla
 
-
 class Stage:
     properties = None
     mapa = None

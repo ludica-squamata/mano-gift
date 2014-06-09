@@ -1,21 +1,17 @@
 from pygame import display as pantalla,init as py_init,image,event as EVENT
-from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData as MD
+from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData
 from engine.quests import QuestManager
 from engine.UI.modos import modo
-from engine.misc import Resources as r, Config, Util as U
+from engine.misc import Resources as r, Config
 
 py_init()
 tamanio = C.ANCHO, C.ALTO
-ini = r.abrir_json("engine.ini")
-if not MD.find_mod_folder(ini):
-    U.salir("la ruta no existe")
-
-mod = MD.get_file_data('mod.json')
-pantalla.set_caption(mod['nombre'])
-pantalla.set_icon(image.load(mod['icono']))
+ModData.init(r.abrir_json("engine.ini"))
+pantalla.set_caption(ModData.data['nombre'])
+pantalla.set_icon(image.load(ModData.data['icono']))
 fondo = pantalla.set_mode(tamanio)
 #if mod['inicial']
-ED.setear_mapa(mod['inicial'], 'inicial')
+ED.setear_mapa(ModData.data['inicial'], 'inicial')
 #if Config.dato('mostrar_intro'): anim = intro(fondo)
 #init = introduccion()
 #init.ejecutar(fondo)

@@ -1,5 +1,5 @@
 from engine.misc import Resources as r
-from engine.globs import EngineData as ED, MobGroup
+from engine.globs import EngineData as ED, MobGroup, ModData as MD
 
 class Quest:
     objetivos = {}
@@ -12,18 +12,18 @@ class Quest:
         self.off_Dialogs = {}
         # si no lo redefino, pasan cosas raras.
         
-        data = r.abrir_json('data/quests/'+script+'.quest')
+        data = r.abrir_json(MD.quests+script+'.quest')
         self.nombre = script
         for tipo in data['objetivos']:
             self.objetivos[tipo] = data['objetivos'][tipo]
         for mob in data['NPCs']:
             if data['NPCs'][mob]['on'] != '':
-                self.on_Dialogs[mob] = r.abrir_json('data/dialogs/'+data['NPCs'][mob]['on'])
+                self.on_Dialogs[mob] = r.abrir_json(MD.dialogos+data['NPCs'][mob]['on'])
             else:
                 self.on_Dialogs[mob] = ""
             
             if data['NPCs'][mob]['off'] != '':
-                self.off_Dialogs[mob] = r.abrir_json('data/dialogs/'+data['NPCs'][mob]['off'])
+                self.off_Dialogs[mob] = r.abrir_json(MD.dialogos+data['NPCs'][mob]['off'])
             else:
                 self.off_Dialogs[mob] = ""
     
