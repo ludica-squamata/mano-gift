@@ -8,7 +8,7 @@ class damageableSprite(_giftSprite):
             if self.death_img != None:
                 self.image = self.death_img
             else: # esto queda hasta que haga sprites 'muertos' de los npcs
-                W.RENDERER.delObj(self)
+                ED.RENDERER.delObj(self)
                 self.stage.delProperty(self)
             self.dead = True
             MobGroup.remove(self)

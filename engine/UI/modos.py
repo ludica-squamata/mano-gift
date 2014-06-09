@@ -1,5 +1,5 @@
 from pygame import QUIT, KEYUP, KEYDOWN
-from engine.globs import Constants as C, World as W
+from engine.globs import Constants as C, EngineData as ED
 from engine.misc import Util
 from engine.UI.menues import *
 
@@ -17,8 +17,8 @@ class modo:
                     Util.salir()
                 
                 elif event.key == C.TECLAS.DEBUG:
-                    print('map: ',(W.HERO.mapX, W.HERO.mapY))
-                    print('rect: ',(W.HERO.rect.x,W.HERO.rect.y))
+                    print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
+                    print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
     
     def Aventura(events,fondo):
         dx, dy = modo.dx, modo.dy
@@ -30,24 +30,24 @@ class modo:
                 elif event.key == C.TECLAS.ABAJO:   dy += 1
                     
                 elif event.key == C.TECLAS.HABLAR:
-                    if W.HERO.hablar():
-                        W.MODO = 'Dialogo'
+                    if ED.HERO.hablar():
+                        ED.MODO = 'Dialogo'
                     else:
-                        W.MODO = 'Aventura'                   
+                        ED.MODO = 'Aventura'                   
                     
                 elif event.key == C.TECLAS.INVENTARIO:
-                    W.MODO = 'Dialogo'
-                    W.HERO.ver_inventario()
+                    ED.MODO = 'Dialogo'
+                    ED.HERO.ver_inventario()
                 
                 elif event.key == C.TECLAS.POSICION_COMBATE:
-                    W.HERO.cambiar_estado()
+                    ED.HERO.cambiar_estado()
                 
                 elif event.key == C.TECLAS.ACCION:
-                    W.HERO.accion()
+                    ED.HERO.accion()
                 
                 elif event.key == C.TECLAS.MENU:
-                    W.onPause = True
-                    W.MODO = 'Menu'
+                    ED.onPause = True
+                    ED.MODO = 'Menu'
                     modo._popMenu('Pausa')
                     
             elif event.type == KEYUP:
@@ -57,88 +57,89 @@ class modo:
                     dy = 0
         
         if dx != 0 or dy != 0:
-            W.HERO.mover(dx,dy)
+            ED.HERO.mover(dx,dy)
         modo.dx, modo.dy = dx, dy
         
-        return W.RENDERER.update(fondo)
+        return ED.RENDERER.update(fondo)
     
     def Dialogo(events,fondo):
         for event in events:
             if event.type == KEYDOWN:
-                if event.key == C.TECLAS.ARRIBA: W.DIALOG.elegir_opcion(-1)
-                elif event.key == C.TECLAS.ABAJO: W.DIALOG.elegir_opcion(+1)
+                if event.key == C.TECLAS.ARRIBA: ED.DIALOG.elegir_opcion(-1)
+                elif event.key == C.TECLAS.ABAJO: ED.DIALOG.elegir_opcion(+1)
                 
                 elif event.key == C.TECLAS.HABLAR:
-                    W.DIALOG.usar_funcion('hablar')
+                    ED.DIALOG.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    W.DIALOG.usar_funcion('cerrar')
+                    ED.DIALOG.usar_funcion('cerrar')
                     
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    W.DIALOG.usar_funcion('cancelar')
+                    ED.DIALOG.usar_funcion('cancelar')
         
-        return W.RENDERER.update(fondo)
+        return ED.RENDERER.update(fondo)
     
     def Menu(events,fondo):
         for event in events:
             if event.type == KEYDOWN:
                 if modo.setKey:
-                    W.menu_actual.cambiarTecla(event.key)
+                    ED.menu_actual.cambiarTecla(event.key)
                     modo.setKey = False
                 else:
                     if event.key == C.TECLAS.IZQUIERDA:
-                        W.menu_actual.usar_funcion('izquierda')
+                        ED.menu_actual.usar_funcion('izquierda')
                     
                     elif event.key == C.TECLAS.DERECHA:
-                        W.menu_actual.usar_funcion('derecha')
+                        ED.menu_actual.usar_funcion('derecha')
                     
                     elif event.key == C.TECLAS.ARRIBA:
-                        W.menu_actual.usar_funcion('arriba')
+                        ED.menu_actual.usar_funcion('arriba')
                             
                     elif event.key == C.TECLAS.ABAJO:
-                        W.menu_actual.usar_funcion('abajo')
+                        ED.menu_actual.usar_funcion('abajo')
                     
                     elif event.key == C.TECLAS.HABLAR:
-                        W.menu_actual.usar_funcion('hablar')
+                        ED.menu_actual.usar_funcion('hablar')
                     
                     elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                        previo = W.menu_actual.cancelar()#podría ser usar_funcion
+                        previo = ED.menu_actual.cancelar()#podría ser usar_funcion
                         if previo:
-                            modo._popMenu(W.menu_previo)
+                            modo._popMenu(ED.menu_previo)
                         elif previo != None:
-                            modo.endDialog()
+                            modo.endDialog(C.CAPA_OVERLAYS_MENUS)
             
             elif event.type == KEYUP:
                 if event.key == C.TECLAS.HABLAR:
                     if modo.newMenu:
-                        modo._popMenu(W.menu_actual.current.nombre)
+                        modo._popMenu(ED.menu_actual.current.nombre)
                         modo.newMenu = False
                     else:
-                        W.menu_actual.keyup_function('hablar')
+                        ED.menu_actual.keyup_function('hablar')
                                         
-        return W.RENDERER.update(fondo)
+        return ED.RENDERER.update(fondo)
     
     @staticmethod
     def _popMenu (titulo):
-        if W.menu_previo == '' and W.menu_previo != titulo:
-            W.menu_previo = titulo
+        if ED.menu_previo == '' and ED.menu_previo != titulo:
+            ED.menu_previo = titulo
 
-        if titulo not in W.MENUS:
+        if titulo not in ED.MENUS:
             try:
                 menu = eval('Menu_'+titulo+'()')
             except Exception as Description:
                 print('No se pudo abrir el menu porque:',Description)
                 menu = Menu(titulo)
         else:
-            menu = W.MENUS[titulo]
+            menu = ED.MENUS[titulo]
             menu.Reset()
         
-        W.menu_actual = menu
-        W.RENDERER.setOverlay(menu,C.CAPA_OVERLAYS_MENUS)
-        W.RENDERER.overlays.move_to_front(menu)
+        ED.menu_actual = menu
+        ED.RENDERER.addOverlay(menu,C.CAPA_OVERLAYS_MENUS)
+        ED.RENDERER.overlays.move_to_front(menu)
     
     @staticmethod
-    def endDialog():
-        W.RENDERER.overlays.empty()
-        W.DIALOG = None
-        W.MODO = 'Aventura'
+    def endDialog(layer):
+        ED.RENDERER.overlays.remove_sprites_of_layer(layer)
+        ED.DIALOG = None
+        ED.MODO = 'Aventura'
+        ED.onPause = False

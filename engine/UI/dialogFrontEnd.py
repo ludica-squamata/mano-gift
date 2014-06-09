@@ -1,6 +1,6 @@
+from pygame.sprite import LayeredDirty
+from engine.globs import Constants as C, EngineData as ED
 from .Ventana import Ventana
-from pygame import sprite
-from engine.globs import Constants as C, World as W
 
 class DialogFrontEnd (Ventana):
     posicion = 0,C.ALTO-int(C.ALTO/5)
@@ -10,7 +10,7 @@ class DialogFrontEnd (Ventana):
     active = True
     
     def __init__(self, borde):
-        self.filas = sprite.LayeredDirty()
+        self.filas = LayeredDirty()
         _size = int(C.ANCHO), int(C.ALTO/5)
         if borde == 'RAISED': 
             self.canvas = self.crear_canvas(*_size)
@@ -21,12 +21,12 @@ class DialogFrontEnd (Ventana):
         #viniendo de Inventario rápido, el super() es Menu_items
         self.altura_del_texto = self.fuente_M.get_height()+1
         self.ubicar(*self.posicion)
-        W.RENDERER.setOverlay(self,C.CAPA_OVERLAYS_DIALOGOS)
+        ED.RENDERER.addOverlay(self,C.CAPA_OVERLAYS_DIALOGOS)
         
     def destruir(self):
-        W.RENDERER.delOverlay(self)
-        W.DIALOG = None
-        W.MODO = 'Aventura'
+        ED.RENDERER.delOverlay(self)
+        ED.DIALOG = None
+        ED.MODO = 'Aventura'
         
     def ubicar(self,x,y):
         if x < 0 or y < 0:

@@ -1,5 +1,4 @@
-from pygame import font, sprite, Rect, draw
-from engine.globs import Constants as C, World as W
+from pygame import Rect
 from engine.misc import Resources as r
 from engine.libs.textrect import render_textrect
 from .dialogFrontEnd import DialogFrontEnd

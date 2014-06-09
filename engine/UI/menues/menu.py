@@ -1,5 +1,5 @@
 from engine.UI.Ventana import Ventana
-from engine.globs import Constants as C, World as W
+from engine.globs import Constants as C, EngineData as ED
 from engine.UI.widgets import _boton, _item_inv
 
 class Menu (Ventana):
@@ -26,7 +26,7 @@ class Menu (Ventana):
         self.ubicar(10,10)
         self.dirty = 1
         
-        W.MENUS[titulo] = self
+        ED.MENUS[titulo] = self
     
     @staticmethod
     def DeselectAll(lista):

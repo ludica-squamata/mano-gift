@@ -1,13 +1,13 @@
-from engine.misc import Resources as r, Util as U
-from .mob import Mob
-from engine.base import _giftSprite
-from .NPC import NPC
-from .Inventory import Inventory
-from .Item import Item
-from .scripts import Dialogo
-from engine.globs import World as W, Constants as C, Tiempo as T, MobGroup
-from engine.UI import Inventario_rapido
 from pygame import Surface,Rect,mask
+from engine.globs import Constants as C, Tiempo as T, MobGroup, EngineData as ED
+from engine.misc import Resources as r, Util as U
+from engine.UI import Inventario_rapido, ProgressBar
+from engine.base import _giftSprite
+from .Inventory import Inventory
+from .scripts import Dialogo
+from .Item import Item
+from .NPC import NPC
+from .mob import Mob
 
 class PC(Mob):
     interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
@@ -53,8 +53,14 @@ class PC(Mob):
         self.temas_para_hablar = {}
         self.tema_preferido = ''
         
+        self.BarraVida = ProgressBar(10,(255,0,0),(100,0,0),(1,1))
+        self.BarraMana = ProgressBar(10,(125,0,255),(75,0,100),(1,20))
+        self.BarraVida.setVariable(actual=8,divisiones=4)
+        
         MobGroup.add(self)
-        W.RENDERER.camara.setFocus(self)
+        ED.RENDERER.camara.setFocus(self)
+        ED.RENDERER.addOverlay(self.BarraVida,1)
+        ED.RENDERER.addOverlay(self.BarraMana,1)
         
     def mover(self,dx,dy):
         
@@ -72,11 +78,10 @@ class PC(Mob):
         # POR ACA DEBERIA DETECTAR LAS SALIDAS
         #for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
         #    if h.colisiona(spr,-dx,-dy):
-        #        W.setear_mapa(spr.dest,spr.link)
+        #        ED.setear_mapa(spr.dest,spr.link)
         #        dx,dy = 0,0
         self.dx,self.dy = -dx,-dy
         
-    
     def accion(self):
         x,y = self.direcciones[self.direccion]
         
@@ -90,7 +95,7 @@ class PC(Mob):
                     x,y = x*self.fuerza,y*self.fuerza
                     self.atacar(sprite,x,y)
         else:
-            from mapa import Prop
+            from engine.mapa import Prop
             sprite = self._interactuar_props(x,y)
             if isinstance(sprite,Prop):
                 x,y = x*self.fuerza*2,y*self.fuerza*2
@@ -98,7 +103,7 @@ class PC(Mob):
                     item = Item(sprite.nombre,sprite.es('stackable'),sprite.image)
                     if self.inventario.agregar(item):
                         self.stage.delProperty(sprite)
-                        W.RENDERER.camara.delObj(sprite)
+                        ED.RENDERER.camara.delObj(sprite)
                 
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
@@ -131,7 +136,7 @@ class PC(Mob):
         if isinstance(sprite,NPC):
             self.interlocutor = sprite
             self.interlocutor.responder()
-            W.DIALOG = Dialogo(self,self.interlocutor)
+            ED.DIALOG = Dialogo(self,self.interlocutor)
             return True
         else:
             return False
@@ -160,7 +165,7 @@ class PC(Mob):
                     return prop
 
     def ver_inventario(self):
-        W.DIALOG = Inventario_rapido()
+        ED.DIALOG = Inventario_rapido()
     
     def usar_item (self,item):
         if not item.esEquipable:

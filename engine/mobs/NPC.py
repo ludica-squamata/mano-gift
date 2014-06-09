@@ -1,4 +1,4 @@
-from engine.globs import World as W, MobGroup
+from engine.globs import MobGroup
 from engine.quests import QuestManager
 from engine.misc import Resources as r
 from .CompoMob import Sensitivo,Autonomo

@@ -1,5 +1,5 @@
 from collections import UserList
-from engine.globs import World as W
+from engine.globs import EngineData as ED
 from .Item import Item
 
 class Inventory(UserList):
@@ -11,14 +11,6 @@ class Inventory(UserList):
         self.volumen_max = maxvol
         self.peso_max = 1
     
-    def ver (self):
-        if len(self) < 1:
-            texto = 'El inventario está vacío'
-        else:
-            texto = ', '.join(sorted([item.nombre.capitalize()+' x'+str(item.cantidad) for item in self]))
-        
-        return texto
-
     def _calcular_limites(self,elemento):
         volumen = 0
         peso = 0
@@ -26,12 +18,12 @@ class Inventory(UserList):
             volumen += item.volumen*item.cantidad
             peso += item.peso*item.cantidad
         
-        if elemento.peso+peso > self.peso_max*W.HERO.fuerza:
-            W.MAPA_ACTUAL.setDialog('No puedes cargar más peso del que llevas.')
+        if elemento.peso+peso > self.peso_max*ED.HERO.fuerza:
+            #MAPA_ACTUAL.setDialog('No puedes cargar más peso del que llevas.')
             return False
         
         if elemento.volumen+volumen > self.volumen_max:
-            W.MAPA_ACTUAL.setDialog('El item no entra en la mochila.')
+            #MAPA_ACTUAL.setDialog('El item no entra en la mochila.')
             return False
         
         return True    

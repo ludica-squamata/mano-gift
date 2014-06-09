@@ -32,10 +32,10 @@ class _espacio_equipable (BaseWidget):
         img.fill(self.bg_cnvs)
         
         rect = Rect(2,2,28,28)
-        engine.base = Surface((32,32))
-        engine.base.fill((153,153,153),rect)
+        base = Surface((32,32))
+        base.fill((153,153,153),rect)
 
-        img.blit(engine.base,(2,2))
+        img.blit(base,(2,2))
         return img
     
     def dibujar_seleccion (self,img):

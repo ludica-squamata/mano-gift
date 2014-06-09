@@ -2,6 +2,7 @@ from .menues import *
 from .Dialog import DialogInterface
 from .Inventario_rapido import Inventario_rapido
 from .dialogFrontEnd import DialogFrontEnd
+from .hud import ProgressBar
 from . import modos
 
 __all__ = [
