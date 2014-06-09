@@ -12,7 +12,6 @@ class EngineData:
     MODO = 'Aventura'
     onPause = False
     RENDERER = Renderer()
-    mod_folder = ''
     
     def setear_mapa(mapa, entrada):
         ED = EngineData

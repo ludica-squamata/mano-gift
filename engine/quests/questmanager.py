@@ -1,11 +1,10 @@
 from engine.globs import MobGroup
+from .quests import Quest
 
 class QuestManager:
     quests = {}
     
     def add(script):
-        from quests import Quest
-        
         if script not in QuestManager.quests:
             quest = Quest(script)
             QuestManager.quests[script] = quest

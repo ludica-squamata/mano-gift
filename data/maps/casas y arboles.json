@@ -44,6 +44,5 @@
         "Palotes_H_top":"props/palotes_horizontales.png",
         "commoner":"mobs/commoner12.png"
         },
-    "ambiente":"exterior",
-    "quest":["intro"]
+    "ambiente":"exterior"
 }
