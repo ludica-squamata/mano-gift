@@ -3,7 +3,7 @@ from pygame import Surface, Rect, font, draw
 from pygame.sprite import LayeredDirty
 from engine.misc import Resources as r
 from engine.libs.textrect import render_textrect
-from engine.globs import World as W
+from engine.globs import EngineData as ED
 from engine.UI.widgets import _item_inv, _espacio_equipable
 
 class Menu_Equipo(Menu_Items):
@@ -49,7 +49,7 @@ class Menu_Equipo(Menu_Items):
         ]
         
         for e in esp:
-            item = W.HERO.equipo[e['nom']]
+            item = ED.HERO.equipo[e['nom']]
             cuadro = _espacio_equipable(e['nom'],item,e['direcciones'],*e['e_pos'])
             titulo = self.titular(e['nom'])
             self.canvas.blit(titulo,e['t_pos'])
@@ -144,15 +144,14 @@ class Menu_Equipo(Menu_Items):
         h = self.altura_del_texto
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp) # por ejemplo: peto
-        for item in W.HERO.inventario:
+        for item in ED.HERO.inventario:
             if item.esEquipable and item.esEquipable == espacio.nombre:
                 i += 1
                 fila = _item_inv(item,188,(0,i*h+i),self.fuente_MP,self.font_high_color)
                 self.filas.add(fila)
                 
         self.opciones = len(self.filas)
-        
-        
+   
     def cambiar_foco(self):
         '''Cambia el foco (las funciones que se utilizarán segun el imput)
         variando entre los espacios equipables y la lista de selección.'''
@@ -174,7 +173,7 @@ class Menu_Equipo(Menu_Items):
         item = self.current.item
         if espacio.nombre == item.esEquipable:
             espacio.ocupar(item)
-            W.HERO.equipar_item(item)
+            ED.HERO.equipar_item(item)
             self.draw_space.fill(self.bg_cnvs)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
@@ -184,7 +183,7 @@ class Menu_Equipo(Menu_Items):
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
         espacio.desocupar()
-        W.HERO.desequipar_item(item)
+        ED.HERO.desequipar_item(item)
         self.espacios.draw(self.canvas)
     
     def cancelar(self):

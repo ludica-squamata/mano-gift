@@ -1,5 +1,5 @@
 from engine.UI import DialogInterface
-from engine.globs import World as W
+from engine.globs import EngineData as ED
 from random import randint
 
 class Dialogo:
@@ -59,7 +59,7 @@ class Dialogo:
             self.frontend.setText(self.mostrar)
         
         if self.fin_de_tema:
-            W.HERO.conversaciones.append(self.nombre_tema_act)
+            ED.HERO.conversaciones.append(self.nombre_tema_act)
             for p in self.participantes:
                 if hasattr(p,'hablando'):
                     p.hablando = False

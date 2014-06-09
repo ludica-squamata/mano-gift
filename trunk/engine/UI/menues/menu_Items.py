@@ -1,6 +1,6 @@
 from .menu import Menu
 from engine.UI.widgets import _item_inv
-from engine.globs import World as W
+from engine.globs import EngineData as ED
 from engine.libs.textrect import render_textrect
 from pygame import sprite, font, Rect, draw, Surface
 
@@ -33,8 +33,8 @@ class Menu_Items (Menu):
         self.draw_space = Surface(draw_area_rect.size)
         self.draw_space.fill(self.bg_cnvs)
         
-        for i in range(len(W.HERO.inventario)):
-            item = W.HERO.inventario[i]
+        for i in range(len(ED.HERO.inventario)):
+            item = ED.HERO.inventario[i]
             if item.esEquipable:
                 color = self.font_high_color
                 
@@ -66,7 +66,7 @@ class Menu_Items (Menu):
         
     def confirmar_seleccion (self):
         if self.opciones > 0:
-            if W.HERO.usar_item(self.current.item) <= 0:
+            if ED.HERO.usar_item(self.current.item) <= 0:
                 self.opciones -= 1
                 if self.opciones <= 0:
                     self.current = self

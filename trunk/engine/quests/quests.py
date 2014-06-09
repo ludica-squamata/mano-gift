@@ -1,5 +1,5 @@
 from engine.misc import Resources as r
-from engine.globs import World as W, MobGroup
+from engine.globs import EngineData as ED, MobGroup
 
 class Quest:
     objetivos = {}
@@ -37,7 +37,7 @@ class Quest:
                 return True
             
             elif objetivo == 'talk':
-                if self.nombre in W.HERO.conversaciones:
+                if self.nombre in ED.HERO.conversaciones:
                     self.resolver()
                     return True
                 else:
@@ -45,7 +45,7 @@ class Quest:
             
             elif objetivo == 'get':
                 for objeto in self.objetivos[objetivo]:
-                    if objeto in W.HERO.inventario:
+                    if objeto in ED.HERO.inventario:
                         self.resolver()
                         return True
                 return False

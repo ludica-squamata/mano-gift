@@ -1,6 +1,6 @@
-from engine.globs import World as W, Constants as C, MobGroup
+from engine.globs import EngineData as ED, Constants as C, MobGroup
 from engine.misc import Resources as r
-from engine.mobs import NPC, Enemy, PC
+from engine.mobs import NPC, PC
 from engine.quests import QuestManager
 from . import Prop, Salida
 
@@ -16,7 +16,6 @@ class _loader:
         _loader.cargar_hero(entrada)
         _loader.cargar_props('ground')
         _loader.cargar_props('top')
-        _loader.cargar_mobs(Enemy)
         _loader.cargar_mobs(NPC)
         _loader.cargar_quests()
         _loader.cargar_salidas()
@@ -48,10 +47,10 @@ class _loader:
     
     @staticmethod
     def cargar_mobs(clase):
-        if clase == Enemy:
-            pos = _loader.STAGE.data['capa_ground']['mobs']['enemies']
-            act = 'agressive'
-        elif clase == NPC:
+        #if clase == Enemy:
+        #    pos = _loader.STAGE.data['capa_ground']['mobs']['enemies']
+        #    act = 'agressive'
+        if clase == NPC:
             pos = _loader.STAGE.data['capa_ground']['mobs']['npcs']
             act = 'passive'
         imgs = _loader.STAGE.data['refs']
@@ -70,12 +69,12 @@ class _loader:
     
     @staticmethod
     def cargar_hero(entrada = None):
-        W.HERO = PC('heroe',r.abrir_json('data/mobs/hero.mob'),_loader.STAGE)
+        ED.HERO = PC('heroe',r.abrir_json('data/mobs/hero.mob'),_loader.STAGE)
         if entrada != None:
             if entrada in _loader.STAGE.data['entradas']:
                 x,y = _loader.STAGE.data['entradas'][entrada]
-                W.HERO.ubicar(x*C.CUADRO, y*C.CUADRO)
-                _loader.STAGE.addProperty(W.HERO,C.CAPA_HERO)
+                ED.HERO.ubicar(x*C.CUADRO, y*C.CUADRO)
+                _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
     
     @staticmethod
     def cargar_quests():

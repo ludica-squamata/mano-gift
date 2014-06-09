@@ -1,7 +1,7 @@
 from .menu import Menu
 from engine.UI.widgets import _opcion
 from engine.misc import Resources as r
-from engine.globs import World as W, Constants as C
+from engine.globs import EngineData as ED, Constants as C
 from pygame import Surface, font, sprite
 import os
 
@@ -42,8 +42,7 @@ class Menu_Debug (Menu):
         for i in range(len(self.mapas)):
             opcion = _opcion(self.mapas[i],self.draw_space_rect.w-10,(0,i*h+i+2))
             self.filas.add(opcion)
-        
-        
+
     def elegir_opcion(self,direccion):
         if direccion == 'arriba': i = -1
         elif direccion == 'abajo': i = +1
@@ -53,8 +52,8 @@ class Menu_Debug (Menu):
         elegido.serElegido()
     
     def cargar_mapa(self):
-        W.setear_mapa(self.mapas[self.sel], 'inicial')
-        W.onPause = False
+        ED.setear_mapa(self.mapas[self.sel], 'inicial')
+        ED.onPause = False
     
     def update(self):
         self.filas.draw(self.draw_space)

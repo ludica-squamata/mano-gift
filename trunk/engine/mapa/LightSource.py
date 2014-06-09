@@ -1,4 +1,4 @@
-from engine.globs import World as W
+from engine.globs import EngineData as ED
 #from engine.misc import Resources as r
 from engine.base import _giftSprite
 from pygame import Surface, draw
@@ -26,7 +26,7 @@ class LightSource(_giftSprite): #o combinar esto con prop?, no estoy seguro. pro
         imagen = self._crear(100)
         self.rect = imagen.get_rect(center = self.origen)
         super().__init__(imagen,x = self.rect.x,y=self.rect.y)
-        W.RENDERER.addFgObj(self)
+        ED.RENDERER.addFgObj(self)
         #setear el resto de las propiedades del area de luz
         #registrarse en Stage como fuente de luz para recibir actualizaciones
     

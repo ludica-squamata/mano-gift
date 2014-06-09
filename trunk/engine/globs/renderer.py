@@ -1,7 +1,6 @@
 from pygame.sprite import LayeredDirty
 from .constantes import Constants as C
 
-
 class Renderer:
     camara = None
     overlays = None
@@ -9,7 +8,7 @@ class Renderer:
     def __init__(self):
         self.camara = Camara()
         self.overlays = LayeredDirty()
-    
+        
     def clear(self):
         self.camara.contents.empty()
         self.overlays.empty()
@@ -24,9 +23,9 @@ class Renderer:
         if obj in self.camara.contents:
             self.camara.contents.remove(obj)
     
-    def setOverlay(self,obj,_layer):
+    def addOverlay(self,obj,_layer):
         self.overlays.add(obj,layer=_layer)
-    
+        
     def delOverlay(self,obj):
         if obj in self.overlays:
             self.overlays.remove(obj)
@@ -35,7 +34,7 @@ class Renderer:
         #fondo.fill((0,0,0))
         self.camara.update()
         for over in self.overlays:
-            if over.active:
+            if over.active:              
                 over.update()
         ret = self.camara.draw(fondo) + self.overlays.draw(fondo)
         

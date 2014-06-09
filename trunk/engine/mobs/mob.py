@@ -1,7 +1,7 @@
 from .CompoMob import Equipado,Atribuido,Animado,Movil
 from engine.base import _giftSprite
 from engine.misc import Resources as r
-from engine.globs import Constants as C, World as W
+from engine.globs import Constants as C, EngineData as ED
 from .scripts import movimiento
 from pygame import mask
 
@@ -94,6 +94,6 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:
             self.anim_counter = 0
-        if not W.onPause and not self.dead:
+        if not ED.onPause and not self.dead:
             self.determinar_accion(self.ver())
             return self.mover()

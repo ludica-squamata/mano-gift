@@ -1,6 +1,6 @@
 from .menues.menu_Items import Menu_Items
 from .dialogFrontEnd import DialogFrontEnd
-from engine.globs import World as W, Constants as C
+from engine.globs import EngineData as ED, Constants as C
 from pygame import Rect
 
 class Inventario_rapido (DialogFrontEnd,Menu_Items):
@@ -23,7 +23,7 @@ class Inventario_rapido (DialogFrontEnd,Menu_Items):
     
     def confirmar_seleccion (self):
         if self.opciones > 0:
-            if W.HERO.usar_item(self.current.item) <= 0:
+            if ED.HERO.usar_item(self.current.item) <= 0:
                 self.opciones -= 1
                 if self.opciones <= 0:
                     self.destruir()
