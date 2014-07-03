@@ -43,7 +43,7 @@ class _loader:
                     prop = Prop(ref,imgs[ref],stage=_loader.STAGE,x=x,y=y)
                 _loader.STAGE.addProperty(prop,layer)
                 if prop.sombra != None:
-                    _loader.STAGE.mapa.image.blit(prop.sombra,[x*C.CUADRO,y*C.CUADRO])
+                    _loader.STAGE.mapa.image.blit(prop.sombra,[x,y])
     
     @staticmethod
     def cargar_mobs(clase):
@@ -73,7 +73,7 @@ class _loader:
         if entrada != None:
             if entrada in _loader.STAGE.data['entradas']:
                 x,y = _loader.STAGE.data['entradas'][entrada]
-                ED.HERO.ubicar(x*C.CUADRO, y*C.CUADRO)
+                ED.HERO.ubicar(x, y)
                 _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
     
     @staticmethod

@@ -10,12 +10,13 @@ class EngineData:
     menu_previo = ''
     MENUS = {}
     DIALOG = None
-    MODO = 'Aventura'
+    MODO = ''
     onPause = False
     RENDERER = Renderer()
     
     def setear_mapa(mapa, entrada):
         ED = EngineData
+        ED.MODO = 'Aventura'
         from engine.mapa import Stage
         if mapa not in ED.mapas:
             ED.mapas[mapa] = Stage(r.abrir_json(MD.mapas+mapa+'.json'),entrada)

@@ -46,7 +46,7 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
         if 'objetivo' in data:
             self.objetivo = MobGroup.get(data['objetivo'])
             
-        self.ubicar(x*C.CUADRO,y*C.CUADRO)
+        self.ubicar(x,y)
         if self.AI == "wanderer":
             self.AI = movimiento.AI_wander # function alias!
             

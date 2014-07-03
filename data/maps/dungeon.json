@@ -1,0 +1,20 @@
+{
+    "ambiente": "",
+    "capa_background": {
+        "colisiones": "maps/colisiones/dungeon_c.png",
+        "fondo": "maps/fondos/dungeon_f.png"
+    },
+    "capa_ground": {
+        "mobs": {
+            "enemies": {},
+            "npcs": {}
+        },
+        "props": {}
+    },
+    "capa_top": {
+        "props": {}
+    },
+    "entradas": {"inicial":[1,4]},
+    "refs": {},
+    "salidas": {}
+}
