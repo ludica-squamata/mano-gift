@@ -14,7 +14,7 @@ class Prop (_giftSprite):
     estado = 0
     sombra = None
     def __init__ (self,nombre, imagen, stage, x,y, data = None):
-        super().__init__(imagen,stage=stage,x=x*C.CUADRO,y=y*C.CUADRO)
+        super().__init__(imagen,stage=stage,x=x,y=y)
         self.nombre = nombre
         self.estado = 0
         self._propiedades = {}

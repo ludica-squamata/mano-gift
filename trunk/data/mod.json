@@ -1,7 +1,8 @@
 {
     "nombre":"Proyecto Mano-Gift",
     "icono":"data/grafs/favicon.png",
-    "inicial":"casas y arboles",
+    "inicial":"dungeon_2",
+    "initial_mode":"Menu",
     "folders":{
         "graficos":"grafs",
         "dialogos":"dialogs",

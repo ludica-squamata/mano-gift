@@ -11,6 +11,7 @@ pantalla.set_caption(ModData.data['nombre'])
 pantalla.set_icon(image.load(ModData.data['icono']))
 fondo = pantalla.set_mode(tamanio)
 #if mod['inicial']
+ED.MODO = ModData.data['initial_mode']
 ED.setear_mapa(ModData.data['inicial'], 'inicial')
 #if Config.dato('mostrar_intro'): anim = intro(fondo)
 #init = introduccion()
