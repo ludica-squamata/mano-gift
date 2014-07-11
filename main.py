@@ -1,7 +1,7 @@
 from pygame import display as pantalla,init as py_init,image,event as EVENT
 from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData
 from engine.quests import QuestManager
-from engine.UI.modos import modo
+from engine.UI import modo, HUD
 from engine.misc import Resources as r, Config
 
 py_init()
@@ -13,6 +13,8 @@ fondo = pantalla.set_mode(tamanio)
 #if mod['inicial']
 ED.MODO = ModData.data['initial_mode']
 ED.setear_mapa(ModData.data['inicial'], 'inicial')
+ED.HUD = HUD()
+
 #if Config.dato('mostrar_intro'): anim = intro(fondo)
 #init = introduccion()
 #init.ejecutar(fondo)

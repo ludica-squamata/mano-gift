@@ -8,6 +8,7 @@ class modo:
     newMenu = False
     setKey = False
     def Juego (events):
+        ED.HUD.update()
         for event in events:
             if event.type == QUIT:
                 Util.salir()
@@ -19,6 +20,7 @@ class modo:
                 elif event.key == C.TECLAS.DEBUG:
                     print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
                     print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
+                    print('modo:', ED.MODO)
     
     def Aventura(events,fondo):
         dx, dy = modo.dx, modo.dy
@@ -65,14 +67,23 @@ class modo:
     def Dialogo(events,fondo):
         for event in events:
             if event.type == KEYDOWN:
-                if event.key == C.TECLAS.ARRIBA: ED.DIALOG.elegir_opcion(-1)
-                elif event.key == C.TECLAS.ABAJO: ED.DIALOG.elegir_opcion(+1)
+                if event.key == C.TECLAS.ARRIBA:
+                    ED.DIALOG.usar_funcion('arriba')
+                
+                elif event.key == C.TECLAS.ABAJO: 
+                    ED.DIALOG.usar_funcion('abajo')
+                
+                elif event.key == C.TECLAS.IZQUIERDA:
+                    ED.DIALOG.usar_funcion('izquierda')
+                
+                elif event.key == C.TECLAS.DERECHA: 
+                    ED.DIALOG.usar_funcion('derecha')
                 
                 elif event.key == C.TECLAS.HABLAR:
                     ED.DIALOG.usar_funcion('hablar')
                 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    ED.DIALOG.usar_funcion('cerrar')
+                    ED.DIALOG.usar_funcion('inventario')
                     
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                     ED.DIALOG.usar_funcion('cancelar')

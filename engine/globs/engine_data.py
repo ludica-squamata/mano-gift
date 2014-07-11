@@ -1,6 +1,6 @@
-from engine.misc import Resources as r
+#from engine.misc import Resources as r
 from .renderer import Renderer
-from .mod_data import ModData as MD
+#from .mod_data import ModData as MD
 
 class EngineData:    
     mapas = {}
@@ -13,13 +13,14 @@ class EngineData:
     MODO = ''
     onPause = False
     RENDERER = Renderer()
+    HUD = None
     
     def setear_mapa(mapa, entrada):
         ED = EngineData
         ED.MODO = 'Aventura'
         from engine.mapa import Stage
         if mapa not in ED.mapas:
-            ED.mapas[mapa] = Stage(r.abrir_json(MD.mapas+mapa+'.json'),entrada)
+            ED.mapas[mapa] = Stage(mapa,entrada)
         ED.MAPA_ACTUAL = ED.mapas[mapa]
         ED.RENDERER.setBackground(ED.MAPA_ACTUAL.mapa)
         for obj in ED.MAPA_ACTUAL.properties:

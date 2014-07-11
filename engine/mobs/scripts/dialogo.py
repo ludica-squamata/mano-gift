@@ -2,153 +2,145 @@ from engine.UI import DialogInterface
 from engine.globs import EngineData as ED
 from random import randint
 
-class Dialogo:
-    txt = str(0)
-    _txt = 0
-    temas_hablados = []
-    tema_actual = None
-    temas = {}
-    mostrar = ''
-    locutor = None
-    onSelect = False
-    onOptions = False
-    frontend = None
-    fin_de_tema = False
-    eligiendo_tema = False
-    cursor_sel_tema = 0
+class _elemento:
+    '''Class for the dialog tree elements.'''
+    parent = None
+    nombre = ''
+    hasLeads = False
+    tipo = ''
+    def __init__(self,tipo,indice,texto,locutor,leads=None):
+        self.tipo = tipo
+        self.indice = indice
+        self.nombre = self.tipo.capitalize()+' #'+str(self.indice)
+        self.texto = texto
+        self.locutor = locutor
+        self.leads = leads
+        if type(self.leads) == list:
+            self.hasLeads = True
+        
+    def __repr__(self):
+        return self.nombre
     
-    def __init__(self,*participantes): # type (participantes) == list
-        self.frontend = DialogInterface()
-        self.temas = {}
-        self.txt = str(0)
-        self._txt = 0
-        self.participantes = participantes
-        for p in participantes:
-            for t in p.temas_para_hablar:
-                self.temas[t] = p.temas_para_hablar[t]
-                
-        ganador_iniciativa = self.iniciativa(*participantes)
-        tema = ganador_iniciativa.tema_preferido
-        if tema == '':
-            self.eligiendo_tema = True
-            tema = self.elegir_tema()
+class _ArboldeDialogo:
+    __slots__ = ['_elementos','_actual','onSelect']
+
+    def __init__(self,datos):
+        self._elementos = []
+        self._actual = -1
+        self.onSelect = False
+
+        for i in range(len(datos)):
+            idx = str(i)
+            data = datos[idx]
+            
+            tipo = data['type']
+            leads = data['leads']
+            loc = data['loc']
+            txt = data['txt']
+            
+            obj = _elemento(tipo, idx, txt, loc, leads)
+
+            
+            self._elementos.append(obj)
+        
+        for obj in self._elementos:
+            if obj.tipo != 'leaf':
+                if type(obj.leads) == list:
+                    for lead in obj.leads:
+                        obj.leads[obj.leads.index(lead)] = self._elementos[lead]
+                else:
+                    obj.leads = self._elementos[obj.leads]
+
+    def __len__(self):
+        return len(self._elementos)
+    
+    def __repr__(self):
+        return '_Arbol de Dialogo ('+str(len(self._elementos))+' elementos)'
+    
+    def __getitem__(self,item):
+        if type(item) != int:
+            raise TypeError('expected int, got'+str(type(item)))
+        elif not 0 <= item <=len(self._elementos)-1:
+            raise IndexError
         else:
-            self.establecer_tema(tema)
-            
-        self.funciones = {
-            'hablar':self.funcion_siguiente,
-            'cancelar':self.frontend.destruir
-        }
-            
-    def establecer_tema(self,tema):
-        self.tema_actual = self.temas[tema]
-        self.nombre_tema_act = tema
-        #if self.tema_actual['textos'][self.txt]['type'] == 'Q':
-        #    self.onSelect = True
-        self.update()
+            return self._elementos[item]
+    
+    def __contains__(self,item):
+        if item in self._elementos:
+            return True
+        return False
+    
+    def get_lead_of (self, parent_i,lead_i=0):
+        if isinstance(parent_i,_elemento):
+            parent_i = self._elementos.index(parent_i)
+        item = self._elementos[parent_i]
+        if item.tipo != 'leaf':
+            if item.hasLeads:
+                if type(item.leads) == list:
+                    return item.leads[lead_i]
+            else:
+                return item.leads
+        else:
+            raise TypeError('Leaf element has no lead')
+    
+    def set_actual(self,idx):
+        if isinstance(idx,elemento):
+            idx = self._elementos.index(idx)
+        if 0 <= idx <= len(self._elementos)-1:
+            self._actual = idx
+        else:
+            raise IndexError
+    
+    def get_actual(self):
+        return self._elementos[self._actual]
+    
+    def next(self):
+        nodo = self.get_actual()
+        return nodo.leads
+    
+    def set_chosen(self, choice):
+        nodo = self.get_actual()
+        if nodo.hasLeads:
+            self.set_actual(nodo.leads[choice])
     
     def update(self):
-        self.frontend.borrar_todo()
-        if self.fin_de_tema:
-            self.txt = str(0)
-            self._txt = 0
-            self.frontend.Destruir()
-        self.fin_de_tema = self.hablar()
-        self.frontend.setLocImg(self.locutor)
-        if self.mostrar != None:
-            self.frontend.setText(self.mostrar)
-        
-        if self.fin_de_tema:
-            ED.HERO.conversaciones.append(self.nombre_tema_act)
-            for p in self.participantes:
-                if hasattr(p,'hablando'):
-                    p.hablando = False
-                    self.usar_funcion('cancelar')
-        else:
-            return True
-        
-    def iniciativa (self,*participantes):
-        part = None
-        high = 0
-        for participante in participantes:
-            inic = participante.iniciativa+randint(1,21)
-            if inic > high:
-                part = participante
-                high = inic
-        return part
-    
-    def hablar(self):
-        tree = self.tema_actual['tree']
-        textos = self.tema_actual['textos']
-        if textos[self.txt]['type'] == 'E':
-            self.mostrar = textos[self.txt]['txt']
-            self.locutor = textos[self.txt]['loc']
-            return True
-        
-        if textos[self.txt]['type'] == 'Q':
-            if not self.onSelect:
-                self.mostrar = textos[self.txt]['txt']
-                self.locutor = textos[self.txt]['loc']
-                self.onSelect = True
-                print('bucle Q consigna')
-            else:
-                self.elegir_opcion(0)
-                self.locutor = textos[str(tree[str(self.txt)][0])]['loc']
-                #chapuza: que pasa si las respuestas se dan por multiples personajes?
-                opciones = [textos[str(n)]['txt'] for n in tree[str(self.txt)]]
-                self.frontend.setSelMode(opciones)
-                self.onOptions = True
-                self.mostrar = None
-                print('bucle Q opciones')
+        _actual = self.get_actual()
+        nodo = self.next()
+        if type(nodo) != list:
+            if _actual.tipo == 'leaf':
+                return False
+            self.set_actual(nodo)
             
-        if textos[self.txt]['type'] == 'A':
-            self.txt = str(tree[str(self.txt)])
-            self.mostrar = textos[self.txt]['txt']
-            self.locutor = textos[self.txt]['loc']
-            #self.txt = str(tree[str(self.txt)])
-            print('bucle A')
-            
-        if textos[self.txt]['type'] == 'S':
-            self.mostrar = textos[self.txt]['txt']
-            self.locutor = textos[self.txt]['loc']
-            self.txt = str(tree[str(self.txt)])
-            print('bucle S')
-    
-        return False
-        
-    def elegir_tema(self):
-        temas = list(self.temas.keys())
-        self.frontend.setSelMode(temas)
-    
-    def elegir_opcion(self,dy):
-        if self.tema_actual != None:
-            if self.tema_actual['textos'][self.txt]['type'] != 'E':
-                tree = self.tema_actual['tree']
-                if type(tree[str(self.txt)]) != int:
-                    d = self.frontend.elegir_opcion(dy)
-                    h = tree[str(self.txt)]
-                    self._txt = h[d]
-        else:
-            self.cursor_sel_tema = self.frontend.elegir_opcion(dy)-1
-    
-    def funcion_siguiente(self):    
-        if self.tema_actual != None:
-            if self.onOptions:
-                self.confirmar_seleccion()
-            else:
-                self.update()
-        else:
-            temas = list(self.temas.keys())
-            tema = temas[self.cursor_sel_tema]
-            self.establecer_tema(tema)    
-    
-    def confirmar_seleccion(self):
-        self.txt = str(self._txt)
-        self._txt = 0
-        self.onOptions = False
-        self.onSelect = False
-        self.update()
+        return nodo
+
+class Dialogo:
+    def __init__(self,*participantes):
+        self.frontend = DialogInterface()
+        self.participantes = participantes
+        self.funciones = {
+            'hablar':self.hablar,
+            'arriba':self.elegir_opcion,
+            'abajo':self.elegir_opcion,
+            'izquierda':self.elegir_opcion,
+            'derecha':self.elegir_opcion,
+            'inventario':self.mostrar,
+            'cancelar':self.cerrar}
     
     def usar_funcion(self,tecla):
         if tecla in self.funciones:
-            self.funciones[tecla]()
+            if tecla in ['arriba','abajo','izquierda','derecha']:
+                self.funciones[tecla](tecla)
+            else:
+                self.funciones[tecla]()
+    
+    def hablar(self):
+        print(self.participantes)
+        
+    def elegir_opcion(self,direccion):
+        print(direccion)
+        
+    def mostrar(self):
+        print(NotImplemented)
+    
+    def cerrar(self):
+        self.frontend.destruir()

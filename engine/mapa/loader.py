@@ -42,8 +42,6 @@ class _loader:
                 else:
                     prop = Prop(ref,imgs[ref],stage=_loader.STAGE,x=x,y=y)
                 _loader.STAGE.addProperty(prop,layer)
-                if prop.sombra != None:
-                    _loader.STAGE.mapa.image.blit(prop.sombra,[x,y])
     
     @staticmethod
     def cargar_mobs(clase):
@@ -68,13 +66,12 @@ class _loader:
                 MobGroup.add(mob)
     
     @staticmethod
-    def cargar_hero(entrada = None):
-        ED.HERO = PC('heroe',r.abrir_json(MD.mobs+'hero.mob'),_loader.STAGE)
-        if entrada != None:
-            if entrada in _loader.STAGE.data['entradas']:
-                x,y = _loader.STAGE.data['entradas'][entrada]
-                ED.HERO.ubicar(x, y)
-                _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
+    def cargar_hero(entrada):
+        #if entrada != None and entrada in _loader.STAGE.data['entradas']:
+        #no hace falta si no va a haber un mensaje de error en caso contrario.
+        x,y = _loader.STAGE.data['entradas'][entrada]
+        ED.HERO = PC('heroe',r.abrir_json(MD.mobs+'hero.mob'),_loader.STAGE,x,y)
+        _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
     
     @staticmethod
     def cargar_quests():

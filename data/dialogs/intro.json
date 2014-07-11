@@ -1,45 +1,43 @@
 {
-    "tree": {"0":1,"1":2,"2":[3,7],"3":4,"4":[5,11],"5":6,"7":8,"8":9,"9":10,"11":12,"12":13},
-    "textos":{
-        "0":{"type":"S","loc":"NPC",
-        "txt":"Bienvenido, Héroe."},
-        
-        "1":{"type":"S","loc":"NPC",
-        "txt":"Esta es tu primera aventura"},
-        
-        "2":{"type":"Q","loc":"NPC",
-        "txt":"Solo debes hablar conmigo para completarla."},
-        
-        "3":{"type":"A","loc":"PC",
-        "txt":"..."},
-        
-        "4":{"type":"Q","loc":"NPC",
-        "txt":"Es sencillo, ¿verdad?"},
-        
-        "5":{"type":"A","loc":"PC",
-        "txt":"Sí, lo es."},
-        
-        "6":{"type":"E","loc":"NPC",
-        "txt":"Felicitaciones, la has completado."},
-        
-        "7":{"type":"A","loc":"PC",
-        "txt":"¿Y vos quien sos?"},
-        
-        "8":{"type":"S","loc":"NPC",
-        "txt":"Sólo soy un commoner."},
-        
-        "9":{"type":"S","loc":"PC",
-        "txt":"Y como completo esta quest?"},
-        
-        "10":{"type":"E","loc":"NPC",
-        "txt":"Ya la completaste al hablarme. Felicidades."},
-        
-        "11":{"type":"A","loc":"PC",
-        "txt":"No, no sé que tecla tengo que tocar."},
-        
-        "12":{"type":"S","loc":"NPC",
-        "txt":"Elegí una opcion con las teclas arriba o abajo, y luego dale a Hablar."},
-        
-        "13":{"type":"E","loc":"PC",
-        "txt":"Ah, ya entiendo."}}
+    "0":{"type":"node","leads":1,"loc":"NPC",
+    "txt":"Bienvenido, Héroe."},
+    
+    "1":{"type":"node","leads":2,"loc":"NPC",
+    "txt":"Esta es tu primera aventura"},
+    
+    "2":{"type":"node","leads":[3,7],"loc":"NPC",
+    "txt":"Solo debes hablar conmigo para completarla."},
+    
+    "3":{"type":"branch","leads":4,"loc":"PC",
+    "txt":"..."},
+    
+    "4":{"type":"node","leads":[5,11],"loc":"NPC",
+    "txt":"Es sencillo, ¿verdad?"},
+    
+    "5":{"type":"branch","leads":6,"loc":"PC",
+    "txt":"Sí, lo es."},
+    
+    "6":{"type":"leaf","leads":null,"loc":"NPC",
+    "txt":"Felicitaciones, la has completado."},
+    
+    "7":{"type":"branch","leads":8,"loc":"PC",
+    "txt":"¿Y vos quien sos?"},
+    
+    "8":{"type":"node","leads":9,"loc":"NPC",
+    "txt":"Sólo soy un commoner."},
+    
+    "9":{"type":"node","leads":10,"loc":"PC",
+    "txt":"Y como completo esta quest?"},
+    
+    "10":{"type":"leaf","leads":null,"loc":"NPC",
+    "txt":"Ya la completaste al hablarme. Felicidades."},
+    
+    "11":{"type":"branch","leads":12,"loc":"PC",
+    "txt":"No, no sé que tecla tengo que tocar."},
+    
+    "12":{"type":"node","leads":13,"loc":"NPC",
+    "txt":"Elegí una opcion con las teclas arriba o abajo, y luego dale a Hablar."},
+    
+    "13":{"type":"leaf","leads":null,"loc":"PC",
+    "txt":"Ah, ya entiendo."}
 }

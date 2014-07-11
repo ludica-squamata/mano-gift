@@ -35,4 +35,11 @@ class DialogFrontEnd (Ventana):
     
     def usar_funcion(self,tecla):
         if tecla in self.funciones:
-            self.funciones[tecla]()
+            if tecla == 'arriba':
+                self.funciones[tecla](-1)
+            elif tecla == 'abajo':
+                self.funciones[tecla](+1)
+            elif tecla in ['izquierda','derecha']:
+                self.funciones[tecla](tecla)
+            else:
+                self.funciones[tecla]()

@@ -44,11 +44,10 @@ class Animado:
                     key = 'D'+self.direccion
                 else:
                     key = 'D'+self.direccion
-                self.t_image = self.images[key]
-                self.calcular_sombra()
+                self.calcular_sombra(self.images[key])
                 self.__key_anim = key
     
-    def calcular_sombra(self):
-        image = U.crear_sombra(self.t_image)
-        image.blit(self.t_image,[0,0])
-        self.image = image
+    def calcular_sombra(self,current_image):
+        ImagenConSombra = U.crear_sombra(current_image)
+        ImagenConSombra.blit(current_image,[0,0])
+        self.image = ImagenConSombra
