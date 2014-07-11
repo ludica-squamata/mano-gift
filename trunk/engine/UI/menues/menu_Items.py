@@ -18,8 +18,6 @@ class Menu_Items (Menu):
         self.draw_space_rect = Rect((10,44),(self.canvas.get_width()-19,270))
         self.crear_contenido(self.draw_space_rect)
         self.crear_espacio_descriptivo((self.canvas.get_width()-15),93)
-        self.dirty = 1
-        self.sel = 1
         self.funciones = {
             "arriba":self.elegir_fila,
             "abajo":self.elegir_fila,

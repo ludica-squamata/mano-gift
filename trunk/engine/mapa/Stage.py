@@ -1,7 +1,7 @@
 from pygame.sprite import DirtySprite, LayeredDirty
 from pygame import mask
 from engine.misc import Resources as r
-from engine.globs import Constants as C, Tiempo as T, MobGroup
+from engine.globs import Constants as C, Tiempo as T, MobGroup, ModData as MD
 from .loader import _loader
 from engine.mobs.scripts.a_star import generar_grilla
 
@@ -11,8 +11,8 @@ class Stage:
     data = {}
     quest = None
     
-    def __init__(self, data, entrada):
-        self.data = data
+    def __init__(self, nombre, entrada):
+        self.data = r.abrir_json(MD.mapas+nombre+'.json')
         self.mapa = ChunkMap(self,self.data) # por ahora es uno solo.
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.properties = LayeredDirty()

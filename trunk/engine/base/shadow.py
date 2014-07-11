@@ -19,7 +19,7 @@ class _shadowSprite(_giftSprite):
             dy = self.centerY - source.centerY
             l = self._luces
             margen = 10 #para que las sombras no sean mayormente diagonales
-                                    #como alternativa podriamos calcular el angulo
+                        #como alternativa podriamos calcular el angulo
             if dx > margen: #source esta a la izq
                 if dy > margen: #arriba
                                     l[7] = 1

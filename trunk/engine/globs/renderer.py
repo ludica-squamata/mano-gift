@@ -20,8 +20,7 @@ class Renderer:
         self.camara.addFgObj(obj,layer)
     
     def delObj(self,obj):
-        if obj in self.camara.contents:
-            self.camara.contents.remove(obj)
+        self.camara.delObj(obj)
     
     def addOverlay(self,obj,_layer):
         self.overlays.add(obj,layer=_layer)

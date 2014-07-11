@@ -1,7 +1,10 @@
 
-class damageableSprite(_giftSprite):
+
+class damageableSprite: #(_giftSprite):
+    salud = 0
     
     def recibir_danio(self):
+        from engine.globs import EngineData as ED, MobGroup
         self.salud -= 1
        
         if self.salud <= 0:

@@ -1,0 +1,2 @@
+class Parlante:
+    pass

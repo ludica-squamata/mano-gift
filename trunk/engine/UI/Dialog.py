@@ -51,7 +51,7 @@ class DialogInterface (DialogFrontEnd):
     def borrar_todo(self):
         self.canvas.fill(self.bg_cnvs,((3,3),self.draw_space_rect.size))
         self.filas.empty()
-        self.sel = 1
+        self.sel = 0
         
     def update (self):
         self.filas.draw(self.canvas)

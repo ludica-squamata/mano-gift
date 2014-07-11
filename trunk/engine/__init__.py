@@ -1,5 +1,5 @@
-from .globs import *
 from .base import *
+from .globs import *
 from .libs import *
 from .mapa import *
 from .misc import *

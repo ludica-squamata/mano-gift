@@ -1,12 +1,13 @@
 from pygame import image,Rect
 import json
-from engine.globs.mod_data import ModData as MD
+
 
 class Resources:
     '''Los métodos de esta clase permiten cargar imágenes, sonidos, etc.'''
     
     @staticmethod
     def cargar_imagen(ruta):
+        from engine.globs.mod_data import ModData as MD
         ar = image.load(MD.graphs+ruta).convert_alpha()
         return ar
     

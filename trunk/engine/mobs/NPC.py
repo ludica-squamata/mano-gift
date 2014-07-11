@@ -1,4 +1,4 @@
-from engine.globs import MobGroup, ModData as MD
+from engine.globs import ModData as MD
 from engine.quests import QuestManager
 from engine.misc import Resources as r
 from .CompoMob import Sensitivo,Autonomo
@@ -10,9 +10,10 @@ class NPC (Mob,Sensitivo,Autonomo):
     hablando = False
     def __init__(self,nombre,ruta_img,stage,x,y,data):
         super().__init__(ruta_img,stage,x,y,data)
+        self.establecer_AI(data,x,y)
+        self.establecer_sentidos()
         self.data = data
         self.nombre = nombre
-        MobGroup.add(self)
         self.generar_rasgos()
         self.tema_preferido = data['tema_preferido']
         self.temas_para_hablar = {}

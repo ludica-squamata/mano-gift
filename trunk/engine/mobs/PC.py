@@ -22,13 +22,12 @@ class PC(Mob):
     alcance_cc = 0 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     atk_counter = 0
     atk_img_index = -1
-    iniciativa = 3
     conversaciones = [] # registro de los temas conversados
     
     dx,dy = 0,0
-    def __init__(self,nombre,data,stage):
+    def __init__(self,nombre,data,stage,x,y):
         imgs = data['imagenes']
-        super().PC__init__(imgs['idle']['graph'],stage,imgs['idle']['alpha'])
+        super().PC__init__(imgs['idle']['graph'],stage,x,y,data,imgs['idle']['alpha'])
         
         self.idle_walk_img = self.images
         self.idle_walk_alpha = self.mascaras
@@ -39,28 +38,20 @@ class PC(Mob):
         self.cmb_pos_img = self.cargar_anims(imgs['atk']['graph'],['A','B','C'])
         self.cmb_pos_alpha = self.cargar_anims(imgs['atk']['alpha'],['A','B','C'],True)
         
-        self.fuerza = data['fuerza']
-        self.alcance_cc = data['alcance_cc']
-        self.tipo = data['tipo']
-        self.velocidad = 3
         
-        self.nombre = nombre
-        self.timer_animacion = 0
+        self.alcance_cc = data['alcance_cc']
+        
+        
+        
+        #self.nombre = nombre #sin efectos
         self.inventario = Inventory(10)
         self.estado = 'idle'
-        self.generar_rasgos()
         
         self.temas_para_hablar = {}
         self.tema_preferido = ''
         
-        self.BarraVida = ProgressBar(10,(255,0,0),(100,0,0),(1,1))
-        self.BarraMana = ProgressBar(10,(125,0,255),(75,0,100),(1,20))
-        self.BarraVida.setVariable(actual=8,divisiones=4)
-        
-        MobGroup.add(self)
         ED.RENDERER.camara.setFocus(self)
-        ED.RENDERER.addOverlay(self.BarraVida,1)
-        ED.RENDERER.addOverlay(self.BarraMana,1)
+        
         
     def mover(self,dx,dy):
         
@@ -73,7 +64,7 @@ class PC(Mob):
         dx,dy = dx*self.velocidad,dy*self.velocidad
         if not self.detectar_colisiones(dx,dy):
             self.reubicar(dx,dy) # el heroe se mueve en el mapa, no en la camara
-        self.dirty = 1
+
         
         # POR ACA DEBERIA DETECTAR LAS SALIDAS
         #for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
@@ -108,7 +99,7 @@ class PC(Mob):
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
         sprite.recibir_danio()
-    
+
     def _anim_atk (self,limite):
         # construir la animación
         frames,alphas = [],[]
@@ -125,12 +116,9 @@ class PC(Mob):
                 self.atk_img_index = 0
                 self.atacando = False
                 self.mask = self.cmb_walk_alpha['S'+self.direccion]
-            
-            self.t_image = frames[self.atk_img_index]
             self.mask = alphas[self.atk_img_index]
-            self.calcular_sombra()
-            self.dirty = 1
-
+            self.calcular_sombra(frames[self.atk_img_index])
+    
     def hablar(self):
         sprite = self._interactuar_mobs(self.alcance_cc)
         if isinstance(sprite,NPC):
@@ -145,10 +133,10 @@ class PC(Mob):
         x,y = self.direcciones[self.direccion]
         x,y = x*rango,y*rango
 
-        for sprite in self.stage.properties:
-            if sprite != self and sprite != self.stage.mapa:
-                if self.colisiona(sprite,x,y):
-                    return sprite
+        for mob in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+            if mob != self:
+                if self.colisiona(mob,x,y):
+                    return mob
     
     def _interactuar_props(self,x,y):
         "Utiliza una máscara propia para seleccionar mejor a los props"
@@ -191,11 +179,11 @@ class PC(Mob):
             
         self.cambiar_direccion(self.direccion)
         self.animar_caminar()
-        self.dirty = 1
     
     def update(self):
         if self.atacando:
             self._anim_atk(5)
         dx,dy = self.dx,self.dy
         self.dx,self.dy = 0,0
+        self.dirty = 1
         return dx,dy

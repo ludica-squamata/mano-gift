@@ -1,27 +1,25 @@
 {
-    "tree":{"0":[1,4],"1":2,"2":[3,4],"4":5,"5":6,"6":7},
-    "textos":{
-        "0":{"type":"Q","loc":"NPC",
-        "txt":"Sabes, este diálogo es un demo."},
-        
-        "1":{"type":"A","loc":"PC",
-        "txt":"¿un demo? no lo creo."},
-        
-        "2":{"type":"Q","loc":"NPC",
-        "txt":"Lo es. ¿No te das cuenta de que no estoy diciendo nada?"},
-        
-        "3":{"type":"E","loc":"PC",
-        "txt":"Sí, tenes razón, es un demo."},
-        
-        "4":{"type":"A","loc":"PC",
-        "txt":"¿Que es un demo?"},
-        
-        "5":{"type":"S","loc":"NPC",
-        "txt":"Es una demostración de que esto funciona."},
-        
-        "6":{"type":"S","loc":"PC",
-        "txt":"Es decir, de que estamos hablando."},
-        
-        "7":{"type":"E","loc":"NPC",
-        "txt":"Precisamente."}}
+    "0":{"type":"node","leads":[1,4],"loc":"NPC",
+    "txt":"Sabes, este diálogo es un demo."},
+    
+    "1":{"type":"branch","leads":2,"loc":"PC",
+    "txt":"¿un demo? no lo creo."},
+    
+    "2":{"type":"node","leads":[3,4],"loc":"NPC",
+    "txt":"Lo es. ¿No te das cuenta de que no estoy diciendo nada?"},
+    
+    "3":{"type":"leaf","leads":null,"loc":"PC",
+    "txt":"Sí, tenes razón, es un demo."},
+    
+    "4":{"type":"branch","leads":5,"loc":"PC",
+    "txt":"¿Que es un demo?"},
+    
+    "5":{"type":"node","leads":6,"loc":"NPC",
+    "txt":"Es una demostración de que esto funciona."},
+    
+    "6":{"type":"node","leads":7,"loc":"PC",
+    "txt":"Es decir, de que estamos hablando."},
+    
+    "7":{"type":"leaf","leads":null,"loc":"NPC",
+    "txt":"Precisamente."}
 }

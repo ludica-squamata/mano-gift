@@ -6,6 +6,12 @@ class Sensitivo:
     vision = None # triangulo de la visión. posición por default = arriba
     vx,vy = 0,0 # posicion de la visión, puesta acá por si el mob no se mueve
     
+    def establecer_sentidos(self): #,data):
+        self.tri_vis = self.generar_tri_vision(32*5) #(data[vision])
+        self.cir_vis = self.generar_cir_vision(32*6) #(data[vision])
+        self.vision = self.tri_vis
+        self.mover_vis = self.mover_tri_vis
+        
     @staticmethod
     def generar_tri_vision(largo):
         '''Crea el triangulo de la visión (fg azul, bg transparente).

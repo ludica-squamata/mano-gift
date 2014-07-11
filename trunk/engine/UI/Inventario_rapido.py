@@ -11,7 +11,7 @@ class Inventario_rapido (DialogFrontEnd,Menu_Items):
         self.draw_space_rect = Rect (3,3,int(C.ANCHO)-7,int(C.ALTO/5)-7)
         self.funciones = {
             'hablar':self.confirmar_seleccion,
-            'cerrar':self.destruir,
+            'inventario':self.destruir,
             'arriba':self.elegir_opcion,
             'abajo':self.elegir_opcion
         }

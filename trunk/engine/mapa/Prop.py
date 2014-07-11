@@ -34,9 +34,12 @@ class Prop (_giftSprite):
     
         if not self.es('sinsombra'):
             self.sombra = U.crear_sombra(self.image, self.mask)
+            image = self.sombra
+            image.blit(self.image,[0,0])
+            self.image = image
         if not self.es('solido'):
             self.solido = False
-
+        
     def interaccion(self,x=0,y=0):
         if self.es('agarrable'):
             return True
@@ -50,18 +53,7 @@ class Prop (_giftSprite):
             self.visible = self._operable[self.estado][1]
             return False
 
-        elif self.es('empujable'):
-            #if self.es('pesado'):
-            #    if x > 0: x -= 10
-            #    elif x < 0: x += 10
-            #
-            #    if y > 0: y -= 10
-            #    elif y < 0: y += 10
-            
-            image = self.sombra
-            image.blit(self.image,[0,0])
-            self.image = image
-            
+        elif self.es('empujable'):                      
             self.reubicar(x,y)
             return False
     
