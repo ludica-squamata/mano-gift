@@ -1,4 +1,4 @@
-from .Prop import Prop
-from .Salida import Salida
+#from .Prop import Prop
+from .salida import Salida
 from .Stage import Stage
 from .LightSource import LightSource

@@ -83,6 +83,7 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
         
         self.ubicar(x,y)
         MobGroup.add(self)
+        
 
     def recibir_danio(self):
         self.salud -= 1
@@ -95,7 +96,7 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
                 self.stage.delProperty(self)
             self.dead = True
             MobGroup.remove(self)
-
+    
     def update(self):
         self.anim_counter += 1
         if self.anim_counter > self.anim_limit:
