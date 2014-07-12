@@ -1,4 +1,5 @@
 {
+    "imagen":"mobs/commoner12.png",
     "temas_para_hablar":{
         "demo":"demo.json",
         "girl":"girl.json",

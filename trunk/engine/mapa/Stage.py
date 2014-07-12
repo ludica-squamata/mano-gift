@@ -22,6 +22,7 @@ class Stage:
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
 
     def addProperty(self,obj,_layer):
+        obj.stage = self
         self.properties.add(obj,layer =_layer)
     
     def delProperty(self,obj):

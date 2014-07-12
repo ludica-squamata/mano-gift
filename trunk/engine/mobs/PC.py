@@ -25,8 +25,9 @@ class PC(Mob):
     conversaciones = [] # registro de los temas conversados
     
     dx,dy = 0,0
-    def __init__(self,nombre,data,stage,x,y):
+    def __init__(self,data,stage,x,y):
         imgs = data['imagenes']
+        self.nombre = 'heroe' #key in MobGroup
         super().PC__init__(imgs['idle']['graph'],stage,x,y,data,imgs['idle']['alpha'])
         
         self.idle_walk_img = self.images
@@ -43,7 +44,7 @@ class PC(Mob):
         
         
         
-        #self.nombre = nombre #sin efectos
+        
         self.inventario = Inventory(10)
         self.estado = 'idle'
         
