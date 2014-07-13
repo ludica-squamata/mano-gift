@@ -49,8 +49,10 @@ class PC(Mob,Parlante):
         else: self.cambiar_direccion('abajo')
         
         dx,dy = dx*self.velocidad,dy*self.velocidad
-        if not self.detectar_colisiones(dx,dy):
-            self.reubicar(dx,dy) # el heroe se mueve en el mapa, no en la camara
+        if not self.detectar_colisiones(dx,0):
+            self.reubicar(dx,0) # el heroe se mueve en el mapa, no en la camara
+        if not self.detectar_colisiones(0,dy):
+            self.reubicar(0,dy)
 
         
         # POR ACA DEBERIA DETECTAR LAS SALIDAS
