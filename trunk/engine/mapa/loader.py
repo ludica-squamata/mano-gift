@@ -1,6 +1,6 @@
 from engine.globs import EngineData as ED, Constants as C, MobGroup, ModData as MD
 from engine.misc import Resources as r
-from engine.mobs import NPC, PC
+from engine.mobs import NPCSocial, PC
 from engine.quests import QuestManager
 from engine.scenery import newProp
 from .salida import Salida
@@ -17,7 +17,7 @@ class _loader:
         _loader.cargar_hero(entrada)
         _loader.cargar_props()
         #_loader.cargar_props('top')
-        _loader.cargar_mobs(NPC)
+        _loader.cargar_mobs(NPCSocial)
         _loader.cargar_quests()
         _loader.cargar_salidas()
         
@@ -42,7 +42,7 @@ class _loader:
         #if clase == Enemy:
         #    pos = _loader.STAGE.data['capa_ground']['mobs']['enemies']
         #    act = 'agressive'
-        if clase == NPC:
+        if clase == NPCSocial:
             pos = _loader.STAGE.data['capa_ground']['mobs']['npcs']
             act = 'passive'
 

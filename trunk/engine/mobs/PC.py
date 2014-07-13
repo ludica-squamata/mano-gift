@@ -1,16 +1,13 @@
 from pygame import Surface,Rect,mask
 from engine.globs import Constants as C, Tiempo as T, MobGroup, EngineData as ED
-from engine.misc import Resources as r, Util as U
-from engine.UI import Inventario_rapido, ProgressBar
-from engine.base import _giftSprite
+from engine.misc import Util as U
+from engine.UI import Inventario_rapido
 from .Inventory import Inventory, InventoryError
+from .CompoMob import Parlante
 from .scripts import Dialogo
-from .Item import Item
-from .NPC import NPC
 from .mob import Mob
 
-class PC(Mob):
-    interlocutor = None # para que el héroe sepa con quién está hablando, si lo está
+class PC(Mob,Parlante):
     cmb_pos_img = {} # combat position images.
     cmb_pos_alpha = {} # combat position images's alpha.
     cmb_walk_img = {} # combat walking images.
@@ -22,7 +19,6 @@ class PC(Mob):
     alcance_cc = 0 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     atk_counter = 0
     atk_img_index = -1
-    conversaciones = [] # registro de los temas conversados
     
     dx,dy = 0,0
     def __init__(self,data,stage,x,y):
@@ -39,21 +35,11 @@ class PC(Mob):
         self.cmb_pos_img = self.cargar_anims(imgs['atk']['graph'],['A','B','C'])
         self.cmb_pos_alpha = self.cargar_anims(imgs['atk']['alpha'],['A','B','C'],True)
         
-        
         self.alcance_cc = data['alcance_cc']
-        
-        
-        
-        
         self.inventario = Inventory(10,10+self.fuerza)
-        self.estado = 'idle'
-        
-        self.temas_para_hablar = {}
-        self.tema_preferido = ''
-        
+        self.estado = 'idle'        
         ED.RENDERER.camara.setFocus(self)
-        
-        
+    
     def mover(self,dx,dy):
         
         self.animar_caminar()
@@ -125,13 +111,14 @@ class PC(Mob):
     
     def hablar(self):
         sprite = self._interactuar_mobs(self.alcance_cc)
-        if isinstance(sprite,NPC):
-            self.interlocutor = sprite
-            self.interlocutor.responder()
-            ED.DIALOG = Dialogo(self,self.interlocutor)
-            return True
-        else:
-            return False
+        if sprite != None:
+            if sprite.hablante:
+                self.interlocutor = sprite
+                self.interlocutor.responder()
+                ED.DIALOG = Dialogo(self,self.interlocutor)
+                return True
+    
+        return False
     
     def _interactuar_mobs(self,rango):
         x,y = self.direcciones[self.direccion]

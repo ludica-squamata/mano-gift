@@ -144,8 +144,9 @@ class Camara:
         
         for spr in self.contents:
             if spr != self.focus and spr != self.bg:
-                spr.rect.x = self.bg.rect.x + spr.mapX
-                spr.rect.y = self.bg.rect.y + spr.mapY
+                if hasattr(spr,'mapX'):
+                    spr.rect.x = self.bg.rect.x + spr.mapX
+                    spr.rect.y = self.bg.rect.y + spr.mapY
             spr.dirty = 1
     
     def update(self):

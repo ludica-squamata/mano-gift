@@ -2,7 +2,7 @@
     "nombre":"Proyecto Mano-Gift",
     "icono":"data/grafs/favicon.png",
     "inicial":"casas y arboles",
-    "initial_mode":"Menu",
+    "initial_mode":"Aventura",
     "folders":{
         "graficos":"grafs",
         "dialogos":"dialogs",

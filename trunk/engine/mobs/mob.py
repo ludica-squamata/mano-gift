@@ -9,6 +9,7 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
     mascaras = {}
     camino = []
     centroX,centroY = 0,0
+    hablante = False
     def __init__(self,ruta_img,stage,x,y,data):
         maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
                  'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
