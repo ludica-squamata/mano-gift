@@ -16,6 +16,9 @@ class Escenografia(_giftSprite):#,shadowSprite):
             image.blit(self.image,[0,0])
             self.image = image
         #------------#
+    
+    def update(self):
+        self.dirty = 1
 
 class Agarrable(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):

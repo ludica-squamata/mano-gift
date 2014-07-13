@@ -89,11 +89,14 @@ class Sensitivo:
         if self.direccion != 'ninguna':
             vision,self.vx,self.vy = self.mover_vis(self.direccion)
             for key in MobGroup:
-                mob =  MobGroup[key]
-                if mob != self:
-                    vis_mask = mask.from_surface(vision)
-                    x,y = self.vx-mob.mapX, self.vy-mob.mapY
-                    if mob.mask.overlap(vis_mask,(x,y)):
-                        detected.append(mob)
+                try:
+                    mob =  MobGroup[key]
+                    if mob != self:
+                        vis_mask = mask.from_surface(vision)
+                        x,y = self.vx-mob.mapX, self.vy-mob.mapY
+                        if mob.mask.overlap(vis_mask,(x,y)):
+                            detected.append(mob)
+                except:
+                    pass
         
         return detected

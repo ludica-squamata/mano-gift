@@ -91,7 +91,12 @@ class PC(Mob,Parlante):
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
         sprite.recibir_danio()
-
+    
+    def recibir_danio(self):
+        super().recibir_danio()
+        if self.salud == 0:
+            print('lanzar evento: muerte del heroe (y perdida de focus)')
+    
     def _anim_atk (self,limite):
         # construir la animación
         frames,alphas = [],[]
@@ -108,6 +113,7 @@ class PC(Mob,Parlante):
                 self.atk_img_index = 0
                 self.atacando = False
                 self.mask = self.cmb_walk_alpha['S'+self.direccion]
+                self.recibir_danio()
             self.mask = alphas[self.atk_img_index]
             self.calcular_sombra(frames[self.atk_img_index])
     
@@ -119,7 +125,6 @@ class PC(Mob,Parlante):
                 self.interlocutor.responder()
                 ED.DIALOG = Dialogo(self,self.interlocutor)
                 return True
-    
         return False
     
     def _interactuar_mobs(self,rango):
