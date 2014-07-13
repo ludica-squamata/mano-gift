@@ -31,7 +31,7 @@ class Stage:
        
     def actualizar_grilla(self):
         for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
-            if spr.es('solido') and not spr.es('empujable'):
+            if spr.solido:# and not spr.es('empujable'):
                 x = int(spr.mapX/32)
                 y = int(spr.mapY/32)
                 self.grilla[x,y].transitable = False

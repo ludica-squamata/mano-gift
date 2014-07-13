@@ -9,6 +9,7 @@
         "mapas":"maps",
         "mobs":"mobs",
         "quest":"quests",
+        "items":"items",
         "scripts":"scripts"
     }
 }

@@ -9,9 +9,9 @@ class _espacio_equipable (BaseWidget):
     def __init__(self,nombre,item,direcciones,x,y):
         '''Inicializa las variables de un espacio equipable.'''
         
-        self.img_uns = self.crear_base()
+        self.img_uns = self.crear_base(self.bg_cnvs)
         super().__init__(self.img_uns)
-        self.img_sel = self.dibujar_seleccion(self.img_uns)
+        self.img_sel = self.dibujar_seleccion(self.img_uns,self.font_high_color)
         
         self.draw_area = Surface((28,28))
         self.draw_area.fill((153,153,153))
@@ -25,11 +25,12 @@ class _espacio_equipable (BaseWidget):
         self.rect = self.image.get_rect(topleft = (x,y))
         self.dirty = 1
     
-    def crear_base(self):
+    @staticmethod
+    def crear_base(color):
         '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
         
         img = Surface((36,36))
-        img.fill(self.bg_cnvs)
+        img.fill(color)
         
         rect = Rect(2,2,28,28)
         base = Surface((32,32))
@@ -38,22 +39,23 @@ class _espacio_equipable (BaseWidget):
         img.blit(base,(2,2))
         return img
     
-    def dibujar_seleccion (self,img):
+    @staticmethod
+    def dibujar_seleccion (img,color):
         sel = img.copy()
         w,h = sel.get_size()
         for i in range(round(38/3)):
             #linea punteada horizontal superior
-            draw.line(sel,self.font_high_color,(i*7,0),((i*7)+5,0),2)
+            draw.line(sel,color,(i*7,0),((i*7)+5,0),2)
             
             #linea punteada horizontal inferior
-            draw.line(sel,self.font_high_color,(i*7,h-2),((i*7)+5,h-2),2)
+            draw.line(sel,color,(i*7,h-2),((i*7)+5,h-2),2)
         
         for i in range(round(38/3)):
             #linea punteada vertical derecha
-            draw.line(sel,self.font_high_color,(w-2,i*7),(w-2,(i*7)+5),2)
+            draw.line(sel,color,(w-2,i*7),(w-2,(i*7)+5),2)
             
             #linea punteada vertical izquierda
-            draw.line(sel,self.font_high_color,(0,i*7),(0,(i*7)+5),2)
+            draw.line(sel,color,(0,i*7),(0,(i*7)+5),2)
         return sel
     
     def ocupar(self,item):

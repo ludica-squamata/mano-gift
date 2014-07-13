@@ -3,7 +3,7 @@ from engine.globs import Constants as C, Tiempo as T, MobGroup, EngineData as ED
 from engine.misc import Resources as r, Util as U
 from engine.UI import Inventario_rapido, ProgressBar
 from engine.base import _giftSprite
-from .Inventory import Inventory
+from .Inventory import Inventory, InventoryError
 from .scripts import Dialogo
 from .Item import Item
 from .NPC import NPC
@@ -45,7 +45,7 @@ class PC(Mob):
         
         
         
-        self.inventario = Inventory(10)
+        self.inventario = Inventory(10,10+self.fuerza)
         self.estado = 'idle'
         
         self.temas_para_hablar = {}
@@ -87,16 +87,19 @@ class PC(Mob):
                     x,y = x*self.fuerza,y*self.fuerza
                     self.atacar(sprite,x,y)
         else:
-            from engine.mapa import Prop
             sprite = self._interactuar_props(x,y)
-            if isinstance(sprite,Prop):
-                x,y = x*self.fuerza*2,y*self.fuerza*2
-                if sprite.interaccion(x,y):
-                    item = Item(sprite.nombre,sprite.es('stackable'),sprite.image)
-                    if self.inventario.agregar(item):
+            if hasattr(sprite,'accion'):
+                if sprite.accion == 'agarrar':
+                    try:
+                        item = sprite()
+                        self.inventario.agregar(item)
                         self.stage.delProperty(sprite)
                         ED.RENDERER.camara.delObj(sprite)
-                
+                    except InventoryError as Error:
+                        print(Error)
+                elif sprite.accion == 'operar':
+                    sprite.operar()
+    
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
         sprite.recibir_danio()
@@ -157,10 +160,10 @@ class PC(Mob):
         ED.DIALOG = Inventario_rapido()
     
     def usar_item (self,item):
-        if not item.esEquipable:
+        if item.tipo == 'consumible':
             print('Used',item.nombre) #acá iria el efecto del item utilizado.
-            return self.inventario.quitar(item.ID)
-        return item.cantidad
+            return self.inventario.remover(item)
+        return self.inventario.cantidad(item)
             
     def cambiar_estado(self):
         if self.estado == 'idle':

@@ -31,15 +31,15 @@ class Menu_Items (Menu):
         self.draw_space = Surface(draw_area_rect.size)
         self.draw_space.fill(self.bg_cnvs)
         
-        for i in range(len(ED.HERO.inventario)):
-            item = ED.HERO.inventario[i]
-            if item.esEquipable:
+        for idxItemCant in ED.HERO.inventario():
+            i,item,cant = idxItemCant
+            
+            if item.tipo == 'equipable':
                 color = self.font_high_color
-                
             else:
                 color = self.font_none_color
                 
-            fila = _item_inv(item,draw_area_rect.w-6,(3,i*h+i),self.fuente_M,color)
+            fila = _item_inv(item,cant,draw_area_rect.w-6,(3,i*h+i),self.fuente_M,color)
             
             self.filas.add(fila)
         

@@ -1,0 +1,14 @@
+{
+    "ID":4,"tipo":"operable",
+    "peso":10, "volumen":5,
+    "image":"props/puerta.png",
+    "propiedades":["solido"],
+    "operable":{"0":{
+                    "visible":true,
+                    "solido":true
+                },
+                "1":{
+                    "visible":false,
+                    "solido":false
+                }}
+}

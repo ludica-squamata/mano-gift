@@ -6,9 +6,9 @@ class Equipado:
     inventario = None
 
     def equipar_item(self,item):
-        self.equipo[item.esEquipable] = item
-        self.inventario.quitar(item.ID)
+        self.equipo[item.espacio] = item
+        self.inventario.remover(item)
         
     def desequipar_item(self,item):
-        self.equipo[item.esEquipable] = None
+        self.equipo[item.espacio] = None
         self.inventario.agregar(item)
