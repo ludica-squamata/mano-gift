@@ -1,0 +1,9 @@
+{
+    "ID":0,"tipo":"agarrable",
+    "subtipo": "consumible",
+    "peso":2, "volumen":0,
+    "image": "props/star.png",
+    "propiedades":[],
+    "efecto":{
+        "des":"Te hace invencible por 10 segundos."}
+}

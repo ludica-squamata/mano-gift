@@ -53,7 +53,7 @@ class Movil:
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
                 if self.colisiona(spr,dx,dy):
                     if spr.solido:
-                        if spr.es('empujable'): spr.interaccion(dx,dy)
+                        if spr.accion == 'mover': spr.reubicar(dx,dy)
                         else: col_props = True
                         
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):

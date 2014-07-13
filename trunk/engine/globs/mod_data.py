@@ -20,6 +20,7 @@ class ModData:
         ModData.mapas = root+data['folders']['mapas']+'/'
         ModData.mobs = root+data['folders']['mobs']+'/'
         ModData.quests = root+data['folders']['quest']+'/'
+        ModData.items = root+data['folders']['items']+'/'
         ModData.scripts = root+data['folders']['scripts']+'/'
     
     @staticmethod

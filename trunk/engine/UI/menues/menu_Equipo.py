@@ -140,16 +140,14 @@ class Menu_Equipo(Menu_Items):
         '''Llena el espacio selectivo con los items que se correspondan con el espacio
         actualmente seleccionado. Esta función se llama en cada bucle.'''
         
-        i = -1
         h = self.altura_del_texto
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp) # por ejemplo: peto
-        for item in ED.HERO.inventario:
-            if item.esEquipable and item.esEquipable == espacio.nombre:
-                i += 1
-                fila = _item_inv(item,188,(0,i*h+i),self.fuente_MP,self.font_high_color)
-                self.filas.add(fila)
-                
+        for idxItemCant in ED.HERO.inventario('equipable',espacio.nombre):
+            i,item,cant = idxItemCant
+            fila = _item_inv(item,cant,188,(0,i*h+i),self.fuente_MP,self.font_high_color)
+            self.filas.add(fila)
+        
         self.opciones = len(self.filas)
    
     def cambiar_foco(self):
@@ -171,7 +169,7 @@ class Menu_Equipo(Menu_Items):
         
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
-        if espacio.nombre == item.esEquipable:
+        if espacio.nombre == item.espacio:
             espacio.ocupar(item)
             ED.HERO.equipar_item(item)
             self.draw_space.fill(self.bg_cnvs)

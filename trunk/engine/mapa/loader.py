@@ -24,13 +24,14 @@ class _loader:
     @staticmethod
     def cargar_props ():
         imgs = _loader.STAGE.data['refs']
-        POS = _loader.STAGE.data['capa_ground']['props']
-        props = r.abrir_json(MD.scripts+'props.json')
-        
+        POS = _loader.STAGE.data['capa_ground']['props']        
         for ref in POS:
+            try:            data = r.abrir_json(MD.items+ref+'.item')
+            except IOError: data = None
+            
             for x,y in POS[ref]:
-                if ref in props:
-                    prop = newProp(ref,props[ref]['image'],x,y,props[ref])
+                if data != None:
+                    prop = newProp(ref,data['image'],x,y,data)
                 else:
                     prop = newProp(ref,imgs[ref],x,y)
 

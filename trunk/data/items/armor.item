@@ -1,0 +1,10 @@
+{
+    "ID":2,"tipo":"agarrable",
+    "subtipo":"armadura",
+    "peso":4, "volumen":4,
+    "image":"props/armor.png",
+    "propiedades":["stackable"],
+    "efecto":{
+        "des":"Es un peto de hierro.",
+        "equipo":"peto"}
+}

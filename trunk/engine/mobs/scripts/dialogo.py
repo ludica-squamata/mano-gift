@@ -22,12 +22,11 @@ class _elemento:
         return self.nombre
     
 class _ArboldeDialogo:
-    __slots__ = ['_elementos','_actual','onSelect']
+    __slots__ = ['_elementos','_actual']
 
     def __init__(self,datos):
         self._elementos = []
         self._actual = -1
-        self.onSelect = False
 
         for i in range(len(datos)):
             idx = str(i)
