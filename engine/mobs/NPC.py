@@ -13,19 +13,9 @@ class NPC (Mob,Sensitivo,Autonomo):
         super().__init__(ruta_img,stage,x,y,data)
         self.establecer_AI(data,x,y)
         self.establecer_sentidos()
-        self.data = data
         
         self.generar_rasgos()
-        self.tema_preferido = data['tema_preferido']
-        self.temas_para_hablar = {}
-        for tema in data['temas_para_hablar']:
-            self.temas_para_hablar[tema] = r.abrir_json(MD.dialogos+data['temas_para_hablar'][tema])
+        self.data = data
+    
         if 'quest' in data:
             QuestManager.add(data['quest'])
-    
-    def responder(self):
-        self.hablando = True
-    
-    def mover(self):
-        if not self.hablando:
-            return super().mover()

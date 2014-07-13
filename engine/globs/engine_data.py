@@ -1,9 +1,6 @@
-#from engine.misc import Resources as r
 from .renderer import Renderer
-#from .mod_data import ModData as MD
 
-class EngineData:    
-    mapas = {}
+class EngineData:
     MAPA_ACTUAL = ''
     HERO = ''
     menu_actual = ''
@@ -19,9 +16,7 @@ class EngineData:
         ED = EngineData
         ED.MODO = 'Aventura'
         from engine.mapa import Stage
-        if mapa not in ED.mapas:
-            ED.mapas[mapa] = Stage(mapa,entrada)
-        ED.MAPA_ACTUAL = ED.mapas[mapa]
+        ED.MAPA_ACTUAL = Stage(mapa,entrada)
         ED.RENDERER.setBackground(ED.MAPA_ACTUAL.mapa)
         for obj in ED.MAPA_ACTUAL.properties:
             ED.RENDERER.addObj(obj,obj.rect.bottom)

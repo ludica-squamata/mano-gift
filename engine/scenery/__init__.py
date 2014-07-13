@@ -1,4 +1,4 @@
-from .prop import *
+from .props import *
 from .items import *
 
 def newProp(nombre,imagen,x,y,data=None):

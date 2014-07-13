@@ -52,6 +52,7 @@ class Menu_Debug (Menu):
         elegido.serElegido()
     
     def cargar_mapa(self):
+        ED.RENDERER.clear()
         ED.setear_mapa(self.mapas[self.sel], 'inicial')
         ED.onPause = False
     

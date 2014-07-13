@@ -20,7 +20,12 @@ class modo:
                 elif event.key == C.TECLAS.DEBUG:
                     print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
                     print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
-                    print('modo:', ED.MODO)
+                    #print('modo:', ED.MODO)
+                    #for grupo in ED.RENDERER.camara.focus.groups():
+                    #    print()
+                    #    for sprite in grupo.sprites():
+                    #        print(sprite)
+                    #    print('len:',str(len(grupo.sprites())))
     
     def Aventura(events,fondo):
         dx, dy = modo.dx, modo.dy
