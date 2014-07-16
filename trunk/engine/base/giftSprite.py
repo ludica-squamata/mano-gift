@@ -9,6 +9,18 @@ class _giftSprite(sprite.DirtySprite):
     mapY = 0
     nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True # si es solido, colisiona; si no, no.
+    images = None
+
+    IMAGEN_D = 'abajo'
+    IMAGEN_U = 'arriba'
+    IMAGEN_L = 'izquierda'
+    IMAGEN_R = 'derecha'
+    IMAGEN_DL = 'abiz'
+    IMAGEN_DR = 'abde'
+    IMAGEN_UL = 'ariz'
+    IMAGEN_UR = 'arde'
+
+
     def __init__(self, imagen=None, rect = None, alpha = False, stage = '', x = 0, y = 0):
         super().__init__()
         if imagen == None and rect == None:
@@ -41,10 +53,7 @@ class _giftSprite(sprite.DirtySprite):
         self.stage = stage
         self.solido = True
         
-        self.anim_counter = 0
-        self.anim_limit = 20
-        self.timer_animacion = 0
-        self.frame_animacion = 1000/12
+
 
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
@@ -72,3 +81,9 @@ class _giftSprite(sprite.DirtySprite):
             if sprite.mask.overlap(self.mask,(x,y)):
                 return True
         return False
+
+    def imagenN(self, n):
+        if n in self.images:
+            return self.images[n]
+        else:
+            return self.image
