@@ -1,4 +1,5 @@
 from pygame.sprite import LayeredDirty
+from pygame import Rect, draw
 from .constantes import Constants as C
 
 class Renderer:
@@ -49,6 +50,7 @@ class Camara:
         self.contents = LayeredDirty()
         self.w = C.ANCHO
         self.h = C.ALTO
+        self.rect = Rect(self.x,self.y,self.w,self.h)
     
     def setBackground(self,spr):
         self.bg = spr
@@ -116,8 +118,7 @@ class Camara:
         self.bg.dirty = 1
         
     def centrar(self):
-        self.focus.rect.x = int(C.ANCHO / C.CUADRO / 2) * C.CUADRO #320
-        self.focus.rect.y = int(C.ALTO / C.CUADRO / 2) * C.CUADRO #240
+        self.focus.rect.center = self.rect.center
         self.focus.centroX, self.focus.centroY = self.focus.rect.topleft
         
         newPosX = self.focus.rect.x - self.focus.mapX
@@ -158,5 +159,8 @@ class Camara:
                 self.panear(dx,dy)
                 
     def draw(self,fondo):
-        return self.contents.draw(fondo)
+        ret = self.contents.draw(fondo)
+        ##Surface, color, start_pos, end_pos, width=1
+        #draw.line(fondo,(0,100,255),(320,0),(320,480))
+        return ret
     

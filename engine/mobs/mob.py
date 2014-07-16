@@ -61,7 +61,7 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
         for e in self.equipo:
             self.equipo[e] = None
         super().__init__(self.image,alpha=self.mask,stage=stage)
-        
+        self.rect = self.images['Sabajo'].get_rect()
         self.tipo = data['tipo']
         self.fuerza = data['fuerza']
         self.salud = 10 #data['salud']#no hay salud establecida para el heroe
