@@ -1,16 +1,26 @@
 from engine.globs import Tiempo as T, Constants as C
 from engine.misc import Util as U, Resources as r
 from pygame import mask
+from ._movil import Movil
+from engine.base import _giftSprite
 
-class Animado:
-    __key_anim = '' #para uso interno de animar_caminar
-    ticks, mov_ticks = 0,0
+
+class Animado(Movil, _giftSprite):  # necesita Movil para tener direccion, giftSprite para las imagenes
+    ticks, mov_ticks = 0, 0
     atacando = False
-    images = {} # incluye todas las imagenes del mob, arriba abajo izquierda y derecha
-    death_img = None # sprite del mob muerto.
+    death_img = None  # sprite del mob muerto.
     dead = False
-        
-    def cargar_anims(self,ruta_imgs,seq,alpha=False):
+    _step = 'S'
+
+    def __init__(self, *args, **kwargs):
+        self.anim_counter = 0
+        self.anim_limit = 20
+        self.timer_animacion = 0
+        self.frame_animacion = 1000/12
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def cargar_anims(ruta_imgs,seq,alpha=False):
         dicc = {}
         spritesheet = r.split_spritesheet(ruta_imgs)
         dires = ['abajo','arriba','derecha','izquierda']
@@ -29,24 +39,22 @@ class Animado:
         return dicc
     
     def animar_caminar(self):
-        '''cambia la orientación del sprite y controla parte de la animación'''
-        
-        key = self.__key_anim
-        self.t_image = None
-        
+        """cambia la orientación del sprite y controla parte de la animación"""
+
+
         self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
-                if key == 'D'+self.direccion:
-                    key = 'I'+self.direccion
-                elif key == 'I'+self.direccion:
-                    key = 'D'+self.direccion
+                if self._step == 'D':
+                    self._step = 'I'
                 else:
-                    key = 'D'+self.direccion
-                self.calcular_sombra(self.images[key])
-                self.__key_anim = key
-    
+                    self._step = 'D'
+
+                key = self._step+self.direccion
+
+                self.image = self.imagenN(key)
+
     def calcular_sombra(self,current_image):
         ImagenConSombra = U.crear_sombra(current_image)
         ImagenConSombra.blit(current_image,[0,0])

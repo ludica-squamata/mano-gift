@@ -4,29 +4,25 @@ from engine.misc import Resources as r
 from engine.globs import Constants as C, EngineData as ED, MobGroup
 from pygame import mask
 
-class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
-    images = {}
-    mascaras = {}
-    camino = []
-    centroX,centroY = 0,0
+class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
+    mascaras = None  # {}
+    camino = None  # []
+    centroX, centroY = 0, 0
     hablante = False
-    def __init__(self,ruta_img,stage,x,y,data):
-        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
-                 'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
-                 'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda'] # paso Derecho
+    mana = 0
 
-        spritesheet = r.split_spritesheet(ruta_img)
-        self.images = {} # si no lo redefino, pasan cosas raras...
-        self.mascaras = {}
+    def __init__(self, ruta_img, stage, x, y, data):
+
         for e in self.equipo:
-            self.equipo[e] = None        
-        self.camino = [] # si no lo redefino, pasan cosas raras...
-        for key in maskeys:
-            self.images[key] = spritesheet[maskeys.index(key)]
+            self.equipo[e] = None
+        dirs = ['S', 'I', 'D']
+        self.images = self.cargar_anims(ruta_img, dirs)
+        self.mascaras = {}
+        self.camino = []
         self.image = self.images['Sabajo']
         super().__init__(self.image,stage=stage)
         self.calcular_sombra(self.image)
-        
+
         self.direccion = data['direccion']
         self.velocidad = data['velocidad']
         self.modo_colision = data['modo_colision']
@@ -34,7 +30,7 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
         #self.actitud = data['actitud'] #sin efectos
         self.tipo = data['tipo']
         self.fuerza = data['fuerza']
-        
+
         if 'solido' in data:
             self.solido = data['solido']
         #eliminar esto una vez que esté aplicado a todos los mobs
@@ -42,7 +38,7 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
             self.death_img = r.cargar_imagen(data['death'])
         if 'objetivo' in data:
             self.objetivo = MobGroup.get(data['objetivo'])
-        
+
         self.ubicar(x,y)
         self.generar_rasgos()
         MobGroup.add(self)
@@ -53,24 +49,15 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
         # lo que hay producido para el Hero y lo que hay para los NPC
         # cuando las capacidades se hayan igualado, PC utilizará el __init__
         # normal, igual que el resto de los Mobs.
-        maskeys=['S'+'abajo','S'+'arriba','S'+'derecha','S'+'izquierda', # Standing
-                 'I'+'abajo','I'+'arriba','I'+'derecha','I'+'izquierda', # paso Izquierdo
-                 'D'+'abajo','D'+'arriba','D'+'derecha','D'+'izquierda'] # paso Derecho
 
-        _images = r.split_spritesheet(ruta_img)
-        _mascaras = r.split_spritesheet(ruta_alpha)
-        self.images = {} # si no lo redefino, pasan cosas raras...
-        self.mascaras = {}       
-        
-        for key in maskeys:
-            _alpha = _mascaras[maskeys.index(key)]
-            self.mascaras[key] = mask.from_threshold(_alpha, C.COLOR_COLISION, (1,1,1,255))
-            self.images[key] = _images[maskeys.index(key)]
+        dirs = ['S', 'I', 'D']
+
+        self.images = self.cargar_anims(ruta_img, dirs)
+        self.mascaras = self.cargar_anims(ruta_alpha, dirs, True)
+
         self.mask  = self.mascaras['Sabajo']
         self.image = self.images['Sabajo']
-        self.calcular_sombra(self.image)
-        
-        
+
         for e in self.equipo:
             self.equipo[e] = None
         super().__init__(self.image,alpha=self.mask,stage=stage)
@@ -105,3 +92,4 @@ class Mob(Equipado,Atribuido,Animado,Movil,_giftSprite):
         if not ED.onPause and not self.dead:
             self.determinar_accion(self.ver())
             return self.mover()
+
