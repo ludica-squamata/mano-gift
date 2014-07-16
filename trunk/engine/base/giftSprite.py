@@ -35,7 +35,7 @@ class _giftSprite(sprite.DirtySprite):
         else:
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
             
-        if self.image != None:
+        if imagen != None:
             self.rect = self.image.get_rect()
         else:
             self.rect = rect
