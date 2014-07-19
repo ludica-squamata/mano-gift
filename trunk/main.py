@@ -1,7 +1,8 @@
 from pygame import display as pantalla,init as py_init,image,event as EVENT
 from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData
 from engine.quests import QuestManager
-from engine.UI import modo, HUD
+from engine.UI import HUD
+from engine.IO.modos import modo
 from engine.misc import Resources as r, Config
 from data import intro,introduccion
 

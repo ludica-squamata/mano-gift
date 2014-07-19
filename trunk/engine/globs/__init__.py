@@ -1,5 +1,4 @@
 #global information
-from .teclas import Teclas
 from .constantes import Constants
 from .tiempo import Tiempo, Noche
 from .giftgroups import MobGroup

@@ -64,7 +64,7 @@ class Menu_Pausa (Menu):
         return False
         
     def PressOne(self):
-        from engine.UI.modos import modo
+        from engine.IO.modos import modo
         super().PressButton()
         modo.newMenu = True
     
