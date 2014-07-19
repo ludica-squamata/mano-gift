@@ -10,6 +10,7 @@ class Teclas:
         pero mirá lo que hacemos en constantes...'''
         
         self.asignar(data)
+        self._keydict = self._crear_keydict()
         # podría ser __init__ en lugar de asignar,
         # pero lo dejo así por las dudas.
 
@@ -30,3 +31,29 @@ class Teclas:
         self.MENU = data['menu']
         self.SALIR = data['salir']
         self.DEBUG = data['debug']
+    
+    def _crear_keydict(self):
+        observar = {}
+        _teclas = {
+            'arriba':self.ARRIBA,
+            'abajo':self.ABAJO,
+            'derecha':self.DERECHA,
+            'izquierda':self.IZQUIERDA,
+            'accion':self.ACCION,
+            'hablar':self.HABLAR,
+            'cancelar':self.CANCELAR_DIALOGO,
+            'inventario':self.INVENTARIO,
+            'posicion_combate':self.POSICION_COMBATE,
+            'menu':self.MENU,
+        }
+        
+        for key in _teclas:
+            observar[_teclas[key]] = {'key':_teclas[key],'nom':key,
+                                     'pressed': False,'tap': False,
+                                     'holding': 0,'hold': False,
+                                     'release':False,'held':0}
+        
+        return observar
+    
+    def devolver(self):
+        return self._keydict

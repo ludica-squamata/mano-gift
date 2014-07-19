@@ -1,5 +1,5 @@
 from pygame import Color
-from .teclas import Teclas
+from engine.IO import Teclas
 from engine.misc import Resources as r, Config as C
 
 class Constants:
@@ -22,3 +22,8 @@ class Constants:
     CAPA_OVERLAYS_MENUS = 2 # ocupan toda o gran parte de la pantalla
 
     COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
+    
+    #constantes de eventos de teclado
+    HOLD = 24
+    TAP = 25
+    RELEASE = 26
