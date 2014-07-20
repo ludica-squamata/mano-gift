@@ -8,10 +8,10 @@ class NPC (Mob,Sensitivo,Autonomo):
     quest = None
     iniciativa = 2
     hablando = False
-    def __init__(self,nombre,ruta_img,stage,x,y,data):
+    def __init__(self,nombre,x,y,data):
         self.nombre = nombre
-        super().__init__(ruta_img,stage,x,y,data)
-        self.establecer_AI(data,x,y)
+        super().__init__(data,x,y)
+        self.establecer_AI(data['AI'],x,y)
         self.establecer_sentidos()
         
         self.generar_rasgos()

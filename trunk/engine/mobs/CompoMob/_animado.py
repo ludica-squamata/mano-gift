@@ -36,11 +36,11 @@ class Animado(Movil, _giftSprite):  # necesita Movil para tener direccion, giftS
             else:
                 _alpha = mask.from_threshold(spritesheet[keys.index(key)], C.COLOR_COLISION, (1,1,1,255))
                 dicc[key] = _alpha
+
         return dicc
     
     def animar_caminar(self):
         """cambia la orientación del sprite y controla parte de la animación"""
-
 
         self.timer_animacion += T.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
@@ -54,7 +54,8 @@ class Animado(Movil, _giftSprite):  # necesita Movil para tener direccion, giftS
                 key = self._step+self.direccion
 
                 self.image = self.imagenN(key)
-
+                self.mask = self.mascaraN(key)
+    
     def calcular_sombra(self,current_image):
         ImagenConSombra = U.crear_sombra(current_image)
         ImagenConSombra.blit(current_image,[0,0])

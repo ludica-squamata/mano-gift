@@ -13,11 +13,11 @@ class _loader:
         _loader.STAGE = stage
     
     @staticmethod
-    def loadEverything(entrada):
+    def loadEverything(entrada,mobs_data):
         _loader.cargar_hero(entrada)
         _loader.cargar_props()
         #_loader.cargar_props('top')
-        _loader.cargar_mobs(NPCSocial)
+        _loader.cargar_mobs(mobs_data)
         _loader.cargar_quests()
         _loader.cargar_salidas()
         
@@ -38,31 +38,28 @@ class _loader:
                 _loader.STAGE.addProperty(prop,C.CAPA_GROUND_ITEMS)
     
     @staticmethod
-    def cargar_mobs(clase):
-        #if clase == Enemy:
-        #    pos = _loader.STAGE.data['capa_ground']['mobs']['enemies']
-        #    act = 'agressive'
-        if clase == NPCSocial:
-            pos = _loader.STAGE.data['capa_ground']['mobs']['npcs']
-            act = 'passive'
-
-        for ref in pos:
-            base = r.abrir_json(MD.mobs+act+'.mob')
-            try:
+    def cargar_mobs(extra_data,capa = 'capa_ground'):
+        for key in _loader.STAGE.data[capa]['mobs']:
+            pos = _loader.STAGE.data[capa]['mobs'][key]
+            if key == 'npcs': clase = NPCSocial
+            
+            for ref in pos:
                 data = r.abrir_json(MD.mobs+ref+'.mob')
-            except IOError:
-                data = {}
-            base.update(data)
-            for x,y in pos[ref]:
-                mob = clase(ref,data['imagen'],_loader.STAGE,x,y,base)
-                _loader.STAGE.addProperty(mob,C.CAPA_GROUND_MOBS)
+                data.update(extra_data[ref])
+                for x,y in pos[ref]:
+                    mob = clase(ref,x,y,data)
+                    if capa == 'capa_ground':
+                        _loader.STAGE.addProperty(mob,C.CAPA_GROUND_MOBS)
+                    elif capa == 'capa_top':
+                        _loader.STAGE.addProperty(mob,C.CAPA_TOP_MOBS)
     
     @staticmethod
     def cargar_hero(entrada):
+        
         #if entrada != None and entrada in _loader.STAGE.data['entradas']:
         #no hace falta si no va a haber un mensaje de error en caso contrario.
         x,y = _loader.STAGE.data['entradas'][entrada]
-        ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),_loader.STAGE,x,y)
+        ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
         _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
     
     @staticmethod

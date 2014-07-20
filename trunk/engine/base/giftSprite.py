@@ -52,9 +52,7 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY = y
         self.stage = stage
         self.solido = True
-        
-
-
+    
     def reubicar(self, dx, dy):
         '''mueve el sprite una cantidad de cuadros'''
         self.mapX += dx
@@ -73,7 +71,6 @@ class _giftSprite(sprite.DirtySprite):
         if self.image != None:
             self.dirty = 1
 
-    
     def colisiona(self, sprite, off_x = 0, off_y = 0):
         if self.nombre != sprite.nombre:
             x = self.mapX-(sprite.mapX-off_x)
@@ -87,3 +84,8 @@ class _giftSprite(sprite.DirtySprite):
             return self.images[n]
         else:
             return self.image
+    def mascaraN(self,n):
+        if n in self.mascaras:
+            return self.mascaras[n]
+        else:
+            return self.mascaras

@@ -1,5 +1,18 @@
 {
-    "quest":"hunt",
-    "temas_para_hablar":{"hunt":"hunt.json"},
-    "tema_preferido":"hunt"
+    "ID":6,"nombre":"girl",
+    "salud":2,"fuerza":2,
+    "velocidad":1,
+    "imagenes":{
+        "idle":"mobs/imagenes/green_girl.png",
+        "atk":null,
+        "death":null
+    },
+    "alphas":{
+        "idle":"mobs/colisiones/human_walk.png",
+        "atk":null,
+        "death":null
+    },
+    "diag_face":"mobs/imagenes/npc_face.png",
+    "clase":"NPCSocial",
+    "propiedades":["pasiva"]
 }

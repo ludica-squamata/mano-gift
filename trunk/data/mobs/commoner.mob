@@ -1,9 +1,18 @@
 {
-    "imagen":"mobs/commoner12.png",
-    "temas_para_hablar":{
-        "demo":"demo.json",
-        "girl":"girl.json",
-        "monstruos":"monstruos.json"},
-    "tema_preferido":"demo",
-    "quest":"intro"
+    "ID":1,"nombre":"commoner",
+    "salud":2,"fuerza":2,
+    "velocidad":1,
+    "imagenes":{
+        "idle":"mobs/imagenes/commoner12.png",
+        "atk":null,
+        "death":null
+    },
+    "alphas":{
+        "idle":"mobs/colisiones/human_walk.png",
+        "atk":null,
+        "death":null
+    },
+    "diag_face":"mobs/imagenes/npc_face.png",
+    "clase":"NPCSocial",
+    "propiedades":["pasiva"]
 }

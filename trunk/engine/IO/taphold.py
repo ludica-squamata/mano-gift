@@ -28,7 +28,7 @@ def _filtrar(events):
             if not key['release']:
                 key['held'] = 0
             
-        if key['holding'] > 10: #este limite deberia ser variable
+        if key['holding'] > 6: #este limite deberia ser variable
             key['hold'] = True
             key['tap'] = False            
         

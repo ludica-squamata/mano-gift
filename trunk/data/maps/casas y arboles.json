@@ -46,5 +46,8 @@
         "arbol":"props/arbol_escalado.png",
         "casa":"props/casa.png"
         },
-    "ambiente":"exterior"
+    "ambiente":"exterior",
+    "amanece":6,
+    "atardece":18,
+    "anochece":21
 }

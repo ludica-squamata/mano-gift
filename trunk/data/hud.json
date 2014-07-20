@@ -1,6 +1,0 @@
-{
-    "widgets":[
-               {"type":"life_bar","pos":[1,1]},
-               {"type":"mana_bar","pos":[1,20]}
-    ]
-}
