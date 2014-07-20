@@ -1,9 +1,17 @@
 {
-    "AI":"patrol",
-    "reversa":true,
-    "camino":[[19,17],[15,17],[15,19],[11,19]],
-    "modo_colision":"contraria",
-    "salud":3,
-    "fuerza":3,
-    "death":"mobs/blue_death.png"
+    "ID":4,"nombre":"blue",
+    "salud":3,"fuerza":3,
+    "velocidad":1,
+    "imagenes":{
+        "idle":"mobs/imagenes/blue.png",
+        "atk":"mobs/imagenes/blue_atk.png",
+        "death":"mobs/imagenes/blue_death.png"
+        },
+    "alphas":{
+        "idle":"mobs/colisiones/monster_walk.png",
+        "atk":"mobs/colisiones/monster_walk.png",
+        "death":null
+    },
+    "clase":"NPC",
+    "propiedades":["solido","hostil"]
 }

@@ -1,10 +1,17 @@
 {
-    "AI":"wanderer",
-    "modo_colision":"izquierda",
-    "direccion":"abajo",
-    "solido":false,
-    "salud":1,
-    "fuerza":0,
-    "death":"mobs/green_death.png",
-    "objetivo":"heroe"
+    "ID":2,"nombre":"green",
+    "salud":1,"fuerza":1,
+    "velocidad":1,
+    "imagenes":{
+        "idle":"mobs/imagenes/green.png",
+        "atk":"mobs/imagenes/green_atk.png",
+        "death":"mobs/imagenes/green_death.png"
+        },
+    "alphas":{
+        "idle":"mobs/colisiones/monster_walk.png",
+        "atk":"mobs/colisiones/monster_walk.png",
+        "death":null
+    },
+    "clase":"NPC",
+    "propiedades":["hostil"]
 }

@@ -1,19 +1,18 @@
 {
+    "ID":0,"nombre":"heroe",
+    "salud":10,"fuerza":15,
+    "velocidad":3,"alcance_cc":16,
     "imagenes":{
-        "idle":{
-            "graph":"mobs/heroe_idle_walk.png",
-            "alpha":"mobs/colisiones/heroe_idle_walk.png"
+        "idle":"mobs/imagenes/heroe_idle_walk.png",
+        "cmb":"mobs/imagenes/heroe_cmb_walk.png",
+        "atk":"mobs/imagenes/heroe_cmb_atk.png"
         },
-        "cmb":{
-            "graph":"mobs/heroe_cmb_walk.png",
-            "alpha":"mobs/colisiones/heroe_idle_walk.png"
-        },
-        "atk":{
-            "graph":"mobs/heroe_cmb_atk.png",
-            "alpha":"mobs/colisiones/heroe_cmb_atk.png"
-        }
+    "alphas":{
+        "idle":"mobs/colisiones/human_walk.png",
+        "cmb":"mobs/colisiones/human_walk.png",
+        "atk":"mobs/colisiones/heroe_cmb_atk.png"
     },
-    "fuerza":15,
-    "alcance_cc":16,
-    "tipo":"victima"
+    "diag_face":"mobs/imagenes/pc_face.png",
+    "clase":"PC",
+    "propiedades":[]
 }

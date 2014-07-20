@@ -10,6 +10,7 @@
         "mobs":"mobs",
         "quest":"quests",
         "items":"items",
-        "scripts":"scripts"
+        "scripts":"scripts",
+        "scenes":"scenes"
     }
 }

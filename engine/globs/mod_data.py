@@ -22,6 +22,7 @@ class ModData:
         ModData.quests = root+data['folders']['quest']+'/'
         ModData.items = root+data['folders']['items']+'/'
         ModData.scripts = root+data['folders']['scripts']+'/'
+        ModData.scenes = root+data['folders']['scenes']+'/'
     
     @staticmethod
     def find_mod_folder(ini):

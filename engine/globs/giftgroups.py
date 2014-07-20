@@ -18,6 +18,10 @@ class _giftGroup:
                 return self._indexes[key]
             else:
                 raise IndexError
+        elif type(key) == str:
+            for item in self._group:
+                if item.nombre == key:
+                    return item
         else:
             raise KeyError(key)
         
@@ -60,6 +64,6 @@ class _giftGroup:
         self.__delitem__(nombre)
     
     def get (self,mob):
-        self.__getitem__(mob.nombre)
+        return self.__getitem__(mob)
 
 MobGroup = _giftGroup()

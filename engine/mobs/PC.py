@@ -1,44 +1,21 @@
-from pygame import Surface,Rect,mask
 from engine.globs import Constants as C, Tiempo as T, MobGroup, EngineData as ED
-from engine.misc import Util as U
-from engine.UI import Inventario_rapido
 from .Inventory import Inventory, InventoryError
+from engine.mobs.scripts.dialogo import Dialogo
+from pygame import Surface,Rect,mask
+from engine.misc import Util as U
 from .CompoMob import Parlante
-from .scripts import Dialogo
 from .mob import Mob
 
-class PC(Mob,Parlante):
-    cmb_pos_img = {} # combat position images.
-    cmb_pos_alpha = {} # combat position images's alpha.
-    cmb_walk_img = {} # combat walking images.
-    cmb_walk_alpha = {} # combat walking images's alpha.
-    idle_walk_img = {} #imagenes normales
-    idle_walk_alpha = {}
-    estado = '' #idle, o cmb. Indica si puede atacar desde esta posición, o no.
-    
+class PC(Mob,Parlante):   
     alcance_cc = 0 #cuerpo a cuerpo.. 16 es la mitad de un cuadro.
     atk_counter = 0
     atk_img_index = -1
     
     dx,dy = 0,0
-    def __init__(self,data,stage,x,y):
-        imgs = data['imagenes']
-        self.nombre = 'heroe' #key in MobGroup
-        super().PC__init__(imgs['idle']['graph'],stage,x,y,data,imgs['idle']['alpha'])
-        
-        self.idle_walk_img = self.images
-        self.idle_walk_alpha = self.mascaras
-        
-        self.cmb_walk_img = self.cargar_anims(imgs['cmb']['graph'],['S','I','D'])
-        self.cmb_walk_alpha = self.cargar_anims(imgs['cmb']['alpha'],['S','I','D'],True)
-        
-        self.cmb_pos_img = self.cargar_anims(imgs['atk']['graph'],['A','B','C'])
-        self.cmb_pos_alpha = self.cargar_anims(imgs['atk']['alpha'],['A','B','C'],True)
-        
+    def __init__(self,data,x,y):
+        super().__init__(data,x,y)
         self.alcance_cc = data['alcance_cc']
         self.inventario = Inventory(10,10+self.fuerza)
-        self.estado = 'idle'        
-        ED.RENDERER.camara.setFocus(self)
     
     def mover(self,dx,dy):
         
@@ -101,8 +78,8 @@ class PC(Mob,Parlante):
         # construir la animación
         frames,alphas = [],[]
         for L in ['A','B','C']:
-            frames.append(self.cmb_pos_img[L+self.direccion])
-            alphas.append(self.cmb_pos_alpha[L+self.direccion])
+            frames.append(self.cmb_atk_img[L+self.direccion])
+            alphas.append(self.cmb_atk_alpha[L+self.direccion])
             
         # iniciar la animación
         self.atk_counter += 1
@@ -112,10 +89,11 @@ class PC(Mob,Parlante):
             if self.atk_img_index > len(frames)-1:
                 self.atk_img_index = 0
                 self.atacando = False
-                self.mask = self.cmb_walk_alpha['S'+self.direccion]
-                self.recibir_danio()
+            
+            self.image = frames[self.atk_img_index]
+            #self.mask = self.cmb_walk_alpha['S'+self.direccion]
             self.mask = alphas[self.atk_img_index]
-            self.calcular_sombra(frames[self.atk_img_index])
+            #self.calcular_sombra(frames[self.atk_img_index])
     
     def hablar(self):
         sprite = self._interactuar_mobs(self.alcance_cc)
@@ -161,18 +139,14 @@ class PC(Mob,Parlante):
             
     def cambiar_estado(self):
         if self.estado == 'idle':
-            self.images = self.cmb_walk_img
-            self.mascaras = self.cmb_walk_alpha
-            self.estado = 'cmb'
+            self.establecer_estado('cmb')
             
         elif self.estado == 'cmb':
-            self.images = self.idle_walk_img
-            self.mascaras = self.idle_walk_alpha
-            self.estado = 'idle'
-        
-        t_image = self.images['S'+self.direccion]
-        self.image = U.crear_sombra(t_image)
-        self.image.blit(t_image,[0,0])
+            self.establecer_estado('idle')
+            
+        self.image = self.images['S'+self.direccion]
+        #self.image = U.crear_sombra(t_image)
+        #self.image.blit(t_image,[0,0])
         self.mask = self.mascaras['S'+self.direccion]
             
         self.cambiar_direccion(self.direccion)

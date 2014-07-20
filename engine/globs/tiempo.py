@@ -8,11 +8,12 @@ class Noche(_giftSprite):
         if 1: #cambiar a 0 para prueba de luces
             img = Surface(size)
             img.fill((0,0,0))
-            img.set_alpha(0)
+            img.set_alpha(230)
             self.rect = img.get_rect()
             super().__init__(img)
         #############################
         else:
+            from engine.misc import Resources as r
             img = Surface(size, SRCALPHA)
             img.fill((0,0,0,230)) #llenamos con color rgba. como es srcalpha funciona bien
             pxArray = PixelArray(img)
@@ -79,6 +80,12 @@ class Tiempo:
     noche = None
     
     @staticmethod
+    def setear_momento(dia,hora):
+        Tiempo.dia = dia
+        Tiempo.hora = hora
+        Tiempo._mins = hora
+    
+    @staticmethod
     def contar_tiempo ():
         Tiempo._frames += 1
         if Tiempo._frames == 60:
@@ -94,23 +101,19 @@ class Tiempo:
                 if Tiempo.hora == 24:
                     Tiempo.dia += 1
                     Tiempo.hora = 0
+                    Tiempo._mins = 0
     
     @staticmethod
-    def anochece(duracion):
-        t = Tiempo.esNoche #debug
-        if not Tiempo.esNoche:
-            if Tiempo._mins == duracion:
-                Tiempo.esNoche = True
-                Tiempo.noche.visible = True
-                Tiempo._mins = 0
-        else:
-            if Tiempo._mins == duracion:
-                Tiempo.esNoche = False
-                Tiempo.noche.visible = False
-                Tiempo._mins = 0
-        
-        return Tiempo.esNoche
-    
+    def oscurecer(limite):
+        alpha = Tiempo.noche.image.get_alpha()
+        if alpha < limite:
+            Tiempo.noche.image.set_alpha(alpha+1)
+
+    @staticmethod
+    def aclarar():
+        alpha = Tiempo.noche.image.get_alpha()
+        Tiempo.noche.image.set_alpha(alpha-1)
+            
     @staticmethod
     def crear_noche(tamanio):
         Tiempo.noche = Noche(tamanio)

@@ -1,1 +1,1 @@
-from .dialogo import Dialogo
+#from .dialogo import Dialogo
