@@ -20,8 +20,8 @@ class PC(Mob,Parlante):
     def mover(self,dx,dy):
         
         self.animar_caminar()
-        if dx == 1: self.cambiar_direccion('izquierda')
-        elif dx == -1: self.cambiar_direccion('derecha')
+        if dx == 1: self.cambiar_direccion('derecha')
+        elif dx == -1: self.cambiar_direccion('izquierda')
         elif dy == -1: self.cambiar_direccion('arriba')
         else: self.cambiar_direccion('abajo')
         
@@ -32,10 +32,10 @@ class PC(Mob,Parlante):
             self.reubicar(0,dy)
 
         
-        # POR ACA DEBERIA DETECTAR LAS SALIDAS
-        #for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
-        #    if h.colisiona(spr,-dx,-dy):
-        #        ED.setear_mapa(spr.dest,spr.link)
+        # DETECTAR LAS SALIDAS
+        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
+            if self.colisiona(spr,dx,dy):
+                ED.setear_mapa(spr.dest,spr.link)
         #        dx,dy = 0,0
         self.dx,self.dy = -dx,-dy
         
@@ -62,6 +62,7 @@ class PC(Mob,Parlante):
                         ED.RENDERER.camara.delObj(sprite)
                     except InventoryError as Error:
                         print(Error)
+                
                 elif sprite.accion == 'operar':
                     sprite.operar()
     
@@ -120,7 +121,7 @@ class PC(Mob,Parlante):
         self_mask.fill()
         dx,dy = x*32,y*32
     
-        for prop in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+        for prop in self.stage.interactives:
             x = prop.mapX-(self.mapX+dx)
             y = prop.mapY-(self.mapY+dy)
             if prop.image != None:

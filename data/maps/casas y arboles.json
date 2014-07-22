@@ -18,7 +18,8 @@
             
             "armor":[[576,768],[608,768]],
             "star":[[576,736]],
-            "crate":[[570,680]]
+            "crate":[[570,680]],
+            "puerta":[[549,645],[780,867],[160,898],[165,453],[423,293],[837,389]]
             
         },
         "mobs": {
@@ -30,9 +31,15 @@
         "props":{}
     },
     "entradas":{
-        "inicial":[544,659]
+        "inicial":[544,659],
+        "puerta":[544,659]
     },
     "salidas":{
+        "puerta":{
+            "rect":[544,620,32,32],
+            "dest":"casa",
+            "link":"puerta"
+        }
     },
     "refs":{
         "PVI_top":"props/palote_vertical_ultimo_izquierda.png",

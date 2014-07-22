@@ -1,5 +1,7 @@
 from engine.base import _giftSprite
 from engine.misc import Util as U
+from engine.misc import Resources as r
+from pygame import mask as MASK
 from .items import *
 
 class Escenografia(_giftSprite):#,shadowSprite):
@@ -10,11 +12,11 @@ class Escenografia(_giftSprite):#,shadowSprite):
         self.solido = False
         
         #shadowSprite#
-        if not sinsombra:
-            self.sombra = U.crear_sombra(self.image, self.mask)
-            image = self.sombra
-            image.blit(self.image,[0,0])
-            self.image = image
+        #if not sinsombra:
+        #    self.sombra = U.crear_sombra(self.image, self.mask)
+        #    image = self.sombra
+        #    image.blit(self.image,[0,0])
+        #    self.image = image
         #------------#
     
     def update(self):
@@ -48,12 +50,36 @@ class Trepable(Escenografia):
         self.accion = 'trepar'
 
 class Operable(Escenografia):
+    estados = {}
+    estado_actual = 0
     def __init__(self,nombre,imagen,x,y,data):
-        super().__init__(nombre,imagen,x,y)
+        if 'sinsombra' in data['propiedades']: super().__init__(nombre,imagen,x,y,True)
+        else: super().__init__(nombre,imagen,x,y)
+        if 'solido' in data['propiedades']: self.solido = True
         self.accion = 'operar'
+        
+        for estado in data['operable']:
+            ID = estado['ID']
+            self.estados[ID] = {}
+            for attr in estado:
+                if attr == 'image':
+                    img = r.cargar_imagen(estado[attr])
+                    mask = MASK.from_surface(img)
+                    self.estados[ID].update({'image':img,'mask':mask})
+                elif attr == 'next':
+                    self.estados[ID].update({'next':estado[attr]})
+                else:
+                    self.estados[ID].update({attr:estado[attr]})
+        
+        self.image = self.estados[self.estado_actual]['image']
+        self.mask = self.estados[self.estado_actual]['mask']
+        self.solido = self.estados[self.estado_actual]['solido']
     
     def operar(self):
-        pass
+        self.estado_actual = self.estados[self.estado_actual]['next']
+        for attr in self.estados[self.estado_actual]:
+            if hasattr(self,attr):
+                setattr(self,attr,self.estados[self.estado_actual][attr])
 
 class Destruible(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):

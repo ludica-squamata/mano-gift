@@ -12,7 +12,7 @@ class Salida (_giftSprite):
         #_image = ((alto, ancho))
         #_image.fill((255,0,0))
         super().__init__(rect = _rect,x = self.x, y= self.y)
-        self.ubicar(self.x*C.CUADRO,self.y*C.CUADRO)
+        self.ubicar(self.x,self.y)
         self.mask.fill()
         #self.image.set_colorkey((0,0,0))
         self.solido = False

@@ -51,7 +51,7 @@ class Menu_Debug (Menu):
         elegido.serElegido()
     
     def cargar_escena(self):
-        ED.RENDERER.clear()
+        ED.MODO = 'Aventura'
         ED.setear_escena(self.escenas[self.sel])
         ED.onPause = False
     

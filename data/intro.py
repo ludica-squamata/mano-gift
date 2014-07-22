@@ -2,10 +2,10 @@
 # módulo de introducción y selección de modo.
 from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite, Color
 from pygame import display as pantalla, event as EVENT,font
-from engine.globs import Tiempo as T, Constants as C, EngineData as W
-from engine.misc import Resources as r, Util
-from engine.UI import Menu_Debug
+from engine.globs import Tiempo as T, Constants as C
 from engine.libs.textrect import render_textrect
+from engine.UI import Menu_Debug
+from engine.misc import Util
 import os,os.path
 
 ###TODO###
