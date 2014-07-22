@@ -66,12 +66,14 @@ class Camara:
     
     def setFocus(self,spr):
         self.focus = spr
+        self.centrar()
     
     def isFocus(self,spr):
-        if self.focus == spr:
-            return True
-        else:
-            return False
+        if hasattr(spr,'nombre'):
+            if self.focus.nombre == spr.nombre:
+                return True
+        
+        return False
         
     def panear(self,dx,dy):
         newPos = self.bg.rect.x + dx
@@ -80,7 +82,6 @@ class Camara:
                 self.bg.rect.x = 0
         else:
             self.bg.rect.x += dx
-                
         newPos = self.bg.rect.y + dy
         if newPos > 0 or newPos < -(self.bg.rect.h - C.ALTO) or self.focus.rect.y != self.focus.centroY:
             if C.ALTO > self.focus.rect.y - dy  >=0:
@@ -89,10 +90,10 @@ class Camara:
             self.bg.rect.y += dy
 
         for spr in self.contents:
-            if spr != self.bg:
+            if spr != self.bg:    
                 self.contents.change_layer(spr, spr.rect.bottom)
                 spr.dirty = 1
-        
+                        
         self.centrar()
         self.bg.dirty = 1
     
@@ -145,9 +146,8 @@ class Camara:
         
         for spr in self.contents:
             if spr != self.focus and spr != self.bg:
-                if hasattr(spr,'mapX'):
-                    spr.rect.x = self.bg.rect.x + spr.mapX
-                    spr.rect.y = self.bg.rect.y + spr.mapY
+                spr.rect.x = self.bg.rect.x + spr.mapX
+                spr.rect.y = self.bg.rect.y + spr.mapY
             spr.dirty = 1
     
     def update(self):
@@ -160,7 +160,7 @@ class Camara:
                 
     def draw(self,fondo):
         ret = self.contents.draw(fondo)
-        ##Surface, color, start_pos, end_pos, width=1
-        #draw.line(fondo,(0,100,255),(320,0),(320,480))
+        #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
+        #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
     

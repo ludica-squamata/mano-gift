@@ -24,7 +24,8 @@ class _loader:
     @staticmethod
     def cargar_props ():
         imgs = _loader.STAGE.data['refs']
-        POS = _loader.STAGE.data['capa_ground']['props']        
+        POS = _loader.STAGE.data['capa_ground']['props']
+        
         for ref in POS:
             try:            data = r.abrir_json(MD.items+ref+'.item')
             except IOError: data = None
@@ -32,10 +33,12 @@ class _loader:
             for x,y in POS[ref]:
                 if data != None:
                     prop = newProp(ref,data['image'],x,y,data)
+                    addInteractive = True
                 else:
                     prop = newProp(ref,imgs[ref],x,y)
+                    addInteractive = False
 
-                _loader.STAGE.addProperty(prop,C.CAPA_GROUND_ITEMS)
+                _loader.STAGE.addProperty(prop,C.CAPA_GROUND_ITEMS,addInteractive)
     
     @staticmethod
     def cargar_mobs(extra_data,capa = 'capa_ground'):
@@ -55,7 +58,6 @@ class _loader:
     
     @staticmethod
     def cargar_hero(entrada):
-        
         #if entrada != None and entrada in _loader.STAGE.data['entradas']:
         #no hace falta si no va a haber un mensaje de error en caso contrario.
         x,y = _loader.STAGE.data['entradas'][entrada]
@@ -73,4 +75,4 @@ class _loader:
         salidas = _loader.STAGE.data['salidas']
         for salida in salidas:
             sld = Salida(salidas[salida])
-            _loader.STAGE.properties.add(sld,layer=C.CAPA_GROUND_SALIDAS)
+            _loader.STAGE.addProperty(sld,C.CAPA_GROUND_SALIDAS)

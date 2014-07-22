@@ -15,13 +15,24 @@ class EngineData:
     onPause = False
     RENDERER = Renderer()
     HUD = None
+    scene_data = None
     
     @staticmethod
     def setear_escena(nombre):
+        EngineData.RENDERER.clear()
         from engine.mapa import Stage
         EngineData.MODO = 'Aventura'
         scene_data = r.abrir_json(MD.scenes+nombre+'.scene')
+        EngineData.scene_data = scene_data
         
         EngineData.MAPA_ACTUAL = Stage(scene_data['mobs'],*scene_data['stage'])
         Tiempo.setear_momento(scene_data['dia'],scene_data['hora'])
         EngineData.RENDERER.camara.setFocus(MobGroup.get(scene_data['focus']))
+    
+    def setear_mapa(nombre,entrada):
+        EngineData.RENDERER.clear()
+        from engine.UI.hud import HUD
+        from engine.mapa import Stage
+        EngineData.HUD = HUD()
+        Stage(EngineData.scene_data['mobs'],nombre,entrada)
+    

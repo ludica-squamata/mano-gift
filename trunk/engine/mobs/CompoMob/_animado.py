@@ -23,7 +23,7 @@ class Animado(Movil, _giftSprite):  # necesita Movil para tener direccion, giftS
     def cargar_anims(ruta_imgs,seq,alpha=False):
         dicc = {}
         spritesheet = r.split_spritesheet(ruta_imgs)
-        dires = ['abajo','arriba','derecha','izquierda']
+        dires = ['abajo','arriba','izquierda','derecha']
         keys = []
         
         for L in seq:

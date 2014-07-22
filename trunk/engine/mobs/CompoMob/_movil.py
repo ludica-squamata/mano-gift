@@ -1,11 +1,11 @@
 from engine.globs import Constants as C
 
 class Movil:
-    direcciones = {'abajo':[0,1],'izquierda':[1,0],'arriba':[0,-1],'derecha':[-1,0],'ninguna':[0,0]}
+    direcciones = {'abajo':[0,1],'izquierda':[-1,0],'arriba':[0,-1],'derecha':[+1,0],'ninguna':[0,0]}
     direccion = 'abajo'
     modo_colision = None# determina qué direccion tomará el mob al chocar con algo
     
-    def cambiar_direccion(self,arg):
+    def cambiar_direccion(self,arg,img=False):
         direccion = 'ninguna'
     
         if arg == 'contraria':
@@ -18,6 +18,8 @@ class Movil:
             direccion = arg
             
         self.direccion = direccion
+        if img:
+            self.image = self.images['S'+self.direccion]
         return direccion
     
     def mover(self):
@@ -31,7 +33,7 @@ class Movil:
             x,y = self.direcciones[self.direccion]
             dx,dy = x*self.velocidad,y*self.velocidad
         
-        self.animar_caminar()        
+        self.animar_caminar()
         self.reubicar(dx, dy)
         
         return dx,dy

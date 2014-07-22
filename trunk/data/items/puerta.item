@@ -1,14 +1,17 @@
 {
     "ID":4,"tipo":"operable",
     "peso":10, "volumen":5,
-    "image":"props/puerta.png",
-    "propiedades":["solido"],
-    "operable":{"0":{
-                    "visible":true,
-                    "solido":true
+    "image":"props/puerta_c.png",
+    "propiedades":["solido","sinsombra"],
+    "operable":[
+                {"ID":0,
+                 "image":"props/puerta_c.png",
+                 "solido":true,
+                 "next":1
                 },
-                "1":{
-                    "visible":false,
-                    "solido":false
-                }}
+                {"ID":1,
+                 "image":"props/puerta_a.png",
+                 "solido":false,
+                 "next":0
+                }]
 }

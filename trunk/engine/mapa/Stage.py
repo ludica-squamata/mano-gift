@@ -8,6 +8,7 @@ from pygame import mask
 
 class Stage:
     properties = None
+    interactives = []
     mapa = None
     data = {}
     quest = None
@@ -23,15 +24,19 @@ class Stage:
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         ED.RENDERER.setBackground(self.mapa)
 
-    def addProperty(self,obj,_layer):
+    def addProperty(self,obj,_layer,addInteractive=False):
         obj.stage = self
         self.properties.add(obj,layer =_layer)
         ED.RENDERER.addObj(obj,obj.rect.bottom)
+        if addInteractive:
+            self.interactives.append(obj)
     
     def delProperty(self,obj):
         if obj in self.properties:
             self.properties.remove(obj)
-
+        if obj in self.interactives:
+            self.interactives.remove(obj)       
+    
     def anochecer(self):
         if self.data['ambiente'] == 'exterior':
             #transiciones
@@ -45,6 +50,8 @@ class Stage:
                 T.noche.image.set_alpha(50)
             elif 0 <= T.hora < self.data['amanece']:
                 T.noche.image.set_alpha(230)
+        elif self.data['ambiente'] == 'interior':
+            T.noche.image.set_alpha(0)
                
     def actualizar_grilla(self):
         for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):

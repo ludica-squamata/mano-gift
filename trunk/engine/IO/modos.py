@@ -47,6 +47,11 @@ class modo:
                     ED.onPause = True
                     ED.MODO = 'Menu'
                     modo._popMenu('Pausa')
+                
+                elif event.key == C.TECLAS.IZQUIERDA: ED.HERO.cambiar_direccion('izquierda',True)
+                elif event.key == C.TECLAS.DERECHA:   ED.HERO.cambiar_direccion('derecha',True)
+                elif event.key == C.TECLAS.ARRIBA:    ED.HERO.cambiar_direccion('arriba',True)
+                elif event.key == C.TECLAS.ABAJO:     ED.HERO.cambiar_direccion('abajo',True)
             
             elif event.type == C.HOLD:
                 if event.key == C.TECLAS.IZQUIERDA: dx = -1
