@@ -58,11 +58,16 @@ class _loader:
     
     @staticmethod
     def cargar_hero(entrada):
-        #if entrada != None and entrada in _loader.STAGE.data['entradas']:
-        #no hace falta si no va a haber un mensaje de error en caso contrario.
         x,y = _loader.STAGE.data['entradas'][entrada]
-        ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
-        _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
+        try:
+            pc = MobGroup['heroe']
+            ED.HERO = pc
+            _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
+            ED.HERO.ubicar(x,y)
+            print(ED.HERO)
+        except:
+            ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
+            _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
     
     @staticmethod
     def cargar_quests():

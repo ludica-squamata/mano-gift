@@ -9,6 +9,8 @@ class _giftGroup:
         if key not in self._group:
             self._group[key] = value
             self._indexes.append(key)
+        else:
+            raise KeyError('Key "'+key+'" is already set. Replacing is not allowed.')
             
     def __getitem__(self,key):
         if key in self._group:
@@ -20,7 +22,7 @@ class _giftGroup:
                 raise IndexError
         elif type(key) == str:
             for item in self._group:
-                if item.nombre == key:
+                if self._group[item] == key:
                     return item
         else:
             raise KeyError(key)
@@ -54,16 +56,5 @@ class _giftGroup:
     
     def __str__(self): 
         return 'MobGroup keys ('+','.join([self._group[i].nombre for i in self._indexes])+')'
-    
-    def add(self,mob):
-        key = mob.nombre
-        self.__setitem__(key,mob)
-    
-    def remove(self,mob):
-        nombre = mob.nombre
-        self.__delitem__(nombre)
-    
-    def get (self,mob):
-        return self.__getitem__(mob)
 
 MobGroup = _giftGroup()
