@@ -20,23 +20,27 @@ class PC(Mob,Parlante):
     def mover(self,dx,dy):
         
         self.animar_caminar()
-        if dx == 1: self.cambiar_direccion('derecha')
-        elif dx == -1: self.cambiar_direccion('izquierda')
-        elif dy == -1: self.cambiar_direccion('arriba')
-        else: self.cambiar_direccion('abajo')
+        if dx > 0: self.cambiar_direccion('derecha')
+        elif dx < -0: self.cambiar_direccion('izquierda')
+        
+        if dy < 0: self.cambiar_direccion('arriba')
+        elif dy > 0: self.cambiar_direccion('abajo')
         
         dx,dy = dx*self.velocidad,dy*self.velocidad
+        
+        # DETECTAR LAS SALIDAS
+        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
+            if self.colisiona(spr,dx,dy):
+                ED.setear_mapa(spr.dest,spr.link)
+                dx,dy = 0,0
+        
         if not self.detectar_colisiones(dx,0):
             self.reubicar(dx,0) # el heroe se mueve en el mapa, no en la camara
         if not self.detectar_colisiones(0,dy):
             self.reubicar(0,dy)
 
         
-        # DETECTAR LAS SALIDAS
-        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
-            if self.colisiona(spr,dx,dy):
-                ED.setear_mapa(spr.dest,spr.link)
-        #        dx,dy = 0,0
+ 
         self.dx,self.dy = -dx,-dy
         
     def accion(self):
@@ -159,4 +163,5 @@ class PC(Mob,Parlante):
         dx,dy = self.dx,self.dy
         self.dx,self.dy = 0,0
         self.dirty = 1
-        return dx,dy
+        if (dx,dy) != (0,0):
+            return dx,dy

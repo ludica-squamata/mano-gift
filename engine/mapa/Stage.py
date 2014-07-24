@@ -13,7 +13,8 @@ class Stage:
     data = {}
     quest = None
     
-    def __init__(self, mobs_data, nombre, entrada):
+    def __init__(self,nombre,mobs_data,entrada):
+        self.nombre = nombre
         self.data = r.abrir_json(MD.mapas+nombre+'.json')
         self.mapa = ChunkMap(self,self.data) # por ahora es uno solo.
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
@@ -22,12 +23,18 @@ class Stage:
         _loader.loadEverything(entrada,mobs_data)
         T.crear_noche(self.mapa.rect.size) #asumiendo que es uno solo...
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
+        self.register_at_renderer(entrada)
+    
+    def register_at_renderer(self,entrada):
         ED.RENDERER.setBackground(self.mapa)
-
+        for obj in self.properties:
+            obj.stage = self
+            ED.RENDERER.addObj(obj,obj.rect.bottom)
+        x,y = self.data['entradas'][entrada]
+        ED.HERO.ubicar(x,y)
+    
     def addProperty(self,obj,_layer,addInteractive=False):
-        obj.stage = self
         self.properties.add(obj,layer =_layer)
-        ED.RENDERER.addObj(obj,obj.rect.bottom)
         if addInteractive:
             self.interactives.append(obj)
     
@@ -59,6 +66,9 @@ class Stage:
                 x = int(spr.mapX/32)
                 y = int(spr.mapY/32)
                 self.grilla[x,y].transitable = False
+    
+    def __repr__(self):
+        return "Stage "+self.nombre+'('+str(self.properties)+')'
   
 class ChunkMap(DirtySprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.

@@ -90,7 +90,7 @@ class Sensitivo:
             vision,self.vx,self.vy = self.mover_vis(self.direccion)
             for key in MobGroup:
                 try:
-                    mob =  MobGroup[key]
+                    mob = MobGroup[key]
                     if mob != self:
                         vis_mask = mask.from_surface(vision)
                         x,y = self.vx-mob.mapX, self.vy-mob.mapY

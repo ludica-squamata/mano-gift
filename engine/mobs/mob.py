@@ -72,7 +72,8 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
         super().__init__(imagen=self.image,alpha=self.mask)
         self.ubicar(x,y)
         self.generar_rasgos()
-        MobGroup.add(self)
+        if self.nombre not in MobGroup:
+            MobGroup[self.nombre] = self
         
     def establecer_estado(self,estado):
         self.estado = estado
@@ -95,7 +96,7 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
                 ED.RENDERER.delObj(self)
                 self.stage.delProperty(self)
             self.dead = True
-            MobGroup.remove(self)
+            del MobGroup[self.nombre]
     
     def update(self):
         self.anim_counter += 1

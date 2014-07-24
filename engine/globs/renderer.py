@@ -66,47 +66,22 @@ class Camara:
     
     def setFocus(self,spr):
         self.focus = spr
-        self.centrar()
-    
+
     def isFocus(self,spr):
-        if hasattr(spr,'nombre'):
+        if self.focus != None and hasattr(spr,'nombre'):
             if self.focus.nombre == spr.nombre:
                 return True
-        
         return False
         
-    def panear(self,dx,dy):
-        newPos = self.bg.rect.x + dx
-        if newPos > 0 or newPos < -(self.bg.rect.w - C.ANCHO) or self.focus.rect.x != self.focus.centroX:
-            if C.ANCHO > self.focus.rect.x - dx  >=0:
-                self.bg.rect.x = 0
-        else:
-            self.bg.rect.x += dx
-        newPos = self.bg.rect.y + dy
-        if newPos > 0 or newPos < -(self.bg.rect.h - C.ALTO) or self.focus.rect.y != self.focus.centroY:
-            if C.ALTO > self.focus.rect.y - dy  >=0:
-                self.bg.rect.y = 0
-        else:
-            self.bg.rect.y += dy
-
-        for spr in self.contents:
-            if spr != self.bg:    
-                self.contents.change_layer(spr, spr.rect.bottom)
-                spr.dirty = 1
-                        
-        self.centrar()
-        self.bg.dirty = 1
-    
     def paneolibre(self,dx,dy):
         
-        newPos = self.bg.rect.x + dx
-        if newPos > 0 or newPos < -(self.bg.rect.w - C.ANCHO):
-            dx = 0
-                
-        newPos = self.bg.rect.y + dy
-        if newPos > 0 or newPos < -(self.bg.rect.h - C.ALTO):
-            dy = 0
+        newPosX = self.bg.rect.x + dx
+        newPosY = self.bg.rect.y + dy
         
+        if newPosX > 0 or newPosX < -(self.bg.rect.w - self.w): dx = 0
+        if newPosY > 0 or newPosY < -(self.bg.rect.h - self.h): dy = 0
+        
+        #esta función sí panea porque mueve el fondo y los sprites.
         self.bg.rect.x += dx
         self.bg.rect.y += dy
         for spr in self.contents:
@@ -114,53 +89,50 @@ class Camara:
                 spr.rect.x += dx
                 spr.rect.y += dy
                 self.contents.change_layer(spr, spr.rect.bottom)
-                spr.dirty = 1
-        
-        self.bg.dirty = 1
-        
+            spr.dirty = 1
+            
     def centrar(self):
         self.focus.rect.center = self.rect.center
-        self.focus.centroX, self.focus.centroY = self.focus.rect.topleft
         
         newPosX = self.focus.rect.x - self.focus.mapX
-        offsetX = C.ANCHO - newPosX - self.bg.rect.w
+        offsetX = self.w - newPosX - self.bg.rect.w
         if offsetX <= 0:
-            if newPosX > 0:
+            if newPosX > 0: #limite 
                 self.focus.rect.x -= newPosX
-            else:
+            else:           # entre limites
                 self.bg.rect.x = newPosX
-        else:
+        else:               # limite 
             self.bg.rect.x = newPosX+offsetX
             self.focus.rect.x += offsetX
         
-        newPosY = self.focus.rect.y - self.focus.mapY
-        offsetY = C.ALTO - newPosY - self.bg.rect.h
+        newPosY = self.focus.rect.y - self.focus.mapY 
+        offsetY = self.h - newPosY - self.bg.rect.h 
         if offsetY <= 0:
-            if newPosY > 0:
+            if newPosY > 0: # limite superior
                 self.focus.rect.y -= newPosY
-            else:
+            else:           # entre limites
                 self.bg.rect.y = newPosY
-        else:
+        else:               # limite inferior
             self.bg.rect.y = newPosY+offsetY
             self.focus.rect.y += offsetY
         
         for spr in self.contents:
-            if spr != self.focus and spr != self.bg:
-                spr.rect.x = self.bg.rect.x + spr.mapX
-                spr.rect.y = self.bg.rect.y + spr.mapY
+            if spr != self.bg: #porque bg no tiene mapX,mapY
+                if spr != self.focus:#porque al focus ya lo movimos antes
+                    spr.rect.x = self.bg.rect.x + spr.mapX
+                    spr.rect.y = self.bg.rect.y + spr.mapY
+                self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
     
     def update(self):
         self.bg.update()
-        for spr in self.contents:
-            pan = spr.update()
-            if self.isFocus(spr) and pan != None:
-                dx,dy = pan
-                self.panear(dx,dy)
+        self.contents.update()
+        self.centrar()
                 
     def draw(self,fondo):
         ret = self.contents.draw(fondo)
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
         #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
+    
     

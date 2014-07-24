@@ -5,34 +5,39 @@ from .renderer import Renderer
 from .tiempo import Tiempo
 
 class EngineData:
+    mapas = {}
     MAPA_ACTUAL = None
-    HERO = ''
+    HERO = None
+    DIALOG = None
+    HUD = None
     menu_actual = ''
     menu_previo = ''
     MENUS = {}
-    DIALOG = None
     MODO = ''
     onPause = False
     RENDERER = Renderer()
-    HUD = None
+    
     scene_data = None
     
     @staticmethod
     def setear_escena(nombre):
-        EngineData.RENDERER.clear()
-        from engine.mapa import Stage
-        EngineData.MODO = 'Aventura'
+        ED = EngineData
+        ED.MODO = 'Aventura'
         scene_data = r.abrir_json(MD.scenes+nombre+'.scene')
-        EngineData.scene_data = scene_data
-        
-        EngineData.MAPA_ACTUAL = Stage(scene_data['mobs'],*scene_data['stage'])
+        ED.scene_data = scene_data
+        stage,entrada = scene_data['stage']
+        ED.setear_mapa(stage,entrada)
         Tiempo.setear_momento(scene_data['dia'],scene_data['hora'])
-        EngineData.RENDERER.camara.setFocus(MobGroup.get(scene_data['focus']))
+        ED.RENDERER.camara.setFocus(MobGroup[scene_data['focus']])
     
+    @staticmethod
     def setear_mapa(nombre,entrada):
-        EngineData.RENDERER.clear()
+        ED = EngineData
+        ED.RENDERER.clear()
         from engine.UI.hud import HUD
         from engine.mapa import Stage
-        EngineData.HUD = HUD()
-        Stage(EngineData.scene_data['mobs'],nombre,entrada)
-    
+        if nombre not in ED.mapas:
+            ED.mapas[nombre] = Stage(nombre,ED.scene_data['mobs'],entrada)
+        ED.MAPA_ACTUAL = ED.mapas[nombre]
+        ED.MAPA_ACTUAL.register_at_renderer(entrada)
+        ED.HUD = HUD()
