@@ -1,6 +1,4 @@
 from engine.UI import DialogInterface
-from engine.globs import EngineData as ED
-from random import randint
 
 class _elemento:
     '''Class for the dialog tree elements.'''
@@ -26,7 +24,7 @@ class _ArboldeDialogo:
 
     def __init__(self,datos):
         self._elementos = []
-        self._actual = -1
+        self._actual = 0
 
         for i in range(len(datos)):
             idx = str(i)
@@ -46,8 +44,11 @@ class _ArboldeDialogo:
             if obj.tipo != 'leaf':
                 if type(obj.leads) == list:
                     for lead in obj.leads:
-                        obj.leads[obj.leads.index(lead)] = self._elementos[lead]
-                else:
+                        if type(lead) == int: #esto no deberia ser necesario
+                            obj.leads[obj.leads.index(lead)] = self._elementos[lead]
+                        elif type(lead) == _elemento: #pero no sé porqué, la segunda vez
+                            obj.leads[obj.leads.index(lead)] = self._elementos[int(lead.indice)]
+                else:       #type(lead) = _elemento, cuando deberia ser int...
                     obj.leads = self._elementos[obj.leads]
 
     def __len__(self):
@@ -83,7 +84,7 @@ class _ArboldeDialogo:
             raise TypeError('Leaf element has no lead')
     
     def set_actual(self,idx):
-        if isinstance(idx,elemento):
+        if isinstance(idx,_elemento):
             idx = self._elementos.index(idx)
         if 0 <= idx <= len(self._elementos)-1:
             self._actual = idx
@@ -113,33 +114,80 @@ class _ArboldeDialogo:
         return nodo
 
 class Dialogo:
-    def __init__(self,*participantes):
+    SelMode = False
+    terminar = False
+    sel = 0
+    def __init__(self,arbol):
         self.frontend = DialogInterface()
-        self.participantes = participantes
-        self.funciones = {
+        self.dialogo = _ArboldeDialogo(arbol)
+        self.func_lin = {
             'hablar':self.hablar,
+            'arriba':lambda:None,
+            'abajo':lambda:None,
+            'izquierda':lambda:None,
+            'derecha':lambda:None,
+            'inventario':self.mostrar,
+            'cancelar':self.cerrar}
+        
+        self.func_sel = {
+            'hablar':self.confirmar_seleccion,
             'arriba':self.elegir_opcion,
             'abajo':self.elegir_opcion,
             'izquierda':self.elegir_opcion,
             'derecha':self.elegir_opcion,
-            'inventario':self.mostrar,
+            'inventario':lambda:None,
             'cancelar':self.cerrar}
+        
+        #empezar con el primer nodo
+        nodo = self.dialogo.get_actual()
+        self.mostrar_nodo(nodo)
     
     def usar_funcion(self,tecla):
-        if tecla in self.funciones:
-            if tecla in ['arriba','abajo','izquierda','derecha']:
-                self.funciones[tecla](tecla)
-            else:
-                self.funciones[tecla]()
-    
+        if self.SelMode:
+            if tecla in self.func_sel:
+                if tecla in ['arriba','abajo','izquierda','derecha']:
+                    self.func_sel[tecla](tecla)
+                else:
+                    self.func_sel[tecla]()
+        elif tecla in self.func_lin:
+            self.func_lin[tecla]()
+ 
     def hablar(self):
-        print(self.participantes)
+        if self.terminar:
+            self.cerrar()
+        else:
+            actual = self.dialogo.update()
+            if type(actual) == list:
+                self.SelMode = True
+                self.frontend.borrar_todo()
+                self.frontend.setLocImg(actual[0].locutor) #misma chapuza
+                self.frontend.setSelMode([n.texto for n in actual])
+            else:
+                nodo = self.dialogo.get_actual()
+                self.mostrar_nodo(nodo)
+                if nodo.tipo == 'leaf':
+                    self.terminar = True
+    
+    def confirmar_seleccion(self):
+        self.dialogo.set_chosen(self.sel)
+        self.SelMode = False
+    
+    def mostrar_nodo(self,nodo):
+        self.frontend.borrar_todo()
+        self.frontend.setLocImg(nodo.locutor)
+        self.frontend.setText(nodo.texto)
         
     def elegir_opcion(self,direccion):
-        print(direccion)
+        if direccion == 'arriba':
+            sel = self.frontend.elegir_opcion(-1)
+        elif direccion == 'abajo':
+            sel = self.frontend.elegir_opcion(+1)
+        self.sel = sel
         
     def mostrar(self):
         print(NotImplemented)
     
     def cerrar(self):
         self.frontend.destruir()
+        
+

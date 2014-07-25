@@ -5,5 +5,7 @@
     "image": "props/banana.png",
     "propiedades":["stackable"],
     "efecto":{
-        "des":"Restaura tu salud al máximo."}
+        "des":"Restaura tu salud al máximo.",
+        "stat":"salud",
+        "mod":100}
 }

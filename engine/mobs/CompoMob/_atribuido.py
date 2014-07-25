@@ -4,22 +4,12 @@ from engine.globs import ModData as MD
 class Atribuido:
     fuerza = 0 # capacidad del mob para empujar cosas.
     velocidad = 1 # en pixeles por frame
-    show,hide = {},{}
+    salud_max = 0 #salud máxima
+    salud_act = 0 #salud actual
     
-    def generar_rasgos(self):
-        rasgos = r.abrir_json(MD.scripts+'rasgos.json')
-        
-        for car in rasgos['cars']:
-            if rasgos['cars'][car]:
-                if car == "Fuerza":
-                    self.show[car] = {"tipo": "atributo", "nombre":car, "value": self.fuerza}
-                else:
-                    self.show[car] = {"tipo": "atributo", "nombre":car, "value": 0}
-            else:
-                self.hide[car] = {"tipo": "atributo", "nombre":car, "value": 0}
-        
-        for hab in rasgos['habs']:
-            if rasgos['habs'][hab]:
-                self.show[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
-            else:
-                self.hide[hab] = {"tipo": "habilidad", "nombre":hab, "value": 0}
+    def __init__(self,*args,**kwargs):
+        self.velocidad = self.data['velocidad']
+        self.fuerza = self.data['fuerza']
+        self.salud_max = self.data['salud']
+        self.salud_act = self.salud_max
+        super().__init__(*args,**kwargs)

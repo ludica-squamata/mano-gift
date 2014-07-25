@@ -35,6 +35,24 @@ class Consumible(Item):
     def __init__(self,nombre,imagen,data):
         super().__init__(nombre,imagen,data)
         self.tipo = 'consumible'
+        self.data = data
+    
+    def usar(self,mob):
+        stat = self.data['efecto']['stat']
+        mod = self.data['efecto']['mod']
+        if stat == 'salud':
+            actual = stat+'_act'
+            maximo = stat+'_max'
+            ValActual = getattr(mob,actual)
+            ValMaximo = getattr(mob,maximo)
+            
+            valor = int((mod*ValMaximo)/100)
+            if valor + ValActual > ValMaximo:
+                valor = ValMaximo
+            else:
+                valor += ValActual
+            
+            setattr(mob,actual,valor)
 
 class Armadura(Equipable):
     def __init__(self,nombre,imagen,data):

@@ -42,21 +42,22 @@ class Stage:
         if obj in self.properties:
             self.properties.remove(obj)
         if obj in self.interactives:
-            self.interactives.remove(obj)       
+            self.interactives.remove(obj)
+        ED.RENDERER.delObj(obj)
     
     def anochecer(self):
         if self.data['ambiente'] == 'exterior':
             #transiciones
             if T.hora   == self.data['amanece']:  T.aclarar()
             elif T.hora == self.data['atardece']: T.oscurecer(100)
-            elif T.hora == self.data['anochece']: T.oscurecer(230)
+            elif T.hora == self.data['anochece']: T.oscurecer(150)
             #dia o noche establecidas
             elif self.data['amanece'] <= T.hora < self.data['atardece']:
                 T.noche.image.set_alpha(0)
             elif self.data['atardece'] <= T.hora < self.data['anochece']:
-                T.noche.image.set_alpha(50)
+                T.noche.image.set_alpha(100)
             elif 0 <= T.hora < self.data['amanece']:
-                T.noche.image.set_alpha(230)
+                T.noche.image.set_alpha(150)
         elif self.data['ambiente'] == 'interior':
             T.noche.image.set_alpha(0)
                

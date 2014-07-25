@@ -1,20 +1,19 @@
-from engine.misc import Resources as r
-from engine.globs import ModData as MD
+from engine.mobs.scripts.dialogo import Dialogo
+from engine.globs import EngineData as ED
 
 class Parlante:
     interlocutor = None # para que el mob sepa con quién está hablando, si lo está
     conversaciones = [] # registro de los temas conversados
-    temas_para_hablar = {}
-    tema_preferido = ''
     hablante = True
     hablando = False
     
-    def establecer_dialogos(self,data):
-        self.tema_preferido = data['tema_preferido']
-        self.temas_para_hablar = {}
-        self.hablante = True
-        for tema in data['temas_para_hablar']:
-            self.temas_para_hablar[tema] = r.abrir_json(MD.dialogos+data['temas_para_hablar'][tema])
-            
-    def responder(self):
-        self.hablando = True
+    def hablar(self):
+        x,y = self.direcciones[self.direccion]
+        sprite = self._interactuar_mobs(x,y)
+        if sprite != None:
+            if sprite.hablante:
+                self.interlocutor = sprite
+                self.interlocutor.hablando = True
+                ED.DIALOG = Dialogo(self.interlocutor.dialogo)
+                return True
+        return False

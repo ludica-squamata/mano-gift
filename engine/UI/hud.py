@@ -22,7 +22,7 @@ class ProgressBar(DirtySprite):
         
         self.x,self.y = x,y
         self.w,self.h = w,h
-        self.draw_area_rect = Rect(1,1,self.w-1,self.h-1)
+        self.draw_area_rect = Rect(1,1,self.w-1,self.h-2)
         self.image = Surface((self.w,self.h))
         self.rect = self.image.get_rect(topleft=(self.x,self.y))
     
@@ -46,7 +46,7 @@ class ProgressBar(DirtySprite):
         '''Función pública para cambiar las variables en una linea'''
         for var in kwargs:
             if hasattr(self,var):
-                exec('self.'+var+'='+str(kwargs[var]))
+                setattr(self,var,kwargs[var])
     
     def update(self):
         self.image.blit(self._dibujar_fondo(),self.draw_area_rect)
@@ -91,7 +91,7 @@ class HUD:
         _rect = ED.RENDERER.camara.rect
         w,h = C.ANCHO//4,C.CUADRO//4
         dx,dy = _rect.centerx,_rect.bottom-33
-        self.BarraVida = ProgressBar(ED.HERO.salud,(200,50,50),(100,0,0),dx-w-1,dy-11,w,h)
+        self.BarraVida = ProgressBar(ED.HERO.salud_max,(200,50,50),(100,0,0),dx-w-1,dy-11,w,h)
         self.BarraMana = ProgressBar(ED.HERO.mana,(125,0,255),(75,0,100),dx+2,dy-11,w,h)
         self.BarraVida.setVariable(divisiones=4)
         for i in range(10):
@@ -101,7 +101,6 @@ class HUD:
         
         ED.RENDERER.addOverlay(self.BarraVida,1)
         ED.RENDERER.addOverlay(self.BarraMana,1)
-        
-        
+    
     def update(self):
-        self.BarraVida.setVariable(actual=ED.HERO.salud)
+        self.BarraVida.setVariable(actual=ED.HERO.salud_act)

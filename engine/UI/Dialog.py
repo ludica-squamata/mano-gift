@@ -16,25 +16,24 @@ class DialogInterface (DialogFrontEnd):
         self.image = self.canvas
     
     def setSelMode(self,opciones):
-        self.borrar_todo()
         h = self.altura_del_texto
         self.opciones = len(opciones)
         for i in range(self.opciones):
             opcion = _opcion(opciones[i],self.draw_space_rect.w,(3,i*h+i+3))
             self.filas.add(opcion)
         
-        #self.filas.draw(self.canvas)
         self.elegir_opcion(0)
+        self.filas.draw(self.canvas)
     
     def setLocImg(self,locutor):
         '''carga y dibuja la imagen de quien está hablando. También setea
         la posición del texto a izquierda o derecha según la "cara" del hablante'''
-        img = r.cargar_imagen('mobs/'+locutor.lower()+'_face.png')
+        img = r.cargar_imagen('mobs/imagenes/'+locutor.lower()+'_face.png')
         if locutor != 'PC':
             dest = 3,3
             self.text_pos = 96,3
         else:
-            x = self.canvas.get_width()-92
+            x = self.canvas.get_width()-93
             dest = x,3
             self.text_pos = 3,3
         

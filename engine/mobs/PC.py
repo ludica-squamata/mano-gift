@@ -1,4 +1,4 @@
-from engine.globs import Constants as C, Tiempo as T, MobGroup, EngineData as ED
+from engine.globs import Constants as C, EngineData as ED, MobGroup
 from .Inventory import Inventory, InventoryError
 from engine.mobs.scripts.dialogo import Dialogo
 from pygame import Surface,Rect,mask
@@ -11,7 +11,6 @@ class PC(Mob,Parlante):
     atk_counter = 0
     atk_img_index = -1
     
-    dx,dy = 0,0
     def __init__(self,data,x,y):
         super().__init__(data,x,y)
         self.alcance_cc = data['alcance_cc']
@@ -38,9 +37,7 @@ class PC(Mob,Parlante):
             self.reubicar(dx,0) # el heroe se mueve en el mapa, no en la camara
         if not self.detectar_colisiones(0,dy):
             self.reubicar(0,dy)
-
-        
- 
+            
         self.dx,self.dy = -dx,-dy
         
     def accion(self):
@@ -50,7 +47,7 @@ class PC(Mob,Parlante):
             # la animacion de ataque se hace siempre,
             # sino pareciera que no pasa nada
             self.atacando = True
-            sprite = self._interactuar_mobs(self.alcance_cc)
+            sprite = self._interactuar_mobs(x,y)
             if issubclass(sprite.__class__,Mob):
                 if self.estado == 'cmb':
                     x,y = x*self.fuerza,y*self.fuerza
@@ -63,7 +60,6 @@ class PC(Mob,Parlante):
                         item = sprite()
                         self.inventario.agregar(item)
                         self.stage.delProperty(sprite)
-                        ED.RENDERER.camara.delObj(sprite)
                     except InventoryError as Error:
                         print(Error)
                 
@@ -72,53 +68,27 @@ class PC(Mob,Parlante):
     
     def atacar(self,sprite,x,y):
         sprite.reubicar(x,y)
-        sprite.recibir_danio()
+        sprite.recibir_danio(self.fuerza)
     
-    def recibir_danio(self):
-        super().recibir_danio()
-        if self.salud == 0:
+    def recibir_danio(self,danio):
+        super().recibir_danio(danio)
+        if self.salud_act == 0:
             print('lanzar evento: muerte del heroe (y perdida de focus)')
     
-    def _anim_atk (self,limite):
-        # construir la animación
-        frames,alphas = [],[]
-        for L in ['A','B','C']:
-            frames.append(self.cmb_atk_img[L+self.direccion])
-            alphas.append(self.cmb_atk_alpha[L+self.direccion])
-            
-        # iniciar la animación
-        self.atk_counter += 1
-        if self.atk_counter > limite:
-            self.atk_counter = 0
-            self.atk_img_index += 1
-            if self.atk_img_index > len(frames)-1:
-                self.atk_img_index = 0
-                self.atacando = False
-            
-            self.image = frames[self.atk_img_index]
-            #self.mask = self.cmb_walk_alpha['S'+self.direccion]
-            self.mask = alphas[self.atk_img_index]
-            #self.calcular_sombra(frames[self.atk_img_index])
+    def _interactuar_mobs(self,x,y):
+        "Utiliza una máscara propia para seleccionar mejor a los mobs"
+        self_mask = mask.Mask((32,32))
+        self_mask.fill()
+        dx,dy = x*32,y*32
     
-    def hablar(self):
-        sprite = self._interactuar_mobs(self.alcance_cc)
-        if sprite != None:
-            if sprite.hablante:
-                self.interlocutor = sprite
-                self.interlocutor.responder()
-                ED.DIALOG = Dialogo(self,self.interlocutor)
-                return True
-        return False
-    
-    def _interactuar_mobs(self,rango):
-        x,y = self.direcciones[self.direccion]
-        x,y = x*rango,y*rango
-
-        for mob in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
+        for key in MobGroup:
+            mob = MobGroup[key]
             if mob != self:
-                if self.colisiona(mob,x,y):
+                x = mob.mapX-(self.mapX+dx)
+                y = mob.mapY-(self.mapY+dy)
+                if mob.mask.overlap(self_mask,(-x,-y)):
                     return mob
-    
+        
     def _interactuar_props(self,x,y):
         "Utiliza una máscara propia para seleccionar mejor a los props"
         self_mask = mask.Mask((32,32))
@@ -138,7 +108,7 @@ class PC(Mob,Parlante):
     
     def usar_item (self,item):
         if item.tipo == 'consumible':
-            print('Used',item.nombre) #acá iria el efecto del item utilizado.
+            item.usar(self)
             return self.inventario.remover(item)
         return self.inventario.cantidad(item)
             
@@ -159,9 +129,6 @@ class PC(Mob,Parlante):
     
     def update(self):
         if self.atacando:
-            self._anim_atk(5)
-        dx,dy = self.dx,self.dy
-        self.dx,self.dy = 0,0
+            self.animar_ataque(5)
         self.dirty = 1
-        if (dx,dy) != (0,0):
-            return dx,dy
+    
