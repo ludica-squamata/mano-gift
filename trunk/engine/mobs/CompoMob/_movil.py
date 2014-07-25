@@ -18,8 +18,11 @@ class Movil:
             direccion = arg
             
         self.direccion = direccion
-        if img:
+        if img: #solo vale para el héroe...
             self.image = self.images['S'+self.direccion]
+            if direccion == self.direccion:
+                self.mover(*self.direcciones[direccion])
+
         return direccion
     
     def mover(self):
@@ -41,7 +44,6 @@ class Movil:
     def detectar_colisiones(self,dx,dy):
         col_bordes = False #colision contra los bordes de la pantalla
         col_mobs = False #colision contra otros mobs
-        col_heroe = False #colision contra el héroe
         col_props = False # colision contra los props
         col_mapa = False # colision contra las cajas de colision del propio mapa
 

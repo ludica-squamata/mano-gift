@@ -41,12 +41,14 @@ class Agarrable(Escenografia):
 class Movible(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
         super().__init__(nombre,imagen,x,y)
+        self.data = data
         self.solido = True
         self.accion = 'mover'
 
 class Trepable(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
         super().__init__(nombre,imagen,x,y)
+        self.data = data
         self.accion = 'trepar'
 
 class Operable(Escenografia):

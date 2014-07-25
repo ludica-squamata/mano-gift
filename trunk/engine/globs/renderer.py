@@ -97,11 +97,11 @@ class Camara:
         newPosX = self.focus.rect.x - self.focus.mapX
         offsetX = self.w - newPosX - self.bg.rect.w
         if offsetX <= 0:
-            if newPosX > 0: #limite 
+            if newPosX > 0: # limite izquierdo
                 self.focus.rect.x -= newPosX
             else:           # entre limites
                 self.bg.rect.x = newPosX
-        else:               # limite 
+        else:               # limite derecho
             self.bg.rect.x = newPosX+offsetX
             self.focus.rect.x += offsetX
         

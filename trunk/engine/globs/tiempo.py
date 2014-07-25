@@ -7,7 +7,7 @@ class Noche(_giftSprite):
         #############################
         if 1: #cambiar a 0 para prueba de luces
             img = Surface(size)
-            img.fill((0,0,0))
+            img.fill((0,0,125))
             img.set_alpha(230)
             self.rect = img.get_rect()
             super().__init__(img)

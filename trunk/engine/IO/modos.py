@@ -72,8 +72,8 @@ class modo:
         return ED.RENDERER.update(fondo)
     
     def Dialogo(events,fondo):
-        for event in events:
-            if event.type == KEYDOWN:
+        for event in _filtrar(events):
+            if event.type == C.TAP:
                 if event.key == C.TECLAS.ARRIBA:
                     ED.DIALOG.usar_funcion('arriba')
                 

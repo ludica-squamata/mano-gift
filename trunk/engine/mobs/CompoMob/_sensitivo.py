@@ -3,14 +3,16 @@ from pygame import Color, Surface, draw, mask, transform
 from engine.globs import MobGroup
 
 class Sensitivo:
-    vision = None # triangulo de la visión. posición por default = arriba
+    vision = None # triangulo o circulo de la visión.
     vx,vy = 0,0 # posicion de la visión, puesta acá por si el mob no se mueve
+    #mover_vis = None #algoritmo para desplazar la visión junto al mob
     
-    def establecer_sentidos(self): #,data):
+    def __init__(self,*args,**kwargs): #,data):
         self.tri_vis = self.generar_tri_vision(32*5) #(data[vision])
         self.cir_vis = self.generar_cir_vision(32*6) #(data[vision])
         self.vision = self.tri_vis
         self.mover_vis = self.mover_tri_vis
+        super().__init__(*args,**kwargs)
         
     @staticmethod
     def generar_tri_vision(largo):
