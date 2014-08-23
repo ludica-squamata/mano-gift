@@ -33,9 +33,9 @@ class modo:
                     else:
                         ED.MODO = 'Aventura'
                 
-                elif event.key == C.TECLAS.INVENTARIO:
-                    ED.MODO = 'Dialogo'
-                    ED.HERO.ver_inventario()
+                #elif event.key == C.TECLAS.INVENTARIO:
+                #    ED.MODO = 'Dialogo'
+                #    ED.HERO.ver_inventario()
                 
                 elif event.key == C.TECLAS.POSICION_COMBATE:
                     ED.HERO.cambiar_estado()

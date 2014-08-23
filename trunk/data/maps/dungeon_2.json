@@ -1,5 +1,5 @@
 {
-    "ambiente": "",
+    "ambiente": "interior",
     "capa_background": {
         "colisiones": "maps/colisiones/dungeon_c.png",
         "fondo": "maps/fondos/dungeon_f.png"
