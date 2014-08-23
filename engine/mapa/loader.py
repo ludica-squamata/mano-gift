@@ -27,15 +27,20 @@ class _loader:
         POS = _loader.STAGE.data['capa_ground']['props']
         
         for ref in POS:
-            try:            data = r.abrir_json(MD.items+ref+'.item')
-            except IOError: data = None
+            try:
+                data = r.abrir_json(MD.items+ref+'.item')
+                imagen = r.cargar_imagen(data['image'])
+            except IOError:
+                data = False
+                imagen = r.cargar_imagen(imgs[ref])
+            
             
             for x,y in POS[ref]:
-                if data != None:
-                    prop = newProp(ref,data['image'],x,y,data)
+                if data:
+                    prop = newProp(ref,imagen,x,y,data)
                     addInteractive = True
                 else:
-                    prop = newProp(ref,imgs[ref],x,y)
+                    prop = newProp(ref,imagen,x,y)
                     addInteractive = False
 
                 _loader.STAGE.addProperty(prop,C.CAPA_GROUND_ITEMS,addInteractive)
@@ -64,7 +69,6 @@ class _loader:
             ED.HERO = pc
             _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
             ED.HERO.ubicar(x,y)
-            print(ED.HERO)
         except:
             ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
             _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)

@@ -1,10 +1,10 @@
-from engine.base import _giftSprite
+from engine.base import _giftSprite, _shadowSprite
 from engine.misc import Util as U
 from engine.misc import Resources as r
 from pygame import mask as MASK
 from .items import *
 
-class Escenografia(_giftSprite):#,shadowSprite):
+class Escenografia(_shadowSprite,_giftSprite):
     def __init__(self,nombre,imagen,x,y,sinsombra=False):
         self.nombre = nombre
         self.tipo = 'Prop'
@@ -21,6 +21,7 @@ class Escenografia(_giftSprite):#,shadowSprite):
     
     def update(self):
         self.dirty = 1
+        self.updateSombra()
 
 class Agarrable(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
@@ -37,6 +38,8 @@ class Agarrable(Escenografia):
         elif self.subtipo == 'arma':      return Arma(*args)
         elif self.subtipo == 'accesorio': return Accesorio(*args)
         elif self.subtipo == 'pocion':    return Pocion(*args)
+    def update(self):
+        pass
         
 class Movible(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
@@ -82,8 +85,12 @@ class Operable(Escenografia):
         for attr in self.estados[self.estado_actual]:
             if hasattr(self,attr):
                 setattr(self,attr,self.estados[self.estado_actual][attr])
+    def update(self):
+        pass
 
 class Destruible(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
         super().__init__(nombre,imagen,x,y)
         self.accion = 'romper'
+    def update(self):
+        pass

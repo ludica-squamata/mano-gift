@@ -1,5 +1,4 @@
 {
-    "ambiente": "",
     "capa_background": {
         "colisiones": "maps/colisiones/dungeon_c.png",
         "fondo": "maps/fondos/dungeon_f.png"
@@ -9,12 +8,23 @@
             "enemies": {},
             "npcs": {}
         },
-        "props": {}
+        "props": {
+            "muro_lateral_s": [[0,0],[0,161],[0,322],[0,222],[0,478],[0,639],
+                               [784,0],[784,161],[784,322],[784,483],[784,639]], 
+            "muro_norte_s": [[0,0],[160,0],[320,0],[480,0],[640,0]], 
+            "muro_sur_s": [[0,704],[159,704],[319,704],[479,704],[639,704]]}
     },
     "capa_top": {
         "props": {}
     },
-    "entradas": {"inicial":[1,4]},
-    "refs": {},
-    "salidas": {}
+    "refs": {
+            "muro_lateral_s":"props/muro_lateral_s.png",
+            "muro_norte_s":"props/muro_norte_s.png",
+            "muro_sur_s":"props/muro_sur_s.png"
+        },
+    "entradas": {
+        "inicial":[128,128]
+    },
+    "salidas": {},
+    "ambiente": "interior"
 }
