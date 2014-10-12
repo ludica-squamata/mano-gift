@@ -119,11 +119,12 @@ class Camara:
         for spr in self.contents:
             if spr != self.bg: #porque bg no tiene mapX,mapY
                 if spr != self.focus:#porque al focus ya lo movimos antes
-                    spr.rect.x = self.bg.rect.x + spr.mapX
-                    spr.rect.y = self.bg.rect.y + spr.mapY
+                    x = self.bg.rect.x + spr.mapX
+                    y = self.bg.rect.y + spr.mapY
+                    spr.ubicar(x,y)
                 self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
-    
+        
     def update(self):
         self.bg.update()
         self.contents.update()

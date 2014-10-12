@@ -19,6 +19,22 @@ class _elemento:
     def __repr__(self):
         return self.nombre
     
+    def __eq__(self,other):
+        if type(self) != type(other):
+            return False
+        elif self.indice != other.indice:
+            return False
+        else:
+            return True
+        
+    def __ne__(self,other):
+        if type(self) == type(other):
+            return False
+        elif self.indice == other.indice:
+            return False
+        else:
+            return True
+    
 class _ArboldeDialogo:
     __slots__ = ['_elementos','_actual']
 
@@ -91,27 +107,32 @@ class _ArboldeDialogo:
         else:
             raise IndexError
     
-    def get_actual(self):
-        return self._elementos[self._actual]
+    def get_actual(self): return self._elementos[self._actual]
     
-    def next(self):
-        nodo = self.get_actual()
-        return nodo.leads
+    def next(self,nodo):  return nodo.leads
     
     def set_chosen(self, choice):
-        nodo = self.get_actual()
-        if nodo.hasLeads:
-            self.set_actual(nodo.leads[choice])
-    
+        self.set_actual(self._actual[choice])
+              
     def update(self):
-        _actual = self.get_actual()
-        nodo = self.next()
-        if type(nodo) != list:
-            if _actual.tipo == 'leaf':
-                return False
-            self.set_actual(nodo)
-            
-        return nodo
+        '''Devuelve el nodo actual, salvo que sea un leaf o branch,
+        en cuyo caso devuelve False y None (respectivamente), y
+        prepara se prepara para devolver el siguiente nodo'''
+        if type(self._actual) != list:
+            actual = self.get_actual()
+            if actual.tipo != 'leaf':
+                if type(actual.leads)!= list:
+                    self._actual = int(actual.leads.indice)
+                else:
+                    self._actual = actual.leads
+                _return = actual
+            else:
+                _return = False
+            if actual.tipo == 'branch':
+                _return = None
+        else:
+            _return = self._actual
+        return _return
 
 class Dialogo:
     SelMode = False
@@ -153,6 +174,7 @@ class Dialogo:
             self.func_lin[tecla]()
  
     def hablar(self):
+        print('aca')
         if self.terminar:
             self.cerrar()
         else:
@@ -162,11 +184,10 @@ class Dialogo:
                 self.frontend.borrar_todo()
                 self.frontend.setLocImg(actual[0].locutor) #misma chapuza
                 self.frontend.setSelMode([n.texto for n in actual])
-            else:
-                nodo = self.dialogo.get_actual()
-                self.mostrar_nodo(nodo)
-                if nodo.tipo == 'leaf':
-                    self.terminar = True
+            elif actual:
+                self.mostrar_nodo(actual)
+            elif actual != None:
+                self.terminar = True
     
     def confirmar_seleccion(self):
         self.dialogo.set_chosen(self.sel)
@@ -189,5 +210,4 @@ class Dialogo:
     
     def cerrar(self):
         self.frontend.destruir()
-        
 

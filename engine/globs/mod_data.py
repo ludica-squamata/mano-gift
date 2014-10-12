@@ -12,17 +12,20 @@ class ModData:
             U.salir("la ruta no existe")
         
         data = ModData.get_file_data('mod.json')
-        ModData.data = data
-        
-        root = ModData.mod_folder
-        ModData.graphs = root+data['folders']['graficos']+'/'
-        ModData.dialogos = root+data['folders']['dialogos']+'/'
-        ModData.mapas = root+data['folders']['mapas']+'/'
-        ModData.mobs = root+data['folders']['mobs']+'/'
-        ModData.quests = root+data['folders']['quest']+'/'
-        ModData.items = root+data['folders']['items']+'/'
-        ModData.scripts = root+data['folders']['scripts']+'/'
-        ModData.scenes = root+data['folders']['scenes']+'/'
+        if data != None:
+            ModData.data = data
+    
+            root = ModData.mod_folder
+            ModData.graphs = root+data['folders']['graficos']+'/'
+            ModData.dialogos = root+data['folders']['dialogos']+'/'
+            ModData.mapas = root+data['folders']['mapas']+'/'
+            ModData.mobs = root+data['folders']['mobs']+'/'
+            ModData.quests = root+data['folders']['quest']+'/'
+            ModData.items = root+data['folders']['items']+'/'
+            ModData.scripts = root+data['folders']['scripts']+'/'
+            ModData.scenes = root+data['folders']['scenes']+'/'
+        else:
+            U.salir('No data in mod folder')
     
     @staticmethod
     def find_mod_folder(ini):

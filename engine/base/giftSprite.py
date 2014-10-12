@@ -7,6 +7,7 @@ class _giftSprite(sprite.DirtySprite):
     #mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
+    tipo = ''
     nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True # si es solido, colisiona; si no, no.
     images = None
@@ -54,7 +55,7 @@ class _giftSprite(sprite.DirtySprite):
         self.solido = True
     
     def reubicar(self, dx, dy):
-        '''mueve el sprite una cantidad de cuadros'''
+        '''mueve el sprite una cantidad de pixeles'''
         self.mapX += dx
         self.mapY += dy
         self.rect.move_ip(dx,dy)
@@ -62,12 +63,9 @@ class _giftSprite(sprite.DirtySprite):
             self.dirty = 1
 
     def ubicar(self, x, y):
-        '''mueve el sprite a una ubicacion especifica. tiene que ser valor positivo'''
-        if x < 0 or y < 0:
-            raise ValueError('Coordenadas fuera de rango')
-        self.mapX = x
-        self.mapY = y
-        self.rect.move_ip(x,y)
+        '''Coloca al sprite en pantalla'''
+        self.rect.x = x
+        self.rect.y = y
         if self.image != None:
             self.dirty = 1
 

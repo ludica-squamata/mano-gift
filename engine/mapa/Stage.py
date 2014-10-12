@@ -30,8 +30,8 @@ class Stage:
         for obj in self.properties:
             obj.stage = self
             ED.RENDERER.addObj(obj,obj.rect.bottom)
-        x,y = self.data['entradas'][entrada]
-        ED.HERO.ubicar(x,y)
+            
+        ED.HERO.ubicar(*self.data['entradas'][entrada])
     
     def addProperty(self,obj,_layer,addInteractive=False):
         self.properties.add(obj,layer =_layer)
@@ -73,6 +73,7 @@ class Stage:
   
 class ChunkMap(DirtySprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.
+    tipo = ''
     def __init__(self,stage,data):
         super().__init__()
         self.stage = stage

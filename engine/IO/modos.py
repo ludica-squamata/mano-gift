@@ -1,7 +1,7 @@
 from engine.globs import Constants as C, EngineData as ED
 from engine.misc import Util
 from .taphold import _filtrar
-from pygame import KEYDOWN,QUIT
+from pygame import KEYDOWN,QUIT,KEYUP
 from engine.UI.menues import *
 
 class modo:
@@ -26,6 +26,8 @@ class modo:
     def Aventura(events,fondo):
         dx, dy = modo.dx, modo.dy
         for event in _filtrar(events):
+            #if event.type == KEYDOWN:
+            #    print(event)
             if event.type == C.TAP:
                 if event.key == C.TECLAS.HABLAR:
                     if ED.HERO.hablar():
@@ -73,7 +75,7 @@ class modo:
     
     def Dialogo(events,fondo):
         for event in _filtrar(events):
-            if event.type == C.TAP:
+            if event.type == KEYDOWN:
                 if event.key == C.TECLAS.ARRIBA:
                     ED.DIALOG.usar_funcion('arriba')
                 
@@ -98,8 +100,8 @@ class modo:
         return ED.RENDERER.update(fondo)
     
     def Menu(events,fondo):
-        for event in _filtrar(events):
-            if event.type == C.TAP:
+        for event in events:
+            if event.type == KEYDOWN:
                 if modo.setKey:
                     ED.menu_actual.cambiarTecla(event.key)
                     modo.setKey = False
@@ -126,11 +128,7 @@ class modo:
                         elif previo != None:
                             modo.endDialog(C.CAPA_OVERLAYS_MENUS)
             
-            elif event.type == C.HOLD:
-                if event.key == C.TECLAS.HABLAR:
-                    ED.menu_actual.usar_funcion('hablar')
-            
-            elif event.type == C.RELEASE:
+            elif event.type == KEYUP:
                 if event.key == C.TECLAS.HABLAR:
                     if modo.newMenu:
                         modo._popMenu(ED.menu_actual.current.nombre)
