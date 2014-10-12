@@ -1,22 +1,32 @@
 from pygame import mask as MASK, PixelArray, Surface, transform
 from pygame.sprite import DirtySprite
-from.giftSprite import _giftSprite
+from .giftSprite import _giftSprite
+from engine.globs import EngineData as ED
 
-class _sombra (DirtySprite):
-    def __init__(self,imagen,rect):
-        super().__init__()
-        self.image = imagen
+class _sombra (_giftSprite):
+    def __init__(self,imagen,rect,x,y,obj):
+        super().__init__(imagen=imagen, x=x,y=y)
         self.deltaRect = rect
+        self.rect = self.set_pos(x,y)
+        self.tipo = "sombra"
+        self.obj = obj
 
-    def get_pos(self,spr_rect):
+    def set_pos(self,x,y):
         #obtiene la posicion final tomando como base la posicion del
         #sprite y la suya propia
         rect = self.image.get_rect()
-        rect.x = spr_rect.x+self.deltaRect.x
-        rect.y = spr_rect.y+self.deltaRect.y
+        rect.x = x+self.deltaRect.x
+        rect.y = y+self.deltaRect.y
         
         return rect
     
+    def ubicar(self, x, y):
+        '''Coloca al sprite en pantalla'''
+        self.rect.x = x+self.deltaRect.x
+        self.rect.y = y+self.deltaRect.y
+        if self.image != None:
+            self.dirty = 1
+
 class _shadowSprite(_giftSprite):
     _sombras = None #list
     _sprSombra = None #sprite
@@ -26,8 +36,11 @@ class _shadowSprite(_giftSprite):
     def __init__(self, *args,**kwargs):
         self._sombras = [0,0,0,0,0,0,0,0]
         self._luces = [0,0,0,0,1,0,0,0]
+        
         super().__init__(*args,**kwargs)
 
+        self.update()
+        
     def crear_sombras(self,surface,sombra,img_rect):
             
         #Sombra Noreste
@@ -82,7 +95,7 @@ class _shadowSprite(_giftSprite):
             img = self._crear_sombra(surface,"N")
             rect = img.get_rect(bottomleft = img_rect.bottomleft)
         
-        return _sombra(img,rect)
+        return img,rect
 
     @staticmethod
     def _crear_sombra(surface,arg=None,mask=None):
@@ -95,20 +108,16 @@ class _shadowSprite(_giftSprite):
             pxarray = PixelArray(Surface((w, h), 0,surface))
         else:
             pxarray = PixelArray(Surface((int(w+h/2), h), 0, surface))
-        W,H = pxarray.shape
-        for x in range(W):
-            for y in range(H):
-                pxarray[x,y] = 0,255,0,255
+        
         for x in range(w):
             for y in range(h):
                     if arg in ('N','S','E','O'):
                         if mask.get_at((x,y)):
                             pxarray[x,y] = 0,0,0,150
-                        else: pxarray[x,y] = 255,0,0,255
                     else:
                         if mask.get_at((x,y)):
                             pxarray[int(x+(h-y)/2),y] = (0,0,0,150)
-                        else: pxarray[int(x+(h-y)/2),y] = 255,0,0,255
+        
         if arg == 'N':
             return transform.smoothscale(pxarray.make_surface().convert_alpha(),(w,h//2))
         elif arg =='S':
@@ -147,7 +156,7 @@ class _shadowSprite(_giftSprite):
                 if dy > 0:    luces[7] = True # norte
                 else:                  luces[3] = True # sur
     
-    def updateSombra(self):
+    def update(self):
         #generar sombra en direccion contraria a los slots iluminados
         #si cambio la lista,
         #actualizar imagen de sombra y centrar
@@ -157,17 +166,13 @@ class _shadowSprite(_giftSprite):
         # si estuviera en posicion U, se usaria L
       
         #a resolver: que imagen usar para las diagonales
-      
-        luces = self._luces
-      
+
         for i in range(0,7):
-            if (luces[(i+4) % 7] - luces[i]) == 1: #bool
+            if (self._luces[(i+4) % 7] - self._luces[i]) == 1: #bool
                 if self._sombras[i] == 0:
-                    self._sombras[i] = self.crear_sombras(self.image,i,self.rect)
                     
-                    sombra = self._sombras[i]
-                    self._sprSombra = sombra
-                    rect = sombra.get_pos(self.rect)
-                    sombra.image.blit(self.image,rect)
-                    self.image = sombra.image
-                break
+                    img,rect = self.crear_sombras(self.image,i,self.rect)
+                    x,y = self.mapX,self.mapY
+                    self._sombras[i] = _sombra(img,rect,x,y,self)
+
+                    ED.RENDERER.addObj(self._sombras[i],self.rect.bottom-10)

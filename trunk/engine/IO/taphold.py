@@ -7,6 +7,7 @@ def _filtrar(events):
         if event.type == KEYDOWN:
             if event.key in teclas:
                 teclas[event.key]['pressed'] = True
+                EVENT.post(event)
         
         elif event.type == KEYUP:
             if event.key in teclas:
@@ -20,7 +21,7 @@ def _filtrar(events):
     for tcl in teclas:
         key = teclas[tcl]
         if key['pressed']:
-            key['holding'] += 1
+            key['holding'] += 10
             key['held'] += 1
         else:
             key['hold'] = False
@@ -28,10 +29,9 @@ def _filtrar(events):
             if not key['release']:
                 key['held'] = 0
             
-        if key['holding'] > 6: #este limite deberia ser variable
+        if key['holding'] > 100: #este limite deberia ser variable
             key['hold'] = True
             key['tap'] = False            
-        
         
         if key['hold']:
             EVENT.post(EVENT.Event(24,{'key':key['key'],

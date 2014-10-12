@@ -49,17 +49,19 @@ class _loader:
     def cargar_mobs(extra_data,capa = 'capa_ground'):
         for key in _loader.STAGE.data[capa]['mobs']:
             pos = _loader.STAGE.data[capa]['mobs'][key]
-            if key == 'npcs': clase = NPCSocial
+            if key == 'npcs':
+                clase = NPCSocial
+    
             
-            for ref in pos:
-                data = r.abrir_json(MD.mobs+ref+'.mob')
-                data.update(extra_data[ref])
-                for x,y in pos[ref]:
-                    mob = clase(ref,x,y,data)
-                    if capa == 'capa_ground':
-                        _loader.STAGE.addProperty(mob,C.CAPA_GROUND_MOBS)
-                    elif capa == 'capa_top':
-                        _loader.STAGE.addProperty(mob,C.CAPA_TOP_MOBS)
+                for ref in pos:
+                    data = r.abrir_json(MD.mobs+ref+'.mob')
+                    data.update(extra_data[ref])
+                    for x,y in pos[ref]:
+                        mob = clase(ref,x,y,data)
+                        if capa == 'capa_ground':
+                            _loader.STAGE.addProperty(mob,C.CAPA_GROUND_MOBS)
+                        elif capa == 'capa_top':
+                            _loader.STAGE.addProperty(mob,C.CAPA_TOP_MOBS)
     
     @staticmethod
     def cargar_hero(entrada):

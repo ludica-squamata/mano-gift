@@ -5,6 +5,7 @@ from engine.globs import Constants as C, EngineData as ED, MobGroup
 from pygame import mask
 
 class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
+    tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []
     centroX, centroY = 0, 0
@@ -69,10 +70,13 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
         #    self.objetivo = MobGroup[data['objetivo']]
         
         self.establecer_estado('idle')
-        super().__init__(imagen=self.image,alpha=self.mask)
-        self.ubicar(x,y)
+        super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y)
+        #self.ubicar(x,y)
+        #print(self.nombre,self.mapX,self.mapY)
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
+        
+        self._sprSombra = None #dumyval
         
     def establecer_estado(self,estado):
         self.estado = estado

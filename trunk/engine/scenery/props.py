@@ -1,32 +1,25 @@
-from engine.base import _giftSprite, _shadowSprite
+from engine.base import _shadowSprite
 from engine.misc import Util as U
 from engine.misc import Resources as r
 from pygame import mask as MASK
 from .items import *
 
-class Escenografia(_shadowSprite,_giftSprite):
-    def __init__(self,nombre,imagen,x,y,sinsombra=False):
+class Escenografia(_shadowSprite):
+    def __init__(self,nombre,imagen,x,y,proyectaSombra=True):
         self.nombre = nombre
         self.tipo = 'Prop'
         super().__init__(imagen,x=x,y=y)
         self.solido = False
+        self.proyectaSombra = proyectaSombra
         
-        #shadowSprite#
-        #if not sinsombra:
-        #    self.sombra = U.crear_sombra(self.image, self.mask)
-        #    image = self.sombra
-        #    image.blit(self.image,[0,0])
-        #    self.image = image
-        #------------#
-    
     def update(self):
+        super().update()
         self.dirty = 1
-        self.updateSombra()
 
 class Agarrable(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
         self.data = data
-        super().__init__(nombre,imagen,x,y,True)
+        super().__init__(nombre,imagen,x,y,False)
         self.subtipo = data['subtipo']
         self.accion = 'agarrar'
     
@@ -38,8 +31,9 @@ class Agarrable(Escenografia):
         elif self.subtipo == 'arma':      return Arma(*args)
         elif self.subtipo == 'accesorio': return Accesorio(*args)
         elif self.subtipo == 'pocion':    return Pocion(*args)
+    
     def update(self):
-        pass
+        self.dirty = 1
         
 class Movible(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
@@ -58,8 +52,8 @@ class Operable(Escenografia):
     estados = {}
     estado_actual = 0
     def __init__(self,nombre,imagen,x,y,data):
-        if 'sinsombra' in data['propiedades']: super().__init__(nombre,imagen,x,y,True)
-        else: super().__init__(nombre,imagen,x,y)
+        super().__init__(nombre,imagen,x,y,False)
+        #self._sprSombra._visible = self.proyectaSombra
         if 'solido' in data['propiedades']: self.solido = True
         self.accion = 'operar'
         
@@ -85,12 +79,11 @@ class Operable(Escenografia):
         for attr in self.estados[self.estado_actual]:
             if hasattr(self,attr):
                 setattr(self,attr,self.estados[self.estado_actual][attr])
+    
     def update(self):
-        pass
+        self.dirty = 1
 
 class Destruible(Escenografia):
     def __init__(self,nombre,imagen,x,y,data):
         super().__init__(nombre,imagen,x,y)
         self.accion = 'romper'
-    def update(self):
-        pass
