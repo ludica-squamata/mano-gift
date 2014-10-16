@@ -5,6 +5,10 @@ from .constantes import Constants as C
 class Renderer:
     camara = None
     overlays = None
+    Lsu = None
+    Lin = None
+    Lde = None
+    Liz = None
 
     def __init__(self):
         self.camara = Camara()
@@ -31,8 +35,18 @@ class Renderer:
             self.overlays.remove(obj)
 
     def update(self,fondo):
-        #fondo.fill((0,0,0))
+        fondo.fill((125,125,125))
         self.camara.update()
+        
+        self.Lsu = self.camara.LimSup
+        self.Lin = self.camara.LimInf
+        self.Liz = self.camara.LimIzq
+        self.Lde = self.camara.LimDer
+        # self.Lsi = self.camara.LimSupI
+        # self.Lsd = self.camara.LimSupD
+        # self.Lii = self.camara.LimInfI
+        # self.Lid = self.camara.LimInfD
+        
         for over in self.overlays:
             if over.active:              
                 over.update()
@@ -45,6 +59,14 @@ class Camara:
     focus = None # objeto que la camara sigue.
     contents = None # objetos del frente
     x,y,w,h = 0,0,0,0
+    LimSup = False
+    LimInf = False
+    LimDer = False
+    LimIzq = False
+    #LimSupD = False
+    #LimInfD = False
+    #LimSupI = False
+    #LimInfI = False
     
     def __init__(self):
         self.contents = LayeredDirty()
@@ -55,6 +77,9 @@ class Camara:
     def setBackground(self,spr):
         self.bg = spr
         self.contents.add(self.bg)
+    
+    def setAdyBg(self,bg):
+        self.contents.add(bg,layer=0)
     
     def addFgObj(self,spr,_layer=0):
         if spr not in self.contents:
@@ -98,23 +123,36 @@ class Camara:
         offsetX = self.w - newPosX - self.bg.rect.w
         if offsetX <= 0:
             if newPosX > 0: # limite izquierdo
-                self.focus.rect.x -= newPosX
+                #self.focus.rect.x -= newPosX
+                self.LimIzq = True
             else:           # entre limites
-                self.bg.rect.x = newPosX
+                #self.bg.rect.x = newPosX
+                self.LimDer = False
+                self.LimIzq = False
         else:               # limite derecho
-            self.bg.rect.x = newPosX+offsetX
-            self.focus.rect.x += offsetX
+            #self.bg.rect.x = newPosX+offsetX
+            #self.focus.rect.x += offsetX
+            if not self.LimDer:
+                self.LimDer = True
+        self.bg.rect.x = newPosX
         
         newPosY = self.focus.rect.y - self.focus.mapY 
         offsetY = self.h - newPosY - self.bg.rect.h 
         if offsetY <= 0:
             if newPosY > 0: # limite superior
-                self.focus.rect.y -= newPosY
+                #self.focus.rect.y -= newPosY
+                if not self.LimSup:
+                    self.LimSup = True
             else:           # entre limites
-                self.bg.rect.y = newPosY
+                #self.bg.rect.y = newPosY
+                self.LimSup = False
+                self.LimInf = False
         else:               # limite inferior
-            self.bg.rect.y = newPosY+offsetY
-            self.focus.rect.y += offsetY
+            #self.bg.rect.y = newPosY+offsetY
+            #self.focus.rect.y += offsetY
+            if not self.LimInf:
+                self.LimInf = True
+        self.bg.rect.y = newPosY
         
         for spr in self.contents:
             if spr != self.bg: #porque bg no tiene mapX,mapY
@@ -122,6 +160,7 @@ class Camara:
                     x = self.bg.rect.x + spr.mapX
                     y = self.bg.rect.y + spr.mapY
                     spr.ubicar(x,y)
+            if spr.tipo != 'mapa':
                 self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
         
@@ -132,8 +171,8 @@ class Camara:
                 
     def draw(self,fondo):
         ret = self.contents.draw(fondo)
-        #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
-        #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
+        draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
+        draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
     
     

@@ -10,6 +10,7 @@ class Stage:
     properties = None
     interactives = []
     mapa = None
+    limites = {}
     data = {}
     quest = None
     
@@ -73,13 +74,20 @@ class Stage:
   
 class ChunkMap(DirtySprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.
-    tipo = ''
+    tipo = 'mapa'
     def __init__(self,stage,data):
         super().__init__()
         self.stage = stage
         self.image = r.cargar_imagen(data['capa_background']['fondo'])
         self.rect = self.image.get_rect()
         self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
+    
+    def ubicar(self, x, y):
+        '''Coloca al sprite en pantalla'''
+        self.rect.x = x
+        self.rect.y = y
+        if self.image != None:
+            self.dirty = 1
     
     def update(self):
         self.stage.anochecer()

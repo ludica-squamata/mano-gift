@@ -33,6 +33,44 @@ class PC(Mob,Parlante):
                 ED.setear_mapa(spr.dest,spr.link)
                 dx,dy = 0,0
         
+        _rect = ED.MAPA_ACTUAL.mapa.rect
+        if ED.RENDERER.Lsu:
+            LimSup = ED.MAPA_ACTUAL.limites['sup']
+            if type(LimSup) == str:
+                ED.mapa_adyacente(LimSup,[0,_rect.top-2],"sup")
+            if ED.RENDERER.Liz:
+                LimSupI = ED.MAPA_ACTUAL.limites['supizq']
+                if type(LimSupI) == str:
+                    ED.mapa_adyacente(LimSupI,[_rect.left-2,_rect.top-2],"supizq")
+            elif ED.RENDERER.Lde:
+                LimSupD = ED.MAPA_ACTUAL.limites['supder']
+                if type(LimSupD) == str:
+                    ED.mapa_adyacente(LimSupD,[_rect.w,_rect.top-2],"supder")
+        
+        elif ED.RENDERER.Lin:
+            LimInf = ED.MAPA_ACTUAL.limites['inf']
+            if type(LimInf) == str:
+                ED.mapa_adyacente(LimInf,[0,_rect.h],'inf')
+            if ED.RENDERER.Liz:
+                LimInfI = ED.MAPA_ACTUAL.limites['infizq']
+                if type(LimInfI) == str:
+                    ED.mapa_adyacente(LimInfI,[_rect.left-2,_rect.h],'infizq')
+        
+            elif ED.RENDERER.Lde:
+                LimInfD = ED.MAPA_ACTUAL.limites['infder']
+                if type(LimInfD) == str:
+                    ED.mapa_adyacente(LimInfD,[_rect.w,_rect.h],'infder')
+        
+        if ED.RENDERER.Liz:
+            LimIzq = ED.MAPA_ACTUAL.limites['izq']
+            if type(LimIzq) == str:
+                ED.mapa_adyacente(LimIzq,[_rect.left-2,0],"izq")
+        
+        elif ED.RENDERER.Lde:
+            LimDer = ED.MAPA_ACTUAL.limites['der']
+            if type(LimDer) == str:
+                ED.mapa_adyacente(LimDer,[_rect.w,0],'der')
+
         if not self.detectar_colisiones(dx,0):
             self.reubicar(dx,0) # el heroe se mueve en el mapa, no en la camara
         if not self.detectar_colisiones(0,dy):

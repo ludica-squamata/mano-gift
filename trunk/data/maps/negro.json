@@ -1,0 +1,27 @@
+{
+    "capa_background":{
+        "fondo":"maps/fondos/negro.png",
+        "colisiones":"maps/colisiones/800.png"
+    },
+    "capa_ground":{
+        "props": {},
+        "mobs": {
+            "enemies":{},
+            "npcs":{}
+        }
+    },
+    "capa_top":{
+        "props":{}
+    },
+    "entradas":{},
+    "salidas":{
+    },
+	"limites":{
+		"Sup":"blanco",
+		"Inf":"blanco",
+		"Izq":"blanco",
+		"Der":"blanco"
+	},
+    "refs":{},
+    "ambiente":"interior"
+}
