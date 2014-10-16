@@ -41,3 +41,23 @@ class EngineData:
         ED.MAPA_ACTUAL = ED.mapas[nombre]
         ED.MAPA_ACTUAL.register_at_renderer(entrada)
         ED.HUD = HUD()
+    
+    def mapa_adyacente(nombre,posicion,ady):
+        from engine.mapa.Stage import ChunkMap
+        ED = EngineData
+        data = r.abrir_json(MD.mapas+nombre+'.json')
+        mapa = ChunkMap(ED.MAPA_ACTUAL,data)
+        
+        x,y = posicion
+        if 'sup' in ady: y -= mapa.rect.w
+        if 'izq' in ady: x -= mapa.rect.h
+        
+        mapa.rect.topleft = x,y
+        mapa.mapX = mapa.rect.x
+        mapa.mapY = mapa.rect.y
+        
+        if type(ED.MAPA_ACTUAL.limites[ady]) == str:
+            ED.MAPA_ACTUAL.limites[ady] = mapa
+            ED.RENDERER.camara.setAdyBg(mapa)
+
+        #print(nombre, posicion)
