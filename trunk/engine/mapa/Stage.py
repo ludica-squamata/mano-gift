@@ -10,7 +10,9 @@ class Stage:
     properties = None
     interactives = []
     mapa = None
-    limites = {}
+    limites = {'sup':None,'supizq':None,'supder':None,
+               'inf':None,'infizq':None,'infder':None,
+               'izq':None,'der' : None}
     data = {}
     quest = None
     
@@ -18,13 +20,14 @@ class Stage:
         self.nombre = nombre
         self.data = r.abrir_json(MD.mapas+nombre+'.json')
         self.mapa = ChunkMap(self,self.data) # por ahora es uno solo.
+        self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.properties = LayeredDirty()
         _loader.setStage(self)
         _loader.loadEverything(entrada,mobs_data)
         T.crear_noche(self.mapa.rect.size) #asumiendo que es uno solo...
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
-        self.register_at_renderer(entrada)
+        #self.register_at_renderer(entrada)
     
     def register_at_renderer(self,entrada):
         ED.RENDERER.setBackground(self.mapa)
@@ -46,6 +49,33 @@ class Stage:
             self.interactives.remove(obj)
         ED.RENDERER.delObj(obj)
     
+    def cargar_mapa_adyacente(self,ady):
+        if type(self.limites[ady]) == str:
+            nombre = self.limites[ady]
+            data = r.abrir_json(MD.mapas+self.limites[ady]+'.json')
+            
+            w,h = self.mapa.rect.size
+            if   ady == 'sup'   :  x,y =  0,-h
+            elif ady == 'supizq':  x,y = -w,-h
+            elif ady == 'supder':  x,y =  w,-h
+            elif ady == 'inf'   :  x,y =  0, h
+            elif ady == 'infizq':  x,y = -w, h
+            elif ady == 'infder':  x,y =  w, h
+            elif ady == 'izq'   :  x,y = -w, 0
+            elif ady == 'der'   :  x,y =  w, 0
+            
+            mapa = ChunkMap(self,data,nombre,x,y)
+           
+            self.limites[ady] = mapa
+            ED.RENDERER.setBackground(mapa)
+            self.rect.union_ip(mapa.rect)
+            #print(self.mapa.rect.topleft)
+            
+            #for item in self.properties:
+            #    if hasattr(item,'mapX'):
+            #        item.mapX -= self.rect.w
+            #        item.mapY -= self.rect.h
+            
     def anochecer(self):
         if self.data['ambiente'] == 'exterior':
             #transiciones
@@ -71,16 +101,21 @@ class Stage:
     
     def __repr__(self):
         return "Stage "+self.nombre+'('+str(self.properties)+')'
-  
+
 class ChunkMap(DirtySprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.
     tipo = 'mapa'
-    def __init__(self,stage,data):
+    offsetX = 0
+    offsetY = 0
+    def __init__(self,stage,data,nombre='',offX=0,offY=0):
         super().__init__()
         self.stage = stage
+        self.nombre = nombre
         self.image = r.cargar_imagen(data['capa_background']['fondo'])
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(topleft=(offX,offY))
         self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
+        self.offsetX = offX
+        self.offsetY = offY
     
     def ubicar(self, x, y):
         '''Coloca al sprite en pantalla'''

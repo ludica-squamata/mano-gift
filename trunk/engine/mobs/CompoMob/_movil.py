@@ -65,14 +65,12 @@ class Movil:
                     if self.colisiona(spr,dx,dy):
                         col_mobs = True
         
-        # newPos = self.mapX + dx
-        # if newPos < 0 or newPos > self.stage.mapa.rect.w-32:
-            # if C.ANCHO > self.rect.x - dx  >=0:
-                # col_bordes = True
-
-        # newPos = self.mapY + dy
-        # if newPos < 0 or newPos > self.stage.mapa.rect.h-32:
-            # if C.ALTO > self.rect.y - dy  >=0:
-                # col_bordes = True
+        newPosX = self.mapX + dx
+        newPosY = self.mapY + dy
+        _rect = self.rect.copy() #esto podria ser algo más permanente
+        _rect.topleft=(newPosX,newPosY) # una onda "maprect"
+        if not self.stage.rect.contains(_rect):
+            col_bordes = True
+        
 
         return any([col_bordes,col_mobs,col_props,col_mapa])

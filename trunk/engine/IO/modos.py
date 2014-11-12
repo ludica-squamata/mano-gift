@@ -1,7 +1,7 @@
 from engine.globs import Constants as C, EngineData as ED
 from engine.misc import Util
 from .taphold import _filtrar
-from pygame import KEYDOWN,QUIT,KEYUP
+from pygame import KEYDOWN,QUIT,KEYUP,MOUSEMOTION, mouse
 from engine.UI.menues import *
 
 class modo:
@@ -20,8 +20,44 @@ class modo:
                     Util.salir()
                 
                 elif event.key == C.TECLAS.DEBUG:
-                    print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
-                    print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
+                    #print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
+                    #print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
+                    ED.RENDERER.use_focus = not ED.RENDERER.use_focus
+        
+        if not ED.RENDERER.use_focus:
+            x,y = mouse.get_pos()
+            dx,dy = 0,0
+            if x < C.CUADRO: #32
+                if x <= C.CUADRO//4: #8
+                    mouse.set_pos(C.CUADRO//4,y)
+                    dx = +3
+                else:
+                    dx = +1
+            
+            elif x > C.ANCHO-C.CUADRO:
+                if x >= C.ANCHO-C.CUADRO//4:
+                    mouse.set_pos(C.ANCHO-C.CUADRO//4,y)
+                    dx = -3
+                else:
+                    dx = -1
+            
+            if y < C.CUADRO: #32
+                if y <= C.CUADRO//4: #8
+                    mouse.set_pos(x,C.CUADRO//4)
+                    dy = +3
+                else:
+                    dy = +1
+            
+            elif y > C.ALTO-C.CUADRO:
+                if y >= C.ALTO-C.CUADRO//4:
+                    mouse.set_pos(x,C.ALTO-C.CUADRO//4)
+                    dy = -3
+                else:
+                    dy = -1
+            
+            ED.RENDERER.camara.mover(dx,dy)
+            ED.RENDERER.camara.paneolibre(dx,dy)
+        
     
     def Aventura(events,fondo):
         dx, dy = modo.dx, modo.dy

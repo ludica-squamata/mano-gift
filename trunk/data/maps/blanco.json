@@ -16,16 +16,16 @@
     "entradas":{"inicial":[400,400]},
     "salidas":{
     },
-	"limites":{
-		"Sup":"negro",
-		"Inf":"negro",
-		"Izq":"negro",
-		"Der":"negro",
-		"SupIzq":"blanco",
-		"SupDer":"blanco",
-		"InfIzq":"blanco",
-		"InfDer":"blanco"
-	},
+    "limites":{
+        "Sup":"negro",
+        "Inf":"negro",
+        "Izq":"negro",
+        "Der":"negro",
+        "SupIzq":"blanco",
+        "SupDer":"blanco",
+        "InfIzq":"blanco",
+        "InfDer":"blanco"
+    },
     "refs":{},
     "ambiente":"interior"
 }
