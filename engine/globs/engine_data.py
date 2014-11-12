@@ -61,3 +61,22 @@ class EngineData:
             ED.RENDERER.camara.setAdyBg(mapa)
 
         #print(nombre, posicion)
+    
+    @staticmethod
+    def checkear_adyacencias():
+        
+        r = EngineData.RENDERER
+        m = EngineData.MAPA_ACTUAL
+        
+        if r.Lsu:
+            m.cargar_mapa_adyacente('sup')
+            if r.Liz:   m.cargar_mapa_adyacente('supizq')
+            elif r.Lde: m.cargar_mapa_adyacente('supder')
+        
+        elif r.Lin:
+            m.cargar_mapa_adyacente('inf')
+            if r.Liz:   m.cargar_mapa_adyacente('infizq')
+            elif r.Lde: m.cargar_mapa_adyacente('infder')
+        
+        if r.Lde:       m.cargar_mapa_adyacente('der')
+        elif r.Liz:     m.cargar_mapa_adyacente('izq')

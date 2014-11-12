@@ -1,7 +1,6 @@
 from pygame import display as pantalla,init as py_init,image,event as EVENT
 from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData
 from engine.quests import QuestManager
-from engine.UI import HUD
 from engine.IO.modos import modo
 from engine.misc import Resources as r, Config
 from data import intro,introduccion
@@ -17,7 +16,6 @@ fuente = font.SysFont('verdana',16,bold=True)
 if Config.dato('mostrar_intro'): anim = intro(fondo)
 init = introduccion()
 init.ejecutar(fondo)
-ED.HUD = HUD()
 
 while True:
     T.FPS.tick(60)
