@@ -5,7 +5,7 @@ from pygame import Surface,Rect
 class BaseWidget(Estilo,_giftSprite):
     enabled = True
     canvas = None
-    
+    isSelected = False
     def __init__(self,img):
         super().__init__(img)
     

@@ -1,7 +1,7 @@
 from engine.globs import Constants as C, EngineData as ED
 from engine.misc import Util
 from .taphold import _filtrar
-from pygame import KEYDOWN,QUIT,KEYUP,MOUSEMOTION, mouse
+from pygame import KEYDOWN,QUIT,KEYUP, mouse
 from engine.UI.menues import *
 
 class modo:
@@ -10,7 +10,6 @@ class modo:
     setKey = False
     
     def Juego(events):
-        ED.HUD.update()
         for event in events:
             if event.type == QUIT:
                 Util.salir()
@@ -60,6 +59,7 @@ class modo:
         
     
     def Aventura(events,fondo):
+        ED.HUD.update()
         dx, dy = modo.dx, modo.dy
         for event in _filtrar(events):
             #if event.type == KEYDOWN:
@@ -71,9 +71,10 @@ class modo:
                     else:
                         ED.MODO = 'Aventura'
                 
-                #elif event.key == C.TECLAS.INVENTARIO:
-                #    ED.MODO = 'Dialogo'
-                #    ED.HERO.ver_inventario()
+                elif event.key == C.TECLAS.INVENTARIO:
+                    ED.MODO = 'Dialogo'
+                    ED.HUD.Inventory.SelectCuadro()
+                    ED.DIALOG = ED.HUD
                 
                 elif event.key == C.TECLAS.POSICION_COMBATE:
                     ED.HERO.cambiar_estado()

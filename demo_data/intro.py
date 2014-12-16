@@ -4,7 +4,6 @@ from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite, Color
 from pygame import display as pantalla, event as EVENT,font
 from engine.globs import Tiempo as T, Constants as C
 from engine.libs.textrect import render_textrect
-from engine.UI import Menu_Debug
 from engine.misc import Util
 import os,os.path
 
@@ -15,43 +14,6 @@ import os,os.path
 # # debug screen
 # # # seleccion de mapa.
 # # # play.
-
-class introduccion (Menu_Debug):
-    running = True
-    def __init__ (self):
-        super().__init__()
-        
-    def ejecutar (self,fondo):
-        while self.running:
-            T.FPS.tick(60)
-            for event in EVENT.get():
-                if event.type == QUIT:
-                    Util.salir()
-                    
-                elif event.type == KEYDOWN:
-                    if event.key == C.TECLAS.SALIR:
-                        Util.salir()
-                    
-                    elif event.key == C.TECLAS.IZQUIERDA:
-                        self.usar_funcion('izquierda')
-                        
-                    elif event.key == C.TECLAS.DERECHA:
-                        self.usar_funcion('derecha')
-                    
-                    elif event.key == C.TECLAS.ARRIBA:
-                        self.usar_funcion('arriba')
-                    
-                    elif event.key == C.TECLAS.ABAJO:
-                        self.usar_funcion('abajo')
-                    
-                    elif event.key == C.TECLAS.HABLAR:
-                        self.running = False
-                        self.usar_funcion('hablar')
-                        break
-            
-            self.update()
-            fondo.blit(self.canvas,(10,10))
-            pantalla.update()
 
 class intro:
     timer = 0

@@ -162,6 +162,7 @@ class Dialogo:
         #empezar con el primer nodo
         nodo = self.dialogo.get_actual()
         self.mostrar_nodo(nodo)
+        self.dialogo.update()
     
     def usar_funcion(self,tecla):
         if self.SelMode:
@@ -174,7 +175,7 @@ class Dialogo:
             self.func_lin[tecla]()
  
     def hablar(self):
-        print('aca')
+        
         if self.terminar:
             self.cerrar()
         else:

@@ -1,6 +1,6 @@
 {
     "ID":0,"nombre":"heroe",
-    "salud":999,"fuerza":50,
+    "salud":20,"fuerza":5,
     "velocidad":3,"alcance_cc":16,
     "imagenes":{
         "idle":"mobs/imagenes/heroe_idle_walk.png",

@@ -1,7 +1,7 @@
 from engine.misc import Resources as r
 from .mod_data import ModData as MD
 from .giftgroups import MobGroup
-from .renderer import Renderer
+from .renderer_ import Renderer
 from .tiempo import Tiempo
 
 class EngineData:
@@ -42,26 +42,6 @@ class EngineData:
         ED.MAPA_ACTUAL.register_at_renderer(entrada)
         ED.HUD = HUD()
     
-    def mapa_adyacente(nombre,posicion,ady):
-        from engine.mapa.Stage import ChunkMap
-        ED = EngineData
-        data = r.abrir_json(MD.mapas+nombre+'.json')
-        mapa = ChunkMap(ED.MAPA_ACTUAL,data)
-        
-        x,y = posicion
-        if 'sup' in ady: y -= mapa.rect.w
-        if 'izq' in ady: x -= mapa.rect.h
-        
-        mapa.rect.topleft = x,y
-        mapa.mapX = mapa.rect.x
-        mapa.mapY = mapa.rect.y
-        
-        if type(ED.MAPA_ACTUAL.limites[ady]) == str:
-            ED.MAPA_ACTUAL.limites[ady] = mapa
-            ED.RENDERER.camara.setAdyBg(mapa)
-
-        #print(nombre, posicion)
-    
     @staticmethod
     def checkear_adyacencias():
         
@@ -80,3 +60,4 @@ class EngineData:
         
         if r.Lde:       m.cargar_mapa_adyacente('der')
         elif r.Liz:     m.cargar_mapa_adyacente('izq')
+    

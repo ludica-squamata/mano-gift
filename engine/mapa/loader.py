@@ -72,6 +72,8 @@ class _loader:
             ED.HERO = pc
             _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
             ED.HERO.ubicar(x,y)
+            ED.HERO.mapX = x
+            ED.HERO.mapY = y
         except:
             ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
             _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
@@ -91,7 +93,8 @@ class _loader:
     
     @staticmethod
     def cargar_limites():
-        limites = _loader.STAGE.data['limites']
-        
-        for key in limites:
-            _loader.STAGE.limites[key.lower()] = limites[key]
+        if 'limites' in _loader.STAGE.data:
+            limites = _loader.STAGE.data['limites']
+            
+            for key in limites:
+                _loader.STAGE.limites[key.lower()] = limites[key]

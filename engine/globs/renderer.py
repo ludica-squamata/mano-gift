@@ -5,7 +5,6 @@ from .constantes import Constants as C
 class Renderer:
     camara = None
     overlays = None
-    use_focus = True
     Lsu = None
     Lin = None
     Lde = None
@@ -37,7 +36,7 @@ class Renderer:
 
     def update(self,fondo):
         fondo.fill((125,125,125))
-        self.camara.update(self.use_focus)
+        self.camara.update()
         
         self.Lsu = self.camara.LimSup
         self.Lin = self.camara.LimInf
@@ -52,10 +51,12 @@ class Renderer:
         return ret
     
 class Camara:
+    bgs = None # diversos fondos
     bg = None # el fondo
     bg_rect = None
     focus = None # objeto que la camara sigue.
     contents = None # objetos del frente
+    _camRect = None
     x,y,w,h = 0,0,0,0
     LimSup = False
     LimInf = False
@@ -63,11 +64,12 @@ class Camara:
     LimIzq = False
     
     def __init__(self):
-        self.contents = LayeredDirty()
         self.bgs = LayeredDirty()
+        self.contents = LayeredDirty()
         self.w = C.ANCHO
         self.h = C.ALTO
         self.rect = Rect(self.x,self.y,self.w,self.h)
+        self._camRect = Rect(self.x,self.y,self.w,self.h)
     
     def setBackground(self,spr):
         if self.bg == None:
@@ -77,9 +79,6 @@ class Camara:
         else:
             self.bgs.add(spr)
             self.bg_rect.union_ip(spr.rect)
-    
-    def setAdyBg(self,bg):
-        self.contents.add(bg,layer=0)
     
     def addFgObj(self,spr,_layer=0):
         if spr not in self.contents:
@@ -97,37 +96,28 @@ class Camara:
             if self.focus.nombre == spr.nombre:
                 return True
         return False
-    
-    def mover (self,dx,dy):
-        self.rect.move_ip(dx,dy)
-        print(self.rect)
-    
+        
     def paneolibre(self,dx,dy):
         
         newPosX = self.bg.rect.x + dx
         newPosY = self.bg.rect.y + dy
         
-        #if newPosX > 0 or newPosX < -(self.bg.rect.w - self.w): dx = 0
-        #if newPosY > 0 or newPosY < -(self.bg.rect.h - self.h): dy = 0
+        if newPosX > 0 or newPosX < -(self.bg.rect.w - self.w): dx = 0
+        if newPosY > 0 or newPosY < -(self.bg.rect.h - self.h): dy = 0
         
         #esta función sí panea porque mueve el fondo y los sprites.
         self.bg.rect.x += dx
         self.bg.rect.y += dy
-        for spr in self.bgs:
-            if spr != self.bg:
-                x = self.bg.rect.x + spr.offsetX
-                y = self.bg.rect.y + spr.offsetY
-                spr.ubicar(x,y)
-            spr.dirty = 1
-            
         for spr in self.contents:
-            x = self.bg.rect.x + spr.mapX
-            y = self.bg.rect.y + spr.mapY
-            spr.ubicar(x,y)
-            self.contents.change_layer(spr, spr.rect.bottom)
+            if spr != self.bg:
+                spr.rect.x += dx
+                spr.rect.y += dy
+                self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
             
-    def detectar_limites(self):
+    def centrar(self):
+        self.focus.rect.center = self.rect.center
+        
         newPosX = self.focus.rect.x - self.focus.mapX
         offsetX = self.w - newPosX - self.bg.rect.w
         if offsetX <= 0:
@@ -143,9 +133,11 @@ class Camara:
             #self.focus.rect.x += offsetX
             if not self.LimDer:
                 self.LimDer = True
+       
         
-        newPosY = self.focus.rect.y - self.focus.mapY 
-        offsetY = self.h - newPosY - self.bg.rect.h 
+        newPosY = self.focus.rect.y - self.focus.mapY
+        #print(self.focus.mapY)
+        offsetY = self.h - newPosY - self.bg.rect.h
         if offsetY <= 0:
             if newPosY > 0: # limite superior
                 #self.focus.rect.y -= newPosY
@@ -160,29 +152,29 @@ class Camara:
             #self.focus.rect.y += offsetY
             if not self.LimInf:
                 self.LimInf = True
+            #else:
+            #    self.bg.rect.y = newPosY+offsetY
+            #    self.focus.rect.y += offsetY
+        #print(offsetY)
+        #dx = newPosX - self.bg.rect.x 
+        #dy = newPosY - self.bg.rect.y
+        self._camRect.x = -newPosX
+        self._camRect.y = -newPosY
         
-        return newPosX,newPosY
-    
-    def centrar(self):
-        self.focus.rect.center = self.rect.center
-    
-    def panear(self,dx,dy):
-        _rect = Rect((-dx,-dy),self.rect.size)
-        #la idea es que si el rect del mapa contiene al de la camara
-        if self.bg_rect.contains(_rect): 
-            pass #entonces la camara se mueve (panea)
-        else: # pero si no la contiene
-            pass # no deberia moverse (para no salirse de los bordes)
+        if not self.bg_rect.contains(self._camRect):
+            newPosX = -newPosX
+            newPosY = -newPosY
         
-        self.bg.rect.x = dx
-        self.bg.rect.y = dy
+        
+        self.bg.rect.x = newPosX
+        self.bg.rect.y = newPosY
         for spr in self.bgs:
             if spr != self.bg:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
             spr.dirty = 1
-        
+            
         for spr in self.contents:
             if spr != self.focus:#porque al focus ya lo movimos antes
                 x = self.bg.rect.x + spr.mapX
@@ -191,19 +183,15 @@ class Camara:
             self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
         
-    def update(self,use_focus):
+    def update(self):
         self.bgs.update()
         self.contents.update()
-        if use_focus:
-            self.centrar()
-            dx,dy = self.detectar_limites()
-            self.panear(dx,dy)
-            
+        self.centrar()
                 
     def draw(self,fondo):
-        ret = ret = self.bgs.draw (fondo) + self.contents.draw(fondo)
-        draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
-        draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
+        ret = self.bgs.draw (fondo) + self.contents.draw(fondo)
+        #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
+        #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
     
     

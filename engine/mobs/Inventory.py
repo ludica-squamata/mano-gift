@@ -36,7 +36,7 @@ class Inventory:
         elif item < 0:
             item += len(self._contenido)
         
-        if item > len(self.contenido)-1:
+        if item > len(self._contenido)-1:
             raise IndexError()
         else:
             return self._contenido[item]

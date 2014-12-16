@@ -4,7 +4,7 @@ from pygame.sprite import LayeredDirty
 from engine.misc import Resources as r
 from engine.libs.textrect import render_textrect
 from engine.globs import EngineData as ED
-from engine.UI.widgets import _item_inv, _espacio_equipable
+from engine.UI.widgets import _base_fila, _espacio_equipable
 
 class Menu_Equipo(Menu_Items):
     espacios = None
@@ -13,7 +13,7 @@ class Menu_Equipo(Menu_Items):
     cur_esp = 0
     cur_itm = 0
     foco = None
-    
+    cambio = False
     def __init__(self):
         '''Crea e inicaliza las varibales del menú Equipo.'''
         
@@ -113,6 +113,7 @@ class Menu_Equipo(Menu_Items):
         self.current = self.espacios.get_sprite(self.cur_esp)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
+            self.cambio = True
         else:
             selected = self.current.nombre
 
@@ -138,14 +139,14 @@ class Menu_Equipo(Menu_Items):
     
     def llenar_espacio_selectivo(self,draw_area_rect):
         '''Llena el espacio selectivo con los items que se correspondan con el espacio
-        actualmente seleccionado. Esta función se llama en cada bucle.'''
+        actualmente seleccionado. Esta función se llama cuando se cambia el espacio.'''
         
         h = self.altura_del_texto
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp) # por ejemplo: peto
         for idxItemCant in ED.HERO.inventario('equipable',espacio.nombre):
             i,item,cant = idxItemCant
-            fila = _item_inv(item,cant,188,(0,i*h+i),self.fuente_MP,self.font_high_color)
+            fila = _fila(item,188,self.fuente_MP,self.font_high_color,(0,i*h+i))
             self.filas.add(fila)
         
         self.opciones = len(self.filas)
@@ -206,8 +207,22 @@ class Menu_Equipo(Menu_Items):
             funciones[tecla]()
     
     def update(self):
-        if self.foco == 'espacios':
+        if self.cambio:
             self.llenar_espacio_selectivo(self.draw_space_rect)
+            self.cambio = False
+        self.filas.update()
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space,self.draw_space_rect)
         self.dirty = 1
+
+class _fila(_base_fila): # menu_equipo
+    def construir_fila(self,bg):
+        _rect = Rect((-1,-1),(int(self.ancho//2),self.fuente.get_height()+1))
+        img_nmbr = render_textrect(self.nombre,self.fuente,_rect,self.color,bg,1)
+        img_cant = render_textrect('x'+str(self.cantidad),self.fuente,_rect,self.color,bg,1)
+        image = Surface((self.ancho,_rect.h))
+        image.fill(self.bg_cnvs)
+        image.blit(img_nmbr,(3,0))
+        image.blit(img_cant,(self.ancho//2,0))
+        
+        return image

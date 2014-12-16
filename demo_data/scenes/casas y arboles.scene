@@ -8,5 +8,6 @@
             "dialog":"intro.json"
         }
     },
-    "focus":"heroe"
+    "focus":"heroe",
+    "end": null
 }
