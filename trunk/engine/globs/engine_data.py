@@ -1,7 +1,7 @@
 from engine.misc import Resources as r
 from .mod_data import ModData as MD
 from .giftgroups import MobGroup
-from .renderer_ import Renderer
+from .renderer import Renderer
 from .tiempo import Tiempo
 
 class EngineData:
