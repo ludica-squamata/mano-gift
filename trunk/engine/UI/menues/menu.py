@@ -1,6 +1,5 @@
 from engine.UI.Ventana import Ventana
 from engine.globs import Constants as C, EngineData as ED
-from engine.UI.widgets import _boton, _item_inv
 
 class Menu (Ventana):
     botones = []
@@ -36,7 +35,7 @@ class Menu (Ventana):
                 item.dirty = 1
             
     def mover_cursor(self,item):
-        if type(item) == _boton:
+        if item.tipo == 'boton':
             for i in range(len(self.botones)):
                 spr = self.botones.get_sprite(i)
                 if  spr.nombre == item.nombre:
@@ -44,7 +43,7 @@ class Menu (Ventana):
                     self.current = spr
                     break
                     
-        elif type(item) == _item_inv:
+        elif item.tipo == 'fila':
             for i in range(len(self.filas)):
                 spr = self.filas.get_sprite(i)
                 if item.nombre == spr.nombre:

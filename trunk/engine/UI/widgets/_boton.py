@@ -13,6 +13,7 @@ class _boton (BaseWidget):
     direcciones = {}
     
     def __init__(self,nombre,ancho_mod,comando,pos):
+        self.tipo = 'boton'
         self.comando = None
         self.direcciones = {}
         self.nombre = nombre

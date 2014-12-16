@@ -13,9 +13,10 @@ class ModData:
         
         data = ModData.get_file_data('mod.json')
         if data != None:
+            
             ModData.data = data
-    
             root = ModData.mod_folder
+            
             ModData.graphs = root+data['folders']['graficos']+'/'
             ModData.dialogos = root+data['folders']['dialogos']+'/'
             ModData.mapas = root+data['folders']['mapas']+'/'
@@ -29,6 +30,7 @@ class ModData:
     
     @staticmethod
     def find_mod_folder(ini):
+
         folder = path.normpath(path.join(cwd(),ini['folder']))
         if not path.exists(folder):
             folder = path.normpath(ini['folder'])
@@ -41,8 +43,12 @@ class ModData:
     @staticmethod
     def get_file_data(filename):
         from engine.misc import Resources as r
+        _folder = path.join(cwd(),'demo_data\\')
         folder = ModData.mod_folder
         ruta = folder+filename
-        if path.exists(ruta):
-            data = r.abrir_json(ruta)
-            return data
+        if not path.exists(ruta):
+            ruta = _folder+filename
+            ModData.mod_folder = _folder
+        
+        data = r.abrir_json(ruta)
+        return data

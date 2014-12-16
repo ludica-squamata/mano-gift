@@ -3,26 +3,34 @@ from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData
 from engine.quests import QuestManager
 from engine.IO.modos import modo
 from engine.misc import Resources as r, Config
-from data import intro,introduccion
+from engine.UI.menues.menu_Debug import introduccion
+#from data import intro,introduccion
 from pygame import font
 py_init()
 tamanio = C.ANCHO, C.ALTO
 ModData.init(r.abrir_json("engine.ini"))
 pantalla.set_caption(ModData.data['nombre'])
-pantalla.set_icon(image.load(ModData.data['icono']))
+pantalla.set_icon(image.load(ModData.graphs+ModData.data['icono']))
 fondo = pantalla.set_mode(tamanio)
 
 fuente = font.SysFont('verdana',16,bold=True)
-if Config.dato('mostrar_intro'): anim = intro(fondo)
+#if Config.dato('mostrar_intro'): anim = intro(fondo)
+
 init = introduccion()
-init.ejecutar(fondo)
+while True:
+    cambios = init.ejecutar(fondo)
+    if cambios:
+        pantalla.update(cambios)
+    else:
+        break
 
 while True:
     T.FPS.tick(60)
     render = fuente.render(str(int(T.FPS.get_fps())),True,(255,0,0))
     T.contar_tiempo()
     QuestManager.update()
-    events = EVENT.get()
+    events = EVENT.get([2,3,12]) # es ligeramente más eficiente
+    EVENT.clear() # no itererar sobre lo que no nos interesa
     modo.Juego(events)
     if ED.MODO == 'Aventura':
         cambios = modo.Aventura(events,fondo)

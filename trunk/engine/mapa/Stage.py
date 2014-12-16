@@ -4,7 +4,7 @@ from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import DirtySprite, LayeredDirty
 from engine.misc import Resources as r
 from .loader import _loader
-from pygame import mask
+from pygame import mask, Rect
 
 class Stage:
     properties = None
@@ -25,7 +25,7 @@ class Stage:
         self.properties = LayeredDirty()
         _loader.setStage(self)
         _loader.loadEverything(entrada,mobs_data)
-        T.crear_noche(self.mapa.rect.size) #asumiendo que es uno solo...
+        T.crear_noche(self.rect.size) #asumiendo que es uno solo...
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         #self.register_at_renderer(entrada)
     
@@ -76,6 +76,7 @@ class Stage:
             #        item.mapX -= self.rect.w
             #        item.mapY -= self.rect.h
             
+    
     def anochecer(self):
         if self.data['ambiente'] == 'exterior':
             #transiciones
@@ -100,7 +101,7 @@ class Stage:
                 self.grilla[x,y].transitable = False
     
     def __repr__(self):
-        return "Stage "+self.nombre+'('+str(self.properties)+')'
+        return "Stage "+self.nombre+' ('+str(self.properties)+')'
 
 class ChunkMap(DirtySprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.

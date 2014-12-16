@@ -1,6 +1,6 @@
 class Item:
     stackable = False
-    
+    slot = 'No'
     def __init__(self,nombre,imagen,data):
         self.nombre = nombre
         self.image = imagen

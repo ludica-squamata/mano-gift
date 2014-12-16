@@ -5,7 +5,7 @@ class _espacio_equipable (BaseWidget):
     isSelected = False
     item = None
     direcciones = {}
-    
+    tipo = 'espacio'
     def __init__(self,nombre,item,direcciones,x,y):
         '''Inicializa las variables de un espacio equipable.'''
         

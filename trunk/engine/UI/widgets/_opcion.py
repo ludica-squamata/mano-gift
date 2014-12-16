@@ -6,11 +6,10 @@ class _opcion (BaseWidget):
     '''Opción única que es parte de una lista más grande.
     No tiene cantidad, pero puede ser seleccionada (resaltando)
     mediante serElegido.'''
-    
+    tipo = 'fila'
     isSelected = False
     
     def __init__(self,texto,ancho,pos,size=16,aling=0):
-        
         self.pos = pos
         self.size = size
         self.fuente = font.SysFont('verdana', size)

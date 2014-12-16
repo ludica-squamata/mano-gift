@@ -51,6 +51,8 @@ class _giftSprite(sprite.DirtySprite):
         
         self.mapX = x
         self.mapY = y
+        self.globX = x
+        self.globY = y
         self.stage = stage
         self.solido = True
     
@@ -58,6 +60,8 @@ class _giftSprite(sprite.DirtySprite):
         '''mueve el sprite una cantidad de pixeles'''
         self.mapX += dx
         self.mapY += dy
+        #self.globX += dx
+        #self.globY += dy
         self.rect.move_ip(dx,dy)
         if self.image != None:
             self.dirty = 1
