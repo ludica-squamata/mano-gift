@@ -69,12 +69,13 @@ class Stage:
             self.limites[ady] = mapa
             ED.RENDERER.setBackground(mapa)
             self.rect.union_ip(mapa.rect)
-            #print(self.mapa.rect.topleft)
             
-            #for item in self.properties:
-            #    if hasattr(item,'mapX'):
-            #        item.mapX -= self.rect.w
-            #        item.mapY -= self.rect.h
+            #print(nombre)
+            #
+            ##for item in self.properties:
+            ##    if hasattr(item,'mapX'):
+            ##        item.mapX -= self.rect.w
+            ##        item.mapY -= self.rect.h
             
     
     def anochecer(self):

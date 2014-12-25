@@ -175,4 +175,4 @@ class _shadowSprite(_giftSprite):
                     x,y = self.mapX,self.mapY
                     self._sombras[i] = _sombra(img,rect,x,y,self)
 
-                    ED.RENDERER.addObj(self._sombras[i],self.rect.bottom-10)
+                    #ED.RENDERER.addObj(self._sombras[i],self.rect.bottom-10)

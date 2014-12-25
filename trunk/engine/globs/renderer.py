@@ -79,10 +79,7 @@ class Camara:
         else:
             self.bgs.add(spr)
             self.bg_rect.union_ip(spr.rect)
-    
-    def setAdyBg(self,bg):
-        self.contents.add(bg,layer=0)
-    
+        
     def addFgObj(self,spr,_layer=0):
         if spr not in self.contents:
             self.contents.add(spr,layer=_layer)
@@ -99,10 +96,6 @@ class Camara:
             if self.focus.nombre == spr.nombre:
                 return True
         return False
-    
-    def mover (self,dx,dy):
-        self.rect.move_ip(dx,dy)
-        print(self.rect)
     
     def paneolibre(self,dx,dy):
         
@@ -162,66 +155,57 @@ class Camara:
             #self.focus.rect.y += offsetY
             if not self.LimInf:
                 self.LimInf = True
-        
-
-        dx = newPosX-self.bg.rect.x
-        dy = newPosY-self.bg.rect.y
-        return dx,dy,newPosX,newPosY
+                
+        return newPosX,newPosY
     
     def centrar(self):
         self.focus.rect.center = self.rect.center
     
-    def panear(self,dx,dy,newX,newY):
+    def panear(self,newX,newY):
         self.camRect.topleft = -newX,-newY
-        _rect = Rect((-newX,-newY),self.rect.size)
-        #la idea es que si el rect del mapa contiene al de la camara
-        if self.bg_rect.contains(self.camRect):
-            #print('contiene')
-            dx = newX - self.bg.rect.x
-            dy = newY - self.bg.rect.y
-        
-            self.bg.rect.x += dx
-            self.bg.rect.y += dy
-            for spr in self.bgs:
-                if spr != self.bg:
-                    x = self.bg.rect.x + spr.offsetX
-                    y = self.bg.rect.y + spr.offsetY
-                    spr.ubicar(x,y)
-                spr.dirty = 1
+    
+        top,bottom,left,right = False,False,False,False
+        cam = self.camRect # alias
+        #A point along the right or bottom edge is not considered to be inside the rectangle.
+        ##hence the -1s
+        if self.bg_rect.collidepoint((cam.top,cam.left)):         top,left     = True,True
+        if self.bg_rect.collidepoint((cam.top,cam.right-1)):      top,right    = True,True
+        if self.bg_rect.collidepoint((cam.bottom-1,cam.left)):    bottom,left  = True,True
+        if self.bg_rect.collidepoint((cam.bottom-1,cam.right-1)): bottom,right = True,True
             
-            for spr in self.contents:
-                if spr != self.focus:#porque al focus ya lo movimos antes
-                    x = self.bg.rect.x + spr.mapX
-                    y = self.bg.rect.y + spr.mapY
-                    spr.ubicar(x,y)
-                self.contents.change_layer(spr, spr.rect.bottom)
-                spr.dirty = 1
-        else: # pero si no la contiene
-            #print('no contiene')
-            for spr in self.contents:
-                #if spr != self.focus:#porque al focus ya lo movimos antes
-                x = self.bg.rect.x + spr.mapX
-                y = self.bg.rect.y + spr.mapY
-                spr.ubicar(x,y)
-                self.contents.change_layer(spr, spr.rect.bottom)
-                spr.dirty = 1
-            pass # no deberia moverse (para no salirse de los bordes)
+        dx = newX - self.bg.rect.x
+        dy = newY - self.bg.rect.y
         
-
+        if not left or not right:   dx = 0
+        if not top or not bottom:   dy = 0
+        
+        self.bg.rect.x += dx
+        self.bg.rect.y += dy
+        for spr in self.bgs:
+            if spr != self.bg:
+                x = self.bg.rect.x + spr.offsetX
+                y = self.bg.rect.y + spr.offsetY
+                spr.ubicar(x,y)
+            spr.dirty = 1
+        
+        for spr in self.contents:
+            x = self.bg.rect.x + spr.mapX
+            y = self.bg.rect.y + spr.mapY
+            spr.ubicar(x,y)
+            self.contents.change_layer(spr, spr.rect.bottom)
+            spr.dirty = 1
         
     def update(self,use_focus):
         self.bgs.update()
         self.contents.update()
         if use_focus:
             self.centrar()
-            dx,dy,nx,ny = self.detectar_limites()
-            self.panear(dx,dy,nx,ny)
-            
-                
+            nx,ny = self.detectar_limites()
+            self.panear(nx,ny)
+        
     def draw(self,fondo):
         ret = ret = self.bgs.draw (fondo) + self.contents.draw(fondo)
-        draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
-        draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
+        #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
+        #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
-    
-    
+       
