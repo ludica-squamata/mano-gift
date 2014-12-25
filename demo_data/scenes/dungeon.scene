@@ -1,9 +1,0 @@
-{
-    "ID":1,
-    "stage":["dungeon","inicial"],
-    "dia":0,"hora":17,
-    "mobs":{
-        
-    },
-    "focus":"heroe"
-}
