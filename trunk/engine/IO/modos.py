@@ -19,44 +19,46 @@ class modo:
                     Util.salir()
                 
                 elif event.key == C.TECLAS.DEBUG:
-                    #print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
+                    print('map: ',(ED.HERO.mapX, ED.HERO.mapY))
                     #print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
-                    ED.RENDERER.use_focus = not ED.RENDERER.use_focus
+                    #ED.RENDERER.use_focus = not ED.RENDERER.use_focus
         
-        if not ED.RENDERER.use_focus:
-            x,y = mouse.get_pos()
-            dx,dy = 0,0
-            if x < C.CUADRO: #32
-                if x <= C.CUADRO//4: #8
-                    mouse.set_pos(C.CUADRO//4,y)
-                    dx = +3
-                else:
-                    dx = +1
-            
-            elif x > C.ANCHO-C.CUADRO:
-                if x >= C.ANCHO-C.CUADRO//4:
-                    mouse.set_pos(C.ANCHO-C.CUADRO//4,y)
-                    dx = -3
-                else:
-                    dx = -1
-            
-            if y < C.CUADRO: #32
-                if y <= C.CUADRO//4: #8
-                    mouse.set_pos(x,C.CUADRO//4)
-                    dy = +3
-                else:
-                    dy = +1
-            
-            elif y > C.ALTO-C.CUADRO:
-                if y >= C.ALTO-C.CUADRO//4:
-                    mouse.set_pos(x,C.ALTO-C.CUADRO//4)
-                    dy = -3
-                else:
-                    dy = -1
-            
-            ED.RENDERER.camara.mover(dx,dy)
-            ED.RENDERER.camara.paneolibre(dx,dy)
-        
+        if True: # folding
+        #if not ED.RENDERER.use_focus:
+        #    x,y = mouse.get_pos()
+        #    dx,dy = 0,0
+        #    if x < C.CUADRO: #32
+        #        if x <= C.CUADRO//4: #8
+        #            mouse.set_pos(C.CUADRO//4,y)
+        #            dx = +3
+        #        else:
+        #            dx = +1
+        #    
+        #    elif x > C.ANCHO-C.CUADRO:
+        #        if x >= C.ANCHO-C.CUADRO//4:
+        #            mouse.set_pos(C.ANCHO-C.CUADRO//4,y)
+        #            dx = -3
+        #        else:
+        #            dx = -1
+        #    
+        #    if y < C.CUADRO: #32
+        #        if y <= C.CUADRO//4: #8
+        #            mouse.set_pos(x,C.CUADRO//4)
+        #            dy = +3
+        #        else:
+        #            dy = +1
+        #    
+        #    elif y > C.ALTO-C.CUADRO:
+        #        if y >= C.ALTO-C.CUADRO//4:
+        #            mouse.set_pos(x,C.ALTO-C.CUADRO//4)
+        #            dy = -3
+        #        else:
+        #            dy = -1
+        #    
+        #    ED.RENDERER.camara.mover(dx,dy)
+        #    ED.RENDERER.camara.paneolibre(dx,dy)
+        #
+            pass
     
     def Aventura(events,fondo):
         ED.HUD.update()
@@ -83,8 +85,6 @@ class modo:
                     ED.HERO.accion()
                 
                 elif event.key == C.TECLAS.MENU:
-                    ED.onPause = True
-                    ED.MODO = 'Menu'
                     modo._popMenu('Pausa')
                 
                 elif event.key == C.TECLAS.IZQUIERDA: ED.HERO.cambiar_direccion('izquierda',True)
@@ -172,7 +172,8 @@ class modo:
                         modo.newMenu = False
                     else:
                         ED.menu_actual.keyup_function('hablar')
-                                        
+        
+        ED.menu_actual.update()
         return ED.RENDERER.update(fondo)
     
     @staticmethod
@@ -189,6 +190,9 @@ class modo:
         else:
             menu = ED.MENUS[titulo]
             menu.Reset()
+        
+        ED.MODO = 'Menu'
+        ED.onPause = True
         
         ED.menu_actual = menu
         ED.RENDERER.addOverlay(menu,C.CAPA_OVERLAYS_MENUS)

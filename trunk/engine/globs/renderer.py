@@ -5,14 +5,10 @@ from .constantes import Constants as C
 class Renderer:
     camara = None
     overlays = None
-    use_focus = True
-    Lsu = None
-    Lin = None
-    Lde = None
-    Liz = None
+    use_focus = False
 
     def __init__(self):
-        self.camara = Camara()
+        self.camara = Camara(self)
         self.overlays = LayeredDirty()
         
     def clear(self):
@@ -39,16 +35,10 @@ class Renderer:
         fondo.fill((125,125,125))
         self.camara.update(self.use_focus)
         
-        self.Lsu = self.camara.LimSup
-        self.Lin = self.camara.LimInf
-        self.Liz = self.camara.LimIzq
-        self.Lde = self.camara.LimDer
-        
         for over in self.overlays:
             if over.active:              
                 over.update()
         ret = self.camara.draw(fondo) + self.overlays.draw(fondo)
-        
         return ret
     
 class Camara:
@@ -57,12 +47,9 @@ class Camara:
     focus = None # objeto que la camara sigue.
     contents = None # objetos del frente
     x,y,w,h = 0,0,0,0
-    LimSup = False
-    LimInf = False
-    LimDer = False
-    LimIzq = False
     
-    def __init__(self):
+    def __init__(self,parent):
+        self.parent = parent
         self.contents = LayeredDirty()
         self.bgs = LayeredDirty()
         self.w = C.ANCHO
@@ -97,71 +84,11 @@ class Camara:
                 return True
         return False
     
-    def paneolibre(self,dx,dy):
-        
-        newPosX = self.bg.rect.x + dx
-        newPosY = self.bg.rect.y + dy
-        
-        #if newPosX > 0 or newPosX < -(self.bg.rect.w - self.w): dx = 0
-        #if newPosY > 0 or newPosY < -(self.bg.rect.h - self.h): dy = 0
-        
-        #esta función sí panea porque mueve el fondo y los sprites.
-        self.bg.rect.x += dx
-        self.bg.rect.y += dy
-        for spr in self.bgs:
-            if spr != self.bg:
-                x = self.bg.rect.x + spr.offsetX
-                y = self.bg.rect.y + spr.offsetY
-                spr.ubicar(x,y)
-            spr.dirty = 1
-            
-        for spr in self.contents:
-            x = self.bg.rect.x + spr.mapX
-            y = self.bg.rect.y + spr.mapY
-            spr.ubicar(x,y)
-            self.contents.change_layer(spr, spr.rect.bottom)
-            spr.dirty = 1
-            
     def detectar_limites(self):
-        newPosX = self.focus.rect.x - self.focus.mapX
-        offsetX = self.w - newPosX - self.bg.rect.w
-        if offsetX <= 0:
-            if newPosX > 0: # limite izquierdo
-                #self.focus.rect.x -= newPosX
-                self.LimIzq = True
-            else:           # entre limites
-                #self.bg.rect.x = newPosX
-                self.LimDer = False
-                self.LimIzq = False
-        else:               # limite derecho
-            #self.bg.rect.x = newPosX+offsetX
-            #self.focus.rect.x += offsetX
-            if not self.LimDer:
-                self.LimDer = True
+        from .engine_data import EngineData as ED
         
-        newPosY = self.focus.rect.y - self.focus.mapY 
-        offsetY = self.h - newPosY - self.bg.rect.h 
-        if offsetY <= 0:
-            if newPosY > 0: # limite superior
-                #self.focus.rect.y -= newPosY
-                if not self.LimSup:
-                    self.LimSup = True
-            else:           # entre limites
-                #self.bg.rect.y = newPosY
-                self.LimSup = False
-                self.LimInf = False
-        else:               # limite inferior
-            #self.bg.rect.y = newPosY+offsetY
-            #self.focus.rect.y += offsetY
-            if not self.LimInf:
-                self.LimInf = True
-                
-        return newPosX,newPosY
-    
-    def centrar(self):
-        self.focus.rect.center = self.rect.center
-    
-    def panear(self,newX,newY):
+        newX = self.focus.rect.x - self.focus.mapX
+        newY = self.focus.rect.y - self.focus.mapY
         self.camRect.topleft = -newX,-newY
     
         top,bottom,left,right = False,False,False,False
@@ -172,13 +99,26 @@ class Camara:
         if self.bg_rect.collidepoint((cam.top,cam.right-1)):      top,right    = True,True
         if self.bg_rect.collidepoint((cam.bottom-1,cam.left)):    bottom,left  = True,True
         if self.bg_rect.collidepoint((cam.bottom-1,cam.right-1)): bottom,right = True,True
-            
+        
+        d = ''
+        if not top:    d+='sup'
+        if not bottom: d+='inf'
+        if not left:   d+='izq'
+        if not right:  d+='der'
+        ED.checkear_adyacencias(d)
+        
         dx = newX - self.bg.rect.x
         dy = newY - self.bg.rect.y
         
-        if not left or not right:   dx = 0
-        if not top or not bottom:   dy = 0
+        #if not left or not right:   dx = 0 #descomentar para restringir
+        #if not top or not bottom:   dy = 0 #el movimiento fuera de borde
         
+        return dx,dy
+    
+    def centrar(self):
+        self.focus.rect.center = self.rect.center
+    
+    def panear(self,dx,dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
         for spr in self.bgs:
@@ -200,8 +140,8 @@ class Camara:
         self.contents.update()
         if use_focus:
             self.centrar()
-            nx,ny = self.detectar_limites()
-            self.panear(nx,ny)
+            dx,dy = self.detectar_limites()
+            self.panear(dx,dy)
         
     def draw(self,fondo):
         ret = ret = self.bgs.draw (fondo) + self.contents.draw(fondo)

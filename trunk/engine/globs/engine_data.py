@@ -28,7 +28,11 @@ class EngineData:
         stage,entrada = scene_data['stage']
         ED.setear_mapa(stage,entrada)
         Tiempo.setear_momento(scene_data['dia'],scene_data['hora'])
-        ED.RENDERER.camara.setFocus(MobGroup[scene_data['focus']])
+        if scene_data['focus'] != '':
+            ED.RENDERER.camara.setFocus(MobGroup[scene_data['focus']])
+            ED.RENDERER.use_focus = True
+        else:
+            ED.RENDERER.use_focus = False
     
     @staticmethod
     def setear_mapa(nombre,entrada):
@@ -43,21 +47,8 @@ class EngineData:
         ED.HUD = HUD()
     
     @staticmethod
-    def checkear_adyacencias():
-        
-        r = EngineData.RENDERER
-        m = EngineData.MAPA_ACTUAL
-        
-        if r.Lsu:
-            m.cargar_mapa_adyacente('sup')
-            if r.Liz:   m.cargar_mapa_adyacente('supizq')
-            elif r.Lde: m.cargar_mapa_adyacente('supder')
-        
-        elif r.Lin:
-            m.cargar_mapa_adyacente('inf')
-            if r.Liz:   m.cargar_mapa_adyacente('infizq')
-            elif r.Lde: m.cargar_mapa_adyacente('infder')
-        
-        if r.Lde:       m.cargar_mapa_adyacente('der')
-        elif r.Liz:     m.cargar_mapa_adyacente('izq')
+    def checkear_adyacencias(clave):
+        if clave in EngineData.MAPA_ACTUAL.limites:
+            return EngineData.MAPA_ACTUAL.cargar_mapa_adyacente(clave)
+
     

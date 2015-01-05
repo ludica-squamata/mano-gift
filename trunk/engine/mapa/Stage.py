@@ -19,7 +19,7 @@ class Stage:
     def __init__(self,nombre,mobs_data,entrada):
         self.nombre = nombre
         self.data = r.abrir_json(MD.mapas+nombre+'.json')
-        self.mapa = ChunkMap(self,self.data) # por ahora es uno solo.
+        self.mapa = ChunkMap(self,self.data,nombre) # por ahora es uno solo.
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.properties = LayeredDirty()
@@ -69,6 +69,8 @@ class Stage:
             self.limites[ady] = mapa
             ED.RENDERER.setBackground(mapa)
             self.rect.union_ip(mapa.rect)
+            return True
+        return False
             
             #print(nombre)
             #
@@ -102,7 +104,7 @@ class Stage:
                 self.grilla[x,y].transitable = False
     
     def __repr__(self):
-        return "Stage "+self.nombre+' ('+str(self.properties)+')'
+        return "Stage "+self.nombre+' ('+str(len(self.properties.sprites()))+' sprites)'
 
 class ChunkMap(DirtySprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.
@@ -118,6 +120,9 @@ class ChunkMap(DirtySprite):
         self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
         self.offsetX = offX
         self.offsetY = offY
+    
+    def __repr__(self):
+        return "ChunkMap "+self.nombre 
     
     def ubicar(self, x, y):
         '''Coloca al sprite en pantalla'''
