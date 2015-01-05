@@ -54,46 +54,9 @@ class Menu_Debug (Menu):
         ED.MODO = 'Aventura'
         ED.setear_escena(self.escenas[self.sel])
         ED.onPause = False
+        ED.menu_previo = ''
     
     def update(self):
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space,self.draw_space_rect)
         self.dirty = 1
-
-class introduccion (Menu_Debug):
-    running = True
-    def __init__ (self):
-        super().__init__()
-        
-    def ejecutar (self,fondo):
-        T.FPS.tick(60)
-        for event in EVENT.get():
-            if event.type == QUIT:
-                Util.salir()
-                
-            elif event.type == KEYDOWN:
-                if event.key == C.TECLAS.SALIR:
-                    Util.salir()
-                
-                elif event.key == C.TECLAS.IZQUIERDA:
-                    self.usar_funcion('izquierda')
-                    
-                elif event.key == C.TECLAS.DERECHA:
-                    self.usar_funcion('derecha')
-                
-                elif event.key == C.TECLAS.ARRIBA:
-                    self.usar_funcion('arriba')
-                
-                elif event.key == C.TECLAS.ABAJO:
-                    self.usar_funcion('abajo')
-                
-                elif event.key == C.TECLAS.HABLAR:
-                    self.running = False
-                    self.usar_funcion('hablar')
-                    break
-        
-        self.update()
-        if self.running:
-            return fondo.blit(self.canvas,(10,10))
-        else:
-            return False

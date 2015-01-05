@@ -33,8 +33,6 @@ class PC(Mob,Parlante):
                 ED.setear_mapa(spr.dest,spr.link)
                 dx,dy = 0,0
         
-        ED.checkear_adyacencias()
-
         if not self.detectar_colisiones(dx,0):
             self.reubicar(dx,0) # el heroe se mueve en el mapa, no en la camara
         if not self.detectar_colisiones(0,dy):
