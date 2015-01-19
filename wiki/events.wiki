@@ -1,0 +1,51 @@
+#summary Sistema de eventos
+#labels scripting
+
+=Sistema de eventos=
+
+Uno de las partes que necesitamos para el sistema de scripting es un servicio de eventos, para que los mobs y objetos puedan tener interacciones no directas.
+
+Podriamos implementarlo como un broadcasting, pero para simplificar las interacciones es mejor hacerlo con una cola de eventos, que a la vez disminuye la cantidad de llamadas en un entorno con muchos sprites.
+
+El proceso sería: 
+  * creamos un objeto global Event dispatcher. 
+  * los giftSprites pueden registrarse para recibir un evento particular (o varios)
+  * un giftSprite o algun otro objeto que solo se dedique a eso puede crear eventos en el dispatcher
+  * antes de llamar el ciclo de updates del renderer, procesamos la cola de eventos que se hayan creado, informando a los interesados
+
+
+La clase EventDispatcher posee estos métodos estáticos:
+ 
+ ===register(events, listener)===
+ 
+ _events_ es un string o un list con strings de los eventos que desean registrarse. 
+ _listener_ es la referencia a una funcion. la misma debe aceptar como parametro un objeto de tipo giftEvent
+ 
+ Este método la llaman los objetos que desean recibir un evento particular
+ 
+
+ ===deregister(events, listener)===
+ 
+ _events_ es un string o un list con strings de los eventos que desean borrarse. 
+ _listener_ es la referencia a una funcion.
+ 
+ Se llama para removerse de la cola de notificaciones (por ejemplo, al morir un mob). la funcion pasada debe ser la misma que se usó para registrarse
+ 
+ 
+ ===trigger(eventData)===
+ 
+ _eventData_ es un objeto de tipo giftEvent.
+ 
+ Este método crea un evento en la cola para ser distribuido, con los datos que van a ser distribuidos.
+ 
+ ===process()===
+ 
+ El método llamado antes del update del renderer para hacer dispatching del frame. Para performande puede estar limitado a ejecutar una cantidad de dispatchs por frame, usando `yield` o algo asi
+ 
+ 
+La clase giftEvent es solo un contenedor de datos, es clase para que sea más claro hacer subclases. Sus propiedades son:
+
+ _type_ un string con el nombre del evento
+ _origin_ un string identificando el objeto que creó el evento
+ _data_ un dict con la información relevante
+
