@@ -14,7 +14,7 @@ El proceso sería:
   * antes de llamar el ciclo de updates del renderer, procesamos la cola de eventos que se hayan creado, informando a los interesados
 
 
-La clase EventDispatcher posee estos métodos estáticos:
+La clase !EventDispatcher posee estos métodos estáticos:
  
  ===register(events, listener)===
  
@@ -48,4 +48,3 @@ La clase giftEvent es solo un contenedor de datos, es clase para que sea más cl
  _type_ un string con el nombre del evento
  _origin_ un string identificando el objeto que creó el evento
  _data_ un dict con la información relevante
-
