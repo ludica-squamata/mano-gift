@@ -16,18 +16,20 @@ El proceso sería:
 
 La clase !EventDispatcher posee estos métodos estáticos:
  
- ===register(events, listener)===
+ ===register(listener, *events)===
  
- _events_ es un string o un list con strings de los eventos que desean registrarse. 
  _listener_ es la referencia a una funcion. la misma debe aceptar como parametro un objeto de tipo giftEvent
+ _events_ es un listado de strings de los eventos que desean registrarse. 
+
  
  Este método la llaman los objetos que desean recibir un evento particular
  
 
- ===deregister(events, listener)===
+ ===deregister(listener, *events)===
  
- _events_ es un string o un list con strings de los eventos que desean borrarse. 
  _listener_ es la referencia a una funcion.
+ _events_ es un listado de strings de los eventos que desean borrarse. 
+
  
  Se llama para removerse de la cola de notificaciones (por ejemplo, al morir un mob). la funcion pasada debe ser la misma que se usó para registrarse
  
