@@ -16,7 +16,7 @@ El proceso sería:
 
 La clase !EventDispatcher posee estos métodos estáticos:
  
- ===register(listener, *events)===
+ ===register(listener, `*`events)===
  
  _listener_ es la referencia a una funcion. la misma debe aceptar como parametro un objeto de tipo giftEvent
  _events_ es un listado de strings de los eventos que desean registrarse. 
@@ -25,7 +25,7 @@ La clase !EventDispatcher posee estos métodos estáticos:
  Este método la llaman los objetos que desean recibir un evento particular
  
 
- ===deregister(listener, *events)===
+ ===deregister(listener, `*`events)===
  
  _listener_ es la referencia a una funcion.
  _events_ es un listado de strings de los eventos que desean borrarse. 
