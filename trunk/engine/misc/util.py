@@ -4,9 +4,10 @@ import sys
 
 class Util:
     ##
-    #crea una sombra para la imagen pasada. de momento tiene inclinacion fija
-    #@param surface Surface
-    #@return Surface
+    # crea una sombra para la imagen pasada. de momento tiene inclinacion fija
+    # @param surface Surface
+    # @param mask MASK
+    # @return Surface
     def crear_sombra(surface, mask = None):
         if mask == None:
             mask = MASK.from_surface(surface)
@@ -19,9 +20,14 @@ class Util:
                     pxarray[int(x+(h-y)/2),y] = (0,0,0,150)
         return pxarray.make_surface().convert_alpha()
 
-    ##
-    #una funcion unificada para cerrar todo
+    @staticmethod
     def salir(output='normal'):
+        """
+        una funcion unificada para cerrar todo
+        :param output:
+        :type output:str
+        :return:None
+        """
         py_quit()
         print('Saliendo...\nStatus: '+output)
         Config.guardar()

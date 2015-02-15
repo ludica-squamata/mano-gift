@@ -107,7 +107,7 @@ class modo:
         if dx != 0 or dy != 0:
             ED.HERO.mover(dx,dy)
         modo.dx, modo.dy = dx, dy
-        
+        ED.EVENTS.process()
         return ED.RENDERER.update(fondo)
     
     def Dialogo(events,fondo):

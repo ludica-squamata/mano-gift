@@ -3,6 +3,7 @@ from .mod_data import ModData as MD
 from .giftgroups import MobGroup
 from .renderer import Renderer
 from .tiempo import Tiempo
+from .eventDispatcher import EventDispatcher
 
 class EngineData:
     mapas = {}
@@ -16,6 +17,7 @@ class EngineData:
     MODO = ''
     onPause = False
     RENDERER = Renderer()
+    EVENTS = EventDispatcher()
     
     scene_data = None
     

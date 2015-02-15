@@ -1,0 +1,10 @@
+{
+  "ID":9999,
+  "tipo":"inerte",
+  "image":"props/reloj.png",
+  "propiedades":["solido"],
+  "script":"reloj",
+  "eventos":{
+    "hora":"on_hora"
+  }
+}

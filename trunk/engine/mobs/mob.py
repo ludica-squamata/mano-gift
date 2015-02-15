@@ -1,10 +1,10 @@
 from .CompoMob import Equipado,Atribuido,Animado,Movil
-from engine.base import _giftSprite
+from engine.base import _giftSprite, _shadowSprite
 from engine.misc import Resources as r
 from engine.globs import Constants as C, EngineData as ED, MobGroup
 from pygame import mask
 
-class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
+class Mob(Equipado, Atribuido, Animado, Movil, _shadowSprite):
     tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []
@@ -19,16 +19,16 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
     idle_walk_alpha = {}
     estado = '' #idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
-    def __init__(self,data,x,y):
+    def __init__(self, data, x, y):
         self.images = {}
         self.mascaras = {}
         self.data = data
         
-        dirs = ['S','I','D']
-        imgs = self.data['imagenes']
-        alpha = self.data['alphas']
+        dirs = ['S', 'I', 'D']
+        imgs = data['imagenes']
+        alpha = data['alphas']
         for key in imgs:
-            if imgs[key] != None:
+            if imgs[key] is not None:
                 if key == 'idle':
                     self.idle_walk_img = self.cargar_anims(imgs['idle'],dirs)
                     self.idle_walk_alpha = self.cargar_anims(alpha['idle'],dirs,True)
@@ -50,18 +50,18 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
         #self.calcular_sombra(self.image)
         
         
-        self.ID = self.data['ID']
-        self.nombre = self.data['nombre']
+        self.ID = data['ID']
+        self.nombre = data['nombre']
         self.direccion = 'abajo'
         
         
 
-        if 'solido' in self.data['propiedades']:
-            self.solido = self.data['solido']
+        if 'solido' in data['propiedades']:
+            self.solido = data['solido']
         
-        if 'hostil' in self.data['propiedades']:
+        if 'hostil' in data['propiedades']:
             self.actitud = 'hostil'
-        elif 'pasiva' in self.data['propiedades']:
+        elif 'pasiva' in data['propiedades']:
             self.actitud = 'pasiva'
         else:
             self.actitud = ''
@@ -105,4 +105,5 @@ class Mob(Equipado, Atribuido, Animado, Movil, _giftSprite):
             self.determinar_accion(self.ver())
             self.mover()
         self.dirty = 1
+        self.updateSombra()
 
