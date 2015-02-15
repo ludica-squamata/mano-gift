@@ -1,6 +1,7 @@
 from pygame import time, Surface, draw, PixelArray, SRCALPHA
 from engine.base import _giftSprite
 from engine.misc import Resources as r
+from engine.globs.eventDispatcher import GiftEvent
 
 class Noche(_giftSprite):
     def __init__(self,size):
@@ -87,6 +88,8 @@ class Tiempo:
     
     @staticmethod
     def contar_tiempo ():
+        from engine.globs.engine_data import EngineData as ED
+
         Tiempo._frames += 1
         if Tiempo._frames == 60:
             Tiempo._segs += 1
@@ -95,6 +98,7 @@ class Tiempo:
                 Tiempo._mins += 1
                 Tiempo.hora += 1
                 Tiempo._segs = 0
+                ED.EVENTS.trigger(GiftEvent('hora', 'Tiempo', {"hora": Tiempo.hora}))
                 if Tiempo.hora < 12:
                     Tiempo.angulo_sol = Tiempo.hora*15
                     # 15 = 90º/6; 6 = 12 horas de luz/2 por el abs de sombra

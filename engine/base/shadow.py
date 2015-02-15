@@ -35,7 +35,7 @@ class _shadowSprite(_giftSprite):
    
     def __init__(self, *args,**kwargs):
         self._sombras = [0,0,0,0,0,0,0,0]
-        self._luces = [0,0,0,0,1,0,0,0]
+        self._luces = [0,1,0,0,1,0,1,0]
         
         super().__init__(*args,**kwargs)
 
@@ -155,8 +155,8 @@ class _shadowSprite(_giftSprite):
             else:
                 if dy > 0:    luces[7] = True # norte
                 else:                  luces[3] = True # sur
-    
-    def update(self):
+
+    def updateSombra(self):
         #generar sombra en direccion contraria a los slots iluminados
         #si cambio la lista,
         #actualizar imagen de sombra y centrar
@@ -176,3 +176,9 @@ class _shadowSprite(_giftSprite):
                     self._sombras[i] = _sombra(img,rect,x,y,self)
 
                     #ED.RENDERER.addObj(self._sombras[i],self.rect.bottom-10)
+                    #sombra = self._sombras[i]
+                    #self._sprSombra = sombra
+                    #rect = sombra.get_pos(self.rect)
+                    #sombra.image.blit(self.image,rect)
+                    #self.image = sombra.image
+                

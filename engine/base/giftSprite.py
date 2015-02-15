@@ -11,6 +11,7 @@ class _giftSprite(sprite.DirtySprite):
     nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True # si es solido, colisiona; si no, no.
     images = None
+    data = None  # info importada de un json
 
     IMAGEN_D = 'abajo'
     IMAGEN_U = 'arriba'
