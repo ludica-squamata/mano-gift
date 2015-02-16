@@ -29,7 +29,9 @@ class _giftGroup:
         
     def __delitem__(self,key):
         if key in self._group:
+            self._indexes.remove(key)
             del self._group[key]
+            
         elif type(key) == int:
             if 0 <= key <= len(self._indexes)-1:
                 del self._group[self._indexes[key]]
@@ -54,7 +56,7 @@ class _giftGroup:
                 return True
         return False
     
-    def __str__(self): 
+    def __str__(self):
         return 'MobGroup keys ('+','.join([self._group[i].nombre for i in self._indexes])+')'
 
 MobGroup = _giftGroup()

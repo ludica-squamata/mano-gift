@@ -110,8 +110,8 @@ class Camara:
         dx = newX - self.bg.rect.x
         dy = newY - self.bg.rect.y
         
-        #if not left or not right:   dx = 0 #descomentar para restringir
-        #if not top or not bottom:   dy = 0 #el movimiento fuera de borde
+        if not left or not right:   dx = 0 #descomentar para restringir
+        if not top or not bottom:   dy = 0 #el movimiento fuera de borde
         
         return dx,dy
     
