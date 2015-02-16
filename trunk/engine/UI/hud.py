@@ -120,6 +120,7 @@ class espacioInventario(DirtySprite,Estilo):
         self.cant_rect = self.cant_img.get_rect(topleft=(w-dw-1,h-dh-1))
         
     def vaciar(self):
+        self.clear()
         self.item = None
         self.item_img = None
         self.item_rect = None
@@ -132,13 +133,14 @@ class espacioInventario(DirtySprite,Estilo):
     
     def update(self):
         self.clear()
-        if self.item != None and self.cant != 0:
+        if self.item is not None and self.cant != 0:
             self.image.blit(self.item_img,self.item_rect)
             self.image.blit(self.cant_img,self.cant_rect)
         self.dirty = 1
 
 class InventoryDisplay:
     cuadros = []
+    _slots = [None for i in range(10)]
     onSelect = False
     current = 0
     def __init__(self,dx,dy,w):
@@ -158,18 +160,24 @@ class InventoryDisplay:
     
     def Item(self):
         cuadro = self.cuadros.get_sprite(self.current)
-        item = cuadro.item 
-        cuadro.cant = ED.HERO.usar_item(item)
-        if cuadro.cant == 0:
-            cuadro.vaciar()
+        item = cuadro.item
+        if item is not None:
+            cuadro.cant = ED.HERO.usar_item(item)
+            if cuadro.cant == 0:
+                cuadro.vaciar()
             
     def colocar_item(self,item,slot):
-        cuadro = self.cuadros.get_sprite(slot-1)
+        if item.ID in self._slots:
+            slotted = self._slots.index(item.ID)
+            self.cuadros.sprites()[slotted].vaciar() #borrar el cuadro anterior
+            self._slots[slotted] = None
+        cuadro = self.cuadros.get_sprite(slot-1) #cuadro actualmente seleccionado
         cuadro.setItem(item)
         cuadro.setCant()
-        
+        self._slots[slot-1] = item.ID
+            
     def isOpen (self,slot):
-        return self.cuadros.get_sprite(slot-1).item == None
+        return self.cuadros.get_sprite(slot-1).item is None
     
     def Salir(self):
         for cuadro in self.cuadros:
@@ -214,7 +222,7 @@ class HUD:
     def update(self):
         self.BarraVida.setVariable(actual=ED.HERO.salud_act)
         for item in ED.HERO.inventario:
-            if item.slot != 'No':
+            if item.slot != '-':
                 if self.Inventory.isOpen(item.slot):
                     self.Inventory.colocar_item(item,item.slot)
         self.Inventory.update()
