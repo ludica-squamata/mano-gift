@@ -4,7 +4,8 @@ from engine.misc import Resources as r
 from engine.globs import Constants as C, EngineData as ED, MobGroup
 from pygame import mask
 
-class Mob(Equipado, Atribuido, Animado, Movil, _shadowSprite):
+
+class Mob(Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para tener .velocidad
     tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []

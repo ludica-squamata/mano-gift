@@ -38,7 +38,8 @@ class Renderer:
         for over in self.overlays:
             if over.active:              
                 over.update()
-        ret = self.camara.draw(fondo) + self.overlays.draw(fondo)
+        ret = self.camara.draw(fondo)
+        ret += self.overlays.draw(fondo)
         return ret
     
 class Camara:
@@ -127,12 +128,13 @@ class Camara:
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
             spr.dirty = 1
-        
+
         for spr in self.contents:
             x = self.bg.rect.x + spr.mapX
             y = self.bg.rect.y + spr.mapY
             spr.ubicar(x,y)
-            self.contents.change_layer(spr, spr.rect.bottom)
+            if y:
+                self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
         
     def update(self,use_focus):
@@ -140,11 +142,13 @@ class Camara:
         self.contents.update()
         if use_focus:
             self.centrar()
-            dx,dy = self.detectar_limites()
-            self.panear(dx,dy)
-        
+            dx, dy = self.detectar_limites()
+            if dx or dy:
+                self.panear(dx,dy)
+
     def draw(self,fondo):
-        ret = ret = self.bgs.draw (fondo) + self.contents.draw(fondo)
+        ret = self.bgs.draw(fondo)
+        ret += self.contents.draw(fondo)
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
         #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret

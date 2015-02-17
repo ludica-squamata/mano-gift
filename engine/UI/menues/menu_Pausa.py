@@ -64,9 +64,9 @@ class Menu_Pausa (Menu):
         return False
         
     def PressOne(self):
-        from engine.IO.modos import modo
+        from engine.IO.modos import Modo
         super().PressButton()
-        modo.newMenu = True
+        Modo.newMenu = True
     
     def Reset(self):
         '''Reseta el presionado de todos los botones, y deja seleccionado
