@@ -112,14 +112,14 @@ class Menu_Opciones (Menu_Pausa,Menu):
             C.asignar('recordar_menus',not C.dato('recordar_menus'))
     
     def setTecla (self):
-        from engine.IO.modos import modo
+        from engine.IO.modos import Modo
         '''Prepara la tecla elegida para ser cambiada'''
         
         boton,tecla = self.elegir_botonYespacio()
         boton.serPresionado()
         tecla.serElegido()
         
-        modo.setKey = True
+        Modo.setKey = True
         
     def cambiarTecla (self,tcl):
         '''Cambia la tecla elgida por el nuevo input'''
