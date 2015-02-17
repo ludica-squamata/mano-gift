@@ -59,7 +59,7 @@ class Movil(Atribuido):
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
                 if self.colisiona(spr, dx, dy):
                     if spr.solido:
-                        if spr is Movible:
+                        if isinstance(spr,Movible):
                             spr.reubicar(dx, dy)
                         else:
                             col_props = True
