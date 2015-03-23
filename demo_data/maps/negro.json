@@ -17,8 +17,6 @@
     "salidas":{
     },
     "limites":{
-        "Sup":"blanco",
-        "Inf":"blanco",
         "Izq":"blanco",
         "Der":"blanco"
     },

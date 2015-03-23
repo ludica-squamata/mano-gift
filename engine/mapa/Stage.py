@@ -38,6 +38,7 @@ class Stage:
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     
     def addProperty(self,obj,_layer,addInteractive=False):
+        obj._layer_ = _layer
         self.properties.add(obj,layer =_layer)
         if addInteractive:
             self.interactives.append(obj)
@@ -71,14 +72,6 @@ class Stage:
             self.rect.union_ip(mapa.rect)
             return True
         return False
-            
-            #print(nombre)
-            #
-            ##for item in self.properties:
-            ##    if hasattr(item,'mapX'):
-            ##        item.mapX -= self.rect.w
-            ##        item.mapY -= self.rect.h
-            
     
     def anochecer(self):
         if self.data['ambiente'] == 'exterior':
@@ -95,7 +88,7 @@ class Stage:
                 T.noche.image.set_alpha(150)
         elif self.data['ambiente'] == 'interior':
             T.noche.image.set_alpha(0)
-               
+    
     def actualizar_grilla(self):
         for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
             if spr.solido:# and not spr.es('empujable'):

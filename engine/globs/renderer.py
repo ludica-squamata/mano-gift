@@ -91,29 +91,34 @@ class Camara:
         newX = self.focus.rect.x - self.focus.mapX
         newY = self.focus.rect.y - self.focus.mapY
         self.camRect.topleft = -newX,-newY
-    
+        
         top,bottom,left,right = False,False,False,False
         cam = self.camRect # alias
         #A point along the right or bottom edge is not considered to be inside the rectangle.
         ##hence the -1s
-        if self.bg_rect.collidepoint((cam.top,cam.left)):         top,left     = True,True
-        if self.bg_rect.collidepoint((cam.top,cam.right-1)):      top,right    = True,True
-        if self.bg_rect.collidepoint((cam.bottom-1,cam.left)):    bottom,left  = True,True
-        if self.bg_rect.collidepoint((cam.bottom-1,cam.right-1)): bottom,right = True,True
+        if self.bg_rect.collidepoint((cam.left,cam.top)):         top,left     = True,True
+        if self.bg_rect.collidepoint((cam.right-1,cam.top)):      top,right    = True,True
+        if self.bg_rect.collidepoint((cam.left,cam.bottom-1)):    bottom,left  = True,True
+        if self.bg_rect.collidepoint((cam.right-1,cam.bottom-1)): bottom,right = True,True
         
         d = ''
         if not top:    d+='sup'
         if not bottom: d+='inf'
         if not left:   d+='izq'
         if not right:  d+='der'
-        ED.checkear_adyacencias(d)
+        
+        if ED.checkear_adyacencias(d):
+            if 'sup' in d: top = True
+            if 'inf' in d: bottom = True
+            if 'izq' in d: left = True
+            if 'der' in d: right = True
         
         dx = newX - self.bg.rect.x
         dy = newY - self.bg.rect.y
-        
-        #if not left or not right:   dx = 0 #descomentar para restringir
-        #if not top or not bottom:   dy = 0 #el movimiento fuera de borde
-        
+       
+        if not left or not right:   dx = 0 #descomentar para restringir
+        if not top or not bottom:   dy = 0 #el movimiento fuera de borde
+
         return dx,dy
     
     def centrar(self):
@@ -122,20 +127,22 @@ class Camara:
     def panear(self,dx,dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
+        
         for spr in self.bgs:
             if spr != self.bg:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
             spr.dirty = 1
-
+    
         for spr in self.contents:
-            x = self.bg.rect.x + spr.mapX
-            y = self.bg.rect.y + spr.mapY
-            spr.ubicar(x,y)
-            if y:
-                self.contents.change_layer(spr, spr.rect.bottom)
-            spr.dirty = 1
+            if 0 < spr._layer_ < 7:
+                x = self.bg.rect.x + spr.mapX
+                y = self.bg.rect.y + spr.mapY
+                spr.ubicar(x,y)
+                if y:
+                    self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
+                spr.dirty = 1
         
     def update(self,use_focus):
         self.bgs.update()
@@ -143,7 +150,9 @@ class Camara:
         if use_focus:
             self.centrar()
             dx, dy = self.detectar_limites()
-            if dx or dy:
+            focus_dx = self.focus.rect.x - self.focus.mapX - self.bg.rect.x
+            focus_dy = self.focus.rect.y - self.focus.mapY - self.bg.rect.y
+            if focus_dx or focus_dy:
                 self.panear(dx,dy)
 
     def draw(self,fondo):
