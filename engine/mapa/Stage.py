@@ -134,4 +134,4 @@ class ChunkMap(DirtySprite):
     def update(self):
         self.stage.anochecer()
         self.stage.actualizar_grilla()
-        self.dirty = 1
+        # self.dirty = 1

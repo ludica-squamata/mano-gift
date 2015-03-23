@@ -31,8 +31,8 @@ class Renderer:
         if obj in self.overlays:
             self.overlays.remove(obj)
 
-    def update(self,fondo):
-        fondo.fill((125,125,125))
+    def update(self, fondo):
+        fondo.fill((125, 125, 125))
         self.camara.update(self.use_focus)
         
         for over in self.overlays:
@@ -48,7 +48,7 @@ class Camara:
     focus = None # objeto que la camara sigue.
     contents = None # objetos del frente
     x,y,w,h = 0,0,0,0
-    
+
     def __init__(self,parent):
         self.parent = parent
         self.contents = LayeredDirty()
@@ -119,7 +119,7 @@ class Camara:
     def centrar(self):
         self.focus.rect.center = self.rect.center
     
-    def panear(self,dx,dy):
+    def panear(self, dx, dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
         for spr in self.bgs:
@@ -137,7 +137,7 @@ class Camara:
                 self.contents.change_layer(spr, spr.rect.bottom)
             spr.dirty = 1
         
-    def update(self,use_focus):
+    def update(self, use_focus):
         self.bgs.update()
         self.contents.update()
         if use_focus:
@@ -146,7 +146,7 @@ class Camara:
             if dx or dy:
                 self.panear(dx,dy)
 
-    def draw(self,fondo):
+    def draw(self, fondo):
         ret = self.bgs.draw(fondo)
         ret += self.contents.draw(fondo)
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))

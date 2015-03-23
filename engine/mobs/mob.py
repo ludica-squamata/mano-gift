@@ -1,11 +1,11 @@
-from .CompoMob import Equipado,Atribuido,Animado,Movil
-from engine.base import _giftSprite, _shadowSprite
+from .CompoMob import Equipado,Animado
+from engine.base import _giftSprite, ShadowSprite
 from engine.misc import Resources as r
 from engine.globs import Constants as C, EngineData as ED, MobGroup
 from pygame import mask
 
 
-class Mob(Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para tener .velocidad
+class Mob(Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .velocidad
     tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []
@@ -93,18 +93,14 @@ class Mob(Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para t
         self.salud_act -= danio
        
         if self.salud_act <= 0:
-            if self.death_img != None:
+            if self.death_img is not None:
                 self.image = self.death_img
-            else: # esto queda hasta que haga sprites 'muertos' de los npcs
-                  # pero necesito más resolución para hacerlos...
+            else:  # esto queda hasta que haga sprites 'muertos' de los npcs
+                   # pero necesito más resolución para hacerlos...
                 self.stage.delProperty(self)
             self.dead = True
             del MobGroup[self.nombre]
     
     def update(self):
-        if not ED.onPause and not self.dead:
-            self.determinar_accion(self.ver())
-            self.mover()
-        self.dirty = 1
-        self.updateSombra()
+        super().update()
 

@@ -1,11 +1,11 @@
-from engine.base import _shadowSprite, EventListener
+from engine.base import ShadowSprite, EventListener
 from engine.misc import Util as U
 from engine.misc import Resources as r
 from pygame import mask as MASK
 from .items import *
 
 
-class Escenografia(_shadowSprite, EventListener):
+class Escenografia(ShadowSprite, EventListener):
     def __init__(self, nombre, imagen, x, y, data):
         """
         :param nombre:
@@ -31,7 +31,7 @@ class Escenografia(_shadowSprite, EventListener):
 
     def update(self):
         super().update()
-        self.dirty = 1
+        # self.dirty = 1
 
 
 class Agarrable(Escenografia):
@@ -57,7 +57,8 @@ class Agarrable(Escenografia):
             return Pocion(*args)
 
     def update(self):
-        self.dirty = 1
+        pass
+        # self.dirty = 1
 
 
 class Movible(Escenografia):
@@ -114,7 +115,8 @@ class Operable(Escenografia):
                 setattr(self, attr, self.estados[self.estado_actual][attr])
 
     def update(self):
-        self.dirty = 1
+        pass
+        # self.dirty = 1
 
 
 class Destruible(Escenografia):

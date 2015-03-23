@@ -137,8 +137,8 @@ class PC(Mob, Parlante):
     def update(self):
         if self.atacando:
             self.animar_ataque(5)
-        self.dirty = 1
-        self.updateSombra()
+        # self.dirty = 1
+        super().update()
 
     def hablar(self, sprite=None):
         x, y = self.direcciones[self.direccion]
