@@ -25,16 +25,16 @@ class Stage:
         self.properties = LayeredDirty()
         _loader.setStage(self)
         _loader.loadEverything(entrada,mobs_data)
-        T.crear_noche(self.rect.size) #asumiendo que es uno solo...
-        self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         #self.register_at_renderer(entrada)
     
     def register_at_renderer(self,entrada):
         ED.RENDERER.setBackground(self.mapa)
+        T.crear_noche(self.rect.size) #asumiendo que es uno solo...
+        self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         for obj in self.properties:
-            obj.stage = self
+            obj.stage = self    
             ED.RENDERER.addObj(obj,obj.rect.bottom)
-            
+        
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     
     def addProperty(self,obj,_layer,addInteractive=False):
