@@ -152,9 +152,10 @@ class Dialogo:
     SelMode = False
     terminar = False
     sel = 0
-    def __init__(self,arbol):
+    def __init__(self,arbol,*locutores):
         self.frontend = DialogInterface()
         self.dialogo = _ArboldeDialogo(arbol)
+        self.locutores = locutores
         self.func_lin = {
             'hablar':self.hablar,
             'arriba':lambda:None,
@@ -222,4 +223,6 @@ class Dialogo:
         print(NotImplemented)
     
     def cerrar(self):
+        for loc in self.locutores:
+            loc.hablando = False
         self.frontend.destruir()

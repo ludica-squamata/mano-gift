@@ -71,7 +71,7 @@ class Modo:
             # print(event)
             if event.type == C.TAP:
                 if event.key == C.TECLAS.HABLAR:
-                    if ED.HERO.hablar():
+                    if ED.HERO.iniciar_dialogo():
                         ED.MODO = 'Dialogo'
                     else:
                         ED.MODO = 'Aventura'

@@ -104,7 +104,6 @@ class Mob(Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para t
     def update(self):
         if not ED.onPause and not self.dead:
             self.determinar_accion(self.ver())
-            self.animar_caminar()
             self.mover()
         self.dirty = 1
         self.updateSombra()

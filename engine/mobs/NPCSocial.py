@@ -11,4 +11,9 @@ class NPCSocial(NPC,Parlante):
     
     def mover(self):
         if not self.hablando:
+            self.animar_caminar()
             return super().mover()
+    
+    def iniciar_dialogo(self,inter,direccion):
+        self.cambiar_direccion(direccion)
+        self.image = self.images['S'+direccion]
