@@ -3,6 +3,7 @@ from engine.globs import Constants as C, Tiempo as T, EngineData as ED, ModData
 from engine.quests import QuestManager
 from engine.IO.modos import Modo
 from engine.misc import Resources as r, Config
+from demo_data.intro import intro #esto debiera ser importación dinámica.
 
 py_init()
 tamanio = C.ANCHO, C.ALTO
@@ -12,7 +13,7 @@ pantalla.set_icon(image.load(ModData.graphs + ModData.data['icono']))
 fondo = pantalla.set_mode(tamanio)
 
 fuente = font.SysFont('verdana', 16, bold=True)
-# if Config.dato('mostrar_intro'): anim = intro(fondo)
+if Config.dato('mostrar_intro'): anim = intro(fondo)
 
 Modo._popMenu('Debug')
 while True:
