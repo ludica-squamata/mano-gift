@@ -168,8 +168,8 @@ class Dialogo:
             'hablar':self.confirmar_seleccion,
             'arriba':self.elegir_opcion,
             'abajo':self.elegir_opcion,
-            'izquierda':self.elegir_opcion,
-            'derecha':self.elegir_opcion,
+            'izquierda':lambda key:None,
+            'derecha':lambda key:None,
             'inventario':lambda:None,
             'cancelar':self.cerrar}
         
