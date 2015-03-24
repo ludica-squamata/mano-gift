@@ -6,7 +6,11 @@ class _elemento:
     nombre = ''
     hasLeads = False
     tipo = ''
+    indice = None
+    locutor = None
+    leads = None
     def __init__(self,tipo,indice,texto,locutor,leads=None):
+        
         self.tipo = tipo
         self.indice = indice
         self.nombre = self.tipo.capitalize()+' #'+str(self.indice)
@@ -42,6 +46,22 @@ class _ArboldeDialogo:
         self._elementos = []
         self._actual = 0
 
+        self._elementos.extend(self._crear_lista(datos))
+        
+        for obj in self._elementos:
+            if obj.tipo != 'leaf':
+                if type(obj.leads) is list:
+                    idx = -1
+                    for lead in obj.leads:
+                        idx += 1
+                        elem = self._elementos[lead]
+                        obj.leads[idx] = self._elementos[lead]
+                else:
+                    obj.leads = self._elementos[obj.leads]
+    
+    @staticmethod
+    def _crear_lista(datos):
+        _elem = []
         for i in range(len(datos)):
             idx = str(i)
             data = datos[idx]
@@ -51,22 +71,9 @@ class _ArboldeDialogo:
             loc = data['loc']
             txt = data['txt']
             
-            obj = _elemento(tipo, idx, txt, loc, leads)
-
+            _elem.append(_elemento(tipo, idx, txt, loc, leads))
+        return _elem
             
-            self._elementos.append(obj)
-        
-        for obj in self._elementos:
-            if obj.tipo != 'leaf':
-                if type(obj.leads) == list:
-                    for lead in obj.leads:
-                        if type(lead) == int: #esto no deberia ser necesario
-                            obj.leads[obj.leads.index(lead)] = self._elementos[lead]
-                        elif type(lead) == _elemento: #pero no sé porqué, la segunda vez
-                            obj.leads[obj.leads.index(lead)] = self._elementos[int(lead.indice)]
-                else:       #type(lead) = _elemento, cuando deberia ser int...
-                    obj.leads = self._elementos[obj.leads]
-
     def __len__(self):
         return len(self._elementos)
     
@@ -211,4 +218,3 @@ class Dialogo:
     
     def cerrar(self):
         self.frontend.destruir()
-
