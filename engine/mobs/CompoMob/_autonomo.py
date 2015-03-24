@@ -33,7 +33,8 @@ class Autonomo(Sensitivo, Movil):  # tiene que poder ver para ser autónomo
             self.vision = self.tri_vis
             self.mover_vis = self.mover_tri_vis
 
-    def mover(self, dx, dy):
+    def mover(self):
         direccion = self.AI(self)
         self.cambiar_direccion(direccion)
-        super().mover(dx, dy)
+        self.moverse() #método de movil
+        #porque super() me devolvía a NPCSOcial...
