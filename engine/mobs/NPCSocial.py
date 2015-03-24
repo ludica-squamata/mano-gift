@@ -11,6 +11,6 @@ class NPCSocial(NPC, Parlante):
         self.dialogo = r.abrir_json(MD.dialogos + data['dialog'])
 
     def mover(self, dx, dy):
-        #if not self.hablando:
-        #    return super().mover(dx, dy)
+        if not self.hablando:
+            return super().mover(dx, dy)
         pass

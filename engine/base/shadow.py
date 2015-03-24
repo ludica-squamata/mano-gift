@@ -58,7 +58,7 @@ class ShadowSprite(_giftSprite):
             self._sprSombra.mapX = self.mapX - h_2
             self._sprSombra.ubicar(self.rect.x - h_2, self.rect.y)
             # self._sprSombra = _sombra(Surface((h-w, h*2), SRCALPHA), self.rect, self.mapX, self.mapY, self)
-            ED.RENDERER.addObj(self._sprSombra, self.rect.bottom + 100)
+            ED.RENDERER.addObj(self._sprSombra, self.rect.bottom - 10)
 
 
         t_surface = Surface((h*2, h*2), SRCALPHA)
@@ -246,4 +246,5 @@ class ShadowSprite(_giftSprite):
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
-        self._sprSombra.reubicar(dx, dy)
+        if self._sprSombra is not None:
+            self._sprSombra.reubicar(dx, dy)
