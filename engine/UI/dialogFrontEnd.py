@@ -24,9 +24,8 @@ class DialogFrontEnd (Ventana):
         ED.RENDERER.addOverlay(self,C.CAPA_OVERLAYS_DIALOGOS)
         
     def destruir(self):
-        ED.RENDERER.delOverlay(self)
         ED.DIALOG = None
-        ED.MODO = 'Aventura'
+        ED.RENDERER.delOverlay(self)
         
     def ubicar(self,x,y):
         if x < 0 or y < 0:

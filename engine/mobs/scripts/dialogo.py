@@ -1,4 +1,4 @@
-from engine.UI import DialogInterface
+﻿from engine.UI import DialogInterface
 
 class _elemento:
     '''Class for the dialog tree elements.'''
@@ -54,8 +54,11 @@ class _ArboldeDialogo:
                     idx = -1
                     for lead in obj.leads:
                         idx += 1
-                        elem = self._elementos[lead]
-                        obj.leads[idx] = self._elementos[lead]
+                        #workaround: no sé porque, pero lead queda como _elemento
+                        if type(lead) is int: #a partir de la segunda vez que se inicia
+                            obj.leads[idx] = self._elementos[lead] # el diálogo.
+                        else:
+                            obj.leads[idx] = lead
                 else:
                     obj.leads = self._elementos[obj.leads]
     
@@ -119,27 +122,31 @@ class _ArboldeDialogo:
     def next(self,nodo):  return nodo.leads
     
     def set_chosen(self, choice):
-        self.set_actual(self._actual[choice])
+        self.set_actual(self._actual[choice].leads)
               
     def update(self):
         '''Devuelve el nodo actual, salvo que sea un leaf o branch,
         en cuyo caso devuelve False y None (respectivamente), y
         prepara se prepara para devolver el siguiente nodo'''
-        if type(self._actual) != list:
-            actual = self.get_actual()
-            if actual.tipo != 'leaf':
-                if type(actual.leads)!= list:
-                    self._actual = int(actual.leads.indice)
+        
+        if self._actual is not False: #last was leaf; close
+            if type(self._actual) is not list: #node or leaf
+                actual = self.get_actual()
+                if actual.tipo != 'leaf':
+                    if type(actual.leads) is not list:
+                        self._actual = int(actual.leads.indice)
+                    else:
+                        self._actual = actual.leads
                 else:
-                    self._actual = actual.leads
-                _return = actual
-            else:
-                _return = False
-            if actual.tipo == 'branch':
-                _return = None
-        else:
-            _return = self._actual
-        return _return
+                    self._actual = False
+
+                return actual
+                
+            else: #branch
+                return self._actual
+            
+        else: #last was leaf; close
+            return self._actual
 
 class Dialogo:
     SelMode = False
@@ -183,23 +190,21 @@ class Dialogo:
  
     def hablar(self):
         
-        if self.terminar:
-            self.cerrar()
+        actual = self.dialogo.update()
+        if type(actual) == list:
+            self.SelMode = True
+            self.frontend.borrar_todo()
+            self.frontend.setLocImg(actual[0].locutor) #misma chapuza
+            self.frontend.setSelMode([n.texto for n in actual])
+        elif actual:
+            self.mostrar_nodo(actual)
         else:
-            actual = self.dialogo.update()
-            if type(actual) == list:
-                self.SelMode = True
-                self.frontend.borrar_todo()
-                self.frontend.setLocImg(actual[0].locutor) #misma chapuza
-                self.frontend.setSelMode([n.texto for n in actual])
-            elif actual:
-                self.mostrar_nodo(actual)
-            elif actual != None:
-                self.terminar = True
+            self.cerrar()
     
     def confirmar_seleccion(self):
         self.dialogo.set_chosen(self.sel)
         self.SelMode = False
+        self.hablar()
     
     def mostrar_nodo(self,nodo):
         self.frontend.borrar_todo()
