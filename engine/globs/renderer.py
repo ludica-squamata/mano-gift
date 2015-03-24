@@ -127,23 +127,27 @@ class Camara:
     def panear(self,dx,dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
-        
+
+        colliderect = self.rect.colliderect
+
         for spr in self.bgs:
             if spr != self.bg:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
-            spr.dirty = 1
+                if colliderect(spr.rect):
+                    spr.dirty = 1
     
         for spr in self.contents:
             if 0 < spr._layer_ < 7:
                 x = self.bg.rect.x + spr.mapX
                 y = self.bg.rect.y + spr.mapY
                 spr.ubicar(x,y)
-                if y:
-                    self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
-                spr.dirty = 1
-        
+                if colliderect(spr.rect):
+                    spr.dirty = 1
+                    if y:
+                        self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
+
     def update(self,use_focus):
         self.bgs.update()
         self.contents.update()
