@@ -1,2 +1,2 @@
-from .intro import intro, introduccion
+from .intro import intro
 from .script import run

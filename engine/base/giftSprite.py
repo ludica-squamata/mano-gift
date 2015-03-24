@@ -54,7 +54,6 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY = y
         self.globX = x
         self.globY = y
-        self.stage = stage
         self.solido = True
     
     def reubicar(self, dx, dy):
@@ -63,9 +62,9 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY += dy
         #self.globX += dx
         #self.globY += dy
-        self.rect.move_ip(dx,dy)
-        if self.image != None:
-            self.dirty = 1
+        #self.rect.move_ip(dx,dy)
+        #if self.image != None:
+        #    self.dirty = 1
 
     def ubicar(self, x, y):
         '''Coloca al sprite en pantalla'''

@@ -1,5 +1,4 @@
 from pygame import mask
-
 from engine.globs import Constants as C, EngineData as ED, MobGroup
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
@@ -38,9 +37,7 @@ class PC(Mob, Parlante):
             self.reubicar(dx, 0)  # el heroe se mueve en el mapa, no en la camara
         if not self.detectar_colisiones(0, dy):
             self.reubicar(0, dy)
-
-        # self.dx, self.dy = -dx, -dy
-
+        
     def accion(self):
         x, y = self.direcciones[self.direccion]
 
@@ -99,7 +96,7 @@ class PC(Mob, Parlante):
         for prop in self.stage.interactives:
             x = prop.mapX - (self.mapX + dx)
             y = prop.mapY - (self.mapY + dy)
-            if prop.image is None:
+            if prop.image is not None:
                 prop_mask = mask.from_surface(prop.image)
                 if prop_mask.overlap(self_mask, (-x, -y)):
                     return prop
