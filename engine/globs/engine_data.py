@@ -42,8 +42,12 @@ class EngineData:
         ED.RENDERER.clear()
         from engine.UI.hud import HUD
         from engine.mapa import Stage
+        from engine.mapa.loader import _loader
         if nombre not in ED.mapas:
             ED.mapas[nombre] = Stage(nombre,ED.scene_data['mobs'],entrada)
+        else:
+            _loader.setStage(ED.mapas[nombre])
+            _loader.cargar_hero(entrada)
         ED.MAPA_ACTUAL = ED.mapas[nombre]
         ED.MAPA_ACTUAL.register_at_renderer(entrada)
         ED.HUD = HUD()

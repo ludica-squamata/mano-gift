@@ -71,7 +71,7 @@ class Modo:
             # print(event)
             if event.type == C.TAP:
                 if event.key == C.TECLAS.HABLAR:
-                    if ED.HERO.hablar():
+                    if ED.HERO.iniciar_dialogo():
                         ED.MODO = 'Dialogo'
                     else:
                         ED.MODO = 'Aventura'
@@ -123,7 +123,7 @@ class Modo:
 
     @staticmethod
     def dialogo(events, fondo):
-        for event in _filtrar(events):
+        for event in events:
             if event.type == KEYDOWN:
                 if event.key == C.TECLAS.ARRIBA:
                     ED.DIALOG.usar_funcion('arriba')
@@ -145,6 +145,10 @@ class Modo:
 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
                     ED.DIALOG.usar_funcion('cancelar')
+            
+            elif event.type == KEYUP:
+                if ED.DIALOG is None:
+                    ED.MODO = "Aventura"
 
         return ED.RENDERER.update(fondo)
 

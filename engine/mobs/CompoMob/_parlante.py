@@ -14,6 +14,7 @@ class Parlante(Atribuido):
             if sprite.hablante:
                 self.interlocutor = sprite
                 self.interlocutor.hablando = True
-                ED.DIALOG = Dialogo(self.interlocutor.dialogo)
+                sprite.interlocutor = self
+                ED.DIALOG = Dialogo(sprite.dialogo,self,sprite)
                 return True
         return False

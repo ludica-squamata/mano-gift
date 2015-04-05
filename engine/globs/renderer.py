@@ -12,7 +12,7 @@ class Renderer:
         self.overlays = LayeredDirty()
         
     def clear(self):
-        self.camara.contents.empty()
+        self.camara.clear()
         self.overlays.empty()
     
     def setBackground(self,bg):
@@ -59,9 +59,9 @@ class Camara:
         self.camRect = Rect(-1,-1,self.w,self.h)
     
     def setBackground(self,spr):
-        if self.bg == None:
+        if self.bg is None:
             self.bg = spr
-            self.bg_rect = spr.rect.copy()
+            self.bg_rect = Rect((0,0),spr.rect.size)
             self.camRect.topleft = self.bg_rect.topleft
             self.bgs.add(spr)
         else:
@@ -80,10 +80,16 @@ class Camara:
         self.focus = spr
 
     def isFocus(self,spr):
-        if self.focus != None and hasattr(spr,'nombre'):
+        if self.focus is not None and hasattr(spr,'nombre'):
             if self.focus.nombre == spr.nombre:
                 return True
         return False
+    
+    def clear(self):
+        self.contents.empty()
+        self.bgs.empty()
+        self.bg = None
+        self.camRect = Rect(-1,-1,self.w,self.h)
     
     def detectar_limites(self):
         from .engine_data import EngineData as ED
@@ -106,6 +112,8 @@ class Camara:
         if not bottom: d+='inf'
         if not left:   d+='izq'
         if not right:  d+='der'
+        
+        #print(top,bottom,left,right)
         
         if ED.checkear_adyacencias(d):
             if 'sup' in d: top = True

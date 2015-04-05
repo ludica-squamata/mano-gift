@@ -62,7 +62,7 @@ class _giftSprite(sprite.DirtySprite):
         self.mapY += dy
         #self.globX += dx
         #self.globY += dy
-        #self.rect.move_ip(dx,dy)
+        self.rect.move_ip(dx,dy)
         #if self.image != None:
         #    self.dirty = 1
 

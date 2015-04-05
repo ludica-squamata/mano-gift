@@ -137,7 +137,22 @@ class PC(Mob, Parlante):
         # self.dirty = 1
         super().update()
 
-    def hablar(self, sprite=None):
+    def iniciar_dialogo(self, sprite=None):
         x, y = self.direcciones[self.direccion]
+        
         sprite = self._interactuar_mobs(x, y)
+        if x:
+            if x > 0:
+                post_dir = 'izquierda'
+            else:
+                post_dir = 'derecha'
+        if y:
+            if y < 0:
+                post_dir = 'abajo'
+            else:
+                post_dir = 'arriba'
+                
+        
+        if sprite is not None:
+            sprite.iniciar_dialogo(self,post_dir)
         return super().hablar(sprite)
