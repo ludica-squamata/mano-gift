@@ -13,7 +13,7 @@ class NPCSocial(NPC, Parlante):
     def mover(self, dx, dy):
         if not self.hablando:
             self.animar_caminar()
-            return super().mover()
+            return super().mover(dx, dy)
     
     def iniciar_dialogo(self,inter,direccion):
         self.cambiar_direccion(direccion)

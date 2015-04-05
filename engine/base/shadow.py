@@ -5,28 +5,16 @@ from engine.globs import EngineData as ED
 
 
 class _sombra(_giftSprite):
-    def __init__(self, imagen, rect, x, y, obj):
-        super().__init__(imagen=imagen, x=x, y=y)
-        self.deltaRect = rect
-        self.rect = self.set_pos(x, y)
+    dif_x = 0
+
+    def __init__(self, imagen):
+        super().__init__(imagen=imagen)
         self.tipo = "sombra"
-        self.obj = obj
-
-    def set_pos(self, x, y):
-        # obtiene la posicion final tomando como base la posicion del
-        # sprite y la suya propia
-        rect = self.image.get_rect()
-        rect.x = x + self.deltaRect.x
-        rect.y = y + self.deltaRect.y
-
-        return rect
 
     def ubicar(self, x, y):
-        '''Coloca al sprite en pantalla'''
-        self.rect.x = x + self.deltaRect.x
-        self.rect.y = y + self.deltaRect.y
-        if self.image != None:
-            self.dirty = 1
+        """Coloca al sprite en pantalla"""
+        super().ubicar(x-self.dif_x, y)
+
 
 
 class ShadowSprite(_giftSprite):
@@ -42,7 +30,7 @@ class ShadowSprite(_giftSprite):
 
     def __init__(self, *args, **kwargs):
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._luces = [0, 0, 0, 0, 1, 0, 0, 0]
+        self._luces = [0, 0, 1, 0, 1, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
 
         super().__init__(*args, **kwargs)
 
@@ -50,18 +38,18 @@ class ShadowSprite(_giftSprite):
 
         h = self.rect.h
         w = self.rect.w
-        h_2 = h/2
+        h_2 = h / 2
 
         if self._sprSombra is None:
-            self._sprSombra = _giftSprite(Surface((h-w, h*2), SRCALPHA))
+            self._sprSombra = _sombra(Surface((h - w, h * 2), SRCALPHA))
+            self._sprSombra.dif_x = h_2
             self._sprSombra.mapY = self.mapY
-            self._sprSombra.mapX = self.mapX - h_2
-            self._sprSombra.ubicar(self.rect.x - h_2, self.rect.y)
+            self._sprSombra.mapX = self.mapX
+            self._sprSombra._layer_ = self._layer_ - 10
             # self._sprSombra = _sombra(Surface((h-w, h*2), SRCALPHA), self.rect, self.mapX, self.mapY, self)
             ED.RENDERER.addObj(self._sprSombra, self.rect.bottom - 10)
 
-
-        t_surface = Surface((h*2, h*2), SRCALPHA)
+        t_surface = Surface((h * 2, h * 2), SRCALPHA)
         """:type t_surface: SurfaceType"""
 
         surface = self.image
@@ -70,9 +58,17 @@ class ShadowSprite(_giftSprite):
         if self._sombras[0] == 1:
             img = self._crear_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
+        if self._sombras[5] == 1:
+            img = self._crear_sombra(surface, "NO")
+            t_surface.blit(img, (0, 0))
         if self._sombras[1] == 1:
             img = self._crear_sombra(surface, "E")
             t_surface.blit(img, (h_2, 0))
+
+        import sys
+        if 'pydevd' in sys.modules:
+            from pygame import draw, Rect
+            draw.rect(t_surface, (255,0,0), Rect(1,1,t_surface.get_width()-2, t_surface.get_height()-2), 1)
 
         self._sprSombra.image = t_surface
         """
@@ -138,7 +134,7 @@ class ShadowSprite(_giftSprite):
         shadow_color = 0, 0, 0, 150
 
         # if arg in ('N', 'S', 'E', 'O'):
-        #     pxarray = PixelArray(Surface((w, h), 0, surface))
+        # pxarray = PixelArray(Surface((w, h), 0, surface))
         # else:
         #     pxarray = PixelArray(Surface((int(w + h / 2), h), 0, surface))
         #
@@ -167,16 +163,28 @@ class ShadowSprite(_giftSprite):
         #     return transform.flip(pxarray.make_surface().convert_alpha(), False, True)
         # else:  # NE
 
-        #if arg == 'NE':
-        d = h/2
-        nw = w + d
+        pxarray = None
 
-        pxarray = PixelArray(Surface((nw, h), 0, surface))
-        for y in range(h):
-            dd = floor(d * (1-(y/h)))
-            for x in range(w):
-                if mask.get_at((x, y)):
-                    pxarray[x+dd, y] = shadow_color
+        if arg == 'NE':
+            d = h / 2
+            nw = w + d
+
+            pxarray = PixelArray(Surface((nw, h), 0, surface))
+            for y in range(h):
+                dd = floor(d * (1 - (y / h)))
+                for x in range(w):
+                    if mask.get_at((x, y)):
+                        pxarray[x + dd, y] = shadow_color
+        if arg == 'NO':
+            d = h / 2
+            nw = w + d
+
+            pxarray = PixelArray(Surface((nw, h), 0, surface))
+            for y in range(h):
+                dd = floor(d * (y / h))
+                for x in range(w):
+                    if mask.get_at((x, y)):
+                        pxarray[x + dd, y] = shadow_color
 
         return pxarray.make_surface().convert_alpha()
 
@@ -231,7 +239,7 @@ class ShadowSprite(_giftSprite):
         if self._prevLuces is None or self._luces != self._prevLuces:
             self._prevLuces = self._luces[:]
             for i in range(0, 7):
-                if (self._luces[(i + 4) % 7] - self._luces[i]) == 1:  #bool
+                if (self._luces[(i + 4) % 7] - self._luces[i]) == 1:  # bool
                     self._sombras[i] = 1
                 else:
                     self._sombras[i] = 0
@@ -243,6 +251,11 @@ class ShadowSprite(_giftSprite):
         # self._sprSombra.rect.x =
         # self._sprSombra.rect.y = self.rect.y - self.rect.h
         super().update(*args)
+
+    def ubicar(self, dx, dy):
+        super().ubicar(dx, dy)
+        if self._sprSombra is not None:
+            self._sprSombra.ubicar(dx, dy)
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
