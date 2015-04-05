@@ -4,7 +4,6 @@ from engine.misc import Resources as r
 from pygame import mask as MASK
 from .items import *
 
-
 class Escenografia(_shadowSprite, EventListener):
     def __init__(self, nombre, imagen, x, y, data):
         """
@@ -26,13 +25,8 @@ class Escenografia(_shadowSprite, EventListener):
         super().__init__(imagen, x=x, y=y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
-
+        
         self.add_listeners()  # carga de event listeners
-
-    def update(self):
-        super().update()
-        self.dirty = 1
-
 
 class Agarrable(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
@@ -56,10 +50,6 @@ class Agarrable(Escenografia):
         elif self.subtipo == 'pocion':
             return Pocion(*args)
 
-    def update(self):
-        self.dirty = 1
-
-
 class Movible(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
         p = data.get('propiedades', ['solido'])
@@ -69,12 +59,10 @@ class Movible(Escenografia):
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'mover'
 
-
 class Trepable(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'trepar'
-
 
 class Operable(Escenografia):
     estados = {}
@@ -112,10 +100,6 @@ class Operable(Escenografia):
         for attr in self.estados[self.estado_actual]:
             if hasattr(self, attr):
                 setattr(self, attr, self.estados[self.estado_actual][attr])
-
-    def update(self):
-        self.dirty = 1
-
 
 class Destruible(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):

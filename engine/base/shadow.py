@@ -1,5 +1,5 @@
 from pygame import mask as MASK, PixelArray, Surface, transform
-from pygame.sprite import DirtySprite
+from pygame.sprite import Sprite
 from .giftSprite import _giftSprite
 from engine.globs import EngineData as ED
 
@@ -24,8 +24,6 @@ class _sombra (_giftSprite):
         '''Coloca al sprite en pantalla'''
         self.rect.x = x+self.deltaRect.x
         self.rect.y = y+self.deltaRect.y
-        if self.image != None:
-            self.dirty = 1
 
 class _shadowSprite(_giftSprite):
     _sombras = None #list

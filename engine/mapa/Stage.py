@@ -1,7 +1,7 @@
 from engine.globs import Constants as C, Tiempo as T, MobGroup
 from engine.globs import ModData as MD, EngineData as ED
 from engine.mobs.scripts.a_star import generar_grilla
-from pygame.sprite import DirtySprite, LayeredDirty
+from pygame.sprite import Sprite, LayeredUpdates
 from engine.misc import Resources as r
 from .loader import _loader
 from pygame import mask, Rect
@@ -22,7 +22,8 @@ class Stage:
         self.mapa = ChunkMap(self,self.data,nombre) # por ahora es uno solo.
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
-        self.properties = LayeredDirty()
+        self.properties = LayeredUpdates()
+        self.salidas = [] #aunque en realidad, las salidas deberian ser del chunk, o no?
         _loader.setStage(self)
         _loader.loadEverything(entrada,mobs_data)
         #self.register_at_renderer(entrada)
@@ -32,16 +33,19 @@ class Stage:
         T.crear_noche(self.rect.size) #asumiendo que es uno solo...
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         for obj in self.properties:
-            obj.stage = self    
+            obj.stage = self
             ED.RENDERER.addObj(obj,obj.rect.bottom)
         
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     
     def addProperty(self,obj,_layer,addInteractive=False):
-        obj._layer_ = _layer
-        self.properties.add(obj,layer =_layer)
-        if addInteractive:
-            self.interactives.append(obj)
+        if _layer == C.CAPA_GROUND_SALIDAS:
+            self.salidas.append(obj)
+        else:
+            obj._layer_ = _layer
+            self.properties.add(obj,layer =_layer)
+            if addInteractive:
+                self.interactives.append(obj)
     
     def delProperty(self,obj):
         if obj in self.properties:
@@ -99,7 +103,7 @@ class Stage:
     def __repr__(self):
         return "Stage "+self.nombre+' ('+str(len(self.properties.sprites()))+' sprites)'
 
-class ChunkMap(DirtySprite):
+class ChunkMap(Sprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.
     tipo = 'mapa'
     offsetX = 0
@@ -121,10 +125,7 @@ class ChunkMap(DirtySprite):
         '''Coloca al sprite en pantalla'''
         self.rect.x = x
         self.rect.y = y
-        if self.image != None:
-            self.dirty = 1
     
     def update(self):
         self.stage.anochecer()
         self.stage.actualizar_grilla()
-        self.dirty = 1

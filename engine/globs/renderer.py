@@ -1,4 +1,4 @@
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredUpdates
 from pygame import Rect, draw
 from .constantes import Constants as C
 
@@ -9,7 +9,7 @@ class Renderer:
 
     def __init__(self):
         self.camara = Camara(self)
-        self.overlays = LayeredDirty()
+        self.overlays = LayeredUpdates()
         
     def clear(self):
         self.camara.clear()
@@ -30,7 +30,10 @@ class Renderer:
     def delOverlay(self,obj):
         if obj in self.overlays:
             self.overlays.remove(obj)
-
+    
+    def addSld(self,obj):
+        self.camara.salidas.append(obj)
+    
     def update(self,fondo):
         fondo.fill((125,125,125))
         self.camara.update(self.use_focus)
@@ -51,8 +54,9 @@ class Camara:
     
     def __init__(self,parent):
         self.parent = parent
-        self.contents = LayeredDirty()
-        self.bgs = LayeredDirty()
+        self.contents = LayeredUpdates()
+        self.bgs = LayeredUpdates()
+        self.salidas = []
         self.w = C.ANCHO
         self.h = C.ALTO
         self.rect = Rect(self.x,self.y,self.w,self.h)
@@ -143,18 +147,23 @@ class Camara:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
-                if colliderect(spr.rect):
-                    spr.dirty = 1
-    
+                # if colliderect(spr.rect):
+                    # spr.dirty = 1
+        
+        for spr in self.salidas:
+            x = self.bg.rect.x + spr.mapX
+            y = self.bg.rect.y + spr.mapY
+            spr.ubicar(x,y)
+            
         for spr in self.contents:
             if 0 < spr._layer_ < 7:
                 x = self.bg.rect.x + spr.mapX
                 y = self.bg.rect.y + spr.mapY
                 spr.ubicar(x,y)
-                if colliderect(spr.rect):
-                    spr.dirty = 1
-                    if y:
-                        self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
+                # if colliderect(spr.rect):
+                    # spr.dirty = 1
+                if y:
+                    self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
 
     def update(self,use_focus):
         self.bgs.update()

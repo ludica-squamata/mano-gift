@@ -15,7 +15,7 @@ class Menu_Debug (Menu):
             'izquierda':lambda dummy:None,
             'derecha':lambda dummy:None,
             'hablar':self.cargar_escena}
-        self.filas = sprite.LayeredDirty()
+        self.filas = sprite.LayeredUpdates()
         self.crear_espacio_de_escenas(C.ANCHO-37,C.ALTO/2.4)
         self.elegir_opcion('arriba')
     
@@ -59,4 +59,3 @@ class Menu_Debug (Menu):
     def update(self):
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space,self.draw_space_rect)
-        self.dirty = 1

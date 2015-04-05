@@ -1,4 +1,4 @@
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredUpdates
 from engine.globs import Constants as C, EngineData as ED
 from .Ventana import Ventana
 
@@ -10,7 +10,7 @@ class DialogFrontEnd (Ventana):
     active = True
     
     def __init__(self, borde):
-        self.filas = LayeredDirty()
+        self.filas = LayeredUpdates()
         _size = int(C.ANCHO), int(C.ALTO/5)
         if borde == 'RAISED': 
             self.canvas = self.crear_canvas(*_size)

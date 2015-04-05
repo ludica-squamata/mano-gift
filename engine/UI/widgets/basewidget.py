@@ -14,14 +14,12 @@ class BaseWidget(Estilo,_giftSprite):
         
         self.image = self.img_sel
         self.isSelected = True
-        self.dirty = 1
-        
+    
     def serDeselegido(self):
         '''Cambia la imagen a la versión no elegida'''
         
         self.image = self.img_uns
         self.isSelected = False
-        self.dirty = 1
     
     def crear_canvas(self,ancho,alto):
         canvas = Surface((ancho,alto))

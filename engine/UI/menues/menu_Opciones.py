@@ -1,4 +1,4 @@
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredUpdates
 from pygame.key import name as key_name
 from pygame import Rect,font
 from engine.UI.widgets import _boton, _opcion
@@ -14,8 +14,8 @@ class Menu_Opciones (Menu_Pausa,Menu):
         Menu.__init__(self,'Opciones')
         self.data = C.cargar()
 
-        self.botones = LayeredDirty()
-        self.espacios = LayeredDirty()
+        self.botones = LayeredUpdates()
+        self.espacios = LayeredUpdates()
         self.establecer_botones(self.crear_botones_config(),5)
         self.establecer_botones(self.crear_botones_teclas(),4)
         self.crear_espacios_config()
@@ -151,4 +151,3 @@ class Menu_Opciones (Menu_Pausa,Menu):
     def update(self):
         self.botones.draw(self.canvas)
         self.espacios.draw(self.canvas)
-        self.dirty = 1

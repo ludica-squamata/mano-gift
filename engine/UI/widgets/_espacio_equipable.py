@@ -23,7 +23,6 @@ class _espacio_equipable (BaseWidget):
             self.ocupar(item)
         self.nombre = nombre
         self.rect = self.image.get_rect(topleft = (x,y))
-        self.dirty = 1
     
     @staticmethod
     def crear_base(color):
@@ -65,7 +64,6 @@ class _espacio_equipable (BaseWidget):
         self.draw_area.blit(item.image,(1,5))
         self.img_uns.blit(self.draw_area,self.draw_area_rect)
         self.img_sel.blit(self.draw_area,self.draw_area_rect)
-        self.dirty = 1
     
     def desocupar (self):
         '''Restaura las imágenes del espacio a su version sin item.'''
@@ -74,4 +72,3 @@ class _espacio_equipable (BaseWidget):
         self.draw_area.fill((153,153,153))
         self.img_uns.blit(self.draw_area,self.draw_area_rect)
         self.img_sel.blit(self.draw_area,self.draw_area_rect)
-        self.dirty = 1

@@ -54,4 +54,3 @@ class DialogInterface (DialogFrontEnd):
         
     def update (self):
         self.filas.draw(self.canvas)
-        self.dirty = 1
