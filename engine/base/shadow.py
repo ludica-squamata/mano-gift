@@ -1,5 +1,5 @@
 from pygame import mask as MASK, PixelArray, Surface, transform, SRCALPHA
-from pygame.sprite import DirtySprite
+from pygame.sprite import Sprite
 from .giftSprite import _giftSprite
 from engine.globs import EngineData as ED
 

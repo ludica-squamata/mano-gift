@@ -88,7 +88,7 @@ class _loader:
     def cargar_salidas():
         salidas = _loader.STAGE.data['salidas']
         for salida in salidas:
-            sld = Salida(salidas[salida])
+            sld = Salida(salida,salidas[salida])
             _loader.STAGE.addProperty(sld,C.CAPA_GROUND_SALIDAS)
     
     @staticmethod

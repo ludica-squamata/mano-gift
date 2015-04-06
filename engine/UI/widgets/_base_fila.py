@@ -24,10 +24,9 @@ class _base_fila (BaseWidget):
         self.img_sel = self.construir_fila(self.font_low_color)
         super().__init__(self.img_uns)
         self.rect = self.image.get_rect(topleft=pos)
-        self.dirty = 1
-           
+    
     def __repr__(self):
-        return self.nombre+' _item_inv DirtySprite'
+        return self.nombre+' _item_inv Sprite'
     
     def update(self):
         self.cantidad = ED.HERO.inventario.cantidad(self.item)
@@ -37,5 +36,4 @@ class _base_fila (BaseWidget):
         if self.isSelected:
             self.image = self.img_sel
         else:
-            self.image = self.img_uns        
-        self.dirty = 1
+            self.image = self.img_uns

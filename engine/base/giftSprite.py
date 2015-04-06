@@ -3,7 +3,7 @@ from collections import UserDict
 from engine.misc import Resources as r
 
 
-class _giftSprite(sprite.DirtySprite):
+class _giftSprite(sprite.Sprite):
     #mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
@@ -63,15 +63,12 @@ class _giftSprite(sprite.DirtySprite):
         #self.globX += dx
         #self.globY += dy
         self.rect.move_ip(dx,dy)
-        #if self.image != None:
-        #    self.dirty = 1
+
 
     def ubicar(self, x, y):
         '''Coloca al sprite en pantalla'''
         self.rect.x = x
         self.rect.y = y
-        if self.image != None:
-            self.dirty = 1
 
     def colisiona(self, sprite, off_x = 0, off_y = 0):
         if self.nombre != sprite.nombre:
@@ -86,6 +83,7 @@ class _giftSprite(sprite.DirtySprite):
             return self.images[n]
         else:
             return self.image
+            
     def mascaraN(self,n):
         if n in self.mascaras:
             return self.mascaras[n]

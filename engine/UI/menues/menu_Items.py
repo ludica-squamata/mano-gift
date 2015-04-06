@@ -7,7 +7,7 @@ from pygame import sprite, font, Rect, draw, Surface
 class Menu_Items (Menu):
     cur_opt = 0
     slots = [0 for i in range(10)]
-    filas = sprite.LayeredDirty()
+    filas = sprite.LayeredUpdates()
     descripcion_area = None
     altura_del_texto = 0 # altura de los glifos
     draw_space = None
@@ -155,7 +155,6 @@ class Menu_Items (Menu):
             desc.fill(self.bg_cnvs)
         
         self.canvas.blit(desc,self.descripcion_area.topleft)
-        self.dirty = 1
 
 class _fila(_base_fila): # menu_item
     

@@ -30,8 +30,7 @@ class _boton (BaseWidget):
     def serPresionado (self):
         self.image = self.img_pre
         self.isSelected = True
-        self.dirty = 1
-      
+    
     def crear(self,texto,ancho_mod):
         ancho = C.CUADRO*ancho_mod
         
@@ -73,4 +72,4 @@ class _boton (BaseWidget):
         return cnvs_sel,cnvs_pre,cnvs_uns
     
     def __repr__(self):
-        return self.nombre+' _boton DirtySprite'
+        return self.nombre+' _boton Sprite'

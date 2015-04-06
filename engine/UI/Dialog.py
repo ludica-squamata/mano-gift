@@ -11,7 +11,7 @@ class DialogInterface (DialogFrontEnd):
         self.draw_space_rect = Rect((-1,-1),(w-96, h-7))
     
     def setText(self,texto):
-        render = render_textrect(texto,self.fuente_M,self.draw_space_rect,self.font_none_color,self.bg_cnvs)
+        render = render_textrect(texto,self.fuente,self.draw_space_rect,self.font_none_color,self.bg_cnvs)
         self.canvas.blit(render,self.text_pos)
         self.image = self.canvas
     
@@ -54,4 +54,3 @@ class DialogInterface (DialogFrontEnd):
         
     def update (self):
         self.filas.draw(self.canvas)
-        self.dirty = 1

@@ -23,7 +23,6 @@ class Menu (Ventana):
             "hablar":lambda : None}
         super().__init__(self.canvas)
         self.ubicar(10,10)
-        self.dirty = 1
         
         ED.MENUS[titulo] = self
     
@@ -65,9 +64,6 @@ class Menu (Ventana):
     def keyup_function(self,tecla):
         if tecla in self.keyup:
             self.keyup[tecla]()
-    
-    def update (self):
-        self.dirty = 1
     
     def PressButton(self):
         if len(self.botones) > 0:

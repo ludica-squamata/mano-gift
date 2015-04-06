@@ -28,7 +28,7 @@ class PC(Mob, Parlante):
         dx, dy = dx * self.velocidad, dy * self.velocidad
 
         # DETECTAR LAS SALIDAS
-        for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_SALIDAS):
+        for spr in self.stage.salidas:
             if self.colisiona(spr, dx, dy):
                 ED.setear_mapa(spr.dest, spr.link)
                 dx, dy = 0, 0
@@ -100,13 +100,7 @@ class PC(Mob, Parlante):
                 prop_mask = mask.from_surface(prop.image)
                 if prop_mask.overlap(self_mask, (-x, -y)):
                     return prop
-
-    @staticmethod
-    def ver_inventario():
-        from engine.UI import Inventario_rapido
-
-        ED.DIALOG = Inventario_rapido()
-
+    
     def usar_item(self, item):
         if item:
             if item.tipo == 'consumible':
@@ -134,7 +128,7 @@ class PC(Mob, Parlante):
     def update(self):
         if self.atacando:
             self.animar_ataque(5)
-        # self.dirty = 1
+        
         super().update()
 
     def iniciar_dialogo(self, sprite=None):

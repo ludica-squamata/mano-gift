@@ -1,9 +1,9 @@
 from pygame import Surface, Rect, font, Color, draw, PixelArray, SRCALPHA
-from pygame.sprite import DirtySprite,LayeredDirty
+from pygame.sprite import Sprite,LayeredUpdates
 from engine.globs import Constants as C, EngineData as ED
 from engine.UI.estilo import Estilo
 
-class ProgressBar(DirtySprite):
+class ProgressBar(Sprite):
     '''Clase base para las barras, de vida, de maná, etc'''
     maximo = 0
     actual = 0
@@ -52,9 +52,8 @@ class ProgressBar(DirtySprite):
         self.image.blit(self._dibujar_fondo(),self.draw_area_rect)
         self.image.fill(self.colorAct,self._actual())
         self._subdividir()
-        self.dirty = 1
 
-class espacioInventario(DirtySprite,Estilo):
+class espacioInventario(Sprite,Estilo):
     item = None
     cant = 0
     item_img = None
@@ -73,7 +72,6 @@ class espacioInventario(DirtySprite,Estilo):
         self.img_sel = self.crear_seleccion(self.img_uns.copy())
         self.image = self.img_uns
         self.rect = self.image.get_rect(topleft = (x,y))
-        self.dirty = 1
     
     @staticmethod
     def crear_base(color):
@@ -128,15 +126,12 @@ class espacioInventario(DirtySprite,Estilo):
         self.cant = 0
         self.cant_img = None
         self.cant_rect = None
-        
-        self.dirty = 1
     
     def update(self):
         self.clear()
         if self.item is not None and self.cant != 0:
             self.image.blit(self.item_img,self.item_rect)
             self.image.blit(self.cant_img,self.cant_rect)
-        self.dirty = 1
 
 class InventoryDisplay:
     cuadros = []
@@ -145,7 +140,7 @@ class InventoryDisplay:
     current = 0
     def __init__(self,dx,dy,w):
         self.current = 0
-        self.cuadros = LayeredDirty()
+        self.cuadros = LayeredUpdates()
         for i in range(10):
             cuadro = espacioInventario(i,dx-w-1+(i*32.6),dy)
             self.cuadros.add(cuadro)

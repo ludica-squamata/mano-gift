@@ -1,4 +1,4 @@
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredUpdates
 from engine.globs import Constants as C, EngineData as ED
 from .Ventana import Ventana
 
@@ -10,16 +10,16 @@ class DialogFrontEnd (Ventana):
     active = True
     
     def __init__(self, borde):
-        self.filas = LayeredDirty()
+        self.filas = LayeredUpdates()
         _size = int(C.ANCHO), int(C.ALTO/5)
         if borde == 'RAISED': 
             self.canvas = self.crear_canvas(*_size)
         elif borde == 'SUNKEN':
             self.canvas = self.crear_inverted_canvas(*_size)
         
-        Ventana.__init__(self,self.canvas)
-        #viniendo de Inventario rápido, el super() es Menu_items
-        self.altura_del_texto = self.fuente_M.get_height()+1
+        super().__init__(self.canvas)
+        self.fuente = self.fuente_M
+        self.altura_del_texto = self.fuente.get_height()
         self.ubicar(*self.posicion)
         ED.RENDERER.addOverlay(self,C.CAPA_OVERLAYS_DIALOGOS)
         

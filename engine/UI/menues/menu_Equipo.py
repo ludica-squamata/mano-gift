@@ -1,6 +1,6 @@
 from .menu_Items import Menu_Items
 from pygame import Surface, Rect, font, draw
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredUpdates
 from engine.misc import Resources as r
 from engine.libs.textrect import render_textrect
 from engine.globs import EngineData as ED
@@ -18,8 +18,8 @@ class Menu_Equipo(Menu_Items):
         '''Crea e inicaliza las varibales del menú Equipo.'''
         
         super(Menu_Items,self).__init__('Equipo')
-        self.espacios = LayeredDirty() # grupo de espacios equipables.
-        self.filas = LayeredDirty() # grupo de items del espacio de selección.
+        self.espacios = LayeredUpdates() # grupo de espacios equipables.
+        self.filas = LayeredUpdates() # grupo de items del espacio de selección.
         self.altura_del_texto = self.fuente_MP.get_height()+1 # se utiliza para trazar lineas
         self.foco = 'espacios' # setea el foco por default
         # Crear los espacios equipables.
@@ -213,7 +213,6 @@ class Menu_Equipo(Menu_Items):
         self.filas.update()
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space,self.draw_space_rect)
-        self.dirty = 1
 
 class _fila(_base_fila): # menu_equipo
     def construir_fila(self,bg):

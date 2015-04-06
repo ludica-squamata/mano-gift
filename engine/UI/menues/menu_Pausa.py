@@ -1,4 +1,4 @@
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredUpdates
 from .menu import Menu
 from engine.globs import Constants as C
 from engine.misc import Config as cfg
@@ -20,7 +20,7 @@ class Menu_Pausa (Menu):
             {m:"Opciones",p:[x,249],k:{a:"Grupo",b:"Debug"},    c:self.PressOne},
             {m:"Debug",   p:[x,288],k:{a:'Opciones'},           c:self.PressOne}]
         
-        self.botones = LayeredDirty()
+        self.botones = LayeredUpdates()
         self.establecer_botones(botones,6)
         self.selectOne('arriba')
         self.funciones = {
@@ -79,4 +79,3 @@ class Menu_Pausa (Menu):
         self.current = selected
         self.botones.draw(self.canvas)
         self.active = True
-        self.dirty = 1

@@ -7,6 +7,7 @@ class Estilo:
     fuente_Mi = font.SysFont(__fuente,16,italic=True)
     fuente_Mb = font.SysFont(__fuente,16,bold=True)
     fuente_M = font.SysFont(__fuente,16)
+    fuente_I = font.SysFont(__fuente,15)
     fuente_P = font.SysFont(__fuente,14)
     fuente_Pi = font.SysFont(__fuente,14,italic=True)
     fuente_MP = font.SysFont(__fuente,12)
