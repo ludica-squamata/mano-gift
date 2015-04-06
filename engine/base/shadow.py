@@ -13,8 +13,7 @@ class _sombra(_giftSprite):
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
-        super().ubicar(x-self.dif_x, y)
-
+        super().ubicar(x - self.dif_x, y)
 
 
 class ShadowSprite(_giftSprite):
@@ -41,7 +40,7 @@ class ShadowSprite(_giftSprite):
         h_2 = h / 2
 
         if self._sprSombra is None:
-            self._sprSombra = _sombra(Surface((h - w, h * 2), SRCALPHA))
+            self._sprSombra = _sombra(Surface((1, 1), SRCALPHA))
             self._sprSombra.dif_x = h_2
             self._sprSombra.mapY = self.mapY
             self._sprSombra.mapX = self.mapX
@@ -66,9 +65,11 @@ class ShadowSprite(_giftSprite):
             t_surface.blit(img, (h_2, 0))
 
         import sys
+
         if 'pydevd' in sys.modules:
             from pygame import draw, Rect
-            draw.rect(t_surface, (255,0,0), Rect(1,1,t_surface.get_width()-2, t_surface.get_height()-2), 1)
+
+            draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
         self._sprSombra.image = t_surface
         """
@@ -136,7 +137,7 @@ class ShadowSprite(_giftSprite):
         # if arg in ('N', 'S', 'E', 'O'):
         # pxarray = PixelArray(Surface((w, h), 0, surface))
         # else:
-        #     pxarray = PixelArray(Surface((int(w + h / 2), h), 0, surface))
+        # pxarray = PixelArray(Surface((int(w + h / 2), h), 0, surface))
         #
         # for x in range(w):
         #     for y in range(h):
