@@ -1,29 +1,18 @@
 # intro.py
-# módulo de introducción y selección de modo.
-from pygame import Surface, Rect, QUIT, KEYDOWN, KEYUP, sprite, Color
+# animación de introducción. Créditos.
+from pygame import Surface, Rect, QUIT, KEYDOWN
 from pygame import display as pantalla, event as EVENT,font
 from engine.globs import Tiempo as T, Constants as C
 from engine.libs.textrect import render_textrect
 from engine.misc import Util
-import os,os.path
-
-###TODO###
-# menu de selección (opciones):
-# # game (deshabilitada)
-# # configuracion (deshabilitada)
-# # debug screen
-# # # seleccion de mapa.
-# # # play.
 
 def intro (fondo):
-    
     color = {
         "rojo":(255,0,0),
         "verde":(0,255,0),
         "amarillo":(255,255,0),
         "negro":(0,0,0),
-        "blanco":(255,255,255),
-        "gris":(125,125,125)
+        "blanco":(255,255,255)
         }
     
     placas = [
