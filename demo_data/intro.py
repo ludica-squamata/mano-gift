@@ -16,106 +16,139 @@ import os,os.path
 # # # play.
 
 def intro (fondo):
+    
+    color = {
+        "rojo":(255,0,0),
+        "verde":(0,255,0),
+        "amarillo":(255,255,0),
+        "negro":(0,0,0),
+        "blanco":(255,255,255),
+        "gris":(125,125,125)
+        }
+    
+    placas = [
+        {
+            "fuente":["Verdana",24,"b"],
+            "texto": "Lúdica Squamata",
+            "color":"verde",
+            "fondo":"negro",
+            "center":[320,240]
+        },
+        {
+            "fuente":["Verdana",16,"i"],
+            "texto":'Presenta...',
+            "color":"amarillo",
+            "fondo":"negro",
+            "center":[380,260]
+        },
+        {
+            "fuente":["Verdana",16],
+            "texto":"una producción de\nZeniel Danaku & Einacio Spiegel",
+            "color":"rojo",
+            "fondo":"negro",
+            "center":[320,250]
+        },
+        {
+            "fuente":["Verdana",30,"b"],
+            "texto":"Proyecto\nMano-Gift",
+            "color":"negro",
+            "fondo":"blanco",
+            "center":[320,69]
+        },
+        {
+            "fuente":["Verdana",16],
+            "texto":'< Presione una tecla para continuar >',
+            "color":"rojo",
+            "fondo":"blanco",
+            "center":[320,436]
+        }
+    ]
+    
+    p = []
+    for pan in placas:
+        f = pan["fuente"]
+        _b = False
+        _i = False
+        if 'b' in f: _b = True
+        if 'i' in f: _i = True
+        fuente = font.SysFont(f[0],f[1],bold=_b,italic=_i)
+        
+        w,h = fuente.size(pan['texto'])
+        l = len(pan['texto'].splitlines())
+        rect = Rect(0,0,w,h*l+1*l)
+        rect.center = pan['center']
+        
+        render = render_textrect(pan["texto"],fuente,rect,color[pan["color"]],color[pan['fondo']],1)
+        
+        p.append({"render":render,"rect":rect})
+
+        
+    running = True
     timer = 0
-    _rect = fondo.get_rect()
     
-    fuente_1 = font.SysFont('Verdana',24,bold=True)
-    nombre = 'Lúdica Squamata'
-    w,h = fuente_1.size(nombre)
-    nom_rect = Rect((0,0),(w,h+10))
-    nom_rect.center = _rect.center
+    #index para la lista "p" 
+    n = 0
     
-    fuente_2 = font.SysFont('Verdana',16,italic=True)
-    presenta ='Presenta...'
-    w,h = fuente_2.size(presenta)
-    pre_rect = Rect((0,C.ALTO//2+10),(w,h+10))
-    pre_rect.centerx = _rect.centerx+30
+    #contadores de alphas para 3 placas distintas (0, 1 y 2)
+    a = 0
+    b = 0
+    c = 0
     
-    fuente_3 = font.SysFont('Verdana',16)
-    produccion = 'una producción de\nZeniel Danaku & Einacio Spiegel'
-    w,h = fuente_3.size(produccion)
-    pro_rect = Rect((0,0),(w,h+40))
-    pro_rect.center = _rect.center
-    
-    fuente_4 = font.SysFont('Verdana',30,bold=True)
-    titulo = 'Proyecto\nMano-Gift'
-    w,h = fuente_4.size(titulo)
-    ttl_rect = Rect((0,30),(C.ANCHO,h+40))
-    ttl_rect.centerx = _rect.centerx
-    
-    continuar = '< Presione una tecla para continuar >'
-    w,h = fuente_3.size(continuar)
-    cont_rect = Rect(0,C.ALTO-(h+30),C.ANCHO,h+10)
-    cont_rect.centerx = _rect.centerx
-    
-    rojo = Color(255,0,0)
-    verde = Color(0,255,0)
-    amarillo = Color(255,255,0)
-    negro = Color(0,0,0)
-    blanco = Color(255,255,255)
-    gris = Color(125,125,125)
-    
-    
-    running = 1
+    #contador para el efecto de parpadeo (placa 4)
     j = 0
-    while running == 1:
+    while running is True:
         T.FPS.tick(60)
+        
         for event in EVENT.get():
-            if event.type == QUIT: running = 0
+            if event.type == QUIT: running = False
             
             if event.type == KEYDOWN:
                 if event.key == C.TECLAS.SALIR:
                     Util.salir()
                 else:
-                    running = 0
+                    running = False
+        
         timer += 1
         if timer <= 60:
-            fondo.fill(negro)
+            fondo.fill(color['negro'])
         
         # Lúdica Squamata
-        i = 0
-        render = render_textrect(nombre,fuente_1,nom_rect,verde,negro,1)
-        if 61 <= timer <180:
-            i+=10
-            render.set_alpha(i)
-            fondo.blit(render,nom_rect)
+        elif 61 <= timer <180:
+            n = 0
+            a+=1
+            p[n]['render'].set_alpha(a)
+            fondo.blit(p[n]['render'],p[n]['rect'])
         
         # Presenta...
-        i = 0
-        render = render_textrect(presenta,fuente_2,pre_rect,amarillo,negro)
-        if 181 <= timer < 300:
-            i += 10
-            render.set_alpha(i)
-            fondo.blit(render,pre_rect)
+        elif 181 <= timer < 300:
+            n = 1
+            b += 1
+            p[n]['render'].set_alpha(b)
+            fondo.blit(p[n]['render'],p[n]['rect'])
         
         # Una producción de Zeniel Danaku & Einacio Spiegel    
-        i = 0
-        render = render_textrect(produccion,fuente_3,pro_rect,rojo,negro,1)
-        
-        if 301 <= timer < 600:
-            
-            i += 10
-            render.set_alpha(i)
-            fondo.blit(render,pro_rect)
+        elif 301 <= timer < 600:
+            n = 2
+            c += 1
+            p[n]['render'].set_alpha(c)
+            fondo.blit(p[n]['render'],p[n]['rect'])
         
         # Proyecto Mano-Gift 
-        render = render_textrect(titulo,fuente_4,ttl_rect,negro,blanco,1)
-        if 601 <= timer < 661:
-            fondo.fill(blanco)
+        elif 601 <= timer < 661:
+            fondo.fill(color['blanco'])
         
-        if 662 <= timer < 900:
-            fondo.blit(render,ttl_rect)
+        elif 662 <= timer < 900:
+            n = 3
+            fondo.blit(p[n]['render'],p[n]['rect'])
         
         # <Presione una tecla para continuar>
-        if timer > 1200:
-            j += 1
-            h = fuente_3.get_height()
-            render = render_textrect(continuar,fuente_3,cont_rect,rojo,blanco,1)
-            
+        elif timer > 1200:
+            n = 4
+            j += 1            
             if j <= 32:
-                fondo.blit(render,cont_rect)
+                fondo.blit(p[n]['render'],p[n]['rect'])
             elif j <= 64:
-                fondo.fill(blanco,cont_rect)
+                fondo.fill(color['blanco'],p[n]['rect'])
             else:
                 j = 0
             
