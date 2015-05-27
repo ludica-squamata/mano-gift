@@ -67,8 +67,8 @@ class Mob(Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para t
         else:
             self.actitud = ''
             
-        #if 'objetivo' in data:
-        #    self.objetivo = MobGroup[data['objetivo']]
+        if 'objetivo' in data:
+            self.objetivo = MobGroup[data['objetivo']]
         
         self.establecer_estado('idle')
         super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y)

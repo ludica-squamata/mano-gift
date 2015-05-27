@@ -5,6 +5,7 @@
     "mobs":{
         "commoner":{
             "AI":"wanderer",
+            "objetivo": "heroe",
             "dialog":"intro.json"
         }
     },
