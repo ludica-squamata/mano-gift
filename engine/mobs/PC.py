@@ -45,13 +45,13 @@ class PC(Mob, Parlante):
             # la animacion de ataque se hace siempre,
             # sino pareciera que no pasa nada
             self.atacando = True
-            sprite = self._interactuar_mobs(x, y)
+            sprite = self._interact_with_mobs(x, y)
             if issubclass(sprite.__class__, Mob):
                 if self.estado == 'cmb':
                     x, y = x * self.fuerza, y * self.fuerza
                     self.atacar(sprite, x, y)
         else:
-            sprite = self._interactuar_props(x, y)
+            sprite = self._interact_with_props(x, y)
             if hasattr(sprite, 'accion'):
                 if sprite.accion == 'agarrar':
                     try:
@@ -73,34 +73,6 @@ class PC(Mob, Parlante):
         if self.salud_act == 0:
             print('lanzar evento: muerte del heroe (y perdida de focus)')
 
-    def _interactuar_mobs(self, x, y):
-        """Utiliza una máscara propia para seleccionar mejor a los mobs"""
-        self_mask = mask.Mask((32, 32))
-        self_mask.fill()
-        dx, dy = x * 32, y * 32
-
-        for key in MobGroup:
-            mob = MobGroup[key]
-            if mob != self:
-                x = mob.mapX - (self.mapX + dx)
-                y = mob.mapY - (self.mapY + dy)
-                if mob.mask.overlap(self_mask, (-x, -y)):
-                    return mob
-
-    def _interactuar_props(self, x, y):
-        """Utiliza una máscara propia para seleccionar mejor a los props"""
-        self_mask = mask.Mask((32, 32))
-        self_mask.fill()
-        dx, dy = x * 32, y * 32
-
-        for prop in self.stage.interactives:
-            x = prop.mapX - (self.mapX + dx)
-            y = prop.mapY - (self.mapY + dy)
-            if prop.image is not None:
-                prop_mask = mask.from_surface(prop.image)
-                if prop_mask.overlap(self_mask, (-x, -y)):
-                    return prop
-    
     def usar_item(self, item):
         if item:
             if item.tipo == 'consumible':
@@ -134,7 +106,7 @@ class PC(Mob, Parlante):
     def iniciar_dialogo(self, sprite=None):
         x, y = self.direcciones[self.direccion]
         
-        sprite = self._interactuar_mobs(x, y)
+        sprite = self._interact_with_mobs(x, y)
         if x:
             if x > 0:
                 post_dir = 'izquierda'

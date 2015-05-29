@@ -21,8 +21,7 @@ class Modo:
                     Util.salir()
 
                 elif event.key == C.TECLAS.DEBUG:
-                    print('map: ', (ED.HERO.mapX, ED.HERO.mapY))
-                    # print('rect: ',(ED.HERO.rect.x,ED.HERO.rect.y))
+                    print('rect: ',(ED.HERO._interaction_rect))
                     # ED.RENDERER.use_focus = not ED.RENDERER.use_focus
 
         if True:  # folding

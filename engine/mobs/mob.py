@@ -1,11 +1,9 @@
-from .CompoMob import Equipado,Atribuido,Animado,Movil
-from engine.base import _giftSprite, _shadowSprite
+from .CompoMob import Equipado, Atribuido, Animado, Movil, Interactivo
+from engine.globs import EngineData as ED, MobGroup
 from engine.misc import Resources as r
-from engine.globs import Constants as C, EngineData as ED, MobGroup
-from pygame import mask
+from engine.base import _shadowSprite
 
-
-class Mob(Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para tener .velocidad
+class Mob(Interactivo, Equipado, Animado, Movil, _shadowSprite):  # Movil es Atribuido para tener .velocidad
     tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []
