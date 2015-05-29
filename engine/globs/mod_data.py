@@ -60,12 +60,9 @@ class ModData:
     @classmethod
     def get_file_data(cls, filename):
         from engine.misc import Resources as r
-        _folder = path.join(cwd(),'demo_data\\')
-        folder = cls.mod_folder
-        ruta = folder+filename
+        ruta = cls.mod_folder+filename
         if not path.exists(ruta):
-            ruta = _folder+filename
-            cls.mod_folder = _folder
+            return None
         
         data = r.abrir_json(ruta)
         return data
