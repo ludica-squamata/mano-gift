@@ -1,11 +1,10 @@
 {
     "ID":0,
     "stage":["casas y arboles","inicial"],
-    "dia":0,"hora":17,
+    "dia":0,"hora":[17,0],
     "mobs":{
         "commoner":{
             "AI":"wanderer",
-            "objetivo": "heroe",
             "dialog":"intro.json"
         }
     },

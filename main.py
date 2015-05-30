@@ -31,5 +31,5 @@ while True:
         cambios = Modo.menu(events, fondo)
 
     cambios.append(fondo.blit(fuente.render(str(int(T.FPS.get_fps())), True, (255, 0, 0)), (10, 0)))
-    cambios.append(fondo.blit(fuente.render(str(T.hora)+':'+str(T._segs).rjust(2,'0'), True, (255, 0, 0)), (590, 0)))
+    cambios.append(fondo.blit(fuente.render(str(T.clock.timestamp()), True, (255, 0, 0)), (570, 0)))
     pantalla.update(cambios)

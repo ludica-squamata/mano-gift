@@ -3,13 +3,186 @@ from engine.base import _giftSprite
 from engine.misc import Resources as r
 from engine.globs.eventDispatcher import GiftEvent
 
+class _clock:
+    _h = 0
+    _m = 0
+    _s = 0
+    day_flag = False
+    hour_flag = False
+    def __init__(self,h=0,m=0,s=0):
+        self._h = h
+        self._m = m
+        self._s = s
+        self.day_flag = False
+        self.hour_flag = False
+    
+    def __repr__(self):
+        return ':'.join([str(self._h),str(self._m).rjust(2,'0')])
+    
+    @property
+    def h(self):
+        return self._h
+    @h.setter
+    def h(self,value):
+        self.hour_flag = True
+        if value > 23:
+            self._h = 0
+            self.day_flag = True
+        else:
+            self._h = value
+    @h.deleter
+    def h(self):
+        self._h = 0
+    
+    @property
+    def m(self):
+        return self._m
+    @m.setter
+    def m(self,value):
+        if value > 59:
+            self.h += 1
+            value = 0
+        self._m = value
+    @m.deleter
+    def m(self):
+        self._m = 0
+
+    @property
+    def s(self):
+        return self._s
+    @s.setter
+    def s(self,value):
+        if value > 59:
+            self._m += 1
+            value = 0
+        self._s = value
+    @s.deleter
+    def s(self):
+        self._s = 0
+        
+    def timestamp(self,h=0,m=0,s=0):
+        if h==0 and m==0 and s==0:
+            return timestamp(self._h,self._m,self._s)
+        else:
+            return timestamp(h,m,s)
+        
+    def update(self,dm=1):
+        self.day_flag = False
+        self.hour_flag = False
+        self.m += dm
+
+class timestamp:
+    def __init__(self,h=0,m=0,s=0):
+        self._h = h
+        self._m = m
+        self._s = s
+    
+    #read-only properties
+    @property
+    def h(self):
+        """Read-only hour value"""
+        return self._h
+    @property
+    def m(self):
+        """Read-only minute value"""
+        return self._m
+    @property
+    def s(self):
+        """Read-only second value"""
+        return self._s  
+    
+    #rich comparison methods
+    def __lt__(self, other): 
+        if hasattr(other,'_h') and hasattr(other,'_m') and hasattr(other,'_s'):
+            if self._h < other._h: 
+                return True
+                
+            if self._m < other._m: 
+                return True
+            
+            if self._s < other._s:
+                return True
+            
+        return False
+    def __le__(self, other): 
+        if hasattr(other,'_h') and hasattr(other,'_m') and hasattr(other,'_s'):
+            if self._h <= other._h:
+                if self._m <= other._m:
+                    if self._s <= other._s:
+                        return True
+        return False
+    def __eq__(self, other): 
+        if hasattr(other,'_h') and hasattr(other,'_m') and hasattr(other,'_s'):
+            return self._h == other._h and self._m == other._m and self._s == other._s
+        return False
+    def __ne__(self, other): 
+        if hasattr(other,'_h') and hasattr(other,'_m') and hasattr(other,'_s'):
+            if self._h != other._h:
+                if self._m != other._m :
+                    if self._s != other._s:
+                        return True
+            return False
+        return True
+    def __gt__(self, other): 
+        if hasattr(other,'_h') and hasattr(other,'_m') and hasattr(other,'_s'):
+            if self._h > other._h:
+                return True
+            if self._m > other._m:
+                return True
+            if self._s > other._s:
+                return True
+        return False
+    def __ge__(self, other):
+        if hasattr(other,'_h') and hasattr(other,'_m') and hasattr(other,'_s'):
+            if self._h >= other._h:
+                if self._m >= other._m:
+                    if self._s >= other._s:
+                        return True
+        return False
+
+        if hasattr(other,'_time'):
+            return self._time >= other._time
+        else:
+            return False
+    
+    #operations, add, sub, mul
+    @staticmethod
+    def _convert(s):
+        m = 0
+        h = 0
+        if s > 59:
+            m += s//60
+            s = s%60
+        if m > 59:
+            h += m//60
+            m = m%60
+            
+        return timestamp(h,m,s)
+    
+    def __add__(self,other):
+        s = (self._h*3600+self._m*60+self._s)+(other._h*3600+other._m*60+other._s)
+        return self._convert(s)
+
+    def __sub__(self,other):
+        s = (self._h*3600+self._m*60+self._s)-(other._h*3600+other._m*60+other._s)
+        return self._convert(s)
+    
+    def __mul__(self,factor):
+        if isinstance(factor,timestamp):
+            raise NotImplementedError('Solo puede multiplicarse por un factor')
+        s = (self._h*3600+self._m*60+self._s)*factor
+        return self._convert(s)
+    
+    def __repr__(self):
+        return ':'.join([str(self._h),str(self._m).rjust(2,'0')])
+    
 class Noche(_giftSprite):
     def __init__(self,size):
         #############################
         if 1: #cambiar a 0 para prueba de luces
             img = Surface(size)
             img.fill((0,0,125))
-            img.set_alpha(230)
+            img.set_alpha(0)
             self.rect = img.get_rect()
             super().__init__(img)
         #############################
@@ -74,51 +247,43 @@ class Noche(_giftSprite):
 
 class Tiempo:
     FPS = time.Clock()
-    _frames,_segs,_mins = 0,0,0 # valores internos
-    hora,dia = 0,0 # valores con efecto en el juego.
-    angulo_sol = 0
+    dia,_frames = 0,0
+    clock = _clock()
     esNoche = False
     noche = None
     
-    @staticmethod
-    def setear_momento(dia,hora):
-        Tiempo.dia = dia
-        Tiempo.hora = hora
-        Tiempo._mins = hora
-    
-    @staticmethod
-    def contar_tiempo ():
+    @classmethod
+    def setear_momento(cls,dia,hora,mins=0):
+        cls.dia = dia
+        cls.clock.h = hora
+        cls.clock.m = mins
+        
+    @classmethod
+    def contar_tiempo (cls):
         from engine.globs.engine_data import EngineData as ED
 
-        Tiempo._frames += 1
-        if Tiempo._frames == 60:
-            Tiempo._segs += 1
-            Tiempo._frames = 0
-            if Tiempo._segs == 60:
-                Tiempo._mins += 1
-                Tiempo.hora += 1
-                Tiempo._segs = 0
-                ED.EVENTS.trigger(GiftEvent('hora', 'Tiempo', {"hora": Tiempo.hora}))
-                if Tiempo.hora < 12:
-                    Tiempo.angulo_sol = Tiempo.hora*15
-                    # 15 = 90º/6; 6 = 12 horas de luz/2 por el abs de sombra
-                if Tiempo.hora == 24:
-                    Tiempo.dia += 1
-                    Tiempo.hora = 0
-                    Tiempo._mins = 0
+        cls._frames += 1
+        if cls._frames == 60:
+            cls.clock.update()
+            cls._frames = 0
+            if cls.clock.day_flag:
+                cls.dia += 1
+            if cls.clock.hour_flag:
+                ED.EVENTS.trigger(GiftEvent('hora', 'Tiempo', {"hora": cls.clock.h}))
     
-    @staticmethod
-    def oscurecer(limite):
-        alpha = Tiempo.noche.image.get_alpha()
+    @classmethod
+    def oscurecer(cls,limite):
+        alpha = cls.noche.image.get_alpha()
         if alpha < limite:
-            Tiempo.noche.image.set_alpha(alpha+1)
+            cls.noche.image.set_alpha(alpha+1)
+        else:
+            return True
 
-    @staticmethod
-    def aclarar():
-        alpha = Tiempo.noche.image.get_alpha()
-        Tiempo.noche.image.set_alpha(alpha-1)
+    @classmethod
+    def aclarar(cls):
+        alpha = cls.noche.image.get_alpha()
+        cls.noche.image.set_alpha(alpha-1)
             
-    @staticmethod
-    def crear_noche(tamanio):
-        Tiempo.noche = Noche(tamanio)
-    
+    @classmethod
+    def crear_noche(cls,tamanio):
+        cls.noche = Noche(tamanio)
