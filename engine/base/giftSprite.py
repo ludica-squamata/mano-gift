@@ -25,19 +25,19 @@ class _giftSprite(sprite.Sprite):
 
     def __init__(self, imagen=None, rect = None, alpha = False, stage = '', x = 0, y = 0):
         super().__init__()
-        if imagen == None and rect == None:
+        if imagen is None and rect is None:
             raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
         elif isinstance(imagen, Surface):
             self.image = imagen
-        elif imagen == None: 
+        elif imagen is None: 
             self.image = None
             self.visible = 0 # no funciona con dirty
         else:
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
             
-        if imagen != None:
+        if imagen is not None:
             self.rect = self.image.get_rect()
         else:
             self.rect = rect
@@ -45,7 +45,7 @@ class _giftSprite(sprite.Sprite):
         if alpha:
             self.mask = alpha
         else:
-            if self.image != None:
+            if self.image is not None:
                 self.mask = mask.from_surface(self.image)
             else:
                 self.mask = mask.Mask(self.rect.size)

@@ -4,4 +4,4 @@ def on_hora(self, event):
     :type event:GiftEvent
     :return:
     """
-    print('Reloj dice: son las '+str(event.data['hora'])+' en punto!')
+    print('Reloj dice: son las '+str(event.data['hora'])+' hs!')

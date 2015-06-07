@@ -156,14 +156,11 @@ class Camara:
             spr.ubicar(x,y)
             
         for spr in self.contents:
-            if 0 < spr._layer_ < 7:
-                x = self.bg.rect.x + spr.mapX
-                y = self.bg.rect.y + spr.mapY
-                spr.ubicar(x,y)
-                # if colliderect(spr.rect):
-                    # spr.dirty = 1
-                if y:
-                    self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
+            x = self.bg.rect.x + spr.mapX
+            y = self.bg.rect.y + spr.mapY
+            spr.ubicar(x,y)
+            if (0 < spr._layer_ < 7) and y:
+                self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
 
     def update(self,use_focus):
         self.bgs.update()
