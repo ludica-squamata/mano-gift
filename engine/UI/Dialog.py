@@ -1,8 +1,7 @@
-from pygame import Rect
-from engine.misc import Resources as r
 from engine.libs.textrect import render_textrect
 from .dialogFrontEnd import DialogFrontEnd
 from .widgets import _opcion
+from pygame import Rect
 
 class DialogInterface (DialogFrontEnd):  
     def __init__(self):
@@ -26,10 +25,10 @@ class DialogInterface (DialogFrontEnd):
         self.filas.draw(self.canvas)
     
     def setLocImg(self,locutor):
-        '''carga y dibuja la imagen de quien está hablando. También setea
-        la posición del texto a izquierda o derecha según la "cara" del hablante'''
-        img = r.cargar_imagen('mobs/imagenes/'+locutor.lower()+'_face.png')
-        if locutor != 'PC':
+        """carga y dibuja la imagen de quien está hablando. También setea
+        la posición del texto a izquierda o derecha según la "cara" del hablante"""
+        img = locutor.diag_face
+        if locutor.nombre != 'heroe': #esto también es chapucero.
             dest = 3,3
             self.text_pos = 96,3
         else:

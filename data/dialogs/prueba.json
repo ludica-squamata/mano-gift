@@ -1,0 +1,25 @@
+{
+    "0":{"type":"node","leads":1,"loc":"commoner","reqs":null,
+    "txt":"Saludos, héroe."},
+    
+    "1":{"type":"node","leads":[2,3,4],"loc":"commoner","reqs":null,
+    "txt":"A continuación deberias ver 3 opciones si tu carisma es de a 9 o más."},
+    
+    "2":{"type":"branch","leads":5,"loc":"heroe","reqs":null,
+    "txt":"Opción 1 (default)"},
+    
+    "3":{"type":"branch","leads":6,"loc":"heroe","reqs":null,
+    "txt":"Opción 2 (default)"},
+    
+    "4":{"type":"branch","leads":7,"loc":"heroe","reqs":{"carisma":9},
+    "txt":"Opción 3 (carisma)"},
+    
+    "5":{"type":"leaf","leads":null,"loc":"commoner","reqs":null,
+    "txt":"No, esta no es la opción"},
+    
+    "6":{"type":"leaf","leads":null,"loc":"commoner","reqs":null,
+    "txt":"Mm, me temo que te has equivocado"},
+    
+    "7":{"type":"leaf","leads":null,"loc":"commoner","reqs":null,
+    "txt":"Correcto! esta es la opción oculta!"}
+}

@@ -39,6 +39,8 @@ class Mob(Interactivo, Equipado, Animado, Movil, _shadowSprite):  # Movil es Atr
                     self.cmb_walk_alpha = self.cargar_anims(alpha['cmb'],dirs,True)
                 elif key == 'death':
                     self.death_img = r.cargar_imagen(imgs['death'])
+                elif key == "diag_face":
+                    self.diag_face = r.cargar_imagen(imgs["diag_face"])
         
         #self.camino = []
         self.images = self.idle_walk_img
