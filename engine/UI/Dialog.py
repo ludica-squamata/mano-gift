@@ -18,10 +18,10 @@ class DialogInterface (DialogFrontEnd):
         h = self.altura_del_texto
         self.opciones = len(opciones)
         for i in range(self.opciones):
-            opcion = _opcion(opciones[i],self.draw_space_rect.w,(3,i*h+i+3))
+            opcion = _opcion(opciones[i].texto,self.draw_space_rect.w,(3,i*h+i+3),extra_data=opciones[i].leads)
             self.filas.add(opcion)
-        
-        self.elegir_opcion(0)
+         
+         
         self.filas.draw(self.canvas)
     
     def setLocImg(self,locutor):
@@ -44,7 +44,7 @@ class DialogInterface (DialogFrontEnd):
         self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
         current = self.filas.get_sprite(self.sel)
         current.serElegido()
-        return self.sel
+        return current.extra_data
     
     def borrar_todo(self):
         self.canvas.fill(self.bg_cnvs,((3,3),self.draw_space_rect.size))

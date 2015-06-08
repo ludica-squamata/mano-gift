@@ -24,7 +24,8 @@ class _elemento:
         
     def __repr__(self):
         return self.nombre
-    
+    def __int__(self):
+        return int(self.indice)
     def __eq__(self,other):
         if type(self) != type(other):
             return False
@@ -114,13 +115,17 @@ class _ArboldeDialogo:
         else:
             raise IndexError
     
-    def get_actual(self): return self._elementos[self._actual]
+    def get_actual(self):
+        if type(self._actual) is list:
+            return self._actual
+        else:
+            return self._elementos[self._actual]
     
     @staticmethod
     def next(nodo):  return nodo.leads
     
     def set_chosen(self, choice):
-        self.set_actual(self._actual[choice].leads)
+        self.set_actual(int(choice))
               
     def update(self):
         '''Devuelve el nodo actual, salvo que sea un leaf o branch,
@@ -176,9 +181,7 @@ class Dialogo:
             'cancelar':self.cerrar}
         
         #empezar con el primer nodo
-        nodo = self.dialogo.get_actual()
-        self.mostrar_nodo(nodo)
-        self.dialogo.update()
+        self.hablar()
     
     def usar_funcion(self,tecla):
         if self.SelMode:
@@ -199,13 +202,19 @@ class Dialogo:
             
             for nodo in actual:
                 if nodo.reqs is not None:
-                    for attr in nodo.reqs:
-                        if getattr(loc,attr) < nodo.reqs[attr]:
-                           show.remove(nodo)
+                    if "attrs" in nodo.reqs:
+                        for attr in nodo.reqs['attrs']:
+                            if getattr(loc,attr) < nodo.reqs['attrs'][attr]:
+                                show.remove(nodo)
+                    elif "objects" in nodo.reqs:
+                        for obj in nodo.reqs['objects']:
+                            if obj not in loc.inventario:
+                                show.remove(nodo)
             self.SelMode = True
             self.frontend.borrar_todo()
             self.frontend.setLocImg(loc) #misma chapuza
-            self.frontend.setSelMode([n.texto for n in show])
+            self.frontend.setSelMode(show)
+            self.elegir_opcion('arriba')
         elif actual:
             self.mostrar_nodo(actual)
         else:
@@ -227,7 +236,7 @@ class Dialogo:
             sel = self.frontend.elegir_opcion(-1)
         elif direccion == 'abajo':
             sel = self.frontend.elegir_opcion(+1)
-        self.sel = sel
+        self.sel = int(sel)
         
     def mostrar(self):
         print(NotImplemented)
