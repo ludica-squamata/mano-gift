@@ -2,17 +2,18 @@
     "ID":0,"nombre":"heroe",
     "salud":20,"fuerza":5,
     "velocidad":3,"alcance_cc":16,
+    "carisma":8,
     "imagenes":{
         "idle":"mobs/imagenes/heroe_idle_walk.png",
         "cmb":"mobs/imagenes/heroe_cmb_walk.png",
-        "atk":"mobs/imagenes/heroe_cmb_atk.png"
+        "atk":"mobs/imagenes/heroe_cmb_atk.png",
+        "diag_face":"mobs/imagenes/pc_face.png"
         },
     "alphas":{
         "idle":"mobs/colisiones/human_walk.png",
         "cmb":"mobs/colisiones/human_walk.png",
         "atk":"mobs/colisiones/heroe_cmb_atk.png"
     },
-    "diag_face":"mobs/imagenes/pc_face.png",
     "clase":"PC",
     "propiedades":[]
 }
