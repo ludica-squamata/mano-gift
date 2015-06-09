@@ -47,7 +47,6 @@ class Renderer:
     
 class Camara:
     bg = None # el fondo
-    bg_rect = None
     focus = None # objeto que la camara sigue.
     contents = None # objetos del frente
     x,y,w,h = 0,0,0,0
@@ -60,17 +59,11 @@ class Camara:
         self.w = C.ANCHO
         self.h = C.ALTO
         self.rect = Rect(self.x,self.y,self.w,self.h)
-        self.camRect = Rect(-1,-1,self.w,self.h)
     
     def setBackground(self,spr):
         if self.bg is None:
             self.bg = spr
-            self.bg_rect = Rect((0,0),spr.rect.size)
-            self.camRect.topleft = self.bg_rect.topleft
-            self.bgs.add(spr)
-        else:
-            self.bgs.add(spr)
-            self.bg_rect.union_ip(spr.rect)
+        self.bgs.add(spr)
         
     def addFgObj(self,spr,_layer=0):
         if spr not in self.contents:
@@ -93,43 +86,48 @@ class Camara:
         self.contents.empty()
         self.bgs.empty()
         self.bg = None
-        self.camRect = Rect(-1,-1,self.w,self.h)
     
     def detectar_limites(self):
-        from .engine_data import EngineData as ED
+        top,bottom,left,right = True,True,True,True
+        topleft,topright = True,True
+        bottomleft,bottomright = True,True
+        _tl,_tr,_bl,_br = True,True,True,True
+        
+        if not len(self.bgs.get_sprites_at((1,1))):   _tl,topleft  = False,False
+        if not len(self.bgs.get_sprites_at((640,1))): _tr,topright = False,False
+        if not len(self.bgs.get_sprites_at((1,480))): _bl,bottomleft = False,False
+        if not len(self.bgs.get_sprites_at((640,480))): _br,bottomright = False,False
+        
+        if not _tl and not _tr: top = False       
+        if not _bl and not _br: bottom = False
+        if not _tl and not _bl: left = False
+        if not _tr and not _br: right = False
+       
+        adys = []
+        if not top:         adys.append('sup')
+        if not bottom:      adys.append('inf')
+        if not left:        adys.append('izq')
+        if not right:       adys.append('der')
+        if not topleft:     adys.append('supizq')
+        if not topright:    adys.append('supder')
+        if not bottomleft:  adys.append('infizq')
+        if not bottomright: adys.append('infder')
+
+        self.bg.checkear_adyacencias(adys)
+        if 'sup' in adys: top = True
+        if 'inf' in adys: bottom = True
+        if 'izq' in adys: left = True
+        if 'der' in adys: right = True
         
         newX = self.focus.rect.x - self.focus.mapX
         newY = self.focus.rect.y - self.focus.mapY
-        self.camRect.topleft = -newX,-newY
-        
-        top,bottom,left,right = False,False,False,False
-        cam = self.camRect # alias
-        #A point along the right or bottom edge is not considered to be inside the rectangle.
-        ##hence the -1s
-        if self.bg_rect.collidepoint((cam.left,cam.top)):         top,left     = True,True
-        if self.bg_rect.collidepoint((cam.right-1,cam.top)):      top,right    = True,True
-        if self.bg_rect.collidepoint((cam.left,cam.bottom-1)):    bottom,left  = True,True
-        if self.bg_rect.collidepoint((cam.right-1,cam.bottom-1)): bottom,right = True,True
-        
-        d = ''
-        if not top:    d+='sup'
-        if not bottom: d+='inf'
-        if not left:   d+='izq'
-        if not right:  d+='der'
-        
-        #print(top,bottom,left,right)
-        
-        if ED.checkear_adyacencias(d):
-            if 'sup' in d: top = True
-            if 'inf' in d: bottom = True
-            if 'izq' in d: left = True
-            if 'der' in d: right = True
-        
         dx = newX - self.bg.rect.x
         dy = newY - self.bg.rect.y
-       
-        if not left or not right:   dx = 0 #descomentar para restringir
-        if not top or not bottom:   dy = 0 #el movimiento fuera de borde
+        
+        if not left or not right:
+            dx = 0 #descomentar para restringir
+        if not top or not bottom:
+            dy = 0 #el movimiento fuera de borde
 
         return dx,dy
     

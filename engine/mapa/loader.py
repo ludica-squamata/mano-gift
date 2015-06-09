@@ -20,7 +20,6 @@ class _loader:
         _loader.cargar_mobs(mobs_data)
         _loader.cargar_quests()
         _loader.cargar_salidas()
-        _loader.cargar_limites()
         
     @staticmethod
     def cargar_props ():
@@ -90,11 +89,3 @@ class _loader:
         for salida in salidas:
             sld = Salida(salida,salidas[salida])
             _loader.STAGE.addProperty(sld,C.CAPA_GROUND_SALIDAS)
-    
-    @staticmethod
-    def cargar_limites():
-        if 'limites' in _loader.STAGE.data:
-            limites = _loader.STAGE.data['limites']
-            
-            for key in limites:
-                _loader.STAGE.limites[key.lower()] = limites[key]

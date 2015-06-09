@@ -9,17 +9,17 @@ from pygame import mask, Rect
 class Stage:
     properties = None
     interactives = []
+    chunks = None
     mapa = None
-    limites = {'sup':None,'supizq':None,'supder':None,
-               'inf':None,'infizq':None,'infder':None,
-               'izq':None,'der' : None}
     data = {}
     quest = None
     
     def __init__(self,nombre,mobs_data,entrada):
+        self.chunks = LayeredUpdates()
         self.nombre = nombre
         self.data = r.abrir_json(MD.mapas+nombre+'.json')
-        self.mapa = ChunkMap(self,self.data,nombre) # por ahora es uno solo.
+        self.chunks.add(ChunkMap(self,self.data,nombre=self.nombre))
+        self.mapa  = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.properties = LayeredUpdates()
@@ -56,29 +56,6 @@ class Stage:
         if obj in self.interactives:
             self.interactives.remove(obj)
         ED.RENDERER.delObj(obj)
-    
-    def cargar_mapa_adyacente(self,ady):
-        if type(self.limites[ady]) == str:
-            nombre = self.limites[ady]
-            data = r.abrir_json(MD.mapas+self.limites[ady]+'.json')
-            
-            w,h = self.mapa.rect.size
-            if   ady == 'sup'   :  x,y =  0,-h
-            elif ady == 'supizq':  x,y = -w,-h
-            elif ady == 'supder':  x,y =  w,-h
-            elif ady == 'inf'   :  x,y =  0, h
-            elif ady == 'infizq':  x,y = -w, h
-            elif ady == 'infder':  x,y =  w, h
-            elif ady == 'izq'   :  x,y = -w, 0
-            elif ady == 'der'   :  x,y =  w, 0
-            
-            mapa = ChunkMap(self,data,nombre,x,y)
-           
-            self.limites[ady] = mapa
-            ED.RENDERER.setBackground(mapa)
-            self.rect.union_ip(mapa.rect)
-            return True
-        return False
     
     def cargar_timestamps(self):
         if self.data['ambiente'] == 'exterior':
@@ -120,10 +97,16 @@ class ChunkMap(Sprite):
     tipo = 'mapa'
     offsetX = 0
     offsetY = 0
-    def __init__(self,stage,data,nombre='',offX=0,offY=0):
+    limites = {'sup':None,'supizq':None,'supder':None,
+               'inf':None,'infizq':None,'infder':None,
+               'izq':None,'der' : None}
+    
+    def __init__(self,stage,data,cuadrante='cen',nombre='',offX=0,offY=0):
         super().__init__()
         self.stage = stage
         self.nombre = nombre
+        self.cuadrante = cuadrante
+        self.cargar_limites(data['limites'])
         self.image = r.cargar_imagen(data['capa_background']['fondo'])
         self.rect = self.image.get_rect(topleft=(offX,offY))
         self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), C.COLOR_COLISION, (1,1,1,255))
@@ -137,6 +120,40 @@ class ChunkMap(Sprite):
         '''Coloca al sprite en pantalla'''
         self.rect.x = x
         self.rect.y = y
+    
+    def cargar_limites(self,limites):
+        for key in limites:
+            self.limites[key.lower()] = limites[key]
+                
+    def checkear_adyacencias(self,claves):
+        for clave in claves:
+            if clave in self.limites:
+                return self.cargar_mapa_adyacente(clave)
+            
+    def cargar_mapa_adyacente(self,ady):
+        if type(self.limites[ady]) is str:
+            nmbr = self.limites[ady]
+            data = r.abrir_json(MD.mapas+self.limites[ady]+'.json')
+            
+            w,h = self.rect.size
+            x,y = self.rect.topleft
+            if   ady == 'sup'   :  dx,dy =  0,-h
+            elif ady == 'supizq':  dx,dy = -w,-h
+            elif ady == 'supder':  dx,dy =  w,-h
+            elif ady == 'inf'   :  dx,dy =  0, h
+            elif ady == 'infizq':  dx,dy = -w, h
+            elif ady == 'infder':  dx,dy =  w, h
+            elif ady == 'izq'   :  dx,dy = -w, 0
+            elif ady == 'der'   :  dx,dy =  w, 0
+            
+            mapa = ChunkMap(self.stage,data,ady,nombre=nmbr,offX=dx,offY=dy)
+           
+            self.limites[ady] = mapa
+            #self.stage.chunks.add(mapa)
+            ED.RENDERER.setBackground(mapa)
+            self.stage.rect.union_ip(mapa.rect)
+            return True
+        return False
     
     def update(self):
         self.stage.anochecer()

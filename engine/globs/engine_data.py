@@ -49,9 +49,3 @@ class EngineData:
         cls.MAPA_ACTUAL = cls.mapas[nombre]
         cls.MAPA_ACTUAL.register_at_renderer(entrada)
         cls.HUD = HUD()
-    
-    @classmethod
-    def checkear_adyacencias(cls,clave):
-        if clave in cls.MAPA_ACTUAL.limites:
-            return cls.MAPA_ACTUAL.cargar_mapa_adyacente(clave)
-

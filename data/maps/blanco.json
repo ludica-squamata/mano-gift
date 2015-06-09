@@ -18,7 +18,13 @@
     },
     "limites":{
         "Izq":"negro",
-        "Der":"negro"
+        "Der":"negro",
+        "Sup":"negro",
+        "Inf":"negro",
+        "SupDer":"blanco",
+        "SupIzq":"blanco",
+        "InfDer":"blanco",
+        "InfIzq":"blanco"
 
     },
     "refs":{},
