@@ -93,27 +93,27 @@ class Camara:
         bottomleft,bottomright = True,True
         _tl,_tr,_bl,_br = True,True,True,True
         
-        if not len(self.bgs.get_sprites_at((1,1))):   _tl,topleft  = False,False
-        if not len(self.bgs.get_sprites_at((640,1))): _tr,topright = False,False
-        if not len(self.bgs.get_sprites_at((1,480))): _bl,bottomleft = False,False
-        if not len(self.bgs.get_sprites_at((640,480))): _br,bottomright = False,False
+        if not len(self.bgs.get_sprites_at((1,1))):   _tl,map_at_topleft  = False,False
+        if not len(self.bgs.get_sprites_at((640,1))): _tr,map_at_topright = False,False
+        if not len(self.bgs.get_sprites_at((1,480))): _bl,map_at_bottomleft = False,False
+        if not len(self.bgs.get_sprites_at((640,480))): _br,map_at_bottomright = False,False
         
-        if not _tl and not _tr: top = False       
-        if not _bl and not _br: bottom = False
-        if not _tl and not _bl: left = False
-        if not _tr and not _br: right = False
+        if not _tl and not _tr: map_at_top = False       
+        if not _bl and not _br: map_at_bottom = False
+        if not _tl and not _bl: map_at_left = False
+        if not _tr and not _br: map_at_right = False
        
-        adys = []
-        if not top:         adys.append('sup')
-        if not bottom:      adys.append('inf')
-        if not left:        adys.append('izq')
-        if not right:       adys.append('der')
-        if not topleft:     adys.append('supizq')
-        if not topright:    adys.append('supder')
-        if not bottomleft:  adys.append('infizq')
-        if not bottomright: adys.append('infder')
+        adyacent_map_keys = []
+        if not map_at_top:         adyacent_map_keys.append('sup')
+        if not map_at_bottom:      adyacent_map_keys.append('inf')
+        if not map_at_left:        adyacent_map_keys.append('izq')
+        if not map_at_right:       adyacent_map_keys.append('der')
+        if not map_at_topleft:     adyacent_map_keys.append('supizq')
+        if not map_at_topright:    adyacent_map_keys.append('supder')
+        if not map_at_bottomleft:  adyacent_map_keys.append('infizq')
+        if not map_at_bottomright: adyacent_map_keys.append('infder')
 
-        self.bg.checkear_adyacencias(adys)
+        self.bg.checkear_adyacencias(adyacent_map_keys)
         if 'sup' in adys: top = True
         if 'inf' in adys: bottom = True
         if 'izq' in adys: left = True
