@@ -41,7 +41,7 @@ class DialogInterface (DialogFrontEnd):
     def elegir_opcion (self,i):
         for fila in self.filas:
             fila.serDeselegido()
-        self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
+        self.posicionar_cursor(i)
         current = self.filas.get_sprite(self.sel)
         current.serElegido()
         return current.extra_data
