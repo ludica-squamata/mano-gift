@@ -84,7 +84,7 @@ def LowestF(abierta):
 
 def mirar_vecinos(nodo,grilla):
     cuadros = []
-    direcciones = ((0,-1),(0,1),(-1,0),(1,0))
+    direcciones = ((0,-1),(1,-1),(1,0),(1,1),(-1,1),(-1,0),(-1,-1),(0,1))
     for dx,dy in direcciones:
         x,y = nodo.x+dx,nodo.y+dy
         if (x,y) in grilla:
