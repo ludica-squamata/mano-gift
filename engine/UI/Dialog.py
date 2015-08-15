@@ -1,4 +1,5 @@
-from engine.libs.textrect import render_textrect
+from engine.libs import render_textrect, render_tagged_text
+from engine.misc.tagloader import load_tagarrayfile
 from .dialogFrontEnd import DialogFrontEnd
 from .widgets import _opcion
 from pygame import Rect
@@ -11,7 +12,8 @@ class DialogInterface (DialogFrontEnd):
         self.erase_area = Rect(3,3,w-7,h-7)
     
     def setText(self,texto):
-        render = render_textrect(texto,self.fuente,self.draw_space_rect,self.font_none_color,self.bg_cnvs)
+        w,h = self.draw_space_rect.size
+        render = render_tagged_text(texto,w,h,self.tags,fgcolor=self.font_none_color,bgcolor=self.bg_cnvs)
         self.canvas.blit(render,self.text_pos)
         self.image = self.canvas
     

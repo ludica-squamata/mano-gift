@@ -18,7 +18,7 @@
 	"txt":"Opción 4 (objeto)"},
     
     "6":{"type":"branch","leads":11,"loc":"heroe","reqs":null,
-    "txt":"Opción 5 (marcado)"},
+    "txt":"Esta es la <b>Opción 5</b>"},
     
     "7":{"type":"leaf","leads":null,"loc":"commoner","reqs":null,
     "txt":"No, esta no es la opción"},
