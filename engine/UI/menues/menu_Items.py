@@ -129,7 +129,7 @@ class Menu_Items (Menu):
 ##                print(self.slots)
             for fila in self.filas:
                 fila.serDeselegido()
-            self.sel = self.posicionar_cursor(j,self.sel,self.opciones)
+            self.posicionar_cursor(j)
             self.mover_cursor(self.filas.get_sprite(self.sel))
             self.current.isSelected = True
             

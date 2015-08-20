@@ -1,8 +1,7 @@
-from pygame import Rect
-from engine.misc import Resources as r
 from engine.libs.textrect import render_textrect
 from .dialogFrontEnd import DialogFrontEnd
 from .widgets import _opcion
+from pygame import Rect
 
 class DialogInterface (DialogFrontEnd):  
     def __init__(self):
@@ -19,17 +18,17 @@ class DialogInterface (DialogFrontEnd):
         h = self.altura_del_texto
         self.opciones = len(opciones)
         for i in range(self.opciones):
-            opcion = _opcion(opciones[i],self.draw_space_rect.w,(3,i*h+i+3))
+            opcion = _opcion(opciones[i].texto,self.draw_space_rect.w,(3,i*h+i+3),extra_data=opciones[i].leads)
             self.filas.add(opcion)
-        
-        self.elegir_opcion(0)
+         
+         
         self.filas.draw(self.canvas)
     
     def setLocImg(self,locutor):
-        '''carga y dibuja la imagen de quien está hablando. También setea
-        la posición del texto a izquierda o derecha según la "cara" del hablante'''
-        img = r.cargar_imagen('mobs/imagenes/'+locutor.lower()+'_face.png')
-        if locutor != 'PC':
+        """carga y dibuja la imagen de quien está hablando. También setea
+        la posición del texto a izquierda o derecha según la "cara" del hablante"""
+        img = locutor.diag_face
+        if locutor.nombre != 'heroe': #esto también es chapucero.
             dest = 3,3
             self.text_pos = 96,3
         else:
@@ -42,10 +41,10 @@ class DialogInterface (DialogFrontEnd):
     def elegir_opcion (self,i):
         for fila in self.filas:
             fila.serDeselegido()
-        self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
+        self.posicionar_cursor(i)
         current = self.filas.get_sprite(self.sel)
         current.serElegido()
-        return self.sel
+        return current.extra_data
     
     def borrar_todo(self):
         self.canvas.fill(self.bg_cnvs,((3,3),self.draw_space_rect.size))

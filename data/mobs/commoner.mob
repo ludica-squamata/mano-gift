@@ -2,17 +2,19 @@
     "ID":1,"nombre":"commoner",
     "salud":2,"fuerza":2,
     "velocidad":1,
+    "carisma":5,
     "imagenes":{
         "idle":"mobs/imagenes/commoner12.png",
         "atk":null,
-        "death":null
+        "death":null,
+        "diag_face":"mobs/imagenes/npc_face.png"
     },
     "alphas":{
         "idle":"mobs/colisiones/human_walk.png",
         "atk":null,
         "death":null
     },
-    "diag_face":"mobs/imagenes/npc_face.png",
+    
     "clase":"NPCSocial",
     "propiedades":["pasiva"]
 }
