@@ -140,15 +140,11 @@ class Camara:
         self.bg.rect.x += dx
         self.bg.rect.y += dy
 
-        colliderect = self.rect.colliderect
-
         for spr in self.bgs:
             if spr != self.bg:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
-                # if colliderect(spr.rect):
-                    # spr.dirty = 1
         
         for spr in self.salidas:
             x = self.bg.rect.x + spr.mapX
@@ -160,10 +156,10 @@ class Camara:
                 x = self.bg.rect.x + spr.mapX
                 y = self.bg.rect.y + spr.mapY
                 spr.ubicar(x,y)
-                # if colliderect(spr.rect):
-                    # spr.dirty = 1
+
                 if y:
-                    self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
+                    spr._layer = spr._layer_+spr.rect.bottom
+                    self.contents.change_layer(spr, spr._layer)
 
     def update(self, use_focus):
         self.bgs.update()
@@ -182,4 +178,3 @@ class Camara:
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
         #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
-       

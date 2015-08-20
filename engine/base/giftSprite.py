@@ -12,7 +12,8 @@ class _giftSprite(sprite.Sprite):
     solido = True # si es solido, colisiona; si no, no.
     images = None
     data = None  # info importada de un json
-
+    _layer = 0
+    
     IMAGEN_D = 'abajo'
     IMAGEN_U = 'arriba'
     IMAGEN_L = 'izquierda'
