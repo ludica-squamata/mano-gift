@@ -49,10 +49,12 @@ class EventDispatcher:
         Este método crea un evento en la cola para ser distribuido, con los datos que
         van a ser distribuidos.
         :param event_data:
-        :type event_data:GiftEvent
+        :type event_data:dict/GiftEvent
         :return:None
         """
-        cls._cola.append(event_data)
+        
+        event = GiftEvent(*event_data)
+        cls._cola.append(event)
 
     @classmethod
     def process(cls):
@@ -66,6 +68,7 @@ class EventDispatcher:
         l = len(_cola)
         while l > 0:
             evento = _cola.popleft()
+            print(evento)
             if evento.type in cls._oyentes:
                 for listener in cls._oyentes[evento.type]:
                     listener(evento)

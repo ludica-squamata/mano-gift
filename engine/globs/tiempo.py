@@ -1,6 +1,5 @@
-﻿from pygame import time, Surface, PixelArray, SRCALPHA
-from engine.globs.eventDispatcher import GiftEvent
-from engine.globs import Constants as C
+from pygame import time, Surface, draw, PixelArray, SRCALPHA
+from engine.misc import Resources as r
 from engine.base import _giftSprite
 
 class _clock:
@@ -244,7 +243,7 @@ class Tiempo:
             if cls.clock.day_flag:
                 cls.dia += 1
             if cls.clock.hour_flag:
-                ED.EVENTS.trigger(GiftEvent('hora', 'Tiempo', {"hora": cls.clock.h}))
+                ED.EVENTS.trigger('hora', 'Tiempo', {"hora": cls.clock.h})
     
     @classmethod
     def crear_noche(cls,tamanio):

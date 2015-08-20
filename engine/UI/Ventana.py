@@ -21,12 +21,13 @@ class Ventana (BaseWidget):
         
         return megacanvas
     
-    def posicionar_cursor (self,i,cursor,max_opciones):
-        cursor += i
-        if cursor < 0: cursor = 0
-        elif cursor > max_opciones-1: cursor = max_opciones-1
-        
-        return cursor
+    def posicionar_cursor (self,i):
+        self.sel += i
+        if self.sel < 0:
+            self.sel = 0
+            
+        elif self.sel > self.opciones-1:
+            self.sel = self.opciones-1
 
     def crear_titulo(self,titulo,fg_color,bg_color,ancho):
         ttl_rect = Rect((3,3),(ancho-7,30))

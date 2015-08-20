@@ -9,12 +9,13 @@ class _opcion (BaseWidget):
     tipo = 'fila'
     isSelected = False
     
-    def __init__(self,texto,ancho,pos,size=16,aling=0):
+    def __init__(self,texto,ancho,pos,size=16,aling=0,extra_data=None):
         self.pos = pos
         self.size = size
         self.fuente = font.SysFont('verdana', size)
         self.rect = Rect((-1,-1),(ancho,self.fuente.get_height()+1))
         self.aling = aling
+        self.extra_data = extra_data
         
         self.setText(texto)
         super().__init__(self.img_uns)

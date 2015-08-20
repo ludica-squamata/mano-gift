@@ -25,6 +25,10 @@ class Item:
         else:
             return False
     
+    def __repr__(self):
+        return self.nombre+' ('+self.tipo+')'
+    
+    
 class Equipable(Item):
     def __init__(self,nombre,imagen,data):
         super().__init__(nombre,imagen,data)
