@@ -1,4 +1,4 @@
-from engine.globs import Constants as C, Tiempo as T, MobGroup
+from engine.globs import Constants as C, Tiempo as T, MobGroup, timestamp
 from engine.globs import ModData as MD, EngineData as ED
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
@@ -24,6 +24,7 @@ class Stage:
         self.grilla = generar_grilla(self.mapa.mask,self.mapa.image)
         self.properties = LayeredUpdates()
         self.salidas = [] #aunque en realidad, las salidas deberian ser del chunk, o no?
+        self.cargar_timestamps()
         _loader.setStage(self)
         _loader.loadEverything(entrada,mobs_data)
         #self.register_at_renderer(entrada)
@@ -43,6 +44,8 @@ class Stage:
             self.salidas.append(obj)
         else:
             obj._layer_ = _layer
+            if _layer == C.CAPA_TOP_CIELO:
+                self.properties.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
             self.properties.add(obj,layer =_layer)
             if addInteractive:
                 self.interactives.append(obj)
@@ -77,19 +80,28 @@ class Stage:
             return True
         return False
     
+    def cargar_timestamps(self):
+        if self.data['ambiente'] == 'exterior':
+            self.amanece  = timestamp(*self.data["amanece"])
+            self.atardece = timestamp(*self.data["atardece"])
+            self.anochece = timestamp(*self.data["anochece"])
+            self.esNoche = False
+            self.esTarde = False
+    
     def anochecer(self):
+        ts = T.clock.timestamp()
         if self.data['ambiente'] == 'exterior':
             #transiciones
-            if T.hora   == self.data['amanece']:  T.aclarar()
-            elif T.hora == self.data['atardece']: T.oscurecer(100)
-            elif T.hora == self.data['anochece']: T.oscurecer(150)
-            #dia o noche establecidas
-            elif self.data['amanece'] <= T.hora < self.data['atardece']:
-                T.noche.image.set_alpha(0)
-            elif self.data['atardece'] <= T.hora < self.data['anochece']:
-                T.noche.image.set_alpha(100)
-            elif 0 <= T.hora < self.data['amanece']:
-                T.noche.image.set_alpha(150)
+            if ts == self.amanece:
+                T.aclarar()
+                self.esNoche = False
+                self.esTarde = False
+            elif ts >= self.atardece and not self.esTarde:
+                if T.oscurecer(100):
+                    self.esTarde = True
+            elif ts == self.anochece:
+                if T.oscurecer(150):
+                    self.esNoche = True
         elif self.data['ambiente'] == 'interior':
             T.noche.image.set_alpha(0)
     

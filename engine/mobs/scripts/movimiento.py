@@ -95,9 +95,9 @@ def _determinar_direccion(curr_p,next_p):
     
     if dx > dy:
         if dy < 0: direccion = 'abajo'
-        else: direccion = 'derecha'
+        else: direccion = 'izquierda'
     else:
-        if dx < 0: direccion = 'izquierda'
+        if dx < 0: direccion = 'derecha'
         else: direccion = 'arriba'
     
     return direccion

@@ -55,7 +55,7 @@
         "casa":"props/casa.png"
         },
     "ambiente":"exterior",
-    "amanece":6,
-    "atardece":18,
-    "anochece":21
+    "amanece":[6,0],
+    "atardece":[18,0],
+    "anochece":[21,0]
 }

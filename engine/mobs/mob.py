@@ -1,11 +1,9 @@
-from .CompoMob import Equipado,Animado
-from engine.base import _giftSprite, ShadowSprite
+from .CompoMob import Equipado, Atribuido, Animado, Movil, Interactivo
+from engine.globs import EngineData as ED, MobGroup
 from engine.misc import Resources as r
-from engine.globs import Constants as C, EngineData as ED, MobGroup
-from pygame import mask
+from engine.base import ShadowSprite
 
-
-class Mob(Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .velocidad
+class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atribuido para tener .velocidad
     tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []
@@ -41,6 +39,8 @@ class Mob(Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .ve
                     self.cmb_walk_alpha = self.cargar_anims(alpha['cmb'],dirs,True)
                 elif key == 'death':
                     self.death_img = r.cargar_imagen(imgs['death'])
+                elif key == "diag_face":
+                    self.diag_face = r.cargar_imagen(imgs["diag_face"])
         
         #self.camino = []
         self.images = self.idle_walk_img
@@ -67,8 +67,8 @@ class Mob(Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .ve
         else:
             self.actitud = ''
             
-        #if 'objetivo' in data:
-        #    self.objetivo = MobGroup[data['objetivo']]
+        if 'objetivo' in data:
+            self.objetivo = MobGroup[data['objetivo']]
         
         self.establecer_estado('idle')
         super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y)

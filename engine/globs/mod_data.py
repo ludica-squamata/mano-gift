@@ -1,6 +1,5 @@
 from os import getcwd as cwd, path
 
-
 class ModData:
     mod_folder = ''
     data = {}
@@ -18,6 +17,9 @@ class ModData:
     @classmethod
     def init(cls, ini):
         from engine.misc import Util as U
+        from importlib import machinery
+        import types
+        
         if not cls.find_mod_folder(ini):
             U.salir("la ruta no existe")
         
@@ -35,6 +37,11 @@ class ModData:
             cls.items = root+data['folders']['items']+'/'
             cls.scripts = root+data['folders']['scripts']+'/'
             cls.scenes = root+data['folders']['scenes']+'/'
+            
+            loader = machinery.SourceFileLoader("module.name", root+data['intro'])
+            m = loader.load_module()
+            cls.intro = getattr(m, "intro")
+            
         else:
             U.salir('No data in mod folder')
     
@@ -53,12 +60,12 @@ class ModData:
     @classmethod
     def get_file_data(cls, filename):
         from engine.misc import Resources as r
-        _folder = path.join(cwd(),'demo_data\\')
-        folder = cls.mod_folder
-        ruta = folder+filename
+        ruta = cls.mod_folder+filename
         if not path.exists(ruta):
-            ruta = _folder+filename
-            cls.mod_folder = _folder
+            return None
         
         data = r.abrir_json(ruta)
         return data
+    
+    def intro(cls):
+        pass

@@ -5,3 +5,4 @@ from ._equipado import Equipado
 from ._autonomo import Autonomo
 from ._movil import Movil
 from ._parlante import Parlante
+from ._interactivo import Interactivo
