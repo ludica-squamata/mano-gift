@@ -1,6 +1,5 @@
-from engine.globs import EngineData as ED, Constants as C, ModData as MD, Tiempo as T
-from pygame import Surface, font, sprite, event as EVENT, KEYDOWN, QUIT
-from engine.misc import Resources as r, Util
+from engine.globs import EngineData as ED, Constants as C, ModData as MD
+from pygame.sprite import LayeredUpdates
 from engine.UI.widgets import _opcion
 from .menu import Menu
 import os
@@ -15,7 +14,7 @@ class Menu_Debug (Menu):
             'izquierda':lambda dummy:None,
             'derecha':lambda dummy:None,
             'hablar':self.cargar_escena}
-        self.filas = sprite.LayeredUpdates()
+        self.filas = LayeredUpdates()
         self.crear_espacio_de_escenas(C.ANCHO-37,C.ALTO/2.4)
         self.elegir_opcion('arriba')
     
@@ -46,12 +45,11 @@ class Menu_Debug (Menu):
         if direccion == 'arriba': i = -1
         elif direccion == 'abajo': i = +1
         self.DeselectAll(self.filas)
-        self.sel = self.posicionar_cursor(i,self.sel,self.opciones)
+        self.posicionar_cursor(i)
         elegido = self.filas.get_sprite(self.sel)
         elegido.serElegido()
     
     def cargar_escena(self):
-        ED.MODO = 'Aventura'
         ED.setear_escena(self.escenas[self.sel])
         ED.onPause = False
         ED.menu_previo = ''
