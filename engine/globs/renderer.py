@@ -92,6 +92,14 @@ class Camara:
         topleft,topright = True,True
         bottomleft,bottomright = True,True
         _tl,_tr,_bl,_br = True,True,True,True
+        map_at_top = False
+        map_at_bottom = False
+        map_at_left = False
+        map_at_right = False
+        map_at_topleft  = False
+        map_at_topright = False
+        map_at_bottomleft = False
+        map_at_bottomright = False
         
         if not len(self.bgs.get_sprites_at((1,1))):   _tl,map_at_topleft  = False,False
         if not len(self.bgs.get_sprites_at((640,1))): _tr,map_at_topright = False,False
@@ -114,10 +122,10 @@ class Camara:
         if not map_at_bottomright: adyacent_map_keys.append('infder')
 
         self.bg.checkear_adyacencias(adyacent_map_keys)
-        if 'sup' in adys: top = True
-        if 'inf' in adys: bottom = True
-        if 'izq' in adys: left = True
-        if 'der' in adys: right = True
+        if 'sup' in adyacent_map_keys: top = True
+        if 'inf' in adyacent_map_keys: bottom = True
+        if 'izq' in adyacent_map_keys: left = True
+        if 'der' in adyacent_map_keys: right = True
         
         newX = self.focus.rect.x - self.focus.mapX
         newY = self.focus.rect.y - self.focus.mapY
@@ -180,4 +188,3 @@ class Camara:
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
         #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
-       
