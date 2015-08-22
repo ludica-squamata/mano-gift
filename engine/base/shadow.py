@@ -6,17 +6,21 @@ from engine.globs import EngineData as ED
 
 class _sombra(_giftSprite):
     dif_x = 0
-
+    alpha = 0
     def __init__(self, spr, dfx, img):
-        super().__init__(imagen=img, x = spr.rect.x, y = spr.rect.y)
         self.spr = spr
+        super().__init__(imagen=img, x = spr.rect.x, y = spr.rect.y)
+        self.alpha = self.image.get_alpha()
         self.dif_x = dfx
         self._layer_ = spr._layer_
         self.tipo = "sombra"
 
-    def ubicar(self, x, y):
+    def ubicar(self, x, y, z=0):
         """Coloca al sprite en pantalla"""
-        super().ubicar(x - self.dif_x, y)
+        if self.z+z < self.spr.z:
+            super().ubicar(x - self.dif_x, y, z)
+        else:
+            super().ubicar(x - self.dif_x, y)
     
     def __repr__(self):
         return "sombra de "+self.spr.nombre
@@ -168,7 +172,7 @@ class ShadowSprite(_giftSprite):
         self.update_sombra()
         super().update(*args)
 
-    def ubicar(self, dx, dy):
+    def ubicar(self, dx, dy, z =0):
         super().ubicar(dx, dy)
         if self._sprSombra is not None:
             self._sprSombra.ubicar(dx, dy)

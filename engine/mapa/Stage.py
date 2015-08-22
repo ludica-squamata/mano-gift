@@ -35,7 +35,7 @@ class Stage:
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         for obj in self.properties:
             obj.stage = self
-            ED.RENDERER.addObj(obj,obj.rect.bottom)
+            ED.RENDERER.addObj(obj,obj.z)
         
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     

@@ -155,11 +155,10 @@ class Camara:
             if 0 < spr._layer_ < 7:
                 x = self.bg.rect.x + spr.mapX
                 y = self.bg.rect.y + spr.mapY
-                spr.ubicar(x,y)
+                spr.ubicar(x,y,dy)
 
                 if y:
-                    spr._layer = spr._layer_+spr.rect.bottom
-                    self.contents.change_layer(spr, spr._layer)
+                    self.contents.change_layer(spr, spr.z)
 
     def update(self, use_focus):
         self.bgs.update()
@@ -169,8 +168,12 @@ class Camara:
             dx, dy = self.detectar_limites()
             focus_dx = self.focus.rect.x - self.focus.mapX - self.bg.rect.x
             focus_dy = self.focus.rect.y - self.focus.mapY - self.bg.rect.y
-            if focus_dx or focus_dy:
+            if dx or dy:
                 self.panear(dx,dy)
+            else:
+                x = self.bg.rect.x + self.focus.mapX
+                y = self.bg.rect.y + self.focus.mapY
+                self.focus.ubicar(x,y,dy)
 
     def draw(self, fondo):
         ret = self.bgs.draw(fondo)
