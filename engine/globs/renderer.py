@@ -136,6 +136,11 @@ class Camara:
     def centrar(self):
         self.focus.rect.center = self.rect.center
     
+    def update_sprites_layer(self):
+        for spr in self.contents:
+            if hasattr(spr, "z"):
+                self.contents.change_layer(spr, spr.z)
+    
     def panear(self, dx, dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
@@ -157,9 +162,6 @@ class Camara:
                 y = self.bg.rect.y + spr.mapY
                 spr.ubicar(x,y,dy)
 
-                if y:
-                    self.contents.change_layer(spr, spr.z)
-
     def update(self, use_focus):
         self.bgs.update()
         self.contents.update()
@@ -174,6 +176,8 @@ class Camara:
                 x = self.bg.rect.x + self.focus.mapX
                 y = self.bg.rect.y + self.focus.mapY
                 self.focus.ubicar(x,y,dy)
+            
+        self.update_sprites_layer()
 
     def draw(self, fondo):
         ret = self.bgs.draw(fondo)
