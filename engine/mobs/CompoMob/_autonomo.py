@@ -1,9 +1,10 @@
 from engine.mobs.scripts import movimiento
-from ._sensitivo import Sensitivo
+from . import Sensitivo, Animado
 from ._movil import Movil
+from engine.globs import EngineData as ED
 
 
-class Autonomo(Sensitivo, Movil):  # tiene que poder ver para ser autónomo
+class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autónomo
     AI = None  # determina cómo se va a mover el mob
     """:type AI:()->None"""
     objetivo = None  # el mob al que este cazador está persiguiendo
@@ -33,8 +34,15 @@ class Autonomo(Sensitivo, Movil):  # tiene que poder ver para ser autónomo
             self.vision = self.tri_vis
             self.mover_vis = self.mover_tri_vis
 
-    def mover(self):
+    def mover(self, dx, dy):
         direccion = self.AI(self)
         self.cambiar_direccion(direccion)
-        self.moverse() #método de movil
-        #porque super() me devolvía a NPCSOcial...
+        super().mover(dx, dy)
+
+    def update(self, *args):
+        if not ED.onPause and not self.dead:
+            self.determinar_accion(self.ver())
+            # mover con 0,0
+            # porque se supone que termina en el mover de movil que ignora los parametros y calcula dx, dy!!!
+            self.mover(0, 0)
+        super().update(*args)

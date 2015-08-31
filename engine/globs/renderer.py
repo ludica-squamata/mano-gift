@@ -15,15 +15,6 @@ class Renderer:
         self.camara.clear()
         self.overlays.empty()
     
-    def setBackground(self,bg):
-        self.camara.setBackground(bg)
-
-    def addObj(self,obj,layer):
-        self.camara.addFgObj(obj,layer)
-    
-    def delObj(self,obj):
-        self.camara.delObj(obj)
-    
     def addOverlay(self,obj,_layer):
         self.overlays.add(obj,layer=_layer)
         
@@ -31,11 +22,8 @@ class Renderer:
         if obj in self.overlays:
             self.overlays.remove(obj)
     
-    def addSld(self,obj):
-        self.camara.salidas.append(obj)
-    
-    def update(self,fondo):
-        fondo.fill((125,125,125))
+    def update(self, fondo):
+        fondo.fill((125, 125, 125))
         self.camara.update(self.use_focus)
         
         for over in self.overlays:
@@ -48,32 +36,40 @@ class Renderer:
 class Camara:
     bg = None # el fondo
     focus = None # objeto que la camara sigue.
-    contents = None # objetos del frente
+    visible = None # objetos que se ven (incluye sombras)
+    real = None # objetos reales del mundo (no incluye sombras)
     x,y,w,h = 0,0,0,0
-    
+
     def __init__(self,parent):
         self.parent = parent
-        self.contents = LayeredUpdates()
+        self.visible = LayeredUpdates()
+        self.real = LayeredUpdates()
         self.bgs = LayeredUpdates()
-        self.salidas = []
         self.w = C.ANCHO
         self.h = C.ALTO
         self.rect = Rect(self.x,self.y,self.w,self.h)
     
-    def setBackground(self,spr):
+    def set_background(self,spr):
         if self.bg is None:
             self.bg = spr
         self.bgs.add(spr)
-        
-    def addFgObj(self,spr,_layer=0):
-        if spr not in self.contents:
-            self.contents.add(spr,layer=_layer)
+            
+    def add_real (self,obj):
+        self.real.add(obj)
+        if obj not in self.visible:
+            self.visible.add(obj,layer = obj.z)
     
-    def delObj(self,obj):
-        if obj in self.contents:
-            self.contents.remove(obj)
-    
-    def setFocus(self,spr):
+    def add_visible (self,obj):
+        if obj not in self.visible:
+            self.visible.add(obj,layer = obj.z)
+            
+    def remove_obj(self,obj):
+        if obj in self.real:
+            self.real.remove(obj)
+        if obj in self.visible:
+            self.visible.remove(obj)
+            
+    def set_focus(self,spr):
         self.focus = spr
 
     def isFocus(self,spr):
@@ -83,7 +79,8 @@ class Camara:
         return False
     
     def clear(self):
-        self.contents.empty()
+        self.real.empty()
+        self.visible.empty()
         self.bgs.empty()
         self.bg = None
     
@@ -142,49 +139,45 @@ class Camara:
     def centrar(self):
         self.focus.rect.center = self.rect.center
     
-    def panear(self,dx,dy):
+    def update_sprites_layer(self):
+        for spr in self.visible:
+            self.visible.change_layer(spr, spr.z)
+
+    def panear(self, dx, dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
-
-        colliderect = self.rect.colliderect
 
         for spr in self.bgs:
             if spr != self.bg:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
-                # if colliderect(spr.rect):
-                    # spr.dirty = 1
-        
-        for spr in self.salidas:
+            
+        for spr in self.real:
             x = self.bg.rect.x + spr.mapX
             y = self.bg.rect.y + spr.mapY
-            spr.ubicar(x,y)
-            
-        for spr in self.contents:
-            if 0 < spr._layer_ < 7:
-                x = self.bg.rect.x + spr.mapX
-                y = self.bg.rect.y + spr.mapY
-                spr.ubicar(x,y)
-                # if colliderect(spr.rect):
-                    # spr.dirty = 1
-                if y:
-                    self.contents.change_layer(spr, spr._layer_+spr.rect.bottom)
+            spr.ubicar(x,y,dy)
 
-    def update(self,use_focus):
+    def update(self, use_focus):
         self.bgs.update()
-        self.contents.update()
+        self.visible.update()
         if use_focus:
             self.centrar()
             dx, dy = self.detectar_limites()
             focus_dx = self.focus.rect.x - self.focus.mapX - self.bg.rect.x
             focus_dy = self.focus.rect.y - self.focus.mapY - self.bg.rect.y
-            if focus_dx or focus_dy:
+            if dx or dy:
                 self.panear(dx,dy)
+            else:
+                x = self.bg.rect.x + self.focus.mapX
+                y = self.bg.rect.y + self.focus.mapY
+                self.focus.ubicar(x,y,dy)
+            
+        self.update_sprites_layer()
 
-    def draw(self,fondo):
+    def draw(self, fondo):
         ret = self.bgs.draw(fondo)
-        ret += self.contents.draw(fondo)
+        ret += self.visible.draw(fondo)
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
         #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret
