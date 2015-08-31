@@ -9,12 +9,12 @@ class _sombra(_giftSprite):
     alpha = 0
     def __init__(self, spr, dfx, img):
         self.spr = spr
-        super().__init__(imagen=img, x = spr.rect.x, y = spr.rect.y)
+        self.tipo = "sombra"
+        self.nombre = "sombra de "+self.spr.nombre
+        super().__init__(imagen=img, x = spr.rect.x, y = spr.rect.y, z = spr.rect.bottom-1)
         self.alpha = self.image.get_alpha()
         self.dif_x = dfx
-        self._layer_ = spr._layer_
-        self.tipo = "sombra"
-
+        
     def ubicar(self, x, y, z=0):
         """Coloca al sprite en pantalla"""
         if self.z+z < self.spr.z:
@@ -23,8 +23,7 @@ class _sombra(_giftSprite):
             super().ubicar(x - self.dif_x, y)
     
     def __repr__(self):
-        return "sombra de "+self.spr.nombre
-
+        return self.nombre
 
 class ShadowSprite(_giftSprite):
     _sombras = None
@@ -74,7 +73,7 @@ class ShadowSprite(_giftSprite):
 
         if self._sprSombra is None:
             self._sprSombra = _sombra(self, h_2, t_surface)            
-            ED.RENDERER.addObj(self._sprSombra, self.rect.bottom - 10)
+            ED.RENDERER.addObj(self._sprSombra, self.rect.bottom)
         
     @staticmethod
     def _crear_sombra(surface, arg=None, mask=None):
@@ -173,9 +172,9 @@ class ShadowSprite(_giftSprite):
         super().update(*args)
 
     def ubicar(self, dx, dy, z =0):
-        super().ubicar(dx, dy)
+        super().ubicar(dx, dy, z)
         if self._sprSombra is not None:
-            self._sprSombra.ubicar(dx, dy)
+            self._sprSombra.ubicar(dx, dy, z)
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)

@@ -43,7 +43,6 @@ class Stage:
         if _layer == C.CAPA_GROUND_SALIDAS:
             self.salidas.append(obj)
         else:
-            obj._layer_ = _layer
             if _layer == C.CAPA_TOP_CIELO:
                 self.properties.remove_sprites_of_layer(C.CAPA_TOP_CIELO)
             self.properties.add(obj,layer =_layer)

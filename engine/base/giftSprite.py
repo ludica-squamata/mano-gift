@@ -70,7 +70,6 @@ class _giftSprite(sprite.Sprite):
         #self.globY += dy
         self.rect.move_ip(dx,dy)
 
-
     def ubicar(self, x, y, z=0):
         '''Coloca al sprite en pantalla'''
         self.rect.x = x

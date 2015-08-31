@@ -117,8 +117,7 @@ class Camara:
         if not left:   d+='izq'
         if not right:  d+='der'
         
-        #print(top,bottom,left,right)
-        
+
         if ED.checkear_adyacencias(d):
             if 'sup' in d: top = True
             if 'inf' in d: bottom = True
@@ -157,10 +156,9 @@ class Camara:
             spr.ubicar(x,y)
             
         for spr in self.contents:
-            if 0 < spr._layer_ < 7:
-                x = self.bg.rect.x + spr.mapX
-                y = self.bg.rect.y + spr.mapY
-                spr.ubicar(x,y,dy)
+            x = self.bg.rect.x + spr.mapX
+            y = self.bg.rect.y + spr.mapY
+            spr.ubicar(x,y,dy)
 
     def update(self, use_focus):
         self.bgs.update()

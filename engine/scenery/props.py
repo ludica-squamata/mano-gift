@@ -69,13 +69,7 @@ class Operable(Escenografia):
     estado_actual = 0
 
     def __init__(self, nombre, imagen, x, y, data):
-        data.setdefault('proyectar_sombra', False)
-        p = data.get('propiedades', ['solido'])
-        if 'solido' not in p:
-            p.append('solido')
-            data['propiedades'] = p
         super().__init__(nombre, imagen, x, y, data)
-        # self._sprSombra._visible = self.proyectaSombra
         self.accion = 'operar'
 
         for estado in data['operable']:
