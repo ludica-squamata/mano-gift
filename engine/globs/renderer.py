@@ -15,24 +15,12 @@ class Renderer:
         self.camara.clear()
         self.overlays.empty()
     
-    def setBackground(self,bg):
-        self.camara.setBackground(bg)
-
-    def addObj(self,obj,layer):
-        self.camara.addFgObj(obj,layer)
-    
-    def delObj(self,obj):
-        self.camara.delObj(obj)
-    
     def addOverlay(self,obj,_layer):
         self.overlays.add(obj,layer=_layer)
         
     def delOverlay(self,obj):
         if obj in self.overlays:
             self.overlays.remove(obj)
-    
-    def addSld(self,obj):
-        self.camara.salidas.append(obj)
     
     def update(self, fondo):
         fondo.fill((125, 125, 125))
@@ -49,20 +37,21 @@ class Camara:
     bg = None # el fondo
     bg_rect = None
     focus = None # objeto que la camara sigue.
-    contents = None # objetos del frente
+    visible = None # objetos que se ven (incluye sombras)
+    real = None # objetos reales del mundo (no incluye sombras)
     x,y,w,h = 0,0,0,0
 
     def __init__(self,parent):
         self.parent = parent
-        self.contents = LayeredUpdates()
+        self.visible = LayeredUpdates()
+        self.real = LayeredUpdates()
         self.bgs = LayeredUpdates()
-        self.salidas = []
         self.w = C.ANCHO
         self.h = C.ALTO
         self.rect = Rect(self.x,self.y,self.w,self.h)
         self.camRect = Rect(-1,-1,self.w,self.h)
     
-    def setBackground(self,spr):
+    def set_background(self,spr):
         if self.bg is None:
             self.bg = spr
             self.bg_rect = Rect((0,0),spr.rect.size)
@@ -71,16 +60,23 @@ class Camara:
         else:
             self.bgs.add(spr)
             self.bg_rect.union_ip(spr.rect)
-        
-    def addFgObj(self,spr,_layer=0):
-        if spr not in self.contents:
-            self.contents.add(spr,layer=_layer)
+            
+    def add_real (self,obj):
+        self.real.add(obj)
+        if obj not in self.visible:
+            self.visible.add(obj,layer = obj.z)
     
-    def delObj(self,obj):
-        if obj in self.contents:
-            self.contents.remove(obj)
-    
-    def setFocus(self,spr):
+    def add_visible (self,obj):
+        if obj not in self.visible:
+            self.visible.add(obj,layer = obj.z)
+            
+    def remove_obj(self,obj):
+        if obj in self.real:
+            self.real.remove(obj)
+        if obj in self.visible:
+            self.visible.remove(obj)
+            
+    def set_focus(self,spr):
         self.focus = spr
 
     def isFocus(self,spr):
@@ -90,7 +86,8 @@ class Camara:
         return False
     
     def clear(self):
-        self.contents.empty()
+        self.real.empty()
+        self.visible.empty()
         self.bgs.empty()
         self.bg = None
         self.camRect = Rect(-1,-1,self.w,self.h)
@@ -117,7 +114,6 @@ class Camara:
         if not left:   d+='izq'
         if not right:  d+='der'
         
-
         if ED.checkear_adyacencias(d):
             if 'sup' in d: top = True
             if 'inf' in d: bottom = True
@@ -136,10 +132,9 @@ class Camara:
         self.focus.rect.center = self.rect.center
     
     def update_sprites_layer(self):
-        for spr in self.contents:
-            if hasattr(spr, "z"):
-                self.contents.change_layer(spr, spr.z)
-    
+        for spr in self.visible:
+            self.visible.change_layer(spr, spr.z)
+
     def panear(self, dx, dy):
         self.bg.rect.x += dx
         self.bg.rect.y += dy
@@ -149,20 +144,15 @@ class Camara:
                 x = self.bg.rect.x + spr.offsetX
                 y = self.bg.rect.y + spr.offsetY
                 spr.ubicar(x,y)
-        
-        for spr in self.salidas:
-            x = self.bg.rect.x + spr.mapX
-            y = self.bg.rect.y + spr.mapY
-            spr.ubicar(x,y)
             
-        for spr in self.contents:
+        for spr in self.real:
             x = self.bg.rect.x + spr.mapX
             y = self.bg.rect.y + spr.mapY
             spr.ubicar(x,y,dy)
 
     def update(self, use_focus):
         self.bgs.update()
-        self.contents.update()
+        self.visible.update()
         if use_focus:
             self.centrar()
             dx, dy = self.detectar_limites()
@@ -179,7 +169,7 @@ class Camara:
 
     def draw(self, fondo):
         ret = self.bgs.draw(fondo)
-        ret += self.contents.draw(fondo)
+        ret += self.visible.draw(fondo)
         #draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
         #draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
         return ret

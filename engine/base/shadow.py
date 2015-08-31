@@ -73,7 +73,7 @@ class ShadowSprite(_giftSprite):
 
         if self._sprSombra is None:
             self._sprSombra = _sombra(self, h_2, t_surface)            
-            ED.RENDERER.addObj(self._sprSombra, self.rect.bottom)
+            ED.RENDERER.camara.add_visible(self._sprSombra)
         
     @staticmethod
     def _crear_sombra(surface, arg=None, mask=None):
@@ -168,7 +168,8 @@ class ShadowSprite(_giftSprite):
             self.crear_sombras()
 
     def update(self, *args):
-        self.update_sombra()
+        if self.proyectaSombra:
+            self.update_sombra()
         super().update(*args)
 
     def ubicar(self, dx, dy, z =0):
