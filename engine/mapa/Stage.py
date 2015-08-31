@@ -28,17 +28,15 @@ class Stage:
         self.cargar_timestamps()
         _loader.setStage(self)
         _loader.loadEverything(entrada,mobs_data)
-        ED.EVENTS.register(self.anochecer,'hora')
-        #self.register_at_renderer(entrada)
     
     def register_at_renderer(self,entrada):
-        ED.RENDERER.setBackground(self.mapa)
+        ED.RENDERER.camara.set_background(self.mapa)
         T.crear_noche(self.rect.size) #asumiendo que es uno solo...
         T.noche.set_lights(DayLight(1024))
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         for obj in self.properties:
             obj.stage = self
-            ED.RENDERER.addObj(obj,obj.rect.bottom)
+            ED.RENDERER.camara.add_real(obj)
         
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     
@@ -46,7 +44,6 @@ class Stage:
         if _layer == C.CAPA_GROUND_SALIDAS:
             self.salidas.append(obj)
         else:
-            obj._layer_ = _layer
             self.properties.add(obj,layer =_layer)
             if addInteractive:
                 self.interactives.append(obj)
@@ -56,7 +53,7 @@ class Stage:
             self.properties.remove(obj)
         if obj in self.interactives:
             self.interactives.remove(obj)
-        ED.RENDERER.delObj(obj)
+        ED.RENDERER.camara.remove_obj(obj)
     
     def cargar_mapa_adyacente(self,ady):
         if type(self.limites[ady]) == str:
@@ -76,7 +73,7 @@ class Stage:
             mapa = ChunkMap(self,data,nombre,x,y)
            
             self.limites[ady] = mapa
-            ED.RENDERER.setBackground(mapa)
+            ED.RENDERER.camara.set_background(mapa)
             self.rect.union_ip(mapa.rect)
             return True
         return False

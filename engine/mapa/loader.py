@@ -70,13 +70,13 @@ class _loader:
         try:
             pc = MobGroup['heroe']
             ED.HERO = pc
-            cls.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
             ED.HERO.ubicar(x,y)
             ED.HERO.mapX = x
             ED.HERO.mapY = y
         except:
             ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
-            cls.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
+        
+        _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
     
     @classmethod
     def cargar_quests(cls,):

@@ -1,11 +1,11 @@
 from engine.globs import Tiempo as T, Constants as C
 from engine.misc import Util as U, Resources as r
-from engine.base import _giftSprite
+from engine.base import ShadowSprite
 from ._movil import Movil
 from pygame import mask
 
 
-class Animado(Movil, _giftSprite):  # necesita Movil para tener direccion, giftSprite para las imagenes
+class Animado(Movil, ShadowSprite):  # necesita Movil para tener direccion, giftSprite para las imagenes
     ticks, mov_ticks = 0, 0
     atacando = False
     death_img = None  # sprite del mob muerto.
