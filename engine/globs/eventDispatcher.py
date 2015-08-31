@@ -52,8 +52,8 @@ class EventDispatcher:
         :type event_data:dict/GiftEvent
         :return:None
         """
-        if not type(event_data) is GiftEvent: #else: suponemos list
-            event = GiftEvent(*event_data)
+        
+        event = GiftEvent(*event_data)
         cls._cola.append(event)
 
     @classmethod

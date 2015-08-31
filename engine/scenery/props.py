@@ -1,10 +1,10 @@
-from engine.base import _shadowSprite, EventListener
+from engine.base import ShadowSprite, EventListener
 from engine.misc import Util as U
 from engine.misc import Resources as r
 from pygame import mask as MASK
 from .items import *
 
-class Escenografia(_shadowSprite, EventListener):
+class Escenografia(ShadowSprite, EventListener):
     def __init__(self, nombre, imagen, x, y, data):
         """
         :param nombre:
@@ -69,13 +69,7 @@ class Operable(Escenografia):
     estado_actual = 0
 
     def __init__(self, nombre, imagen, x, y, data):
-        data.setdefault('proyectar_sombra', False)
-        p = data.get('propiedades', ['solido'])
-        if 'solido' not in p:
-            p.append('solido')
-            data['propiedades'] = p
         super().__init__(nombre, imagen, x, y, data)
-        # self._sprSombra._visible = self.proyectaSombra
         self.accion = 'operar'
 
         for estado in data['operable']:

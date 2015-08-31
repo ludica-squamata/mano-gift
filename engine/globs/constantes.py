@@ -22,6 +22,7 @@ class Constants:
     CAPA_OVERLAYS_MENUS = 2 # ocupan toda o gran parte de la pantalla
 
     COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
+    COLOR_IGNORADO = Color(1,1,1)
     
     #constantes de eventos de teclado
     HOLD = 24

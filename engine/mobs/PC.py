@@ -101,7 +101,7 @@ class PC(Mob, Parlante):
         if self.atacando:
             self.animar_ataque(5)
         
-        self.updateSombra()
+        super().update()
 
     def iniciar_dialogo(self, sprite=None):
         x, y = self.direcciones[self.direccion]
