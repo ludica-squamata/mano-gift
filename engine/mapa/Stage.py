@@ -140,8 +140,8 @@ class ChunkMap(Sprite):
             mapa = ChunkMap(self.stage,data,ady,nombre=nmbr,offX=dx,offY=dy)
            
             self.limites[ady] = mapa
-            #self.stage.chunks.add(mapa)
-            ED.RENDERER.setBackground(mapa)
+            self.stage.chunks.add(mapa)
+            ED.RENDERER.camara.set_background(mapa)
             self.stage.rect.union_ip(mapa.rect)
             return True
         return False

@@ -89,14 +89,14 @@ class Camara:
         topleft,topright = True,True
         bottomleft,bottomright = True,True
         _tl,_tr,_bl,_br = True,True,True,True
-        map_at_top = False
-        map_at_bottom = False
-        map_at_left = False
-        map_at_right = False
-        map_at_topleft  = False
-        map_at_topright = False
-        map_at_bottomleft = False
-        map_at_bottomright = False
+        map_at_top = True
+        map_at_bottom = True
+        map_at_left = True
+        map_at_right = True
+        map_at_topleft  = True
+        map_at_topright = True
+        map_at_bottomleft = True
+        map_at_bottomright = True
         
         if not len(self.bgs.get_sprites_at((1,1))):   _tl,map_at_topleft  = False,False
         if not len(self.bgs.get_sprites_at((640,1))): _tr,map_at_topright = False,False
@@ -117,8 +117,8 @@ class Camara:
         if not map_at_topright:    adyacent_map_keys.append('supder')
         if not map_at_bottomleft:  adyacent_map_keys.append('infizq')
         if not map_at_bottomright: adyacent_map_keys.append('infder')
-
-        self.bg.checkear_adyacencias(adyacent_map_keys)
+        
+        self.bg.checkear_adyacencias(adyacent_map_keys) #bool
         if 'sup' in adyacent_map_keys: top = True
         if 'inf' in adyacent_map_keys: bottom = True
         if 'izq' in adyacent_map_keys: left = True
