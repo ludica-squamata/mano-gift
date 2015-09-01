@@ -1,6 +1,7 @@
 from pygame import font, Rect
 from .basewidget import BaseWidget
-from engine.libs.textrect import TextRectException, render_textrect
+from engine.libs.render_tagged_text import render_tagged_text
+from engine.libs.textrect import render_textrect
 
 class _opcion (BaseWidget):
     '''Opción única que es parte de una lista más grande.
@@ -9,10 +10,10 @@ class _opcion (BaseWidget):
     tipo = 'fila'
     isSelected = False
     
-    def __init__(self,texto,ancho,pos,size=16,aling=0,extra_data=None):
+    def __init__(self,texto,ancho,pos,fuente='verdana',size=16,aling=0,extra_data=None):
         self.pos = pos
         self.size = size
-        self.fuente = font.SysFont('verdana', size)
+        self.fuente = font.SysFont(fuente, size)
         self.rect = Rect((-1,-1),(ancho,self.fuente.get_height()+1))
         self.aling = aling
         self.extra_data = extra_data
@@ -24,21 +25,11 @@ class _opcion (BaseWidget):
     def setText(self,texto):
         '''Cambia y asigna el texto de la opción'''
         
-        f = self.fuente
-        r = self.rect
-        bg = self.bg_cnvs
+        w,h = self.rect.size
         a = self.aling
         
-        while True:
-            try:
-                #Si el texto es muy grande para el rect...
-                self.img_uns = render_textrect(texto,f,r,self.font_none_color,bg,a)
-                self.img_sel = render_textrect(texto,f,r,self.font_none_color,self.font_low_color,a)
-                break
-            except TextRectException:
-                # Acá se achica.
-                self.size -= 1
-                f = font.SysFont('verdana', self.size)
+        self.img_uns = render_tagged_text(texto,w,h,self.tags,bgcolor=self.bg_cnvs,justification=a)
+        self.img_sel = render_tagged_text(texto,w,h,self.tags,bgcolor=self.font_low_color,justification=a)
                 
         if self.isSelected: self.serElegido()
         else: self.serDeselegido()
