@@ -156,8 +156,6 @@ class Camara:
         if use_focus:
             self.centrar()
             dx, dy = self.detectar_limites()
-            focus_dx = self.focus.rect.x - self.focus.mapX - self.bg.rect.x
-            focus_dy = self.focus.rect.y - self.focus.mapY - self.bg.rect.y
             if dx or dy:
                 self.panear(dx,dy)
             else:

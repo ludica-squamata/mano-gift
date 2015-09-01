@@ -45,10 +45,7 @@
         "PVD_top":"props/palote_vertical_ultimo_derecha.png",
         "PVD_bottom":"props/palote_vertical_primero_derecha.png",
         "PVI_bottom":"props/palote_vertical_primero_izquierda.png",
-        "PVI_fila":"props/palote_vertical_fila_izquierda.png",
-        "PVD_fila":"props/palote_vertical_fila_derecha.png",
-        "Palotes_H_bottom":"props/palotes_horizontales.png",
-        "Palotes_H_top":"props/palotes_horizontales.png",
+        "PVI_fila":"props/palote_vertical_fila_izquierda.png",        
         "arbol":"props/arbol_escalado.png",
         "casa":"props/casa.png"
         },
