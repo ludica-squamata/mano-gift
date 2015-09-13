@@ -13,6 +13,7 @@ class _giftSprite(sprite.Sprite):
     images = None
     data = None  # info importada de un json
     z = 0
+    stage = None  # stage donde existe el mob
 
     IMAGEN_D = 'abajo'
     IMAGEN_U = 'arriba'

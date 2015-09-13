@@ -25,12 +25,16 @@ class _loader:
     @classmethod
     def cargar_props (cls,):
         imgs = cls.STAGE.data['refs']
+        """:type imgs: dict"""
         POS = cls.STAGE.data['capa_ground']['props']
         
         for ref in POS:
             try:
                 data = r.abrir_json(MD.items+ref+'.item')
-                imagen = r.cargar_imagen(data['image'])
+                if ref in imgs:
+                    imagen = r.cargar_imagen(imgs[ref])
+                else:
+                    imagen = r.cargar_imagen(data['image'])
             except IOError:
                 data = False
                 imagen = r.cargar_imagen(imgs[ref])
