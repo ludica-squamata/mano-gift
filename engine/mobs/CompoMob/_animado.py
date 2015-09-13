@@ -5,7 +5,7 @@ from ._movil import Movil
 from pygame import mask
 
 
-class Animado(Movil, ShadowSprite):  # necesita Movil para tener direccion, giftSprite para las imagenes
+class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para las imagenes
     ticks, mov_ticks = 0, 0
     atacando = False
     death_img = None  # sprite del mob muerto.
@@ -57,8 +57,8 @@ class Animado(Movil, ShadowSprite):  # necesita Movil para tener direccion, gift
 
                 key = self._step + self.direccion
 
-                self.image = self.imagenN(key)
-                self.mask = self.mascaraN(key)
+                self.image = self.imagen_n(key)
+                self.mask = self.mascara_n(key)
 
     def animar_ataque(self, limite):
         # construir la animación
@@ -77,14 +77,7 @@ class Animado(Movil, ShadowSprite):  # necesita Movil para tener direccion, gift
                 self.atacando = False
 
             self.image = frames[self.atk_img_index]
-            # self.mask = self.cmb_walk_alpha['S'+self.direccion]
             self.mask = alphas[self.atk_img_index]
-            # self.calcular_sombra(frames[self.atk_img_index])
-
-    def calcular_sombra(self, current_image):
-        imagenconsombra = U.crear_sombra(current_image)
-        imagenconsombra.blit(current_image, [0, 0])
-        self.image = imagenconsombra
 
     def mover(self, dx, dy):
         dx, dy = super().mover(dx, dy)

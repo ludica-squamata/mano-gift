@@ -4,7 +4,7 @@ from engine.misc import Resources as r
 
 
 class _giftSprite(sprite.Sprite):
-    #mapX y mapY estan medidas en pixeles y son relativas al mapa
+    # mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
     tipo = ''
@@ -25,25 +25,23 @@ class _giftSprite(sprite.Sprite):
     IMAGEN_UR = 'arde'
 
 
-    def __init__(self, imagen=None, rect = None, alpha = False, stage = '', x = 0, y = 0, z = 0):
-        super().__init__()
+    def __init__(self, imagen=None, rect=None, alpha=False, x=0, y=0, z=0):
         if imagen is None and rect is None:
             raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
+
+        super().__init__()
+
         if isinstance(imagen, str):
-            self.image = r.cargar_imagen(imagen)
-        elif isinstance(imagen, Surface):
-            self.image = imagen
-        elif imagen is None: 
-            self.image = None
-            self.visible = 0 # no funciona con dirty
-        else:
-            raise TypeError('Imagen debe ser una ruta, un Surface o None')
-            
-        if imagen is not None:
-            self.rect = self.image.get_rect(topleft=(x,y))
-        else:
-            self.rect = rect
-        
+            imagen = r.cargar_imagen(imagen)
+        self.image = imagen  # a esta altura, imagen es un Surface o None
+
+        if imagen is None:
+            self.visible = 0
+
+        if rect is None:
+            rect = self.image.get_rect(topleft=(x, y))
+        self.rect = rect
+
         if alpha:
             self.mask = alpha
         else:
@@ -51,11 +49,12 @@ class _giftSprite(sprite.Sprite):
                 self.mask = mask.from_surface(self.image)
             else:
                 self.mask = mask.Mask(self.rect.size)
-        
+
         if z:
             self.z = z
         else:
             self.z = self.rect.bottom
+
         self.mapX = x
         self.mapY = y
         self.globX = x
@@ -63,16 +62,16 @@ class _giftSprite(sprite.Sprite):
         self.solido = True
     
     def reubicar(self, dx, dy):
-        '''mueve el sprite una cantidad de pixeles'''
+        """mueve el sprite una cantidad de pixeles"""
         self.mapX += dx
         self.mapY += dy
         self.z += dy
-        #self.globX += dx
-        #self.globY += dy
+        # self.globX += dx
+        # self.globY += dy
         self.rect.move_ip(dx,dy)
 
     def ubicar(self, x, y, z=0):
-        '''Coloca al sprite en pantalla'''
+        """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
         if z:
@@ -86,13 +85,13 @@ class _giftSprite(sprite.Sprite):
                 return True
         return False
 
-    def imagenN(self, n):
+    def imagen_n(self, n):
         if n in self.images:
             return self.images[n]
         else:
             return self.image
-            
-    def mascaraN(self,n):
+
+    def mascara_n(self,n):
         if n in self.mascaras:
             return self.mascaras[n]
         else:
