@@ -19,7 +19,7 @@ class _elemento:
         self.locutor = data['loc']
         self.leads = data['leads']
         self.reqs = data['reqs']
-        if type(self.leads) == list:
+        if type(self.leads) is list:
             self.hasLeads = True
         
     def __repr__(self):
