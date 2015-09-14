@@ -213,7 +213,7 @@ class Dialogo:
             self.SelMode = True
             self.frontend.borrar_todo()
             self.frontend.setLocImg(loc) #misma chapuza
-            self.frontend.setSelMode(show)
+            self.frontend.set_sel_mode(show)
             self.elegir_opcion('arriba')
         elif actual:
             self.mostrar_nodo(actual)
@@ -229,7 +229,7 @@ class Dialogo:
         self.frontend.borrar_todo()
         loc = self.locutores[nodo.locutor]
         self.frontend.setLocImg(loc)
-        self.frontend.setText(nodo.texto)
+        self.frontend.set_text(nodo.texto)
         
     def elegir_opcion(self,direccion):
         if direccion == 'arriba':

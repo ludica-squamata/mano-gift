@@ -1,17 +1,21 @@
 from pygame import Surface, Rect, Color
 
+
 class TaggedTextException(BaseException):
     def __init__(self, message = None):
         self.message = message
+
     def __str__(self):
         return self.message
 
+
 class tag:
     fuente = None
-    fg = 0,0,0
-    bg = 255,255,255
+    fg = 0, 0, 0
+    bg = 255, 255, 255
     init = ''
     close = ''
+
     def __init__(self,nombre,data):
         self.nombre = nombre
         self.fuente = data.get('fuente')
@@ -20,10 +24,13 @@ class tag:
         self.bg = data.get('bg',Color(255,255,255))
         self.init = '<'+nombre+'>'
         self.close = '</'+nombre+'>'
-    def render(self,string):
-        return self.fuente.render(string,1,self.fg)#,self.bg)
+
+    def render(self, string):
+        return self.fuente.render(string ,1, self.fg)  # ,self.bg)
+
     def __repr__(self):
         return 'tag '+self.init    
+
 
 def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255), _defaultspace=4, line_spacing=0, justification=0):
     actual_lines = []
@@ -55,7 +62,7 @@ def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255),
                     wordspace = 0
             if '<' in _word:
                 if not tagged:
-                    #si ya había sido aplicada una tag, no hay que volver a calcularla
+                    # si ya había sido aplicada una tag, no hay que volver a calcularla
                     _init = _word.find('<')+1
                     _end = _word.find('>',_init)
                     tag_name = _word[_init:_end]  
@@ -66,17 +73,17 @@ def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255),
                     actual_tag = last_tag
 
                 if _word.startswith(tag.init) and _word.endswith(tag.close):
-                    #casos como <tag>palabra</tag>
+                    # casos como <tag>palabra</tag>
                     actual_word = _word[_end+1:_word.find(tag.close,_end+1)]
                     tagged = False
                     
                 elif _word.startswith(tag.init) and tag.close not in _word:
-                    #casos como <tag>palabra
+                    # casos como <tag>palabra
                     actual_word = _word[_end+1:]
                     tagged = True
 
                 elif _word.endswith(tag.close) and tag.init not in _word:
-                    #casos como palabra</tag>
+                    # casos como palabra</tag>
                     actual_word = _word[:_word.find(tag.close)]
                     tagged = False
                     
@@ -90,7 +97,7 @@ def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255),
                     insertion = True
 
                 elif _word.endswith(tag.close):
-                    #en casos como pala<tag>bra</tag>
+                    # en casos como pala<tag>bra</tag>
                     _WORD = _word.split(tag.init)
                     actual_word = _WORD[0]
                     wordspace = 0
@@ -101,7 +108,7 @@ def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255),
                     max_word_h = tag.h
                     
                 elif tag.close in _word:
-                    #en casos como <tag>palabra</tag>!?
+                    # en casos como <tag>palabra</tag>!?
                     _WORD = _word.split(tag.close)
                     actual_word = _WORD[0]
                     wordspace = 0
@@ -109,7 +116,7 @@ def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255),
                     tagged = False
                     
                 else:
-                    #en casos como <tag>... palabra ... </tag>
+                    # en casos como <tag>... palabra ... </tag>
                     wordspace = _defaultspace
                     actual_word = _word[_end+1:]
                     tagged = True
@@ -121,7 +128,6 @@ def render_tagged_text(text, w, h, tags, fgcolor=(0,0,0), bgcolor=(255,255,255),
                     wordspace = _defaultspace
                     insertion = False
 
-            
             rendered_word = tag.render(actual_word)
             rendered_word_rect = rendered_word.get_rect()
             rendered_word_rect.width += wordspace

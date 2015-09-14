@@ -21,7 +21,7 @@ class Modo:
                     Util.salir()
 
                 elif event.key == C.TECLAS.DEBUG:
-                    print('rect: ',(ED.HERO._interaction_rect))
+                    print('rect: ', ED.HERO._interaction_rect)
                     # ED.RENDERER.use_focus = not ED.RENDERER.use_focus
 
         if True:  # folding
@@ -156,7 +156,7 @@ class Modo:
         for event in events:
             if event.type == KEYDOWN:
                 if Modo.setKey:
-                    ED.menu_actual.cambiarTecla(event.key)
+                    ED.menu_actual.cambiar_tecla(event.key)
                     Modo.setKey = False
                 else:
                     if event.key == C.TECLAS.IZQUIERDA:
@@ -198,14 +198,14 @@ class Modo:
             ED.menu_previo = titulo
 
         if titulo not in ED.MENUS:
-            try:
-                menu = eval('Menu_' + titulo + '()')
-            except Exception as Description:
-                print('No se pudo abrir el menu porque:', Description)
-                menu = Menu(titulo)
+            # try:
+                menu = eval('Menu' + titulo + '()')
+            # except Exception as Description:
+            #     print('No se pudo abrir el menu porque:', Description)
+            #     menu = Menu(titulo)
         else:
             menu = ED.MENUS[titulo]
-            menu.Reset()
+            menu.reset()
 
         ED.MODO = 'Menu'
         ED.onPause = True
