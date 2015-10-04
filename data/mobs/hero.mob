@@ -2,7 +2,7 @@
     "ID":0,"nombre":"heroe",
     "salud":20,"fuerza":5,
     "velocidad":3,"alcance_cc":16,
-    "carisma":8,
+    "carisma":10,
     "imagenes":{
         "idle":"mobs/imagenes/heroe_idle_walk.png",
         "cmb":"mobs/imagenes/heroe_cmb_walk.png",

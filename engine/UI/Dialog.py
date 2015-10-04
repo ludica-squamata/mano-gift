@@ -1,16 +1,37 @@
 from engine.libs import render_textrect, render_tagged_text
 from engine.misc.tagloader import load_tagarrayfile
-from .dialogFrontEnd import DialogFrontEnd
 from .widgets import Opcion
 from pygame import Rect
+from pygame.sprite import LayeredUpdates
+from engine.globs import Constants as Cs, EngineData as Ed
+from .Ventana import Ventana
 
 
-class DialogInterface(DialogFrontEnd):
+class DialogInterface(Ventana):
+    text_pos = 0, 0
+
     def __init__(self):
-        super().__init__('RAISED')
+        self.filas = LayeredUpdates()
+        self.canvas = self.crear_canvas(int(Cs.ANCHO), int(Cs.ALTO / 5))
+        super().__init__(self.canvas)
+
         w, h = self.canvas.get_size()
         self.draw_space_rect = Rect((3, 3), (w - 100, h - 7))
         self.erase_area = Rect(3, 3, w - 7, h - 7)
+
+        self.fuente = self.fuente_M
+        self.altura_del_texto = self.fuente.get_height()
+        self.ubicar(*self.posicion)
+        Ed.RENDERER.addOverlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
+
+    def destruir(self):
+        Ed.DIALOG = None
+        Ed.RENDERER.delOverlay(self)
+
+    def ubicar(self, x = 0, y = 0, z = 0):
+        if x < 0 or y < 0:
+            raise ValueError('Coordenadas inválidas')
+        self.rect.move_ip(x, y)
 
     def set_text(self, texto):
         w, h = self.draw_space_rect.size
@@ -29,7 +50,7 @@ class DialogInterface(DialogFrontEnd):
 
         self.filas.draw(self.canvas)
 
-    def setLocImg(self, locutor):
+    def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
         la posición del texto a izquierda o derecha según la "cara" del hablante"""
         img = locutor.diag_face
