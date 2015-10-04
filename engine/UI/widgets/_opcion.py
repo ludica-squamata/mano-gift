@@ -9,6 +9,8 @@ class Opcion (BaseWidget):
     mediante serElegido."""
     tipo = 'fila'
     isSelected = False
+    img_uns = None
+    img_sel = None
 
     def __init__(self, texto, ancho, pos, fuente = 'verdana', size = 16, aling = 0, extra_data = None):
         self.pos = pos

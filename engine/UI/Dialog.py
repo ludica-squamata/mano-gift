@@ -1,5 +1,5 @@
-from engine.libs import render_textrect, render_tagged_text
-from engine.misc.tagloader import load_tagarrayfile
+from engine.libs import render_tagged_text
+# from engine.misc.tagloader import load_tagarrayfile
 from .widgets import Opcion
 from pygame import Rect
 from pygame.sprite import LayeredUpdates
@@ -49,8 +49,6 @@ class DialogInterface(Ventana):
             opcion = Opcion(opciones[i].texto, w, (x, i * h + i + 3), extra_data = opciones[i].leads)
             self.filas.add(opcion)
 
-        self.filas.draw(self.canvas)
-
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
         la posición del texto a izquierda o derecha según la "cara" del hablante"""
@@ -67,11 +65,25 @@ class DialogInterface(Ventana):
         self.canvas.blit(img, dest)
 
     def elegir_opcion(self, i):
+        # get the option's position
+        self.posicionar_cursor(i)
+
+        # get current's sprite, self.sel is current's ID
+        current = self.filas.get_sprite(self.sel)
+        if not self.draw_space_rect.contains(current.rect):
+            h = self.altura_del_texto
+            for x in range(len(self.filas)):
+                op = self.filas.get_sprite(x)
+                if i > 0:
+                    op.rect.y -= h + 1
+                else:
+                    op.rect.y += h + 1
+
+        # deselect all and select the chosen one
         for fila in self.filas:
             fila.ser_deselegido()
-        self.posicionar_cursor(i)
-        current = self.filas.get_sprite(self.sel)
         current.ser_elegido()
+
         return current.extra_data
 
     def borrar_todo(self):
@@ -80,4 +92,9 @@ class DialogInterface(Ventana):
         self.sel = 0
 
     def update(self):
-        self.filas.draw(self.canvas)
+        if len(self.filas):
+            # si no hay filas, la imagen es lo que sale de set_text.
+            for fila in self.filas:
+                if self.draw_space_rect.contains(fila.rect):
+                    # no dibujar las filas que quedan fuera de la pantalla
+                    self.canvas.blit(fila.image, fila.rect)
