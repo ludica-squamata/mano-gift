@@ -9,6 +9,7 @@ from .Ventana import Ventana
 
 class DialogInterface(Ventana):
     text_pos = 0, 0
+    active = True
 
     def __init__(self):
         self.filas = LayeredUpdates()
@@ -21,7 +22,7 @@ class DialogInterface(Ventana):
 
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
-        self.ubicar(*self.posicion)
+        self.ubicar(0, Cs.ALTO-int(Cs.ALTO/5))
         Ed.RENDERER.addOverlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
 
     def destruir(self):
