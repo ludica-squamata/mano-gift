@@ -172,10 +172,10 @@ class Dialogo:
 
         self.func_lin = {
             'hablar': self.hablar,
-            'arriba': lambda: None,
-            'abajo': lambda: None,
-            'izquierda': lambda: None,
-            'derecha': lambda: None,
+            'arriba': self.desplazar_texto,
+            'abajo': self.desplazar_texto,
+            'izquierda': lambda key: None,
+            'derecha': lambda key: None,
             'inventario': self.mostrar,
             'cancelar': self.cerrar}
 
@@ -198,8 +198,12 @@ class Dialogo:
                     self.func_sel[tecla](tecla)
                 else:
                     self.func_sel[tecla]()
+
         elif tecla in self.func_lin:
-            self.func_lin[tecla]()
+            if tecla in ['arriba', 'abajo', 'izquierda', 'derecha']:
+                self.func_lin[tecla](tecla)
+            else:
+                self.func_lin[tecla]()
 
     def hablar(self):
 
@@ -247,6 +251,12 @@ class Dialogo:
             self.sel = self.frontend.elegir_opcion(-1)
         elif direccion == 'abajo':
             self.sel = self.frontend.elegir_opcion(+1)
+
+    def desplazar_texto(self, direccion):
+        if direccion == 'arriba':
+            self.frontend.scroll(+1)
+        elif direccion == 'abajo':
+            self.frontend.scroll(-1)
 
     @staticmethod
     def mostrar():

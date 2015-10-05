@@ -1,6 +1,6 @@
 from pygame import time, Surface, draw, PixelArray, SRCALPHA
 from engine.misc import Resources as r
-from engine.base import _giftSprite
+from engine.base import GiftSprite
 
 class _clock:
     _h = 0
@@ -179,7 +179,7 @@ class timestamp:
     def __repr__(self):
         return ':'.join([str(self._h),str(self._m).rjust(2,'0')])
     
-class Noche(_giftSprite):
+class Noche(GiftSprite):
     def __init__(self,size):
         img = Surface(size, SRCALPHA)
         img.fill((0,0,0,230)) #llenamos con color rgba. como es srcalpha funciona bien

@@ -1,6 +1,6 @@
 
 
-class damageableSprite: #(_giftSprite):
+class damageableSprite: #(GiftSprite):
     salud = 0
     
     def recibir_danio(self):

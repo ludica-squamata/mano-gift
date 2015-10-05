@@ -31,7 +31,7 @@ class MenuItems(Menu):
     def crear_contenido(self):
         self.actualizar_filas()
 
-        if len(self.filas) > 0:
+        if self.opciones > 0:
             self.elegir_fila()
 
     def actualizar_filas(self):
@@ -140,12 +140,10 @@ class MenuItems(Menu):
             if Ed.HERO.usar_item(self.current.item) <= 0:
                 self.filas.remove(self.current)
                 self.opciones -= 1
-                if self.opciones <= 0:
-                    self.current = self
 
     def update(self):
         self.draw_space.fill(self.bg_cnvs)
-        self.actualizar_filas()
+        self.crear_contenido()
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space, self.draw_space_rect)
         if self.opciones > 0:

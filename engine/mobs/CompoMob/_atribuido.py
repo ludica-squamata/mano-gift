@@ -1,7 +1,7 @@
-from engine.base.giftSprite import _giftSprite
+from engine.base.giftSprite import GiftSprite
 
 
-class Atribuido(_giftSprite):
+class Atribuido(GiftSprite):
     fuerza = 0  # capacidad del mob para empujar cosas.
     velocidad = 1  # en pixeles por frame
     salud_max = 0  # salud máxima

@@ -1,11 +1,11 @@
-from engine.base import _giftSprite
+from engine.base import GiftSprite
 from engine.UI.estilo import Estilo
 from pygame import Surface, Rect
 
 
-class BaseWidget(Estilo, _giftSprite):
+class BaseWidget(Estilo, GiftSprite):
     enabled = True
-    canvas = None
+    #canvas = None
     isSelected = False
 
     def __init__(self, img):
@@ -23,7 +23,7 @@ class BaseWidget(Estilo, _giftSprite):
         self.image = self.img_uns
         self.isSelected = False
 
-    def crear_canvas(self, ancho, alto):
+    def create_raised_canvas(self, ancho, alto):
         canvas = Surface((ancho, alto))
 
         clip = Rect(0, 0, ancho, alto)
@@ -37,7 +37,7 @@ class BaseWidget(Estilo, _giftSprite):
 
         return canvas
 
-    def crear_inverted_canvas(self, ancho, alto):
+    def create_sunken_canvas(self, ancho, alto):
         canvas = Surface((ancho, alto))
 
         clip = Rect(0, 0, ancho, alto)
@@ -50,3 +50,20 @@ class BaseWidget(Estilo, _giftSprite):
         canvas.fill(self.bg_cnvs, rect = clip)
 
         return canvas
+
+    def crear_marco(self, ancho, alto):
+        marco = Surface([ancho, alto])
+
+        clip = Rect(0, 0, ancho, alto)
+        marco.fill(self.bg_bisel_bg, rect = clip)
+
+        clip = Rect(3, 3, ancho, alto)
+        marco.fill(self.bg_bisel_fg, rect = clip)
+
+        clip = Rect(3, 3, ancho - 7, alto - 7)
+        marco.set_clip(clip)
+
+        return marco
+
+    def create_filled_canvas(self,ancho,alto):
+        pass

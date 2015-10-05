@@ -30,8 +30,8 @@ class Opcion (BaseWidget):
         w, h = self.rect.size
         a = self.aling
 
-        self.img_uns = render_tagged_text(texto, w, h, self.tags, bgcolor = self.bg_cnvs, justification = a)
-        self.img_sel = render_tagged_text(texto, w, h, self.tags, bgcolor = self.font_low_color, justification = a)
+        self.img_uns = render_tagged_text(texto, self.tags, w, bgcolor = self.bg_cnvs, justification = a)
+        self.img_sel = render_tagged_text(texto, self.tags, w, bgcolor = self.font_low_color, justification = a)
 
         if self.isSelected:
             self.ser_elegido()

@@ -1,6 +1,6 @@
-#tagloader
-from engine.libs.render_tagged_text import tag
-from engine.misc.resources import Resources as r
+# tagloader
+from engine.libs.render_tagged_text import Tag
+from engine.misc.resources import Resources as Rs
 from pygame import font, Color
 
 font.init()
@@ -35,34 +35,36 @@ font.init()
     }
 '''
 
+
 def load_tagfile(filename):
-    d = r.abrir_json(filename)
-    
+    d = Rs.abrir_json(filename)
+
     nombre = d['tag-name']
     data = {
-        'fuente': font.SysFont(d.get('font-name'),d.get('font-size'),
-                               bold=d.get('bold',False),
-                               italic=d.get('italic',False)),
-        'fg': Color(*d.get('fg',Color(0,0,0))),
-        'bg': Color(*d.get('bg',Color(255,255,255)))
-        }
-    
-    return tag(nombre,data)
-    
+        'fuente': font.SysFont(d.get('font-name'), d.get('font-size'),
+                               bold = d.get('bold', False),
+                               italic = d.get('italic', False)),
+        'fg': Color(*d.get('fg', Color(0, 0, 0))),
+        'bg': Color(*d.get('bg', Color(255, 255, 255)))
+    }
+
+    return Tag(nombre, data)
+
+
 def load_tagarrayfile(filename):
-    d = r.abrir_json(filename)
+    d = Rs.abrir_json(filename)
     tags = {}
     for key in d:
         td = d[key]
         nombre = td['tag-name']
         data = {
-            'fuente': font.SysFont(td.get('font-name'),td.get('font-size'),
-                                   bold=td.get('bold',False),
-                                   italic=td.get('italic',False)),
-            'fg': Color(*td.get('fg',Color(0,0,0))),
-            'bg': Color(*td.get('bg',Color(255,255,255)))
-            }
-            
-        tags[nombre] = tag(nombre,data)
-    
+            'fuente': font.SysFont(td.get('font-name'), td.get('font-size'),
+                                   bold = td.get('bold', False),
+                                   italic = td.get('italic', False)),
+            'fg': Color(*td.get('fg', Color(0, 0, 0))),
+            'bg': Color(*td.get('bg', Color(255, 255, 255)))
+        }
+
+        tags[nombre] = Tag(nombre, data)
+
     return tags

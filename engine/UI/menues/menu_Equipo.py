@@ -63,7 +63,7 @@ class MenuEquipo(MenuItems):
         selected.ser_elegido()
         self.current = selected
 
-        # dibujar todo
+        # dibujar
         self.espacios.draw(self.canvas)
         self.hombre = r.cargar_imagen('hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))

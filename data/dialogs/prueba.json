@@ -1,6 +1,6 @@
 {
     "0":{"type":"node","leads":1,"loc":"commoner","reqs":null,
-    "txt":"Saludos, héroe."},
+    "txt":"Saludos, héroe. Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
     
     "1":{"type":"node","leads":[2,3,4,5,6],"loc":"commoner","reqs":null,
     "txt":"A continuación deberias ver 5 opciones si cumples todos los requisitos"},

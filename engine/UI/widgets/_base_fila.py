@@ -1,6 +1,6 @@
 from engine.UI.estilo import Estilo
 from .basewidget import BaseWidget
-from engine.base import _giftSprite
+from engine.base import GiftSprite
 from pygame import font, Rect, Surface
 from engine.libs.textrect import render_textrect
 from engine.globs import EngineData as ED

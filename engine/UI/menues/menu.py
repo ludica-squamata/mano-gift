@@ -16,8 +16,8 @@ class Menu(Ventana):
 
     def __init__(self, titulo):
         self.nombre = titulo
-        self.current = self
-        self.canvas = self.crear_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
+        # self.current = self
+        self.canvas = self.create_raised_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
         self.funciones = {
             "arriba": lambda dummy: None,
@@ -37,7 +37,7 @@ class Menu(Ventana):
         self.canvas.blit(ttl_txt, ttl_rect.topleft)
 
     def crear_espacio_titulado(self, ancho, alto, titulo):
-        marco = self.crear_inverted_canvas(ancho, alto)
+        marco = self.create_sunken_canvas(ancho, alto)
         megacanvas = Surface((marco.get_width(), marco.get_height() + 17))
         megacanvas.fill(self.bg_cnvs)
         texto = self.fuente_P.render(titulo, True, self.font_none_color, self.bg_cnvs)

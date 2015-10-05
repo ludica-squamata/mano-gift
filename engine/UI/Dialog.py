@@ -8,17 +8,23 @@ from .Ventana import Ventana
 
 
 class DialogInterface(Ventana):
-    text_pos = 0, 0
+    text_rect = None
+    rendered_text = None
     active = True
+    loc_img = None
+    loc_rect = None
+    w, h = 0, 0
 
     def __init__(self):
         self.filas = LayeredUpdates()
-        self.canvas = self.crear_canvas(int(Cs.ANCHO), int(Cs.ALTO / 5))
-        super().__init__(self.canvas)
+        self.marco = self.crear_marco(int(Cs.ANCHO), int(Cs.ALTO / 5))
+        super().__init__(self.marco)  # en realidad, la imagen no deberia ser el marco, pero bueh
+        self.image.fill(self.bg_cnvs)
 
-        w, h = self.canvas.get_size()
-        self.draw_space_rect = Rect((3, 3), (w - 100, h - 7))
-        self.erase_area = Rect(3, 3, w - 7, h - 7)
+        self.w, self.h = self.image.get_size()
+        self.draw_space_rect = Rect((3, 3), (self.w - 115, self.h - 7))
+        self.erase_area = Rect(3, 3, self.w - 7, self.h - 7)
+        self.text_rect = Rect(0, 3, 0, 0)
 
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
@@ -35,10 +41,10 @@ class DialogInterface(Ventana):
         self.rect.move_ip(x, y)
 
     def set_text(self, texto):
-        w, h = self.draw_space_rect.size
-        render = render_tagged_text(texto, w, h, self.tags, fgcolor = self.font_none_color, bgcolor = self.bg_cnvs)
-        self.canvas.blit(render, self.text_pos)
-        self.image = self.canvas
+        self.text_rect.y = 3
+        width = self.draw_space_rect.width
+        self.rendered_text = render_tagged_text(texto, self.tags, width, bgcolor = self.bg_cnvs)
+        self.text_rect.size = self.rendered_text.get_size()
 
     def set_sel_mode(self, opciones):
         self.opciones = len(opciones)
@@ -52,17 +58,15 @@ class DialogInterface(Ventana):
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
         la posición del texto a izquierda o derecha según la "cara" del hablante"""
-        img = locutor.diag_face
+        self.loc_img = locutor.diag_face
         if locutor.direccion == 'derecha' or locutor.direccion == 'abajo':
-            dest = 3, 3
-            self.text_pos = 96, 3
-            self.draw_space_rect.topleft = 96, 3
+            self.loc_rect = 3, 3
+            self.text_rect.x = 96
+            self.draw_space_rect.x = 96
         else:
-            dest = self.canvas.get_width() - 93, 3
-            self.text_pos = 3, 3
-            self.draw_space_rect.topleft = 3, 3
-
-        self.canvas.blit(img, dest)
+            self.loc_rect = self.w - 93, 3
+            self.text_rect.x = 3
+            self.draw_space_rect.x = 3
 
     def elegir_opcion(self, i):
         # get the option's position
@@ -86,15 +90,38 @@ class DialogInterface(Ventana):
 
         return current.extra_data
 
+    def scroll(self, dy):
+        if not self.draw_space_rect.contains(self.text_rect):
+            if self.text_rect.top + dy < self.draw_space_rect.top:
+                if self.text_rect.bottom + dy > self.draw_space_rect.bottom:
+                    self.text_rect.y += dy*3  # TODO: "3" podría ser un setting
+
     def borrar_todo(self):
-        self.canvas.fill(self.bg_cnvs, self.erase_area)
+        self.image.fill(self.bg_cnvs)
         self.filas.empty()
+        self.rendered_text = None
         self.sel = 0
 
     def update(self):
+        self.image.blit(self.loc_img, self.loc_rect)
+
+        color = self.bg_cnvs  # TODO: estos colores deberían ser otros
+
         if len(self.filas):
-            # si no hay filas, la imagen es lo que sale de set_text.
+
             for fila in self.filas:
                 if self.draw_space_rect.contains(fila.rect):
                     # no dibujar las filas que quedan fuera de la pantalla
-                    self.canvas.blit(fila.image, fila.rect)
+                    self.image.blit(fila.image, fila.rect)
+                else:
+                    # si hay más filas, pintar el espacio de la flecha
+                    color = self.bg_bisel_bg
+                    #break
+        else:
+            # si no hay filas, la imagen es lo que sale de set_text.
+            self.image.blit(self.rendered_text, self.text_rect)
+            if not self.draw_space_rect.contains(self.text_rect):
+                color = self.bg_bisel_fg
+
+        # pintar el area de la flecha, si es que hay más contenido que ver.
+        self.image.fill(color, (self.text_rect.right+1, 0, 16, self.draw_space_rect.h+3))
