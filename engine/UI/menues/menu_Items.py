@@ -48,8 +48,8 @@ class MenuItems(Menu):
             if not (i <= len(filas) - 1):  # si el item no está ya representado en una fila
                 fila = Fila(item, self.draw_space_rect.w, self.fuente_M, color, (3, i * h + i))
                 self.filas.add(fila)
+                self.opciones += 1
 
-        self.opciones = len(self.filas)
         self.filas.update()
 
     def crear_espacio_descriptivo(self, ancho, alto):
@@ -149,7 +149,7 @@ class MenuItems(Menu):
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space, self.draw_space_rect)
         if self.opciones > 0:
-            desc = render_textrect(self.cur_opt.item.efecto_des,
+            desc = render_textrect(self.current.item.efecto_des,
                                    self.fuente_M, self.descripcion_area,
                                    self.font_high_color, self.bg_cnvs)
         else:

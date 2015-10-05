@@ -1,6 +1,8 @@
 from engine.UI.Ventana import Ventana
 from engine.globs import Constants as Cs, EngineData as Ed
 from pygame.sprite import LayeredUpdates
+from pygame import Surface, Rect
+from engine.libs.textrect import render_textrect
 
 
 class Menu(Ventana):
@@ -64,8 +66,8 @@ class Menu(Ventana):
             for i in range(len(self.filas)):
                 spr = self.filas.get_sprite(i)
                 if item.nombre == spr.nombre:
-                    self.cur_opt = self.filas.get_sprite(i)
-                    self.current = spr  # .nombre
+                    self.cur_opt = i
+                    self.current = spr
                     break
 
     def cancelar(self):
