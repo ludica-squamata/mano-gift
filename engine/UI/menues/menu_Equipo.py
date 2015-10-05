@@ -17,7 +17,7 @@ class MenuEquipo(MenuItems):
     cambio = False
 
     def __init__(self):
-        '''Crea e inicaliza las varibales del menú Equipo.'''
+        """Crea e inicaliza las varibales del menú Equipo."""
 
         super(MenuItems, self).__init__('Equipo')
         self.espacios = LayeredUpdates()  # grupo de espacios equipables.
@@ -108,7 +108,7 @@ class MenuEquipo(MenuItems):
         return render
 
     def select_one(self, direccion):
-        '''Desplaza la selección al espacio equipable actual, y lo resalta.'''
+        """Desplaza la selección al espacio equipable actual, y lo resalta."""
 
         self.deselect_all(self.espacios)
         self.draw_space.fill(self.bg_cnvs)
@@ -140,8 +140,8 @@ class MenuEquipo(MenuItems):
         self.draw_space.fill(self.bg_cnvs)
 
     def llenar_espacio_selectivo(self):
-        '''Llena el espacio selectivo con los items que se correspondan con el espacio
-        actualmente seleccionado. Esta función se llama cuando se cambia el espacio.'''
+        """Llena el espacio selectivo con los items que se correspondan con el espacio
+        actualmente seleccionado. Esta función se llama cuando se cambia el espacio."""
 
         h = self.altura_del_texto
         self.filas.empty()
@@ -154,12 +154,11 @@ class MenuEquipo(MenuItems):
         self.opciones = len(self.filas)
 
     def cambiar_foco(self):
-        '''Cambia el foco (las funciones que se utilizarán segun el imput)
-        variando entre los espacios equipables y la lista de selección.'''
+        """Cambia el foco (las funciones que se utilizarán segun el imput)
+        variando entre los espacios equipables y la lista de selección."""
 
-        if self.current.item == None:
+        if self.current.item is None:
             if self.opciones > 0:
-                h = self.altura_del_texto
                 self.foco = 'items'
                 self.opciones = len(self.filas)
                 self.elegir_fila()
@@ -167,8 +166,8 @@ class MenuEquipo(MenuItems):
             self.desequipar_espacio()
 
     def equipar_item(self):
-        '''Cuando un espacio esta seleccionado, y el foco está en la lista de items
-        usar esta función traslada el item de la lista al espacio seleccionado.'''
+        """Cuando un espacio esta seleccionado, y el foco está en la lista de items
+        usar esta función traslada el item de la lista al espacio seleccionado."""
 
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
@@ -191,12 +190,11 @@ class MenuEquipo(MenuItems):
         if self.foco == 'espacios':
             return super().cancelar()
         else:
-            h = self.altura_del_texto
-            self.current.serDeselegido()
+            self.current.isSelected = False
             self.foco = 'espacios'
 
     def usar_funcion(self, tecla):
-        '''Determina qué grupo de funciones se van a usar según el foco actual.'''
+        """Determina qué grupo de funciones se van a usar según el foco actual."""
 
         if self.foco == 'espacios':
             funciones = self.funciones_espacios
