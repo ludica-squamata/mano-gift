@@ -4,22 +4,9 @@ from engine.misc.resources import Resources as Rs
 from pygame import font, Color
 
 font.init()
-'''
-    tagfile:{
-        tag-name:string,
-        font-name:string,
-        font-size:integer,
-        bold:bool,
-        italic:bool,
-        fg:color,
-        bg:color
-        
-        color:[list|string]
-    }
 
 '''
-'''
-    tagarrayfile:{
+    tagarrayfile.json = {
         tag-identifier:string:{
             tag-name:string,
             font-name:string,
@@ -36,35 +23,48 @@ font.init()
 '''
 
 
-def load_tagfile(filename):
-    d = Rs.abrir_json(filename)
-
-    nombre = d['tag-name']
-    data = {
-        'fuente': font.SysFont(d.get('font-name'), d.get('font-size'),
-                               bold = d.get('bold', False),
-                               italic = d.get('italic', False)),
-        'fg': Color(*d.get('fg', Color(0, 0, 0))),
-        'bg': Color(*d.get('bg', Color(255, 255, 255)))
-    }
-
-    return Tag(nombre, data)
-
-
 def load_tagarrayfile(filename):
-    d = Rs.abrir_json(filename)
+    tagarray = Rs.abrir_json(filename)
     tags = {}
-    for key in d:
-        td = d[key]
-        nombre = td['tag-name']
+    _font = "verdana"
+    _size = 16
+    _bold = False
+    _italic = False
+    _fg = (0,0,0)
+    _bg = (255, 255, 255)
+    
+    # crear tag por default
+    if "n" not in tagarray:
         data = {
-            'fuente': font.SysFont(td.get('font-name'), td.get('font-size'),
-                                   bold = td.get('bold', False),
-                                   italic = td.get('italic', False)),
-            'fg': Color(*td.get('fg', Color(0, 0, 0))),
-            'bg': Color(*td.get('bg', Color(255, 255, 255)))
-        }
-
-        tags[nombre] = Tag(nombre, data)
-
+            'fuente': font.SysFont(_font, _size, bold = _bold, italic = _italic),
+            'fg': Color(*_fg),
+            'bg': Color(*_bg)
+            }
+        tags['n'] = Tag('n',data)
+    
+    # buscar default tag por caracteristicas
+    for key in tagarray:
+        tagdata = tagarray[key]
+                
+        font_name = tagdata.get('font-name', _font)
+        font_size = tagdata.get('font-size',_size)
+        bold = tagdata.get('bold',_bold)
+        italic = tagdata.get('italic',_italic)
+        fg = tagdata.get('fg',_fg)
+        bg = tagdata.get('bg',_bg)
+        
+        if font_name == _font and font_size == _size \
+        and bold == _bold and italic == _italic \
+        and fg == _fg and bg == _bg:
+            name = 'n'
+        else:
+            name = tagdata.get("tag-name",key)
+        
+        data = {
+            'fuente': font.SysFont(font_name, font_size, bold = bold, italic = italic),
+            'fg': Color(*fg),
+            'bg': Color(*bg)
+            }
+        tags[name] = Tag(name,data)
+    
     return tags

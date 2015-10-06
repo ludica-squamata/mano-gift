@@ -20,8 +20,8 @@ class Tag:
         self.nombre = nombre
         self.fuente = data.get('fuente')
         self.h = self.fuente.get_height()
-        self.fg = data.get('fg', Color(0, 0, 0))
-        self.bg = data.get('bg', Color(255, 255, 255))
+        self.fg = data.get('fg')
+        self.bg = data.get('bg')
         self.init = '<' + nombre + '>'
         self.close = '</' + nombre + '>'
 
@@ -115,7 +115,7 @@ def render_tagged_text(text, tags, w, h = 0, bgcolor = (255, 255, 255), _default
                     wordspace = 0
                     line_words.insert(current_word_idx + 1, _WORD[1])
                     tagged = False
-
+                    wordcount += 1
                 else:
                     # en casos como <tag>... palabra ... </tag>
                     wordspace = _defaultspace

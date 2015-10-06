@@ -3,7 +3,7 @@
 
 class Elemento:
     """Class for the dialog tree elements."""
-    parent = None
+    
     nombre = ''
     hasLeads = False
     tipo = ''
@@ -13,14 +13,16 @@ class Elemento:
     reqs = {}
 
     def __init__(self, indice, data):
+        self.leads = None
         self.indice = indice
 
         self.tipo = data['type']
         self.nombre = self.tipo.capitalize() + ' #' + str(self.indice)
         self.texto = data['txt']
         self.locutor = data['loc']
-        self.leads = data['leads']
-        self.reqs = data['reqs']
+        self.leads = data.get('leads',None)
+        self.reqs = data.get('reqs',None)
+        
         if type(self.leads) is list:
             self.hasLeads = True
 
@@ -48,11 +50,11 @@ class Elemento:
 
 
 class _ArboldeDialogo:
-    __slots__ = ['_elementos', '_actual']
+    __slots__ = ['_elementos', '_future']
 
     def __init__(self, datos):
         self._elementos = []
-        self._actual = 0
+        self._future = 0
 
         self._elementos.extend(self._crear_lista(datos))
 
@@ -67,6 +69,8 @@ class _ArboldeDialogo:
                             obj.leads[idx] = self._elementos[lead]  # el diálogo.
                         else:
                             obj.leads[idx] = lead
+                    if obj.tipo == 'exclusive':
+                        obj.leads = tuple(obj.leads)
                 else:
                     obj.leads = self._elementos[obj.leads]
 
@@ -105,7 +109,7 @@ class _ArboldeDialogo:
         item = self._elementos[parent_i]
         if item.tipo != 'leaf':
             if item.hasLeads:
-                if type(item.leads) == list:
+                if isinstance(item.leads,(list,tuple)):
                     return item.leads[lead_i]
             else:
                 return item.leads
@@ -116,15 +120,15 @@ class _ArboldeDialogo:
         if isinstance(idx, Elemento):
             idx = self._elementos.index(idx)
         if 0 <= idx <= len(self._elementos) - 1:
-            self._actual = idx
+            self._future = idx
         else:
             raise IndexError
 
     def get_actual(self):
-        if type(self._actual) is list:
-            return self._actual
+        if isinstance(self._future,(list,tuple)):
+            return self._future
         else:
-            return self._elementos[self._actual]
+            return self._elementos[self._future]
 
     @staticmethod
     def next(nodo):
@@ -138,24 +142,24 @@ class _ArboldeDialogo:
         en cuyo caso devuelve False y None (respectivamente), y
         prepara se prepara para devolver el siguiente nodo"""
 
-        if self._actual is not False:  # last was leaf; close
-            if type(self._actual) is not list:  # node or leaf
-                actual = self.get_actual()
+        if self._future is not False:  # last was leaf; close
+            if not isinstance(self._future,(list,tuple)):
+                actual = self.get_actual()  # node or leaf
                 if actual.tipo != 'leaf':
-                    if type(actual.leads) is not list:
-                        self._actual = int(actual.leads.indice)
+                    if not isinstance(actual.leads,(list,tuple)):
+                        self._future = int(actual.leads.indice)
                     else:
-                        self._actual = actual.leads
+                        self._future = actual.leads
                 else:
-                    self._actual = False
+                    self._future = False
 
                 return actual
 
             else:  # branch
-                return self._actual
+                return self._future
 
         else:  # last was leaf; close
-            return self._actual
+            return self._future
 
 
 class Dialogo:
@@ -192,26 +196,25 @@ class Dialogo:
         self.hablar()
 
     def usar_funcion(self, tecla):
+        funciones = {}
         if self.SelMode:
-            if tecla in self.func_sel:
-                if tecla in ['arriba', 'abajo', 'izquierda', 'derecha']:
-                    self.func_sel[tecla](tecla)
-                else:
-                    self.func_sel[tecla]()
-
-        elif tecla in self.func_lin:
+            funciones = self.func_sel
+        else:
+            funciones = self.func_lin
+        
+        if tecla in funciones:
             if tecla in ['arriba', 'abajo', 'izquierda', 'derecha']:
-                self.func_lin[tecla](tecla)
+                funciones[tecla](tecla)
             else:
-                self.func_lin[tecla]()
+                funciones[tecla]()
 
     def hablar(self):
-
+    
         actual = self.dialogo.update()
         if type(actual) is list:
             show = actual.copy()
             loc = self.locutores[actual[0].locutor]
-
+            
             for nodo in actual:
                 if nodo.reqs is not None:
                     if "attrs" in nodo.reqs:
@@ -227,6 +230,23 @@ class Dialogo:
             self.frontend.set_loc_img(loc)  # misma chapuza
             self.frontend.set_sel_mode(show)
             self.elegir_opcion('arriba')
+        elif type(actual) is tuple:
+            choices = list(actual)
+            # estoy seguro de que este bloque se puede hacer en un onliner, pero no se como.
+            # seria onda: choice = nodo que tiene reqs
+            for i in range(len(choices)):
+                if choices[i].reqs is not None: #tiene precedencia
+                    choice = i
+            
+            reqs = choices[choice].reqs
+            sujeto = self.locutores[reqs['loc']]
+            for attr in reqs['attrs']:
+                if getattr(sujeto,attr) < reqs['attrs'][attr]:
+                    del choices[choice]
+            
+            choice = choices[0]
+            self.dialogo.set_chosen(choice)
+            self.hablar()
         elif type(actual) is Elemento:
             self.mostrar_nodo(actual)
         else:

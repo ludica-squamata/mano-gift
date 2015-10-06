@@ -1,13 +1,5 @@
 {
     "b":{
-        "tag-name":"b",
-        "font-name":"verdana",
-        "font-size":16,
         "bold":true
-    },
-    "n":{
-        "tag-name":"n",
-        "font-name":"verdana",
-        "font-size":16
     }
 }

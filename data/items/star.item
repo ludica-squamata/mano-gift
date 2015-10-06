@@ -5,5 +5,7 @@
     "image": "props/star.png",
     "propiedades":[],
     "efecto":{
-        "des":"Te hace invencible por 10 segundos."}
+        "des":"Aumenta tu carisma en 2.",
+        "stat":"carisma",
+        "mod":2}
 }
