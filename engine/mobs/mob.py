@@ -95,7 +95,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
                 self.image = self.death_img
             else:  # esto queda hasta que haga sprites 'muertos' de los npcs
                 # pero necesito más resolución para hacerlos...
-                self.stage.delProperty(self)
+                self.stage.del_property(self)
             self.dead = True
             del MobGroup[self.nombre]
 

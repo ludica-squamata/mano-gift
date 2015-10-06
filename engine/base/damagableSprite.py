@@ -12,7 +12,7 @@ class damageableSprite: #(GiftSprite):
                 self.image = self.death_img
             else: # esto queda hasta que haga sprites 'muertos' de los npcs
                 ED.RENDERER.delObj(self)
-                self.stage.delProperty(self)
+                self.stage.del_property(self)
             self.dead = True
             MobGroup.remove(self)
 

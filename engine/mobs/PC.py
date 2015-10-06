@@ -57,7 +57,7 @@ class PC(Mob, Parlante):
                     try:
                         item = sprite()
                         self.inventario.agregar(item)
-                        self.stage.delProperty(sprite)
+                        self.stage.del_property(sprite)
                     except InventoryError as Error:
                         print(Error)
 

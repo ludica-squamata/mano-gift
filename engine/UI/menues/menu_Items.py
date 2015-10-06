@@ -9,7 +9,7 @@ class MenuItems(Menu):
     cur_opt = 0
     slots = [0 for i in range(10)]
     filas = sprite.LayeredUpdates()
-    descripcion_area = None
+    description_area = None
     altura_del_texto = 0  # altura de los glifos
     draw_space = None
     draw_space_rect = None
@@ -36,7 +36,7 @@ class MenuItems(Menu):
 
     def actualizar_filas(self):
         h = self.altura_del_texto
-        filas = self.filas.sprites()
+        self.filas.empty()
 
         for idxItemCant in Ed.HERO.inventario():
             i, item, cant = idxItemCant  # no estamos usando Cant
@@ -45,17 +45,17 @@ class MenuItems(Menu):
             else:
                 color = self.font_none_color
 
-            if not (i <= len(filas) - 1):  # si el item no está ya representado en una fila
+            if not (i <= len(self.filas) - 1):  # si el item no está ya representado en una fila
                 fila = Fila(item, self.draw_space_rect.w, self.fuente_M, color, (3, i * h + i))
                 self.filas.add(fila)
-                self.opciones += 1
 
+        self.opciones = len(self.filas)
         self.filas.update()
 
     def crear_espacio_descriptivo(self, ancho, alto):
         marco = self.crear_espacio_titulado(ancho, alto, 'Efecto')
         rect = self.canvas.blit(marco, (7, 340))
-        self.descripcion_area = Rect((12, 363), (rect.w - 20, rect.h - 42))
+        self.description_area = Rect((12, 363), (rect.w - 20, rect.h - 42))
 
     def indicar_espacio(self, direccion = None):
         if direccion == 'izquierda':
@@ -133,7 +133,7 @@ class MenuItems(Menu):
                 fila.ser_deselegido()
             self.posicionar_cursor(j)
             self.mover_cursor(self.filas.get_sprite(self.sel))
-            self.current.isSelected = True
+            self.current.ser_elegido()
 
     def confirmar_seleccion(self):
         if self.opciones > 0:
@@ -148,13 +148,13 @@ class MenuItems(Menu):
         self.canvas.blit(self.draw_space, self.draw_space_rect)
         if self.opciones > 0:
             desc = render_textrect(self.current.item.efecto_des,
-                                   self.fuente_M, self.descripcion_area,
+                                   self.fuente_M, self.description_area,
                                    self.font_high_color, self.bg_cnvs)
         else:
-            desc = Surface(self.descripcion_area.size)
+            desc = Surface(self.description_area.size)
             desc.fill(self.bg_cnvs)
 
-        self.canvas.blit(desc, self.descripcion_area.topleft)
+        self.canvas.blit(desc, self.description_area.topleft)
 
 
 class Fila(FilaBase):  # menu_item
