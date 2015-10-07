@@ -1,9 +1,7 @@
-aca hay algo de texto
+#Documentación
 
-#aca un titulo
+Esta sección tiene los archivos que documentan las distintas APIs
 
-* lista
-* 2
-* 3
-
-[API de mobs](mobs.txt)
+* [API de mobs](formato de mobs.txt)
+* mapas
+* npc
