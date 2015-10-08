@@ -8,8 +8,8 @@ from .mob import Mob
 class PC(Mob, Parlante):
     alcance_cc = 0  # cuerpo a cuerpo.. 16 es la mitad de un cuadro.
 
-    def __init__(self, data, x, y):
-        super().__init__(data, x, y)
+    def __init__(self, data, x, y, ):
+        super().__init__(data, x, y, focus=True)
         self.alcance_cc = data['alcance_cc']
         self.inventario = Inventory(10, 10 + self.fuerza)
 
@@ -26,7 +26,6 @@ class PC(Mob, Parlante):
             self.cambiar_direccion('abajo')
 
         dx, dy = dx * self.velocidad, dy * self.velocidad
-
         # DETECTAR LAS SALIDAS
         for spr in self.stage.salidas:
             if self.colisiona(spr, dx, dy):

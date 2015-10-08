@@ -194,10 +194,10 @@ class HUD:
         self.BarraMana = ProgressBar(ED.HERO.mana,(125,0,255),(75,0,100),dx+2,dy-11,w,h)
         self.BarraVida.setVariable(divisiones=4)
         self.Inventory = InventoryDisplay(dx,dy,w)
-        ED.RENDERER.addOverlay(self.BarraVida,1)
-        ED.RENDERER.addOverlay(self.BarraMana,1)
+        ED.RENDERER.add_overlay(self.BarraVida,1)
+        ED.RENDERER.add_overlay(self.BarraMana,1)
         for cuadro in self.Inventory.cuadros:
-             ED.RENDERER.addOverlay(cuadro,1)
+             ED.RENDERER.add_overlay(cuadro,1)
         
         self._func_inv = {
             'izquierda':lambda:self.Inventory.SelectCuadro(-1),

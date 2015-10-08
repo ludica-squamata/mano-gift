@@ -24,7 +24,7 @@ class _giftSprite(sprite.Sprite):
     IMAGEN_UR = 'arde'
 
 
-    def __init__(self, imagen=None, rect = None, alpha = False, stage = '', x = 0, y = 0, z = 0):
+    def __init__(self, imagen=None, rect = None, alpha = False, center = False, x = 0, y = 0, z = 0):
         super().__init__()
         if imagen is None and rect is None:
             raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
@@ -37,8 +37,10 @@ class _giftSprite(sprite.Sprite):
             self.visible = 0 # no funciona con dirty
         else:
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
-            
-        if imagen is not None:
+
+        if center:
+            self.rect = self.image.get_rect(center=(320,240))
+        elif imagen is not None:
             self.rect = self.image.get_rect(topleft=(x,y))
         else:
             self.rect = rect
@@ -50,15 +52,16 @@ class _giftSprite(sprite.Sprite):
                 self.mask = mask.from_surface(self.image)
             else:
                 self.mask = mask.Mask(self.rect.size)
-        
+
         if z:
             self.z = z
+        elif center:
+            self.z = y+self.rect.h
         else:
             self.z = self.rect.bottom
+
         self.mapX = x
         self.mapY = y
-        self.globX = x
-        self.globY = y
         self.solido = True
     
     def reubicar(self, dx, dy):
@@ -68,7 +71,7 @@ class _giftSprite(sprite.Sprite):
         self.z += dy
         #self.globX += dx
         #self.globY += dy
-        self.rect.move_ip(dx,dy)
+        #self.rect.move_ip(dx,dy)
 
     def ubicar(self, x, y, z=0):
         '''Coloca al sprite en pantalla'''
@@ -76,7 +79,7 @@ class _giftSprite(sprite.Sprite):
         self.rect.y = y
         if z:
             self.z += z
-        
+
     def colisiona(self, sprite, off_x = 0, off_y = 0):
         if self.nombre != sprite.nombre:
             x = self.mapX-(sprite.mapX-off_x)

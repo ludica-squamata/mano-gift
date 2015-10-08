@@ -21,11 +21,11 @@ class DialogFrontEnd (Ventana):
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
         self.ubicar(*self.posicion)
-        ED.RENDERER.addOverlay(self,C.CAPA_OVERLAYS_DIALOGOS)
+        ED.RENDERER.add_overlay(self,C.CAPA_OVERLAYS_DIALOGOS)
         
     def destruir(self):
         ED.DIALOG = None
-        ED.RENDERER.delOverlay(self)
+        ED.RENDERER.del_overlay(self)
         
     def ubicar(self,x,y):
         if x < 0 or y < 0:

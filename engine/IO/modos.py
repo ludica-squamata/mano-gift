@@ -21,7 +21,7 @@ class Modo:
                     Util.salir()
 
                 elif event.key == C.TECLAS.DEBUG:
-                    print('rect: ',(ED.HERO._interaction_rect))
+                    print('rect: ', ED.HERO.rect)
                     # ED.RENDERER.use_focus = not ED.RENDERER.use_focus
 
         if True:  # folding
@@ -211,7 +211,7 @@ class Modo:
         ED.onPause = True
 
         ED.menu_actual = menu
-        ED.RENDERER.addOverlay(menu, C.CAPA_OVERLAYS_MENUS)
+        ED.RENDERER.add_overlay(menu, C.CAPA_OVERLAYS_MENUS)
         ED.RENDERER.overlays.move_to_front(menu)
 
     @staticmethod

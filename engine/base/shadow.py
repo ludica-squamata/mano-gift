@@ -11,7 +11,7 @@ class _sombra(_giftSprite):
         self.spr = spr
         self.tipo = "sombra"
         self.nombre = "sombra de "+self.spr.nombre
-        super().__init__(imagen=img, x = spr.rect.x, y = spr.rect.y, z = spr.rect.bottom-1)
+        super().__init__(imagen=img, x = spr.rect.x-dfx, y = spr.rect.y, z = spr.rect.bottom-1)
         self.alpha = self.image.get_alpha()
         self.dif_x = dfx
         
@@ -72,7 +72,7 @@ class ShadowSprite(_giftSprite):
             draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
         if self._sprSombra is None:
-            self._sprSombra = _sombra(self, h_2, t_surface)            
+            self._sprSombra = _sombra(self, h_2, t_surface)
             ED.RENDERER.camara.add_visible(self._sprSombra)
         
     @staticmethod

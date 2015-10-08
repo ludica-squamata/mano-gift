@@ -74,7 +74,7 @@ class Movil(Atribuido):
         new_pos_y = self.mapY + dy
         _rect = self.rect.copy()  # esto podria ser algo más permanente
         _rect.topleft = (new_pos_x, new_pos_y)  # una onda "maprect"
-        if not self.stage.rect.contains(_rect):
-            col_bordes = True
+        #if not self.stage.rect.contains(_rect):
+        #    col_bordes = True
 
         return any([col_bordes, col_mobs, col_props, col_mapa])
