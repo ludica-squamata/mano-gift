@@ -12,7 +12,7 @@ La parte visible del mapa, el área recorrida por el héroe y lo que se muestra 
 - El tamaño minimo de esta imagen debe ser de 512x512 pixeles. No hay un tamaño máximo establecido.
 
 ####Imagen de colisiones
-El mapa de colisiones es una imagen 'alpha' de la imagen de fondo, que le indicará al engine qué elementos de la imagen de fondo son sólidos e imposibles de atravezar, y qué partes del terreno son transitables. Las características de esta imagen son:
+La imagen de colisiones es una imagen 'alpha' de la imagen de fondo, que le indicará al engine qué elementos de la imagen de fondo son sólidos e imposibles de atravezar, y qué partes del terreno son transitables. Las características de esta imagen son:
 
 - Ha de tener exactamente las mismas dimensiones que la imagen de fondo.
 - El color designado para la detección de colisiones es el _magenta_: RGB 255,0,255
@@ -57,8 +57,8 @@ Aquí, "props", "enemies" y "npcs" son diccionarios, donde cada clave es una **r
 Lo siguiente en el archivo de datos son los accesos al mapa. Estos puntos son lugares donde el mapa cambiará en abrupto, en contraste con el movimiento continuo entre chunks en el overworld.
 
 ######Entradas
-El valor de "entradas" es un diccionario, donde cada key es el nombre de una entrada (un _link_ ver abajo), que a su vez contiene un par de coordenadas (x,y). 
-Una entrada en particular demanda una atención especial. La entrada llamada "inicial" es el lugar donde el héroe aparecerá por primera vez. Solo los mapas con una entrada inicial aparecen en el selector de mapas del debugger.
+El valor de "entradas" es un diccionario, donde cada key es el nombre de una entrada (un _link_, ver abajo), que a su vez contiene un par de coordenadas (x,y). 
+Una entrada en particular demanda una atención especial. La entrada llamada "inicial" es el lugar donde el héroe aparecerá por primera vez. Sólo los mapas con una entrada inicial aparecen en el selector de mapas del debugger.
 
     "entradas":{
         "inicial":[<x>,y>],
@@ -68,11 +68,11 @@ Una entrada en particular demanda una atención especial. La entrada llamada "in
 
 
 ######Salidas
-Las salidas en cambio, tienen mas datos. En principio, salidas es un diccionario, donde cada key es el nombre de una salida (un string) que contiene a su vez otro diccionario. Este ultimo dict tiene 3 keys: "rect", "dest" y "link".
+Las salidas en cambio, tienen más datos. En principio, _salidas_ es un diccionario, donde cada key es el nombre de una salida (un string) que contiene a su vez otro diccionario. Este ultimo dict tiene 3 keys: "rect", "dest" y "link".
 - "rect" es una lista con 4 integers, donde los numeros son los valores x,y,w,h del rect.
 - "dest" es un string con el nombre del mapa de destino. 
 - "link" es un string con el nombre de la entrada (ver arriba) que se vincula con esta salida. 
-
+```
     "salidas":{
         "<nombre de la salida>":{
             "rect":[<x>,<y>,<w>,<h>],
@@ -81,7 +81,7 @@ Las salidas en cambio, tienen mas datos. En principio, salidas es un diccionario
         },
         ...
     },
-
+```
 
 ####Referencias
 La clave "refs" es udiccionario, donde cada key es una referencia a los mobs o props utilizados en la capa ground. Los que no figuren aquí usarán un arhivo de datos separado, como el de los mobs. Cada el valor de cada key es una ruta a una imagen. Nótese que los keys deben corresponderse con aquellos presentes en la capa ground.
@@ -95,4 +95,4 @@ Las últimas 4 claves del archivo de datos son "ambiente", que es un string que 
         "anochece": [<h>,<m>],
     }
 
-[Contenidos](main.md)
+[Documentación](main.md)
