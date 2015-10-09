@@ -1,17 +1,18 @@
 from pygame.sprite import LayeredUpdates
-from engine.globs import Constants as C, EngineData as ED
+from engine.globs import Constants as Cs, EngineData as Ed
 from .Ventana import Ventana
 
+
 class DialogFrontEnd (Ventana):
-    posicion = 0,C.ALTO-int(C.ALTO/5)
+    posicion = 0, Cs.ALTO-int(Cs.ALTO/5)
     filas = None
     draw_space_rect = None
-    text_pos = 3,3
+    text_pos = 3, 3
     active = True
     
     def __init__(self, borde):
         self.filas = LayeredUpdates()
-        _size = int(C.ANCHO), int(C.ALTO/5)
+        _size = int(Cs.ANCHO), int(Cs.ALTO/5)
         if borde == 'RAISED': 
             self.canvas = self.crear_canvas(*_size)
         elif borde == 'SUNKEN':
@@ -21,24 +22,13 @@ class DialogFrontEnd (Ventana):
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
         self.ubicar(*self.posicion)
-        ED.RENDERER.add_overlay(self,C.CAPA_OVERLAYS_DIALOGOS)
+        Ed.RENDERER.add_overlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
         
     def destruir(self):
-        ED.DIALOG = None
-        ED.RENDERER.del_overlay(self)
+        Ed.DIALOG = None
+        Ed.RENDERER.del_overlay(self)
         
-    def ubicar(self,x,y):
+    def ubicar(self, x=0, y=0, z=0):
         if x < 0 or y < 0:
             raise ValueError('Coordenadas inválidas')
-        self.rect.move_ip(x,y)
-    
-    def usar_funcion(self,tecla):
-        if tecla in self.funciones:
-            if tecla == 'arriba':
-                self.funciones[tecla](-1)
-            elif tecla == 'abajo':
-                self.funciones[tecla](+1)
-            elif tecla in ['izquierda','derecha']:
-                self.funciones[tecla](tecla)
-            else:
-                self.funciones[tecla]()
+        self.rect.move_ip(x, y)

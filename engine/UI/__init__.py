@@ -6,9 +6,9 @@ from .hud import ProgressBar, HUD
 __all__ = [
     'Dialog',
     'Menu',
-    'Menu_Pausa',
-    'Menu_Items',
-    'Menu_Equipo',
-    'Menu_Opciones',
-    'Menu_Debug'
+    'MenuPausa',
+    'MenuItems',
+    'MenuEquipo',
+    'MenuOpciones',
+    'MenuDebug'
     ]

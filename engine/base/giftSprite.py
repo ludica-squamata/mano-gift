@@ -4,7 +4,7 @@ from engine.misc import Resources as r
 
 
 class _giftSprite(sprite.Sprite):
-    #mapX y mapY estan medidas en pixeles y son relativas al mapa
+    # mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
     tipo = ''
@@ -13,6 +13,7 @@ class _giftSprite(sprite.Sprite):
     images = None
     data = None  # info importada de un json
     z = 0
+    stage = None  # stage donde existe el mob
 
     IMAGEN_D = 'abajo'
     IMAGEN_U = 'arriba'
@@ -25,9 +26,11 @@ class _giftSprite(sprite.Sprite):
 
 
     def __init__(self, imagen=None, rect = None, alpha = False, center = False, x = 0, y = 0, z = 0):
-        super().__init__()
         if imagen is None and rect is None:
             raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
+
+        super().__init__()
+
         if isinstance(imagen, str):
             self.image = r.cargar_imagen(imagen)
         elif isinstance(imagen, Surface):
@@ -65,16 +68,16 @@ class _giftSprite(sprite.Sprite):
         self.solido = True
     
     def reubicar(self, dx, dy):
-        '''mueve el sprite una cantidad de pixeles'''
+        """mueve el sprite una cantidad de pixeles"""
         self.mapX += dx
         self.mapY += dy
         self.z += dy
-        #self.globX += dx
-        #self.globY += dy
+        # self.globX += dx
+        # self.globY += dy
         #self.rect.move_ip(dx,dy)
 
     def ubicar(self, x, y, z=0):
-        '''Coloca al sprite en pantalla'''
+        """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
         if z:
@@ -88,13 +91,13 @@ class _giftSprite(sprite.Sprite):
                 return True
         return False
 
-    def imagenN(self, n):
+    def imagen_n(self, n):
         if n in self.images:
             return self.images[n]
         else:
             return self.image
-            
-    def mascaraN(self,n):
+
+    def mascara_n(self,n):
         if n in self.mascaras:
             return self.mascaras[n]
         else:

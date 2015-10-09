@@ -75,8 +75,9 @@ class PC(Mob, Parlante):
     def usar_item(self, item):
         if item:
             if item.tipo == 'consumible':
-                item.usar(self)
-                return self.inventario.remover(item)
+                usado = item.usar(self)
+                if usado:
+                    return self.inventario.remover(item)
             return self.inventario.cantidad(item)
         else:
             return 0
