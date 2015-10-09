@@ -1,7 +1,6 @@
 from pygame import time, Surface, draw, PixelArray, SRCALPHA
-from engine.base import _giftSprite
 from engine.misc import Resources as r
-from engine.globs.eventDispatcher import GiftEvent
+from engine.base import _giftSprite
 
 class _clock:
     _h = 0
@@ -61,6 +60,10 @@ class _clock:
         self._s = 0
         
     def timestamp(self,h=0,m=0,s=0):
+        '''Without arguments, returns current tiemstamp
+        with arguments, returns the specified timestamp
+        '''
+        
         if h==0 and m==0 and s==0:
             return timestamp(self._h,self._m,self._s)
         else:
@@ -178,78 +181,48 @@ class timestamp:
     
 class Noche(_giftSprite):
     def __init__(self,size):
-        #############################
-        if 1: #cambiar a 0 para prueba de luces
-            img = Surface(size)
-            img.fill((0,0,125))
-            img.set_alpha(0)
-            self.rect = img.get_rect()
-            super().__init__(img)
-        #############################
-        else:
-            from engine.misc import Resources as r
-            img = Surface(size, SRCALPHA)
-            img.fill((0,0,0,230)) #llenamos con color rgba. como es srcalpha funciona bien
-            pxArray = PixelArray(img)
+        img = Surface(size, SRCALPHA)
+        img.fill((0,0,0,230)) #llenamos con color rgba. como es srcalpha funciona bien
+        
+        super().__init__(img)
+        
+        self.ubicar(0,0)
+    
+    def set_lights(self,*lights):
+        clamp = lambda n: 0 if n<0 else 255 if n>255 else n
             
-            lights = []
-            colorIgnorado = (1,1,1) #este es el color para las secciones que no se renderean, sino siempre se borra un cuadrado. el alpha no importa
-                                    #deberiamos definirlo en documentacion
-            surf = Surface((80,80), SRCALPHA)
-            surf.fill(colorIgnorado)
-            draw.circle(surf, (127,0,127,127), (40,40) ,40)
-            
-            lights.append([{"x":400,"y":600}, surf])
-            
-            surf = r.cargar_imagen('degrade.png')
-            rect = surf.get_rect()
-            rect.x = 600
-            rect.y = 600
-            
-            lights.append([rect, surf])
-            
-            surf = Surface((100,100), SRCALPHA) #luz de dia, 0,0,0,0. probe y sin SRCALPHA no funciona
-            surf.set_alpha(0)
-            lights.append([{"x":500,"y":800}, surf])
-            
-            def clamp(n):
-                return 0 if n<0 else 255 if n>255 else n
-            
-            imap = img.unmap_rgb #cache para velocidad
-            
-            for l in lights:
-                lightArray = PixelArray(l[1])
-                if type(l[0]) is dict:
-                    lx = l[0]["x"]
-                    ly = l[0]["y"]
-                else: #suponemos Rect
-                    lx = l[0].x
-                    ly = l[0].y
-                lmap = l[1].unmap_rgb
-                for y in range(0, l[1].get_width()):
-                    for x in range(0, l[1].get_height()):
+        imap = self.image.unmap_rgb #cache para velocidad
+        pxArray = PixelArray(self.image)
+        
+        for light in lights:
+            if light.nombre == 'sol':
+                #chapuza para velocidad
+                self.image.fill(light.color,light.rect)
+            else:
+                image = light.image
+                lx = light.rect.x
+                ly = light.rect.y
+                
+                lightArray = PixelArray(image)
+                lmap = image.unmap_rgb
+                for y in range(0, image.get_width()):
+                    for x in range(0, image.get_height()):
                         ox, oy = lx + x, ly + y
                         r,g,b,a = lmap(lightArray[x,y]) #hay que usar el motodo unmap_rgb de la instancia de surface que corresponde
-                        if ((r,g,b) != colorIgnorado):
+                        if ((r,g,b) != C.COLOR_IGNORADO):
                             _r,_g,_b,_a = imap(pxArray[ox, oy])
                             r = clamp(r+_r)
                             g = clamp(g+_g)
                             b = clamp(b+_b)
                             a = clamp(_a -(255-a))
                             pxArray[ox,oy] = r,g,b,a
-            nch = pxArray.make_surface()
-            self.rect = nch.get_rect()
-            super().__init__(nch)
-        ##############################
+        nch = pxArray.make_surface()
+        self.image = nch
         
-        self.ubicar(0,0)
-        self.dirty = 2
-
 class Tiempo:
     FPS = time.Clock()
     dia,_frames = 0,0
     clock = _clock()
-    esNoche = False
     noche = None
     
     @classmethod
@@ -259,31 +232,19 @@ class Tiempo:
         cls.clock.m = mins
         
     @classmethod
-    def contar_tiempo (cls):
+    def update (cls,rate):
+        cls.FPS.tick(rate)
         from engine.globs.engine_data import EngineData as ED
 
         cls._frames += 1
-        if cls._frames == 60:
+        if cls._frames == rate:
             cls.clock.update()
             cls._frames = 0
             if cls.clock.day_flag:
                 cls.dia += 1
             if cls.clock.hour_flag:
-                ED.EVENTS.trigger(GiftEvent('hora', 'Tiempo', {"hora": cls.clock.h}))
+                ED.EVENTS.trigger('hora', 'Tiempo', {"hora": cls.clock.h})
     
-    @classmethod
-    def oscurecer(cls,limite):
-        alpha = cls.noche.image.get_alpha()
-        if alpha < limite:
-            cls.noche.image.set_alpha(alpha+1)
-        else:
-            return True
-
-    @classmethod
-    def aclarar(cls):
-        alpha = cls.noche.image.get_alpha()
-        cls.noche.image.set_alpha(alpha-1)
-            
     @classmethod
     def crear_noche(cls,tamanio):
         cls.noche = Noche(tamanio)

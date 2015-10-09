@@ -25,6 +25,10 @@ class Item:
         else:
             return False
     
+    def __repr__(self):
+        return self.nombre+' ('+self.tipo+')'
+    
+    
 class Equipable(Item):
     def __init__(self,nombre,imagen,data):
         super().__init__(nombre,imagen,data)
@@ -37,9 +41,10 @@ class Consumible(Item):
         self.tipo = 'consumible'
         self.data = data
     
-    def usar(self,mob):
-        stat = self.data['efecto']['stat']
-        mod = self.data['efecto']['mod']
+    def usar(self, mob):
+        usado = False
+        stat = self.data.get('efecto', {}).get('stat', '')
+        mod = self.data.get('efecto', {}).get('mod', '')
         if stat == 'salud':
             actual = stat+'_act'
             maximo = stat+'_max'
@@ -52,7 +57,10 @@ class Consumible(Item):
             else:
                 valor += ValActual
             
-            setattr(mob,actual,valor)
+            setattr(mob, actual, valor)
+            usado = True
+        return usado
+
 
 class Armadura(Equipable):
     def __init__(self,nombre,imagen,data):

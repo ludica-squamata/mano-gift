@@ -1,8 +1,8 @@
-from engine.base import _giftSprite
-from engine.globs.engine_data import EngineData as ED
+from engine.globs import EngineData as ED, ModData as MD
+from importlib import machinery
+import types
 
-
-class EventListener(_giftSprite):
+class EventListener:
 
     event_handlers = {}
 
@@ -12,10 +12,6 @@ class EventListener(_giftSprite):
         :return:None
         """
         if self.data.get('script') and self.data.get('eventos'):
-            from engine.globs.mod_data import ModData as MD
-            from importlib import machinery
-            import types
-
             # cargar un archivo por ruta
             loader = machinery.SourceFileLoader("module.name", MD.scripts+self.data['script']+'.py')
             m = loader.load_module()  # en 3.4 lo cambiaron a exec_module()

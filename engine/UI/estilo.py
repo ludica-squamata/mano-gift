@@ -1,8 +1,10 @@
 from pygame import Color,font
+from engine.misc.tagloader import load_tagarrayfile
 
 font.init()
 
 class Estilo:
+    tags = load_tagarrayfile('data/tagarray.json')
     __fuente = 'verdana'
     fuente_Mi = font.SysFont(__fuente,16,italic=True)
     fuente_Mb = font.SysFont(__fuente,16,bold=True)

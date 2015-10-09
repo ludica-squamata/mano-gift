@@ -76,8 +76,9 @@ class PC(Mob, Parlante):
     def usar_item(self, item):
         if item:
             if item.tipo == 'consumible':
-                item.usar(self)
-                return self.inventario.remover(item)
+                usado = item.usar(self)
+                if usado:
+                    return self.inventario.remover(item)
             return self.inventario.cantidad(item)
         else:
             return 0
@@ -101,7 +102,7 @@ class PC(Mob, Parlante):
         if self.atacando:
             self.animar_ataque(5)
         
-        self.updateSombra()
+        super().update()
 
     def iniciar_dialogo(self, sprite=None):
         x, y = self.direcciones[self.direccion]
