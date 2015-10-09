@@ -47,19 +47,14 @@ class Camara:
         self.visible = LayeredUpdates()
         self.real = LayeredUpdates()
         self.bgs = LayeredUpdates()
-        self.bgs_rect = Rect(0,0,0,0)
         self.w = Cs.ANCHO
         self.h = Cs.ALTO
         self.rect = Rect(self.x, self.y, self.w, self.h)
-        self.cam_rect = Rect(0,0,self.w,self.h)
 
     def set_background(self, spr):
         if self.bg is None:
             self.bg = spr
-            self.cam_rect.topleft = spr.rect.topleft
         self.bgs.add(spr)
-        self.bgs_rect.union_ip(spr.rect)
-
 
     def add_real(self, obj):
         self.real.add(obj)
@@ -91,33 +86,18 @@ class Camara:
         self.bgs.empty()
         self.bg = None
 
-    def detectar_limites(self):
+    def detectar_mapas_adyacentes(self):
+        map_at_topleft = self.bgs.get_sprites_at((0, 0))
+        map_at_topright = self.bgs.get_sprites_at((640, 0))
+        map_at_bottomleft = self.bgs.get_sprites_at((0, 480))
+        map_at_bottomright = self.bgs.get_sprites_at((640, 480))
 
-        offx = self.rect.w-self.bgs_rect.w
-        offy = self.bgs_rect.h-self.rect.h
-        #print(self.cam_rect)
+        map_at_center = self.bgs.get_sprites_at((320, 240))
 
-
-
-
-        # map_at_topleft = True
-        # map_at_topright = True
-        # map_at_bottomleft = True
-        # map_at_bottomright = True
-        #
-        # if not len(self.bgs.get_sprites_at((0, 0))):
-        #     map_at_topleft = False
-        # if not len(self.bgs.get_sprites_at((640, 0))):
-        #     map_at_topright = False
-        # if not len(self.bgs.get_sprites_at((0, 480))):
-        #     map_at_bottomleft = False
-        # if not len(self.bgs.get_sprites_at((640, 480))):
-        #     map_at_bottomright = False
-
-        map_at_bottom = bool(len(self.bgs.get_sprites_at((320, 480))))
-        map_at_right = bool(len(self.bgs.get_sprites_at((640, 240))))
-        map_at_top = bool(len(self.bgs.get_sprites_at((320, 0))))
-        map_at_left = bool(len(self.bgs.get_sprites_at((0, 240))))
+        map_at_bottom = self.bgs.get_sprites_at((320, 480))
+        map_at_right = self.bgs.get_sprites_at((640, 240))
+        map_at_top = self.bgs.get_sprites_at((320, 0))
+        map_at_left = self.bgs.get_sprites_at((0, 240))
 
         adyacent_map_keys = []
         if not map_at_top:
@@ -128,33 +108,54 @@ class Camara:
             adyacent_map_keys.append('izq')
         if not map_at_right:
             adyacent_map_keys.append('der')
-        # if not map_at_topleft:
-        #     adyacent_map_keys.append('supizq')
-        # if not map_at_topright:
-        #     adyacent_map_keys.append('supder')
-        # if not map_at_bottomleft:
-        #     adyacent_map_keys.append('infizq')
-        # if not map_at_bottomright:
-        #     adyacent_map_keys.append('infder')
-        mapas = self.bgs.get_sprites_at((320, 240))
+
+        mapas = []
+        if not map_at_topleft:
+            if map_at_top:
+                mapas = map_at_top
+                adyacent_map_keys.append('izq')
+            elif map_at_left:
+                mapas = map_at_left
+                adyacent_map_keys.append('sup')
+        elif not map_at_topright:
+            if map_at_top:
+                mapas = map_at_top
+                adyacent_map_keys.append('der')
+            elif map_at_right:
+                mapas = map_at_right
+                adyacent_map_keys.append('sup')
+        elif not map_at_bottomleft:
+            if map_at_bottom:
+                mapas = map_at_bottom
+                adyacent_map_keys.append('izq')
+            elif map_at_left:
+                mapas = map_at_left
+                adyacent_map_keys.append('inf')
+        elif not map_at_bottomright:
+            if map_at_bottom:
+                mapas = map_at_bottom
+                adyacent_map_keys.append('der')
+            elif map_at_right:
+                mapas = map_at_right
+                adyacent_map_keys.append('inf')
+        else:
+            mapas = map_at_center
+
         if len(mapas):
             mapa = mapas[0]
             mapa.checkear_adyacencias(adyacent_map_keys)
 
+    def update_sprites_layer(self):
+        for spr in self.visible:
+            self.visible.change_layer(spr, spr.z)
+
+    def panear(self):
         new_x = self.focus.rect.x - self.focus.mapX
         new_y = self.focus.rect.y - self.focus.mapY
 
         dx = new_x - self.bg.rect.x
         dy = new_y - self.bg.rect.y
 
-        return dx, dy
-
-    def update_sprites_layer(self):
-        for spr in self.visible:
-            self.visible.change_layer(spr, spr.z)
-
-    def panear(self, dx, dy):
-        self.cam_rect.move_ip(dx,dy)
         self.bg.rect.x += dx
         self.bg.rect.y += dy
 
@@ -173,13 +174,8 @@ class Camara:
         self.bgs.update()
         self.visible.update()
         if use_focus:
-            dx, dy = self.detectar_limites()
-            if dx or dy:
-                self.panear(dx, dy)
-            else:
-                x = self.bg.rect.x + self.focus.mapX
-                y = self.bg.rect.y + self.focus.mapY
-                self.focus.ubicar(x, y, dy)
+            self.detectar_mapas_adyacentes()
+            self.panear()
 
         self.update_sprites_layer()
 

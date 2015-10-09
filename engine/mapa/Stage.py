@@ -4,7 +4,7 @@ from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
 from engine.misc import Resources as r
 from .loader import _loader
-from .LightSource import DayLight # SpotLight
+from .LightSource import DayLight  # SpotLight
 from pygame import mask
 
 
@@ -25,7 +25,7 @@ class Stage:
         dx, dy = self.data['entradas'][entrada]
         self.offset_x -= dx
         self.offset_y -= dy
-        self.chunks.add(ChunkMap(self, self.data, nombre = self.nombre, offX= self.offset_x, offY= self.offset_y))
+        self.chunks.add(ChunkMap(self, self.data, nombre = self.nombre, offX = self.offset_x, offY = self.offset_y))
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask, self.mapa.image)
@@ -47,7 +47,7 @@ class Stage:
             x = self.rect.x + obj.mapX
             y = self.rect.y + obj.mapY
 
-            obj.ubicar(x,y,self.offset_y)
+            obj.ubicar(x, y, self.offset_y)
 
     def addProperty(self, obj, _layer, addInteractive = False):
         if _layer == Cs.CAPA_GROUND_SALIDAS:
@@ -71,11 +71,11 @@ class Stage:
             self.anochece = timestamp(*self.data["anochece"])
 
     def anochecer(self, event):
-        '''
+        """
         :param event:
         :type event:GiftEvent
         :return:
-        '''
+        """
         print(event)
         if self.data['ambiente'] == 'exterior':
             pass
@@ -105,8 +105,8 @@ class ChunkMap(Sprite):
     def __init__(self, stage, data, cuadrante = 'cen', nombre = '', offX = 0, offY = 0):
         super().__init__()
         self.limites = {'sup': '', 'supizq': '', 'supder': '',
-               'inf': '', 'infizq': '', 'infder': '',
-               'izq': '', 'der': ''}
+                        'inf': '', 'infizq': '', 'infder': '',
+                        'izq': '', 'der': ''}
         self.stage = stage
         self.nombre = nombre
         self.cuadrante = cuadrante
@@ -151,15 +151,23 @@ class ChunkMap(Sprite):
             offx = self.offsetX
             offy = self.offsetY
 
-            dx,dy = 0,0
-            if   ady == 'sup':    dx, dy = offx, offy-h
-            elif ady == 'supizq': dx, dy = offx-w, offy-h
-            elif ady == 'supder': dx, dy = offx+w, offy-h
-            elif ady == 'inf':    dx, dy = offx, offy+h
-            elif ady == 'infizq': dx, dy = offx-w, offy+h
-            elif ady == 'infder': dx, dy = offx+w, offy+h
-            elif ady == 'izq':    dx, dy = offx-w, offy
-            elif ady == 'der':    dx, dy = offx+w, offy
+            dx, dy = 0, 0
+            if ady == 'sup':
+                dx, dy = offx, offy - h
+            elif ady == 'supizq':
+                dx, dy = offx - w, offy - h
+            elif ady == 'supder':
+                dx, dy = offx + w, offy - h
+            elif ady == 'inf':
+                dx, dy = offx, offy + h
+            elif ady == 'infizq':
+                dx, dy = offx - w, offy + h
+            elif ady == 'infder':
+                dx, dy = offx + w, offy + h
+            elif ady == 'izq':
+                dx, dy = offx - w, offy
+            elif ady == 'der':
+                dx, dy = offx + w, offy
 
             mapa = ChunkMap(self.stage, data, ady, nombre = nmbr, offX = dx, offY = dy)
 
