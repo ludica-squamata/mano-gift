@@ -35,7 +35,7 @@ class Stage:
         _loader.setStage(self)
         _loader.loadEverything(entrada, mobs_data)
 
-    def register_at_renderer(self, entrada):
+    def register_at_renderer(self):
         Ed.RENDERER.camara.set_background(self.mapa)
         Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         Tiempo.noche.set_lights(DayLight(1024))
@@ -47,8 +47,6 @@ class Stage:
             y = self.rect.y + obj.mapY
 
             obj.ubicar(x,y,self.offset_y)
-
-        #Ed.HERO.ubicar(*self.data['entradas'][entrada])
 
     def addProperty(self, obj, _layer, addInteractive = False):
         if _layer == Cs.CAPA_GROUND_SALIDAS:
@@ -99,12 +97,15 @@ class ChunkMap(Sprite):
     tipo = 'mapa'
     offsetX = 0
     offsetY = 0
-    limites = {'sup': None, 'supizq': None, 'supder': None,
-               'inf': None, 'infizq': None, 'infder': None,
-               'izq': None, 'der': None}
+    limites = {'sup': '', 'supizq': '', 'supder': '',
+               'inf': '', 'infizq': '', 'infder': '',
+               'izq': '', 'der': ''}
 
     def __init__(self, stage, data, cuadrante = 'cen', nombre = '', offX = 0, offY = 0):
         super().__init__()
+        self.limites = {'sup': '', 'supizq': '', 'supder': '',
+               'inf': '', 'infizq': '', 'infder': '',
+               'izq': '', 'der': ''}
         self.stage = stage
         self.nombre = nombre
         self.cuadrante = cuadrante
@@ -113,14 +114,18 @@ class ChunkMap(Sprite):
         self.rect = self.image.get_rect(topleft = (offX, offY))
         self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
                                         (1, 1, 1, 255))
-        self.offsetX = offX
-        self.offsetY = offY
+        if cuadrante == 'cen':
+            self.offsetY = 0
+            self.offsetX = 0
+        else:
+            self.offsetX = offX
+            self.offsetY = offY
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
 
     def ubicar(self, x, y):
-        '''Coloca al sprite en pantalla'''
+        """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
 
@@ -129,25 +134,31 @@ class ChunkMap(Sprite):
             self.limites[key.lower()] = limites[key]
 
     def checkear_adyacencias(self, claves):
+
         for clave in claves:
-            if clave in self.limites:
-                return self.cargar_mapa_adyacente(clave)
+            if type(self.limites[clave]) is not ChunkMap:
+                self.cargar_mapa_adyacente(clave)
 
     def cargar_mapa_adyacente(self, ady):
-        if type(self.limites[ady]) is str:
-            nmbr = self.limites[ady]
-            data = r.abrir_json(Md.mapas + self.limites[ady] + '.json')
+
+        nmbr = self.limites[ady]
+
+        try:
+            data = r.abrir_json(Md.mapas + nmbr + '.json')
 
             w, h = self.rect.size
-            x, y = self.rect.topleft
-            if ady ==   'sup':    dx, dy = 0, -h
-            elif ady == 'supizq': dx, dy = -w, -h
-            elif ady == 'supder': dx, dy = w, -h
-            elif ady == 'inf':    dx, dy = 0, h
-            elif ady == 'infizq': dx, dy = -w, h
-            elif ady == 'infder': dx, dy = w, h
-            elif ady == 'izq':    dx, dy = -w, 0
-            elif ady == 'der':    dx, dy = w, 0
+            offx = self.offsetX
+            offy = self.offsetY
+
+            dx,dy = 0,0
+            if   ady == 'sup':    dx, dy = offx, offy-h
+            elif ady == 'supizq': dx, dy = offx-w, offy-h
+            elif ady == 'supder': dx, dy = offx+w, offy-h
+            elif ady == 'inf':    dx, dy = offx, offy+h
+            elif ady == 'infizq': dx, dy = offx-w, offy+h
+            elif ady == 'infder': dx, dy = offx+w, offy+h
+            elif ady == 'izq':    dx, dy = offx-w, offy
+            elif ady == 'der':    dx, dy = offx+w, offy
 
             mapa = ChunkMap(self.stage, data, ady, nombre = nmbr, offX = dx, offY = dy)
 
@@ -155,8 +166,8 @@ class ChunkMap(Sprite):
             self.stage.chunks.add(mapa)
             Ed.RENDERER.camara.set_background(mapa)
             self.stage.rect.union_ip(mapa.rect)
-            return True
-        return False
+        except IOError:
+            pass
 
     def update(self):
         # self.stage.anochecer()

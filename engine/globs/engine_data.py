@@ -47,5 +47,5 @@ class EngineData:
             _loader.setStage(cls.mapas[nombre])
             _loader.cargar_hero(entrada)
         cls.MAPA_ACTUAL = cls.mapas[nombre]
-        cls.MAPA_ACTUAL.register_at_renderer(entrada)
+        cls.MAPA_ACTUAL.register_at_renderer()
         cls.HUD = HUD()
