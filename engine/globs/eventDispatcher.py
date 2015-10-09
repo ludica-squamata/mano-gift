@@ -44,16 +44,16 @@ class EventDispatcher:
                     del cls._oyentes[event]
 
     @classmethod
-    def trigger(cls, event_data):
+    def trigger(cls, *event_data):
         """
         Este método crea un evento en la cola para ser distribuido, con los datos que
         van a ser distribuidos.
         :param event_data:
-        :type event_data:dict/GiftEvent
+        :type event_data:list/GiftEvent
         :return:None
         """
-        if not type(event_data) is GiftEvent: #else: suponemos list
-            event = GiftEvent(*event_data)
+        
+        event = GiftEvent(*event_data)
         cls._cola.append(event)
 
     @classmethod

@@ -1,8 +1,3 @@
 /config.json
-/engine/scenery/__pycache__
-/demo_data/scripts/__pycache__
-/engine/IO/__pycache__
-/engine/UI/__pycache__
-/engine/UI/menues/__pycache__
 .idea
 __pycache__

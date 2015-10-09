@@ -30,7 +30,7 @@ class Movil(Atribuido):
 
         return direccion
 
-    def moverse(self):
+    def mover(self, dx, dy):
         
         x, y = self.direcciones[self.direccion]
         dx, dy = x * self.velocidad, y * self.velocidad

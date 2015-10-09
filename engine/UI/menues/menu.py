@@ -1,83 +1,86 @@
 from engine.UI.Ventana import Ventana
-from engine.globs import Constants as C, EngineData as ED
+from engine.globs import Constants as Cs, EngineData as Ed
+from pygame.sprite import LayeredUpdates
 
-class Menu (Ventana):
-    botones = []
+
+class Menu(Ventana):
+    botones = None
     keyup = {}
     cur_btn = 0
     current = ''
     canvas = None
     newMenu = False
     active = True
-    
-    def __init__(self,titulo):
+
+    def __init__(self, titulo):
         self.nombre = titulo
         self.current = self
-        self.canvas = self.crear_canvas(C.ANCHO-20,C.ALTO-20)
-        self.crear_titulo(titulo,self.font_high_color,self.bg_cnvs,C.ANCHO-20)
+        self.canvas = self.crear_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
+        self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
         self.funciones = {
-            "arriba":lambda dummy : None,
-            "abajo":lambda dummy : None,
-            "izquierda":lambda dummy : None,
-            "derecha":lambda dummy : None,
-            "hablar":lambda : None}
+            "arriba": lambda dummy: None,
+            "abajo": lambda dummy: None,
+            "izquierda": lambda dummy: None,
+            "derecha": lambda dummy: None,
+            "hablar": lambda: None}
+        self.botones = LayeredUpdates()
         super().__init__(self.canvas)
-        self.ubicar(10,10)
-        
-        ED.MENUS[titulo] = self
-    
+        self.ubicar(10, 10)
+
+        Ed.MENUS[titulo] = self
+
     @staticmethod
-    def DeselectAll(lista):
+    def deselect_all(lista):
         if len(lista) > 0:
             for item in lista:
-                item.serDeselegido()
+                item.ser_deselegido()
                 item.dirty = 1
-            
-    def mover_cursor(self,item):
+
+    def mover_cursor(self, item):
         if item.tipo == 'boton':
             for i in range(len(self.botones)):
                 spr = self.botones.get_sprite(i)
-                if  spr.nombre == item.nombre:
+                if spr.nombre == item.nombre:
                     self.cur_btn = i
                     self.current = spr
                     break
-                    
+
         elif item.tipo == 'fila':
             for i in range(len(self.filas)):
                 spr = self.filas.get_sprite(i)
                 if item.nombre == spr.nombre:
                     self.cur_opt = self.filas.get_sprite(i)
-                    self.current = spr#.nombre
+                    self.current = spr  # .nombre
                     break
-    
+
     def cancelar(self):
-        '''Esta funcion es un hook para otras funciones del mismo nombre.'''
+        """Esta funcion es un hook para otras funciones del mismo nombre."""
         self.active = False
         return True
-    
-    def usar_funcion(self,tecla):
-        if tecla in ('arriba','abajo','izquierda','derecha'):
+
+    def usar_funcion(self, tecla):
+        if tecla in ('arriba', 'abajo', 'izquierda', 'derecha'):
             self.funciones[tecla](tecla)
         else:
             self.funciones[tecla]()
-    
-    def keyup_function(self,tecla):
+
+    def keyup_function(self, tecla):
         if tecla in self.keyup:
             self.keyup[tecla]()
-    
-    def PressButton(self):
+
+    def press_button(self):
         if len(self.botones) > 0:
-            self.current.serPresionado()
+            self.current.ser_presionado()
             self.botones.draw(self.canvas)
-    
-    def ReleaseButton(self):
-        self.DeselectAll(self.botones)
-        self.current.serElegido()
+
+    def release_button(self):
+        self.deselect_all(self.botones)
+        self.current.ser_elegido()
         self.botones.draw(self.canvas)
-          
-    def Reset(self):
-        '''Resetea el estado de la ventana. Esta función es solo un hook.'''
+
+    def reset(self):
+        """Resetea el estado de la ventana. Esta función es solo un hook."""
         self.active = True
-    
+
     def __repr__(self):
-        return 'Menu_'+self.nombre+' (en '+str(len(self.groups()))+' grupos)'
+        return 'Menu_' + self.nombre + ' (en ' + str(len(self.groups())) + ' grupos)'
