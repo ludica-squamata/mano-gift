@@ -1,7 +1,7 @@
 from pygame.sprite import LayeredUpdates
 from pygame.key import name as key_name
 from pygame import Rect, font
-from engine.UI.widgets import Boton, Opcion
+from engine.UI.widgets import Fila
 from engine.globs.constantes import Constants as K
 from engine.misc.config import Config as C
 from engine.libs.textrect import render_textrect
@@ -78,19 +78,19 @@ class MenuOpciones(MenuPausa, Menu):
                     opt = 'Sí'
                 else:
                     opt = 'No'
-                esp = Opcion(opt, 88, [x, y + 9], size= 15, aling=1)
+                esp = Fila(opt, 88, x, y + 9,  justification=1)
                 self.espacios.add(esp)
 
             elif nom == 'resolución':
                 nom = nom.replace('ó', 'o')
                 ANCHO = self.data[nom]['ANCHO']
                 ALTO = self.data[nom]['ALTO']
-                esp = Opcion(str(ANCHO) + 'x' + str(ALTO), 88, [x, y + 9], size=15, aling=1)
+                esp = Fila(str(ANCHO) + 'x' + str(ALTO), 88, x, y + 9, justification=1)
 
             elif nom in self.data['teclas']:
                 texto = self.data['teclas'][nom]
                 nom = key_name(texto)
-                esp = Opcion(nom, 75, [x + 3, y + 9], size=15, aling=1)
+                esp = Fila(nom, 75, x + 3, y + 9, justification=1)
 
             self.espacios.add(esp)
 

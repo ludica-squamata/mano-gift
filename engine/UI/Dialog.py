@@ -1,7 +1,6 @@
 from engine.libs import render_tagged_text
-# from engine.misc.tagloader import load_tagarrayfile
-from .widgets import Opcion
-from pygame import Rect
+from .widgets import Fila
+from pygame import Rect, Surface
 from pygame.sprite import LayeredUpdates
 from engine.globs import Constants as Cs, EngineData as Ed
 from .Ventana import Ventana
@@ -16,11 +15,12 @@ class DialogInterface(Ventana):
     w, h = 0, 0
 
     def __init__(self):
-        self.filas = LayeredUpdates()
-        self.marco = self.crear_marco(int(Cs.ANCHO), int(Cs.ALTO / 5))
-        super().__init__(self.marco)  # en realidad, la imagen no deberia ser el marco, pero bueh
-        self.image.fill(self.bg_cnvs)
+        image = Surface((int(Cs.ANCHO), int(Cs.ALTO / 5)))
+        image.fill(self.bg_cnvs)
+        super().__init__(image)
 
+        self.filas = LayeredUpdates()
+        self.marco = self.crear_marco(*self.rect.size)
         self.w, self.h = self.image.get_size()
         self.draw_space_rect = Rect((3, 3), (self.w - 115, self.h - 7))
         self.erase_area = Rect(3, 3, self.w - 7, self.h - 7)
@@ -52,7 +52,7 @@ class DialogInterface(Ventana):
         x = self.draw_space_rect.x
         w = self.draw_space_rect.w
         for i in range(self.opciones):
-            opcion = Opcion(opciones[i].texto, w, (x, i * h + i + 3), extra_data = opciones[i].leads)
+            opcion = Fila(opciones[i], w, x, i * h + i + 3)
             self.filas.add(opcion)
 
     def set_loc_img(self, locutor):
@@ -88,7 +88,7 @@ class DialogInterface(Ventana):
             fila.ser_deselegido()
         current.ser_elegido()
 
-        return current.extra_data
+        return current.item.leads
 
     def scroll(self, dy):
         if not self.draw_space_rect.contains(self.text_rect):
@@ -108,15 +108,12 @@ class DialogInterface(Ventana):
         color = self.bg_cnvs  # TODO: estos colores deberían ser otros
 
         if len(self.filas):
+            filas = [fila for fila in self.filas if self.draw_space_rect.contains(fila.rect)]
+            if len(self.filas) > len(filas):
+                color = self.bg_bisel_bg
+            for fila in filas:
+                self.image.blit(fila.image, fila.rect)
 
-            for fila in self.filas:
-                if self.draw_space_rect.contains(fila.rect):
-                    # no dibujar las filas que quedan fuera de la pantalla
-                    self.image.blit(fila.image, fila.rect)
-                else:
-                    # si hay más filas, pintar el espacio de la flecha
-                    color = self.bg_bisel_bg
-                    #break
         else:
             # si no hay filas, la imagen es lo que sale de set_text.
             self.image.blit(self.rendered_text, self.text_rect)
@@ -125,3 +122,6 @@ class DialogInterface(Ventana):
 
         # pintar el area de la flecha, si es que hay más contenido que ver.
         self.image.fill(color, (self.text_rect.right+1, 0, 16, self.draw_space_rect.h+3))
+
+        # dibujar el marco biselado.
+        self.image.blit(self.marco, (0, 0))

@@ -36,16 +36,6 @@ class Menu(Ventana):
         ttl_txt = render_textrect(titulo, self.fuente_Mu, ttl_rect, fg_color, bg_color, 1)
         self.canvas.blit(ttl_txt, ttl_rect.topleft)
 
-    def crear_espacio_titulado(self, ancho, alto, titulo):
-        marco = self.create_sunken_canvas(ancho, alto)
-        megacanvas = Surface((marco.get_width(), marco.get_height() + 17))
-        megacanvas.fill(self.bg_cnvs)
-        texto = self.fuente_P.render(titulo, True, self.font_none_color, self.bg_cnvs)
-        megacanvas.blit(marco, (0, 17))
-        megacanvas.blit(texto, (3, 7))
-
-        return megacanvas
-
     @staticmethod
     def deselect_all(lista):
         if len(lista) > 0:
