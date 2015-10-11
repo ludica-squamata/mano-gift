@@ -76,9 +76,10 @@ class Modo:
                         ED.MODO = 'Aventura'
 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    ED.MODO = 'Dialogo'
-                    ED.HUD.Inventory.SelectCuadro()
-                    ED.DIALOG = ED.HUD
+                    #ED.MODO = 'Dialogo'
+                    #ED.HUD.Inventory.SelectCuadro()
+                    #ED.DIALOG = ED.HUD
+                    pass
 
                 elif event.key == C.TECLAS.POSICION_COMBATE:
                     ED.HERO.cambiar_estado()

@@ -1,5 +1,5 @@
-from engine.mobs.CompoMob import Atribuido
-from engine.mobs.scripts.dialogo import Dialogo
+from ._atribuido import Atribuido
+from engine.IO.dialogo import Dialogo
 from engine.globs import EngineData as ED
 
 

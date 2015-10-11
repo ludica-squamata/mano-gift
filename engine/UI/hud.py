@@ -53,135 +53,135 @@ class ProgressBar(Sprite):
         self.image.fill(self.colorAct,self._actual())
         self._subdividir()
 
-class espacioInventario(Sprite,Estilo):
-    item = None
-    cant = 0
-    item_img = None
-    item_rect = None
+# class espacioInventario(Sprite,Estilo):
+    # item = None
+    # cant = 0
+    # item_img = None
+    # item_rect = None
     
-    cant_img = None
-    cant_rect = None
+    # cant_img = None
+    # cant_rect = None
 
-    isSelected = False
-    active = True
-    def __init__(self,idx,x,y):
-        '''Inicializa las variables de un espacio equipable.'''
-        super().__init__()
-        self.id = idx
-        self.img_uns = self.crear_base((125,125,125))
-        self.img_sel = self.crear_seleccion(self.img_uns.copy())
-        self.image = self.img_uns
-        self.rect = self.image.get_rect(topleft = (x,y))
+    # isSelected = False
+    # active = True
+    # def __init__(self,idx,x,y):
+        # '''Inicializa las variables de un espacio equipable.'''
+        # super().__init__()
+        # self.id = idx
+        # self.img_uns = self.crear_base((125,125,125))
+        # self.img_sel = self.crear_seleccion(self.img_uns.copy())
+        # self.image = self.img_uns
+        # self.rect = self.image.get_rect(topleft = (x,y))
     
-    @staticmethod
-    def crear_base(color):
-        '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
+    # @staticmethod
+    # def crear_base(color):
+        # '''Crea las imagenes seleccionada y deseleccionada del espacio equipable.'''
         
-        rect = Rect(1,1,28,28)
-        base = Surface((30,30),flags=SRCALPHA)
-        base.fill((0,0,0))
-        base.fill((255,0,0),rect)
-        pxArray = PixelArray(base)
-        pxArray.replace((255,0,0),(175,175,175,100))        
-        base = pxArray.surface
-        return base
+        # rect = Rect(1,1,28,28)
+        # base = Surface((30,30),flags=SRCALPHA)
+        # base.fill((0,0,0))
+        # base.fill((255,0,0),rect)
+        # pxArray = PixelArray(base)
+        # pxArray.replace((255,0,0),(175,175,175,100))        
+        # base = pxArray.surface
+        # return base
     
-    def clear(self):
-        rect = Rect(2,2,26,26)
-        self.image.fill((175,175,175,100),rect)
+    # def clear(self):
+        # rect = Rect(2,2,26,26)
+        # self.image.fill((175,175,175,100),rect)
     
-    @staticmethod
-    def crear_seleccion(imagen):
-        w,h = imagen.get_size()
-        draw.rect(imagen,(255,255,255),(1,1,w-2,h-2),1)
-        return imagen
+    # @staticmethod
+    # def crear_seleccion(imagen):
+        # w,h = imagen.get_size()
+        # draw.rect(imagen,(255,255,255),(1,1,w-2,h-2),1)
+        # return imagen
     
-    def serElegido(self):
-        self.image = self.img_sel
-        isSelected = True
+    # def serElegido(self):
+        # self.image = self.img_sel
+        # isSelected = True
         
-    def serDeselegido(self):
-        self.image = self.img_uns
-        isSelected = False
+    # def serDeselegido(self):
+        # self.image = self.img_uns
+        # isSelected = False
     
-    def setItem(self,item):
-        _rect = Rect((0,0),self.rect.size)
-        self.item = item
-        self.item_img = item.image
-        self.item_rect = item.image.get_rect(center=_rect.center)
+    # def setItem(self,item):
+        # _rect = Rect((0,0),self.rect.size)
+        # self.item = item
+        # self.item_img = item.image
+        # self.item_rect = item.image.get_rect(center=_rect.center)
        
-    def setCant(self):
-        w,h = self.rect.size
-        self.cant = ED.HERO.inventario.cantidad(self.item)
-        self.cant_img = self.fuente_MP.render(str(self.cant),True,self.font_none_color)
-        dw,dh = self.cant_img.get_size()
-        self.cant_rect = self.cant_img.get_rect(topleft=(w-dw-1,h-dh-1))
+    # def setCant(self):
+        # w,h = self.rect.size
+        # self.cant = ED.HERO.inventario.cantidad(self.item)
+        # self.cant_img = self.fuente_MP.render(str(self.cant),True,self.font_none_color)
+        # dw,dh = self.cant_img.get_size()
+        # self.cant_rect = self.cant_img.get_rect(topleft=(w-dw-1,h-dh-1))
         
-    def vaciar(self):
-        self.clear()
-        self.item = None
-        self.item_img = None
-        self.item_rect = None
+    # def vaciar(self):
+        # self.clear()
+        # self.item = None
+        # self.item_img = None
+        # self.item_rect = None
         
-        self.cant = 0
-        self.cant_img = None
-        self.cant_rect = None
+        # self.cant = 0
+        # self.cant_img = None
+        # self.cant_rect = None
     
-    def update(self):
-        self.clear()
-        if self.item is not None and self.cant != 0:
-            self.image.blit(self.item_img,self.item_rect)
-            self.image.blit(self.cant_img,self.cant_rect)
+    # def update(self):
+        # self.clear()
+        # if self.item is not None and self.cant != 0:
+            # self.image.blit(self.item_img,self.item_rect)
+            # self.image.blit(self.cant_img,self.cant_rect)
 
-class InventoryDisplay:
-    cuadros = []
-    _slots = [None for i in range(10)]
-    onSelect = False
-    current = 0
-    def __init__(self,dx,dy,w):
-        self.current = 0
-        self.cuadros = LayeredUpdates()
-        for i in range(10):
-            cuadro = espacioInventario(i,dx-w-1+(i*32.6),dy)
-            self.cuadros.add(cuadro)
+# class InventoryDisplay:
+    # cuadros = []
+    # _slots = [None for i in range(10)]
+    # onSelect = False
+    # current = 0
+    # def __init__(self,dx,dy,w):
+        # self.current = 0
+        # self.cuadros = LayeredUpdates()
+        # for i in range(10):
+            # cuadro = espacioInventario(i,dx-w-1+(i*32.6),dy)
+            # self.cuadros.add(cuadro)
             
-    def SelectCuadro(self,i=0):
-        for cuadro in self.cuadros:
-            cuadro.serDeselegido()
-        if 0 <= self.current+i <= len(self.cuadros)-1:
-            self.current += i
-        self.cuadros.get_sprite(self.current).serElegido()
-        self.onSelect = True
+    # def SelectCuadro(self,i=0):
+        # for cuadro in self.cuadros:
+            # cuadro.serDeselegido()
+        # if 0 <= self.current+i <= len(self.cuadros)-1:
+            # self.current += i
+        # self.cuadros.get_sprite(self.current).serElegido()
+        # self.onSelect = True
     
-    def Item(self):
-        cuadro = self.cuadros.get_sprite(self.current)
-        item = cuadro.item
-        if item is not None:
-            cuadro.cant = ED.HERO.usar_item(item)
-            if cuadro.cant == 0:
-                cuadro.vaciar()
+    # def Item(self):
+        # cuadro = self.cuadros.get_sprite(self.current)
+        # item = cuadro.item
+        # if item is not None:
+            # cuadro.cant = ED.HERO.usar_item(item)
+            # if cuadro.cant == 0:
+                # cuadro.vaciar()
             
-    def colocar_item(self,item,slot):
-        if item.ID in self._slots:
-            slotted = self._slots.index(item.ID)
-            self.cuadros.sprites()[slotted].vaciar() #borrar el cuadro anterior
-            self._slots[slotted] = None
-        cuadro = self.cuadros.get_sprite(slot-1) #cuadro actualmente seleccionado
-        cuadro.setItem(item)
-        cuadro.setCant()
-        self._slots[slot-1] = item.ID
+    # def colocar_item(self,item,slot):
+        # if item.ID in self._slots:
+            # slotted = self._slots.index(item.ID)
+            # self.cuadros.sprites()[slotted].vaciar() #borrar el cuadro anterior
+            # self._slots[slotted] = None
+        # cuadro = self.cuadros.get_sprite(slot-1) #cuadro actualmente seleccionado
+        # cuadro.setItem(item)
+        # cuadro.setCant()
+        # self._slots[slot-1] = item.ID
             
-    def isOpen (self,slot):
-        return self.cuadros.get_sprite(slot-1).item is None
+    # def isOpen (self,slot):
+        # return self.cuadros.get_sprite(slot-1).item is None
     
-    def Salir(self):
-        for cuadro in self.cuadros:
-            cuadro.serDeselegido()
-        self.onSelect = False
-        ED.MODO = 'Aventura'
+    # def Salir(self):
+        # for cuadro in self.cuadros:
+            # cuadro.serDeselegido()
+        # self.onSelect = False
+        # ED.MODO = 'Aventura'
     
-    def update(self):
-        self.cuadros.update()
+    # def update(self):
+        # self.cuadros.update()
 
 class HUD:
     #ya no es clase base. próximamente será una clase que agrupe
@@ -193,20 +193,20 @@ class HUD:
         self.BarraVida = ProgressBar(ED.HERO.salud_max,(200,50,50),(100,0,0),dx-w-1,dy-11,w,h)
         self.BarraMana = ProgressBar(ED.HERO.mana,(125,0,255),(75,0,100),dx+2,dy-11,w,h)
         self.BarraVida.setVariable(divisiones=4)
-        self.Inventory = InventoryDisplay(dx,dy,w)
+        # self.Inventory = InventoryDisplay(dx,dy,w)
         ED.RENDERER.addOverlay(self.BarraVida,1)
         ED.RENDERER.addOverlay(self.BarraMana,1)
-        for cuadro in self.Inventory.cuadros:
-             ED.RENDERER.addOverlay(cuadro,1)
+        # for cuadro in self.Inventory.cuadros:
+             # ED.RENDERER.addOverlay(cuadro,1)
         
         self._func_inv = {
-            'izquierda':lambda:self.Inventory.SelectCuadro(-1),
-            'derecha':lambda:self.Inventory.SelectCuadro(+1),
+            'izquierda':lambda:None,
+            'derecha':lambda:None,
             'arriba':lambda:None,
             'abajo':lambda:None,
-            'cancelar':self.Inventory.Salir,
+            'cancelar':lambda:None,
             'inventario':lambda:None,
-            'hablar':self.Inventory.Item
+            'hablar':lambda:None
             }
     
     def usar_funcion(self,tecla):
@@ -216,8 +216,8 @@ class HUD:
     
     def update(self):
         self.BarraVida.setVariable(actual=ED.HERO.salud_act)
-        for item in ED.HERO.inventario:
-            if item.slot != '-':
-                if self.Inventory.isOpen(item.slot):
-                    self.Inventory.colocar_item(item,item.slot)
-        self.Inventory.update()
+        # for item in ED.HERO.inventario:
+            # if item.slot != '-':
+                # if self.Inventory.isOpen(item.slot):
+                    # self.Inventory.colocar_item(item,item.slot)
+        # self.Inventory.update()

@@ -1,4 +1,4 @@
-from .widgets import BaseWidget
+from .basewidget import BaseWidget
 
 
 class Ventana(BaseWidget):
