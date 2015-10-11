@@ -3,6 +3,7 @@ from engine.misc import Util
 from .taphold import _filtrar
 from pygame import KEYDOWN, QUIT, KEYUP, mouse
 from engine.UI.menues import *
+from engine.UI import InventoryCircularDisplay
 
 
 class Modo:
@@ -76,10 +77,10 @@ class Modo:
                         ED.MODO = 'Aventura'
 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    #ED.MODO = 'Dialogo'
+                    ED.MODO = 'Dialogo'
                     #ED.HUD.Inventory.SelectCuadro()
-                    #ED.DIALOG = ED.HUD
-                    pass
+                    ED.DIALOG = InventoryCircularDisplay()
+                    
 
                 elif event.key == C.TECLAS.POSICION_COMBATE:
                     ED.HERO.cambiar_estado()
@@ -126,27 +127,33 @@ class Modo:
         for event in events:
             if event.type == KEYDOWN:
                 if event.key == C.TECLAS.ARRIBA:
-                    ED.DIALOG.usar_funcion('arriba')
+                    ED.DIALOG.use_keydown_func('arriba')
 
                 elif event.key == C.TECLAS.ABAJO:
-                    ED.DIALOG.usar_funcion('abajo')
+                    ED.DIALOG.use_keydown_func('abajo')
 
                 elif event.key == C.TECLAS.IZQUIERDA:
-                    ED.DIALOG.usar_funcion('izquierda')
+                    ED.DIALOG.use_keydown_func('izquierda')
 
                 elif event.key == C.TECLAS.DERECHA:
-                    ED.DIALOG.usar_funcion('derecha')
+                    ED.DIALOG.use_keydown_func('derecha')
 
                 elif event.key == C.TECLAS.HABLAR:
-                    ED.DIALOG.usar_funcion('hablar')
+                    ED.DIALOG.use_keydown_func('hablar')
 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    ED.DIALOG.usar_funcion('inventario')
+                    ED.DIALOG.use_keydown_func('inventario')
 
                 elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    ED.DIALOG.usar_funcion('cancelar')
+                    ED.DIALOG.use_keydown_func('cancelar')
             
             elif event.type == KEYUP:
+                if event.key == C.TECLAS.IZQUIERDA:
+                    ED.DIALOG.use_keyup_func('izquierda')
+
+                elif event.key == C.TECLAS.DERECHA:
+                    ED.DIALOG.use_keyup_func('derecha')
+                    
                 if ED.DIALOG is None:
                     ED.MODO = "Aventura"
 

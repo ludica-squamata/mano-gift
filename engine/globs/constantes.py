@@ -18,8 +18,9 @@ class Constants:
     CAPA_TOP_MOBS = 6
     CAPA_TOP_CIELO = 7
 
-    CAPA_OVERLAYS_DIALOGOS = 1 # ocupan un framento de la pantalla
-    CAPA_OVERLAYS_MENUS = 2 # ocupan toda o gran parte de la pantalla
+    CAPA_OVERLAYS_DIALOGOS = 0 # ocupan un framento de la pantalla
+    CAPA_OVERLAYS_MENUS = 1 # ocupan toda o gran parte de la pantalla
+    CAPA_OVERLAYS_INVENTARIO = 2
 
     COLOR_COLISION = Color(255,0,255) #Fuchsia #FF00FF
     COLOR_IGNORADO = Color(1,1,1)

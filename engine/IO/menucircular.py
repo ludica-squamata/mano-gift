@@ -5,11 +5,13 @@ from random import uniform
 class BaseElement (Sprite):
     selected = False
     inplace = False
+    stop = False
     cascada = []
     angle = 0
-    def __init__(self,nombre):
+    def __init__(self,parent,nombre):
         self.cascada = []
         super().__init__()
+        self.parent = parent
         self.nombre = nombre
         self.check_placement()
 
@@ -46,16 +48,24 @@ class BaseElement (Sprite):
         self.rect = self.rect_uns
         self.selected = False
     
-    def update(self,delta,puntos):
-        self.circular(delta)
-        self.rect_sel.center = puntos[self.angle]
-        self.rect_uns.center = puntos[self.angle]
+    def update(self):
+        self.circular(self.delta)
+        self.rect_sel.center = self.puntos[self.angle]
+        self.rect_uns.center = self.puntos[self.angle]
+        if self.check_placement():
+            self.select()
+            self.parent.actual = self
+            if self.stop:
+                self.parent.stop_everything()
+        else:
+            self.deselect()
+        
 
 class CircularMenu:
     cubos = None #cascada actualmente visible
     cascadaActual = 'inicial'
     cascadaAnterior = ''
-    pressed = False
+    stopped = False
     hold = False
     actual = None 
     di = 0
@@ -65,7 +75,6 @@ class CircularMenu:
         self.cubos = LayeredUpdates()
         self.cascadas = {}
         self.center = centerx,centery
-        self.log = str(int(uniform(0,1)*100000))
         
         for key in cascadas:
             grupo = cascadas[key]
@@ -77,21 +86,21 @@ class CircularMenu:
                 for item in grupo:
                     angle += separacion
                     item.change_angle(angle,*puntos[angle])
+                    item.puntos = puntos
                 self.cascadas[key] = {'items':cascadas[key],'radius':radius,'puntos':puntos}
         
         self.cubos.add(*self.cascadas['inicial']['items'])
             
         self.functions = {
             'keydown':{
-                'left':lambda:self.turn(-1),
-                'right':lambda:self.turn(+1),
-                'accept':self.accept,
-                'back':self.back,
-                'del': self.supress
+                'izquierda':lambda:self.turn(-1),
+                'derecha':lambda:self.turn(+1),
+                'hablar':self.accept,
+                'cancelar':self.back,
             },
             'keyup':{
-                'left':self.stop,
-                'right':self.stop
+                'izquierda':self.stop,
+                'derecha':self.stop
             }
         }
         
@@ -112,23 +121,31 @@ class CircularMenu:
         return x,y
     
     def turn(self,delta): #+1 o -1
-        self.pressed = True
-        self.di = delta
-    
+        for cubo in self.cubos:
+            cubo.stop = False
+            cubo.delta = delta*3
+            cubo.puntos = self.cascadas[self.cascadaActual]['puntos']
+        self.stopped = False
+        
     def stop(self):
-        self.pressed = False
-        self.hold = False
+        for cubo in self.cubos:
+            cubo.stop = True
+            
+    def stop_everything(self):
+        for cubo in self.cubos:
+            cubo.delta = 0
+        self.stopped = True
         
     def accept(self):
-        if self.di == 0 and self.actual.nombre in self.cascadas:
+        if self.stopped and self.actual.nombre in self.cascadas:
             self.cascadaAnterior = self.cascadaActual
             self.cascadaActual = self.actual.nombre
             self._change_cube_list()
             
     def back(self):
-        if self.di == 0 and self.cascadaAnterior != '':
+        if self.stopped and self.cascadaAnterior != '':
             self.cascadaActual = self.cascadaAnterior
-            self.cascadaAnterior = ''
+            #self.cascadaAnterior = ''
             self._change_cube_list()
     
     def supress(self):
@@ -152,38 +169,4 @@ class CircularMenu:
         for cuadro in self.cubos:
             angulo+=separacion
             cuadro.change_angle(angulo,*self.puntos[angulo])
-        self.cubos.update(self.di,self.puntos)
-        
-    def show_angle(self,fondo):
-        import pygame.image
-        import os.path
-        
-        ar = open('log-'+self.log+'.txt','a')
-        ar.write('len: '+str(len(self.cubos))+'\n')
-        for cubo in self.cubos:
-            ar.write(cubo.nombre+': '+str(cubo.angle)+'\n')
-        ar.write('----------------------------\n')
-        
-        i = 1
-        name = 'image-'+self.log+'-'+str(i)
-        while os.path.exists(name+'.png'):
-            i += 1
-            name = 'image-'+self.log+'-'+str(i)
-                
-        pygame.image.save(fondo.copy(),name+'.png')
-    
-    def draw(self,fondo): return self.cubos.draw(fondo)
-    
-    def update(self):
-        for cuadro in self.cubos:
-            if cuadro.check_placement():
-                if not self.pressed:
-                    self.di = 0
-                    cuadro.select()
-                    self.actual = cuadro
-                    self.cubos.move_to_front(self.actual)
-            else:
-                cuadro.deselect()
-                
-        if self.cascadaActual in self.cascadas:
-            self.cubos.update(self.di,self.cascadas[self.cascadaActual]['puntos'])
+        #self.cubos.update(self.di,self.puntos)
