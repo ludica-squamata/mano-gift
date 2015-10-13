@@ -1,7 +1,7 @@
 class Item:
     stackable = False
-    slot = '-'
-    def __init__(self,nombre,imagen,data):
+
+    def __init__(self, nombre, imagen, data):
         self.nombre = nombre
         self.image = imagen
         self.ID = data['ID']
@@ -10,80 +10,83 @@ class Item:
         self.efecto_des = data['efecto']['des']
         if 'stackable' in data['propiedades']:
             self.stackable = True
-    
-    def __eq__(self,other):
-        if other.__class__== self.__class__ and self.ID == other.ID:
+
+    def __eq__(self, other):
+        if other.__class__ == self.__class__ and self.ID == other.ID:
             return True
         else:
             return False
-        
-    def __ne__(self,other):
-        if other.__class__!= self.__class__:
+
+    def __ne__(self, other):
+        if other.__class__ != self.__class__:
             return True
         elif self.ID != other.ID:
             return True
         else:
             return False
-    
+
     def __repr__(self):
-        return self.nombre+' ('+self.tipo+')'
-    
-    
+        return self.nombre + ' (' + self.tipo + ')'
+
+
 class Equipable(Item):
-    def __init__(self,nombre,imagen,data):
-        super().__init__(nombre,imagen,data)
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
         self.tipo = 'equipable'
         self.espacio = data['efecto']['equipo']
 
+
 class Consumible(Item):
-    def __init__(self,nombre,imagen,data):
-        super().__init__(nombre,imagen,data)
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
         self.tipo = 'consumible'
         self.data = data
-    
+
     def usar(self, mob):
-        usado = False
         stat = self.data.get('efecto', {}).get('stat', '')
         mod = self.data.get('efecto', {}).get('mod', '')
-        
+
         if stat == 'salud':
-            actual = stat+'_act'
-            maximo = stat+'_max'
-            ValActual = getattr(mob,actual)
-            ValMaximo = getattr(mob,maximo)
-            
-            valor = int((mod*ValMaximo)/100)
+            actual = stat + '_act'
+            maximo = stat + '_max'
+            ValActual = getattr(mob, actual)
+            ValMaximo = getattr(mob, maximo)
+
+            valor = int((mod * ValMaximo) / 100)
             if valor + ValActual > ValMaximo:
                 valor = ValMaximo
             else:
                 valor += ValActual
-            
+
             setattr(mob, actual, valor)
-            usado = True
+
         else:
-            actual = getattr(mob,stat)
-            valor = actual+mod
-            setattr(mob,stat,valor)
-            usado = True
-        return usado
+            actual = getattr(mob, stat)
+            valor = actual + mod
+            setattr(mob, stat, valor)
+
+        return True
 
 
 class Armadura(Equipable):
-    def __init__(self,nombre,imagen,data):
-        super().__init__(nombre,imagen,data)
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
         self.subtipo = 'armadura'
 
-class Arma (Equipable):
-    def __init__(self,nombre,imagen,data):
-        super().__init__(nombre,imagen,data)
+
+class Arma(Equipable):
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
         self.subtipo = 'arma'
 
-class Accesorio (Equipable):
-    def __init__(self,nombre,imagen,data):
-        super().__init__(nombre,imagen,data)
+
+class Accesorio(Equipable):
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
         self.subtipo = 'accesorio'
 
-class Pocion (Consumible):
-    def __init__(self,nombre,imagen,data):
-        super().__init__(nombre,imagen,data)
+
+class Pocion(Consumible):
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
         self.subtipo = 'pocion'
