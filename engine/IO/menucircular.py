@@ -185,11 +185,6 @@ class CircularMenu:
         self.cubos.remove(self.actual)
         self.cascadas[self.cascadaActual]['items'].remove(self.actual)
 
-    def append(self, obj):
-        self.cubos.add(obj)
-        self.cascadas[self.cascadaActual]['items'].append(obj)
-        self._modify_cube_list()
-
     def _change_cube_list(self):
         self.cubos.empty()
         self.cubos.add(*self.cascadas[self.cascadaActual]['items'])
