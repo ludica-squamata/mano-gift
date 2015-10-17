@@ -1,4 +1,4 @@
-from pygame import sprite, mask
+from pygame import sprite, mask, Surface
 from engine.misc import Resources
 
 
@@ -28,22 +28,28 @@ class AzoeSprite(sprite.Sprite):
                    'ninguna': [0, 0]}
     direccion = 'abajo'
 
-    def __init__(self, imagen = None, rect = None, alpha = False, x = 0, y = 0, z = 0):
+    def __init__(self, imagen = None, rect = None, alpha = False, center = False, x = 0, y = 0, z = 0):
         if imagen is None and rect is None:
-            raise TypeError('AzoeSprite debe tener bien una imagen, bien un rect')
+            raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
 
         super().__init__()
 
         if isinstance(imagen, str):
-            imagen = Resources.cargar_imagen(imagen)
-        self.image = imagen  # a esta altura, imagen es un Surface o None
+            self.image = Resources.cargar_imagen(imagen)
+        elif isinstance(imagen, Surface):
+            self.image = imagen
+        elif imagen is None:
+            self.image = None
+            self.visible = 0  # no funciona con dirty
+        else:
+            raise TypeError('Imagen debe ser una ruta, un Surface o None')
 
-        if imagen is None:
-            self.visible = 0
-
-        if rect is None:
-            rect = self.image.get_rect(topleft = (x, y))
-        self.rect = rect
+        if center:
+            self.rect = self.image.get_rect(center = (320, 240))
+        elif imagen is not None:
+            self.rect = self.image.get_rect(topleft = (x, y))
+        else:
+            self.rect = rect
 
         if alpha:
             self.mask = alpha
@@ -55,13 +61,13 @@ class AzoeSprite(sprite.Sprite):
 
         if z:
             self.z = z
+        elif center:
+            self.z = y + self.rect.h
         else:
             self.z = self.rect.bottom
 
         self.mapX = x
         self.mapY = y
-        self.globX = x
-        self.globY = y
         self.solido = True
 
     def reubicar(self, dx, dy):
@@ -69,7 +75,6 @@ class AzoeSprite(sprite.Sprite):
         self.mapX += dx
         self.mapY += dy
         self.z += dy
-        self.rect.move_ip(dx, dy)
 
     def ubicar(self, x, y, z = 0):
         """Coloca al sprite en pantalla"""
