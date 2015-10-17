@@ -1,15 +1,14 @@
-from pygame import sprite,mask,Surface
-from collections import UserDict
-from engine.misc import Resources as r
+from pygame import sprite, mask
+from engine.misc import Resources
 
 
-class _giftSprite(sprite.Sprite):
+class AzoeSprite(sprite.Sprite):
     # mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
     tipo = ''
-    nombre = '' # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
-    solido = True # si es solido, colisiona; si no, no.
+    nombre = ''  # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
+    solido = True  # si es solido, colisiona; si no, no.
     images = None
     data = None  # info importada de un json
     z = 0
@@ -24,22 +23,26 @@ class _giftSprite(sprite.Sprite):
     IMAGEN_UL = 'ariz'
     IMAGEN_UR = 'arde'
 
+    direcciones = {'arriba': [0, -1], 'abajo': [0, 1],
+                   'izquierda': [-1, 0], 'derecha': [1, 0],
+                   'ninguna': [0, 0]}
+    direccion = 'abajo'
 
-    def __init__(self, imagen=None, rect=None, alpha=False, x=0, y=0, z=0):
+    def __init__(self, imagen = None, rect = None, alpha = False, x = 0, y = 0, z = 0):
         if imagen is None and rect is None:
-            raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
+            raise TypeError('AzoeSprite debe tener bien una imagen, bien un rect')
 
         super().__init__()
 
         if isinstance(imagen, str):
-            imagen = r.cargar_imagen(imagen)
+            imagen = Resources.cargar_imagen(imagen)
         self.image = imagen  # a esta altura, imagen es un Surface o None
 
         if imagen is None:
             self.visible = 0
 
         if rect is None:
-            rect = self.image.get_rect(topleft=(x, y))
+            rect = self.image.get_rect(topleft = (x, y))
         self.rect = rect
 
         if alpha:
@@ -60,28 +63,26 @@ class _giftSprite(sprite.Sprite):
         self.globX = x
         self.globY = y
         self.solido = True
-    
+
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
         self.mapX += dx
         self.mapY += dy
         self.z += dy
-        # self.globX += dx
-        # self.globY += dy
-        self.rect.move_ip(dx,dy)
+        self.rect.move_ip(dx, dy)
 
-    def ubicar(self, x, y, z=0):
+    def ubicar(self, x, y, z = 0):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
         if z:
             self.z += z
-        
-    def colisiona(self, sprite, off_x = 0, off_y = 0):
-        if self.nombre != sprite.nombre:
-            x = self.mapX-(sprite.mapX-off_x)
-            y = self.mapY-(sprite.mapY-off_y)
-            if sprite.mask.overlap(self.mask,(x,y)):
+
+    def colisiona(self, other, off_x = 0, off_y = 0):
+        if self.nombre != other.nombre:
+            x = self.mapX - (other.mapX - off_x)
+            y = self.mapY - (other.mapY - off_y)
+            if other.mask.overlap(self.mask, (x, y)):
                 return True
         return False
 
@@ -90,9 +91,3 @@ class _giftSprite(sprite.Sprite):
             return self.images[n]
         else:
             return self.image
-
-    def mascara_n(self,n):
-        if n in self.mascaras:
-            return self.mascaras[n]
-        else:
-            return self.mascaras
