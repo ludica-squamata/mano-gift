@@ -43,11 +43,12 @@ class Stage:
         for obj in self.properties:
             ''':type obj: _giftSprite'''
             obj.stage = self
-            Ed.RENDERER.camara.add_real(obj)
+
             x = self.rect.x + obj.mapX
             y = self.rect.y + obj.mapY
-
             obj.ubicar(x, y, self.offset_y)
+
+            Ed.RENDERER.camara.add_real(obj)
 
     def addProperty(self, obj, _layer, addInteractive = False):
         if _layer == Cs.CAPA_GROUND_SALIDAS:

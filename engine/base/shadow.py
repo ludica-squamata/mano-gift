@@ -11,7 +11,7 @@ class _sombra(_giftSprite):
         self.spr = spr
         self.tipo = "sombra"
         self.nombre = "sombra de "+self.spr.nombre
-        super().__init__(imagen=img, x = spr.rect.x-dfx, y = spr.rect.y, z = spr.rect.bottom-1)
+        super().__init__(imagen=img, x = spr.rect.x-dfx, y = spr.rect.y, z= spr.rect.bottom-10)
         self.alpha = self.image.get_alpha()
         self.dif_x = dfx
         
