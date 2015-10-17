@@ -188,6 +188,9 @@ class TimeStamp:
         return self._convert(s)
 
     def __repr__(self):
+        return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
+
+
 class Noche(AzoeSprite):
     def __init__(self, size):
         img = Surface(size, SRCALPHA)
@@ -258,5 +261,5 @@ class Tiempo:
                 Ed.EVENTS.trigger('hora', 'Tiempo', {"hora": cls.clock.h})
 
     @classmethod
-    def crear_noche(cls,tamanio):
+    def crear_noche(cls, tamanio):
         cls.noche = Noche(tamanio)
