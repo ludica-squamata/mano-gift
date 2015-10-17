@@ -1,10 +1,10 @@
 from pygame import mask as MASK, PixelArray, Surface, transform, SRCALPHA
 from pygame.sprite import Sprite
-from .giftSprite import _giftSprite
+from .azoeSprite import AzoeSprite
 from engine.globs import EngineData as ED
 
 
-class _sombra(_giftSprite):
+class _sombra(AzoeSprite):
     dif_x = 0
     alpha = 0
     def __init__(self, spr, dfx, img):
@@ -25,7 +25,7 @@ class _sombra(_giftSprite):
     def __repr__(self):
         return self.nombre
 
-class ShadowSprite(_giftSprite):
+class ShadowSprite(AzoeSprite):
     _sombras = None
     """:type : list"""
     _sprSombra = None
@@ -113,7 +113,7 @@ class ShadowSprite(_giftSprite):
     def recibir_luz(self, source):
         """
         :param source:
-        :type source:_giftSprite
+        :type source:AzoeSprite
         :return:
         """
         tolerancia = 10

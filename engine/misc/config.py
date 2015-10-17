@@ -1,49 +1,53 @@
-from .resources import Resources as r
+from .resources import Resources
+
 
 class Config:
     # configuraciones
-    data = None # {}
+    data = {}
     __changed = False
-    
+
     __defaults = {
-        "mostrar_intro":True,
-        "recordar_menus":True, 
-        "resolucion":{
-            "ANCHO":640,
-            "ALTO":480
+        "mostrar_intro": True,
+        "recordar_menus": True,
+        "resolucion": {
+            "ANCHO": 640,
+            "ALTO": 480
         },
-        
-        "teclas":{
-            "arriba":273,
-            "abajo":274,
-            "derecha":275,
-            "izquierda":276,
-            
-            "accion":120,
-            "hablar":115,
-            "cancelar":97,
-            "inventario":122,
-            "posicion":304,
-            
-            "menu":13,
-            "debug":282,
-            "salir":27
+
+        "teclas": {
+            "arriba": 273,
+            "abajo": 274,
+            "derecha": 275,
+            "izquierda": 276,
+
+            "accion": 120,
+            "hablar": 115,
+            "cancelar": 97,
+            "inventario": 122,
+            "posicion": 304,
+
+            "menu": 13,
+            "debug": 282,
+            "salir": 27
         }
     }
-    
-    def cargar():
-        if Config.data is None:
+
+    @classmethod
+    def cargar(cls):
+        if not len(cls.data):
             import os
             if os.path.isfile('config.json'):
-                Config.data = r.abrir_json('config.json')
+                cls.data = Resources.abrir_json('config.json')
             else:
-                Config.data = Config.defaults()
-                Config.__changed = True
-                Config.guardar()
-        return Config.data
+                cls.data = cls.defaults()
+                cls.__changed = True
+                cls.guardar()
 
-    def defaults(clave = None):
-        dato = Config.__defaults
+        return cls.data
+
+    @classmethod
+    def defaults(cls, clave = None):
+        dato = cls.__defaults
         if clave is not None:
             if not isinstance(clave, list):
                 clave = clave.split('/')
@@ -53,9 +57,10 @@ class Config:
                 else:
                     dato = None
         return dato
-        
-    def dato(clave = None):
-        dato = Config.cargar()
+
+    @classmethod
+    def dato(cls, clave = None):
+        dato = cls.cargar()
         if clave is not None:
             if not isinstance(clave, list):
                 clave = clave.split('/')
@@ -63,14 +68,15 @@ class Config:
                 if x in dato:
                     dato = dato[x]
                 else:
-                    dato = Config.defaults(clave)
+                    dato = cls.defaults(clave)
                     break
         return dato
-    
-    def asignar(clave, valor):
-        dato = Config.cargar()
+
+    @classmethod
+    def asignar(cls, clave, valor):
+        dato = cls.cargar()
         if not isinstance(clave, list):
-                clave = clave.split('/')
+            clave = clave.split('/')
         last = clave.pop()
         if len(clave) > 0:
             for x in clave:
@@ -80,8 +86,9 @@ class Config:
                     dato[x] = {}
                     dato = dato[x]
         dato[last] = valor
-        Config.__changed = True
-    
-    def guardar():
-        if Config.__changed:
-            r.guardar_json('config.json',Config.data)
+        cls.__changed = True
+
+    @classmethod
+    def guardar(cls):
+        if cls.__changed:
+            Resources.guardar_json('config.json', cls.data)
