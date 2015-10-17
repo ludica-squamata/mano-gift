@@ -40,7 +40,7 @@ class Stage:
         Tiempo.noche.set_lights(DayLight(1024))
         self.add_property(Tiempo.noche, Cs.CAPA_TOP_CIELO)
         for obj in self.properties:
-            ''':type obj: GiftSprite'''
+            ''':type obj: AzoeSprite'''
             obj.stage = self
             Ed.RENDERER.camara.add_real(obj)
 
@@ -95,9 +95,9 @@ class Stage:
 
     def cargar_timestamps(self):
         if self.data['ambiente'] == 'exterior':
-            self.amanece = timestamp(*self.data["amanece"])
-            self.atardece = timestamp(*self.data["atardece"])
-            self.anochece = timestamp(*self.data["anochece"])
+            self.amanece  = TimeStamp(*self.data["amanece"])
+            self.atardece = TimeStamp(*self.data["atardece"])
+            self.anochece = TimeStamp(*self.data["anochece"])
 
     def anochecer(self, event):
         """

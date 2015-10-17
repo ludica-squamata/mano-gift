@@ -1,9 +1,8 @@
-from pygame import mask
-from pygame.sprite import Sprite
-from engine.misc import Resources as r
+from pygame import sprite, mask
+from engine.misc import Resources
 
 
-class GiftSprite(Sprite):
+class AzoeSprite(sprite.Sprite):
     # mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
@@ -24,14 +23,19 @@ class GiftSprite(Sprite):
     IMAGEN_UL = 'ariz'
     IMAGEN_UR = 'arde'
 
+    direcciones = {'arriba': [0, -1], 'abajo': [0, 1],
+                   'izquierda': [-1, 0], 'derecha': [1, 0],
+                   'ninguna': [0, 0]}
+    direccion = 'abajo'
+
     def __init__(self, imagen = None, rect = None, alpha = False, x = 0, y = 0, z = 0):
         if imagen is None and rect is None:
-            raise TypeError('GiftSprite debe tener bien una imagen, bien un rect')
+            raise TypeError('AzoeSprite debe tener bien una imagen, bien un rect')
 
         super().__init__()
 
         if isinstance(imagen, str):
-            imagen = r.cargar_imagen(imagen)
+            imagen = Resources.cargar_imagen(imagen)
         self.image = imagen  # a esta altura, imagen es un Surface o None
 
         if imagen is None:
@@ -65,8 +69,6 @@ class GiftSprite(Sprite):
         self.mapX += dx
         self.mapY += dy
         self.z += dy
-        # self.globX += dx
-        # self.globY += dy
         self.rect.move_ip(dx, dy)
 
     def ubicar(self, x, y, z = 0):
@@ -76,11 +78,11 @@ class GiftSprite(Sprite):
         if z:
             self.z += z
 
-    def colisiona(self, sprite, off_x = 0, off_y = 0):
-        if self.nombre != sprite.nombre:
-            x = self.mapX - (sprite.mapX - off_x)
-            y = self.mapY - (sprite.mapY - off_y)
-            if sprite.mask.overlap(self.mask, (x, y)):
+    def colisiona(self, other, off_x = 0, off_y = 0):
+        if self.nombre != other.nombre:
+            x = self.mapX - (other.mapX - off_x)
+            y = self.mapY - (other.mapY - off_y)
+            if other.mask.overlap(self.mask, (x, y)):
                 return True
         return False
 
@@ -89,9 +91,3 @@ class GiftSprite(Sprite):
             return self.images[n]
         else:
             return self.image
-
-    def mascara_n(self, n):
-        if n in self.mascaras:
-            return self.mascaras[n]
-        else:
-            return self.mascaras

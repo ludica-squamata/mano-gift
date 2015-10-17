@@ -1,9 +1,9 @@
 ﻿from engine.globs import EngineData as ED, Constants as C
 from pygame import Surface, Rect, draw, SRCALPHA
 from engine.misc import Resources as r
-from engine.base import GiftSprite
+from engine.base import AzoeSprite
 
-class LightSource(GiftSprite): #o combinar esto con prop?, no estoy seguro. probablemente de esta forma pueda tener mas flexibilidad
+class LightSource(AzoeSprite): #o combinar esto con prop?, no estoy seguro. probablemente de esta forma pueda tener mas flexibilidad
     '''Los objetos de esta clase tienen un area de luz, que permite ver y genera sombras'''
     color = 0,0,0,0
     origen = None #una coordenada desde donde se calcula el area. por ejemplo para un poste con iluminacion en la punta? por defecto center

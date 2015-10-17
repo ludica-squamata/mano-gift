@@ -1,9 +1,10 @@
 from engine.globs import MobGroup
-from engine.base import GiftSprite
 from pygame import Rect
 
 
-class Interactivo(GiftSprite):
+class Interactivo:
+    # el nombre no es del todo correcto, pero no existe palabra en castellano
+    # para lo que sería un interactuante. Al menos, el dRAE dice que no existe.
     def __init__(self, *args, **kwargs):
         self._rect_h = Rect((0, 0), (8 * 5, 32))
         self._rect_v = Rect((0, 0), (32, 8 * 5))
