@@ -1,4 +1,4 @@
-from engine.globs import Constants as Cs, Tiempo, timestamp
+from engine.globs import Constants as Cs, Tiempo, TimeStamp
 from engine.globs import ModData as Md, EngineData as Ed
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
