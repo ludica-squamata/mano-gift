@@ -1,9 +1,9 @@
-from engine.base import GiftSprite
+from engine.base import AzoeSprite
 from engine.UI.estilo import Estilo
 from pygame import Surface, Rect, SRCALPHA
 
 
-class BaseWidget(Estilo, GiftSprite):
+class BaseWidget(Estilo, AzoeSprite):
     enabled = True
     # canvas = None
     isSelected = False

@@ -40,7 +40,7 @@ class Stage:
         Tiempo.noche.set_lights(DayLight(1024))
         self.add_property(Tiempo.noche, Cs.CAPA_TOP_CIELO)
         for obj in self.properties:
-            ''':type obj: GiftSprite'''
+            ''':type obj: AzoeSprite'''
             obj.stage = self
             Ed.RENDERER.camara.add_real(obj)
 
