@@ -10,7 +10,6 @@ class PC(Mob, Parlante):
 
     def __init__(self, data, x, y):
         super().__init__(data, x, y)
-        self.alcance_cc = data['alcance_cc']
         self.inventario = Inventory(10, 10 + self.fuerza)
 
     def mover(self, dx, dy):
