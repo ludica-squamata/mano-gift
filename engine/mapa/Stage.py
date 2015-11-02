@@ -153,23 +153,18 @@ class ChunkMap(Sprite):
             offy = self.offsetY
 
             dx, dy = 0, 0
-            if ady == 'sup':
-                dx, dy = offx, offy - h
-            elif ady == 'supizq':
-                dx, dy = offx - w, offy - h
-            elif ady == 'supder':
-                dx, dy = offx + w, offy - h
-            elif ady == 'inf':
-                dx, dy = offx, offy + h
-            elif ady == 'infizq':
-                dx, dy = offx - w, offy + h
-            elif ady == 'infder':
-                dx, dy = offx + w, offy + h
-            elif ady == 'izq':
-                dx, dy = offx - w, offy
-            elif ady == 'der':
-                dx, dy = offx + w, offy
-
+            if ady == 'sup': # 0,-1
+                dx, dy =   0, - h + 1
+            elif ady == 'inf': # 0,1
+                dx, dy =   0, + h - 1
+            elif ady == 'izq': # -1,0
+                dx, dy = - w + 1,   0
+            elif ady == 'der': # 1,0
+                dx, dy = + w - 1,   0
+            
+            dx += offx
+            dy += offy
+            
             mapa = ChunkMap(self.stage, data, ady, nombre = nmbr, offX = dx, offY = dy)
 
             self.limites[ady] = mapa
