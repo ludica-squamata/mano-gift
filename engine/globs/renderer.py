@@ -108,7 +108,7 @@ class Camara:
             adyacent_map_keys.append('izq')
         if not map_at_right:
             adyacent_map_keys.append('der')
-
+        
         mapas = []
         if not map_at_topleft:
             if map_at_top:
@@ -156,14 +156,8 @@ class Camara:
         dx = new_x - self.bg.rect.x
         dy = new_y - self.bg.rect.y
 
-        self.bg.rect.x += dx
-        self.bg.rect.y += dy
-
         for spr in self.bgs:
-            if spr != self.bg:
-                x = self.bg.rect.x + spr.offsetX
-                y = self.bg.rect.y + spr.offsetY
-                spr.ubicar(x, y)
+            spr.rect.move_ip(dx, dy)
 
         for spr in self.real:
             x = self.bg.rect.x + spr.mapX

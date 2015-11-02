@@ -1,5 +1,4 @@
-from pygame import mask
-from engine.globs import Constants as C, EngineData as ED, MobGroup
+from engine.globs import EngineData as Ed
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
 from .mob import Mob
@@ -29,7 +28,7 @@ class PC(Mob, Parlante):
         # DETECTAR LAS SALIDAS
         for spr in self.stage.salidas:
             if self.colisiona(spr, dx, dy):
-                ED.setear_mapa(spr.dest, spr.link)
+                Ed.setear_mapa(spr.dest, spr.link)
                 dx, dy = 0, 0
 
         if not self.detectar_colisiones(dx, 0):
@@ -103,10 +102,11 @@ class PC(Mob, Parlante):
         
         super().update()
 
-    def iniciar_dialogo(self, sprite=None):
+    def iniciar_dialogo(self):
         x, y = self.direcciones[self.direccion]
         
         sprite = self._interact_with_mobs(x, y)
+        post_dir = ''
         if x:
             if x > 0:
                 post_dir = 'izquierda'
@@ -117,8 +117,7 @@ class PC(Mob, Parlante):
                 post_dir = 'abajo'
             else:
                 post_dir = 'arriba'
-                
         
         if sprite is not None:
-            sprite.iniciar_dialogo(self,post_dir)
+            sprite.iniciar_dialogo(self, post_dir)
         return super().hablar(sprite)

@@ -25,7 +25,7 @@ class Stage:
         dx, dy = self.data['entradas'][entrada]
         self.offset_x -= dx
         self.offset_y -= dy
-        self.chunks.add(ChunkMap(self, self.data, nombre = self.nombre, offX = self.offset_x, offY = self.offset_y))
+        self.chunks.add(ChunkMap(self, self.data, nombre = self.nombre, off_x = self.offset_x, off_y = self.offset_y))
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask, self.mapa.image)
@@ -103,25 +103,18 @@ class ChunkMap(Sprite):
                'inf': '', 'infizq': '', 'infder': '',
                'izq': '', 'der': ''}
 
-    def __init__(self, stage, data, cuadrante = 'cen', nombre = '', offX = 0, offY = 0):
+    def __init__(self, stage, data, nombre = '', off_x = 0, off_y = 0):
         super().__init__()
         self.limites = {'sup': '', 'supizq': '', 'supder': '',
                         'inf': '', 'infizq': '', 'infder': '',
                         'izq': '', 'der': ''}
         self.stage = stage
         self.nombre = nombre
-        self.cuadrante = cuadrante
         self.cargar_limites(data['limites'])
         self.image = r.cargar_imagen(data['capa_background']['fondo'])
-        self.rect = self.image.get_rect(topleft = (offX, offY))
+        self.rect = self.image.get_rect(topleft = (off_x, off_y))
         self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
                                         (1, 1, 1, 255))
-        if cuadrante == 'cen':
-            self.offsetY = 0
-            self.offsetX = 0
-        else:
-            self.offsetX = offX
-            self.offsetY = offY
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
@@ -149,28 +142,18 @@ class ChunkMap(Sprite):
             data = r.abrir_json(Md.mapas + nmbr + '.json')
 
             w, h = self.rect.size
-            offx = self.offsetX
-            offy = self.offsetY
+            dx, dy = self.rect.topleft
 
-            dx, dy = 0, 0
             if ady == 'sup':
-                dx, dy = offx, offy - h
-            elif ady == 'supizq':
-                dx, dy = offx - w, offy - h
-            elif ady == 'supder':
-                dx, dy = offx + w, offy - h
+                dy -= h
             elif ady == 'inf':
-                dx, dy = offx, offy + h
-            elif ady == 'infizq':
-                dx, dy = offx - w, offy + h
-            elif ady == 'infder':
-                dx, dy = offx + w, offy + h
+                dy += h
             elif ady == 'izq':
-                dx, dy = offx - w, offy
+                dx -= w
             elif ady == 'der':
-                dx, dy = offx + w, offy
+                dx += w
 
-            mapa = ChunkMap(self.stage, data, ady, nombre = nmbr, offX = dx, offY = dy)
+            mapa = ChunkMap(self.stage, data,  nombre = nmbr, off_x = dx, off_y = dy)
 
             self.limites[ady] = mapa
             self.stage.chunks.add(mapa)
