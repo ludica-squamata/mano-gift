@@ -145,13 +145,13 @@ class ChunkMap(Sprite):
             dx, dy = self.rect.topleft
 
             if ady == 'sup':
-                dy -= h
+                dy -= h +1
             elif ady == 'inf':
-                dy += h
+                dy += h -1
             elif ady == 'izq':
-                dx -= w
+                dx -= w +1
             elif ady == 'der':
-                dx += w
+                dx += w -1
 
             mapa = ChunkMap(self.stage, data,  nombre = nmbr, off_x = dx, off_y = dy)
 

@@ -87,62 +87,63 @@ class Camara:
         self.bg = None
 
     def detectar_mapas_adyacentes(self):
-        map_at_topleft = self.bgs.get_sprites_at((0, 0))
-        map_at_topright = self.bgs.get_sprites_at((640, 0))
-        map_at_bottomleft = self.bgs.get_sprites_at((0, 480))
-        map_at_bottomright = self.bgs.get_sprites_at((640, 480))
-
-        map_at_center = self.bgs.get_sprites_at((320, 240))
-
-        map_at_bottom = self.bgs.get_sprites_at((320, 480))
-        map_at_right = self.bgs.get_sprites_at((640, 240))
-        map_at_top = self.bgs.get_sprites_at((320, 0))
-        map_at_left = self.bgs.get_sprites_at((0, 240))
-
+        r = self.rect
+        map_at = self.bgs.get_sprites_at
         adyacent_map_keys = []
+        reference = []
+        
+        #shortcuts
+        map_at_center = map_at(r.center)
+        map_at_bottom = map_at(r.midbottom)
+        map_at_right = map_at(r.midright)
+        map_at_top = map_at(r.midtop)
+        map_at_left = map_at(r.midleft)
+        
+        #check in ortogonal positions
         if not map_at_top:
             adyacent_map_keys.append('sup')
-        if not map_at_bottom:
+        elif not map_at_bottom:
             adyacent_map_keys.append('inf')
         if not map_at_left:
             adyacent_map_keys.append('izq')
-        if not map_at_right:
+        elif not map_at_right:
             adyacent_map_keys.append('der')
         
-        mapas = []
-        if not map_at_topleft:
-            if map_at_top:
-                mapas = map_at_top
-                adyacent_map_keys.append('izq')
-            elif map_at_left:
-                mapas = map_at_left
-                adyacent_map_keys.append('sup')
-        elif not map_at_topright:
-            if map_at_top:
-                mapas = map_at_top
-                adyacent_map_keys.append('der')
-            elif map_at_right:
-                mapas = map_at_right
-                adyacent_map_keys.append('sup')
-        elif not map_at_bottomleft:
-            if map_at_bottom:
-                mapas = map_at_bottom
-                adyacent_map_keys.append('izq')
-            elif map_at_left:
-                mapas = map_at_left
-                adyacent_map_keys.append('inf')
-        elif not map_at_bottomright:
-            if map_at_bottom:
-                mapas = map_at_bottom
-                adyacent_map_keys.append('der')
-            elif map_at_right:
-                mapas = map_at_right
-                adyacent_map_keys.append('inf')
+        if not len(adyacent_map_keys):
+            #check in diagonal positions
+            if not map_at(r.topleft):
+                if map_at_top:
+                    reference = map_at_top
+                    adyacent_map_keys.append('izq')
+                elif map_at_left:
+                    mapa = map_at_left
+                    adyacent_map_keys.append('sup')
+            elif not map_at(r.topright):
+                if map_at_top:
+                    reference = map_at_top
+                    adyacent_map_keys.append('der')
+                elif map_at_right:
+                    reference = map_at_right
+                    adyacent_map_keys.append('sup')
+            elif not map_at(r.bottomleft):
+                if map_at_bottom:
+                    reference = map_at_bottom
+                    adyacent_map_keys.append('izq')
+                elif map_at_left:
+                    reference = map_at_left
+                    adyacent_map_keys.append('inf')
+            elif not map_at(r.bottomright):
+                if map_at_bottom:
+                    reference = map_at_bottom
+                    adyacent_map_keys.append('der')
+                elif map_at_right:
+                    reference = map_at_right
+                    adyacent_map_keys.append('inf')
         else:
-            mapas = map_at_center
-
-        if len(mapas):
-            mapa = mapas[0]
+            reference = map_at_center
+        
+        if len(reference):
+            mapa = reference[0]
             mapa.checkear_adyacencias(adyacent_map_keys)
 
     def update_sprites_layer(self):
