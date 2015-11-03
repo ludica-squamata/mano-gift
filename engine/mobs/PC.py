@@ -1,13 +1,12 @@
 from pygame import mask
-from engine.globs import Constants as C, EngineData as ED, MobGroup
+from engine.globs import Constants as C, EngineData as Ed, MobGroup
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
 from .mob import Mob
 
 
 class PC(Mob, Parlante):
-    alcance_cc = 0  # cuerpo a cuerpo.. 16 es la mitad de un cuadro.
-
+    
     def __init__(self, data, x, y):
         super().__init__(data, x, y)
         self.inventario = Inventory(10, 10 + self.fuerza)
@@ -29,7 +28,7 @@ class PC(Mob, Parlante):
         # DETECTAR LAS SALIDAS
         for spr in self.stage.salidas:
             if self.colisiona(spr, dx, dy):
-                ED.setear_mapa(spr.dest, spr.link)
+                Ed.setear_mapa(spr.dest, spr.link)
                 dx, dy = 0, 0
 
         if not self.detectar_colisiones(dx, 0):
