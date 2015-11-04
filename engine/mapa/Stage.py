@@ -1,4 +1,4 @@
-from engine.globs import Constants as C, Tiempo as T, MobGroup, timestamp
+from engine.globs import Constants as C, Tiempo as T, MobGroup, TimeStamp
 from engine.globs import ModData as MD, EngineData as ED
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
@@ -35,7 +35,7 @@ class Stage:
         T.noche.set_lights(DayLight(1024))
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         for obj in self.properties:
-            ''':type obj: _giftSprite'''
+            ''':type obj: AzoeSprite'''
             obj.stage = self
             ED.RENDERER.camara.add_real(obj)
         
@@ -81,9 +81,9 @@ class Stage:
     
     def cargar_timestamps(self):
         if self.data['ambiente'] == 'exterior':
-            self.amanece  = timestamp(*self.data["amanece"])
-            self.atardece = timestamp(*self.data["atardece"])
-            self.anochece = timestamp(*self.data["anochece"])
+            self.amanece  = TimeStamp(*self.data["amanece"])
+            self.atardece = TimeStamp(*self.data["atardece"])
+            self.anochece = TimeStamp(*self.data["anochece"])
     
     def anochecer(self,event):
         '''

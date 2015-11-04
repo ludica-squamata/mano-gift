@@ -1,13 +1,11 @@
-from engine.base.giftSprite import _giftSprite
+from engine.base.azoeSprite import AzoeSprite
 
 
-class Atribuido(_giftSprite):
+class Atribuido(AzoeSprite):
     fuerza = 0  # capacidad del mob para empujar cosas.
     velocidad = 1  # en pixeles por frame
     salud_max = 0  # salud máxima
     salud_act = 0  # salud actual
-    direcciones = {'abajo': [0, 1], 'izquierda': [-1, 0], 'arriba': [0, -1], 'derecha': [+1, 0], 'ninguna': [0, 0]}
-    direccion = 'abajo'
 
     def __init__(self, *args, **kwargs):
         self.velocidad = self.data['velocidad']
