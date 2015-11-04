@@ -1,4 +1,5 @@
 from engine.globs import Constants as C, EngineData as ED
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Util
 from .taphold import _filtrar
 from pygame import KEYDOWN, QUIT, KEYUP, mouse
@@ -117,7 +118,7 @@ class Modo:
         if dx != 0 or dy != 0:
             ED.HERO.mover(dx, dy)
         Modo.dx, Modo.dy = dx, dy
-        ED.EVENTS.process()
+        EventDispatcher.process()
         return ED.RENDERER.update(fondo)
 
     @staticmethod

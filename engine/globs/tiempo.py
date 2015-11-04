@@ -1,6 +1,7 @@
 from pygame import time, Surface, draw, PixelArray, SRCALPHA
 from engine.misc import Resources as r
 from engine.base import _giftSprite
+from engine.globs.eventDispatcher import EventDispatcher
 
 class _clock:
     _h = 0
@@ -234,7 +235,6 @@ class Tiempo:
     @classmethod
     def update (cls,rate):
         cls.FPS.tick(rate)
-        from engine.globs.engine_data import EngineData as ED
 
         cls._frames += 1
         if cls._frames == rate:
@@ -243,7 +243,7 @@ class Tiempo:
             if cls.clock.day_flag:
                 cls.dia += 1
             if cls.clock.hour_flag:
-                ED.EVENTS.trigger('hora', 'Tiempo', {"hora": cls.clock.h})
+                EventDispatcher.trigger('hora', 'Tiempo', {"hora": cls.clock.h})
     
     @classmethod
     def crear_noche(cls,tamanio):
