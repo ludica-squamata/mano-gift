@@ -23,7 +23,7 @@ class LightSource(AzoeSprite): #o combinar esto con prop?, no estoy seguro. prob
         # imagen = self._crear(40)
         # self.rect = imagen.get_rect(center = self.origen)
         # super().__init__(imagen,x = self.rect.x,y=self.rect.y)
-        # ED.RENDERER.addFgObj(self)
+        # Renderer.addFgObj(self)
         #setear el resto de las propiedades del area de luz
         #registrarse en Stage como fuente de luz para recibir actualizaciones
     

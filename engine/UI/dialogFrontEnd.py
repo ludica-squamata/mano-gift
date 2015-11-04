@@ -1,5 +1,6 @@
-from pygame.sprite import LayeredUpdates
 from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs.renderer import Renderer
+from pygame.sprite import LayeredUpdates
 from .Ventana import Ventana
 
 
@@ -22,11 +23,11 @@ class DialogFrontEnd (Ventana):
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
         self.ubicar(*self.posicion)
-        Ed.RENDERER.addOverlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
+        Renderer.addOverlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
         
     def destruir(self):
         Ed.DIALOG = None
-        Ed.RENDERER.delOverlay(self)
+        Renderer.delOverlay(self)
         
     def ubicar(self, x=0, y=0, z=0):
         if x < 0 or y < 0:

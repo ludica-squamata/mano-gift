@@ -2,6 +2,7 @@ from engine.globs import Constants as C, Tiempo as T, MobGroup, TimeStamp
 from engine.globs import ModData as MD, EngineData as ED
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
+from engine.globs.renderer import Renderer
 from engine.misc import Resources as r
 from .loader import _loader
 from .LightSource import DayLight, SpotLight
@@ -30,14 +31,14 @@ class Stage:
         _loader.loadEverything(entrada,mobs_data)
     
     def register_at_renderer(self,entrada):
-        ED.RENDERER.camara.set_background(self.mapa)
+        Renderer.camara.set_background(self.mapa)
         T.crear_noche(self.rect.size) #asumiendo que es uno solo...
         T.noche.set_lights(DayLight(1024))
         self.addProperty(T.noche,C.CAPA_TOP_CIELO)
         for obj in self.properties:
             ''':type obj: AzoeSprite'''
             obj.stage = self
-            ED.RENDERER.camara.add_real(obj)
+            Renderer.camara.add_real(obj)
         
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     
@@ -54,7 +55,7 @@ class Stage:
             self.properties.remove(obj)
         if obj in self.interactives:
             self.interactives.remove(obj)
-        ED.RENDERER.camara.remove_obj(obj)
+        Renderer.camara.remove_obj(obj)
     
     def cargar_mapa_adyacente(self,ady):
         if type(self.limites[ady]) == str:
@@ -74,7 +75,7 @@ class Stage:
             mapa = ChunkMap(self,data,nombre,x,y)
            
             self.limites[ady] = mapa
-            ED.RENDERER.camara.set_background(mapa)
+            Renderer.camara.set_background(mapa)
             self.rect.union_ip(mapa.rect)
             return True
         return False
