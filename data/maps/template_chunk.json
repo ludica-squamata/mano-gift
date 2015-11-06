@@ -1,16 +1,13 @@
 ﻿{
     "fondo":"maps/fondos/filename.png",
-    "colisiones":"maps/colisiones/filename.png"
+    "colisiones":"maps/colisiones/filename.png",
     "props": {},
-    "mobs": {
-        "enemies":{},
-        "npcs":{}
-    },
+    "mobs": {},
     "limites":{
-        "Izq":none,
-        "Der":none,
-        "Sup":none,
-        "Inf":none
+        "Izq":null,
+        "Der":null,
+        "Sup":null,
+        "Inf":null
     },
     "refs":{}
 }
