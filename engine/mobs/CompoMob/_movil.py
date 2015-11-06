@@ -30,19 +30,16 @@ class Movil(Atribuido):
 
         return direccion
 
-    def mover(self, dx, dy):
-        
-        x, y = self.direcciones[self.direccion]
+    def mover(self, x, y):
         dx, dy = x * self.velocidad, y * self.velocidad
 
         if self.detectar_colisiones(dx, dy):
+            #en realidad, esto es territorio de la AI, asi que debería hacer super()
             self.cambiar_direccion(self.modo_colision)
             x, y = self.direcciones[self.direccion]
             dx, dy = x * self.velocidad, y * self.velocidad
 
         self.reubicar(dx, dy)
-
-        return dx, dy
 
     def detectar_colisiones(self, dx, dy):
         col_bordes = False  # colision contra los bordes de la pantalla

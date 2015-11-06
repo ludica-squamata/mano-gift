@@ -10,10 +10,9 @@ class NPCSocial(NPC, Parlante):
         self.hablante = True
         self.dialogo = r.abrir_json(MD.dialogos + data['dialog'])
 
-    def mover(self, dx, dy):
+    def mover(self):
         if not self.hablando:
-            self.animar_caminar()
-            return super().mover(dx, dy)
+            super().mover()
     
     def iniciar_dialogo(self,inter,direccion):
         self.cambiar_direccion(direccion)
