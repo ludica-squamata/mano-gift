@@ -33,7 +33,7 @@ class Stage:
         ED.RENDERER.camara.set_background(self.mapa)
         T.crear_noche(self.rect.size) #asumiendo que es uno solo...
         T.noche.set_lights(DayLight(1024))
-        self.addProperty(T.noche,C.CAPA_TOP_CIELO)
+        self.addProperty(T.noche,C.CAPA_CIELO)
         for obj in self.properties:
             ''':type obj: AzoeSprite'''
             obj.stage = self
@@ -42,7 +42,7 @@ class Stage:
         ED.HERO.ubicar(*self.data['entradas'][entrada])
     
     def addProperty(self,obj,_layer,addInteractive=False):
-        if _layer == C.CAPA_GROUND_SALIDAS:
+        if _layer == C.GRUPO_SALIDAS:
             self.salidas.append(obj)
         else:
             self.properties.add(obj,layer =_layer)
@@ -98,7 +98,7 @@ class Stage:
             pass
     
     def actualizar_grilla(self):
-        for spr in self.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+        for spr in self.properties.get_sprites_from_layer(C.GRUPO_ITEMS):
             if spr.solido:# and not spr.es('empujable'):
                 x = int(spr.mapX/32)
                 y = int(spr.mapY/32)

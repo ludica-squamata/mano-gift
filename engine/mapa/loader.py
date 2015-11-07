@@ -16,7 +16,6 @@ class _loader:
     def loadEverything(cls,entrada,mobs_data):
         cls.cargar_hero(entrada)
         cls.cargar_props()
-        #cls.cargar_props('top')
         cls.cargar_mobs(mobs_data)
         cls.cargar_quests()
         cls.cargar_salidas()
@@ -48,7 +47,7 @@ class _loader:
                     prop = newProp(ref,imagen,x,y)
                     addInteractive = False
 
-                cls.STAGE.addProperty(prop,C.CAPA_GROUND_ITEMS,addInteractive)
+                cls.STAGE.addProperty(prop,C.GRUPO_ITEMS,addInteractive)
     
     @classmethod
     def cargar_mobs(cls,extra_data,capa = 'capa_ground'):
@@ -64,9 +63,7 @@ class _loader:
                     for x,y in pos[ref]:
                         mob = clase(ref,x,y,data)
                         if capa == 'capa_ground':
-                            cls.STAGE.addProperty(mob,C.CAPA_GROUND_MOBS)
-                        elif capa == 'capa_top':
-                            cls.STAGE.addProperty(mob,C.CAPA_TOP_MOBS)
+                            cls.STAGE.addProperty(mob,C.GRUPO_MOBS)
     
     @classmethod
     def cargar_hero(cls,entrada):
@@ -80,7 +77,7 @@ class _loader:
         except:
             ED.HERO = PC(r.abrir_json(MD.mobs+'hero.mob'),x,y)
         
-        _loader.STAGE.addProperty(ED.HERO,C.CAPA_HERO)
+        _loader.STAGE.addProperty(ED.HERO,C.GRUPO_MOBS)
     
     @classmethod
     def cargar_quests(cls,):
@@ -93,7 +90,7 @@ class _loader:
         salidas = cls.STAGE.data['salidas']
         for salida in salidas:
             sld = Salida(salida,salidas[salida])
-            cls.STAGE.addProperty(sld,C.CAPA_GROUND_SALIDAS)
+            cls.STAGE.addProperty(sld,C.GRUPO_SALIDAS)
     
     @classmethod
     def cargar_limites(cls,):
