@@ -3,7 +3,7 @@ from engine.globs import ModData as Md, EngineData as Ed
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
 from engine.misc import Resources as r
-from .loader import _loader
+from .loader import Loader
 from .LightSource import DayLight  # SpotLight
 from pygame import mask
 
@@ -32,14 +32,14 @@ class Stage:
         self.properties = LayeredUpdates()
         self.salidas = []
         self.cargar_timestamps()
-        _loader.setStage(self)
-        _loader.loadEverything(entrada, mobs_data)
+        Loader.set_stage(self)
+        Loader.load_everything(entrada, mobs_data)
 
     def register_at_renderer(self):
         Ed.RENDERER.camara.set_background(self.mapa)
         Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         Tiempo.noche.set_lights(DayLight(1024))
-        self.addProperty(Tiempo.noche, Cs.CAPA_TOP_CIELO)
+        self.add_property(Tiempo.noche, Cs.CAPA_TOP_CIELO)
         for obj in self.properties:
             ''':type obj: _giftSprite'''
             obj.stage = self
@@ -50,15 +50,15 @@ class Stage:
 
             Ed.RENDERER.camara.add_real(obj)
 
-    def addProperty(self, obj, _layer, addInteractive = False):
+    def add_property(self, obj, _layer, add_interactive = False):
         if _layer == Cs.CAPA_GROUND_SALIDAS:
             self.salidas.append(obj)
         else:
             self.properties.add(obj, layer = _layer)
-            if addInteractive:
+            if add_interactive:
                 self.interactives.append(obj)
 
-    def delProperty(self, obj):
+    def del_property(self, obj):
         if obj in self.properties:
             self.properties.remove(obj)
         if obj in self.interactives:
@@ -95,7 +95,6 @@ class Stage:
 
 
 class ChunkMap(Sprite):
-    # chunkmap: la idea es tener 9 de estos al mismo tiempo.
     tipo = 'mapa'
     offsetX = 0
     offsetY = 0
@@ -128,11 +127,9 @@ class ChunkMap(Sprite):
         for key in limites:
             self.limites[key.lower()] = limites[key]
 
-    def checkear_adyacencias(self, claves):
-
-        for clave in claves:
-            if type(self.limites[clave]) is not ChunkMap:
-                self.cargar_mapa_adyacente(clave)
+    def checkear_adyacencia(self, clave):
+        if type(self.limites.get(clave, None)) is not ChunkMap:
+            return self.cargar_mapa_adyacente(clave)
 
     def cargar_mapa_adyacente(self, ady):
 
@@ -157,10 +154,12 @@ class ChunkMap(Sprite):
 
             self.limites[ady] = mapa
             self.stage.chunks.add(mapa)
-            Ed.RENDERER.camara.set_background(mapa)
             self.stage.rect.union_ip(mapa.rect)
+            return mapa
         except IOError:
             pass
+
+        return False
 
     def update(self):
         # self.stage.anochecer()

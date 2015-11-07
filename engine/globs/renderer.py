@@ -89,62 +89,64 @@ class Camara:
     def detectar_mapas_adyacentes(self):
         r = self.rect
         map_at = self.bgs.get_sprites_at
-        adyacent_map_keys = []
+        adyacent_map_key = ''
         reference = []
-        
-        #shortcuts
+
+        # shortcuts
         map_at_center = map_at(r.center)
         map_at_bottom = map_at(r.midbottom)
         map_at_right = map_at(r.midright)
         map_at_top = map_at(r.midtop)
         map_at_left = map_at(r.midleft)
-        
-        #check in ortogonal positions
+
+        # check in ortogonal positions
         if not map_at_top:
-            adyacent_map_keys.append('sup')
+            adyacent_map_key = 'sup'
         elif not map_at_bottom:
-            adyacent_map_keys.append('inf')
+            adyacent_map_key = 'inf'
         if not map_at_left:
-            adyacent_map_keys.append('izq')
+            adyacent_map_key = 'izq'
         elif not map_at_right:
-            adyacent_map_keys.append('der')
-        
-        if not len(adyacent_map_keys):
-            #check in diagonal positions
+            adyacent_map_key = 'der'
+
+        if adyacent_map_key == '':
+            # check in diagonal positions
             if not map_at(r.topleft):
                 if map_at_top:
                     reference = map_at_top
-                    adyacent_map_keys.append('izq')
+                    adyacent_map_key = 'izq'
                 elif map_at_left:
-                    mapa = map_at_left
-                    adyacent_map_keys.append('sup')
+                    reference = map_at_left
+                    adyacent_map_key = 'sup'
             elif not map_at(r.topright):
                 if map_at_top:
                     reference = map_at_top
-                    adyacent_map_keys.append('der')
+                    adyacent_map_key = 'der'
                 elif map_at_right:
                     reference = map_at_right
-                    adyacent_map_keys.append('sup')
+                    adyacent_map_key = 'sup'
             elif not map_at(r.bottomleft):
                 if map_at_bottom:
                     reference = map_at_bottom
-                    adyacent_map_keys.append('izq')
+                    adyacent_map_key = 'izq'
                 elif map_at_left:
                     reference = map_at_left
-                    adyacent_map_keys.append('inf')
+                    adyacent_map_key = 'inf'
             elif not map_at(r.bottomright):
                 if map_at_bottom:
                     reference = map_at_bottom
-                    adyacent_map_keys.append('der')
+                    adyacent_map_key = 'der'
                 elif map_at_right:
                     reference = map_at_right
-                    adyacent_map_keys.append('inf')
+                    adyacent_map_key = 'inf'
         else:
             reference = map_at_center
-        
-        if len(reference):
+
+        if adyacent_map_key != '':
             mapa = reference[0]
-            mapa.checkear_adyacencias(adyacent_map_keys)
+            new_map = mapa.checkear_adyacencia(adyacent_map_key)
+            if new_map:
+                self.set_background(new_map)
 
     def update_sprites_layer(self):
         for spr in self.visible:
