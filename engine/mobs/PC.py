@@ -12,6 +12,7 @@ class PC(Mob, Parlante):
         self.inventario = Inventory(10, 10 + self.fuerza)
 
     def mover(self, dx, dy):
+        self.moviendose = True
         self.animar_caminar()
         if dx > 0:
             self.cambiar_direccion('derecha')
@@ -97,6 +98,7 @@ class PC(Mob, Parlante):
         self.animar_caminar()
 
     def update(self):
+        self.moviendose = False
         if self.atacando:
             self.animar_ataque(5)
         

@@ -46,7 +46,7 @@ class Movil(Atribuido):
         col_mobs = False  # colision contra otros mobs
         col_props = False  # colision contra los props
         col_mapa = False  # colision contra las cajas de colision del propio mapa
-
+        col_hero = False # colision contra el héroe... aunque el heroe deberia ser un mob más.
         if self.solido:
             if self.stage.mapa.mask.overlap(self.mask, (self.mapX + dx, self.mapY)) is not None:
                 col_mapa = True
@@ -63,9 +63,14 @@ class Movil(Atribuido):
                             col_props = True
 
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                if spr.solido:
+                if spr.solido:                        
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
+            
+            if self.nombre != 'heroe':
+                for hero in self.stage.properties.get_sprites_from_layer(C.CAPA_HERO):
+                    if self.colisiona(hero,dx,dy):
+                        col_hero = True
 
         new_pos_x = self.mapX + dx
         new_pos_y = self.mapY + dy
@@ -74,4 +79,4 @@ class Movil(Atribuido):
         if not self.stage.rect.contains(_rect):
             col_bordes = True
 
-        return any([col_bordes, col_mobs, col_props, col_mapa])
+        return any([col_bordes, col_mobs, col_props, col_mapa, col_hero])

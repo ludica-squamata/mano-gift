@@ -18,20 +18,20 @@ class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autó
         self._AI = self.AI  # copia de la AI original
         super().__init__(*args, **kwargs)
 
-    def determinar_accion(self, mobs_detectados):
+    def determinar_accion(self, detectados):
         """Cambia la AI, la velocidad y la visión de un mob
         si su objetivo está entre los detectados"""
 
-        if self.objetivo in mobs_detectados:
+        if self.objetivo in detectados:
             self.velocidad = 2
             self.AI = movimiento.AI_pursue
-            self.vision = self.cir_vis
+            self.vision = 'circulo'
             self.mover_vis = self.mover_cir_vis
         else:
             # Esto permite acercarse hasta la espalda del mob, a lo MGS
             self.velocidad = 1
             self.AI = self._AI
-            self.vision = self.tri_vis
+            self.vision = 'cono'
             self.mover_vis = self.mover_tri_vis
 
     def mover(self):
@@ -42,6 +42,7 @@ class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autó
 
     def update(self, *args):
         if not ED.onPause and not self.dead:
-            self.determinar_accion(self.ver())
+            detectados = self.oir()+self.ver()
+            self.determinar_accion(detectados)
             self.mover()
         super().update(*args)
