@@ -2,9 +2,11 @@ from math import tan, radians
 from pygame import Color, Surface, draw, mask, transform
 from engine.globs import MobGroup
 
+
 class Sensitivo:
     vision = None # triangulo o circulo de la visión.
     vx,vy = 0,0 # posicion de la visión, puesta acá por si el mob no se mueve
+    ultima_direccion = ''
     #mover_vis = None #algoritmo para desplazar la visión junto al mob
     
     def __init__(self,*args,**kwargs): #,data):
@@ -57,12 +59,12 @@ class Sensitivo:
             w,h = surf.get_size()
             y = ty+th
             x = tx+(tw/2)-w/2
-        elif direccion == 'izquierda':
+        elif direccion == 'derecha':
             surf = transform.rotate(img,-90.0)
             w,h = surf.get_size()
             x = tx+tw
             y = ty+(th/2)-h/2
-        elif direccion == 'derecha':
+        elif direccion == 'izquierda':
             surf = transform.rotate(img,+90.0)
             w,h = surf.get_size()
             x = tx-w
@@ -72,7 +74,9 @@ class Sensitivo:
             w,h = surf.get_size()
             y = ty-h
             x = tx+(tw/2)-w/2
-        return surf,int(x),int(y)
+        
+        self.vx,self.vy = int(x),int(y)
+        self.vis_mask = mask.from_surface(surf)
     
     def mover_cir_vis(self,dummy = None):
         '''Si la visión es circular, entonces se usa esta función
@@ -83,22 +87,30 @@ class Sensitivo:
         w,h = self.cir_vis.get_size()
         x = int(tx+(tw/2)-(w/2))
         y = int(ty+(th/2)-(h/2))
-        return self.cir_vis,x,y
+        
+        self.vx,self.vy = x,y
+        self.vis_mask = mask.from_surface(surf)
 
     def ver (self):
         '''Realiza detecciones con la visión del mob'''
         detected = []
-        if self.direccion != 'ninguna':
-            vision,self.vx,self.vy = self.mover_vis(self.direccion)
-            for key in MobGroup:
-                try:
-                    mob = MobGroup[key]
-                    if mob != self:
-                        vis_mask = mask.from_surface(vision)
-                        x,y = self.vx-mob.mapX, self.vy-mob.mapY
-                        if mob.mask.overlap(vis_mask,(x,y)):
-                            detected.append(mob)
-                except:
-                    pass
+        direccion = self.direccion
+        if direccion == 'ninguna':
+            direccion = self.ultima_direccion
+        else:
+            self.ultima_direccion = self.direccion
         
+        self.mover_vis(direccion)
+        for key in MobGroup: 
+            mob = MobGroup[key]
+            if mob != self:
+                x,y = self.vx-mob.mapX, self.vy-mob.mapY
+                if mob.mask.overlap(self.vis_mask,(x,y)):
+                    detected.append(mob)
+        
+        for obj in self.stage.interactives:
+            x,y = self.vx-obj.mapX, self.vy-obj.mapY
+            if mob.mask.overlap(self.vis_mask,(x,y)):
+                detected.append(obj)
+       
         return detected
