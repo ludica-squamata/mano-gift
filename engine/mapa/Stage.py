@@ -107,6 +107,10 @@ class Stage:
     def __repr__(self):
         return "Stage "+self.nombre+' ('+str(len(self.properties.sprites()))+' sprites)'
 
+    def update(self):
+        for salida in self.salidas:
+            salida.update()
+
 class ChunkMap(Sprite):
     #chunkmap: la idea es tener 9 de estos al mismo tiempo.
     tipo = 'mapa'
