@@ -118,6 +118,7 @@ class Modo:
             ED.HERO.mover(dx, dy)
         Modo.dx, Modo.dy = dx, dy
         ED.EVENTS.process()
+        ED.MAPA_ACTUAL.update()
         return ED.RENDERER.update(fondo)
 
     @staticmethod

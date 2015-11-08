@@ -94,6 +94,10 @@ class Stage:
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
 
+    def update(self):
+        for salida in self.salidas:
+            salida.update()
+
 class ChunkMap(Sprite):
     tipo = 'mapa'
     offsetX = 0
