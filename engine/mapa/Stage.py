@@ -2,10 +2,10 @@ from engine.globs import Constants as Cs, Tiempo, TimeStamp
 from engine.globs import ModData as Md, EngineData as Ed
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
-from engine.misc import Resources as r
+from engine.misc import Resources as Rs
 from .loader import Loader
 from .LightSource import DayLight  # SpotLight
-from pygame import mask
+from pygame import mask, Rect
 
 
 class Stage:
@@ -17,15 +17,18 @@ class Stage:
     quest = None
     offset_x = 320  # camara.rect.centerx
     offset_y = 240  # camara.rect.centery
+    amanece = None
+    atardece = None
+    anochece = None
 
     def __init__(self, nombre, mobs_data, entrada):
         self.chunks = LayeredUpdates()
         self.nombre = nombre
-        self.data = r.abrir_json(Md.mapas + nombre + '.json')
+        self.data = Rs.abrir_json(Md.mapas + nombre + '.json')
         dx, dy = self.data['entradas'][entrada]
         self.offset_x -= dx
         self.offset_y -= dy
-        self.chunks.add(ChunkMap(self, self.data, nombre = self.nombre, off_x = self.offset_x, off_y = self.offset_y))
+        self.chunks.add(ChunkMap(self, self.data, self.nombre, self.offset_x, self.offset_y))
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask, self.mapa.image)
@@ -93,68 +96,80 @@ class Stage:
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
-
     def update(self):
         for salida in self.salidas:
             salida.update()
 
+
 class ChunkMap(Sprite):
     tipo = 'mapa'
-    offsetX = 0
-    offsetY = 0
-    limites = {'sup': '', 'supizq': '', 'supder': '',
-               'inf': '', 'infizq': '', 'infder': '',
-               'izq': '', 'der': ''}
+    limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
 
-    def __init__(self, stage, data, nombre = '', off_x = 0, off_y = 0):
+    def __init__(self, stage, data, nombre, off_x, off_y):
         super().__init__()
-        self.limites = {'sup': '', 'supizq': '', 'supder': '',
-                        'inf': '', 'infizq': '', 'infder': '',
-                        'izq': '', 'der': ''}
+        self.limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
         self.stage = stage
         self.nombre = nombre
-        self.cargar_limites(data['limites'])
-        self.image = r.cargar_imagen(data['capa_background']['fondo'])
+
+        self.image = Rs.cargar_imagen(data['capa_background']['fondo'])
         self.rect = self.image.get_rect(topleft = (off_x, off_y))
-        self.mask = mask.from_threshold(r.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
+        self.mask = mask.from_threshold(Rs.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
                                         (1, 1, 1, 255))
+
+        self.cargar_limites(data['limites'])
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
 
     def ubicar(self, x, y):
-        """Coloca al sprite en pantalla"""
+        """Coloca al sprite en pantalla
+        :param y:
+        :param x:
+        """
         self.rect.x = x
         self.rect.y = y
 
     def cargar_limites(self, limites):
+
         for key in limites:
-            self.limites[key.lower()] = limites[key]
+            rect = Rect(self._get_newmap_pos(key), self.rect.size)
+            mapa = self.stage.chunks.get_sprites_at(rect.center)
+            if not mapa:
+                self.limites[key.lower()] = limites[key]
+            else:
+                self.limites[key.lower()] = mapa[0]
 
     def checkear_adyacencia(self, clave):
         if type(self.limites.get(clave, None)) is not ChunkMap:
             return self.cargar_mapa_adyacente(clave)
+
+    def _get_newmap_pos(self, ady):
+        w, h = self.rect.size
+        dx, dy = self.rect.topleft
+
+        ady = ady.lower()  # por si acaso.
+
+        if ady == 'sup':
+            dy -= h + 1
+        elif ady == 'inf':
+            dy += h - 1
+        elif ady == 'izq':
+            dx -= w + 1
+        elif ady == 'der':
+            dx += w - 1
+
+        return dx, dy
 
     def cargar_mapa_adyacente(self, ady):
 
         nmbr = self.limites[ady]
 
         try:
-            data = r.abrir_json(Md.mapas + nmbr + '.json')
+            data = Rs.abrir_json(Md.mapas + nmbr + '.json')
 
-            w, h = self.rect.size
-            dx, dy = self.rect.topleft
+            dx, dy = self._get_newmap_pos(ady)
 
-            if ady == 'sup':
-                dy -= h +1
-            elif ady == 'inf':
-                dy += h -1
-            elif ady == 'izq':
-                dx -= w +1
-            elif ady == 'der':
-                dx += w -1
-
-            mapa = ChunkMap(self.stage, data,  nombre = nmbr, off_x = dx, off_y = dy)
+            mapa = ChunkMap(self.stage, data,  nmbr, dx, dy)
 
             self.limites[ady] = mapa
             self.stage.chunks.add(mapa)

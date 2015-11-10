@@ -17,10 +17,10 @@
     "salidas":{
     },
     "limites":{
-        "Izq":"blanco",
-        "Der":"blanco",
-        "Inf":"blanco",
-        "Sup":"blanco"
+        "izq":"blanco",
+        "der":"blanco",
+        "inf":"blanco",
+        "sup":"blanco"
     },
     "refs":{},
     "ambiente":"interior"
