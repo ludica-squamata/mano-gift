@@ -6,6 +6,8 @@ class AzoeSprite(sprite.Sprite):
     # mapX y mapY estan medidas en pixeles y son relativas al mapa
     mapX = 0
     mapY = 0
+    stageX = 0
+    stageY = 0
     tipo = ''
     nombre = ''  # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True  # si es solido, colisiona; si no, no.
@@ -68,12 +70,16 @@ class AzoeSprite(sprite.Sprite):
 
         self.mapX = x
         self.mapY = y
+        self.stageX = x
+        self.stageY = y
         self.solido = True
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
         self.mapX += dx
         self.mapY += dy
+        self.stageX += dx
+        self.stageY += dy
         self.z += dy
 
     def ubicar(self, x, y, z = 0):

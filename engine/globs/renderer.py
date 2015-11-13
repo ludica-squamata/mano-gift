@@ -37,6 +37,8 @@ class Renderer:
 
 class Camara:
     bg = None  # el fondo
+    bgs = None  # el grupo de todos los fondos cargados
+    bgs_rect = None  # el rect colectivo de los fondos
     focus = None  # objeto que la camara sigue.
     visible = None  # objetos que se ven (incluye sombras)
     real = None  # objetos reales del mundo (no incluye sombras)
@@ -54,6 +56,7 @@ class Camara:
     def set_background(self, spr):
         if self.bg is None:
             self.bg = spr
+            self.bgs_rect = spr.rect.copy()
         self.bgs.add(spr)
 
     def add_real(self, obj):
@@ -87,7 +90,7 @@ class Camara:
         self.bg = None
 
     def detectar_mapas_adyacentes(self):
-        r = self.rect
+        r = self.rect.inflate(2,2)
         map_at = self.bgs.get_sprites_at
         adyacent_map_key = ''
         reference = []
@@ -142,12 +145,20 @@ class Camara:
         else:
             reference = map_at_center
 
-        if adyacent_map_key != '':
+        if adyacent_map_key != '' and len(reference):
             mapa = reference[0]
             new_map = mapa.checkear_adyacencia(adyacent_map_key)
             if new_map:
                 self.set_background(new_map)
-
+                if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
+                    self.bgs_rect.w += new_map.rect.w
+                    if adyacent_map_key == 'izq':
+                        self.bgs_rect.x = new_map.rect.x
+                elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
+                    self.bgs_rect.h += new_map.rect.h
+                    if adyacent_map_key == 'sup':
+                        self.bgs_rect.y = new_map.rect.y
+    
     def update_sprites_layer(self):
         for spr in self.visible:
             self.visible.change_layer(spr, spr.z)
@@ -158,7 +169,17 @@ class Camara:
 
         dx = new_x - self.bg.rect.x
         dy = new_y - self.bg.rect.y
-
+        
+        f = self.focus.rect
+        b = self.bgs_rect
+        s = self.rect
+        
+        if any([b.x+dx > 1, b.right+dx < s.w-2, f.x != s.centerx]):
+            dx = 0
+        if any([b.y+dy > 2, b.bottom+dy < s.h-2, f.y != s.centery]):
+            dy = 0
+        
+        self.bgs_rect.move_ip(dx, dy)
         for spr in self.bgs:
             spr.rect.move_ip(dx, dy)
 

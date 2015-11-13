@@ -150,13 +150,13 @@ class ChunkMap(Sprite):
         ady = ady.lower()  # por si acaso.
 
         if ady == 'sup':
-            dy -= h + 1
+            dy -= h 
         elif ady == 'inf':
-            dy += h - 1
+            dy += h 
         elif ady == 'izq':
-            dx -= w + 1
+            dx -= w 
         elif ady == 'der':
-            dx += w - 1
+            dx += w 
 
         return dx, dy
 
@@ -173,7 +173,18 @@ class ChunkMap(Sprite):
 
             self.limites[ady] = mapa
             self.stage.chunks.add(mapa)
-            self.stage.rect.union_ip(mapa.rect)
+            
+            if ady == 'izq' or ady == 'der':
+                self.stage.rect.inflate_ip(mapa.rect.w,0)
+                if ady == 'izq':
+                    for spr in self.stage.properties:
+                        spr.stageX += mapa.rect.w
+            elif ady == 'sup' or ady == 'inf':
+                self.stage.rect.h.inflate_ip(0,mapa.rect.h)
+                if ady == 'sup':
+                    for spr in self.stage.properties:
+                        spr.stageY += mapa.rect.h
+            
             return mapa
         except IOError:
             pass
