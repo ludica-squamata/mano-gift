@@ -180,7 +180,7 @@ class ChunkMap(Sprite):
                     for spr in self.stage.properties:
                         spr.stageX += mapa.rect.w
             elif ady == 'sup' or ady == 'inf':
-                self.stage.rect.h.inflate_ip(0,mapa.rect.h)
+                self.stage.rect.inflate_ip(0,mapa.rect.h)
                 if ady == 'sup':
                     for spr in self.stage.properties:
                         spr.stageY += mapa.rect.h
