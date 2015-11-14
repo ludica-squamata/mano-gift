@@ -29,11 +29,11 @@ class DialogInterface(Ventana):
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
         self.ubicar(0, Cs.ALTO-int(Cs.ALTO/5))
-        Ed.RENDERER.addOverlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
+        Ed.RENDERER.add_overlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
 
     def destruir(self):
         Ed.DIALOG = None
-        Ed.RENDERER.delOverlay(self)
+        Ed.RENDERER.del_overlay(self)
 
     def ubicar(self, x = 0, y = 0, z = 0):
         if x < 0 or y < 0:

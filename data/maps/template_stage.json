@@ -1,0 +1,18 @@
+{
+    "entradas": {
+      "<nombre>": {
+        "chunk":"",
+        "pos": [0,0]
+      }
+    },
+    "salidas":[{
+      "chunk":"",
+      "rect":[0,0,0,0],
+      "dest":"",
+      "link":""}
+    ],
+    "ambiente":"",
+    "amanece":[0, 0],
+    "atardece":[0, 0],
+    "anochece":[0, 0]
+}

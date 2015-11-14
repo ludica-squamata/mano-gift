@@ -1,0 +1,13 @@
+﻿{
+    "fondo":"maps/fondos/filename.png",
+    "colisiones":"maps/colisiones/filename.png",
+    "props": {},
+    "mobs": {},
+    "limites":{
+        "Izq":null,
+        "Der":null,
+        "Sup":null,
+        "Inf":null
+    },
+    "refs":{}
+}
