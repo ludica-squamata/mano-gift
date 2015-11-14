@@ -42,8 +42,8 @@ class Boton (BaseWidget):
         cnvs_sel = cnvs_pre.copy()
         cnvs_uns = cnvs_pre.copy()
 
-        fnd_pre = self.crear_inverted_canvas(ancho, Cs.CUADRO)
-        fnd_uns = self.crear_canvas(ancho, Cs.CUADRO)
+        fnd_pre = self.create_sunken_canvas(ancho, Cs.CUADRO)
+        fnd_uns = self.create_raised_canvas(ancho, Cs.CUADRO)
 
         for i in range(round((ancho + 6) / 3)):
             # linea punteada horizontal superior

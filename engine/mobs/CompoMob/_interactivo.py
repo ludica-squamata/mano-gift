@@ -1,7 +1,6 @@
-from engine.globs import EngineData as ED, MobGroup
-from engine.base import AzoeSprite
-from pygame import mask, Rect, Surface
-from pygame.sprite import Sprite
+from engine.globs import MobGroup
+
+from pygame import Rect
 
 
 class Interactivo:

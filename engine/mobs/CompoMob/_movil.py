@@ -66,13 +66,13 @@ class Movil(Atribuido):
                 if spr.solido and self is not spr:                        
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
-            
-
-        new_pos_x = self.mapX + dx
-        new_pos_y = self.mapY + dy
-        _rect = self.rect.copy()  # esto podria ser algo más permanente
-        _rect.topleft = (new_pos_x, new_pos_y)  # una onda "maprect"
-        if not self.stage.rect.contains(_rect):
+        
+        new_posX = self.stageX+dx
+        new_posY = self.stageY+dy
+        w = self.stage.rect.w-self.rect.w
+        h = self.stage.rect.h-self.rect.h
+        
+        if 0 > new_posX or new_posX > w or 0 > new_posY or new_posY > h:
             col_bordes = True
-
+        
         return any([col_bordes, col_mobs, col_props, col_mapa])

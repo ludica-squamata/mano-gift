@@ -1,6 +1,8 @@
 from engine.UI.Ventana import Ventana
 from engine.globs import Constants as Cs, EngineData as Ed
 from pygame.sprite import LayeredUpdates
+from pygame import Surface, Rect
+from engine.libs.textrect import render_textrect
 
 
 class Menu(Ventana):
@@ -14,8 +16,8 @@ class Menu(Ventana):
 
     def __init__(self, titulo):
         self.nombre = titulo
-        self.current = self
-        self.canvas = self.crear_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
+        # self.current = self
+        self.canvas = self.create_raised_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
         self.funciones = {
             "arriba": lambda dummy: None,
@@ -28,6 +30,11 @@ class Menu(Ventana):
         self.ubicar(10, 10)
 
         Ed.MENUS[titulo] = self
+
+    def crear_titulo(self, titulo, fg_color, bg_color, ancho):
+        ttl_rect = Rect((3, 3), (ancho - 7, 30))
+        ttl_txt = render_textrect(titulo, self.fuente_Mu, ttl_rect, fg_color, bg_color, 1)
+        self.canvas.blit(ttl_txt, ttl_rect.topleft)
 
     @staticmethod
     def deselect_all(lista):
@@ -49,8 +56,8 @@ class Menu(Ventana):
             for i in range(len(self.filas)):
                 spr = self.filas.get_sprite(i)
                 if item.nombre == spr.nombre:
-                    self.cur_opt = self.filas.get_sprite(i)
-                    self.current = spr  # .nombre
+                    self.cur_opt = i
+                    self.current = spr
                     break
 
     def cancelar(self):
