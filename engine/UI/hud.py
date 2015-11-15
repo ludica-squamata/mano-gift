@@ -65,8 +65,8 @@ class HUD:
         self.BarraVida = ProgressBar(Ed.HERO.salud_max, (200, 50, 50), (100, 0, 0), dx - w - 1, dy - 11, w, h)
         self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx + 2, dy - 11, w, h)
         self.BarraVida.set_variable(divisiones = 4)
-        Ed.RENDERER.addOverlay(self.BarraVida, Cs.CAPA_OVERLAYS_HUD)
-        Ed.RENDERER.addOverlay(self.BarraMana, Cs.CAPA_OVERLAYS_HUD)
+        Ed.RENDERER.add_overlay(self.BarraVida, Cs.CAPA_OVERLAYS_HUD)
+        Ed.RENDERER.add_overlay(self.BarraMana, Cs.CAPA_OVERLAYS_HUD)
 
     def usar_funcion(self, tecla):
         pass

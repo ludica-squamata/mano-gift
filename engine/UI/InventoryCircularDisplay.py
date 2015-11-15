@@ -100,7 +100,7 @@ class InventoryCircularDisplay(CircularMenu):
         cascadas = {'inicial': []}
         for opt in opciones:
             obj = InventoryElement(self, opt)
-            Ed.RENDERER.addOverlay(obj, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Ed.RENDERER.add_overlay(obj, Cs.CAPA_OVERLAYS_INVENTARIO)
             cascadas['inicial'].append(obj)
             cascadas[obj.nombre] = obj.cascada
 
@@ -108,25 +108,25 @@ class InventoryCircularDisplay(CircularMenu):
 
     def _change_cube_list(self):
         super()._change_cube_list()
-        Ed.RENDERER.overlays.remove_sprites_of_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Ed.RENDERER.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
-            Ed.RENDERER.addOverlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Ed.RENDERER.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
 
     def supress(self):
         super().supress()
-        Ed.RENDERER.overlays.remove_sprites_of_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Ed.RENDERER.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
-            Ed.RENDERER.addOverlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Ed.RENDERER.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
 
     def _modify_cube_list(self):
         super()._modify_cube_list()
-        Ed.RENDERER.overlays.remove_sprites_of_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Ed.RENDERER.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
-            Ed.RENDERER.addOverlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Ed.RENDERER.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
 
     def back(self):
         if self.cascadaActual == 'inicial':
-            Ed.RENDERER.overlays.remove_sprites_of_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+            Ed.RENDERER.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
             Ed.DIALOGO = None
             Ed.MODO = 'Aventura'
         else:

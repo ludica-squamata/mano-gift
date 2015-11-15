@@ -22,6 +22,9 @@ class Renderer:
     def del_overlay(self, obj):
         if obj in self.overlays:
             self.overlays.remove(obj)
+    
+    def clear_overlays (self, layer):
+        self.overlays.remove_sprites_of_layer(layer)
 
     def update(self, fondo):
         fondo.fill((125, 125, 125))
