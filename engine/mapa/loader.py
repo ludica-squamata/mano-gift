@@ -6,7 +6,7 @@ from engine.scenery import newProp
 from .salida import Salida
 
 
-class MapDataLoader:
+class Loader:
     STAGE = None
 
     @classmethod
@@ -17,19 +17,17 @@ class MapDataLoader:
     def load_everything(cls, entrada, mobs_data):
         cls.cargar_hero(entrada)
         cls.cargar_props()
-        # cls.cargar_props('top')
         cls.cargar_mobs(mobs_data)
         cls.cargar_quests()
         cls.cargar_salidas()
-        cls.cargar_limites()
 
     @classmethod
     def cargar_props(cls, ):
         imgs = cls.STAGE.data['refs']
         """:type imgs: dict"""
-        posiciones = cls.STAGE.data['capa_ground']['props']
+        pos = cls.STAGE.data['capa_ground']['props']
 
-        for ref in posiciones:
+        for ref in pos:
             try:
                 data = Rs.abrir_json(Md.items + ref + '.json')
                 if ref in imgs:
@@ -40,15 +38,15 @@ class MapDataLoader:
                 data = False
                 imagen = Rs.cargar_imagen(imgs[ref])
 
-            for x, y in posiciones[ref]:
+            for x, y in pos[ref]:
                 if data:
                     prop = newProp(ref, imagen, x, y, data)
-                    is_interactive = True
+                    add_interactive = True
                 else:
                     prop = newProp(ref, imagen, x, y)
-                    is_interactive = False
+                    add_interactive = False
 
-                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, is_interactive)
+                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, add_interactive)
 
     @classmethod
     def cargar_mobs(cls, extra_data, capa = 'capa_ground'):
@@ -76,10 +74,10 @@ class MapDataLoader:
             Ed.HERO.ubicar(x, y)
             Ed.HERO.mapX = x
             Ed.HERO.mapY = y
-        except AttributeError:
+        except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
-        MapDataLoader.STAGE.add_property(Ed.HERO, Cs.CAPA_HERO)
+        Loader.STAGE.add_property(Ed.HERO, Cs.CAPA_HERO)
 
     @classmethod
     def cargar_quests(cls, ):
@@ -88,16 +86,8 @@ class MapDataLoader:
                 QuestManager.add(quest)
 
     @classmethod
-    def cargar_salidas(cls, ):
+    def cargar_salidas(cls):
         salidas = cls.STAGE.data['salidas']
         for salida in salidas:
             sld = Salida(salida, salidas[salida])
             cls.STAGE.add_property(sld, Cs.CAPA_GROUND_SALIDAS)
-
-    @classmethod
-    def cargar_limites(cls, ):
-        if 'limites' in cls.STAGE.data:
-            limites = cls.STAGE.data['limites']
-
-            for key in limites:
-                cls.STAGE.limites[key.lower()] = limites[key]

@@ -1,7 +1,7 @@
 {
     "ID":2,
     "stage":["blanco","inicial"],
-    "dia":0,"hora":0,
+    "dia":0,"hora":[0,0],
     "mobs":{
     },
     "focus":"heroe"

@@ -3,55 +3,62 @@ from engine.globs import ModData as Md, EngineData as Ed
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
 from engine.misc import Resources as Rs
-from .loader import MapDataLoader
+from .loader import Loader
 from .LightSource import DayLight  # SpotLight
-from pygame import mask
+from pygame import mask, Rect
 
 
 class Stage:
     properties = None
     interactives = []
+    chunks = None
     mapa = None
-    limites = {'sup': '', 'supizq': '', 'supder': '',
-               'inf': '', 'infizq': '', 'infder': '',
-               'izq': '', 'der': ''}
-    anochece = None
-    atardece = None
-    amanece = None
-
     data = {}
     quest = None
+    offset_x = 320  # camara.rect.centerx
+    offset_y = 240  # camara.rect.centery
+    amanece = None
+    atardece = None
+    anochece = None
 
     def __init__(self, nombre, mobs_data, entrada):
+        self.chunks = LayeredUpdates()
         self.nombre = nombre
         self.data = Rs.abrir_json(Md.mapas + nombre + '.json')
-        self.mapa = ChunkMap(self, self.data, nombre)  # por ahora es uno solo.
+        dx, dy = self.data['entradas'][entrada]
+        self.offset_x -= dx
+        self.offset_y -= dy
+        self.chunks.add(ChunkMap(self, self.data, self.nombre, self.offset_x, self.offset_y))
+        self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.grilla = generar_grilla(self.mapa.mask, self.mapa.image)
         self.properties = LayeredUpdates()
-        self.salidas = []  # aunque en realidad, las salidas deberian ser del chunk, o no?
+        self.salidas = []
         self.cargar_timestamps()
-        MapDataLoader.set_stage(self)
-        MapDataLoader.load_everything(entrada, mobs_data)
+        Loader.set_stage(self)
+        Loader.load_everything(entrada, mobs_data)
 
-    def register_at_renderer(self, entrada):
+    def register_at_renderer(self):
         Ed.RENDERER.camara.set_background(self.mapa)
         Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         Tiempo.noche.set_lights(DayLight(1024))
         self.add_property(Tiempo.noche, Cs.CAPA_TOP_CIELO)
         for obj in self.properties:
-            ''':type obj: AzoeSprite'''
+            ''':type obj: _giftSprite'''
             obj.stage = self
+
+            x = self.rect.x + obj.mapX
+            y = self.rect.y + obj.mapY
+            obj.ubicar(x, y, self.offset_y)
+
             Ed.RENDERER.camara.add_real(obj)
 
-        Ed.HERO.ubicar(*self.data['entradas'][entrada])
-
-    def add_property(self, obj, _layer, is_interactive = False):
+    def add_property(self, obj, _layer, add_interactive = False):
         if _layer == Cs.CAPA_GROUND_SALIDAS:
             self.salidas.append(obj)
         else:
             self.properties.add(obj, layer = _layer)
-            if is_interactive:
+            if add_interactive:
                 self.interactives.append(obj)
 
     def del_property(self, obj):
@@ -61,41 +68,9 @@ class Stage:
             self.interactives.remove(obj)
         Ed.RENDERER.camara.remove_obj(obj)
 
-    def cargar_mapa_adyacente(self, ady):
-        x, y = 0, 0
-        if self.limites[ady] != '':
-            nombre = self.limites[ady]
-            data = Rs.abrir_json(Md.mapas + self.limites[ady] + '.json')
-
-            w, h = self.mapa.rect.size
-            if ady == 'sup':
-                x, y = 0, -h
-            elif ady == 'supizq':
-                x, y = -w, -h
-            elif ady == 'supder':
-                x, y = w, -h
-            elif ady == 'inf':
-                x, y = 0, h
-            elif ady == 'infizq':
-                x, y = -w, h
-            elif ady == 'infder':
-                x, y = w, h
-            elif ady == 'izq':
-                x, y = -w, 0
-            elif ady == 'der':
-                x, y = w, 0
-
-            mapa = ChunkMap(self, data, nombre, x, y)
-
-            self.limites[ady] = mapa
-            Ed.RENDERER.camara.set_background(mapa)
-            self.rect.union_ip(mapa.rect)
-            return True
-        return False
-
     def cargar_timestamps(self):
         if self.data['ambiente'] == 'exterior':
-            self.amanece  = TimeStamp(*self.data["amanece"])
+            self.amanece = TimeStamp(*self.data["amanece"])
             self.atardece = TimeStamp(*self.data["atardece"])
             self.anochece = TimeStamp(*self.data["anochece"])
 
@@ -121,31 +96,100 @@ class Stage:
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
+    def update(self):
+        for salida in self.salidas:
+            salida.update()
+
 
 class ChunkMap(Sprite):
-    # chunkmap: la idea es tener 9 de estos al mismo tiempo.
     tipo = 'mapa'
-    offsetX = 0
-    offsetY = 0
+    limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
 
-    def __init__(self, stage, data, nombre = '', off_x = 0, off_y = 0):
+    def __init__(self, stage, data, nombre, off_x, off_y):
         super().__init__()
+        self.limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
         self.stage = stage
         self.nombre = nombre
+
         self.image = Rs.cargar_imagen(data['capa_background']['fondo'])
         self.rect = self.image.get_rect(topleft = (off_x, off_y))
         self.mask = mask.from_threshold(Rs.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
                                         (1, 1, 1, 255))
-        self.offsetX = off_x
-        self.offsetY = off_y
+
+        self.cargar_limites(data['limites'])
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
 
     def ubicar(self, x, y):
-        """Coloca al sprite en pantalla"""
+        """Coloca al sprite en pantalla
+        :param y:
+        :param x:
+        """
         self.rect.x = x
         self.rect.y = y
+
+    def cargar_limites(self, limites):
+
+        for key in limites:
+            rect = Rect(self._get_newmap_pos(key), self.rect.size)
+            mapa = self.stage.chunks.get_sprites_at(rect.center)
+            if not mapa:
+                self.limites[key.lower()] = limites[key]
+            else:
+                self.limites[key.lower()] = mapa[0]
+
+    def checkear_adyacencia(self, clave):
+        if type(self.limites.get(clave, None)) is not ChunkMap:
+            return self.cargar_mapa_adyacente(clave)
+
+    def _get_newmap_pos(self, ady):
+        w, h = self.rect.size
+        dx, dy = self.rect.topleft
+
+        ady = ady.lower()  # por si acaso.
+
+        if ady == 'sup':
+            dy -= h 
+        elif ady == 'inf':
+            dy += h 
+        elif ady == 'izq':
+            dx -= w 
+        elif ady == 'der':
+            dx += w 
+
+        return dx, dy
+
+    def cargar_mapa_adyacente(self, ady):
+
+        nmbr = self.limites[ady]
+
+        try:
+            data = Rs.abrir_json(Md.mapas + nmbr + '.json')
+
+            dx, dy = self._get_newmap_pos(ady)
+
+            mapa = ChunkMap(self.stage, data,  nmbr, dx, dy)
+
+            self.limites[ady] = mapa
+            self.stage.chunks.add(mapa)
+            
+            if ady == 'izq' or ady == 'der':
+                self.stage.rect.inflate_ip(mapa.rect.w,0)
+                if ady == 'izq':
+                    for spr in self.stage.properties:
+                        spr.stageX += mapa.rect.w
+            elif ady == 'sup' or ady == 'inf':
+                self.stage.rect.inflate_ip(0,mapa.rect.h)
+                if ady == 'sup':
+                    for spr in self.stage.properties:
+                        spr.stageY += mapa.rect.h
+            
+            return mapa
+        except IOError:
+            pass
+
+        return False
 
     def update(self):
         # self.stage.anochecer()

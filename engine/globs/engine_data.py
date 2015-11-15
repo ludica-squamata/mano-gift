@@ -40,18 +40,12 @@ class EngineData:
         cls.RENDERER.clear()
         from engine.UI.hud import HUD
         from engine.mapa import Stage
-        from engine.mapa.loader import MapDataLoader
+        from engine.mapa.loader import Loader
         if nombre not in cls.mapas:
             cls.mapas[nombre] = Stage(nombre,cls.scene_data['mobs'],entrada)
         else:
-            MapDataLoader.set_stage(cls.mapas[nombre])
-            MapDataLoader.cargar_hero(entrada)
+            Loader.set_stage(cls.mapas[nombre])
+            Loader.cargar_hero(entrada)
         cls.MAPA_ACTUAL = cls.mapas[nombre]
-        cls.MAPA_ACTUAL.register_at_renderer(entrada)
+        cls.MAPA_ACTUAL.register_at_renderer()
         cls.HUD = HUD()
-    
-    @classmethod
-    def checkear_adyacencias(cls,clave):
-        if clave in cls.MAPA_ACTUAL.limites:
-            return cls.MAPA_ACTUAL.cargar_mapa_adyacente(clave)
-

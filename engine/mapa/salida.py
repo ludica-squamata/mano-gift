@@ -26,3 +26,6 @@ class Salida:
     def ubicar(self, x, y):
         self.rect.x = x
         self.rect.y = y
+
+    def update(self):
+        pass
