@@ -6,19 +6,19 @@
     "txt":"A continuación deberias ver 5 opciones si cumples todos los requisitos"},
     
     "2":{"type":"branch","leads":7,"loc":"heroe",
-    "txt":"Hmm, supongo que será esta opción."},
+    "txt":"Hmm, supongo que serÃ¡ esta opción."},
     
     "3":{"type":"branch","leads":8,"loc":"heroe",
     "txt":"O quizás esta otra."},
     
     "4":{"type":"branch","leads":9,"loc":"heroe","reqs":{"attrs":{"carisma":9}},
-    "txt":"¿Es esta la opcion oculta por mi <b>carisma</b>?"},
+    "txt":"?Es esta la opcion oculta por mi <b>carisma</b>?"},
     
     "5":{"type":"branch","leads":10,"loc":"heroe","reqs":{"objects":["star"]},
     "txt":"Aquí tengo una <b>estrella</b> que encontré"},
     
     "6":{"type":"branch","leads":11,"loc":"heroe",
-    "txt":"¿Qué puedes decirme de este <b>texto marcado</b>?"},
+    "txt":"?Qué puedes decirme de este <b>texto marcado</b>?"},
     
     "7":{"type":"leaf","loc":"commoner",
     "txt":"No, esta no es la opción"},

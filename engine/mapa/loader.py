@@ -41,12 +41,12 @@ class Loader:
             for x, y in pos[ref]:
                 if data:
                     prop = newProp(ref, imagen, x, y, data)
-                    add_interactive = True
+                    is_interactive = True
                 else:
                     prop = newProp(ref, imagen, x, y)
-                    add_interactive = False
+                    is_interactive = False
 
-                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, add_interactive)
+                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, is_interactive)
 
     @classmethod
     def cargar_mobs(cls, extra_data, capa = 'capa_ground'):
@@ -77,7 +77,7 @@ class Loader:
         except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
-        Loader.STAGE.add_property(Ed.HERO, Cs.CAPA_HERO)
+        cls.STAGE.add_property(Ed.HERO, Cs.CAPA_HERO)
 
     @classmethod
     def cargar_quests(cls, ):

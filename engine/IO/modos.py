@@ -154,8 +154,9 @@ class Modo:
 
                 elif event.key == C.TECLAS.DERECHA:
                     ED.DIALOG.use_keyup_func('derecha')
-                    
-                # s  # ED.MODO = "Aventura"
+                
+                if ED.DIALOG is None:
+                    ED.MODO = "Aventura"
 
         return ED.RENDERER.update(fondo)
 
