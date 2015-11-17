@@ -175,7 +175,7 @@ class Modo:
         ED.onPause = True
 
         ED.menu_actual = menu
-        Renderer.addOverlay(menu, C.CAPA_OVERLAYS_MENUS)
+        Renderer.add_overlay(menu, C.CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
     @staticmethod

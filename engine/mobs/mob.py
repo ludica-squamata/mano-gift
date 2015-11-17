@@ -18,7 +18,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
     idle_walk_alpha = {}
     estado = '' #idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
-    def __init__(self, data, x, y):
+    def __init__(self, data, x, y, focus=False):
         self.images = {}
         self.mascaras = {}
         self.data = data
@@ -71,7 +71,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
             self.objetivo = MobGroup[data['objetivo']]
         
         self.establecer_estado('idle')
-        super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y)
+        super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y, center=focus)
         #self.ubicar(x,y)
         #print(self.nombre,self.mapX,self.mapY)
         if self.nombre not in MobGroup:
@@ -97,7 +97,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
                 self.image = self.death_img
             else:  # esto queda hasta que haga sprites 'muertos' de los npcs
                    # pero necesito más resolución para hacerlos...
-                self.stage.delProperty(self)
+                self.stage.del_property(self)
             self.dead = True
             del MobGroup[self.nombre]
     

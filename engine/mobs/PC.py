@@ -1,5 +1,4 @@
-from pygame import mask
-from engine.globs import Constants as C, EngineData as ED, MobGroup
+from engine.globs import EngineData as Ed
 from engine.globs.eventDispatcher import EventDispatcher
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
@@ -9,8 +8,8 @@ from .mob import Mob
 class PC(Mob, Parlante):
     alcance_cc = 0  # cuerpo a cuerpo.. 16 es la mitad de un cuadro.
 
-    def __init__(self, data, x, y):
-        super().__init__(data, x, y)
+    def __init__(self, data, x, y, ):
+        super().__init__(data, x, y, focus=True)
         self.alcance_cc = data['alcance_cc']
         self.inventario = Inventory(10, 10 + self.fuerza)
 
@@ -27,11 +26,10 @@ class PC(Mob, Parlante):
             self.cambiar_direccion('abajo')
 
         dx, dy = dx * self.velocidad, dy * self.velocidad
-
         # DETECTAR LAS SALIDAS
         for spr in self.stage.salidas:
             if self.colisiona(spr, dx, dy):
-                ED.setear_mapa(spr.dest, spr.link)
+                Ed.setear_mapa(spr.dest, spr.link)
                 dx, dy = 0, 0
 
         if not self.detectar_colisiones(dx, 0):
@@ -58,7 +56,7 @@ class PC(Mob, Parlante):
                     try:
                         item = sprite()
                         self.inventario.agregar(item)
-                        self.stage.delProperty(sprite)
+                        self.stage.del_property(sprite)
                     except InventoryError as Error:
                         print(Error)
 
@@ -105,10 +103,11 @@ class PC(Mob, Parlante):
         
         super().update()
 
-    def iniciar_dialogo(self, sprite=None):
+    def iniciar_dialogo(self):
         x, y = self.direcciones[self.direccion]
         
         sprite = self._interact_with_mobs(x, y)
+        post_dir = ''
         if x:
             if x > 0:
                 post_dir = 'izquierda'
@@ -119,8 +118,7 @@ class PC(Mob, Parlante):
                 post_dir = 'abajo'
             else:
                 post_dir = 'arriba'
-                
         
         if sprite is not None:
-            sprite.iniciar_dialogo(self,post_dir)
+            sprite.iniciar_dialogo(self, post_dir)
         return super().hablar(sprite)

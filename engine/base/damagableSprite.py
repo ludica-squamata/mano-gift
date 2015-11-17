@@ -12,7 +12,7 @@ class damageableSprite: #(AzoeSprite):
                 self.image = self.death_img
             else: # esto queda hasta que haga sprites 'muertos' de los npcs
                 Renderer.delObj(self)
-                self.stage.delProperty(self)
+                self.stage.del_property(self)
             self.dead = True
             MobGroup.remove(self)
 
