@@ -1,4 +1,4 @@
-﻿from engine.IO.menucircular import CircularMenu, BaseElement
+from engine.IO.menucircular import CircularMenu, BaseElement
 from engine.globs import EngineData as Ed, Constants as Cs
 from pygame import font, Surface, SRCALPHA
 
@@ -46,7 +46,9 @@ class InventoryElement(BaseElement):
     @staticmethod
     def _crear_base(w, h):
         image = Surface((w, h), SRCALPHA)
-        image.fill((125, 125, 125, 200))
+        image.fill((0,0,0,255))
+        image.fill((125, 125, 125, 200),(1,1,w-2,h-2))
+        
         rect = image.get_rect()
         return image, rect
 
@@ -105,6 +107,7 @@ class InventoryCircularDisplay(CircularMenu):
             cascadas[obj.nombre] = obj.cascada
 
         super().__init__(cascadas, cx, cy)
+        self.functions['on_keydown'].update({'inventario':self.salir})
 
     def _change_cube_list(self):
         super()._change_cube_list()
@@ -123,11 +126,15 @@ class InventoryCircularDisplay(CircularMenu):
         Ed.RENDERER.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
             Ed.RENDERER.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
-
+    
     def back(self):
+        if self.cascadaActual == 'inicial':
+            self.salir()
+        else:
+            super().back()
+    
+    def salir(self):
         if self.cascadaActual == 'inicial':
             Ed.RENDERER.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
             Ed.DIALOGO = None
             Ed.MODO = 'Aventura'
-        else:
-            super().back()

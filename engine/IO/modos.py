@@ -67,8 +67,11 @@ class Modo:
         ED.HUD.update()
         dx, dy = Modo.dx, Modo.dy
         for event in _filtrar(events):
-            # if event.type == KEYDOWN:
-            # print(event)
+            if event.type == KEYDOWN:
+                if event.key == C.TECLAS.INVENTARIO:
+                    ED.MODO = 'Dialogo'
+                    ED.DIALOG = InventoryCircularDisplay()
+                    
             if event.type == C.TAP:
                 if event.key == C.TECLAS.HABLAR:
                     if ED.HERO.iniciar_dialogo():
@@ -77,11 +80,8 @@ class Modo:
                         ED.MODO = 'Aventura'
 
                 elif event.key == C.TECLAS.INVENTARIO:
-                    ED.MODO = 'Dialogo'
-                    #ED.HUD.Inventory.SelectCuadro()
-                    ED.DIALOG = InventoryCircularDisplay()
+                    pass
                     
-
                 elif event.key == C.TECLAS.POSICION_COMBATE:
                     ED.HERO.cambiar_estado()
 
@@ -155,8 +155,7 @@ class Modo:
                 elif event.key == C.TECLAS.DERECHA:
                     ED.DIALOG.use_keyup_func('derecha')
                     
-                if ED.DIALOG is None:
-                    ED.MODO = "Aventura"
+                # s  # ED.MODO = "Aventura"
 
         return ED.RENDERER.update(fondo)
 

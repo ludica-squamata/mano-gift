@@ -108,23 +108,23 @@ class CircularMenu:
         self.change_radius(self.radius)
 
         self.functions = {
-            'keydown': {
+            'on_keydown': {
                 'izquierda': lambda: self.turn(-1),
                 'derecha': lambda: self.turn(+1),
                 'hablar': self.accept,
-                'cancelar': self.back,
+                'cancelar': self.back
             },
-            'keyup': {
+            'on_keyup': {
                 'izquierda': self.stop,
                 'derecha': self.stop
             }
         }
 
     def use_keydown_func(self, key):
-        self.use_function('keydown', key)
+        self.use_function('on_keydown', key)
 
     def use_keyup_func(self, key):
-        self.use_function('keyup', key)
+        self.use_function('on_keyup', key)
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:
