@@ -1,10 +1,10 @@
 from .menu_Items import MenuItems
 from pygame import Surface, Rect
 from pygame.sprite import LayeredUpdates
-from engine.misc import Resources as r
+from engine.misc import Resources as Rs
 from engine.libs.textrect import render_textrect
-from engine.globs import EngineData as ED
-from engine.UI.widgets import FilaBase, EspacioEquipable
+from engine.globs import EngineData as Ed
+from engine.UI.widgets import Fila, EspacioEquipable
 
 
 class MenuEquipo(MenuItems):
@@ -17,7 +17,7 @@ class MenuEquipo(MenuItems):
     cambio = False
 
     def __init__(self):
-        '''Crea e inicaliza las varibales del menú Equipo.'''
+        """Crea e inicaliza las varibales del menú Equipo."""
 
         super(MenuItems, self).__init__('Equipo')
         self.espacios = LayeredUpdates()  # grupo de espacios equipables.
@@ -51,7 +51,7 @@ class MenuEquipo(MenuItems):
         ]
 
         for e in esp:
-            item = ED.HERO.equipo[e['nom']]
+            item = Ed.HERO.equipo[e['nom']]
             cuadro = EspacioEquipable(e['nom'], item, e['direcciones'], *e['e_pos'])
             titulo = self.titular(e['nom'])
             self.canvas.blit(titulo, e['t_pos'])
@@ -63,9 +63,9 @@ class MenuEquipo(MenuItems):
         selected.ser_elegido()
         self.current = selected
 
-        # dibujar todo
+        # dibujar
         self.espacios.draw(self.canvas)
-        self.hombre = r.cargar_imagen('hombre_mimbre.png')
+        self.hombre = Rs.cargar_imagen('hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))
         self.crear_espacio_selectivo(188, self.canvas.get_height() - 64)
 
@@ -108,7 +108,7 @@ class MenuEquipo(MenuItems):
         return render
 
     def select_one(self, direccion):
-        '''Desplaza la selección al espacio equipable actual, y lo resalta.'''
+        """Desplaza la selección al espacio equipable actual, y lo resalta."""
 
         self.deselect_all(self.espacios)
         self.draw_space.fill(self.bg_cnvs)
@@ -133,33 +133,33 @@ class MenuEquipo(MenuItems):
         """Crea el marco donde aparecerán las listas de items que se correspondan
         con el espacio actualmente seleccionado"""
 
-        marco = self.crear_espacio_titulado(ancho, alto, 'Inventario')
+        marco = self.create_titled_canvas(ancho, alto, 'Inventario')
         rect = self.canvas.blit(marco, (266, 39))
         self.draw_space_rect = Rect((rect.x + 4, rect.y + 26), (rect.w - 9, rect.h - 31))
         self.draw_space = Surface(self.draw_space_rect.size)
         self.draw_space.fill(self.bg_cnvs)
 
     def llenar_espacio_selectivo(self):
-        '''Llena el espacio selectivo con los items que se correspondan con el espacio
-        actualmente seleccionado. Esta función se llama cuando se cambia el espacio.'''
+        """Llena el espacio selectivo con los items que se correspondan con el espacio
+        actualmente seleccionado. Esta función se llama cuando se cambia el espacio."""
 
         h = self.altura_del_texto
+
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
-        for idxItemCant in ED.HERO.inventario('equipable', espacio.nombre):
-            i, item, cant = idxItemCant
-            fila = Fila(item, 188, self.fuente_MP, self.font_high_color, (0, i * h + i))
+        items = Ed.HERO.inventario('equipable', espacio.nombre)
+        for i in range(len(items)):
+            fila = Fila(items[i], 188, 0, i * h + i, tag='n')
             self.filas.add(fila)
 
         self.opciones = len(self.filas)
 
     def cambiar_foco(self):
-        '''Cambia el foco (las funciones que se utilizarán segun el imput)
-        variando entre los espacios equipables y la lista de selección.'''
+        """Cambia el foco (las funciones que se utilizarán segun el imput)
+        variando entre los espacios equipables y la lista de selección."""
 
-        if self.current.item == None:
+        if self.current.item is None:
             if self.opciones > 0:
-                h = self.altura_del_texto
                 self.foco = 'items'
                 self.opciones = len(self.filas)
                 self.elegir_fila()
@@ -167,14 +167,14 @@ class MenuEquipo(MenuItems):
             self.desequipar_espacio()
 
     def equipar_item(self):
-        '''Cuando un espacio esta seleccionado, y el foco está en la lista de items
-        usar esta función traslada el item de la lista al espacio seleccionado.'''
+        """Cuando un espacio esta seleccionado, y el foco está en la lista de items
+        usar esta función traslada el item de la lista al espacio seleccionado."""
 
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
         if espacio.nombre == item.espacio:
             espacio.ocupar(item)
-            ED.HERO.equipar_item(item)
+            Ed.HERO.equipar_item(item)
             self.draw_space.fill(self.bg_cnvs)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
@@ -184,24 +184,25 @@ class MenuEquipo(MenuItems):
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
         espacio.desocupar()
-        ED.HERO.desequipar_item(item)
+        Ed.HERO.desequipar_item(item)
         self.espacios.draw(self.canvas)
 
     def cancelar(self):
         if self.foco == 'espacios':
             return super().cancelar()
         else:
-            h = self.altura_del_texto
-            self.current.serDeselegido()
+            self.current.isSelected = False
             self.foco = 'espacios'
 
     def usar_funcion(self, tecla):
-        '''Determina qué grupo de funciones se van a usar según el foco actual.'''
+        """Determina qué grupo de funciones se van a usar según el foco actual."""
 
         if self.foco == 'espacios':
             funciones = self.funciones_espacios
         elif self.foco == 'items':
             funciones = self.funciones_lista
+        else:
+            funciones = []
 
         if tecla in ('arriba', 'abajo', 'izquierda', 'derecha'):
             funciones[tecla](tecla)
@@ -215,16 +216,3 @@ class MenuEquipo(MenuItems):
         self.filas.update()
         self.filas.draw(self.draw_space)
         self.canvas.blit(self.draw_space, self.draw_space_rect)
-
-
-class Fila(FilaBase):  # menu_equipo
-    def construir_fila(self, bg):
-        _rect = Rect((-1, -1), (int(self.ancho // 2), self.fuente.get_height() + 1))
-        img_nmbr = render_textrect(self.nombre, self.fuente, _rect, self.color, bg, 1)
-        img_cant = render_textrect('x' + str(self.cantidad), self.fuente, _rect, self.color, bg, 1)
-        image = Surface((self.ancho, _rect.h))
-        image.fill(self.bg_cnvs)
-        image.blit(img_nmbr, (3, 0))
-        image.blit(img_cant, (self.ancho // 2, 0))
-
-        return image

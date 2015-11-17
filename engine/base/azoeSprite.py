@@ -1,5 +1,4 @@
 from pygame import sprite, mask, Surface
-from engine.misc import Resources
 
 
 class AzoeSprite(sprite.Sprite):

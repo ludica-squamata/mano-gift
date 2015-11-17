@@ -45,6 +45,7 @@ class Consumible(Item):
         usado = False
         stat = self.data.get('efecto', {}).get('stat', '')
         mod = self.data.get('efecto', {}).get('mod', '')
+        
         if stat == 'salud':
             actual = stat+'_act'
             maximo = stat+'_max'
@@ -58,6 +59,11 @@ class Consumible(Item):
                 valor += ValActual
             
             setattr(mob, actual, valor)
+            usado = True
+        else:
+            actual = getattr(mob,stat)
+            valor = actual+mod
+            setattr(mob,stat,valor)
             usado = True
         return usado
 

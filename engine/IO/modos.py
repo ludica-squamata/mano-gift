@@ -162,11 +162,11 @@ class Modo:
             ED.menu_previo = titulo
 
         if titulo not in ED.MENUS:
-            # try:
+            try:
                 menu = eval('Menu' + titulo + '()')
-            # except Exception as Description:
-            #     print('No se pudo abrir el menu porque:', Description)
-            #     menu = Menu(titulo)
+            except Exception as Description:
+                print('No se pudo abrir el menu porque:', Description)
+                menu = Menu(titulo)
         else:
             menu = ED.MENUS[titulo]
             menu.reset()

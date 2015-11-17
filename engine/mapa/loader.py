@@ -29,7 +29,7 @@ class Loader:
 
         for ref in pos:
             try:
-                data = Rs.abrir_json(Md.items + ref + '.item')
+                data = Rs.abrir_json(Md.items + ref + '.json')
                 if ref in imgs:
                     imagen = Rs.cargar_imagen(imgs[ref])
                 else:
@@ -41,12 +41,12 @@ class Loader:
             for x, y in pos[ref]:
                 if data:
                     prop = newProp(ref, imagen, x, y, data)
-                    add_interactive = True
+                    is_interactive = True
                 else:
                     prop = newProp(ref, imagen, x, y)
-                    add_interactive = False
+                    is_interactive = False
 
-                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, add_interactive)
+                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, is_interactive)
 
     @classmethod
     def cargar_mobs(cls, extra_data, capa = 'capa_ground'):
@@ -56,7 +56,7 @@ class Loader:
                 clase = NPCSocial
 
                 for ref in pos:
-                    data = Rs.abrir_json(Md.mobs + ref + '.mob')
+                    data = Rs.abrir_json(Md.mobs + ref + '.json')
                     data.update(extra_data[ref])
                     for x, y in pos[ref]:
                         mob = clase(ref, x, y, data)
@@ -75,7 +75,7 @@ class Loader:
             Ed.HERO.mapX = x
             Ed.HERO.mapY = y
         except (IndexError, KeyError, AttributeError):
-            Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.mob'), x, y)
+            Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
         Loader.STAGE.add_property(Ed.HERO, Cs.CAPA_HERO)
 
@@ -90,4 +90,4 @@ class Loader:
         salidas = cls.STAGE.data['salidas']
         for salida in salidas:
             sld = Salida(salida, salidas[salida])
-            Loader.STAGE.add_property(sld, Cs.CAPA_GROUND_SALIDAS)
+            cls.STAGE.add_property(sld, Cs.CAPA_GROUND_SALIDAS)
