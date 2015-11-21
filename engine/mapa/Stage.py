@@ -116,7 +116,7 @@ class ChunkMap(Sprite):
         self.mask = mask.from_threshold(Rs.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
                                         (1, 1, 1, 255))
 
-        self.cargar_limites(data['limites'])
+        self.cargar_limites(data.get('limites', self.limites))
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
