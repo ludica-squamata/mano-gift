@@ -13,7 +13,7 @@
     "capa_top":{
         "props":{}
     },
-    "entradas":{"puerta":[320,240]
+    "entradas":{"puerta":[320,400]
     },
     "salidas":{"exit":{
         "rect":[320,448,32,32],

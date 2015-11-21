@@ -5,7 +5,7 @@ from pygame.sprite import Sprite, LayeredUpdates
 from engine.misc import Resources as Rs
 from .loader import Loader
 from .LightSource import DayLight  # SpotLight
-from pygame import mask, Rect
+from pygame import mask, Rect, Surface
 
 
 class Stage:
@@ -111,11 +111,28 @@ class ChunkMap(Sprite):
         self.stage = stage
         self.nombre = nombre
 
-        self.image = Rs.cargar_imagen(data['capa_background']['fondo'])
-        self.rect = self.image.get_rect(topleft = (off_x, off_y))
-        self.mask = mask.from_threshold(Rs.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
-                                        (1, 1, 1, 255))
+        imagen = Rs.cargar_imagen(data['capa_background']['fondo'])
+        colisiones = Rs.cargar_imagen(data['capa_background']['colisiones'])
+        
+        w, h = imagen.get_size()
+        if w < 800 or h < 800:
+            img = Surface((800,800))
+            col = img.copy()
+            col.fill(Cs.COLOR_COLISION)
+            
+            _rect = img.get_rect()
+            topleft = imagen.get_rect(center = _rect.center)
+            
+            img.blit(imagen,topleft)
+            col.blit(colisiones,topleft)    
+        else:
+            img = imagen
+            col = colisiones
 
+        self.image = img
+        self.mask = mask.from_threshold(col, Cs.COLOR_COLISION, (1, 1, 1, 255))
+        self.rect = img.get_rect(topleft = (off_x, off_y))
+        
         self.cargar_limites(data.get('limites', self.limites))
 
     def __repr__(self):
