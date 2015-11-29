@@ -2,6 +2,7 @@ from engine.globs import Constants as Cs, Tiempo, TimeStamp
 from engine.globs import ModData as Md, EngineData as Ed
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
+from engine.globs.renderer import Renderer
 from engine.misc import Resources as Rs
 from .loader import Loader
 from .LightSource import DayLight  # SpotLight
@@ -37,9 +38,9 @@ class Stage:
         self.cargar_timestamps()
         Loader.set_stage(self)
         Loader.load_everything(entrada, mobs_data)
-
+    
     def register_at_renderer(self):
-        Ed.RENDERER.camara.set_background(self.mapa)
+        Renderer.camara.set_background(self.mapa)
         Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         Tiempo.noche.set_lights(DayLight(1024))
         self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
@@ -51,7 +52,7 @@ class Stage:
             y = self.rect.y + obj.mapY
             obj.ubicar(x, y, self.offset_y)
 
-            Ed.RENDERER.camara.add_real(obj)
+            Renderer.camara.add_real(obj)
 
     def add_property(self, obj, _layer, add_interactive = False):
         if _layer == Cs.GRUPO_SALIDAS:
@@ -66,7 +67,7 @@ class Stage:
             self.properties.remove(obj)
         if obj in self.interactives:
             self.interactives.remove(obj)
-        Ed.RENDERER.camara.remove_obj(obj)
+        Renderer.camara.remove_obj(obj)
 
     def cargar_timestamps(self):
         if self.data['ambiente'] == 'exterior':
@@ -77,7 +78,7 @@ class Stage:
     def anochecer(self, event):
         """
         :param event:
-        :type event:GiftEvent
+        :type event:AzoeEvent
         :return:
         """
         print(event)
@@ -115,8 +116,8 @@ class ChunkMap(Sprite):
         self.rect = self.image.get_rect(topleft = (off_x, off_y))
         self.mask = mask.from_threshold(Rs.cargar_imagen(data['capa_background']['colisiones']), Cs.COLOR_COLISION,
                                         (1, 1, 1, 255))
-
-        self.cargar_limites(data['limites'])
+        
+        self.cargar_limites(data.get('limites',self.limites))
 
     def __repr__(self):
         return "ChunkMap " + self.nombre

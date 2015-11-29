@@ -2,96 +2,64 @@ from pygame.sprite import LayeredUpdates
 from pygame import Rect
 from .constantes import Constants as Cs
 
-
-class Renderer:
-    camara = None
-    overlays = None
-    use_focus = False
-
-    def __init__(self):
-        self.camara = Camara(self)
-        self.overlays = LayeredUpdates()
-
-    def clear(self):
-        self.camara.clear()
-        self.overlays.empty()
-
-    def add_overlay(self, obj, _layer):
-        self.overlays.add(obj, layer = _layer)
-
-    def del_overlay(self, obj):
-        if obj in self.overlays:
-            self.overlays.remove(obj)
-
-    def update(self, fondo):
-        fondo.fill((125, 125, 125))
-        self.camara.update(self.use_focus)
-
-        for over in self.overlays:
-            if over.active:
-                over.update()
-        ret = self.camara.draw(fondo)
-        ret += self.overlays.draw(fondo)
-        return ret
-
-
 class Camara:
-    bg = None  # el fondo
-    bgs = None  # el grupo de todos los fondos cargados
-    bgs_rect = None  # el rect colectivo de los fondos
     focus = None  # objeto que la camara sigue.
-    visible = None  # objetos que se ven (incluye sombras)
-    real = None  # objetos reales del mundo (no incluye sombras)
-    x, y, w, h = 0, 0, 0, 0
+    bg = None  # el fondo
+    bgs_rect = None  # el rect colectivo de los fondos
+    bgs = LayeredUpdates()  # el grupo de todos los fondos cargados    
+    visible = LayeredUpdates()  # objetos que se ven (incluye sombras)
+    real = LayeredUpdates()  # objetos reales del mundo (no incluye sombras)
+    x, y = 0, 0
+    w, h = Cs.ANCHO, Cs.ALTO
+    rect = Rect(x, y, w, h)
 
-    def __init__(self, parent):
-        self.parent = parent
-        self.visible = LayeredUpdates()
-        self.real = LayeredUpdates()
-        self.bgs = LayeredUpdates()
-        self.w = Cs.ANCHO
-        self.h = Cs.ALTO
-        self.rect = Rect(self.x, self.y, self.w, self.h)
+    @classmethod
+    def set_background(cls, spr):
+        if cls.bg is None:
+            cls.bg = spr
+            cls.bgs_rect = spr.rect.copy()
+        cls.bgs.add(spr)
+    
+    @classmethod
+    def add_real(cls, obj):
+        cls.real.add(obj)
+        if obj not in cls.visible:
+            cls.visible.add(obj, layer = obj.z)
 
-    def set_background(self, spr):
-        if self.bg is None:
-            self.bg = spr
-            self.bgs_rect = spr.rect.copy()
-        self.bgs.add(spr)
+    @classmethod
+    def add_visible(cls, obj):
+        if obj not in cls.visible:
+            cls.visible.add(obj, layer = obj.z)
 
-    def add_real(self, obj):
-        self.real.add(obj)
-        if obj not in self.visible:
-            self.visible.add(obj, layer = obj.z)
-
-    def add_visible(self, obj):
-        if obj not in self.visible:
-            self.visible.add(obj, layer = obj.z)
-
-    def remove_obj(self, obj):
-        if obj in self.real:
-            self.real.remove(obj)
-        if obj in self.visible:
-            self.visible.remove(obj)
-
-    def set_focus(self, spr):
-        self.focus = spr
-
-    def is_focus(self, spr):
-        if self.focus is not None and hasattr(spr, 'nombre'):
-            if self.focus.nombre == spr.nombre:
+    @classmethod
+    def remove_obj(cls, obj):
+        if obj in cls.real:
+            cls.real.remove(obj)
+        if obj in cls.visible:
+            cls.visible.remove(obj)
+    
+    @classmethod
+    def set_focus(cls, spr):
+        cls.focus = spr
+    
+    @classmethod
+    def is_focus(cls, spr):
+        if cls.focus is not None and hasattr(spr, 'nombre'):
+            if cls.focus.nombre == spr.nombre:
                 return True
         return False
 
-    def clear(self):
-        self.real.empty()
-        self.visible.empty()
-        self.bgs.empty()
-        self.bg = None
-
-    def detectar_mapas_adyacentes(self):
-        r = self.rect.inflate(2,2)
-        map_at = self.bgs.get_sprites_at
+    @classmethod
+    def clear(cls):
+        cls.real.empty()
+        cls.visible.empty()
+        cls.bgs.empty()
+        cls.bg = None
+    
+    @classmethod
+    def detectar_mapas_adyacentes(cls):
+        r = cls.rect.inflate(2,2)
+        map_at = cls.bgs.get_sprites_at
         adyacent_map_key = ''
         reference = []
 
@@ -149,57 +117,93 @@ class Camara:
             mapa = reference[0]
             new_map = mapa.checkear_adyacencia(adyacent_map_key)
             if new_map:
-                self.set_background(new_map)
+                cls.set_background(new_map)
                 if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
-                    self.bgs_rect.w += new_map.rect.w
+                    cls.bgs_rect.w += new_map.rect.w
                     if adyacent_map_key == 'izq':
-                        self.bgs_rect.x = new_map.rect.x
+                        cls.bgs_rect.x = new_map.rect.x
                 elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
-                    self.bgs_rect.h += new_map.rect.h
+                    cls.bgs_rect.h += new_map.rect.h
                     if adyacent_map_key == 'sup':
-                        self.bgs_rect.y = new_map.rect.y
+                        cls.bgs_rect.y = new_map.rect.y
     
-    def update_sprites_layer(self):
-        for spr in self.visible:
-            self.visible.change_layer(spr, spr.z)
+    @classmethod
+    def update_sprites_layer(cls):
+        for spr in cls.visible:
+            cls.visible.change_layer(spr, spr.z)
 
-    def panear(self):
-        new_x = self.focus.rect.x - self.focus.mapX
-        new_y = self.focus.rect.y - self.focus.mapY
+    @classmethod
+    def panear(cls):
+        new_x = cls.focus.rect.x - cls.focus.mapX
+        new_y = cls.focus.rect.y - cls.focus.mapY
 
-        dx = new_x - self.bg.rect.x
-        dy = new_y - self.bg.rect.y
+        dx = new_x - cls.bg.rect.x
+        dy = new_y - cls.bg.rect.y
         
-        f = self.focus.rect
-        b = self.bgs_rect
-        s = self.rect
+        f = cls.focus.rect
+        b = cls.bgs_rect
+        s = cls.rect
         
         if any([b.x+dx > 1, b.right+dx < s.w-2, f.x != s.centerx]):
             dx = 0
         if any([b.y+dy > 2, b.bottom+dy < s.h-2, f.y != s.centery]):
             dy = 0
         
-        self.bgs_rect.move_ip(dx, dy)
-        for spr in self.bgs:
+        cls.bgs_rect.move_ip(dx, dy)
+        for spr in cls.bgs:
             spr.rect.move_ip(dx, dy)
 
-        for spr in self.real:
-            x = self.bg.rect.x + spr.mapX
-            y = self.bg.rect.y + spr.mapY
+        for spr in cls.real:
+            x = cls.bg.rect.x + spr.mapX
+            y = cls.bg.rect.y + spr.mapY
             spr.ubicar(x, y, dy)
-
-    def update(self, use_focus):
-        self.bgs.update()
-        self.visible.update()
+    
+    @classmethod
+    def update(cls, use_focus):
+        cls.bgs.update()
+        cls.visible.update()
         if use_focus:
-            self.detectar_mapas_adyacentes()
-            self.panear()
+            cls.detectar_mapas_adyacentes()
+            cls.panear()
 
-        self.update_sprites_layer()
+        cls.update_sprites_layer()
+    
+    @classmethod
+    def draw(cls, fondo):
+        ret = cls.bgs.draw(fondo)
+        ret += cls.visible.draw(fondo)
+        # draw.line(fondo,(0,100,255),(cls.rect.centerx,0),(cls.rect.centerx,cls.h))
+        # draw.line(fondo,(0,100,255),(0,cls.rect.centery),(cls.w,cls.rect.centery))
+        return ret
 
-    def draw(self, fondo):
-        ret = self.bgs.draw(fondo)
-        ret += self.visible.draw(fondo)
-        # draw.line(fondo,(0,100,255),(self.rect.centerx,0),(self.rect.centerx,self.h))
-        # draw.line(fondo,(0,100,255),(0,self.rect.centery),(self.w,self.rect.centery))
+        
+class Renderer:
+    use_focus = False
+    camara = Camara()
+    overlays = LayeredUpdates()
+    
+    @classmethod
+    def clear(cls):
+        cls.camara.clear()
+        cls.overlays.empty()
+
+    @classmethod
+    def add_overlay(cls, obj, _layer):
+        cls.overlays.add(obj, layer = _layer)
+
+    @classmethod
+    def del_overlay(cls, obj):
+        if obj in cls.overlays:
+            cls.overlays.remove(obj)
+
+    @classmethod
+    def update(cls, fondo):
+        fondo.fill((125, 125, 125))
+        cls.camara.update(cls.use_focus)
+
+        for over in cls.overlays:
+            if over.active:
+                over.update()
+        ret = cls.camara.draw(fondo)
+        ret += cls.overlays.draw(fondo)
         return ret

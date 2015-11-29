@@ -1,4 +1,5 @@
-from os import getcwd as cwd, path
+﻿from os import getcwd as cwd, path, listdir
+from importlib import machinery
 
 class ModData:
     mod_folder = ''
@@ -13,17 +14,15 @@ class ModData:
     items = ''
     scripts = ''
     scenes = ''
-
+    
     @classmethod
     def init(cls, ini):
         from engine.misc import Util as U
-        from importlib import machinery
-        import types
         
-        if not cls.find_mod_folder(ini):
+        if not cls._find_mod_folder(ini):
             U.salir("la ruta no existe")
         
-        data = cls.get_file_data('mod.json')
+        data = cls._get_file_data('mod.json')
         if data is not None:
             
             cls.data = data
@@ -38,16 +37,23 @@ class ModData:
             cls.scripts = root+data['folders']['scripts']+'/'
             cls.scenes = root+data['folders']['scenes']+'/'
             
-            loader = machinery.SourceFileLoader("module.name", root+data['intro'])
-            m = loader.load_module()
-            cls.intro = getattr(m, "intro")
-            
+            for script in listdir(cls.scripts):
+            # lo convertí en un loop para poder agregar, por ejemplo,
+            # una pantalla de gameover sin tener que buscar ese nombre
+                ruta = cls.scripts+script
+                if path.isfile(ruta):
+                    name = script.rstrip('.py')
+                    module = machinery.SourceFileLoader("module.name", ruta).load_module()
+                    if hasattr(module, name) and not hasattr(cls,name):
+                        # lo resolví mmás fácil. Si ésta clase no tiene el nombre ya...
+                        setattr(cls,name,(getattr(module, name)))
+                        # añadirlo.
+        
         else:
             U.salir('No data in mod folder')
     
     @classmethod
-    def find_mod_folder(cls, ini):
-
+    def _find_mod_folder(cls, ini):
         folder = path.normpath(path.join(cwd(), ini['folder']))
         if not path.exists(folder):
             folder = path.normpath(ini['folder'])
@@ -58,7 +64,7 @@ class ModData:
         return True
     
     @classmethod
-    def get_file_data(cls, filename):
+    def _get_file_data(cls, filename):
         from engine.misc import Resources as r
         ruta = cls.mod_folder+filename
         if not path.exists(ruta):
@@ -66,6 +72,3 @@ class ModData:
         
         data = r.abrir_json(ruta)
         return data
-    
-    def intro(cls):
-        pass

@@ -3,7 +3,6 @@ from .mod_data import ModData as MD
 from .giftgroups import MobGroup
 from .renderer import Renderer
 from .tiempo import Tiempo
-from .eventDispatcher import EventDispatcher
 
 class EngineData:
     mapas = {}
@@ -16,9 +15,6 @@ class EngineData:
     MENUS = {}
     MODO = ''
     onPause = False
-    RENDERER = Renderer()
-    EVENTS = EventDispatcher()
-    
     scene_data = None
     
     @classmethod
@@ -30,14 +26,14 @@ class EngineData:
         cls.setear_mapa(stage,entrada)
         Tiempo.setear_momento(scene_data['dia'],*scene_data['hora'])
         if scene_data['focus'] != '':
-            cls.RENDERER.camara.set_focus(MobGroup[scene_data['focus']])
-            cls.RENDERER.use_focus = True
+            Renderer.camara.set_focus(MobGroup[scene_data['focus']])
+            Renderer.use_focus = True
         else:
-            cls.RENDERER.use_focus = False
+            Renderer.use_focus = False
     
     @classmethod
     def setear_mapa(cls,nombre,entrada):
-        cls.RENDERER.clear()
+        Renderer.clear()
         from engine.UI.hud import HUD
         from engine.mapa import Stage
         from engine.mapa.loader import Loader

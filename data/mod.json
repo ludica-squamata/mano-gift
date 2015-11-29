@@ -12,6 +12,5 @@
         "items":"items",
         "scripts":"scripts",
         "scenes":"scenes"
-    },
-    "intro":"intro.py"
+    }
 }
