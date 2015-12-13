@@ -183,7 +183,7 @@ class TimeStamp:
         return self._convert(s)
 
     def __mul__(self, factor):
-        if isinstance(factor, TimeStamp):
+        if not isinstance(factor, int):
             raise NotImplementedError('Solo puede multiplicarse por un factor')
         s = (self._h * 3600 + self._m * 60 + self._s) * factor
         return self._convert(s)
@@ -258,7 +258,7 @@ class Tiempo:
             if cls.clock.day_flag:
                 cls.dia += 1
             if cls.clock.hour_flag:
-                EventDispatcher.trigger('hora', 'Tiempo', {"hora": cls.clock.h})
+                EventDispatcher.trigger('hora', 'Tiempo', {"hora": cls.clock.timestamp()})
     
     @classmethod
     def crear_noche(cls, tamanio):
