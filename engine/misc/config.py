@@ -1,5 +1,5 @@
 from .resources import Resources
-
+import os
 
 class Config:
     # configuraciones
@@ -9,10 +9,7 @@ class Config:
     __defaults = {
         "mostrar_intro": True,
         "recordar_menus": True,
-        "resolucion": {
-            "ANCHO": 640,
-            "ALTO": 480
-        },
+        "metodo_de_entrada":'teclado',
 
         "teclas": {
             "arriba": 273,
@@ -29,13 +26,28 @@ class Config:
             "menu": 13,
             "debug": 282,
             "salir": 27
+        },
+        
+        "botones":{
+            "inventario": 0,
+            "cancelar": 1,
+            "hablar": 2,
+            "accion": 3,
+            "posicion": 4,
+            "debug": 5,
+            
+            "menu": 8,
+            "salir": 9,
+            "derecha": 10,
+            "izquierda": 11,
+            "arriba": 12,
+            "abajo": 13
         }
     }
 
     @classmethod
     def cargar(cls):
         if not len(cls.data):
-            import os
             if os.path.isfile('config.json'):
                 cls.data = Resources.abrir_json('config.json')
             else:

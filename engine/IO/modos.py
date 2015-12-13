@@ -1,7 +1,7 @@
-from engine.globs import Constants as C, EngineData as ED
+from engine.globs import Constants as Cs, EngineData as Ed
 from engine.misc import Util
-from .taphold import _filtrar
-from pygame import KEYDOWN, QUIT, KEYUP, mouse
+from .taphold import get_taphold_events
+from pygame import KEYDOWN, QUIT, K_ESCAPE
 from engine.UI.menues import *
 
 
@@ -17,207 +17,183 @@ class Modo:
                 Util.salir()
 
             elif event.type == KEYDOWN:
-                if event.key == C.TECLAS.SALIR:
+                if event.key == K_ESCAPE:
                     Util.salir()
 
-                elif event.key == C.TECLAS.DEBUG:
-                    print('rect: ', ED.HERO.rect)
-                    # ED.RENDERER.use_focus = not ED.RENDERER.use_focus
-
-        if True:  # folding
-            # if not ED.RENDERER.use_focus:
-            # x,y = mouse.get_pos()
-            #    dx,dy = 0,0
-            #    if x < C.CUADRO: #32
-            #        if x <= C.CUADRO//4: #8
-            #            mouse.set_pos(C.CUADRO//4,y)
-            #            dx = +3
-            #        else:
-            #            dx = +1
-            #
-            #    elif x > C.ANCHO-C.CUADRO:
-            #        if x >= C.ANCHO-C.CUADRO//4:
-            #            mouse.set_pos(C.ANCHO-C.CUADRO//4,y)
-            #            dx = -3
-            #        else:
-            #            dx = -1
-            #
-            #    if y < C.CUADRO: #32
-            #        if y <= C.CUADRO//4: #8
-            #            mouse.set_pos(x,C.CUADRO//4)
-            #            dy = +3
-            #        else:
-            #            dy = +1
-            #
-            #    elif y > C.ALTO-C.CUADRO:
-            #        if y >= C.ALTO-C.CUADRO//4:
-            #            mouse.set_pos(x,C.ALTO-C.CUADRO//4)
-            #            dy = -3
-            #        else:
-            #            dy = -1
-            #
-            #    ED.RENDERER.camara.mover(dx,dy)
-            #    ED.RENDERER.camara.paneolibre(dx,dy)
-            #
-            pass
+                elif event.key == Cs.TECLAS.DEBUG:
+                    print('rect: ', Ed.HERO.rect)
 
     @staticmethod
     def aventura(events, fondo):
-        ED.HUD.update()
+        Ed.HUD.update()
         dx, dy = Modo.dx, Modo.dy
-        for event in _filtrar(events):
-            # if event.type == KEYDOWN:
-            # print(event)
-            if event.type == C.TAP:
-                if event.key == C.TECLAS.HABLAR:
-                    if ED.HERO.iniciar_dialogo():
-                        ED.MODO = 'Dialogo'
+        for event in get_taphold_events(events):
+            if event.type == Cs.TAP:
+                if event.key == Cs.TECLAS.HABLAR:
+                    if Ed.HERO.iniciar_dialogo():
+                        Ed.MODO = 'Dialogo'
                     else:
-                        ED.MODO = 'Aventura'
+                        Ed.MODO = 'Aventura'
 
-                elif event.key == C.TECLAS.INVENTARIO:
-                    ED.MODO = 'Dialogo'
-                    ED.HUD.Inventory.SelectCuadro()
-                    ED.DIALOG = ED.HUD
+                elif event.key == Cs.TECLAS.INVENTARIO:
+                    Ed.MODO = 'Dialogo'
+                    Ed.HUD.Inventory.SelectCuadro()
+                    Ed.DIALOG = Ed.HUD
 
-                elif event.key == C.TECLAS.POSICION_COMBATE:
-                    ED.HERO.cambiar_estado()
+                elif event.key == Cs.TECLAS.POSICION_COMBATE:
+                    Ed.HERO.cambiar_estado()
 
-                elif event.key == C.TECLAS.ACCION:
-                    ED.HERO.accion()
+                elif event.key == Cs.TECLAS.ACCION:
+                    Ed.HERO.accion()
 
-                elif event.key == C.TECLAS.MENU:
-                    Modo._popMenu('Pausa')
+                elif event.key == Cs.TECLAS.MENU:
+                    Modo.pop_menu('Pausa')
 
-                elif event.key == C.TECLAS.IZQUIERDA:
-                    ED.HERO.cambiar_direccion('izquierda', True)
-                elif event.key == C.TECLAS.DERECHA:
-                    ED.HERO.cambiar_direccion('derecha', True)
-                elif event.key == C.TECLAS.ARRIBA:
-                    ED.HERO.cambiar_direccion('arriba', True)
-                elif event.key == C.TECLAS.ABAJO:
-                    ED.HERO.cambiar_direccion('abajo', True)
+                elif event.key == Cs.TECLAS.IZQUIERDA:
+                    Ed.HERO.cambiar_direccion('izquierda', True)
+                elif event.key == Cs.TECLAS.DERECHA:
+                    Ed.HERO.cambiar_direccion('derecha', True)
+                elif event.key == Cs.TECLAS.ARRIBA:
+                    Ed.HERO.cambiar_direccion('arriba', True)
+                elif event.key == Cs.TECLAS.ABAJO:
+                    Ed.HERO.cambiar_direccion('abajo', True)
 
-            elif event.type == C.HOLD:
-                if event.key == C.TECLAS.IZQUIERDA:
+            elif event.type == Cs.HOLD:
+                if event.key == Cs.TECLAS.IZQUIERDA:
                     dx = -1
-                elif event.key == C.TECLAS.DERECHA:
+                elif event.key == Cs.TECLAS.DERECHA:
                     dx = +1
-                elif event.key == C.TECLAS.ARRIBA:
+                elif event.key == Cs.TECLAS.ARRIBA:
                     dy = -1
-                elif event.key == C.TECLAS.ABAJO:
+                elif event.key == Cs.TECLAS.ABAJO:
                     dy = +1
 
-            elif event.type == C.RELEASE:
-                if event.key == C.TECLAS.IZQUIERDA or event.key == C.TECLAS.DERECHA:
+            elif event.type == Cs.RELEASE:
+                if event.key == Cs.TECLAS.IZQUIERDA or event.key == Cs.TECLAS.DERECHA:
                     dx = 0
-                elif event.key == C.TECLAS.ABAJO or event.key == C.TECLAS.ARRIBA:
+                elif event.key == Cs.TECLAS.ABAJO or event.key == Cs.TECLAS.ARRIBA:
                     dy = 0
 
         if dx != 0 or dy != 0:
-            ED.HERO.mover(dx, dy)
+            Ed.HERO.mover(dx, dy)
         Modo.dx, Modo.dy = dx, dy
-        ED.EVENTS.process()
-        ED.MAPA_ACTUAL.update()
-        return ED.RENDERER.update(fondo)
+        Ed.EVENTS.process()
+        Ed.MAPA_ACTUAL.update()
+        return Ed.RENDERER.update(fondo)
 
     @staticmethod
     def dialogo(events, fondo):
-        for event in events:
-            if event.type == KEYDOWN:
-                if event.key == C.TECLAS.ARRIBA:
-                    ED.DIALOG.usar_funcion('arriba')
+        for event in get_taphold_events(events):
+            if event.type == Cs.TAP:
+                if event.key == Cs.TECLAS.ARRIBA:
+                    Ed.DIALOG.usar_funcion('arriba')
 
-                elif event.key == C.TECLAS.ABAJO:
-                    ED.DIALOG.usar_funcion('abajo')
+                elif event.key == Cs.TECLAS.ABAJO:
+                    Ed.DIALOG.usar_funcion('abajo')
 
-                elif event.key == C.TECLAS.IZQUIERDA:
-                    ED.DIALOG.usar_funcion('izquierda')
+                elif event.key == Cs.TECLAS.IZQUIERDA:
+                    Ed.DIALOG.usar_funcion('izquierda')
 
-                elif event.key == C.TECLAS.DERECHA:
-                    ED.DIALOG.usar_funcion('derecha')
+                elif event.key == Cs.TECLAS.DERECHA:
+                    Ed.DIALOG.usar_funcion('derecha')
 
-                elif event.key == C.TECLAS.HABLAR:
-                    ED.DIALOG.usar_funcion('hablar')
+                elif event.key == Cs.TECLAS.HABLAR:
+                    Ed.DIALOG.usar_funcion('hablar')
 
-                elif event.key == C.TECLAS.INVENTARIO:
-                    ED.DIALOG.usar_funcion('inventario')
+                elif event.key == Cs.TECLAS.INVENTARIO:
+                    Ed.DIALOG.usar_funcion('inventario')
 
-                elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                    ED.DIALOG.usar_funcion('cancelar')
-            
-            elif event.type == KEYUP:
-                if ED.DIALOG is None:
-                    ED.MODO = "Aventura"
+                elif event.key == Cs.TECLAS.CANCELAR_DIALOGO:
+                    Ed.DIALOG.usar_funcion('cancelar')
 
-        return ED.RENDERER.update(fondo)
+        if Ed.DIALOG is None:
+            Ed.MODO = "Aventura"
+
+        return Ed.RENDERER.update(fondo)
 
     @staticmethod
     def menu(events, fondo):
-        for event in events:
-            if event.type == KEYDOWN:
+        for event in get_taphold_events(events):
+
+            if event.type == Cs.TAP:
                 if Modo.setKey:
-                    ED.menu_actual.cambiar_tecla(event.key)
+                    Ed.menu_actual.cambiar_tecla(event.key)
                     Modo.setKey = False
-                else:
-                    if event.key == C.TECLAS.IZQUIERDA:
-                        ED.menu_actual.usar_funcion('izquierda')
 
-                    elif event.key == C.TECLAS.DERECHA:
-                        ED.menu_actual.usar_funcion('derecha')
+                elif event.key == Cs.TECLAS.IZQUIERDA:
+                    Ed.menu_actual.usar_funcion('izquierda')
 
-                    elif event.key == C.TECLAS.ARRIBA:
-                        ED.menu_actual.usar_funcion('arriba')
+                elif event.key == Cs.TECLAS.DERECHA:
+                    Ed.menu_actual.usar_funcion('derecha')
 
-                    elif event.key == C.TECLAS.ABAJO:
-                        ED.menu_actual.usar_funcion('abajo')
+                elif event.key == Cs.TECLAS.ARRIBA:
+                    Ed.menu_actual.usar_funcion('arriba')
 
-                    elif event.key == C.TECLAS.HABLAR:
-                        ED.menu_actual.usar_funcion('hablar')
+                elif event.key == Cs.TECLAS.ABAJO:
+                    Ed.menu_actual.usar_funcion('abajo')
 
-                    elif event.key == C.TECLAS.CANCELAR_DIALOGO:
-                        previo = ED.menu_actual.cancelar()  # podría ser usar_funcion
-                        if previo:
-                            Modo._popMenu(ED.menu_previo)
-                        elif previo is not None:
-                            Modo.end_dialog(C.CAPA_OVERLAYS_MENUS)
+                elif event.key == Cs.TECLAS.HABLAR:
+                    Ed.menu_actual.usar_funcion('hablar')
 
-            elif event.type == KEYUP:
-                if event.key == C.TECLAS.HABLAR:
-                    if Modo.newMenu:
-                        Modo._popMenu(ED.menu_actual.current.nombre)
-                        Modo.newMenu = False
-                    else:
-                        ED.menu_actual.keyup_function('hablar')
+                elif event.key == Cs.TECLAS.CANCELAR_DIALOGO:
+                    previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
+                    if previo:
+                        Modo.pop_menu(Ed.menu_previo)
+                    elif previo is not None:
+                        Modo.end_dialog(Cs.CAPA_OVERLAYS_MENUS)
 
-        ED.menu_actual.update()
-        return ED.RENDERER.update(fondo)
+            elif event.type == Cs.HOLD:
+                if event.key == Cs.TECLAS.HABLAR:
+                    Ed.menu_actual.current.mantener_presion()
+
+                elif event.key == Cs.TECLAS.IZQUIERDA:
+                    Ed.menu_actual.usar_funcion('izquierda')
+
+                elif event.key == Cs.TECLAS.DERECHA:
+                    Ed.menu_actual.usar_funcion('derecha')
+
+                elif event.key == Cs.TECLAS.ARRIBA:
+                    Ed.menu_actual.usar_funcion('arriba')
+
+                elif event.key == Cs.TECLAS.ABAJO:
+                    Ed.menu_actual.usar_funcion('abajo')
+
+            elif event.type == Cs.RELEASE:
+                if event.key == Cs.TECLAS.HABLAR:
+                    Ed.menu_actual.current.liberar_presion()
+
+        if Modo.newMenu:
+            Modo.pop_menu(Ed.menu_actual.current.nombre)
+            Modo.newMenu = False
+
+        Ed.menu_actual.update()
+        return Ed.RENDERER.update(fondo)
 
     @staticmethod
-    def _popMenu(titulo):
-        if ED.menu_previo == '' and ED.menu_previo != titulo:
-            ED.menu_previo = titulo
+    def pop_menu(titulo):
+        if Ed.menu_previo == '' and Ed.menu_previo != titulo:
+            Ed.menu_previo = titulo
 
-        if titulo not in ED.MENUS:
+        if titulo not in Ed.MENUS:
             try:
                 menu = eval('Menu' + titulo + '()')
             except Exception as Description:
                 print('No se pudo abrir el menu porque:', Description)
                 menu = Menu(titulo)
         else:
-            menu = ED.MENUS[titulo]
+            menu = Ed.MENUS[titulo]
             menu.reset()
 
-        ED.MODO = 'Menu'
-        ED.onPause = True
+        Ed.MODO = 'Menu'
+        Ed.onPause = True
 
-        ED.menu_actual = menu
-        ED.RENDERER.add_overlay(menu, C.CAPA_OVERLAYS_MENUS)
-        ED.RENDERER.overlays.move_to_front(menu)
+        Ed.menu_actual = menu
+        Ed.RENDERER.add_overlay(menu, Cs.CAPA_OVERLAYS_MENUS)
+        Ed.RENDERER.overlays.move_to_front(menu)
 
     @staticmethod
     def end_dialog(layer):
-        ED.RENDERER.overlays.remove_sprites_of_layer(layer)
-        ED.DIALOG = None
-        ED.MODO = 'Aventura'
-        ED.onPause = False
+        Ed.RENDERER.overlays.remove_sprites_of_layer(layer)
+        Ed.DIALOG = None
+        Ed.MODO = 'Aventura'
+        Ed.onPause = False
