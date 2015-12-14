@@ -1,5 +1,4 @@
 from engine.globs import EngineData as Ed
-from engine.globs.eventDispatcher import EventDispatcher
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
 from .mob import Mob
@@ -67,11 +66,6 @@ class PC(Mob, Parlante):
         sprite.reubicar(x, y)
         sprite.recibir_danio(self.fuerza)
 
-    def recibir_danio(self, danio):
-        super().recibir_danio(danio)
-        if self.salud_act == 0:
-            EventDispatcher.trigger('MuertedelHeroe','PC',{})
-
     def usar_item(self, item):
         if item:
             if item.tipo == 'consumible':
@@ -90,8 +84,6 @@ class PC(Mob, Parlante):
             self.establecer_estado('idle')
 
         self.image = self.images['S' + self.direccion]
-        # self.image = U.crear_sombra(t_image)
-        # self.image.blit(t_image,[0,0])
         self.mask = self.mascaras['S' + self.direccion]
 
         self.cambiar_direccion(self.direccion)

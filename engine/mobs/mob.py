@@ -2,6 +2,7 @@ from .CompoMob import Equipado, Animado, Movil, Interactivo
 from engine.globs import MobGroup
 from engine.misc import Resources as r
 from engine.base import ShadowSprite
+from engine.globs.eventDispatcher import EventDispatcher
 
 
 class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atribuido para tener .velocidad
@@ -19,7 +20,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
     idle_walk_alpha = {}
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
-    def __init__(self, data, x, y, focus=False):
+    def __init__(self, data, x, y, focus = False):
         self.images = {}
         self.mascaras = {}
         self.data = data
@@ -69,9 +70,9 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
             self.objetivo = MobGroup[data['objetivo']]
 
         self.establecer_estado('idle')
-        super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y, center=focus)
-        #self.ubicar(x,y)
-        #print(self.nombre,self.mapX,self.mapY)
+        super().__init__(imagen = self.image, alpha = self.mask, x = x, y = y, center = focus)
+        # self.ubicar(x,y)
+        # print(self.nombre,self.mapX,self.mapY)
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
 
@@ -93,11 +94,13 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
         if self.salud_act <= 0:
             if self.death_img is not None:
                 self.image = self.death_img
-            else:  # esto queda hasta que haga sprites 'muertos' de los npcs
-                   # pero necesito más resolución para hacerlos...
+            else:
+                # esto queda hasta que haga sprites 'muertos' de los npcs
+                # pero necesito más resolución para hacerlos...
                 self.stage.del_property(self)
             self.dead = True
             del MobGroup[self.nombre]
+            EventDispatcher.trigger('MobMuerto', self.tipo, {'name': self.nombre})
 
     def update(self):
         super().update()
