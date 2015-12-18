@@ -61,7 +61,8 @@ class Fila(BaseWidget):
 
         self.img_uns = render_tagged_text(texto, self.tags, w, bgcolor = self.bg_cnvs, justification = a)
         self.img_sel = render_tagged_text(texto, self.tags, w, bgcolor = self.font_low_color, justification = a)
-
+        
+        self.image = self.img_uns
         self.nombre = texto
 
     def update(self):

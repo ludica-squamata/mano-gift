@@ -26,7 +26,7 @@ class MenuPausa(Menu):
             "abajo": self.select_one,
             "izquierda": self.select_one,
             "derecha": self.select_one,
-            "hablar": self.current.comando}
+            "hablar": self.press_button}
 
     def establecer_botones(self, botones, ancho_mod):
         for btn in botones:
@@ -61,9 +61,9 @@ class MenuPausa(Menu):
     def cancelar(self):
         return False
 
-    def press_one(self):
+    @staticmethod
+    def press_one():
         from engine.IO.modos import Modo
-        super().press_button()
         Modo.newMenu = True
 
     def reset(self):
@@ -77,3 +77,7 @@ class MenuPausa(Menu):
         self.current = selected
         self.botones.draw(self.canvas)
         self.active = True
+
+    def update(self):
+        self.botones.update()
+        self.botones.draw(self.canvas)

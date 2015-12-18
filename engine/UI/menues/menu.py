@@ -13,6 +13,7 @@ class Menu(Ventana):
     canvas = None
     newMenu = False
     active = True
+    ticks = 0
 
     def __init__(self, titulo):
         self.nombre = titulo
@@ -78,12 +79,6 @@ class Menu(Ventana):
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()
-            self.botones.draw(self.canvas)
-
-    def release_button(self):
-        self.deselect_all(self.botones)
-        self.current.ser_elegido()
-        self.botones.draw(self.canvas)
 
     def reset(self):
         """Resetea el estado de la ventana. Esta función es solo un hook."""

@@ -41,11 +41,10 @@ class BaseElement(Sprite):
 
     def circular(self, delta):
         self.angle += delta
-        self.check_placement()
         if self.angle > 359:
             self.angle = 0
         elif self.angle < 0:
-            self.angle += 359
+            self.angle += 360
 
     def select(self):
         self.image = self.img_sel
@@ -66,9 +65,9 @@ class BaseElement(Sprite):
         self.rect_uns.center = self.puntos[self.angle]
 
         if self.check_placement():
-            self.select()
             self.parent.actual = self
             if self.stop:
+                self.select()
                 self.parent.stop_everything(self)
         else:
             self.deselect()
@@ -108,23 +107,21 @@ class CircularMenu:
         self.change_radius(self.radius)
 
         self.functions = {
-            'on_keydown': {
-                'izquierda': lambda: self.turn(-1),
-                'derecha': lambda: self.turn(+1),
-                'hablar': self.accept,
-                'cancelar': self.back
+            'tap':{
+                'hablar':self.accept,
+                'canelar':self.back,
+                'izquierda': self.stop,
+                'derecha': self.stop
             },
-            'on_keyup': {
+            'hold':{
+                'izquierda': lambda: self.turn(-1),
+                'derecha': lambda: self.turn(+1)
+            },
+            'release':{
                 'izquierda': self.stop,
                 'derecha': self.stop
             }
         }
-
-    def use_keydown_func(self, key):
-        self.use_function('on_keydown', key)
-
-    def use_keyup_func(self, key):
-        self.use_function('on_keyup', key)
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:

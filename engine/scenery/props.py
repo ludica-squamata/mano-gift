@@ -58,6 +58,20 @@ class Movible(Escenografia):
             data['propiedades'] = p
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'mover'
+    
+    def mover(self,dx,dy):
+        col_mapa = False
+        if self.stage.mapa.mask.overlap(self.mask, (self.mapX + dx, self.mapY)) is not None:
+            col_mapa = True
+
+        if self.stage.mapa.mask.overlap(self.mask, (self.mapX, self.mapY + dy)) is not None:
+            col_mapa = True
+        
+        if not col_mapa:
+            self.reubicar(dx, dy)
+            return True
+        
+        return False
 
 class Trepable(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):

@@ -5,10 +5,10 @@ from engine.misc import Config
 
 class Constants:
     CUADRO = 32
-    ANCHO = Config.dato('resolucion/ANCHO')
-    ALTO = Config.dato('resolucion/ALTO')
+    ANCHO = 640
+    ALTO = 480
     TECLAS = Teclas(Config.dato('teclas'))
-
+    
     CAPA_BACKGROUND = 0
     CAPA_GROUND_ITEMS = 1
     CAPA_GROUND_SALIDAS = 2

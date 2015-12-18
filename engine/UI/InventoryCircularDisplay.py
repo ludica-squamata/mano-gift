@@ -107,7 +107,7 @@ class InventoryCircularDisplay(CircularMenu):
             cascadas[obj.nombre] = obj.cascada
 
         super().__init__(cascadas, cx, cy)
-        self.functions['on_keydown'].update({'inventario':self.salir})
+        self.functions['tap'].update({'inventario':self.salir})
 
     def _change_cube_list(self):
         super()._change_cube_list()
