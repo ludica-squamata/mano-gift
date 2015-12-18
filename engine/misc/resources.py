@@ -8,6 +8,7 @@ class Resources:
     @staticmethod
     def cargar_imagen(ruta):
         from engine.globs.mod_data import ModData as MD
+        #print(MD.graphs+ruta)
         ar = image.load(MD.graphs+ruta).convert_alpha()
         return ar
     

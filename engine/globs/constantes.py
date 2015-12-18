@@ -5,8 +5,8 @@ from engine.misc import Resources as r, Config as C
 class Constants:
     
     CUADRO = 32
-    ANCHO = C.dato('resolucion/ANCHO')
-    ALTO = C.dato('resolucion/ALTO')
+    ANCHO = 640
+    ALTO = 480
     TECLAS = Teclas(C.dato('teclas'))
     
     CAPA_BACKGROUND = 0
