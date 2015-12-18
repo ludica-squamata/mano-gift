@@ -169,7 +169,7 @@ class Modo:
             Modo.newMenu = False
 
         Ed.menu_actual.update()
-        return Ed.RENDERER.update(fondo)
+        return Renderer.update(fondo)
 
     @staticmethod
     def pop_menu(titulo):
