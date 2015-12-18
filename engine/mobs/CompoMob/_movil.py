@@ -61,9 +61,8 @@ class Movil(Atribuido):
                 if self.colisiona(spr, dx, dy):
                     if spr.solido:
                         if isinstance(spr,Movible):
-                            spr.reubicar(dx, dy)
-                        else:
-                            col_props = True
+                            if not spr.mover(dx,dy):
+                                col_props = True
 
             for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
                 if spr.solido:

@@ -13,6 +13,9 @@ class Boton (BaseWidget):
     pos = 0, 0
     direcciones = {}
 
+    timer = 0
+    animar = False
+
     def __init__(self, nombre, ancho_mod, comando, pos):
         self.tipo = 'boton'
         self.comando = None
@@ -29,8 +32,29 @@ class Boton (BaseWidget):
         self.comando = comando
 
     def ser_presionado(self):
+        self.animar = True
+
+    def mantener_presion(self):
         self.image = self.img_pre
-        self.isSelected = True
+
+    def liberar_presion(self):
+        self.image = self.img_sel
+        self.comando()
+
+    def presionar(self, lt):
+        self.timer += 1
+        if self.timer <= lt:
+            self.image = self.img_pre
+
+        elif lt+1 <= self.timer <= lt*2:
+            self.image = self.img_sel
+
+        elif self.timer == lt*2+1:
+            self.comando()
+
+        else:
+            self.timer = 0
+            self.animar = False
 
     def crear(self, texto, ancho_mod):
         ancho = Cs.CUADRO * ancho_mod
@@ -74,3 +98,7 @@ class Boton (BaseWidget):
 
     def __repr__(self):
         return self.nombre + ' _boton Sprite'
+
+    def update(self):
+        if self.animar:
+            self.presionar(5)

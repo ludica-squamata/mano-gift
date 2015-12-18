@@ -1,6 +1,6 @@
 from .CompoMob import Equipado, Animado, Movil, Interactivo
 from engine.globs import MobGroup
-from engine.misc import Resources as r
+from engine.misc import Resources as Rs
 from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
 
@@ -40,17 +40,15 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
                     self.cmb_walk_img = self.cargar_anims(imgs['cmb'], dirs)
                     self.cmb_walk_alpha = self.cargar_anims(alpha['cmb'], dirs, True)
                 elif key == 'death':
-                    self.death_img = r.cargar_imagen(imgs['death'])
+                    self.death_img = Rs.cargar_imagen(imgs['death'])
                 elif key == "diag_face":
-                    self.diag_face = r.cargar_imagen(imgs["diag_face"])
+                    self.diag_face = Rs.cargar_imagen(imgs["diag_face"])
 
-        # self.camino = []
+
         self.images = self.idle_walk_img
         self.mascaras = self.idle_walk_alpha
         self.image = self.images['Sabajo']
         self.mask = self.mascaras['Sabajo']
-
-        # self.calcular_sombra(self.image)
 
         self.ID = data['ID']
         self.nombre = data['nombre']
@@ -71,8 +69,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
 
         self.establecer_estado('idle')
         super().__init__(imagen = self.image, alpha = self.mask, x = x, y = y, center = focus)
-        # self.ubicar(x,y)
-        # print(self.nombre,self.mapX,self.mapY)
+
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
 
@@ -98,9 +95,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
                 # esto queda hasta que haga sprites 'muertos' de los npcs
                 # pero necesito más resolución para hacerlos...
                 self.stage.del_property(self)
+                self.stage.del_property(self._sprSombra)
             self.dead = True
             del MobGroup[self.nombre]
             EventDispatcher.trigger('MobMuerto', self.tipo, {'name': self.nombre})
-
-    def update(self):
-        super().update()

@@ -89,7 +89,9 @@ class MenuEquipo(MenuItems):
 
         Si el nombre tiene dos partes de texto (por ejemplo 'mano buena'),
         se separa en dos lineas mediante un \\n. Si, en cambio, tras el espacio
-        hay un numero (como en 'aro 1') se deja como está."""
+        hay un numero (como en 'aro 1') se deja como está.
+
+        :param titulo: string"""
 
         w, h = self.fuente_MP.size(titulo)
         just = 0
@@ -108,7 +110,9 @@ class MenuEquipo(MenuItems):
         return render
 
     def select_one(self, direccion):
-        """Desplaza la selección al espacio equipable actual, y lo resalta."""
+        """Desplaza la selección al espacio equipable actual, y lo resalta.
+        :param direccion: string
+        """
 
         self.deselect_all(self.espacios)
         self.draw_space.fill(self.bg_cnvs)
@@ -131,7 +135,9 @@ class MenuEquipo(MenuItems):
 
     def crear_espacio_selectivo(self, ancho, alto):
         """Crea el marco donde aparecerán las listas de items que se correspondan
-        con el espacio actualmente seleccionado"""
+        con el espacio actualmente seleccionado
+        :param alto: integer
+        :param ancho: integer """
 
         marco = self.create_titled_canvas(ancho, alto, 'Inventario')
         rect = self.canvas.blit(marco, (266, 39))
@@ -149,6 +155,7 @@ class MenuEquipo(MenuItems):
         espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
         items = Ed.HERO.inventario('equipable', espacio.nombre)
         for i in range(len(items)):
+            print(items[i])
             fila = Fila(items[i], 188, 0, i * h + i, tag='n')
             self.filas.add(fila)
 
@@ -179,6 +186,7 @@ class MenuEquipo(MenuItems):
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
             self.current = espacio
+            self.cambio = True
 
     def desequipar_espacio(self):
         espacio = self.espacios.get_sprite(self.cur_esp)
@@ -186,6 +194,7 @@ class MenuEquipo(MenuItems):
         espacio.desocupar()
         Ed.HERO.desequipar_item(item)
         self.espacios.draw(self.canvas)
+        self.cambio = True
 
     def cancelar(self):
         if self.foco == 'espacios':
@@ -195,7 +204,9 @@ class MenuEquipo(MenuItems):
             self.foco = 'espacios'
 
     def usar_funcion(self, tecla):
-        """Determina qué grupo de funciones se van a usar según el foco actual."""
+        """Determina qué grupo de funciones se van a usar según el foco actual.
+        :param tecla: string
+        """
 
         if self.foco == 'espacios':
             funciones = self.funciones_espacios
