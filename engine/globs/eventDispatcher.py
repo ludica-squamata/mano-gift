@@ -68,7 +68,6 @@ class EventDispatcher:
         l = len(_cola)
         while l > 0:
             evento = _cola.popleft()
-            print(evento)
             if evento.type in cls._oyentes:
                 for listener in cls._oyentes[evento.type]:
                     listener(evento)

@@ -7,6 +7,7 @@ from engine.misc import Resources as Rs
 from .loader import Loader
 from .LightSource import DayLight  # SpotLight
 from pygame import mask, Rect
+from engine.globs.eventDispatcher import EventDispatcher
 
 
 class Stage:
@@ -38,6 +39,8 @@ class Stage:
         self.cargar_timestamps()
         Loader.set_stage(self)
         Loader.load_everything(entrada, mobs_data)
+        
+        EventDispatcher.register(self.anochecer,'hora')
     
     def register_at_renderer(self):
         Renderer.camara.set_background(self.mapa)
@@ -81,7 +84,14 @@ class Stage:
         :type event:AzoeEvent
         :return:
         """
-        print(event)
+        hora = event.data['hora']
+        if hora == self.amanece:
+            print('amanecer')
+        elif hora == self.atardece:
+            print('atardecer')
+        elif hora == self.anochece:
+            print('anochecer')
+            
         if self.data['ambiente'] == 'exterior':
             pass
         elif self.data['ambiente'] == 'interior':
