@@ -1,4 +1,5 @@
-from engine.globs import EngineData as ED, ModData as MD
+from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs import ModData as MD
 from importlib import machinery
 import types
 
@@ -22,7 +23,7 @@ class EventListener:
                     # asi puede acceder a propiedades del sprite
                     f = types.MethodType(f, self)
                     self.event_handlers[event_name] = f
-                    ED.EVENTS.register(f, event_name)
+                    EventDispatcher.register(f, event_name)
 
     def remove_listeners(self):
         """
@@ -31,4 +32,4 @@ class EventListener:
         """
         if self.event_handlers:
             for event_name, f in self.event_handlers:
-                ED.EVENTS.deregister(f, event_name)
+                EventDispatcher.deregister(f, event_name)

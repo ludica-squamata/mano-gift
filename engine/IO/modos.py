@@ -1,4 +1,6 @@
 from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.renderer import Renderer
 from engine.misc import Util
 from .taphold import get_taphold_events
 from pygame import KEYDOWN, QUIT, K_ESCAPE
@@ -21,7 +23,7 @@ class Modo:
                     Util.salir()
 
                 elif event.key == Cs.TECLAS.DEBUG:
-                    print('rect: ', Ed.HERO.rect)
+                    pass
 
     @staticmethod
     def aventura(events, fondo):
@@ -77,9 +79,9 @@ class Modo:
         if dx != 0 or dy != 0:
             Ed.HERO.mover(dx, dy)
         Modo.dx, Modo.dy = dx, dy
-        Ed.EVENTS.process()
+        EventDispatcher.process()
         Ed.MAPA_ACTUAL.update()
-        return Ed.RENDERER.update(fondo)
+        return Renderer.update(fondo)
 
     @staticmethod
     def dialogo(events, fondo):
@@ -109,7 +111,7 @@ class Modo:
         if Ed.DIALOG is None:
             Ed.MODO = "Aventura"
 
-        return Ed.RENDERER.update(fondo)
+        return Renderer.update(fondo)
 
     @staticmethod
     def menu(events, fondo):
@@ -167,7 +169,7 @@ class Modo:
             Modo.newMenu = False
 
         Ed.menu_actual.update()
-        return Ed.RENDERER.update(fondo)
+        return Renderer.update(fondo)
 
     @staticmethod
     def pop_menu(titulo):
@@ -188,12 +190,12 @@ class Modo:
         Ed.onPause = True
 
         Ed.menu_actual = menu
-        Ed.RENDERER.add_overlay(menu, Cs.CAPA_OVERLAYS_MENUS)
-        Ed.RENDERER.overlays.move_to_front(menu)
+        Renderer.add_overlay(menu, Cs.CAPA_OVERLAYS_MENUS)
+        Renderer.overlays.move_to_front(menu)
 
     @staticmethod
     def end_dialog(layer):
-        Ed.RENDERER.overlays.remove_sprites_of_layer(layer)
+        Renderer.overlays.remove_sprites_of_layer(layer)
         Ed.DIALOG = None
         Ed.MODO = 'Aventura'
         Ed.onPause = False

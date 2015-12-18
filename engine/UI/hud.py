@@ -1,6 +1,7 @@
 from pygame import Surface, Rect, font, Color, draw, PixelArray, SRCALPHA
 from pygame.sprite import Sprite,LayeredUpdates
 from engine.globs import Constants as C, EngineData as ED
+from engine.globs.renderer import Renderer
 from engine.UI.estilo import Estilo
 
 class ProgressBar(Sprite):
@@ -187,17 +188,17 @@ class HUD:
     #ya no es clase base. próximamente será una clase que agrupe
     #y registre en el renderer todos los elementos del hud.
     def __init__(self):
-        _rect = ED.RENDERER.camara.rect
+        _rect = Renderer.camara.rect
         w,h = C.ANCHO//4,C.CUADRO//4
         dx,dy = _rect.centerx,_rect.bottom-33
         self.BarraVida = ProgressBar(ED.HERO.salud_max,(200,50,50),(100,0,0),dx-w-1,dy-11,w,h)
         self.BarraMana = ProgressBar(ED.HERO.mana,(125,0,255),(75,0,100),dx+2,dy-11,w,h)
         self.BarraVida.setVariable(divisiones=4)
         self.Inventory = InventoryDisplay(dx,dy,w)
-        ED.RENDERER.add_overlay(self.BarraVida,1)
-        ED.RENDERER.add_overlay(self.BarraMana,1)
+        Renderer.add_overlay(self.BarraVida,1)
+        Renderer.add_overlay(self.BarraMana,1)
         for cuadro in self.Inventory.cuadros:
-             ED.RENDERER.add_overlay(cuadro,1)
+             Renderer.add_overlay(cuadro,1)
         
         self._func_inv = {
             'izquierda':lambda:self.Inventory.SelectCuadro(-1),

@@ -1,7 +1,7 @@
 from pygame import mask as MASK, PixelArray, Surface, transform, SRCALPHA
+from engine.globs.renderer import Renderer
 from pygame.sprite import Sprite
 from .azoeSprite import AzoeSprite
-from engine.globs import EngineData as ED
 
 
 class _sombra(AzoeSprite):
@@ -73,7 +73,7 @@ class ShadowSprite(AzoeSprite):
 
         if self._sprSombra is None:
             self._sprSombra = _sombra(self, h_2, t_surface)
-            ED.RENDERER.camara.add_visible(self._sprSombra)
+            Renderer.camara.add_visible(self._sprSombra)
         
     @staticmethod
     def _crear_sombra(surface, arg=None, mask=None):

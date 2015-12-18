@@ -1,4 +1,5 @@
 from engine.globs import EngineData as Ed
+from engine.globs.eventDispatcher import EventDispatcher
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
 from .mob import Mob
@@ -68,7 +69,7 @@ class PC(Mob, Parlante):
     def recibir_danio(self, danio):
         super().recibir_danio(danio)
         if self.salud_act == 0:
-            print('lanzar evento: muerte del heroe (y perdida de focus)')
+            EventDispatcher.trigger('MuertedelHeroe','PC',{})
 
     def usar_item(self, item):
         if item:
