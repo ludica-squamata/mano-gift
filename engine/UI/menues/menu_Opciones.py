@@ -2,8 +2,8 @@ from pygame.sprite import LayeredUpdates
 from pygame.key import name as key_name
 from pygame import Rect, font
 from engine.UI.widgets import Fila
-from engine.globs.constantes import Constants as K
-from engine.misc.config import Config as C
+from engine.globs.constantes import Constants as Cs
+from engine.misc.config import Config as Cfg
 from engine.libs.textrect import render_textrect
 from .menu_Pausa import MenuPausa
 from .menu import Menu
@@ -12,11 +12,11 @@ from .menu import Menu
 class MenuOpciones(MenuPausa, Menu):
     def __init__(self):
         Menu.__init__(self, 'Opciones')
-        self.data = C.cargar()
+        self.data = Cfg.cargar()
 
         self.botones = LayeredUpdates()
         self.espacios = LayeredUpdates()
-        self.establecer_botones(self.crear_botones_config(), 5)
+        self.establecer_botones(self.crear_botones_config(), 6)
         self.establecer_botones(self.crear_botones_teclas(), 4)
         self.crear_espacios_config()
         self.funciones = {
@@ -24,21 +24,18 @@ class MenuOpciones(MenuPausa, Menu):
             "abajo": self.select_one,
             "izquierda": self.select_one,
             "derecha": self.select_one,
-            "hablar": self.ejecutar_comando}
-
-        self.keyup = {
-            "hablar": self.release_button}
+            "hablar": self.press_button}
 
     def crear_botones_config(self):
         m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
         dy, f = 64, 38  # constantes numéricas de posicion # f = fila
-        cmd1 = self.cambiarBooleano
-        cmd2 = self.press_button
+        cmd1 = self.cambiar_booleano
+        cmd2 = self.set_input_device
         botones = [
             {m: "Mostrar Intro", c: cmd1, p: [6, f * 0 + dy], k: {b: "Recordar Menus", a: "Salir"}},
-            {m: "Recordar Menus", c: cmd1, p: [6, f * 1 + dy], k: {b: "Resolución", a: "Mostrar Intro"}},
-            {m: "Resolución", c: cmd2, p: [6, f * 2 + dy], k: {b: "Arriba", a: "Recordar Menus"}}
+            {m: "Recordar Menus", c: cmd1, p: [6, f * 1 + dy], k: {b: "Metodo de Entrada", a: "Mostrar Intro"}},
+            {m: "Metodo de Entrada", c: cmd2, p: [6, f * 2 + dy], k: {b: "Arriba", a: "Recordar Menus"}}
         ]
 
         return botones
@@ -52,7 +49,7 @@ class MenuOpciones(MenuPausa, Menu):
         cmd = self.set_tecla
         botones = [
             # primera columna
-            {m: "Arriba", c: cmd, p: [x1, f * 0 + dy], k: {b: "Abajo", a: "Resolución", d: "Accion"}},
+            {m: "Arriba", c: cmd, p: [x1, f * 0 + dy], k: {b: "Abajo", a: "Metodo de Entrada", d: "Accion"}},
             {m: "Abajo", c: cmd, p: [x1, f * 1 + dy], k: {b: "Derecha", a: "Arriba", d: "Hablar"}},
             {m: "Derecha", c: cmd, p: [x1, f * 2 + dy], k: {b: "Izquierda", a: "Abajo", d: "Inventario"}},
             {m: "Izquierda", c: cmd, p: [x1, f * 3 + dy], k: {b: "Menu", a: "Derecha", d: "Cancelar"}},
@@ -69,67 +66,83 @@ class MenuOpciones(MenuPausa, Menu):
         return botones
 
     def crear_espacios_config(self):
+        esp = None
         for boton in self.botones:
             nom = boton.nombre.lower()
             x, y = boton.rect.topright
-            if ' ' in nom:
+            if nom == "mostrar intro" or nom == "recordar menus":
                 nom = nom.replace(' ', '_')
                 if self.data[nom]:
                     opt = 'Sí'
                 else:
                     opt = 'No'
-                esp = Fila(opt, 88, x, y + 9,  justification=1)
+                esp = Fila(opt, 88, x, y + 9, justification = 1)
                 self.espacios.add(esp)
 
-            elif nom == 'resolución':
-                nom = nom.replace('ó', 'o')
-                ANCHO = self.data[nom]['ANCHO']
-                ALTO = self.data[nom]['ALTO']
-                esp = Fila(str(ANCHO) + 'x' + str(ALTO), 88, x, y + 9, justification=1)
+            elif nom == 'metodo de entrada':
+                nom = nom.replace(' ', '_')
+                txt = self.data[nom].title()
+                esp = Fila(txt, 88, x, y + 9, justification = 1)
 
             elif nom in self.data['teclas']:
                 texto = self.data['teclas'][nom]
                 nom = key_name(texto)
-                esp = Fila(nom, 75, x + 3, y + 9, justification=1)
+                esp = Fila(nom, 75, x + 3, y + 9, justification = 1)
 
             self.espacios.add(esp)
 
-    def elegir_botonYespacio(self):
+    def elegir_boton_espacio(self):
         n = self.cur_btn
         tecla = self.espacios.get_sprite(n)
         boton = self.botones.get_sprite(n)
         return boton, tecla
 
-    def cambiarBooleano(self):
-        self.press_button()
-        boton, opcion = self.elegir_botonYespacio()
+    def cambiar_booleano(self):
+        boton, opcion = self.elegir_boton_espacio()
+
         if opcion.nombre == 'Sí':
-            opcion.set_text('No')
+            opcion.set_text('No', 88, 1)
         else:
-            opcion.set_text('Sí')
+            opcion.set_text('Sí', 88, 1)
 
         if boton.nombre == 'Mostrar Intro':
-            C.asignar('mostrar_intro', not C.dato('mostrar_intro'))
+            Cfg.asignar('mostrar_intro', not Cfg.dato('mostrar_intro'))
         elif boton.nombre == 'Recordar Menus':
-            C.asignar('recordar_menus', not C.dato('recordar_menus'))
+            Cfg.asignar('recordar_menus', not Cfg.dato('recordar_menus'))
+
+    def set_input_device(self):
+        boton, opcion = self.elegir_boton_espacio()
+
+        nombre = ''
+        if opcion.nombre == 'Teclado':
+            nombre = 'Gamepad'
+            Cs.TECLAS.asignar(Cfg.dato('botones'))
+        elif opcion.nombre == 'Gamepad':
+            nombre = 'Teclado'
+            Cs.TECLAS.asignar(Cfg.dato('teclas'))
+
+        opcion.set_text(nombre, 88, 1)
+        Cfg.asignar('metodo_de_entrada', nombre.lower())
 
     def set_tecla(self):
         from engine.IO.modos import Modo
         '''Prepara la tecla elegida para ser cambiada'''
 
-        boton, tecla = self.elegir_botonYespacio()
+        boton, tecla = self.elegir_boton_espacio()
         boton.ser_presionado()
         tecla.ser_elegido()
 
         Modo.setKey = True
 
     def cambiar_tecla(self, tcl):
-        """Cambia la tecla elgida por el nuevo input"""
+        """Cambia la tecla elgida por el nuevo input
+        :param tcl: int
+        """
 
-        boton, tecla = self.elegir_botonYespacio()
+        boton, tecla = self.elegir_boton_espacio()
         tecla.ser_deselegido()
-        tecla.set_text(key_name(tcl))
-        C.asignar('teclas/' + boton.nombre.lower(), tcl)
+        tecla.set_text(key_name(tcl), 75, 1)
+        Cfg.asignar('teclas/' + boton.nombre.lower(), tcl)
         self.mostrar_aviso()
 
     def mostrar_aviso(self):
@@ -143,13 +156,10 @@ class MenuOpciones(MenuPausa, Menu):
         render = render_textrect(texto, fuente, rect, self.font_low_color, self.bg_cnvs)
         self.canvas.blit(render, rect)
 
-    def ejecutar_comando(self):
-        self.current.comando()
-
     def cancelar(self):
-        K.TECLAS.asignar(C.dato('teclas'))
         return True
 
     def update(self):
+        self.botones.update()
         self.botones.draw(self.canvas)
         self.espacios.draw(self.canvas)

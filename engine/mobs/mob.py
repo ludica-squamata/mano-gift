@@ -1,6 +1,6 @@
 from .CompoMob import Equipado, Animado, Movil, Interactivo
 from engine.globs import MobGroup
-from engine.misc import Resources as r
+from engine.misc import Resources as Rs
 from engine.base import ShadowSprite
 
 
@@ -20,7 +20,7 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
     
     moviendose = False
-    def __init__(self, data, x, y, focus=False):
+    def __init__(self, data, x, y, focus = False):
         self.images = {}
         self.mascaras = {}
         self.data = data
@@ -40,17 +40,15 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
                     self.cmb_walk_img = self.cargar_anims(imgs['cmb'], dirs)
                     self.cmb_walk_alpha = self.cargar_anims(alpha['cmb'], dirs, True)
                 elif key == 'death':
-                    self.death_img = r.cargar_imagen(imgs['death'])
+                    self.death_img = Rs.cargar_imagen(imgs['death'])
                 elif key == "diag_face":
-                    self.diag_face = r.cargar_imagen(imgs["diag_face"])
+                    self.diag_face = Rs.cargar_imagen(imgs["diag_face"])
 
-        # self.camino = []
+
         self.images = self.idle_walk_img
         self.mascaras = self.idle_walk_alpha
         self.image = self.images['Sabajo']
         self.mask = self.mascaras['Sabajo']
-
-        # self.calcular_sombra(self.image)
 
         self.ID = data['ID']
         self.nombre = data['nombre']
@@ -70,9 +68,8 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
             self.objetivo = MobGroup[data['objetivo']]
 
         self.establecer_estado('idle')
-        super().__init__(imagen=self.image,alpha=self.mask, x=x, y=y, center=focus)
-        #self.ubicar(x,y)
-        #print(self.nombre,self.mapX,self.mapY)
+        super().__init__(imagen = self.image, alpha = self.mask, x = x, y = y, center = focus)
+
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
 
@@ -94,11 +91,10 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
         if self.salud_act <= 0:
             if self.death_img is not None:
                 self.image = self.death_img
-            else:  # esto queda hasta que haga sprites 'muertos' de los npcs
-                   # pero necesito más resolución para hacerlos...
+            else:
+                # esto queda hasta que haga sprites 'muertos' de los npcs
+                # pero necesito más resolución para hacerlos...
                 self.stage.del_property(self)
+                self.stage.del_property(self._sprSombra)
             self.dead = True
             del MobGroup[self.nombre]
-
-    def update(self):
-        super().update()
