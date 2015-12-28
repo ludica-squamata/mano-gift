@@ -1,4 +1,6 @@
 from pygame import Rect, Mask
+from engine.globs import MobGroup
+from engine.globs.eventDispatcher import EventDispatcher
 
 
 class Salida:
@@ -28,4 +30,10 @@ class Salida:
         self.rect.y = y
 
     def update(self):
-        pass
+        for key in MobGroup:
+            mob = MobGroup[key]
+            dx, dy = mob.direcciones[mob.direccion]
+            dx *= mob.velocidad
+            dy *= mob.velocidad
+            if mob.colisiona(self, dx, dy):
+                EventDispatcher.trigger('CambiarMapa', 'Salida', {"mob": mob, 'dest': self.dest, 'link': self.link})

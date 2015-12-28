@@ -1,4 +1,5 @@
 from pygame import sprite, mask, Surface
+from engine.misc import Resources
 
 
 class AzoeSprite(sprite.Sprite):
@@ -85,6 +86,8 @@ class AzoeSprite(sprite.Sprite):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
+        self.stageX = x
+        self.stageY = y
         if z:
             self.z += z
 
