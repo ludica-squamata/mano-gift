@@ -66,14 +66,9 @@ class PC(Mob, Parlante):
         sprite.recibir_danio(self.fuerza)
 
     def usar_item(self, item):
-        if item:
-            if item.tipo == 'consumible':
-                usado = item.usar(self)
-                if usado:
-                    return self.inventario.remover(item)
-            return self.inventario.cantidad(item)
-        else:
-            return 0
+        if item.tipo == 'consumible':
+            if item.usar(self):
+                return self.inventario.remover(item)
 
     def cambiar_estado(self):
         if self.estado == 'idle':

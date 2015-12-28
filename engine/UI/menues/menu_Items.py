@@ -26,7 +26,7 @@ class MenuItems(Menu):
             "abajo": self.elegir_fila,
             "izquierda": lambda dummy: None,
             "derecha": lambda dummy: None,
-            "hablar": self.confirmar_seleccion}
+            "hablar": lambda: None}
 
     def crear_contenido(self):
         self.actualizar_filas()
@@ -66,12 +66,6 @@ class MenuItems(Menu):
             self.posicionar_cursor(j)
             self.mover_cursor(self.filas.get_sprite(self.sel))
             self.current.ser_elegido()
-
-    def confirmar_seleccion(self):
-        if self.opciones > 0:
-            if Ed.HERO.usar_item(self.current.item) <= 0:
-                self.filas.remove(self.current)
-                self.opciones -= 1
 
     def update(self):
         self.draw_space.fill(self.bg_cnvs)

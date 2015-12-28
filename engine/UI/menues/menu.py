@@ -1,7 +1,7 @@
-from engine.UI.Ventana import Ventana
+from engine.UI.widgets import Ventana
 from engine.globs import Constants as Cs, EngineData as Ed
 from pygame.sprite import LayeredUpdates
-from pygame import Surface, Rect
+from pygame import Rect
 from engine.libs.textrect import render_textrect
 
 

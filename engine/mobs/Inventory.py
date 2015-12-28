@@ -102,4 +102,4 @@ class Inventory:
             self._contenido.remove(item)
             return self._contenido.count(item)
         else:
-            raise InventoryError('El item no existe')
+            return 0

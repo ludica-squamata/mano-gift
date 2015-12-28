@@ -5,6 +5,7 @@ from engine.misc import Util
 from .taphold import get_taphold_events
 from pygame import KEYDOWN, QUIT, K_ESCAPE
 from engine.UI.menues import *
+from engine.UI import InventoryCircularDisplay
 
 
 class Modo:
@@ -39,9 +40,8 @@ class Modo:
 
                 elif event.key == Cs.TECLAS.INVENTARIO:
                     Ed.MODO = 'Dialogo'
-                    Ed.HUD.Inventory.SelectCuadro()
-                    Ed.DIALOG = Ed.HUD
-
+                    Ed.DIALOG = InventoryCircularDisplay()
+                    
                 elif event.key == Cs.TECLAS.POSICION_COMBATE:
                     Ed.HERO.cambiar_estado()
 
@@ -88,25 +88,39 @@ class Modo:
         for event in get_taphold_events(events):
             if event.type == Cs.TAP:
                 if event.key == Cs.TECLAS.ARRIBA:
-                    Ed.DIALOG.usar_funcion('arriba')
+                    Ed.DIALOG.use_function('tap','arriba')
 
                 elif event.key == Cs.TECLAS.ABAJO:
-                    Ed.DIALOG.usar_funcion('abajo')
+                    Ed.DIALOG.use_function('tap','abajo')
 
                 elif event.key == Cs.TECLAS.IZQUIERDA:
-                    Ed.DIALOG.usar_funcion('izquierda')
+                    Ed.DIALOG.use_function('tap','izquierda')
 
                 elif event.key == Cs.TECLAS.DERECHA:
-                    Ed.DIALOG.usar_funcion('derecha')
+                    Ed.DIALOG.use_function('tap','derecha')
 
                 elif event.key == Cs.TECLAS.HABLAR:
-                    Ed.DIALOG.usar_funcion('hablar')
+                    Ed.DIALOG.use_function('tap','hablar')
 
                 elif event.key == Cs.TECLAS.INVENTARIO:
-                    Ed.DIALOG.usar_funcion('inventario')
+                    Ed.DIALOG.use_function('tap','inventario')
 
                 elif event.key == Cs.TECLAS.CANCELAR_DIALOGO:
-                    Ed.DIALOG.usar_funcion('cancelar')
+                    Ed.DIALOG.use_function('tap','cancelar')
+            
+            elif event.type == Cs.HOLD:
+                if event.key == Cs.TECLAS.IZQUIERDA:
+                    Ed.DIALOG.use_function('hold','izquierda')
+                
+                elif event.key == Cs.TECLAS.DERECHA:
+                    Ed.DIALOG.use_function('hold','derecha')
+            
+            elif event.type == Cs.RELEASE:
+                if event.key == Cs.TECLAS.IZQUIERDA:
+                    Ed.DIALOG.use_function('release','izquierda')
+                
+                elif event.key == Cs.TECLAS.DERECHA:
+                    Ed.DIALOG.use_function('release','derecha')
 
         if Ed.DIALOG is None:
             Ed.MODO = "Aventura"
@@ -116,7 +130,6 @@ class Modo:
     @staticmethod
     def menu(events, fondo):
         for event in get_taphold_events(events):
-
             if event.type == Cs.TAP:
                 if Modo.setKey:
                     Ed.menu_actual.cambiar_tecla(event.key)
@@ -195,7 +208,7 @@ class Modo:
 
     @staticmethod
     def end_dialog(layer):
-        Renderer.overlays.remove_sprites_of_layer(layer)
+        Renderer.clear_overlays_from_layer(layer)
         Ed.DIALOG = None
         Ed.MODO = 'Aventura'
         Ed.onPause = False

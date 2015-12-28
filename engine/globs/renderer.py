@@ -195,6 +195,10 @@ class Renderer:
     def del_overlay(cls, obj):
         if obj in cls.overlays:
             cls.overlays.remove(obj)
+    
+    @classmethod
+    def clear_overlays_from_layer(cls, layer):
+        cls.overlays.remove_sprites_of_layer(layer)
 
     @classmethod
     def update(cls, fondo):
