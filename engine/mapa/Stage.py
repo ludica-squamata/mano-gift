@@ -46,7 +46,7 @@ class Stage:
         Renderer.camara.set_background(self.mapa)
         Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         Tiempo.noche.set_lights(DayLight(1024))
-        self.add_property(Tiempo.noche, Cs.CAPA_TOP_CIELO)
+        self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
         for obj in self.properties:
             ''':type obj: _giftSprite'''
             obj.stage = self
@@ -58,7 +58,7 @@ class Stage:
             Renderer.camara.add_real(obj)
 
     def add_property(self, obj, _layer, add_interactive = False):
-        if _layer == Cs.CAPA_GROUND_SALIDAS:
+        if _layer == Cs.GRUPO_SALIDAS:
             self.salidas.append(obj)
         else:
             self.properties.add(obj, layer = _layer)
@@ -98,7 +98,7 @@ class Stage:
             pass
 
     def actualizar_grilla(self):
-        for spr in self.properties.get_sprites_from_layer(Cs.CAPA_GROUND_ITEMS):
+        for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
             if spr.solido:  # and not spr.es('empujable'):
                 x = int(spr.mapX / 32)
                 y = int(spr.mapY / 32)

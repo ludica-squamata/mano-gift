@@ -19,7 +19,8 @@ class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atri
     idle_walk_img = {}  # imagenes normales
     idle_walk_alpha = {}
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
-
+    
+    moviendose = False
     def __init__(self, data, x, y, focus = False):
         self.images = {}
         self.mascaras = {}

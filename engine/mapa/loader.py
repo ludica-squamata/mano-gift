@@ -46,7 +46,7 @@ class Loader:
                     prop = newProp(ref, imagen, x, y)
                     is_interactive = False
 
-                cls.STAGE.add_property(prop, Cs.CAPA_GROUND_ITEMS, is_interactive)
+                cls.STAGE.add_property(prop, Cs.GRUPO_ITEMS, is_interactive)
 
     @classmethod
     def cargar_mobs(cls, extra_data, capa = 'capa_ground'):
@@ -61,10 +61,8 @@ class Loader:
                     for x, y in pos[ref]:
                         mob = clase(ref, x, y, data)
                         if capa == 'capa_ground':
-                            cls.STAGE.add_property(mob, Cs.CAPA_GROUND_MOBS)
-                        elif capa == 'capa_top':
-                            cls.STAGE.add_property(mob, Cs.CAPA_TOP_MOBS)
-
+                            cls.STAGE.add_property(mob, Cs.GRUPO_MOBS)
+    
     @classmethod
     def cargar_hero(cls, entrada):
         x, y = cls.STAGE.data['entradas'][entrada]
@@ -77,10 +75,10 @@ class Loader:
         except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
-        Loader.STAGE.add_property(Ed.HERO, Cs.CAPA_HERO)
+        Loader.STAGE.add_property(Ed.HERO, Cs.GRUPO_MOBS)
 
     @classmethod
-    def cargar_quests(cls, ):
+    def cargar_quests(cls):
         if 'quests' in cls.STAGE.data:
             for quest in cls.STAGE.data['quests']:
                 QuestManager.add(quest)
@@ -90,4 +88,4 @@ class Loader:
         salidas = cls.STAGE.data['salidas']
         for salida in salidas:
             sld = Salida(salida, salidas[salida])
-            cls.STAGE.add_property(sld, Cs.CAPA_GROUND_SALIDAS)
+            cls.STAGE.add_property(sld, Cs.GRUPO_SALIDAS)

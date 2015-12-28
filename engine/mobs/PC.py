@@ -5,14 +5,13 @@ from .mob import Mob
 
 
 class PC(Mob, Parlante):
-    alcance_cc = 0  # cuerpo a cuerpo.. 16 es la mitad de un cuadro.
-
+    
     def __init__(self, data, x, y, ):
         super().__init__(data, x, y, focus=True)
-        self.alcance_cc = data['alcance_cc']
         self.inventario = Inventory(10, 10 + self.fuerza)
 
     def mover(self, dx, dy):
+        self.moviendose = True
         self.animar_caminar()
         if dx > 0:
             self.cambiar_direccion('derecha')
@@ -90,6 +89,7 @@ class PC(Mob, Parlante):
         self.animar_caminar()
 
     def update(self):
+        self.moviendose = False
         if self.atacando:
             self.animar_ataque(5)
         

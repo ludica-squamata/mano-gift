@@ -23,7 +23,7 @@ class Modo:
                     Util.salir()
 
                 elif event.key == Cs.TECLAS.DEBUG:
-                    print('rect: ', Ed.HERO.rect)
+                    pass
 
     @staticmethod
     def aventura(events, fondo):
@@ -111,7 +111,7 @@ class Modo:
         if Ed.DIALOG is None:
             Ed.MODO = "Aventura"
 
-        return Ed.RENDERER.update(fondo)
+        return Renderer.update(fondo)
 
     @staticmethod
     def menu(events, fondo):

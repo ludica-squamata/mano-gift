@@ -30,19 +30,16 @@ class Movil(Atribuido):
 
         return direccion
 
-    def mover(self, dx, dy):
-        
-        x, y = self.direcciones[self.direccion]
+    def mover(self, x, y):
         dx, dy = x * self.velocidad, y * self.velocidad
 
         if self.detectar_colisiones(dx, dy):
+            #en realidad, esto es territorio de la AI, asi que debería hacer super()
             self.cambiar_direccion(self.modo_colision)
             x, y = self.direcciones[self.direccion]
             dx, dy = x * self.velocidad, y * self.velocidad
 
         self.reubicar(dx, dy)
-
-        return dx, dy
 
     def detectar_colisiones(self, dx, dy):
         col_bordes = False  # colision contra los bordes de la pantalla
@@ -57,15 +54,15 @@ class Movil(Atribuido):
             if self.stage.mapa.mask.overlap(self.mask, (self.mapX, self.mapY + dy)) is not None:
                 col_mapa = True
 
-            for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_ITEMS):
+            for spr in self.stage.properties.get_sprites_from_layer(C.GRUPO_ITEMS):
                 if self.colisiona(spr, dx, dy):
                     if spr.solido:
                         if isinstance(spr,Movible):
                             if not spr.mover(dx,dy):
                                 col_props = True
 
-            for spr in self.stage.properties.get_sprites_from_layer(C.CAPA_GROUND_MOBS):
-                if spr.solido:
+            for spr in self.stage.properties.get_sprites_from_layer(C.GRUPO_MOBS):
+                if spr.solido and self is not spr:                        
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
         

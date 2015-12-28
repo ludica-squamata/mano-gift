@@ -9,14 +9,10 @@ class Constants:
     ALTO = 480
     TECLAS = Teclas(C.dato('teclas'))
     
-    CAPA_BACKGROUND = 0
-    CAPA_GROUND_ITEMS = 1
-    CAPA_GROUND_SALIDAS = 2
-    CAPA_GROUND_MOBS = 3
-    CAPA_HERO = 4
-    CAPA_TOP_ITEMS = 5
-    CAPA_TOP_MOBS = 6
-    CAPA_TOP_CIELO = 7
+    GRUPO_ITEMS = 0
+    GRUPO_SALIDAS = 1
+    GRUPO_MOBS = 2
+    CAPA_CIELO = 3
 
     CAPA_OVERLAYS_DIALOGOS = 1 # ocupan un framento de la pantalla
     CAPA_OVERLAYS_MENUS = 2 # ocupan toda o gran parte de la pantalla
