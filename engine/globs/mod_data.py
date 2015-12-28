@@ -1,4 +1,4 @@
-﻿from os import getcwd as cwd, path, listdir
+from os import getcwd as cwd, path, listdir
 from importlib import machinery
 
 
