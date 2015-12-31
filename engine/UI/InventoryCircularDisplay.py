@@ -112,19 +112,19 @@ class InventoryCircularDisplay(CircularMenu):
 
     def _change_cube_list(self):
         super()._change_cube_list()
-        Renderer.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
 
     def supress(self):
         super().supress()
-        Renderer.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
 
     def _modify_cube_list(self):
         super()._modify_cube_list()
-        Renderer.clear_overlays(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
     

@@ -1,8 +1,8 @@
 from engine.base import ShadowSprite, EventListener
-from engine.misc import Util as U
-from engine.misc import Resources as r
-from pygame import mask as MASK
+from engine.misc import Resources
+from pygame import mask
 from .items import *
+
 
 class Escenografia(ShadowSprite, EventListener):
     def __init__(self, nombre, imagen, x, y, data):
@@ -22,11 +22,12 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = nombre
         self.tipo = 'Prop'
         self.data = data
-        super().__init__(imagen, x=x, y=y)
+        super().__init__(imagen, x = x, y = y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
-        
+
         self.add_listeners()  # carga de event listeners
+
 
 class Agarrable(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
@@ -50,6 +51,7 @@ class Agarrable(Escenografia):
         elif self.subtipo == 'pocion':
             return Pocion(*args)
 
+
 class Movible(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
         p = data.get('propiedades', ['solido'])
@@ -58,25 +60,27 @@ class Movible(Escenografia):
             data['propiedades'] = p
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'mover'
-    
-    def mover(self,dx,dy):
+
+    def mover(self, dx, dy):
         col_mapa = False
         if self.stage.mapa.mask.overlap(self.mask, (self.mapX + dx, self.mapY)) is not None:
             col_mapa = True
 
         if self.stage.mapa.mask.overlap(self.mask, (self.mapX, self.mapY + dy)) is not None:
             col_mapa = True
-        
+
         if not col_mapa:
             self.reubicar(dx, dy)
             return True
-        
+
         return False
+
 
 class Trepable(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'trepar'
+
 
 class Operable(Escenografia):
     estados = {}
@@ -87,17 +91,17 @@ class Operable(Escenografia):
         self.accion = 'operar'
 
         for estado in data['operable']:
-            ID = estado['ID']
-            self.estados[ID] = {}
+            idx = estado['ID']
+            self.estados[idx] = {}
             for attr in estado:
                 if attr == 'image':
-                    img = r.cargar_imagen(estado[attr])
-                    mask = MASK.from_surface(img)
-                    self.estados[ID].update({'image': img, 'mask': mask})
+                    img = Resources.cargar_imagen(estado[attr])
+                    mascara = mask.from_surface(img)
+                    self.estados[idx].update({'image': img, 'mask': mascara})
                 elif attr == 'next':
-                    self.estados[ID].update({'next': estado[attr]})
+                    self.estados[idx].update({'next': estado[attr]})
                 else:
-                    self.estados[ID].update({attr: estado[attr]})
+                    self.estados[idx].update({attr: estado[attr]})
 
         self.image = self.estados[self.estado_actual]['image']
         self.mask = self.estados[self.estado_actual]['mask']
@@ -108,6 +112,7 @@ class Operable(Escenografia):
         for attr in self.estados[self.estado_actual]:
             if hasattr(self, attr):
                 setattr(self, attr, self.estados[self.estado_actual][attr])
+
 
 class Destruible(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):

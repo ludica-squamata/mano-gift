@@ -3,44 +3,44 @@
     "txt":"Saludos, héroe. Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
     
     "1":{"type":"node","leads":[2,3,4,5,6],"loc":"commoner",
-    "txt":"A continuación deberias ver 5 opciones si cumples todos los requisitos"},
+    "txt":"A continuación deberías ver 5 opciones si cumples todos los requisitos."},
     
     "2":{"type":"branch","leads":7,"loc":"heroe",
-    "txt":"Hmm, supongo que serÃ¡ esta opción."},
+    "txt":"Hmm, supongo que sería esta opción."},
     
     "3":{"type":"branch","leads":8,"loc":"heroe",
     "txt":"O quizás esta otra."},
     
     "4":{"type":"branch","leads":9,"loc":"heroe","reqs":{"attrs":{"carisma":9}},
-    "txt":"?Es esta la opcion oculta por mi <b>carisma</b>?"},
+    "txt":"¿Es esta la opcion oculta por mi <b>carisma</b>?"},
     
     "5":{"type":"branch","leads":10,"loc":"heroe","reqs":{"objects":["star"]},
-    "txt":"Aquí tengo una <b>estrella</b> que encontré"},
+    "txt":"Aquí tengo una <b>estrella</b> que encontré."},
     
     "6":{"type":"branch","leads":11,"loc":"heroe",
-    "txt":"?Qué puedes decirme de este <b>texto marcado</b>?"},
+    "txt":"¿Qué puedes decirme de este <b>texto marcado</b>?"},
     
     "7":{"type":"leaf","loc":"commoner",
-    "txt":"No, esta no es la opción"},
+    "txt":"No, esta no es la opción."},
     
     "8":{"type":"leaf","loc":"commoner",
-    "txt":"Mm, me temo que te has equivocado"},
+    "txt":"Mm, me temo que te has equivocado."},
     
     "9":{"type":"leaf","loc":"commoner",
-    "txt":"Correcto! esta es la opción oculta!"},
+    "txt":"¡Correcto! esta es la opción oculta!"},
     
     "10":{"type":"leaf","loc":"commoner",
-    "txt":"Oh, tienes la estrella. Usala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi dialogo"},
+    "txt":"Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."},
     
     "11":{"type":"exclusive","leads":[12,13],"loc":"commoner",
-    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrias que ver un fragmento distinto"},
+    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrias que ver un fragmento distinto."},
     
     "12":{"type":"node","leads":14,"loc":"commoner","reqs":{"loc":"heroe","attrs":{"carisma":9}},
-    "txt":"Este es el primer bloque de texto, que solo deberias poder ver si <b>tu</b> carisma es mayor 9"},
+    "txt":"Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."},
     
     "13":{"type":"node","leads":14,"loc":"commoner",
-    "txt":"Y este es el segundo bloque de texto, que solo deberías poder ver si tu carisma es menor que 9"},
+    "txt":"Este es el segundo bloque de texto, que solo deberías poder ver si tu carisma es <b>menor</b> que 9."},
     
     "14":{"type":"leaf","loc":"commoner",
-    "txt":"Bien, este es el final de mi diálogo. Este leaf es solo para cerrar el diálogo y que no crashee durante el desarrollo"}
+    "txt":"Bien, este es el final de mi diálogo. Este leaf es solo para cerrar el diálogo y que no crashee durante el desarrollo."}
 }

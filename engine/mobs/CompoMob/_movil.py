@@ -60,6 +60,8 @@ class Movil(Atribuido):
                         if isinstance(spr,Movible):
                             if not spr.mover(dx,dy):
                                 col_props = True
+                        else:
+                            col_props = True
 
             for spr in self.stage.properties.get_sprites_from_layer(C.GRUPO_MOBS):
                 if spr.solido and self is not spr:                        
