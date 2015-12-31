@@ -36,4 +36,4 @@
 - Agregados NPCs
 - Salidas y Cambio de mapas
 
-[Documentación](data/main.md)
+[Documentación](docs/main.md)
