@@ -12,15 +12,22 @@ class MenuDebug(Menu):
 
     def __init__(self):
         super().__init__("Mano-Gift: Selector de Escenas")
-        self.funciones = {
-            'arriba': self.elegir_opcion,
-            'abajo': self.elegir_opcion,
-            'izquierda': lambda dummy: None,
-            'derecha': lambda dummy: None,
-            'hablar': self.cargar_escena}
+        
+        self.functions.update({
+            'tap':{
+                'hablar':self.cargar_escena,
+                'arriba': lambda: self.elegir_opcion('arriba'),
+                'abajo': lambda: self.elegir_opcion('abajo'),
+            },
+            'hold':{
+                'arriba': lambda: self.elegir_opcion('arriba'),
+                'abajo': lambda: self.elegir_opcion('abajo'),
+            }
+        })
+        
         self.filas = LayeredUpdates()
         self.crear_espacio_de_escenas(Cs.ANCHO - 37, Cs.ALTO / 2.4)
-        self.elegir_opcion('arriba')
+        self.elegir_opcion(0)
 
     @staticmethod
     def cargar_escenas():

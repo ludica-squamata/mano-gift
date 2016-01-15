@@ -195,8 +195,6 @@ class Dialogo:
         # empezar con el primer nodo
         self.hablar()
     
-    def use_keydown_func(self,key): self.use_function('keydown',key)
-    def use_keyup_func(self,key):pass
     def use_function(self,mode,key):
         self.usar_funcion(key)
             

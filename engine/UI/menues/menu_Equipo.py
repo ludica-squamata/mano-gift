@@ -70,19 +70,40 @@ class MenuEquipo(MenuItems):
         self.crear_espacio_selectivo(188, self.canvas.get_height() - 64)
 
         # determinar qué tecla activa qué función.
-        self.funciones_espacios = {
-            "arriba": self.select_one,
-            "abajo": self.select_one,
-            "izquierda": self.select_one,
-            "derecha": self.select_one,
-            "hablar": self.cambiar_foco}
-
-        self.funciones_lista = {
-            "arriba": self.elegir_fila,
-            "abajo": self.elegir_fila,
-            "izquierda": lambda dummy: None,
-            "derecha": lambda dummy: None,
-            "hablar": self.equipar_item}
+        self.functions = {
+            'espacios':{
+                'tap':{
+                    'hablar': self.cambiar_foco,
+                    'arriba': lambda: self.select_one('arriba'),
+                    'abajo': lambda: self.select_one('abajo'),
+                    'izquierda': lambda: self.select_one('izquierda'),
+                    'derecha': lambda: self.select_one('derecha')
+                },
+                'hold':{
+                    'arriba': lambda: self.select_one('arriba'),
+                    'abajo': lambda: self.select_one('abajo'),
+                    'izquierda': lambda: self.select_one('izquierda'),
+                    'derecha': lambda: self.select_one('derecha')
+                },
+                'release':{
+                    'hablar':self.cambiar_foco
+                }
+            },
+            'items':{
+                'tap':{
+                    'hablar': self.equipar_item,
+                    'arriba': lambda: self.elegir_fila('arriba'),
+                    'abajo': lambda: self.elegir_fila('abajo')
+                },
+                'hold':{
+                    'arriba': lambda: self.elegir_fila('arriba'),
+                    'abajo': lambda: self.elegir_fila('abajo')
+                },
+                'release':{
+                    'hablar':self.equipar_item
+                }
+            }
+        }
 
     def titular(self, titulo):
         """Agrega un titulo descriptivo a cada espacio equipable.
@@ -155,7 +176,6 @@ class MenuEquipo(MenuItems):
         espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
         items = Ed.HERO.inventario('equipable', espacio.nombre)
         for i in range(len(items)):
-            print(items[i])
             fila = Fila(items[i], 188, 0, i * h + i, tag='n')
             self.filas.add(fila)
 
@@ -203,23 +223,14 @@ class MenuEquipo(MenuItems):
             self.current.isSelected = False
             self.foco = 'espacios'
 
-    def usar_funcion(self, tecla):
+    def use_function(self, mode, key):
         """Determina qué grupo de funciones se van a usar según el foco actual.
-        :param tecla: string
+        :param mode: string,
+        :param key: string
         """
-
-        if self.foco == 'espacios':
-            funciones = self.funciones_espacios
-        elif self.foco == 'items':
-            funciones = self.funciones_lista
-        else:
-            funciones = []
-
-        if tecla in ('arriba', 'abajo', 'izquierda', 'derecha'):
-            funciones[tecla](tecla)
-        else:
-            funciones[tecla]()
-
+        if key in self.functions[self.foco][mode]:
+            self.functions[self.foco][mode][key]()
+    
     def update(self):
         if self.cambio:
             self.llenar_espacio_selectivo()

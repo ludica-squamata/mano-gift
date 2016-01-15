@@ -2,13 +2,16 @@ from pygame import display as pantalla, init as py_init, image, event as Event, 
 from engine.globs import Constants as C, Tiempo, EngineData as ED, ModData
 from engine.misc import Resources as r, Config
 from engine.IO.modos import Modo
+import os
 
 py_init()
-joystick.Joystick(0).init()
+if joystick.get_count():
+    joystick.Joystick(0).init()
 tamanio = C.ANCHO, C.ALTO
 ModData.init(r.abrir_json("engine.ini"))
 pantalla.set_caption(ModData.data['nombre'])
 pantalla.set_icon(image.load(ModData.graphs + ModData.data['icono']))
+os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0,0)
 fondo = pantalla.set_mode(tamanio)
 
 fuente = font.SysFont('verdana', 16, bold=True)

@@ -1,7 +1,8 @@
-from .menu import Menu
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Constants as Cs
 from engine.misc import Config as Cfg
 from engine.UI.widgets import Boton
+from .menu import Menu
 
 
 class MenuPausa(Menu):
@@ -12,21 +13,30 @@ class MenuPausa(Menu):
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
 
         botones = [
-            {m: "Items", p: [x, 93], k: {b: "Equipo"}, c: self.press_one},
-            {m: "Equipo", p: [x, 132], k: {a: "Items", b: "Status"}, c: self.press_one},
-            {m: "Status", p: [x, 171], k: {a: "Equipo", b: "Grupo"}, c: self.press_one},
-            {m: "Grupo", p: [x, 210], k: {a: "Status", b: "Opciones"}, c: self.press_one},
-            {m: "Opciones", p: [x, 249], k: {a: "Grupo", b: "Debug"}, c: self.press_one},
-            {m: "Debug", p: [x, 288], k: {a: 'Opciones'}, c: self.press_one}]
+            {m: "Items", p: [x, 93], k: {a: "Debug", b: "Equipo"}, c: self.new_menu},
+            {m: "Equipo", p: [x, 132], k: {a: "Items", b: "Status"}, c: self.new_menu},
+            {m: "Status", p: [x, 171], k: {a: "Equipo", b: "Grupo"}, c: self.new_menu},
+            {m: "Grupo", p: [x, 210], k: {a: "Status", b: "Opciones"}, c: self.new_menu},
+            {m: "Opciones", p: [x, 249], k: {a: "Grupo", b: "Debug"}, c: self.new_menu},
+            {m: "Debug", p: [x, 288], k: {a: 'Opciones',b:"Items"}, c: self.new_menu}]
 
         self.establecer_botones(botones, 6)
-        self.select_one('arriba')
-        self.funciones = {
-            "arriba": self.select_one,
-            "abajo": self.select_one,
-            "izquierda": self.select_one,
-            "derecha": self.select_one,
-            "hablar": self.press_button}
+        
+        self.functions.update({
+            'tap':{
+                'hablar':self.press_button,
+                'arriba': lambda: self.select_one('arriba'),
+                'abajo': lambda: self.select_one('abajo')
+            },
+            'hold':{
+                'hablar': self.mantener_presion,
+                'arriba': lambda: self.select_one('arriba'),
+                'abajo': lambda: self.select_one('abajo')
+            },
+            'release':{
+                'hablar': self.liberar_presion,
+            }
+        })
 
     def establecer_botones(self, botones, ancho_mod):
         for btn in botones:
@@ -43,11 +53,11 @@ class MenuPausa(Menu):
     def select_one(self, direccion):
         self.deselect_all(self.botones)
         if len(self.botones) > 0:
-            self.current = self.botones.get_sprite(self.cur_btn)
-            if direccion in self.current.direcciones:
-                selected = self.current.direcciones[direccion]
+            current = self.botones.get_sprite(self.cur_btn)
+            if direccion in current.direcciones:
+                selected = current.direcciones[direccion]
             else:
-                selected = self.current.nombre
+                selected = current.nombre
 
             for i in range(len(self.botones)):
                 boton = self.botones.get_sprite(i)
@@ -61,10 +71,14 @@ class MenuPausa(Menu):
     def cancelar(self):
         return False
 
-    @staticmethod
-    def press_one():
-        from engine.IO.modos import Modo
-        Modo.newMenu = True
+    def new_menu(self):
+        EventDispatcher.trigger('SetMode',self.nombre,{'mode': 'NewMenu','value':self.current.nombre})
+
+    def mantener_presion(self):
+        self.current.mantener_presion()
+
+    def liberar_presion(self):
+        self.current.liberar_presion()
 
     def reset(self):
         """Reseta el presionado de todos los botones, y deja seleccionado

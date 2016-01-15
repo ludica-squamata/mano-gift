@@ -13,7 +13,7 @@ class Ventana(BaseWidget):
     def posicionar_cursor(self, i):
         self.sel += i
         if self.sel < 0:
-            self.sel = 0
+            self.sel = self.opciones - 1
 
         elif self.sel > self.opciones - 1:
-            self.sel = self.opciones - 1
+            self.sel = 0

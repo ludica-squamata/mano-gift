@@ -17,15 +17,34 @@ class Menu(Ventana):
 
     def __init__(self, titulo):
         self.nombre = titulo
-        # self.current = self
         self.canvas = self.create_raised_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
-        self.funciones = {
-            "arriba": lambda dummy: None,
-            "abajo": lambda dummy: None,
-            "izquierda": lambda dummy: None,
-            "derecha": lambda dummy: None,
-            "hablar": lambda: None}
+        self.functions = {
+            'tap':{
+                'hablar':lambda: None,
+                'cancelar':lambda: None,
+                'arriba': lambda dummy: None,
+                'abajo': lambda dummy: None,
+                'izquierda': lambda dummy: None,
+                'derecha': lambda dummy: None
+            },
+            'hold':{
+                'hablar':lambda: None,
+                'cancelar':lambda: None,
+                'arriba': lambda dummy: None,
+                'abajo': lambda dummy: None,
+                'izquierda': lambda dummy: None,
+                'derecha': lambda dummy: None
+            },
+            'release':{
+                'hablar':lambda: None,
+                'cancelar':lambda: None,
+                'arriba': lambda dummy: None,
+                'abajo': lambda dummy: None,
+                'izquierda': lambda dummy: None,
+                'derecha': lambda dummy: None
+            }
+        }
         self.botones = LayeredUpdates()
         super().__init__(self.canvas)
         self.ubicar(10, 10)
@@ -65,12 +84,10 @@ class Menu(Ventana):
         """Esta funcion es un hook para otras funciones del mismo nombre."""
         self.active = False
         return True
-
-    def usar_funcion(self, tecla):
-        if tecla in ('arriba', 'abajo', 'izquierda', 'derecha'):
-            self.funciones[tecla](tecla)
-        else:
-            self.funciones[tecla]()
+    
+    def use_function(self, mode, key):
+        if key in self.functions[mode]:
+            self.functions[mode][key]()
 
     def keyup_function(self, tecla):
         if tecla in self.keyup:

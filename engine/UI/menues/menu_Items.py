@@ -21,12 +21,16 @@ class MenuItems(Menu):
         self.draw_space = Surface(self.draw_space_rect.size)
         self.crear_contenido()
         self.crear_espacio_descriptivo((self.canvas.get_width() - 15), 93)
-        self.funciones = {
-            "arriba": self.elegir_fila,
-            "abajo": self.elegir_fila,
-            "izquierda": lambda dummy: None,
-            "derecha": lambda dummy: None,
-            "hablar": lambda: None}
+        self.functions.update({
+            'tap':{
+                'arriba': lambda: self.elegir_fila('arriba'),
+                'abajo': lambda: self.elegir_fila('abajo')
+            },
+            'hold':{
+                'arriba': lambda: self.elegir_fila('arriba'),
+                'abajo': lambda: self.elegir_fila('abajo')
+            }
+        })
 
     def crear_contenido(self):
         self.actualizar_filas()

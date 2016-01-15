@@ -1,8 +1,9 @@
 from pygame.sprite import LayeredUpdates
 from pygame.key import name as key_name
-from pygame import Rect, font
+from pygame import Rect, font, joystick
 from engine.UI.widgets import Fila
 from engine.globs.constantes import Constants as Cs
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc.config import Config as Cfg
 from engine.libs.textrect import render_textrect
 from .menu_Pausa import MenuPausa
@@ -19,12 +20,26 @@ class MenuOpciones(MenuPausa, Menu):
         self.establecer_botones(self.crear_botones_config(), 6)
         self.establecer_botones(self.crear_botones_teclas(), 4)
         self.crear_espacios_config()
-        self.funciones = {
-            "arriba": self.select_one,
-            "abajo": self.select_one,
-            "izquierda": self.select_one,
-            "derecha": self.select_one,
-            "hablar": self.press_button}
+        
+        self.functions.update({
+            'tap':{
+                'hablar':self.press_button,
+                'arriba': lambda: self.select_one('arriba'),
+                'abajo': lambda: self.select_one('abajo'),
+                'izquierda': lambda: self.select_one('izquierda'),
+                'derecha': lambda: self.select_one('derecha')
+            },
+            'hold':{
+                'hablar': self.mantener_presion,
+                'arriba': lambda: self.select_one('arriba'),
+                'abajo': lambda: self.select_one('abajo'),
+                'izquierda': lambda: self.select_one('izquierda'),
+                'derecha': lambda: self.select_one('derecha')
+            },
+            'release':{
+                'hablar': self.liberar_presion,
+            }
+        })
 
     def crear_botones_config(self):
         m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
@@ -32,11 +47,18 @@ class MenuOpciones(MenuPausa, Menu):
         dy, f = 64, 38  # constantes numéricas de posicion # f = fila
         cmd1 = self.cambiar_booleano
         cmd2 = self.set_input_device
-        botones = [
-            {m: "Mostrar Intro", c: cmd1, p: [6, f * 0 + dy], k: {b: "Recordar Menus", a: "Salir"}},
-            {m: "Recordar Menus", c: cmd1, p: [6, f * 1 + dy], k: {b: "Metodo de Entrada", a: "Mostrar Intro"}},
-            {m: "Metodo de Entrada", c: cmd2, p: [6, f * 2 + dy], k: {b: "Arriba", a: "Recordar Menus"}}
-        ]
+        if joystick.get_count():
+            botones = [
+                {m: "Mostrar Intro", c: cmd1, p: [6, f * 0 + dy], k: {b: "Recordar Menus", a: "Salir"}},
+                {m: "Recordar Menus", c: cmd1, p: [6, f * 1 + dy], k: {b: "Metodo de Entrada", a: "Mostrar Intro"}},
+                {m: "Metodo de Entrada", c: cmd2, p: [6, f * 2 + dy], k: {b: "Arriba", a: "Recordar Menus"}}
+            ]
+        else:
+            botones = [
+                {m: "Mostrar Intro", c: cmd1, p: [6, f * 0 + dy], k: {b: "Recordar Menus", a: "Salir"}},
+                {m: "Recordar Menus", c: cmd1, p: [6, f * 1 + dy], k: {b: "Arriba", a: "Mostrar Intro"}}
+            ]
+            
 
         return botones
 
@@ -47,9 +69,13 @@ class MenuOpciones(MenuPausa, Menu):
         x1, x2 = 6, 226
         dy, f = 185, 38  # constantes numéricas de posicion # f = fila
         cmd = self.set_tecla
+        if joystick.get_count():
+            special = "Metodo de Entrada"
+        else:
+            special = "Recordar Menus"
         botones = [
             # primera columna
-            {m: "Arriba", c: cmd, p: [x1, f * 0 + dy], k: {b: "Abajo", a: "Metodo de Entrada", d: "Accion"}},
+            {m: "Arriba", c: cmd, p: [x1, f * 0 + dy], k: {b: "Abajo", a: special, d: "Accion"}},
             {m: "Abajo", c: cmd, p: [x1, f * 1 + dy], k: {b: "Derecha", a: "Arriba", d: "Hablar"}},
             {m: "Derecha", c: cmd, p: [x1, f * 2 + dy], k: {b: "Izquierda", a: "Abajo", d: "Inventario"}},
             {m: "Izquierda", c: cmd, p: [x1, f * 3 + dy], k: {b: "Menu", a: "Derecha", d: "Cancelar"}},
@@ -61,7 +87,7 @@ class MenuOpciones(MenuPausa, Menu):
             {m: "Inventario", c: cmd, p: [x2, f * 2 + dy], k: {b: "Cancelar", a: "Hablar", i: "Derecha"}},
             {m: "Cancelar", c: cmd, p: [x2, f * 3 + dy], k: {b: "Posicion", a: "Inventario", i: "Izquierda"}},
             {m: "Posicion", c: cmd, p: [x2, f * 4 + dy], k: {b: "Salir", a: "Cancelar", i: "Menu"}},
-            {m: "Salir", c: cmd, p: [x2, f * 5 + dy], k: {b: "Arriba", a: "Posicion", i: "Debug"}}]
+            {m: "Salir", c: cmd, p: [x2, f * 5 + dy], k: {b: "Mostrar Intro", a: "Posicion", i: "Debug"}}]
 
         return botones
 
@@ -125,14 +151,13 @@ class MenuOpciones(MenuPausa, Menu):
         Cfg.asignar('metodo_de_entrada', nombre.lower())
 
     def set_tecla(self):
-        from engine.IO.modos import Modo
         '''Prepara la tecla elegida para ser cambiada'''
 
         boton, tecla = self.elegir_boton_espacio()
         boton.ser_presionado()
         tecla.ser_elegido()
 
-        Modo.setKey = True
+        EventDispatcher.trigger('SetMode',self.nombre,{'mode': 'SetKey','value':True})
 
     def cambiar_tecla(self, tcl):
         """Cambia la tecla elgida por el nuevo input
