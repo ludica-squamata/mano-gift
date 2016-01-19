@@ -115,6 +115,12 @@ class Modo:
                 
                 elif event.key == Cs.TECLAS.DERECHA:
                     Ed.DIALOG.use_function('hold','derecha')
+                    
+                elif event.key == Cs.TECLAS.ARRIBA:
+                    Ed.DIALOG.use_function('hold','arriba')
+                
+                elif event.key == Cs.TECLAS.ABAJO:
+                    Ed.DIALOG.use_function('hold','abajo')
             
             elif event.type == Cs.RELEASE:
                 if event.key == Cs.TECLAS.IZQUIERDA:
@@ -122,6 +128,12 @@ class Modo:
                 
                 elif event.key == Cs.TECLAS.DERECHA:
                     Ed.DIALOG.use_function('release','derecha')
+                    
+                elif event.key == Cs.TECLAS.ARRIBA:
+                    Ed.DIALOG.use_function('release','arriba')
+                
+                elif event.key == Cs.TECLAS.ABAJO:
+                    Ed.DIALOG.use_function('release','abajo')
 
         if Ed.DIALOG is None:
             Ed.MODO = "Aventura"
