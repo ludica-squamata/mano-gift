@@ -13,7 +13,6 @@ class Menu(Ventana):
     canvas = None
     newMenu = False
     active = True
-    ticks = 0
 
     def __init__(self, titulo):
         self.nombre = titulo
@@ -61,7 +60,6 @@ class Menu(Ventana):
         if len(lista) > 0:
             for item in lista:
                 item.ser_deselegido()
-                item.dirty = 1
 
     def mover_cursor(self, item):
         if item.tipo == 'boton':
@@ -88,10 +86,6 @@ class Menu(Ventana):
     def use_function(self, mode, key):
         if key in self.functions[mode]:
             self.functions[mode][key]()
-
-    def keyup_function(self, tecla):
-        if tecla in self.keyup:
-            self.keyup[tecla]()
 
     def press_button(self):
         if len(self.botones) > 0:

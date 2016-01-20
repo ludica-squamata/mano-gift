@@ -1,7 +1,7 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import ModData as MD
 from importlib import machinery
-import types
+import types, sys
 
 class EventListener:
 
@@ -15,7 +15,12 @@ class EventListener:
         if self.data.get('script') and self.data.get('eventos'):
             # cargar un archivo por ruta
             loader = machinery.SourceFileLoader("module.name", MD.scripts+self.data['script']+'.py')
-            m = loader.load_module()  # en 3.4 lo cambiaron a exec_module()
+            if sys.version_info.minor == 3:
+                m = loader.load_module()
+            elif sys.version_info.minor == 4:
+                # en 3.4 lo cambiaron a exec_module()
+                m = loader.exec_module()
+            
             for event_name, func_name in self.data['eventos'].items():
                 f = getattr(m, func_name)
                 if f:

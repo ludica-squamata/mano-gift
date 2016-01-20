@@ -6,10 +6,8 @@ class Ventana(BaseWidget):
     tamanio = ancho, alto = 0, 0
     sel = 0
     opciones = 0
-
-    def __init__(self, image):
-        super().__init__(image)
-
+    ticks = 0
+    
     def posicionar_cursor(self, i):
         self.sel += i
         if self.sel < 0:

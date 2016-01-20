@@ -1,5 +1,6 @@
 from os import getcwd as cwd, path, listdir
 from importlib import machinery
+import sys
 
 
 class ModData:
@@ -37,14 +38,18 @@ class ModData:
             cls.items = root + data['folders']['items'] + '/'
             cls.scripts = root + data['folders']['scripts'] + '/'
             cls.scenes = root + data['folders']['scenes'] + '/'
-
+            
             for script in listdir(cls.scripts):
                 # lo convertí en un loop para poder agregar, por ejemplo,
                 # una pantalla de gameover sin tener que buscar ese nombre
                 ruta = cls.scripts + script
                 if path.isfile(ruta):
                     name = script.rstrip('.py')
-                    module = machinery.SourceFileLoader("module.name", ruta).load_module()
+                    if sys.version_info.minor == 3:  # python 3.3
+                        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+                    elif sys.version_info.minor == 4:  # python 3.4
+                        module = machinery.SourceFileLoader("module.name", ruta).exec_module()
+                    
                     if hasattr(module, name) and not hasattr(cls, name):
                         # lo resolví mmás fácil. Si ésta clase no tiene el nombre ya...
                         setattr(cls, name, (getattr(module, name)))

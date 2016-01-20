@@ -70,32 +70,37 @@ class DialogInterface(Ventana):
             self.draw_space_rect.x = 3
 
     def elegir_opcion(self, i):
-        # get the option's position
-        self.posicionar_cursor(i)
+        if self.ticks > 10:
+            # get the option's position
+            self.posicionar_cursor(i)
 
-        # get current's sprite, self.sel is current's ID
-        current = self.filas.get_sprite(self.sel)
-        if not self.draw_space_rect.contains(current.rect):
-            h = self.altura_del_texto
-            for x in range(len(self.filas)):
-                op = self.filas.get_sprite(x)
-                if i > 0:
-                    op.rect.y -= h + 1
-                else:
-                    op.rect.y += h + 1
+            # get current's sprite, self.sel is current's ID
+            current = self.filas.get_sprite(self.sel)
+            if not self.draw_space_rect.contains(current.rect):
+                h = self.altura_del_texto
+                for x in range(len(self.filas)):
+                    op = self.filas.get_sprite(x)
+                    if i > 0:
+                        op.rect.y -= h + 1
+                    else:
+                        op.rect.y += h + 1
 
-        # deselect all and select the chosen one
-        for fila in self.filas:
-            fila.ser_deselegido()
-        current.ser_elegido()
-
-        return current.item.leads
+            # deselect all and select the chosen one
+            for fila in self.filas:
+                fila.ser_deselegido()
+            current.ser_elegido()
+            
+            self.ticks = 0
+            return current.item.leads
+            
 
     def scroll(self, dy):
-        if not self.draw_space_rect.contains(self.text_rect):
-            if self.text_rect.top + dy < self.draw_space_rect.top:
-                if self.text_rect.bottom + dy > self.draw_space_rect.bottom:
-                    self.text_rect.y += dy*3  # TODO: "3" podría ser un setting
+        if self.ticks > 10:
+            if not self.draw_space_rect.contains(self.text_rect):
+                if self.text_rect.top + dy < self.draw_space_rect.top:
+                    if self.text_rect.bottom + dy > self.draw_space_rect.bottom:
+                        self.text_rect.y += dy*3  # TODO: "3" podría ser un setting
+            self.ticks = 0
 
     def borrar_todo(self):
         self.image.fill(self.bg_cnvs)
@@ -104,6 +109,8 @@ class DialogInterface(Ventana):
         self.sel = 0
 
     def update(self):
+        self.ticks += 1
+        print(self.ticks)
         self.image.blit(self.loc_img, self.loc_rect)
 
         color = self.bg_cnvs  # TODO: estos colores deberían ser otros
