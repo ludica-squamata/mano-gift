@@ -45,10 +45,11 @@ class ModData:
                 ruta = cls.scripts + script
                 if path.isfile(ruta):
                     name = script.rstrip('.py')
-                    if sys.version_info.minor == 3:  # python 3.3
-                        module = machinery.SourceFileLoader("module.name", ruta).load_module()
-                    elif sys.version_info.minor == 4:  # python 3.4
-                        module = machinery.SourceFileLoader("module.name", ruta).exec_module()
+                    # if sys.version_info.minor == 3:  # python 3.3
+                    module = machinery.SourceFileLoader("module.name", ruta).load_module()
+                    # elif sys.version_info.minor == 4:  # python 3.4
+                    ## Deshabilitado porque me tira una exception que no entiendo.
+                        # module = machinery.SourceFileLoader("module.name", ruta).exec_module()
                     
                     if hasattr(module, name) and not hasattr(cls, name):
                         # lo resolví mmás fácil. Si ésta clase no tiene el nombre ya...

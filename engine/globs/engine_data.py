@@ -25,8 +25,16 @@ class EngineData:
         stage,entrada = scene_data['stage']
         cls.setear_mapa(stage,entrada)
         Tiempo.setear_momento(scene_data['dia'],*scene_data['hora'])
-        if scene_data['focus'] != '':
-            Renderer.camara.set_focus(MobGroup[scene_data['focus']])
+        focus = scene_data.get('focus',False)
+        if focus:
+            if focus in MobGroup:
+                focus = MobGroup[scene_data['focus']]
+            else:
+                for prop in cls.MAPA_ACTUAL.properties:
+                    if focus == prop.nombre:
+                        focus = prop
+            
+            Renderer.camara.set_focus(focus)
             Renderer.use_focus = True
         else:
             Renderer.use_focus = False

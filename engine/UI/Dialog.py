@@ -110,7 +110,6 @@ class DialogInterface(Ventana):
 
     def update(self):
         self.ticks += 1
-        print(self.ticks)
         self.image.blit(self.loc_img, self.loc_rect)
 
         color = self.bg_cnvs  # TODO: estos colores deberían ser otros
