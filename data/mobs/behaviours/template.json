@@ -1,0 +1,8 @@
+{
+    "0": {"name":"Secuence","children":[]},
+    "10":{"name":"Selector","children":[]},
+    "2": {"name":"UntilFail","child":0},
+    "7": {"name":"Inverter", "child":0},
+    "12":{"name":"Succeeder","child":0},
+    "1": {"name":"_getstackfrom", "context":["door","building"]}
+}
