@@ -1,16 +1,23 @@
-from engine.globs import ModData as MD
-from engine.quests import QuestManager
-from engine.misc import Resources as r
-from .CompoMob import Autonomo
+from .CompoMob import Autonomo, Parlante
+from engine.misc import Resources as Rs
+from engine.globs import ModData as Md
 from .mob import Mob
 
-class NPC (Autonomo,Mob): 
-    quest = None
-    iniciativa = 2
+
+class NPC(Autonomo, Parlante, Mob):
     hablando = False
-    def __init__(self,nombre,x,y,data):
+    hablante = True
+    image = None  # para corregir un advertencia en PyCharm
+
+    def __init__(self, nombre, x, y, data):
         self.nombre = nombre
-        super().__init__(data,x,y)
-    
-        if 'quest' in data:
-            QuestManager.add(data['quest'])
+        self.dialogo = Rs.abrir_json(Md.dialogos + data['dialog'])
+        super().__init__(data, x, y)
+
+    def mover(self):
+        if not self.hablando:
+            super().mover()
+
+    def iniciar_dialogo(self, direccion):
+        self.cambiar_direccion(direccion)
+        self.image = self.images['S' + direccion]

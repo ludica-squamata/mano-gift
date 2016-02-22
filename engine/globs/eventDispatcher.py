@@ -15,7 +15,6 @@ class EventDispatcher:
         :param listener:es la referencia a una funcion. la misma debe aceptar como parametro un
                         objeto de tipo giftEvent.
         :param events:lista de string con los eventos que desean registrarse.
-        :type listener:(GiftEvent)->None
         :type events:tuple
         :return:None
         """

@@ -25,7 +25,7 @@ class Modo:
 
                 elif event.key == Cs.TECLAS.DEBUG:
                     pass
-        
+
         EventDispatcher.process()
 
     @classmethod
@@ -43,7 +43,7 @@ class Modo:
                 elif event.key == Cs.TECLAS.INVENTARIO:
                     Ed.MODO = 'Dialogo'
                     Ed.DIALOG = InventoryCircularDisplay()
-                    
+
                 elif event.key == Cs.TECLAS.POSICION_COMBATE:
                     Ed.HERO.cambiar_estado()
 
@@ -89,51 +89,51 @@ class Modo:
         for event in get_taphold_events(events):
             if event.type == Cs.TAP:
                 if event.key == Cs.TECLAS.ARRIBA:
-                    Ed.DIALOG.use_function('tap','arriba')
+                    Ed.DIALOG.use_function('tap', 'arriba')
 
                 elif event.key == Cs.TECLAS.ABAJO:
-                    Ed.DIALOG.use_function('tap','abajo')
+                    Ed.DIALOG.use_function('tap', 'abajo')
 
                 elif event.key == Cs.TECLAS.IZQUIERDA:
-                    Ed.DIALOG.use_function('tap','izquierda')
+                    Ed.DIALOG.use_function('tap', 'izquierda')
 
                 elif event.key == Cs.TECLAS.DERECHA:
-                    Ed.DIALOG.use_function('tap','derecha')
+                    Ed.DIALOG.use_function('tap', 'derecha')
 
                 elif event.key == Cs.TECLAS.HABLAR:
-                    Ed.DIALOG.use_function('tap','hablar')
+                    Ed.DIALOG.use_function('tap', 'hablar')
 
                 elif event.key == Cs.TECLAS.INVENTARIO:
-                    Ed.DIALOG.use_function('tap','inventario')
+                    Ed.DIALOG.use_function('tap', 'inventario')
 
                 elif event.key == Cs.TECLAS.CANCELAR_DIALOGO:
-                    Ed.DIALOG.use_function('tap','cancelar')
-            
+                    Ed.DIALOG.use_function('tap', 'cancelar')
+
             elif event.type == Cs.HOLD:
                 if event.key == Cs.TECLAS.IZQUIERDA:
-                    Ed.DIALOG.use_function('hold','izquierda')
-                
+                    Ed.DIALOG.use_function('hold', 'izquierda')
+
                 elif event.key == Cs.TECLAS.DERECHA:
-                    Ed.DIALOG.use_function('hold','derecha')
-                    
+                    Ed.DIALOG.use_function('hold', 'derecha')
+
                 elif event.key == Cs.TECLAS.ARRIBA:
-                    Ed.DIALOG.use_function('hold','arriba')
-                
+                    Ed.DIALOG.use_function('hold', 'arriba')
+
                 elif event.key == Cs.TECLAS.ABAJO:
-                    Ed.DIALOG.use_function('hold','abajo')
-            
+                    Ed.DIALOG.use_function('hold', 'abajo')
+
             elif event.type == Cs.RELEASE:
                 if event.key == Cs.TECLAS.IZQUIERDA:
-                    Ed.DIALOG.use_function('release','izquierda')
-                
+                    Ed.DIALOG.use_function('release', 'izquierda')
+
                 elif event.key == Cs.TECLAS.DERECHA:
-                    Ed.DIALOG.use_function('release','derecha')
-                    
+                    Ed.DIALOG.use_function('release', 'derecha')
+
                 elif event.key == Cs.TECLAS.ARRIBA:
-                    Ed.DIALOG.use_function('release','arriba')
-                
+                    Ed.DIALOG.use_function('release', 'arriba')
+
                 elif event.key == Cs.TECLAS.ABAJO:
-                    Ed.DIALOG.use_function('release','abajo')
+                    Ed.DIALOG.use_function('release', 'abajo')
 
         if Ed.DIALOG is None:
             Ed.MODO = "Aventura"
@@ -149,19 +149,19 @@ class Modo:
                     cls.setKey = False
 
                 elif event.key == Cs.TECLAS.IZQUIERDA:
-                    Ed.menu_actual.use_function('tap','izquierda')
-                    
+                    Ed.menu_actual.use_function('tap', 'izquierda')
+
                 elif event.key == Cs.TECLAS.DERECHA:
-                    Ed.menu_actual.use_function('tap','derecha')
+                    Ed.menu_actual.use_function('tap', 'derecha')
 
                 elif event.key == Cs.TECLAS.ARRIBA:
-                    Ed.menu_actual.use_function('tap','arriba')
-                    
+                    Ed.menu_actual.use_function('tap', 'arriba')
+
                 elif event.key == Cs.TECLAS.ABAJO:
-                    Ed.menu_actual.use_function('tap','abajo')
-                    
+                    Ed.menu_actual.use_function('tap', 'abajo')
+
                 elif event.key == Cs.TECLAS.HABLAR:
-                    Ed.menu_actual.use_function('tap','hablar')
+                    Ed.menu_actual.use_function('tap', 'hablar')
 
                 elif event.key == Cs.TECLAS.CANCELAR_DIALOGO:
                     previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
@@ -172,23 +172,23 @@ class Modo:
 
             elif event.type == Cs.HOLD:
                 if event.key == Cs.TECLAS.HABLAR:
-                    Ed.menu_actual.use_function('hold','hablar')
+                    Ed.menu_actual.use_function('hold', 'hablar')
 
                 elif event.key == Cs.TECLAS.IZQUIERDA:
-                    Ed.menu_actual.use_function('hold','izquierda')
+                    Ed.menu_actual.use_function('hold', 'izquierda')
 
                 elif event.key == Cs.TECLAS.DERECHA:
-                    Ed.menu_actual.use_function('hold','derecha')
+                    Ed.menu_actual.use_function('hold', 'derecha')
 
                 elif event.key == Cs.TECLAS.ARRIBA:
-                    Ed.menu_actual.use_function('hold','arriba')
+                    Ed.menu_actual.use_function('hold', 'arriba')
 
                 elif event.key == Cs.TECLAS.ABAJO:
-                    Ed.menu_actual.use_function('hold','abajo')
+                    Ed.menu_actual.use_function('hold', 'abajo')
 
             elif event.type == Cs.RELEASE:
                 if event.key == Cs.TECLAS.HABLAR:
-                    Ed.menu_actual.use_function('release','hablar')
+                    Ed.menu_actual.use_function('release', 'hablar')
 
         if cls.newMenu:
             cls.pop_menu()
@@ -197,24 +197,24 @@ class Modo:
         return Renderer.update(fondo)
 
     @classmethod
-    def toggle_mode(cls,event):
+    def toggle_mode(cls, event):
         """
         :param event:
         :type event:AzoeEvent
         :return:
         """
         value = event.data['value']
-        
+
         if event.data['mode'] == 'SetKey':
             cls.setKey = value
         elif event.data['mode'] == 'NewMenu':
             cls.newMenu = value
-        
+
     @classmethod
-    def pop_menu(cls, titulo = None):
+    def pop_menu(cls, titulo=None):
         if titulo is None:
             titulo = cls.newMenu
-            
+
         if Ed.menu_previo == '' and Ed.menu_previo != titulo:
             Ed.menu_previo = titulo
 
@@ -241,6 +241,6 @@ class Modo:
         Ed.DIALOG = None
         Ed.MODO = 'Aventura'
         Ed.onPause = False
-    
-    
-EventDispatcher.register(Modo.toggle_mode,'SetMode')
+
+
+EventDispatcher.register(Modo.toggle_mode, 'SetMode')

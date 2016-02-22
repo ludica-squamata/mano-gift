@@ -92,20 +92,22 @@ class PC(Mob, Parlante):
 
     def iniciar_dialogo(self):
         x, y = self.direcciones[self.direccion]
-        
-        sprite = self._interact_with_mobs(x, y)
-        post_dir = ''
         if x:
             if x > 0:
                 post_dir = 'izquierda'
             else:
                 post_dir = 'derecha'
-        if y:
+        elif y:
             if y < 0:
                 post_dir = 'abajo'
             else:
                 post_dir = 'arriba'
-        
+        else:
+            # esto nunca sucede; está por una correcion de PyCharm
+            post_dir = ''
+
+        sprite = self._interact_with_mobs(x, y)
         if sprite is not None:
-            sprite.iniciar_dialogo(self, post_dir)
+            sprite.iniciar_dialogo(post_dir)
+
         return super().hablar(sprite)

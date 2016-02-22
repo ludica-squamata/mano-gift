@@ -1,7 +1,6 @@
 from engine.globs import EngineData as Ed, Constants as Cs, MobGroup, ModData as Md
 from engine.misc import Resources as Rs
-from engine.mobs import NPCSocial, PC
-from engine.quests import QuestManager
+from engine.mobs import PC, NPC
 from engine.scenery import newProp
 from .salida import Salida
 
@@ -18,7 +17,6 @@ class Loader:
         cls.cargar_hero(entrada)
         cls.cargar_props()
         cls.cargar_mobs(mobs_data)
-        cls.cargar_quests()
         cls.cargar_salidas()
 
     @classmethod
@@ -49,11 +47,11 @@ class Loader:
                 cls.STAGE.add_property(prop, Cs.GRUPO_ITEMS, is_interactive)
 
     @classmethod
-    def cargar_mobs(cls, extra_data, capa = 'capa_ground'):
+    def cargar_mobs(cls, extra_data, capa='capa_ground'):
         for key in cls.STAGE.data[capa]['mobs']:
             pos = cls.STAGE.data[capa]['mobs'][key]
             if key == 'npcs':
-                clase = NPCSocial
+                clase = NPC
 
                 for ref in pos:
                     data = Rs.abrir_json(Md.mobs + ref + '.json')
@@ -62,7 +60,7 @@ class Loader:
                         mob = clase(ref, x, y, data)
                         if capa == 'capa_ground':
                             cls.STAGE.add_property(mob, Cs.GRUPO_MOBS)
-    
+
     @classmethod
     def cargar_hero(cls, entrada):
         x, y = cls.STAGE.data['entradas'][entrada]
@@ -76,12 +74,6 @@ class Loader:
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
         Loader.STAGE.add_property(Ed.HERO, Cs.GRUPO_MOBS)
-
-    @classmethod
-    def cargar_quests(cls):
-        if 'quests' in cls.STAGE.data:
-            for quest in cls.STAGE.data['quests']:
-                QuestManager.add(quest)
 
     @classmethod
     def cargar_salidas(cls):

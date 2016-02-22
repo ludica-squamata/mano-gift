@@ -16,8 +16,6 @@ class ModData:
     scripts = ''
     scenes = ''
 
-    intro = None
-
     @classmethod
     def init(cls, ini):
         from engine.misc import Util
