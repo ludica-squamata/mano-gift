@@ -1,9 +1,9 @@
 from engine.globs import MobGroup
-
+from ._atribuido import Atribuido
 from pygame import Rect
 
 
-class Interactivo:
+class Interactivo(Atribuido):
     # el nombre no es del todo correcto, pero no existe palabra en castellano
     # para lo que sería un interactuante. Al menos, el dRAE dice que no existe.
     def __init__(self, *args, **kwargs):
@@ -47,8 +47,7 @@ class Interactivo:
     def _interact_with_mobs(self, x, y):
         """Selecciona a un mob utilizando el rect de interacción"""
         self._orient_interaction_rect(x, y)
-        for key in MobGroup:
-            mob = MobGroup[key]
+        for mob in MobGroup:
             if mob != self:
                 if self._interaction_rect.colliderect(mob.rect):
                     return mob

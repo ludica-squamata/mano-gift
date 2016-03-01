@@ -1,29 +1,30 @@
-from pygame import mask as MASK, PixelArray, Surface, transform, SRCALPHA
+from pygame import mask, PixelArray, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
-from pygame.sprite import Sprite
 from .azoeSprite import AzoeSprite
 
 
-class _sombra(AzoeSprite):
+class Sombra(AzoeSprite):
     dif_x = 0
     alpha = 0
+
     def __init__(self, spr, dfx, img):
         self.spr = spr
         self.tipo = "sombra"
-        self.nombre = "sombra de "+self.spr.nombre
-        super().__init__(imagen=img, x = spr.rect.x-dfx, y = spr.rect.y, z= spr.rect.bottom-10)
+        self.nombre = "sombra de " + self.spr.nombre
+        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.rect.bottom - 10)
         self.alpha = self.image.get_alpha()
         self.dif_x = dfx
-        
+
     def ubicar(self, x, y, z=0):
         """Coloca al sprite en pantalla"""
-        if self.z+z < self.spr.z:
+        if self.z + z < self.spr.z:
             super().ubicar(x - self.dif_x, y, z)
         else:
             super().ubicar(x - self.dif_x, y)
-    
+
     def __repr__(self):
         return self.nombre
+
 
 class ShadowSprite(AzoeSprite):
     _sombras = None
@@ -45,7 +46,7 @@ class ShadowSprite(AzoeSprite):
     def crear_sombras(self):
 
         h = self.rect.h
-        w = self.rect.w
+        # w = self.rect.w
         h_2 = h / 2
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
@@ -72,17 +73,17 @@ class ShadowSprite(AzoeSprite):
             draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
         if self._sprSombra is None:
-            self._sprSombra = _sombra(self, h_2, t_surface)
+            self._sprSombra = Sombra(self, h_2, t_surface)
             Renderer.camara.add_visible(self._sprSombra)
-        
+
     @staticmethod
-    def _crear_sombra(surface, arg=None, mask=None):
+    def _crear_sombra(surface, arg=None, _mask=None):
         from math import floor
 
         h = surface.get_height()
         w = surface.get_width()
-        if mask == None:
-            mask = MASK.from_surface(surface)
+        if _mask is None:
+            _mask = mask.from_surface(surface)
 
         shadow_color = 0, 0, 0, 150
         pxarray = None
@@ -95,7 +96,7 @@ class ShadowSprite(AzoeSprite):
             for y in range(h):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
-                    if mask.get_at((x, y)):
+                    if _mask.get_at((x, y)):
                         pxarray[x + dd, y] = shadow_color
         if arg == 'NO':
             d = h / 2
@@ -105,7 +106,7 @@ class ShadowSprite(AzoeSprite):
             for y in range(h):
                 dd = floor(d * (y / h))
                 for x in range(w):
-                    if mask.get_at((x, y)):
+                    if _mask.get_at((x, y)):
                         pxarray[x + dd, y] = shadow_color
 
         return pxarray.make_surface().convert_alpha()
@@ -116,7 +117,7 @@ class ShadowSprite(AzoeSprite):
         :type source:AzoeSprite
         :return:
         """
-        tolerancia = 10
+        # tolerancia = 10
         luces = self._luces
         if self.proyectaSombra:
             # calcular direccion de origen
@@ -172,7 +173,7 @@ class ShadowSprite(AzoeSprite):
             self.update_sombra()
         super().update(*args)
 
-    def ubicar(self, dx, dy, z =0):
+    def ubicar(self, dx, dy, z=0):
         super().ubicar(dx, dy, z)
         if self._sprSombra is not None:
             self._sprSombra.ubicar(dx, dy, z)

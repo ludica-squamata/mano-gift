@@ -18,7 +18,7 @@ class GiftGroup:
             return self._group[key]
         elif type(key) is int:
             if 0 <= key <= len(self._indexes) - 1:
-                return self._indexes[key]
+                return self._group[self._indexes[key]]
             else:
                 raise IndexError
         elif type(key) is str:

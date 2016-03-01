@@ -30,8 +30,7 @@ class Salida:
         self.rect.y = y
 
     def update(self):
-        for key in MobGroup:
-            mob = MobGroup[key]
+        for mob in MobGroup:
             dx, dy = mob.direcciones[mob.direccion]
             dx *= mob.velocidad
             dy *= mob.velocidad

@@ -5,7 +5,7 @@ from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
 
 
-class Mob(Interactivo, Equipado, Animado, Movil, ShadowSprite):  # Movil es Atribuido para tener .velocidad
+class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .velocidad
     tipo = "Mob"
     mascaras = None  # {}
     camino = None  # []
