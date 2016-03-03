@@ -29,7 +29,7 @@ class Sombra(AzoeSprite):
 class ShadowSprite(AzoeSprite):
     _sombras = None
     """:type : list"""
-    _sprSombra = None
+    sombra = None
     """:type : Sprite"""
     proyectaSombra = True
     _luces = None
@@ -72,9 +72,9 @@ class ShadowSprite(AzoeSprite):
 
             draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
-        if self._sprSombra is None:
-            self._sprSombra = Sombra(self, h_2, t_surface)
-            Renderer.camara.add_visible(self._sprSombra)
+        if self.sombra is None:
+            self.sombra = Sombra(self, h_2, t_surface)
+            Renderer.camara.add_visible(self.sombra)
 
     @staticmethod
     def _crear_sombra(surface, arg=None, _mask=None):
@@ -175,10 +175,10 @@ class ShadowSprite(AzoeSprite):
 
     def ubicar(self, dx, dy, z=0):
         super().ubicar(dx, dy, z)
-        if self._sprSombra is not None:
-            self._sprSombra.ubicar(dx, dy, z)
+        if self.sombra is not None:
+            self.sombra.ubicar(dx, dy, z)
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
-        if self._sprSombra is not None:
-            self._sprSombra.reubicar(dx, dy)
+        if self.sombra is not None:
+            self.sombra.reubicar(dx, dy)

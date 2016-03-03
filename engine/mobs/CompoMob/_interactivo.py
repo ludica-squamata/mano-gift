@@ -1,4 +1,4 @@
-from engine.globs import MobGroup
+from engine.globs import MobGroup, ItemGroup
 from ._atribuido import Atribuido
 from pygame import Rect
 
@@ -39,7 +39,7 @@ class Interactivo(Atribuido):
     def _interact_with_props(self, x, y):
         """Selecciona a un prop utilizando el rect de interacción"""
         self._orient_interaction_rect(x, y)
-        for prop in self.stage.interactives:
+        for prop in ItemGroup:
             if prop.image is not None:
                 if self._interaction_rect.colliderect(prop.rect):
                     return prop

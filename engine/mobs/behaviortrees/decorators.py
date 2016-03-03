@@ -6,9 +6,9 @@ class Decorator(Node):
     type = 'Decorator'
     child = None
 
-    def __init__(self, tree, idx, child):
+    def __init__(self, tree, idx, entity, child):
         # these nodes can only point to one child
-        super().__init__(tree, idx)
+        super().__init__(tree, idx, entity)
         self.child_idx = child
     
     def update(self):
@@ -19,8 +19,8 @@ class Repeater(Decorator):
     name = 'Repeater'
     current_time = -1
 
-    def __init__(self, tree, idx, child, times=None):
-        super().__init__(tree, idx, child)
+    def __init__(self, tree, idx, entity, child, times=None):
+        super().__init__(tree, idx, entity, child)
         if times is not None and times > 0:
             self.amount_of_times = times
         else:

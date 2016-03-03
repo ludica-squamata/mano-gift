@@ -1,3 +1,4 @@
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import EngineData as Ed
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
@@ -54,7 +55,7 @@ class PC(Mob, Parlante):
                     try:
                         item = sprite()
                         self.inventario.agregar(item)
-                        self.stage.del_property(sprite)
+                        EventDispatcher.trigger('DelItem', self.tipo, {'obj': sprite})
                     except InventoryError as Error:
                         print(Error)
 

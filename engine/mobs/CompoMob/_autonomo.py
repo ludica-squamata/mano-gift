@@ -1,7 +1,9 @@
 from engine.mobs.scripts import movimiento
-from . import Sensitivo, Animado
-from ._movil import Movil
-from engine.globs import EngineData as ED
+from engine.mobs.behaviortrees import BehaviourTree
+from . import Sensitivo, Animado, Movil
+from engine.globs import EngineData as Ed, ModData as Md
+from importlib import machinery
+from engine.misc.resources import Resources as Rs
 
 
 class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autónomo
@@ -10,10 +12,11 @@ class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autó
     objetivo = None  # el mob al que este cazador está persiguiendo
 
     def __init__(self, *args, **kwargs):
-        AI = args[0]['AI']
-
-        if AI == "wanderer":
-            self.AI = movimiento.AI_wander  # function alias!
+        nombre = args[0]['AI']
+        ruta = Md.scripts+nombre+'.py'
+        tree_data = Rs.abrir_json(Md.mobs+'behaviours/'+nombre+'.json')
+        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        self.AI = BehaviourTree(self, tree_data, module)  # function alias!
 
         self._AI = self.AI  # copia de la AI original
         super().__init__(*args, **kwargs)
@@ -35,13 +38,13 @@ class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autó
             self.mover_vis = self.mover_tri_vis
 
     def mover(self):
-        direccion = self.AI(self)
-        dir = self.cambiar_direccion(direccion)
+        self.AI.update()
+        dir = self.cambiar_direccion(self.direccion)
         dx, dy = self.direcciones[dir]
         super().mover(dx, dy)
 
     def update(self, *args):
-        if not ED.onPause and not self.dead:
+        if not Ed.onPause and not self.dead:
             detectados = self.oir()+self.ver()
             self.determinar_accion(detectados)
             self.mover()

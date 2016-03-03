@@ -9,9 +9,9 @@ class Composite(Node):
     children = None
     current_id = None
 
-    def __init__(self, tree, idx, children):
+    def __init__(self, tree, idx, entity, children):
         # these are NOT containers, they just point to their children
-        super().__init__(tree, idx)
+        super().__init__(tree, idx, entity)
         self.children = [child for child in children]
         self.current_id = 0
 
@@ -74,8 +74,8 @@ class Parallel(Composite):
     success_value = 0
     failure_value = 0
 
-    def __init__(self, tree, idx, children, s=0, f=0):
-        super().__init__(tree, idx, children)
+    def __init__(self, tree, idx, entity, children, s=0, f=0):
+        super().__init__(tree, idx, entity, children)
         self.children_status = [i*0 for i in children]
         self.success_value = s
         self.failure_value = f

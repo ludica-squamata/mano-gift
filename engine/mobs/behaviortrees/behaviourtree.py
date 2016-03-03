@@ -11,7 +11,7 @@ class BehaviourTree:
     tree_structure = None
     to_check = None
 
-    def __init__(self, tree_data, scripts):
+    def __init__(self, entity, tree_data, scripts):
         self.tree_structure = OrderedDict()
         for key in [str(i) for i in range(len(tree_data))]:
             node = None
@@ -23,20 +23,20 @@ class BehaviourTree:
             if 'children' in data:  # composite
                 self.tree_structure[idx].extend(data['children'])
                 if name == 'Selector':
-                    node = Selector(self, idx, data['children'])
+                    node = Selector(self, idx, entity, data['children'])
                 elif name == 'Secuence':
-                    node = Secuence(self, idx, data['children'])
+                    node = Secuence(self, idx, entity, data['children'])
 
             elif 'child' in data:  # decorator
                 self.tree_structure[idx].append(int(data['child']))
                 if name == 'Repeater':
-                    node = Repeater(self, idx, data['child'], data.get('context', 0))
+                    node = Repeater(self, idx, entity, data['child'], data.get('context', 0))
                 elif name == 'UntilFail':
-                    node = UntilFail(self, idx, data['child'])
+                    node = UntilFail(self, idx, entity, data['child'])
                 elif name == 'Succeeder':
-                    node = Succeeder(self, idx, data['child'])
+                    node = Succeeder(self, idx, entity, data['child'])
                 elif name == 'Inverter':
-                    node = Inverter(self, idx, data['child'])
+                    node = Inverter(self, idx, entity, data['child'])
 
             else:  # leaf
                 process = None
@@ -47,11 +47,11 @@ class BehaviourTree:
                     process = getattr(scripts, name)
 
                 if isinstance(process, FunctionType):
-                    node = Leaf(self, idx, data['context'], name)
+                    node = Leaf(self, idx, entity, data['context'], name)
                     node.set_process(process)
 
                 elif issubclass(process, Leaf):
-                    node = process(self, idx, data['context'], name)
+                    node = process(self, idx, entity, data['context'], name)
 
             self.nodes.append(node)
 

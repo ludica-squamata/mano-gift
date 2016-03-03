@@ -5,11 +5,13 @@ from types import MethodType
 class Node:
     idx = None
     parent = None
+    entity = None
     type = ''
 
-    def __init__(self, tree, idx):
+    def __init__(self, tree, idx, entity):
         self.idx = idx
         self.tree = tree
+        self.entity = entity
 
     def set_parent(self, parent):
         self.parent = parent
@@ -20,9 +22,9 @@ class Leaf(Node):
     process = None
     tick = 0
 
-    def __init__(self, tree, idx, data, process_name):
+    def __init__(self, tree, idx, entity, data, process_name):
         # leaves are incapable of having any children
-        super().__init__(tree, idx)
+        super().__init__(tree, idx, entity)
         self.data = data
         self.process_name = process_name
 
@@ -33,7 +35,6 @@ class Leaf(Node):
         self.process = MethodType(process, self)
 
     def update(self):
-        self.tick += 1
         status = self.process(*self.data)
         if status is None:
             status = Running

@@ -1,5 +1,5 @@
 from engine.globs import Constants as Cs, Tiempo, TimeStamp
-from engine.globs import ModData as Md, EngineData as Ed
+from engine.globs import ModData as Md
 from engine.mobs.scripts.a_star import generar_grilla
 from pygame.sprite import Sprite, LayeredUpdates
 from engine.globs.renderer import Renderer
@@ -39,9 +39,10 @@ class Stage:
         self.cargar_timestamps()
         Loader.set_stage(self)
         Loader.load_everything(entrada, mobs_data)
-        
-        EventDispatcher.register(self.anochecer,'hora')
-    
+
+        EventDispatcher.register(self.anochecer, 'hora')
+        EventDispatcher.register(self.del_interactive, 'DelItem', 'MobMuerto')
+
     def register_at_renderer(self):
         Renderer.camara.set_background(self.mapa)
         Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
@@ -57,11 +58,11 @@ class Stage:
 
             Renderer.camara.add_real(obj)
 
-    def add_property(self, obj, _layer, add_interactive = False):
+    def add_property(self, obj, _layer, add_interactive=False):
         if _layer == Cs.GRUPO_SALIDAS:
             self.salidas.append(obj)
         else:
-            self.properties.add(obj, layer = _layer)
+            self.properties.add(obj, layer=_layer)
             if add_interactive:
                 self.interactives.append(obj)
 
@@ -91,11 +92,17 @@ class Stage:
             print('atardecer')
         elif hora == self.anochece:
             print('anochecer')
-            
+
         if self.data['ambiente'] == 'exterior':
             pass
         elif self.data['ambiente'] == 'interior':
             pass
+
+    def del_interactive(self, event):
+        obj = event.data['obj']
+        if hasattr(obj, 'sombra') and obj.sombra is not None:
+            self.del_property(obj.sombra)
+        self.del_property(obj)
 
     def actualizar_grilla(self):
         for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
@@ -124,26 +131,26 @@ class ChunkMap(Sprite):
 
         imagen = Rs.cargar_imagen(data['capa_background']['fondo'])
         colisiones = Rs.cargar_imagen(data['capa_background']['colisiones'])
-        
+
         w, h = imagen.get_size()
         if w < 800 or h < 800:
-            img = Surface((800,800))
+            img = Surface((800, 800))
             col = img.copy()
             col.fill(Cs.COLOR_COLISION)
-            
+
             _rect = img.get_rect()
-            topleft = imagen.get_rect(center = _rect.center)
-            
-            img.blit(imagen,topleft)
-            col.blit(colisiones,topleft)    
+            topleft = imagen.get_rect(center=_rect.center)
+
+            img.blit(imagen, topleft)
+            col.blit(colisiones, topleft)
         else:
             img = imagen
             col = colisiones
-        
+
         self.image = img
         self.mask = mask.from_threshold(col, Cs.COLOR_COLISION, (1, 1, 1, 255))
-        self.rect = img.get_rect(topleft = (off_x, off_y))
-        
+        self.rect = img.get_rect(topleft=(off_x, off_y))
+
         self.cargar_limites(data.get('limites', self.limites))
 
     def __repr__(self):
@@ -178,13 +185,13 @@ class ChunkMap(Sprite):
         ady = ady.lower()  # por si acaso.
 
         if ady == 'sup':
-            dy -= h 
+            dy -= h
         elif ady == 'inf':
-            dy += h 
+            dy += h
         elif ady == 'izq':
-            dx -= w 
+            dx -= w
         elif ady == 'der':
-            dx += w 
+            dx += w
 
         return dx, dy
 
@@ -197,22 +204,22 @@ class ChunkMap(Sprite):
 
             dx, dy = self._get_newmap_pos(ady)
 
-            mapa = ChunkMap(self.stage, data,  nmbr, dx, dy)
+            mapa = ChunkMap(self.stage, data, nmbr, dx, dy)
 
             self.limites[ady] = mapa
             self.stage.chunks.add(mapa)
-            
+
             if ady == 'izq' or ady == 'der':
-                self.stage.rect.inflate_ip(mapa.rect.w,0)
+                self.stage.rect.inflate_ip(mapa.rect.w, 0)
                 if ady == 'izq':
                     for spr in self.stage.properties:
                         spr.stageX += mapa.rect.w
             elif ady == 'sup' or ady == 'inf':
-                self.stage.rect.inflate_ip(0,mapa.rect.h)
+                self.stage.rect.inflate_ip(0, mapa.rect.h)
                 if ady == 'sup':
                     for spr in self.stage.properties:
                         spr.stageY += mapa.rect.h
-            
+
             return mapa
         except IOError:
             pass

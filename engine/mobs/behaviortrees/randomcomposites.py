@@ -6,8 +6,8 @@ from .status import *
 class RandomComposite(Composite):
     explored_children = []
 
-    def __init___(self, tree, idx, children):
-        super().__init__(tree, idx, children)
+    def __init___(self, tree, idx, entity, children):
+        super().__init__(tree, idx, entity, children)
         self.current_id = randint(0, len(children))
         self.explored_children.append(self.children[self.current_id])
 
