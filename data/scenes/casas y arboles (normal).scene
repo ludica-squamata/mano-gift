@@ -4,7 +4,7 @@
     "dia":0,"hora":[16,58],
     "mobs":{
         "commoner":{
-            "AI":"wanderer",
+            "AI":"wander",
             "dialog":"prueba.json"
         }
     },

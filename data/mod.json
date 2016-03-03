@@ -12,5 +12,6 @@
         "items":"items",
         "scripts":"scripts",
         "scenes":"scenes"
-    }
+    },
+    "events":{"MobMuerto":"gameover.py"}
 }
