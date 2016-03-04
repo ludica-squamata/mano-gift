@@ -9,7 +9,7 @@ class Util:
     # @param mask MASK
     # @return Surface
     def crear_sombra(surface, mask = None):
-        if mask == None:
+        if mask is None:
             mask = MASK.from_surface(surface)
         h = surface.get_height()
         w = surface.get_width()

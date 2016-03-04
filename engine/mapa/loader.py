@@ -1,7 +1,7 @@
 from engine.globs import EngineData as Ed, Constants as Cs, MobGroup, ItemGroup, ModData as Md
 from engine.misc import Resources as Rs
 from engine.mobs import PC, NPC
-from engine.scenery import newProp
+from engine.scenery import new_prop
 from .salida import Salida
 
 
@@ -38,11 +38,11 @@ class Loader:
 
             for x, y in pos[ref]:
                 if data:
-                    prop = newProp(ref, imagen, x, y, data)
+                    prop = new_prop(ref, imagen, x, y, data)
                     is_interactive = True
                     ItemGroup[ref] = prop
                 else:
-                    prop = newProp(ref, imagen, x, y)
+                    prop = new_prop(ref, imagen, x, y)
                     is_interactive = False
 
                 cls.STAGE.add_property(prop, Cs.GRUPO_ITEMS, is_interactive)

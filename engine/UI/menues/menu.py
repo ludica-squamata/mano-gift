@@ -7,8 +7,10 @@ from engine.libs.textrect import render_textrect
 
 class Menu(Ventana):
     botones = None
+    filas = None
     keyup = {}
     cur_btn = 0
+    cur_opt = 0
     current = ''
     canvas = None
     newMenu = False
@@ -19,25 +21,25 @@ class Menu(Ventana):
         self.canvas = self.create_raised_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
         self.functions = {
-            'tap':{
-                'hablar':lambda: None,
-                'cancelar':lambda: None,
+            'tap': {
+                'hablar': lambda: None,
+                'cancelar': lambda: None,
                 'arriba': lambda dummy: None,
                 'abajo': lambda dummy: None,
                 'izquierda': lambda dummy: None,
                 'derecha': lambda dummy: None
             },
-            'hold':{
-                'hablar':lambda: None,
-                'cancelar':lambda: None,
+            'hold': {
+                'hablar': lambda: None,
+                'cancelar': lambda: None,
                 'arriba': lambda dummy: None,
                 'abajo': lambda dummy: None,
                 'izquierda': lambda dummy: None,
                 'derecha': lambda dummy: None
             },
-            'release':{
-                'hablar':lambda: None,
-                'cancelar':lambda: None,
+            'release': {
+                'hablar': lambda: None,
+                'cancelar': lambda: None,
                 'arriba': lambda dummy: None,
                 'abajo': lambda dummy: None,
                 'izquierda': lambda dummy: None,
@@ -82,7 +84,7 @@ class Menu(Ventana):
         """Esta funcion es un hook para otras funciones del mismo nombre."""
         self.active = False
         return True
-    
+
     def use_function(self, mode, key):
         if key in self.functions[mode]:
             self.functions[mode][key]()

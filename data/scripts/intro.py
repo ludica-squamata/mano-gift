@@ -63,7 +63,7 @@ def intro(fondo):
             _b = True
         if 'i' in f:
             _i = True
-        fuente = font.SysFont(f[0], f[1], bold = _b, italic = _i)
+        fuente = font.SysFont(f[0], f[1], bold=_b, italic=_i)
 
         w, h = fuente.size(pan['texto'])
         l = len(pan['texto'].splitlines())

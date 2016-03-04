@@ -9,6 +9,7 @@ class Sensitivo(Atribuido):
     audicion = None
     vx, vy = 0, 0  # posicion de la visión, puesta acá por si el mob no se mueve
     ultima_direccion = ''
+    vis_mask = None
 
     # mover_vis = None #algoritmo para desplazar la visión junto al mob
 

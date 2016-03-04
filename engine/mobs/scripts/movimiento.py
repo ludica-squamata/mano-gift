@@ -1,6 +1,6 @@
 # movimiento.py
 # scripts de movimiento para los mobs.
-from .a_star import Astar
+from .a_star import a_star
 from engine.globs import Constants as C
 
 
@@ -46,7 +46,7 @@ def iniciar_persecucion(mob, objetivo):
     ruta = generar_camino(CURR_POS, OBJ_POS, mob.stage.grilla)
     if type(ruta) == list:
         camino = simplificar_camino(ruta)
-    elif ruta == None:
+    elif ruta is None:
         iniciar_persecucion(mob, objetivo)
     else:
         camino = [[ruta.x, ruta.y]]
@@ -56,7 +56,7 @@ def iniciar_persecucion(mob, objetivo):
 def generar_camino(inicio, destino, grilla):
     '''Genera un camino de puntos de grilla.
     inicio y destino deben ser un tuple Gx,Gy'''
-    ruta = Astar(grilla[inicio], grilla[destino], grilla)
+    ruta = a_star(grilla[inicio], grilla[destino], grilla)
     if type(ruta) == str:
         camino = [[int(i) * C.CUADRO for i in punto.strip('()').split(',')] for punto in ruta.split(';')]
         return camino

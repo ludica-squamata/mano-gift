@@ -1,4 +1,4 @@
-def on_hora(self, event):
+def on_hora(event):
     """
     :param event:
     :type event:GiftEvent

@@ -3,7 +3,7 @@
 
 class Elemento:
     """Class for the dialog tree elements."""
-    
+
     nombre = ''
     hasLeads = False
     tipo = ''
@@ -20,9 +20,9 @@ class Elemento:
         self.nombre = self.tipo.capitalize() + ' #' + str(self.indice)
         self.texto = data['txt']
         self.locutor = data['loc']
-        self.leads = data.get('leads',None)
-        self.reqs = data.get('reqs',None)
-        
+        self.leads = data.get('leads', None)
+        self.reqs = data.get('reqs', None)
+
         if type(self.leads) is list:
             self.hasLeads = True
 
@@ -103,13 +103,13 @@ class _ArboldeDialogo:
             return True
         return False
 
-    def get_lead_of(self, parent_i, lead_i = 0):
+    def get_lead_of(self, parent_i, lead_i=0):
         if isinstance(parent_i, Elemento):
             parent_i = self._elementos.index(parent_i)
         item = self._elementos[parent_i]
         if item.tipo != 'leaf':
             if item.hasLeads:
-                if isinstance(item.leads,(list,tuple)):
+                if isinstance(item.leads, (list, tuple)):
                     return item.leads[lead_i]
             else:
                 return item.leads
@@ -125,7 +125,7 @@ class _ArboldeDialogo:
             raise IndexError
 
     def get_actual(self):
-        if isinstance(self._future,(list,tuple)):
+        if isinstance(self._future, (list, tuple)):
             return self._future
         else:
             return self._elementos[self._future]
@@ -143,10 +143,10 @@ class _ArboldeDialogo:
         prepara se prepara para devolver el siguiente nodo"""
 
         if self._future is not False:  # last was leaf; close
-            if not isinstance(self._future,(list,tuple)):
+            if not isinstance(self._future, (list, tuple)):
                 actual = self.get_actual()  # node or leaf
                 if actual.tipo != 'leaf':
-                    if not isinstance(actual.leads,(list,tuple)):
+                    if not isinstance(actual.leads, (list, tuple)):
                         self._future = int(actual.leads.indice)
                     else:
                         self._future = actual.leads
@@ -194,17 +194,16 @@ class Dialogo:
 
         # empezar con el primer nodo
         self.hablar()
-    
-    def use_function(self,mode,key):
+
+    def use_function(self, key):
         self.usar_funcion(key)
-            
+
     def usar_funcion(self, tecla):
-        funciones = {}
         if self.SelMode:
             funciones = self.func_sel
         else:
             funciones = self.func_lin
-        
+
         if tecla in funciones:
             if tecla in ['arriba', 'abajo', 'izquierda', 'derecha']:
                 funciones[tecla](tecla)
@@ -212,12 +211,12 @@ class Dialogo:
                 funciones[tecla]()
 
     def hablar(self):
-    
+
         actual = self.dialogo.update()
         if type(actual) is list:
             show = actual.copy()
             loc = self.locutores[actual[0].locutor]
-            
+
             for nodo in actual:
                 if nodo.reqs is not None:
                     if "attrs" in nodo.reqs:
@@ -237,16 +236,17 @@ class Dialogo:
             choices = list(actual)
             # estoy seguro de que este bloque se puede hacer en un onliner, pero no se como.
             # seria onda: choice = nodo que tiene reqs
+            choice = -1
             for i in range(len(choices)):
-                if choices[i].reqs is not None: #tiene precedencia
+                if choices[i].reqs is not None:  # tiene precedencia
                     choice = i
-            
+
             reqs = choices[choice].reqs
             sujeto = self.locutores[reqs['loc']]
             for attr in reqs['attrs']:
-                if getattr(sujeto,attr) < reqs['attrs'][attr]:
+                if getattr(sujeto, attr) < reqs['attrs'][attr]:
                     del choices[choice]
-            
+
             choice = choices[0]
             self.dialogo.set_chosen(choice)
             self.hablar()
