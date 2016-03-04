@@ -107,17 +107,17 @@ class CircularMenu:
         self.change_radius(self.radius)
 
         self.functions = {
-            'tap':{
-                'hablar':self.accept,
-                'canelar':self.back,
+            'tap': {
+                'hablar': self.accept,
+                'cancelar': self.back,
                 'izquierda': self.stop,
                 'derecha': self.stop
             },
-            'hold':{
+            'hold': {
                 'izquierda': lambda: self.turn(-1),
                 'derecha': lambda: self.turn(+1)
             },
-            'release':{
+            'release': {
                 'izquierda': self.stop,
                 'derecha': self.stop
             }

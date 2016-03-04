@@ -11,7 +11,6 @@ def filtrar_eventos_teclado(events):
         if _event.type == KEYDOWN:
             if _event.key in teclas:
                 teclas[_event.key]['pressed'] = True
-                event.post(_event)
 
         elif _event.type == KEYUP:
             if _event.key in teclas:
@@ -21,7 +20,6 @@ def filtrar_eventos_teclado(events):
                     key['tap'] = True
                 else:
                     key['release'] = True
-                event.post(_event)
 
     return teclas
 
@@ -29,8 +27,6 @@ def filtrar_eventos_teclado(events):
 def filtrar_eventos_gamepad(events):
     teclas = Cs.TECLAS.devolver()
     for _event in events:
-        # if _event.type == KEYUP or _event.type == KEYDOWN:
-        #     event.post(event)
         if _event.type == JOYBUTTONDOWN:
             if _event.button not in (10, 11):
                 b = _event.button
@@ -142,7 +138,7 @@ def filtrar_eventos_gamepad(events):
     return teclas
 
 
-def get_taphold_events(events, holding = 100):
+def get_taphold_events(events, holding=100):
     input_device = Config.dato('metodo_de_entrada')
     teclas = None
     if input_device == 'teclado':

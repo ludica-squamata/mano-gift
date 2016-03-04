@@ -195,7 +195,8 @@ class Dialogo:
         # empezar con el primer nodo
         self.hablar()
 
-    def use_function(self, key):
+    def use_function(self, mode, key):
+        del mode
         self.usar_funcion(key)
 
     def usar_funcion(self, tecla):
