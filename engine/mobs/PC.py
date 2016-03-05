@@ -25,12 +25,6 @@ class PC(Mob, Parlante):
             self.cambiar_direccion('abajo')
 
         dx, dy = dx * self.velocidad, dy * self.velocidad
-        # DETECTAR LAS SALIDAS
-        for spr in self.stage.salidas:
-            if self.colisiona(spr, dx, dy):
-                Ed.setear_mapa(spr.dest, spr.link)
-                dx, dy = 0, 0
-
         if not self.detectar_colisiones(dx, 0):
             self.reubicar(dx, 0)  # el heroe se mueve en el mapa, no en la camara
         if not self.detectar_colisiones(0, dy):

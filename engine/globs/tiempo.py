@@ -248,7 +248,7 @@ class Tiempo:
         cls.clock.m = mins
 
     @classmethod
-    def update(cls, rate):
+    def update(cls, rate=0):
         cls.FPS.tick(rate)
 
         cls._frames += 1

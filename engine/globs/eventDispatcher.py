@@ -67,8 +67,8 @@ class EventDispatcher:
         l = len(_cola)
         while l > 0:
             evento = _cola.popleft()
-            if evento.type in cls._oyentes:
-                for listener in cls._oyentes[evento.type]:
+            if evento.tipo in cls._oyentes:
+                for listener in cls._oyentes[evento.tipo]:
                     listener(evento)
             l -= 1
 
@@ -77,26 +77,26 @@ class GiftEvent:
     """
     representacion de un evento ejecutado por un objeto de juego
     """
-    type = ''  # type un string con el nombre del evento
+    tipo = ''  # type un string con el nombre del evento
     origin = ''  # origin un string identificando el objeto que creó el evento
     data = {}  # data un dict con la información relevante
 
-    def __init__(self, type, origin, data):
+    def __init__(self, tipo, origin, data):
         """
-        :param type:
+        :param tipo:
         :param origin:
         :param data:
-        :type type:str
+        :type tipo:str
         :type origin:str
         :type data:dict
         :return:None
         """
-        self.type = type
+        self.tipo = tipo
         self.origin = origin
         self.data = data
 
     def __repr__(self):
-        return 'giftEvent-' + self.type + '(origin: ' + self.origin + ', data: ' + str(self.data) + ')'
+        return 'giftEvent-' + self.tipo + '(origin: ' + self.origin + ', data: ' + str(self.data) + ')'
 
 
 if __name__ == '__main__':
