@@ -4,38 +4,23 @@ from ._atribuido import Atribuido
 
 
 class Movil(Atribuido):
-    modo_colision = None  # determina qué direccion tomará el mob al chocar con algo
 
-    def cambiar_direccion(self, arg, img=False):
-        direccion = 'ninguna'
+    def cambiar_direccion(self, direccion=None, img=False):
 
-        if arg == 'contraria':
-            if self.direccion == 'arriba':
-                direccion = 'abajo'
-            elif self.direccion == 'abajo':
-                direccion = 'arriba'
-            elif self.direccion == 'izquierda':
-                direccion = 'derecha'
-            elif self.direccion == 'derecha':
-                direccion = 'izquierda'
+        if direccion in self.direcciones:
+            self.direccion = direccion
 
-        elif arg in self.direcciones:
-            direccion = arg
-
-        self.direccion = direccion
         if img:  # solo vale para el héroe...
             self.image = self.images['S' + self.direccion]
             if direccion == self.direccion:
                 self.mover(*self.direcciones[direccion])
-
-        return direccion
 
     def mover(self, x, y):
         dx, dy = x * self.velocidad, y * self.velocidad
 
         if self.detectar_colisiones(dx, dy):
             #en realidad, esto es territorio de la AI, asi que debería hacer super()
-            self.cambiar_direccion(self.modo_colision)
+            self.cambiar_direccion()
             x, y = self.direcciones[self.direccion]
             dx, dy = x * self.velocidad, y * self.velocidad
 

@@ -1,12 +1,12 @@
 from engine.mobs.scripts import movimiento
 from engine.mobs.behaviortrees import BehaviourTree
-from . import Sensitivo, Animado, Movil
+from . import Sensitivo, Animado
 from engine.globs import EngineData as Ed, ModData as Md
 from importlib import machinery
 from engine.misc.resources import Resources as Rs
 
 
-class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autónomo
+class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     AI = None  # determina cómo se va a mover el mob
     """:type AI:()->None"""
     objetivo = None  # el mob al que este cazador está persiguiendo
@@ -39,8 +39,8 @@ class Autonomo(Sensitivo, Animado, Movil):  # tiene que poder ver para ser autó
 
     def mover(self):
         self.AI.update()
-        dir = self.cambiar_direccion(self.direccion)
-        dx, dy = self.direcciones[dir]
+        self.cambiar_direccion(self.direccion)
+        dx, dy = self.direcciones[self.direccion]
         super().mover(dx, dy)
 
     def update(self, *args):
