@@ -3,9 +3,9 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import Util
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE
+from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1
 from engine.UI.menues import *
-from engine.UI import InventoryCircularDisplay
+from engine.UI import QuickCircularMenu
 
 
 class Modo:
@@ -23,7 +23,7 @@ class Modo:
                 if event.key == K_ESCAPE:
                     Util.salir()
 
-                elif event.key == Cs.TECLAS.DEBUG:
+                elif event.key == K_F1:
                     pass
 
         EventDispatcher.process()
@@ -40,12 +40,9 @@ class Modo:
                     else:
                         Ed.MODO = 'Aventura'
 
-                elif event.key == Cs.TECLAS.INVENTARIO:
+                elif event.key == Cs.TECLAS.MENU_RAPIDO:
                     Ed.MODO = 'Dialogo'
-                    Ed.DIALOG = InventoryCircularDisplay()
-
-                elif event.key == Cs.TECLAS.POSICION_COMBATE:
-                    Ed.HERO.cambiar_estado()
+                    Ed.DIALOG = QuickCircularMenu()
 
                 elif event.key == Cs.TECLAS.ACCION:
                     Ed.HERO.accion()
@@ -103,7 +100,7 @@ class Modo:
                 elif event.key == Cs.TECLAS.HABLAR:
                     Ed.DIALOG.use_function('tap', 'hablar')
 
-                elif event.key == Cs.TECLAS.INVENTARIO:
+                elif event.key == Cs.TECLAS.MENU_RAPIDO:
                     Ed.DIALOG.use_function('tap', 'inventario')
 
                 elif event.key == Cs.TECLAS.CANCELAR_DIALOGO:

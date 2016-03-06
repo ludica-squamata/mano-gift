@@ -69,6 +69,7 @@ class BaseElement(Sprite):
             if self.stop:
                 self.select()
                 self.parent.stop_everything(self)
+                self.stop = False
         else:
             self.deselect()
 
@@ -149,9 +150,14 @@ class CircularMenu:
             cubo.stop = True
 
     def stop_everything(self, on_spot):
-        for cubo in self.cubos:
+        cubos = self.cubos.sprites()
+        angle = 360 // len(cubos)  # base
+
+        i = -1
+        for cubo in sorted(cubos, key=lambda c: c.angle):
+            i += 1
             if cubo is not on_spot:
-                cubo.angle = 360 // len(self.cubos)
+                cubo.angle = angle * i
             cubo.delta = 0
         self.stopped = True
 

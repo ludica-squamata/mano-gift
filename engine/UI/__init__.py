@@ -1,6 +1,6 @@
 from .menues import *
 from .Dialog import DialogInterface
-from .InventoryCircularDisplay import InventoryCircularDisplay
+from .QuickCircularMenu import QuickCircularMenu
 from .hud import ProgressBar, HUD
 
 __all__ = [

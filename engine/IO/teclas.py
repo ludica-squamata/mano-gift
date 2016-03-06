@@ -1,8 +1,7 @@
 class Teclas:
     ARRIBA, ABAJO, IZQUIERDA, DERECHA = 0, 0, 0, 0
     ACCION, HABLAR, CANCELAR_DIALOGO = 0, 0, 0
-    INVENTARIO, POSICION_COMBATE = 0, 0
-    MENU, SALIR, DEBUG = 0, 0, 0
+    MENU, SALIR, MENU_RAPIDO = 0, 0, 0
 
     _keydict = None
 
@@ -28,12 +27,10 @@ class Teclas:
         self.ACCION = data['accion']
         self.HABLAR = data['hablar']
         self.CANCELAR_DIALOGO = data['cancelar']
-        self.INVENTARIO = data['inventario']
-        self.POSICION_COMBATE = data['posicion']
+        self.MENU_RAPIDO = data['menu rapido']
 
         self.MENU = data['menu']
         self.SALIR = data['salir']
-        self.DEBUG = data['debug']
 
         self._keydict = self._crear_keydict()
 
@@ -47,8 +44,7 @@ class Teclas:
             'accion': self.ACCION,
             'hablar': self.HABLAR,
             'cancelar': self.CANCELAR_DIALOGO,
-            'inventario': self.INVENTARIO,
-            'posicion_combate': self.POSICION_COMBATE,
+            'menu rápido': self.MENU_RAPIDO,
             'menu': self.MENU,
         }
 

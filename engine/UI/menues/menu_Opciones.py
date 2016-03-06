@@ -20,23 +20,23 @@ class MenuOpciones(MenuPausa, Menu):
         self.establecer_botones(self.crear_botones_config(), 6)
         self.establecer_botones(self.crear_botones_teclas(), 4)
         self.crear_espacios_config()
-        
+
         self.functions.update({
-            'tap':{
-                'hablar':self.press_button,
+            'tap': {
+                'hablar': self.press_button,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo'),
                 'izquierda': lambda: self.select_one('izquierda'),
                 'derecha': lambda: self.select_one('derecha')
             },
-            'hold':{
+            'hold': {
                 'hablar': self.mantener_presion,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo'),
                 'izquierda': lambda: self.select_one('izquierda'),
                 'derecha': lambda: self.select_one('derecha')
             },
-            'release':{
+            'release': {
                 'hablar': self.liberar_presion,
             }
         })
@@ -58,7 +58,6 @@ class MenuOpciones(MenuPausa, Menu):
                 {m: "Mostrar Intro", c: cmd1, p: [6, f * 0 + dy], k: {b: "Recordar Menus", a: "Salir"}},
                 {m: "Recordar Menus", c: cmd1, p: [6, f * 1 + dy], k: {b: "Arriba", a: "Mostrar Intro"}}
             ]
-            
 
         return botones
 
@@ -77,17 +76,15 @@ class MenuOpciones(MenuPausa, Menu):
             # primera columna
             {m: "Arriba", c: cmd, p: [x1, f * 0 + dy], k: {b: "Abajo", a: special, d: "Accion"}},
             {m: "Abajo", c: cmd, p: [x1, f * 1 + dy], k: {b: "Derecha", a: "Arriba", d: "Hablar"}},
-            {m: "Derecha", c: cmd, p: [x1, f * 2 + dy], k: {b: "Izquierda", a: "Abajo", d: "Inventario"}},
+            {m: "Derecha", c: cmd, p: [x1, f * 2 + dy], k: {b: "Izquierda", a: "Abajo", d: "Menu Rapido"}},
             {m: "Izquierda", c: cmd, p: [x1, f * 3 + dy], k: {b: "Menu", a: "Derecha", d: "Cancelar"}},
-            {m: "Menu", c: cmd, p: [x1, f * 4 + dy], k: {b: "Debug", a: "Izquierda", d: "Posicion"}},
-            {m: "Debug", c: cmd, p: [x1, f * 5 + dy], k: {b: "Accion", a: "Menu", d: "Salir"}},
+            {m: "Menu", c: cmd, p: [x1, f * 4 + dy], k: {b: "Accion", a: "Izquierda"}},
             # segunda columna
-            {m: "Accion", c: cmd, p: [x2, f * 0 + dy], k: {b: "Hablar", a: "Debug", i: "Arriba"}},
-            {m: "Hablar", c: cmd, p: [x2, f * 1 + dy], k: {b: "Inventario", a: "Accion", i: "Abajo"}},
-            {m: "Inventario", c: cmd, p: [x2, f * 2 + dy], k: {b: "Cancelar", a: "Hablar", i: "Derecha"}},
-            {m: "Cancelar", c: cmd, p: [x2, f * 3 + dy], k: {b: "Posicion", a: "Inventario", i: "Izquierda"}},
-            {m: "Posicion", c: cmd, p: [x2, f * 4 + dy], k: {b: "Salir", a: "Cancelar", i: "Menu"}},
-            {m: "Salir", c: cmd, p: [x2, f * 5 + dy], k: {b: "Mostrar Intro", a: "Posicion", i: "Debug"}}]
+            {m: "Accion", c: cmd, p: [x2, f * 0 + dy], k: {b: "Hablar", a: "Menu", i: "Arriba"}},
+            {m: "Hablar", c: cmd, p: [x2, f * 1 + dy], k: {b: "Menu Rápido", a: "Accion", i: "Abajo"}},
+            {m: "Menu Rapido", c: cmd, p: [x2, f * 2 + dy], k: {b: "Cancelar", a: "Hablar", i: "Derecha"}},
+            {m: "Cancelar", c: cmd, p: [x2, f * 3 + dy], k: {b: "Salir", a: "Menu Rapido", i: "Izquierda"}},
+            {m: "Salir", c: cmd, p: [x2, f * 4 + dy], k: {b: "Mostrar Intro", a: "Cancelar"}}]
 
         return botones
 
@@ -102,18 +99,18 @@ class MenuOpciones(MenuPausa, Menu):
                     opt = 'Sí'
                 else:
                     opt = 'No'
-                esp = Fila(opt, 88, x, y + 9, justification = 1)
+                esp = Fila(opt, 88, x, y + 9, justification=1)
                 self.espacios.add(esp)
 
             elif nom == 'metodo de entrada':
                 nom = nom.replace(' ', '_')
                 txt = self.data[nom].title()
-                esp = Fila(txt, 88, x, y + 9, justification = 1)
+                esp = Fila(txt, 88, x, y + 9, justification=1)
 
             elif nom in self.data['teclas']:
                 texto = self.data['teclas'][nom]
                 nom = key_name(texto)
-                esp = Fila(nom, 75, x + 3, y + 9, justification = 1)
+                esp = Fila(nom, 75, x + 3, y + 9, justification=1)
 
             self.espacios.add(esp)
 
@@ -151,13 +148,13 @@ class MenuOpciones(MenuPausa, Menu):
         Cfg.asignar('metodo_de_entrada', nombre.lower())
 
     def set_tecla(self):
-        '''Prepara la tecla elegida para ser cambiada'''
+        """Prepara la tecla elegida para ser cambiada"""
 
         boton, tecla = self.elegir_boton_espacio()
         boton.ser_presionado()
         tecla.ser_elegido()
 
-        EventDispatcher.trigger('SetMode',self.nombre,{'mode': 'SetKey','value':True})
+        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'SetKey', 'value': True})
 
     def cambiar_tecla(self, tcl):
         """Cambia la tecla elgida por el nuevo input
