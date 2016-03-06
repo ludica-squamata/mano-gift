@@ -141,7 +141,6 @@ class QuickCircularMenu(CircularMenu):
                 obj = CommandElement(self, opt)
             else:
                 obj = InventoryElement(self, opt)
-            Renderer.add_overlay(obj, Cs.CAPA_OVERLAYS_INVENTARIO)
             cascadas['inicial'].append(obj)
             cascadas[obj.nombre] = obj.cascada
 
@@ -177,3 +176,7 @@ class QuickCircularMenu(CircularMenu):
             Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
             Ed.DIALOGO = None
             Ed.MODO = 'Aventura'
+
+    def show(self):
+        for cubo in self.cubos:
+            Renderer.add_overlay(cubo, Cs.CAPA_OVERLAYS_INVENTARIO)

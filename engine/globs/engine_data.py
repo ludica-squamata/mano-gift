@@ -12,6 +12,7 @@ class EngineData:
     HERO = None
     DIALOG = None
     HUD = None
+    MENU_RAPIDO = None
     menu_actual = ''
     menu_previo = ''
     MENUS = {}

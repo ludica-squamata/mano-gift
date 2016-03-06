@@ -42,7 +42,11 @@ class Modo:
 
                 elif event.key == Cs.TECLAS.MENU_RAPIDO:
                     Ed.MODO = 'Dialogo'
-                    Ed.DIALOG = QuickCircularMenu()
+                    if Ed.MENU_RAPIDO is None:
+                        Ed.MENU_RAPIDO = QuickCircularMenu()
+
+                    Ed.DIALOG = Ed.MENU_RAPIDO
+                    Ed.DIALOG.show()
 
                 elif event.key == Cs.TECLAS.ACCION:
                     Ed.HERO.accion()
