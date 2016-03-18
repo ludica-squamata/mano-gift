@@ -1,6 +1,7 @@
 from pygame import mask, PixelArray, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
 from .azoeSprite import AzoeSprite
+import sys
 
 
 class Sombra(AzoeSprite):
@@ -39,7 +40,7 @@ class ShadowSprite(AzoeSprite):
 
     def __init__(self, *args, **kwargs):
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._luces = [0, 0, 0, 0, 1, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
+        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
 
         super().__init__(*args, **kwargs)
 
@@ -64,8 +65,6 @@ class ShadowSprite(AzoeSprite):
         if self._sombras[1] == 1:
             img = self._crear_sombra(surface, "E")
             t_surface.blit(img, (h_2, 0))
-
-        import sys
 
         if 'pydevd' in sys.modules:
             from pygame import draw, Rect
@@ -166,7 +165,8 @@ class ShadowSprite(AzoeSprite):
                     self._sombras[i] = 1
                 else:
                     self._sombras[i] = 0
-            self.crear_sombras()
+            if any(self._sombras):
+                self.crear_sombras()
 
     def update(self, *args):
         if self.proyectaSombra:

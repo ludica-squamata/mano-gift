@@ -10,6 +10,16 @@ class Movil(Atribuido):
         if direccion in self.direcciones:
             self.direccion = direccion
 
+        elif direccion == 'contraria':
+            if self.direccion == 'arriba':
+                self.direccion = 'abajo'
+            elif direccion == 'abajo':
+                self.direccion = 'arriba'
+            elif direccion == 'derecha':
+                self.direccion = 'izquierda'
+            elif direccion == 'izquierda':
+                self.direccion = 'derecha'
+
         if img:  # solo vale para el héroe...
             self.image = self.images['S' + self.direccion]
             if direccion == self.direccion:
@@ -19,8 +29,8 @@ class Movil(Atribuido):
         dx, dy = x * self.velocidad, y * self.velocidad
 
         if self.detectar_colisiones(dx, dy):
-            #en realidad, esto es territorio de la AI, asi que debería hacer super()
-            self.cambiar_direccion()
+            # en realidad, esto es territorio de la AI, asi que debería hacer super()
+            self.cambiar_direccion('contraria')
             x, y = self.direcciones[self.direccion]
             dx, dy = x * self.velocidad, y * self.velocidad
 
@@ -52,13 +62,13 @@ class Movil(Atribuido):
                 if spr.solido and self is not spr:                        
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
-        
-        new_posX = self.stageX+dx
-        new_posY = self.stageY+dy
-        w = self.stage.rect.w-self.rect.w
-        h = self.stage.rect.h-self.rect.h
-        
-        if 0 > new_posX or new_posX > w or 0 > new_posY or new_posY > h:
-            col_bordes = True
+
+        # new_posX = self.stageX+dx
+        # new_posY = self.stageY+dy
+        # w = self.stage.rect.w-self.rect.w
+        # h = self.stage.rect.h-self.rect.h
+        #
+        # if 0 > new_posX or new_posX > w or 0 > new_posY or new_posY > h:
+        #     col_bordes = True
         
         return any([col_bordes, col_mobs, col_props, col_mapa])

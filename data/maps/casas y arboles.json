@@ -23,14 +23,13 @@
         },
         "mobs": {
             "enemies":{},
-            "npcs":{"commoner":[[830,410]]}
+            "npcs":{}
         }
     },
     "capa_top":{
         "props":{}
     },
     "entradas":{
-        "inicial":[544,659],
         "puerta":[544,659]
     },
     "salidas":{
@@ -53,5 +52,6 @@
     "ambiente":"exterior",
     "amanece":[19,0],
     "atardece":[17,0],
-    "anochece":[18,0]
+    "anochece":[18,0],
+    "latitude":30
 }

@@ -1,7 +1,7 @@
 {
     "ID":0,
-    "stage":["casas y arboles","inicial"],
-    "dia":0,"hora":[16,58],
+    "stage":["casas y arboles","puerta"],
+    "dia":0,"hora":[16,0],
     "mobs":{
         "commoner":{
             "AI":"wander",

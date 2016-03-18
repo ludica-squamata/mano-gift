@@ -45,12 +45,19 @@ class Stage:
 
     def register_at_renderer(self):
         Renderer.camara.set_background(self.mapa)
-        Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
-        Tiempo.noche.set_lights(DayLight(1024))
-        self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
+        if Tiempo.noche is None:
+            Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
+        if self.data['ambiente'] == 'exterior':
+            Tiempo.noche.set_lights(DayLight(1024))
+        #self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
+        # elif self.data['ambiente'] == 'interior':
+        #     pass 
+        
         for obj in self.properties:
             ''':type obj: _giftSprite'''
             obj.stage = self
+            obj.sombra = None
+            obj._prevLuces = None
 
             x = self.rect.x + obj.mapX
             y = self.rect.y + obj.mapY

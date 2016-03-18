@@ -1,12 +1,12 @@
-﻿from engine.globs import EngineData as ED, Constants as C
+﻿from engine.globs import Constants, EngineData
+from engine.globs.giftgroups import MobGroup
 from pygame import Surface, Rect, draw, SRCALPHA
-from engine.misc import Resources as r
+from engine.misc import Resources
 from engine.base import AzoeSprite
 
 
-class LightSource(
-    AzoeSprite):  # o combinar esto con prop?, no estoy seguro. probablemente de esta forma pueda tener mas flexibilidad
-    '''Los objetos de esta clase tienen un area de luz, que permite ver y genera sombras'''
+class LightSource(AzoeSprite):
+    """Los objetos de esta clase tienen un area de luz, que permite ver y genera sombras"""
     color = 0, 0, 0, 0
     origen = None
     # una coordenada desde donde se calcula el area.
@@ -35,7 +35,7 @@ class LightSource(
     def _crear_base(tamanio):
         surf = Surface((tamanio, tamanio), SRCALPHA)
         # este es el color para las secciones que no se renderean,
-        surf.fill(C.COLOR_IGNORADO)  # sino siempre se borra un cuadrado. el alpha no importa
+        surf.fill(Constants.COLOR_IGNORADO)  # sino siempre se borra un cuadrado. el alpha no importa
         # deberiamos definirlo en documentacion
 
         return surf
@@ -46,8 +46,8 @@ class LightSource(
 
 
 class ImageLight(LightSource):
-    def __init__(self, ruta):
-        img = r.cargar_imagen(ruta)
+    def __init__(self, ruta, x, y):
+        img = Resources.cargar_imagen(ruta)
         super().__init__(img, x, y)
 
 
@@ -67,7 +67,7 @@ class SpotLight(LightSource):
 
 
 class GradientSpotLight(LightSource):
-    def __init__(self, radio, color):
+    def __init__(self, radio, color, x, y):
         img = self._crear(radio, color)
         super().__init__(img, x, y)
 
@@ -84,7 +84,7 @@ class GradientSpotLight(LightSource):
             if _a > a:  # este máximo es seteable hasta 255
                 _a = a  # cuanto más bajo esté, menos degradé
             color = r, g, b, _a
-            draw.circle(base, (color), (radio, radio), _r)
+            draw.circle(base, color, (radio, radio), _r)
             _r -= 1
         return base
 
@@ -106,13 +106,13 @@ class SquareLight(LightSource):
 
 
 class GradientSquareLight(LightSource):
-    def __init__(self, color):
+    def __init__(self, lado, color, x, y):
         img = self._crear(lado, color)
-        super().__init__(img)
+        super().__init__(img, x, y)
 
     @staticmethod
-    def __crear(lado, color, step=1):
-        pass
+    def _crear(lado, color, step=1):
+        return lado, color, step
 
 
 class DayLight:
@@ -123,3 +123,10 @@ class DayLight:
         self.color = 0, 0, 0, 0  # el color podría ser una constante.
         self.estatico = True
         self.nombre = 'sol'
+        self.check = True
+
+    def update(self):
+        for item in EngineData.MAPA_ACTUAL.properties:
+            if self.rect.colliderect(item.rect):
+                if item.proyectaSombra:
+                    item._luces[4] = 1

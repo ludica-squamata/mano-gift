@@ -38,7 +38,7 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
             self.mover_vis = self.mover_tri_vis
 
     def mover(self):
-        self.AI.update()
+        #self.AI.update()
         self.cambiar_direccion(self.direccion)
         dx, dy = self.direcciones[self.direccion]
         super().mover(dx, dy)

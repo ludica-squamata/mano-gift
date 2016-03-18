@@ -2,6 +2,7 @@ from pygame import time, Surface, PixelArray, SRCALPHA
 from engine.base import AzoeSprite
 from .constantes import Constants as Cs
 from engine.globs.eventDispatcher import EventDispatcher
+from .renderer import Renderer
 
 
 class Clock:
@@ -11,7 +12,7 @@ class Clock:
     day_flag = False
     hour_flag = False
 
-    def __init__(self, h = 0, m = 0, s = 0):
+    def __init__(self, h=0, m=0, s=0):
         self._h = h
         self._m = m
         self._s = s
@@ -68,9 +69,12 @@ class Clock:
     def s(self):
         self._s = 0
 
-    def timestamp(self, h = 0, m = 0, s = 0):
+    def timestamp(self, h=0, m=0, s=0):
         """Without arguments, returns current tiemstamp
         with arguments, returns the specified TimeStamp
+        :param s: int
+        :param m: int
+        :param h: int
         """
 
         if h == 0 and m == 0 and s == 0:
@@ -78,14 +82,14 @@ class Clock:
         else:
             return TimeStamp(h, m, s)
 
-    def update(self, dm = 1):
+    def update(self, dm=1):
         self.day_flag = False
         self.hour_flag = False
         self.m += dm
 
 
 class TimeStamp:
-    def __init__(self, h = 0, m = 0, s = 0):
+    def __init__(self, h=0, m=0, s=0):
         self._h = h
         self._m = m
         self._s = s
@@ -193,13 +197,19 @@ class TimeStamp:
 
 
 class Noche(AzoeSprite):
+    luces = []
+    solido = False
+    proyectaSombra = False
+    nombre = 'Noche'
+
     def __init__(self, size):
         img = Surface(size, SRCALPHA)
         img.fill((0, 0, 0, 230))  # llenamos con color rgba. como es srcalpha funciona bien
-
+        self.luces = []
         super().__init__(img)
 
         self.ubicar(0, 0)
+        Renderer.camara.add_visible(self)
 
     def set_lights(self, *lights):
 
@@ -231,9 +241,14 @@ class Noche(AzoeSprite):
                             b = clamp(b + _b)
                             a = clamp(_a - (255 - a))
                             pxarray[ox, oy] = r, g, b, a
+            self.luces.append(light)
+            light.update()
         nch = pxarray.make_surface()
         self.image = nch
-
+    
+    def update(self):
+        for luz in self.luces:
+            luz.update()
 
 class Tiempo:
     FPS = time.Clock()
@@ -242,7 +257,7 @@ class Tiempo:
     noche = None
 
     @classmethod
-    def setear_momento(cls, dia, hora, mins = 0):
+    def setear_momento(cls, dia, hora, mins=0):
         cls.dia = dia
         cls.clock.h = hora
         cls.clock.m = mins
@@ -259,7 +274,7 @@ class Tiempo:
                 cls.dia += 1
             if cls.clock.hour_flag:
                 EventDispatcher.trigger('hora', 'Tiempo', {"hora": cls.clock.timestamp()})
-    
+
     @classmethod
     def crear_noche(cls, tamanio):
         cls.noche = Noche(tamanio)

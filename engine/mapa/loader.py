@@ -71,6 +71,7 @@ class Loader:
             Ed.HERO.ubicar(x, y)
             Ed.HERO.mapX = x
             Ed.HERO.mapY = y
+            Ed.HERO.z = y + Ed.HERO.rect.h
         except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
