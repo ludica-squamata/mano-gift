@@ -3,7 +3,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import Util
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1
+from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1, K_F2, K_F3, K_F4
 from engine.UI.menues import *
 from engine.UI import QuickCircularMenu
 
@@ -24,7 +24,16 @@ class Modo:
                     Util.salir()
 
                 elif event.key == K_F1:
-                    pass
+                    Ed.HERO.z += 1
+
+                elif event.key == K_F2:
+                    Ed.HERO.z -= 1
+
+                elif event.key == K_F3:
+                    Ed.HERO.z += 10
+
+                elif event.key == K_F4:
+                    Ed.HERO.z -= 10
 
         EventDispatcher.process()
 

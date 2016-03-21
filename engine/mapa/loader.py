@@ -68,14 +68,17 @@ class Loader:
         try:
             pc = MobGroup['heroe']
             Ed.HERO = pc
-            Ed.HERO.ubicar(x, y)
+            Ed.HERO.ubicar(320, 240)
             Ed.HERO.mapX = x
             Ed.HERO.mapY = y
-            Ed.HERO.z = y + Ed.HERO.rect.h
+            print(Ed.HERO.z)
+            # Ed.HERO.z = y + 53
+
         except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
-        Loader.STAGE.add_property(Ed.HERO, Cs.GRUPO_MOBS)
+        if Ed.HERO not in cls.STAGE.properties:
+            Loader.STAGE.add_property(Ed.HERO, Cs.GRUPO_MOBS)
 
     @classmethod
     def cargar_salidas(cls):

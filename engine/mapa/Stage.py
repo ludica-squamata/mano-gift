@@ -25,6 +25,7 @@ class Stage:
 
     def __init__(self, nombre, mobs_data, entrada):
         self.chunks = LayeredUpdates()
+        self.interactives.clear()
         self.nombre = nombre
         self.data = Rs.abrir_json(Md.mapas + nombre + '.json')
         dx, dy = self.data['entradas'][entrada]
@@ -49,21 +50,23 @@ class Stage:
             Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         if self.data['ambiente'] == 'exterior':
             Tiempo.noche.set_lights(DayLight(1024))
-        #self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
+        # self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
         # elif self.data['ambiente'] == 'interior':
         #     pass 
         
         for obj in self.properties:
             ''':type obj: _giftSprite'''
-            obj.stage = self
-            obj.sombra = None
+            if obj.stage is not self:
+                obj.stage = self
+            # obj.sombra = None
             obj._prevLuces = None
 
-            x = self.rect.x + obj.mapX
-            y = self.rect.y + obj.mapY
-            obj.ubicar(x, y, self.offset_y)
+            # x = self.rect.x + obj.mapX
+            # y = self.rect.y + obj.mapY
+            # obj.ubicar(x, y, self.offset_y)
 
-            Renderer.camara.add_real(obj)
+            if obj not in Renderer.camara.real:
+                Renderer.camara.add_real(obj)
 
     def add_property(self, obj, _layer, add_interactive=False):
         if _layer == Cs.GRUPO_SALIDAS:
@@ -143,7 +146,7 @@ class ChunkMap(Sprite):
         if w < 800 or h < 800:
             img = Surface((800, 800))
             col = img.copy()
-            col.fill(Cs.COLOR_COLISION)
+            # col.fill(Cs.COLOR_COLISION)
 
             _rect = img.get_rect()
             topleft = imagen.get_rect(center=_rect.center)
@@ -165,8 +168,8 @@ class ChunkMap(Sprite):
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla
-        :param y:
-        :param x:
+        :param y: int
+        :param x: int
         """
         self.rect.x = x
         self.rect.y = y

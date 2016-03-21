@@ -1,6 +1,9 @@
-from pygame import Rect, Mask
+from pygame import Rect, Mask, Surface
 from engine.globs import MobGroup
 from engine.globs.eventDispatcher import EventDispatcher
+from pygame.sprite import Sprite
+from engine.globs.renderer import Renderer
+import sys
 
 
 class Salida:
@@ -24,6 +27,10 @@ class Salida:
         self.ubicar(self.x, self.y)
         self.mask = Mask(self.rect.size)
         self.mask.fill()
+        if 'pydevd' in sys.modules:
+            sprite = SpriteSalida(self.rect)
+            if sprite not in Renderer.camara.real:
+                Renderer.camara.add_real(sprite)
 
     def ubicar(self, x, y):
         self.rect.x = x
@@ -36,3 +43,22 @@ class Salida:
             dy *= mob.velocidad
             if mob.colisiona(self, dx, dy):
                 EventDispatcher.trigger('CambiarMapa', 'Salida', {"mob": mob, 'dest': self.dest, 'link': self.link})
+
+
+class SpriteSalida(Sprite):
+    """Intented only to debugging"""
+    def __init__(self, rect):
+        super().__init__()
+
+        self.image = Surface(rect.size)
+        self.image.fill((255, 255, 0))
+        self.rect = self.image.get_rect(center=rect.center)
+
+        self.z = 5000
+        self.mapX = self.rect.x
+        self.mapY = self.rect.y
+
+    def ubicar(self, x, y, z=0):
+        self.rect.x = x
+        self.rect.y = y
+        del z

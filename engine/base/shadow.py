@@ -17,7 +17,11 @@ class Sombra(AzoeSprite):
         self.dif_x = dfx
 
     def ubicar(self, x, y, z=0):
-        """Coloca al sprite en pantalla"""
+        """Coloca al sprite en pantalla
+        :param z: int
+        :param y: int
+        :param x: int
+        """
         if self.z + z < self.spr.z:
             super().ubicar(x - self.dif_x, y, z)
         else:
@@ -71,9 +75,8 @@ class ShadowSprite(AzoeSprite):
 
             draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
-        if self.sombra is None:
-            self.sombra = Sombra(self, h_2, t_surface)
-            Renderer.camara.add_visible(self.sombra)
+        self.sombra = Sombra(self, h_2, t_surface)
+        Renderer.camara.add_visible(self.sombra)
 
     @staticmethod
     def _crear_sombra(surface, arg=None, _mask=None):

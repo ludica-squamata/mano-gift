@@ -2,6 +2,7 @@ from pygame.sprite import LayeredUpdates
 from pygame import Rect
 from .constantes import Constants as Cs
 
+
 class Camara:
     focus = None  # objeto que la camara sigue.
     bg = None  # el fondo
@@ -19,17 +20,17 @@ class Camara:
             cls.bg = spr
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
-    
+
     @classmethod
     def add_real(cls, obj):
         cls.real.add(obj)
         if obj not in cls.visible:
-            cls.visible.add(obj, layer = obj.z)
+            cls.visible.add(obj, layer=obj.z)
 
     @classmethod
     def add_visible(cls, obj):
         if obj not in cls.visible:
-            cls.visible.add(obj, layer = obj.z)
+            cls.visible.add(obj, layer=obj.z)
 
     @classmethod
     def remove_obj(cls, obj):
@@ -37,11 +38,11 @@ class Camara:
             cls.real.remove(obj)
         if obj in cls.visible:
             cls.visible.remove(obj)
-    
+
     @classmethod
     def set_focus(cls, spr):
         cls.focus = spr
-    
+
     @classmethod
     def is_focus(cls, spr):
         if cls.focus is not None and hasattr(spr, 'nombre'):
@@ -55,10 +56,10 @@ class Camara:
         cls.visible.empty()
         cls.bgs.empty()
         cls.bg = None
-    
+
     @classmethod
     def detectar_mapas_adyacentes(cls):
-        r = cls.rect.inflate(2,2)
+        r = cls.rect.inflate(2, 2)
         map_at = cls.bgs.get_sprites_at
         adyacent_map_key = ''
         reference = []
@@ -126,7 +127,7 @@ class Camara:
                     cls.bgs_rect.h += new_map.rect.h
                     if adyacent_map_key == 'sup':
                         cls.bgs_rect.y = new_map.rect.y
-    
+
     @classmethod
     def update_sprites_layer(cls):
         for spr in cls.visible:
@@ -139,16 +140,16 @@ class Camara:
 
         dx = new_x - cls.bg.rect.x
         dy = new_y - cls.bg.rect.y
-        
+
         f = cls.focus.rect
         b = cls.bgs_rect
         s = cls.rect
-        
-        if any([b.x+dx > 1, b.right+dx < s.w-2, f.x != s.centerx]):
+
+        if any([b.x + dx > 1, b.right + dx < s.w - 2, f.x != s.centerx]):
             dx = 0
-        if any([b.y+dy > 2, b.bottom+dy < s.h-2, f.y != s.centery]):
+        if any([b.y + dy > 2, b.bottom + dy < s.h - 2, f.y != s.centery]):
             dy = 0
-        
+
         cls.bgs_rect.move_ip(dx, dy)
         for spr in cls.bgs:
             spr.rect.move_ip(dx, dy)
@@ -157,7 +158,7 @@ class Camara:
             x = cls.bg.rect.x + spr.mapX
             y = cls.bg.rect.y + spr.mapY
             spr.ubicar(x, y, dy)
-    
+
     @classmethod
     def update(cls, use_focus):
         cls.bgs.update()
@@ -167,7 +168,7 @@ class Camara:
             cls.panear()
 
         cls.update_sprites_layer()
-    
+
     @classmethod
     def draw(cls, fondo):
         ret = cls.bgs.draw(fondo)
@@ -176,12 +177,12 @@ class Camara:
         # draw.line(fondo,(0,100,255),(0,cls.rect.centery),(cls.w,cls.rect.centery))
         return ret
 
-        
+
 class Renderer:
     use_focus = False
     camara = Camara()
     overlays = LayeredUpdates()
-    
+
     @classmethod
     def clear(cls):
         cls.camara.clear()
@@ -189,13 +190,13 @@ class Renderer:
 
     @classmethod
     def add_overlay(cls, obj, _layer):
-        cls.overlays.add(obj, layer = _layer)
+        cls.overlays.add(obj, layer=_layer)
 
     @classmethod
     def del_overlay(cls, obj):
         if obj in cls.overlays:
             cls.overlays.remove(obj)
-    
+
     @classmethod
     def clear_overlays_from_layer(cls, layer):
         cls.overlays.remove_sprites_of_layer(layer)

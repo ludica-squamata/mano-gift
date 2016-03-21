@@ -30,7 +30,7 @@ class AzoeSprite(sprite.Sprite):
                    'ninguna': [0, 0]}
     direccion = 'abajo'
 
-    def __init__(self, imagen = None, rect = None, alpha = False, center = False, x = 0, y = 0, z = 0):
+    def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0):
         if imagen is None and rect is None:
             raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
 
@@ -47,9 +47,9 @@ class AzoeSprite(sprite.Sprite):
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
 
         if center:
-            self.rect = self.image.get_rect(center = (320, 240))
+            self.rect = self.image.get_rect(center=(320, 240))
         elif imagen is not None:
-            self.rect = self.image.get_rect(topleft = (x, y))
+            self.rect = self.image.get_rect(topleft=(x, y))
         else:
             self.rect = rect
 
@@ -82,7 +82,7 @@ class AzoeSprite(sprite.Sprite):
         self.stageY += dy
         self.z += dy
 
-    def ubicar(self, x, y, z = 0):
+    def ubicar(self, x, y, z=0):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
@@ -91,7 +91,7 @@ class AzoeSprite(sprite.Sprite):
         if z:
             self.z += z
 
-    def colisiona(self, other, off_x = 0, off_y = 0):
+    def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
             x = self.mapX - (other.mapX - off_x)
             y = self.mapY - (other.mapY - off_y)
