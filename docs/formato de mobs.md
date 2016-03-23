@@ -31,7 +31,7 @@ Esta es la estructura de un archivo json que define un mob. Estos archivos se al
 
 - **ID**:  Referencia a la base de datos. Aún no tiene función.
 - **nombre**: El nombre del mob en cuestión. Tiene que ser único.
-- **salud**, **fuerza**, **carisma**: características del mob. En el [futuro] (wishlist.md) habrá más.
+- **salud**, **fuerza**, **carisma**: características del mob. En el [futuro](wishlist.md) habrá más.
 - **velocidad**: cantidad de pixeles por frame a los que se moverá el mob. Para los NPCs es 1.
 - **imagenes**: cada "filename" es una ruta de arhivo a la imagen en cuestión. Estas rutas son relativas a la carpeta de datos gráficos (data/grafs), por lo que no es necesario indicar la ruta completa.
 
@@ -46,6 +46,6 @@ Esta es la estructura de un archivo json que define un mob. Estos archivos se al
   - **death**: cadáver del mob. Puede ser `null`.
 
 - **clase**: el nombre de la clase que se usará para crear el Mob. Ejemplos son "PC", "NPC", etc.
-- **propiedades**: Ejemplos son "solido", "pasiva", "hostil" etc.
+- **[propiedades](propiedades.md)**: Ejemplos son "solido", "pasiva", "hostil" etc.
 
 [Documentación](main.md)

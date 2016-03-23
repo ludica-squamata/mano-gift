@@ -22,7 +22,8 @@ La imagen de colisiones es una imagen 'alpha' de la imagen de fondo, que le indi
 ## Archivo de datos
 Finalmente, cada mapa cuenta con un archivo de texto plano, llamado de 'datos' que contiene las posiciones iniciales de cada mob y las posiciones (usualmente fijas) de los props. Este es el arhivo que el engine usará para cargar el mapa.
 
-Cada mapa cuenta con dos claves básicas, llamdas capas _background_ y _ground_, que contienen las posiciones de cada mob o prop en pantalla. 
+Cada mapa cuenta con dos claves básicas, llamdas capas _background_ y _ground_, que contienen las posiciones de cada mob o prop en pantalla.
+
 ### La capa background
 La primera capa (background) tiene la siguiente forma:
 
@@ -51,7 +52,7 @@ La capa _ground_ por otra parte, es algo más compleja. Como la capa background,
         }
     },
 
-Aquí, "props", "enemies" y "npcs" son diccionarios, donde cada clave es una **referencia** (ver abajo). El valor de cada key/ref es una lista que a su vez contiene pares de integers (una lista de listas). Estos integeres son posiciones medidas en pixeles (x e y, y un [futuro] (wishlist.md), tambien z), y son relativos al mapa, no a la pantalla.
+Aquí, "props", "enemies" y "npcs" son diccionarios, donde cada clave es una **referencia** (ver abajo). El valor de cada key/ref es una lista que a su vez contiene pares de integers (una lista de listas). Estos integeres son posiciones medidas en pixeles (x e y, y un [futuro](wishlist.md), tambien z), y son relativos al mapa, no a la pantalla.
 
 ### Entradas y Salidas
 Lo siguiente en el archivo de datos son los accesos al mapa. Estos puntos son lugares donde el mapa cambiará en abrupto, en contraste con el movimiento continuo entre chunks en el overworld.
