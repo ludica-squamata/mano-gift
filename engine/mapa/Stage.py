@@ -50,20 +50,18 @@ class Stage:
             Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         if self.data['ambiente'] == 'exterior':
             Tiempo.noche.set_lights(DayLight(1024))
-        # self.add_property(Tiempo.noche, Cs.CAPA_CIELO)
         # elif self.data['ambiente'] == 'interior':
         #     pass 
-        
         for obj in self.properties:
             ''':type obj: _giftSprite'''
             if obj.stage is not self:
                 obj.stage = self
-            # obj.sombra = None
+            obj.sombra = None
             obj._prevLuces = None
 
-            # x = self.rect.x + obj.mapX
-            # y = self.rect.y + obj.mapY
-            # obj.ubicar(x, y, self.offset_y)
+            x = self.rect.x + obj.mapX
+            y = self.rect.y + obj.mapY
+            obj.ubicar(x, y)
 
             if obj not in Renderer.camara.real:
                 Renderer.camara.add_real(obj)
@@ -125,6 +123,7 @@ class Stage:
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
     def update(self):
+        self.actualizar_grilla()
         for salida in self.salidas:
             salida.update()
 
@@ -146,7 +145,7 @@ class ChunkMap(Sprite):
         if w < 800 or h < 800:
             img = Surface((800, 800))
             col = img.copy()
-            # col.fill(Cs.COLOR_COLISION)
+            col.fill(Cs.COLOR_COLISION)
 
             _rect = img.get_rect()
             topleft = imagen.get_rect(center=_rect.center)
@@ -235,7 +234,3 @@ class ChunkMap(Sprite):
             pass
 
         return False
-
-    def update(self):
-        # self.stage.anochecer()
-        self.stage.actualizar_grilla()

@@ -82,14 +82,12 @@ class AzoeSprite(sprite.Sprite):
         self.stageY += dy
         self.z += dy
 
-    def ubicar(self, x, y, z=0):
+    def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
         self.stageX = x
         self.stageY = y
-        if z:
-            self.z += z
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:

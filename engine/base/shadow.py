@@ -12,20 +12,17 @@ class Sombra(AzoeSprite):
         self.spr = spr
         self.tipo = "sombra"
         self.nombre = "sombra de " + self.spr.nombre
-        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.rect.bottom - 10)
+        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z-1)
         self.alpha = self.image.get_alpha()
         self.dif_x = dfx
 
-    def ubicar(self, x, y, z=0):
+    def ubicar(self, x, y):
         """Coloca al sprite en pantalla
-        :param z: int
         :param y: int
         :param x: int
         """
-        if self.z + z < self.spr.z:
-            super().ubicar(x - self.dif_x, y, z)
-        else:
-            super().ubicar(x - self.dif_x, y)
+        
+        super().ubicar(x - self.dif_x, y)
 
     def __repr__(self):
         return self.nombre
@@ -174,12 +171,14 @@ class ShadowSprite(AzoeSprite):
     def update(self, *args):
         if self.proyectaSombra:
             self.update_sombra()
+        if self.sombra is not None:
+            self.sombra.z = self.z-1
         super().update(*args)
 
-    def ubicar(self, dx, dy, z=0):
-        super().ubicar(dx, dy, z)
+    def ubicar(self, dx, dy):
+        super().ubicar(dx, dy)
         if self.sombra is not None:
-            self.sombra.ubicar(dx, dy, z)
+            self.sombra.ubicar(dx, dy)
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)

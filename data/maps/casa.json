@@ -1,10 +1,10 @@
 {
     "capa_background":{
-        "fondo":"maps/fondos/chiquito.png",
-        "colisiones":"maps/colisiones/chiquito.png"
+        "fondo":"maps/fondos/dungeon.png",
+        "colisiones":"maps/colisiones/dungeon_c.png"
     },
     "capa_ground":{
-        "props": {"crate":[[32,32],[96,74]]},
+        "props": {"crate":[[132,132],[196,174]]},
         "mobs": {
             "enemies":{},
             "npcs":{}
@@ -13,10 +13,10 @@
     "capa_top":{
         "props":{}
     },
-    "entradas":{"puerta":[400,400]
+    "entradas":{"puerta":[400,500]
     },
     "salidas":{"exit":{
-        "rect":[320,448,32,32],
+        "rect":[400,688,32,32],
         "dest":"casas y arboles",
         "link":"puerta"}
     },

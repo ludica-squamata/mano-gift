@@ -68,12 +68,11 @@ class Loader:
         try:
             pc = MobGroup['heroe']
             Ed.HERO = pc
-            Ed.HERO.ubicar(320, 240)
+            Ed.HERO.ubicar(x, y)
             Ed.HERO.mapX = x
             Ed.HERO.mapY = y
-            print(Ed.HERO.z)
-            # Ed.HERO.z = y + 53
-
+            Ed.HERO.z = y + Ed.HERO.rect.h
+            
         except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 

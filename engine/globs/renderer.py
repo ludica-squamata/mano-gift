@@ -1,6 +1,7 @@
 from pygame.sprite import LayeredUpdates
-from pygame import Rect
+from pygame import Rect, draw
 from .constantes import Constants as Cs
+import sys
 
 
 class Camara:
@@ -20,7 +21,25 @@ class Camara:
             cls.bg = spr
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
-
+        
+        dx, dy = 0, 0
+        #Posicionar el fondo si de otro modo
+        #quedara la camara fuera de los bordes.
+        if cls.bgs_rect.y > 2:
+            dy = -cls.bgs_rect.y+2
+            
+        elif cls.bgs_rect.bottom < cls.rect.h -2:
+            dy = (cls.rect.h - 2)- cls.bgs_rect.bottom
+            
+        if cls.bgs_rect.x > 1:
+            dx = -cls.bgs_rect.x-2
+            
+        elif cls.bgs_rect.right < cls.rect.w -2:
+            dx = (cls.rect.w - 2)- cls.bgs_rect.right
+        
+        if dx or dy:
+            cls.jump(dx,dy)
+            
     @classmethod
     def add_real(cls, obj):
         cls.real.add(obj)
@@ -144,12 +163,17 @@ class Camara:
         f = cls.focus.rect
         b = cls.bgs_rect
         s = cls.rect
-
-        if any([b.x + dx > 1, b.right + dx < s.w - 2, f.x != s.centerx]):
-            dx = 0
+        
+        if any([b.x + dx > 1, b.right + dx < s.w - 2, f.x != s.centerx]):    
+            # El tercer caso tiene un problema de centrado si f.x+dx != s.centerx
+            dx = 0    
         if any([b.y + dy > 2, b.bottom + dy < s.h - 2, f.y != s.centery]):
             dy = 0
-
+        
+        cls.jump(dx,dy)
+    
+    @classmethod
+    def jump(cls, dx, dy):
         cls.bgs_rect.move_ip(dx, dy)
         for spr in cls.bgs:
             spr.rect.move_ip(dx, dy)
@@ -157,7 +181,7 @@ class Camara:
         for spr in cls.real:
             x = cls.bg.rect.x + spr.mapX
             y = cls.bg.rect.y + spr.mapY
-            spr.ubicar(x, y, dy)
+            spr.ubicar(x, y)
 
     @classmethod
     def update(cls, use_focus):
@@ -173,8 +197,9 @@ class Camara:
     def draw(cls, fondo):
         ret = cls.bgs.draw(fondo)
         ret += cls.visible.draw(fondo)
-        # draw.line(fondo,(0,100,255),(cls.rect.centerx,0),(cls.rect.centerx,cls.h))
-        # draw.line(fondo,(0,100,255),(0,cls.rect.centery),(cls.w,cls.rect.centery))
+        if 'pydevd' in sys.modules:
+            draw.line(fondo,(0,100,255),(cls.rect.centerx,0),(cls.rect.centerx,cls.h))
+            draw.line(fondo,(0,100,255),(0,cls.rect.centery),(cls.w,cls.rect.centery))
         return ret
 
 
