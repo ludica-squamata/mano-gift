@@ -19,6 +19,7 @@ class EngineData:
     MODO = ''
     onPause = False
     scene_data = None
+    setKey = False
 
     @classmethod
     def setear_escena(cls, nombre):
@@ -61,5 +62,19 @@ class EngineData:
     def on_cambiarmapa(cls, evento):
         if evento.data['mob'] is cls.HERO:
             cls.setear_mapa(evento.data['dest'], evento.data['link'])
+    
+    @classmethod
+    def on_setkey(cls,event):
+        """
+        :param event:
+        :type event: AzoeEvent
+        :return:
+        """
+        value = event.data['value']
+
+        if event.data['mode'] == 'SetKey':
+            cls.setKey = value
+    
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
+EventDispatcher.register(EngineData.on_setkey, "SetMode")

@@ -154,9 +154,9 @@ class Modo:
     def menu(cls, events, fondo):
         for event in get_taphold_events(events):
             if event.type == Cs.TAP:
-                if cls.setKey:
+                if Ed.setKey:
                     Ed.menu_actual.cambiar_tecla(event.key)
-                    cls.setKey = False
+                    Ed.setKey = False
 
                 elif event.key == Cs.TECLAS.IZQUIERDA:
                     Ed.menu_actual.use_function('tap', 'izquierda')
@@ -214,10 +214,7 @@ class Modo:
         :return:
         """
         value = event.data['value']
-
-        if event.data['mode'] == 'SetKey':
-            cls.setKey = value
-        elif event.data['mode'] == 'NewMenu':
+        if event.data['mode'] == 'NewMenu':
             cls.newMenu = value
 
     @classmethod

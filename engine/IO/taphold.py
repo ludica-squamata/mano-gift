@@ -1,4 +1,4 @@
-from engine.globs import Constants as Cs
+from engine.globs import Constants as Cs, EngineData as Ed
 from engine.misc import Config
 from pygame import event
 from pygame import KEYDOWN, KEYUP
@@ -9,6 +9,8 @@ def filtrar_eventos_teclado(events):
     teclas = Cs.TECLAS.devolver()
     for _event in events:
         if _event.type == KEYDOWN:
+            if Ed.setKey:
+                event.post(event.Event(Cs.TAP, {'key': _event.key, 'type': 'tapping'}))
             if _event.key in teclas:
                 teclas[_event.key]['pressed'] = True
 

@@ -22,6 +22,9 @@ class MenuDebug(Menu):
             'hold':{
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
+            },
+            'release':{
+                'hablar':self.cargar_escena
             }
         })
         

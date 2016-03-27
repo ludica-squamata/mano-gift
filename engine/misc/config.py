@@ -20,28 +20,23 @@ class Config:
             "accion": 120,
             "hablar": 115,
             "cancelar": 97,
-            "inventario": 122,
-            "posicion": 304,
-
             "menu": 13,
-            "debug": 282,
+            "menu rapido": 122,
+            
             "salir": 27
         },
         
         "botones":{
-            "inventario": 0,
-            "cancelar": 1,
-            "hablar": 2,
+            "abajo": 13,
             "accion": 3,
-            "posicion": 4,
-            "debug": 5,
-            
-            "menu": 8,
-            "salir": 9,
-            "derecha": 10,
-            "izquierda": 11,
             "arriba": 12,
-            "abajo": 13
+            "cancelar": 1,
+            "derecha": 10,
+            "hablar": 2,
+            "izquierda": 11,
+            "menu": 8,
+            "menu rapido": 0,
+            "salir": 9
         }
     }
 

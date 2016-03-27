@@ -81,7 +81,7 @@ class MenuOpciones(MenuPausa, Menu):
             {m: "Menu", c: cmd, p: [x1, f * 4 + dy], k: {b: "Accion", a: "Izquierda"}},
             # segunda columna
             {m: "Accion", c: cmd, p: [x2, f * 0 + dy], k: {b: "Hablar", a: "Menu", i: "Arriba"}},
-            {m: "Hablar", c: cmd, p: [x2, f * 1 + dy], k: {b: "Menu Rápido", a: "Accion", i: "Abajo"}},
+            {m: "Hablar", c: cmd, p: [x2, f * 1 + dy], k: {b: "Menu Rapido", a: "Accion", i: "Abajo"}},
             {m: "Menu Rapido", c: cmd, p: [x2, f * 2 + dy], k: {b: "Cancelar", a: "Hablar", i: "Derecha"}},
             {m: "Cancelar", c: cmd, p: [x2, f * 3 + dy], k: {b: "Salir", a: "Menu Rapido", i: "Izquierda"}},
             {m: "Salir", c: cmd, p: [x2, f * 4 + dy], k: {b: "Mostrar Intro", a: "Cancelar"}}]
