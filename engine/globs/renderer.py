@@ -186,7 +186,7 @@ class Camara:
     @classmethod
     def update(cls, use_focus):
         cls.bgs.update()
-        cls.visible.update()
+        cls.real.update()
         if use_focus:
             cls.detectar_mapas_adyacentes()
             cls.panear()

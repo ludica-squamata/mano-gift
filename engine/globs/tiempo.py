@@ -209,7 +209,7 @@ class Noche(AzoeSprite):
         super().__init__(img)
 
         self.ubicar(0, 0)
-        Renderer.camara.add_visible(self)
+        Renderer.camara.add_real(self)
 
     def set_lights(self, *lights):
 
