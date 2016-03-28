@@ -66,6 +66,10 @@ class Stage:
             if obj not in Renderer.camara.real:
                 Renderer.camara.add_real(obj)
 
+        for salida in self.salidas:
+            if salida.sprite is not None:
+                Renderer.camara.add_real(salida.sprite)
+
     def add_property(self, obj, _layer, add_interactive=False):
         if _layer == Cs.GRUPO_SALIDAS:
             self.salidas.append(obj)
