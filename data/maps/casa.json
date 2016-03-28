@@ -18,7 +18,9 @@
     "salidas":{"exit":{
         "rect":[400,688,32,32],
         "dest":"casas y arboles",
-        "link":"puerta"}
+        "link":"puerta",
+        "direcciones":["abajo"]
+        }
     },
     "refs":{},
     "ambiente":"interior"

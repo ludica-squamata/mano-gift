@@ -22,6 +22,7 @@ class Salida:
         self.mapY = y
         self.dest = data['dest']
         self.link = data['link']  # string, nombre de la entrada en dest con la cual conecta
+        self.direcciones = data.get('direcciones',['arriba','abajo','izquierda','derecha'])
         self.mask = Mask((w, h))
         self.mask.fill()
         if 'pydevd' in sys.modules:
@@ -33,7 +34,7 @@ class Salida:
             dx, dy = mob.direcciones[mob.direccion]
             dx *= mob.velocidad
             dy *= mob.velocidad
-            if mob.colisiona(self, dx, dy):
+            if mob.colisiona(self, dx, dy) and mob.direccion in self.direcciones:
                 EventDispatcher.trigger('CambiarMapa', 'Salida', {"mob": mob, 'dest': self.dest, 'link': self.link})
 
     def __repr__(self):
