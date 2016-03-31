@@ -37,15 +37,12 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
             self.vision = 'cono'
             self.mover_vis = self.mover_tri_vis
 
-    def mover(self):
-        #self.AI.update()
-        self.cambiar_direccion(self.direccion)
-        dx, dy = self.direcciones[self.direccion]
-        super().mover(dx, dy)
-
     def update(self, *args):
         if not Ed.onPause and not self.dead:
             detectados = self.oir()+self.ver()
-            self.determinar_accion(detectados)
-            self.mover()
+            #self.determinar_accion(detectados)
+            self.animar_caminar()
+            e = self.AI.update()
+            if e is not None:
+                self.AI.reset()
         super().update(*args)

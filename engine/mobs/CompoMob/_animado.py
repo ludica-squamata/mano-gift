@@ -79,6 +79,6 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
             self.image = frames[self.atk_img_index]
             self.mask = alphas[self.atk_img_index]
 
-    def mover(self, dx, dy):
+    def mover(self):
         self.animar_caminar()
-        super().mover(dx, dy)
+        super().mover()

@@ -2,7 +2,7 @@ from collections import OrderedDict
 from .composites import *
 from .decorators import *
 from .node import Leaf
-from types import FunctionType, MethodType
+from types import FunctionType
 
 
 class BehaviourTree:
@@ -10,9 +10,13 @@ class BehaviourTree:
     nodes = []
     tree_structure = None
     to_check = None
+    shared_context = {}
+    status = None
+    entity = None
 
     def __init__(self, entity, tree_data, scripts):
         self.tree_structure = OrderedDict()
+        self.entity = entity
         for key in [str(i) for i in range(len(tree_data))]:
             node = None
             data = tree_data[key]
@@ -23,23 +27,25 @@ class BehaviourTree:
             if 'children' in data:  # composite
                 self.tree_structure[idx].extend(data['children'])
                 if name == 'Selector':
-                    node = Selector(self, idx, entity, data['children'])
+                    node = Selector(self, idx, data['children'])
                 elif name == 'Secuence':
-                    node = Secuence(self, idx, entity, data['children'])
+                    node = Secuence(self, idx, data['children'])
 
             elif 'child' in data:  # decorator
                 self.tree_structure[idx].append(int(data['child']))
                 if name == 'Repeater':
-                    node = Repeater(self, idx, entity, data['child'], data.get('context', 0))
+                    node = Repeater(self, idx, data['child'], data.get('context', 0))
                 elif name == 'UntilFail':
-                    node = UntilFail(self, idx, entity, data['child'])
+                    node = UntilFail(self, idx, data['child'])
                 elif name == 'Succeeder':
-                    node = Succeeder(self, idx, entity, data['child'])
+                    node = Succeeder(self, idx, data['child'])
                 elif name == 'Inverter':
-                    node = Inverter(self, idx, entity, data['child'])
+                    node = Inverter(self, idx, data['child'])
 
             else:  # leaf
                 process = None
+                for entry in data['context']:
+                    self.shared_context[entry] = None
                 if name in globals():
                     process = globals()[name]
 
@@ -47,11 +53,11 @@ class BehaviourTree:
                     process = getattr(scripts, name)
 
                 if isinstance(process, FunctionType):
-                    node = Leaf(self, idx, entity, data['context'], name)
+                    node = Leaf(self, idx, data['context'], name)
                     node.set_process(process)
 
                 elif issubclass(process, Leaf):
-                    node = process(self, idx, entity, data['context'], name)
+                    node = process(self, idx, data['context'], name)
 
             self.nodes.append(node)
 
@@ -86,11 +92,13 @@ class BehaviourTree:
     def set_to_check(self, node):
         self.to_check = node
 
-    def reset_to_check(self):
-        self.to_check = None
+    def reset(self):
+        self.status = None
+        self.to_check = self.nodes[0]
+        for node in self.nodes:
+            node.reset()
 
     def update(self):
-        if self.to_check is not None:
+        if self.status is None:
             self.to_check.update()
-        else:
-            return True
+        return self.status

@@ -1,4 +1,9 @@
 {
-  "0":{"name":"Repeater","child":1},
-  "1":{"name":"WanderAbout","context":[]}
+  "0":{"name":"Secuence","children":[1,2,5]},
+  "1":{"name":"GetRandomDir","context":["direccion"]},
+  
+  "2":{"name":"Selector","children":[3,4]},
+  "3":{"name":"CheckCollition","context":["direccion"]},
+  "4":{"name":"ChangeDirection","context":["direccion"]},
+  "5":{"name":"Move","context":["direccion"]}
 }

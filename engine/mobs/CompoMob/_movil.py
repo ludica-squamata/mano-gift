@@ -12,29 +12,23 @@ class Movil(Atribuido):
 
         elif direccion == 'contraria':
             if self.direccion == 'arriba':
-                self.direccion = 'abajo'
-            elif direccion == 'abajo':
-                self.direccion = 'arriba'
-            elif direccion == 'derecha':
-                self.direccion = 'izquierda'
-            elif direccion == 'izquierda':
-                self.direccion = 'derecha'
+                d = 'abajo'
+            if self.direccion == 'abajo':
+                d = 'arriba'
+            if self.direccion == 'derecha':
+                d = 'izquierda'
+            if self.direccion == 'izquierda':
+                d = 'derecha'
+            self.direccion = d
 
         if img:  # solo vale para el héroe...
             self.image = self.images['S' + self.direccion]
             if direccion == self.direccion:
                 self.mover(*self.direcciones[direccion])
 
-    def mover(self, x, y):
-        dx, dy = x * self.velocidad, y * self.velocidad
-
-        if self.detectar_colisiones(dx, dy):
-            # en realidad, esto es territorio de la AI, asi que debería hacer super()
-            self.cambiar_direccion('contraria')
-            x, y = self.direcciones[self.direccion]
-            dx, dy = x * self.velocidad, y * self.velocidad
-
-        self.reubicar(dx, dy)
+    def mover(self):
+        dx, dy = super().mover(*self.direcciones[self.direccion])
+        self.reubicar(dx,dy)    
 
     def detectar_colisiones(self, dx, dy):
         col_bordes = False  # colision contra los bordes de la pantalla
@@ -52,14 +46,14 @@ class Movil(Atribuido):
             for spr in self.stage.properties.get_sprites_from_layer(C.GRUPO_ITEMS):
                 if self.colisiona(spr, dx, dy):
                     if spr.solido:
-                        if isinstance(spr,Movible):
-                            if not spr.mover(dx,dy):
+                        if isinstance(spr, Movible):
+                            if not spr.mover(dx, dy):
                                 col_props = True
                         else:
                             col_props = True
 
             for spr in self.stage.properties.get_sprites_from_layer(C.GRUPO_MOBS):
-                if spr.solido and self is not spr:                        
+                if spr.solido and self is not spr:
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
@@ -70,5 +64,5 @@ class Movil(Atribuido):
         #
         # if 0 > new_posX or new_posX > w or 0 > new_posY or new_posY > h:
         #     col_bordes = True
-        
+
         return any([col_bordes, col_mobs, col_props, col_mapa])

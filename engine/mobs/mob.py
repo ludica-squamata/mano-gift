@@ -8,10 +8,11 @@ from engine.globs.eventDispatcher import EventDispatcher
 class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .velocidad
     tipo = "Mob"
     mascaras = None  # {}
-    camino = None  # []
-    centroX, centroY = 0, 0
+
     hablante = False
+    moviendose = False
     mana = 1
+
     cmb_pos_img = {}  # combat position images.
     cmb_pos_alpha = {}  # combat position images's alpha.
     cmb_walk_img = {}  # combat walking images.
@@ -19,8 +20,6 @@ class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido p
     idle_walk_img = {}  # imagenes normales
     idle_walk_alpha = {}
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
-
-    moviendose = False
 
     def __init__(self, data, x, y, focus=False):
         self.images = {}

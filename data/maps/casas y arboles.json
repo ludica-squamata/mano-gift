@@ -23,7 +23,9 @@
         },
         "mobs": {
             "enemies":{},
-            "npcs":{}
+            "npcs":{
+                "commoner":[[830,410]]
+            }
         }
     },
     "capa_top":{

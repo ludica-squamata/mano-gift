@@ -3,7 +3,7 @@ from engine.base.azoeSprite import AzoeSprite
 
 class Atribuido(AzoeSprite):
     fuerza = 0  # capacidad del mob para empujar cosas.
-    velocidad = 1  # en pixeles por frame
+    velocidad = 0  # en pixeles por frame
     salud_max = 0  # salud máxima
     salud_act = 0  # salud actual
 
@@ -18,3 +18,4 @@ class Atribuido(AzoeSprite):
     def mover(self, dx, dy):
         dx *= self.velocidad
         dy *= self.velocidad
+        return dx, dy
