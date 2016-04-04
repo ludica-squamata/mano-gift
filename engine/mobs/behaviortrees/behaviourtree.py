@@ -92,6 +92,12 @@ class BehaviourTree:
     def set_to_check(self, node):
         self.to_check = node
 
+    def set_context(self, key, value):
+        self.shared_context[key] = value
+
+    def get_context(self, key):
+        return self.shared_context[key]
+
     def reset(self):
         self.status = None
         self.to_check = self.nodes[0]

@@ -1,5 +1,5 @@
 # A* module
-from pygame import mask
+from pygame import mask, Rect
 from random import choice
 
 
@@ -8,34 +8,88 @@ class Nodo:
     x, y = 0, 0
     transitable = True
 
-    def __init__(self, x, y, boole=True):
+    def __init__(self, x, y, t, value=True):
         self.x = x
         self.y = y
-        self.transitable = boole
+        self.transitable = value
+        self.rect = Rect(x,y,t,t)
+
+    def set_transitable(self, value):
+        self.transitable = value
+
+    def __bool__(self):
+        return self.transitable
 
     def __repr__(self):
         return 'Nodo ' + str(self.x) + ',' + str(self.y) + '(' + str(self.transitable) + ')'
 
     def __str__(self):
-        return str((self.x, self.y))
+        return 'Nodo ' + str(self.x) + ',' + str(self.y) + '(' + str(self.transitable) + ')'
 
 
-def generar_grilla(mascara, imagen):
-    ancho = imagen.get_width()
-    alto = imagen.get_height()
+class Grilla:
+    _cuadros = None
+    _indexes = None
+    _index = 0
+    _lenght = 0
 
-    tamanio = w, h = 32, 32
-    _test = mask.Mask(tamanio)
-    _test.fill()
+    def __init__(self, mascara, t):
+        w, h = mascara.get_size()
+        self._cuadros = {}
+        self._indexes = []
 
-    cuadros = {}
-    for y in range(int(alto / h)):
-        for x in range(int(ancho / w)):
-            if mascara.overlap(_test, (x * 32, y * 32)):
-                cuadros[x, y] = Nodo(x, y, False)
-            else:
-                cuadros[x, y] = Nodo(x, y, True)
-    return cuadros
+        test = mask.Mask((t, t))
+        test.fill()
+
+        for y in range(h // t):
+            for x in range(w // t):
+                self._indexes.append((x, y))
+                self._lenght += 1
+                if mascara.overlap(test, (x * t, y * t)):
+                    self._cuadros[x, y] = Nodo(x, y, False)
+                else:
+                    self._cuadros[x, y] = Nodo(x, y True)
+
+    def __getitem__(self, item):
+        if type(item) is int:
+            if 0 <= item <= self._lenght:
+                return self._cuadros[self._indexes[item]]
+
+        elif type(item) is tuple:
+            if item in self._cuadros:
+                return self._cuadros[item]
+
+    def __setitem__(self, key, value):
+        pass
+
+    def __delitem__(self, key):
+        pass
+
+    def __contains__(self, item):
+        if type(item) is int:
+            if 0 <= item <= self._lenght:
+                return True
+        if item in self._cuadros:
+            return True
+        return False
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        key = self._indexes[self._index]
+        if self._index + 1 < len(self._indexes):
+            self._index += 1
+            result = self._cuadros[key]
+
+        else:
+            self._index = 0
+            raise StopIteration
+
+        return result
+
+    def __len__(self):
+        return self._lenght
 
 
 def a_star(inicio, destino, mapa):
@@ -100,7 +154,7 @@ def mirar_vecinos(nodo, grilla):
         x, y = nodo.x + dx, nodo.y + dy
         if (x, y) in grilla:
             n = grilla[x, y]
-            if n.transitable:
+            if n:
                 cuadros.append(n)
 
     return cuadros
@@ -108,7 +162,9 @@ def mirar_vecinos(nodo, grilla):
 
 def reconstruir_camino(camino, nodo_actual):
     if nodo_actual in camino:
-        p = reconstruir_camino(camino, camino[nodo_actual])
-        return str(p) + ';' + str(nodo_actual)
+        nodo = camino[nodo_actual]
+        p = reconstruir_camino(camino, nodo)
+        p.append(nodo_actual)
+        return p
     else:
-        return nodo_actual
+        return [nodo_actual]

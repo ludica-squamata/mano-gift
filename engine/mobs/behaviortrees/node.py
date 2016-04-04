@@ -14,6 +14,9 @@ class Node:
     def set_parent(self, parent):
         self.parent = parent
 
+    def get_entity(self):
+        return self.tree.entity
+
     def reset(self):
         pass
 

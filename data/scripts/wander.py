@@ -1,44 +1,74 @@
-from random import randint, choice
+from random import choice
 from engine.mobs.behaviortrees import Leaf, Success, Failure
+from engine.mobs.scripts.a_star import a_star
+from engine.mobs.scripts.movimiento import _determinar_direccion
+from engine.globs import EngineData as Ed
 
 
 class GetRandomDir(Leaf):
     def process(self):
-        e = self.tree.entity
-        dx, dy = 0, 0
-        if randint(1,101) <= 10:
-            lista = list(e.direcciones.keys())
-            lista.remove(e.direccion)
-            d = choice(lista)
-            self.tree.shared_context['direccion'] = d
-        else:
-            self.tree.shared_context['direccion'] = e.direccion
+        cuadros = Ed.MAPA_ACTUAL.grilla
+        self.tree.shared_context.clear()
+
+        self.tree.set_context('mapa', cuadros)
+        self.tree.set_context('next', 0)
+
+        punto = False
+        while not punto:
+            punto = choice(cuadros)
+        self.tree.set_context('punto_final', punto)
+
         return Success
 
 
-class CheckCollition(Leaf):
+class GetRoute(Leaf):
     def process(self):
-        e = self.tree.entity
-        direccion = self.tree.shared_context['direccion']
-        x, y = e.direcciones[direccion]
-        v = e.velocidad
-        dx, dy = x * v, y * v
-        if self.tree.entity.detectar_colisiones(dx, dy):
+        e = self.get_entity()
+        mapa = self.tree.get_context('mapa')
+        prox = self.tree.get_context('next')
+        pd = self.tree.get_context('punto_final')
+        
+        pi = mapa[e.mapX//32, e.mapY//32]
+        ruta = a_star(pi, pd, mapa)
+        
+        self.tree.set_context('camino', ruta)
+        self.tree.set_context('punto_proximo', ruta[prox])
+
+        return Success
+
+
+class NextPosition(Leaf):
+    def process(self):
+        e = self.get_entity()
+        mapa = self.tree.get_context('mapa')
+        camino = self.tree.get_context('camino')
+        prox = self.tree.get_context('next')
+        curr_p = mapa[e.mapX // 32, e.mapY // 32]
+
+        if curr_p == self.tree.get_context('punto_final'):
             return Failure
-        else:
-            return Success
 
+        elif curr_p == camino[prox]:    
+            self.tree.set_context('next', prox + 1)
+            prox = self.tree.get_context('next')
+            self.tree.set_context('punto_proximo', camino[prox])
 
-class ChangeDirection(Leaf):
-    def process(self):
-        self.tree.entity.cambiar_direccion('contraria')
-        self.tree.shared_context['direccion'] = self.tree.entity.direccion
         return Success
 
 
 class Move(Leaf):
     def process(self):
-        direccion = self.tree.shared_context['direccion']
-        self.tree.entity.cambiar_direccion(direccion)
-        self.tree.entity.mover()
-        return Success
+        e = self.tree.entity
+        mapa = self.tree.shared_context['mapa']
+        pd = self.tree.shared_context['punto_proximo']
+        pi = mapa[e.mapX//32, e.mapY//32]
+
+        if pi != pd:
+            direccion = _determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
+            e.cambiar_direccion(direccion)
+            e.mover()
+
+        else:
+            # Esto no deberia ser necesario.
+            self.tree.reset()
+            return Success

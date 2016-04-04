@@ -20,7 +20,7 @@ class Composite(Node):
         child.update()
 
     def reset(self):
-        self.current_id = 0
+        self.current_id = -1
 
 
 class Secuence(Composite):
@@ -43,8 +43,7 @@ class Secuence(Composite):
             self.parent.get_child_status(status)
 
         elif status is Success:
-            self.tree.status = Success
-
+            self.tree.reset()
 
 class Selector(Composite):
     name = 'Selector'
@@ -66,7 +65,7 @@ class Selector(Composite):
             self.parent.get_child_status(status)
 
         elif status is Success:
-            self.tree.status = Success
+            self.tree.reset()
 
 
 class Parallel(Composite):

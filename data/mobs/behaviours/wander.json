@@ -1,9 +1,9 @@
 {
-  "0":{"name":"Secuence","children":[1,2,5]},
-  "1":{"name":"GetRandomDir","context":["direccion"]},
-  
-  "2":{"name":"Selector","children":[3,4]},
-  "3":{"name":"CheckCollition","context":["direccion"]},
-  "4":{"name":"ChangeDirection","context":["direccion"]},
-  "5":{"name":"Move","context":["direccion"]}
+  "0":{"name":"Secuence","children":[1,2,3]},
+  "1":{"name":"GetRandomDir","context":["punto"]},
+  "2":{"name":"GetRoute","context":[]},
+  "3":{"name":"UntilFail","child":4},
+  "4":{"name":"Secuence","children":[5,6]},
+  "5":{"name":"NextPosition","context":[]},
+  "6":{"name":"Move","context":[]}
 }

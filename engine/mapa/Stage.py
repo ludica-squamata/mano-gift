@@ -1,6 +1,6 @@
 from engine.globs import Constants as Cs, Tiempo, TimeStamp
 from engine.globs import ModData as Md
-from engine.mobs.scripts.a_star import generar_grilla
+from engine.mobs.scripts.a_star import Grilla
 from pygame.sprite import Sprite, LayeredUpdates
 from engine.globs.renderer import Renderer
 from engine.misc import Resources as Rs
@@ -34,7 +34,7 @@ class Stage:
         self.chunks.add(ChunkMap(self, self.data, self.nombre, self.offset_x, self.offset_y))
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
-        self.grilla = generar_grilla(self.mapa.mask, self.mapa.image)
+        self.grilla = Grilla(self.mapa.mask, 32)
         self.properties = LayeredUpdates()
         self.salidas = []
         self.cargar_timestamps()
@@ -116,18 +116,17 @@ class Stage:
             self.del_property(obj.sombra)
         self.del_property(obj)
 
-    def actualizar_grilla(self):
-        for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
-            if spr.solido:  # and not spr.es('empujable'):
-                x = int(spr.mapX / 32)
-                y = int(spr.mapY / 32)
-                self.grilla[x, y].transitable = False
+    # def actualizar_grilla(self):
+    #     for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
+    #         if spr.solido:  # and not spr.es('empujable'):
+    #             x, y = spr.mapX, spr.mapY
+    #             self.grilla[x, y].transitable = False
 
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
     def update(self):
-        self.actualizar_grilla()
+        # self.actualizar_grilla()
         for salida in self.salidas:
             salida.update()
 

@@ -41,7 +41,6 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         if not Ed.onPause and not self.dead:
             detectados = self.oir()+self.ver()
             #self.determinar_accion(detectados)
-            self.animar_caminar()
             e = self.AI.update()
             if e is not None:
                 self.AI.reset()
