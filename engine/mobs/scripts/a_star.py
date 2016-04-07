@@ -8,11 +8,10 @@ class Nodo:
     x, y = 0, 0
     transitable = True
 
-    def __init__(self, x, y, t, value=True):
+    def __init__(self, x, y, value=True):
         self.x = x
         self.y = y
         self.transitable = value
-        self.rect = Rect(x,y,t,t)
 
     def set_transitable(self, value):
         self.transitable = value
@@ -48,7 +47,7 @@ class Grilla:
                 if mascara.overlap(test, (x * t, y * t)):
                     self._cuadros[x, y] = Nodo(x, y, False)
                 else:
-                    self._cuadros[x, y] = Nodo(x, y True)
+                    self._cuadros[x, y] = Nodo(x, y, True)
 
     def __getitem__(self, item):
         if type(item) is int:

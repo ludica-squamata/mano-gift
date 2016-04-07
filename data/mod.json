@@ -13,6 +13,5 @@
         "scripts":"scripts",
         "scenes":"scenes"
     },
-    "events":{"MobMuerto":"gameover.py"},
     "use_latitude":true
 }

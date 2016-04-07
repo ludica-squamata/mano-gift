@@ -55,6 +55,7 @@ class DialogInterface(Ventana):
         for i in range(self.opciones):
             opcion = Fila(opciones[i], w, x, i * h + i + 3)
             self.filas.add(opcion)
+        self.elegir_opcion(0)
 
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
@@ -69,21 +70,21 @@ class DialogInterface(Ventana):
             self.text_rect.x = 3
             self.draw_space_rect.x = 3
 
-    def elegir_opcion(self, i):
+    def elegir_opcion(self, dy):
         if self.ticks > 10:
             # get the option's position
-            self.posicionar_cursor(i)
+            self.posicionar_cursor(dy)
 
             # get current's sprite, self.sel is current's ID
             current = self.filas.get_sprite(self.sel)
+            h = self.altura_del_texto
             if not self.draw_space_rect.contains(current.rect):
-                h = self.altura_del_texto
-                for x in range(len(self.filas)):
-                    op = self.filas.get_sprite(x)
-                    if i > 0:
-                        op.rect.y -= h + 1
-                    else:
+                if current.rect.y < 0:
+                    for op in self.filas.sprites():
                         op.rect.y += h + 1
+                elif current.rect.y < self.draw_space_rect.bottom:
+                    for op in self.filas.sprites():
+                        op.rect.y -= h + 1
 
             # deselect all and select the chosen one
             for fila in self.filas:
@@ -91,8 +92,7 @@ class DialogInterface(Ventana):
             current.ser_elegido()
             
             self.ticks = 0
-            return current.item.leads
-            
+            return current.item
 
     def scroll(self, dy):
         if self.ticks > 10:

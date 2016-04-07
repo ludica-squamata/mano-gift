@@ -1,5 +1,5 @@
 ﻿from engine.UI import DialogInterface
-
+from engine.globs.eventDispatcher import EventDispatcher
 
 class Elemento:
     """Class for the dialog tree elements."""
@@ -10,7 +10,8 @@ class Elemento:
     indice = None
     locutor = None
     leads = None
-    reqs = {}
+    reqs = None
+    event_data = None
 
     def __init__(self, indice, data):
         self.leads = None
@@ -22,9 +23,13 @@ class Elemento:
         self.locutor = data['loc']
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
+        self.event_data = data.get('event_data', None)
 
         if type(self.leads) is list:
             self.hasLeads = True
+    
+    def post_event(self):
+        EventDispatcher.trigger('DialogEvent',self,self.event_data)
 
     def __repr__(self):
         return self.nombre
@@ -47,6 +52,10 @@ class Elemento:
             return False
         else:
             return True
+
+
+class BranchArray:
+    pass
 
 
 class _ArboldeDialogo:
@@ -166,6 +175,7 @@ class Dialogo:
     SelMode = False
     terminar = False
     sel = 0
+    next = 0
 
     def __init__(self, arbol, *locutores):
         self.frontend = DialogInterface()
@@ -232,7 +242,7 @@ class Dialogo:
             self.frontend.borrar_todo()
             self.frontend.set_loc_img(loc)  # misma chapuza
             self.frontend.set_sel_mode(show)
-            self.elegir_opcion('arriba')
+
         elif type(actual) is tuple:
             choices = list(actual)
             # estoy seguro de que este bloque se puede hacer en un onliner, pero no se como.
@@ -257,7 +267,9 @@ class Dialogo:
             self.cerrar()
 
     def confirmar_seleccion(self):
-        self.dialogo.set_chosen(self.sel)
+        if self.sel.event_data is not None:
+            self.sel.post_event()
+        self.dialogo.set_chosen(self.next)
         self.SelMode = False
         self.hablar()
 
@@ -275,6 +287,8 @@ class Dialogo:
             self.sel = self.frontend.elegir_opcion(-1)
         elif direccion == 'abajo':
             self.sel = self.frontend.elegir_opcion(+1)
+        if self.sel is not None:
+            self.next = self.sel.leads
 
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':
