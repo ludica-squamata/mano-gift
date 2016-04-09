@@ -6,12 +6,14 @@ class Atribuido(AzoeSprite):
     velocidad = 0  # en pixeles por frame
     salud_max = 0  # salud máxima
     salud_act = 0  # salud actual
+    iniciativa = 0
 
     def __init__(self, *args, **kwargs):
         self.velocidad = self.data['velocidad']
         self.fuerza = self.data['fuerza']
         self.salud_max = self.data['salud']
         self.carisma = self.data['carisma']
+        self.iniciativa = self.data['iniciativa']
         self.salud_act = self.salud_max
         super().__init__(*args, **kwargs)
 

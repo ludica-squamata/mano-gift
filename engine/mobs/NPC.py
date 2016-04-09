@@ -19,5 +19,6 @@ class NPC(Autonomo, Parlante, Mob):
             super().mover()
 
     def iniciar_dialogo(self, direccion):
+        self.hablando = True
         self.cambiar_direccion(direccion)
         self.image = self.images['S' + direccion]

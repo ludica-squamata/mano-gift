@@ -2,6 +2,7 @@
     "ID":1,"nombre":"commoner",
     "salud":2,"fuerza":2,
     "velocidad":1,
+    "iniciativa":10,
     "carisma":5,
     "imagenes":{
         "idle":"mobs/imagenes/commoner12.png",

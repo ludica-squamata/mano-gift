@@ -1,5 +1,4 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import EngineData as Ed
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
 from .mob import Mob
@@ -87,6 +86,7 @@ class PC(Mob, Parlante):
 
     def iniciar_dialogo(self):
         x, y = self.direcciones[self.direccion]
+        post_dir = ''
         if x:
             if x > 0:
                 post_dir = 'izquierda'
@@ -97,12 +97,19 @@ class PC(Mob, Parlante):
                 post_dir = 'abajo'
             else:
                 post_dir = 'arriba'
-        else:
-            # esto nunca sucede; está por una correcion de PyCharm
-            post_dir = ''
 
         sprite = self._interact_with_mobs(x, y)
         if sprite is not None:
-            sprite.iniciar_dialogo(post_dir)
+            # este check va a cambiar.
+            if self.iniciativa < sprite.iniciativa:
+                # la iniciativa la gana el NPC si se acerca a hablarle al heroe
+                sprite.iniciar_dialogo(post_dir)
+                super().hablar(sprite)
+            else:
+                # si es el player el que toca Hablar, entonces se abre el menú
+                sprite.iniciar_dialogo(post_dir)
+                self.elegir_tema(sprite)
 
-        return super().hablar(sprite)
+            return True
+
+        return False

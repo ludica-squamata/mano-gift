@@ -40,7 +40,8 @@ class Loader:
                 if data:
                     prop = new_prop(ref, imagen, x, y, data)
                     is_interactive = True
-                    ItemGroup[ref] = prop
+                    if prop.accion is not None:
+                        ItemGroup[ref] = prop
                 else:
                     prop = new_prop(ref, imagen, x, y)
                     is_interactive = False

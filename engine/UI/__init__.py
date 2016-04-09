@@ -1,7 +1,7 @@
-from .menues import *
+from .circularmenus import QuickCircularMenu
 from .Dialog import DialogInterface
-from .QuickCircularMenu import QuickCircularMenu
 from .hud import ProgressBar, HUD
+from .menues import *
 
 __all__ = [
     'Menu',

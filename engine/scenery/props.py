@@ -5,6 +5,8 @@ from .items import *
 
 
 class Escenografia(ShadowSprite, EventListener):
+    accion = None
+
     def __init__(self, nombre, imagen, x, y, data):
         """
         :param nombre:
@@ -22,7 +24,7 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = nombre
         self.tipo = 'Prop'
         self.data = data
-        super().__init__(imagen, x = x, y = y)
+        super().__init__(imagen, x=x, y=y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
 
