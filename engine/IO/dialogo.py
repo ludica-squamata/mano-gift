@@ -1,6 +1,7 @@
 ﻿from engine.UI import DialogInterface
 from engine.globs.eventDispatcher import EventDispatcher
 
+
 class Elemento:
     """Class for the dialog tree elements."""
 
@@ -27,9 +28,9 @@ class Elemento:
 
         if type(self.leads) is list:
             self.hasLeads = True
-    
+
     def post_event(self):
-        EventDispatcher.trigger('DialogEvent',self,self.event_data)
+        EventDispatcher.trigger('DialogEvent', self, self.event_data)
 
     def __repr__(self):
         return self.nombre
@@ -55,7 +56,45 @@ class Elemento:
 
 
 class BranchArray:
-    pass
+    _lenght = 0
+    is_exclusive = False
+    locutor = None
+    array = []
+    flaged = []
+
+    def __init__(self, node, elementos):
+        self.array = []
+        for idx in node.leads:
+            self.array.append(elementos[idx])
+        if node.tipo == 'exclusive':
+            self.is_exclusive = True
+
+        self.locutor = self.array[0].locutor
+
+    def __getitem__(self, item):
+        if type(item) != int:
+            raise TypeError('expected int, got' + str(type(item)))
+        else:
+            return self.array[item]
+
+    def __len__(self):
+        return self._lenght
+
+    def add(self, x):
+        self.array.append(x)
+        self._lenght += 1
+
+    def supress(self, nodo):
+        if nodo in self.array:
+            self.flaged.append(self.array.index(nodo))
+
+    def show(self):
+        to_show = []
+        for i in range(len(self.array)):
+            if i not in self.flaged:
+                to_show.append(self.array[i])
+        self.flaged.clear()
+        return to_show
 
 
 class _ArboldeDialogo:
@@ -69,19 +108,10 @@ class _ArboldeDialogo:
 
         for obj in self._elementos:
             if obj.tipo != 'leaf':
-                if type(obj.leads) is list:
-                    idx = -1
-                    for lead in obj.leads:
-                        idx += 1
-                        # workaround: no sé porque, pero lead queda como Elemento
-                        if type(lead) is int:  # a partir de la segunda vez que se inicia
-                            obj.leads[idx] = self._elementos[lead]  # el diálogo.
-                        else:
-                            obj.leads[idx] = lead
-                    if obj.tipo == 'exclusive':
-                        obj.leads = tuple(obj.leads)
-                else:
+                if not obj.hasLeads:
                     obj.leads = self._elementos[obj.leads]
+                else:
+                    obj.leads = BranchArray(obj, self._elementos)
 
     @staticmethod
     def _crear_lista(datos):
@@ -113,13 +143,12 @@ class _ArboldeDialogo:
         return False
 
     def get_lead_of(self, parent_i, lead_i=0):
-        if isinstance(parent_i, Elemento):
+        if type(parent_i) is Elemento:
             parent_i = self._elementos.index(parent_i)
         item = self._elementos[parent_i]
         if item.tipo != 'leaf':
             if item.hasLeads:
-                if isinstance(item.leads, (list, tuple)):
-                    return item.leads[lead_i]
+                return item.leads[lead_i]
             else:
                 return item.leads
         else:
@@ -134,7 +163,7 @@ class _ArboldeDialogo:
             raise IndexError
 
     def get_actual(self):
-        if isinstance(self._future, (list, tuple)):
+        if type(self._future) is BranchArray:
             return self._future
         else:
             return self._elementos[self._future]
@@ -152,10 +181,10 @@ class _ArboldeDialogo:
         prepara se prepara para devolver el siguiente nodo"""
 
         if self._future is not False:  # last was leaf; close
-            if not isinstance(self._future, (list, tuple)):
+            if not type(self._future) is BranchArray:
                 actual = self.get_actual()  # node or leaf
                 if actual.tipo != 'leaf':
-                    if not isinstance(actual.leads, (list, tuple)):
+                    if not type(actual.leads) is BranchArray:
                         self._future = int(actual.leads.indice)
                     else:
                         self._future = actual.leads
@@ -173,7 +202,6 @@ class _ArboldeDialogo:
 
 class Dialogo:
     SelMode = False
-    terminar = False
     sel = 0
     next = 0
 
@@ -224,45 +252,49 @@ class Dialogo:
     def hablar(self):
 
         actual = self.dialogo.update()
-        if type(actual) is list:
-            show = actual.copy()
-            loc = self.locutores[actual[0].locutor]
+        if type(actual) is BranchArray:
+            if actual.is_exclusive:
+                choices = actual.array.copy()
+                choice = -1
+                for i in range(len(choices)):
+                    if choices[i].reqs is not None:  # tiene precedencia
+                        choice = i
 
-            for nodo in actual:
-                if nodo.reqs is not None:
-                    if "attrs" in nodo.reqs:
-                        for attr in nodo.reqs['attrs']:
-                            if getattr(loc, attr) < nodo.reqs['attrs'][attr]:
-                                show.remove(nodo)
-                    elif "objects" in nodo.reqs:
-                        for obj in nodo.reqs['objects']:
-                            if obj not in loc.inventario:
-                                show.remove(nodo)
-            self.SelMode = True
-            self.frontend.borrar_todo()
-            self.frontend.set_loc_img(loc)  # misma chapuza
-            self.frontend.set_sel_mode(show)
+                reqs = choices[choice].reqs
+                sujeto = self.locutores[reqs['loc']]
+                for attr in reqs['attrs']:
+                    if getattr(sujeto, attr) < reqs['attrs'][attr]:
+                        del choices[choice]
 
-        elif type(actual) is tuple:
-            choices = list(actual)
-            # estoy seguro de que este bloque se puede hacer en un onliner, pero no se como.
-            # seria onda: choice = nodo que tiene reqs
-            choice = -1
-            for i in range(len(choices)):
-                if choices[i].reqs is not None:  # tiene precedencia
-                    choice = i
+                choice = choices[0]
+                self.dialogo.set_chosen(choice)
+                self.hablar()
 
-            reqs = choices[choice].reqs
-            sujeto = self.locutores[reqs['loc']]
-            for attr in reqs['attrs']:
-                if getattr(sujeto, attr) < reqs['attrs'][attr]:
-                    del choices[choice]
+            else:
+                loc = self.locutores[actual.locutor]
 
-            choice = choices[0]
-            self.dialogo.set_chosen(choice)
-            self.hablar()
+                for nodo in actual:
+                    if nodo.reqs is not None:
+                        if "attrs" in nodo.reqs:
+                            for attr in nodo.reqs['attrs']:
+                                if getattr(loc, attr) < nodo.reqs['attrs'][attr]:
+                                    actual.supress(nodo)
+                        elif "objects" in nodo.reqs:
+                            for obj in nodo.reqs['objects']:
+                                if obj not in loc.inventario:
+                                    actual.supress(nodo)
+
+                show = actual.show()
+                self.SelMode = True
+                self.frontend.borrar_todo()
+                self.frontend.set_loc_img(loc)
+                self.frontend.set_sel_mode(show)
+                self.next = show[0].leads
+                self.sel = show[0]
+
         elif type(actual) is Elemento:
             self.mostrar_nodo(actual)
+
         else:
             self.cerrar()
 
@@ -305,3 +337,4 @@ class Dialogo:
             mob = self.locutores[loc]
             mob.hablando = False
         self.frontend.destruir()
+        del self.dialogo

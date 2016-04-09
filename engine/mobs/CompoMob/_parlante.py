@@ -1,6 +1,6 @@
 from ._atribuido import Atribuido
 from engine.IO.dialogo import Dialogo
-from engine.globs import EngineData as ED
+from engine.globs import EngineData as Ed
 
 
 class Parlante(Atribuido):
@@ -14,6 +14,6 @@ class Parlante(Atribuido):
                 self.interlocutor = sprite
                 self.interlocutor.hablando = True
                 sprite.interlocutor = self
-                ED.DIALOG = Dialogo(sprite.dialogo,self,sprite)
+                Ed.DIALOG = Dialogo(sprite.dialogo, self, sprite)
                 return True
         return False
