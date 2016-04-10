@@ -101,13 +101,12 @@ class PC(Mob, Parlante):
         sprite = self._interact_with_mobs(x, y)
         if sprite is not None:
             # este check va a cambiar.
+            sprite.iniciar_dialogo(post_dir)
             if self.iniciativa < sprite.iniciativa:
                 # la iniciativa la gana el NPC si se acerca a hablarle al heroe
-                sprite.iniciar_dialogo(post_dir)
                 super().hablar(sprite)
             else:
                 # si es el player el que toca Hablar, entonces se abre el menú
-                sprite.iniciar_dialogo(post_dir)
                 self.elegir_tema(sprite)
 
             return True

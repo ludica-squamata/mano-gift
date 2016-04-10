@@ -1,0 +1,14 @@
+{
+  "0":{"type":"node","leads":1,"loc":"heroe",
+  "txt":"¿qué puedes decirme acerca de las <b>bananas</b>?"},
+  "1":{"type":"node","leads":2,"loc":"commoner",
+  "txt":"No mucho, solo que los monos se alimentan de ellas."},
+  "2":{"type":"node","leads":3,"loc":"heroe",
+  "txt":"Nosotros los humanos también podemos"},
+  "3":{"type":"node","leads":4,"loc":"commoner",
+  "txt":"Sí, pero es el alimento preferido de los monos"},
+  "4":{"type":"node","leads":5,"loc":"heroe",
+  "txt":"¿Hay <b>monos</b> por aquí?"},
+  "5":{"type":"leaf","loc":"commoner",
+  "txt":"No que yo sepa. Deberías buscar más al norte."}
+}
