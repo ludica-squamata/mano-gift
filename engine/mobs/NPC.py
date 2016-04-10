@@ -22,3 +22,7 @@ class NPC(Autonomo, Parlante, Mob):
         self.hablando = True
         self.cambiar_direccion(direccion)
         self.image = self.images['S' + direccion]
+        
+    def update(self):
+        if not self.hablando:
+            super().update()

@@ -86,22 +86,28 @@ class PC(Mob, Parlante):
 
     def iniciar_dialogo(self):
         x, y = self.direcciones[self.direccion]
-        post_dir = ''
+        inter_dir = ''
+        self_dir = ''
         if x:
             if x > 0:
-                post_dir = 'izquierda'
+                inter_dir = 'izquierda'
+                self_dir = 'derecha'
             else:
-                post_dir = 'derecha'
+                inter_dir = 'derecha'
+                self_dir = 'izquierda'
         elif y:
             if y < 0:
-                post_dir = 'abajo'
+                inter_dir = 'abajo'
+                self_dir = 'arriba'
             else:
-                post_dir = 'arriba'
+                inter_dir = 'arriba'
+                self_dir = 'abajo'
 
         sprite = self._interact_with_mobs(x, y)
         if sprite is not None:
             # este check va a cambiar.
-            sprite.iniciar_dialogo(post_dir)
+            sprite.iniciar_dialogo(inter_dir)
+            self.cambiar_direccion(self_dir)
             if self.iniciativa < sprite.iniciativa:
                 # la iniciativa la gana el NPC si se acerca a hablarle al heroe
                 super().hablar(sprite)
