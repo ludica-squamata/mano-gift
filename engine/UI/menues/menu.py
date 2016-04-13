@@ -24,26 +24,26 @@ class Menu(Ventana):
             'tap': {
                 'hablar': lambda: None,
                 'cancelar': lambda: None,
-                'arriba': lambda dummy: None,
-                'abajo': lambda dummy: None,
-                'izquierda': lambda dummy: None,
-                'derecha': lambda dummy: None
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
             },
             'hold': {
                 'hablar': lambda: None,
                 'cancelar': lambda: None,
-                'arriba': lambda dummy: None,
-                'abajo': lambda dummy: None,
-                'izquierda': lambda dummy: None,
-                'derecha': lambda dummy: None
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
             },
             'release': {
                 'hablar': lambda: None,
                 'cancelar': lambda: None,
-                'arriba': lambda dummy: None,
-                'abajo': lambda dummy: None,
-                'izquierda': lambda dummy: None,
-                'derecha': lambda dummy: None
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
             }
         }
         self.botones = LayeredUpdates()
@@ -92,6 +92,12 @@ class Menu(Ventana):
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()
+    
+    def mantener_presion(self):
+        self.current.mantener_presion()
+
+    def liberar_presion(self):
+        self.current.liberar_presion()
 
     def reset(self):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
