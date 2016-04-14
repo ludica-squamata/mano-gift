@@ -51,7 +51,6 @@ class MenuPersonaje(Menu):
 
         self.ltr_idx = -1  # idx de self.area_input
         self.lin_idx = 0  # idx de self.lineas
-        self.char_name = ''  # resultado final
 
         #generar boton 'Aceptar'
         aceptar = Boton('Aceptar', 3, self.aceptar, (self.area_rect.right+20,self.area_rect.bottom-35))
@@ -158,7 +157,6 @@ class MenuPersonaje(Menu):
         if self.lin_idx < len(self.lineas):
             key = self.cursor.current.nombre #string
             espacio = self.lineas.get_sprite(self.lin_idx).rect
-            self.char_name += key
 
             spr = Sprite() #no hace falta una clase nueva para esto.
             fuente = font.SysFont('Verdana',20)
@@ -166,6 +164,7 @@ class MenuPersonaje(Menu):
             spr.rect = spr.image.get_rect()
             spr.rect.bottom = espacio.top -2
             spr.rect.centerx = espacio.centerx
+            spr.key = key
 
             self.area_input.add(spr)
             self.ltr_idx += 1
@@ -194,7 +193,8 @@ class MenuPersonaje(Menu):
             self.select_line(-1)
 
     def aceptar(self):
-        print(self.char_name)
+        name = ''.join([spr.key for spr in self.area_input])
+        print(name)
 
     def mover_cursor(self,dx,dy):
         """Desplaza el cursor por el teclado en pantalla y controla los limites."""
@@ -219,7 +219,8 @@ class MenuPersonaje(Menu):
         for linea in self.lineas:
             linea.isSelected = False
         self.lin_idx += delta
-        self.lineas.get_sprite(self.lin_idx).isSelected = True
+        if 0 <= self.lin_idx < len(self.lineas):
+            self.lineas.get_sprite(self.lin_idx).isSelected = True
 
     @staticmethod
     def cargar_anims(ruta_imgs):
