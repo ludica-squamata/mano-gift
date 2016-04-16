@@ -116,17 +116,18 @@ class Stage:
             self.del_property(obj.sombra)
         self.del_property(obj)
 
-    # def actualizar_grilla(self):
-    #     for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
-    #         if spr.solido:  # and not spr.es('empujable'):
-    #             x, y = spr.mapX, spr.mapY
-    #             self.grilla[x, y].transitable = False
-
+    def actualizar_grilla(self):
+        self.grilla.update()
+        for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
+            if hasattr(spr,'accion') and spr.accion == 'mover':
+                x, y = spr.mapX//32, spr.mapY//32
+                self.grilla.set_transitable((x, y),False)
+        
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
     def update(self):
-        # self.actualizar_grilla()
+        self.actualizar_grilla()
         for salida in self.salidas:
             salida.update()
 
