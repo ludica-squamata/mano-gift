@@ -1,4 +1,4 @@
-from engine.globs import MobGroup, ItemGroup, Constants as Cs, EngineData as Ed
+from engine.globs import MobGroup, ItemGroup, EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
 from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
 from engine.IO.menucircular import CircularMenu
 from engine.IO.dialogo import Dialogo
@@ -78,7 +78,7 @@ class DialogElement(LetterElement):
 
 class DialogCircularMenu(RenderedCircularMenu, CircularMenu):
     radius = 20
-    layer = Cs.CAPA_OVERLAYS_DIALOGOS
+    layer = CAPA_OVERLAYS_DIALOGOS
 
     def __init__(self, *locutores):
         n, c, i, = 'nombre', 'cascada', 'icono'

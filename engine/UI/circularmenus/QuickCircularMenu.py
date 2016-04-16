@@ -110,7 +110,7 @@ class CommandElement(LetterElement):
 
 class QuickCircularMenu(RenderedCircularMenu, CircularMenu):
     radius = 20
-    layer = Cs.CAPA_OVERLAYS_INVENTARIO
+    layer = CAPA_OVERLAYS_INVENTARIO
 
     def __init__(self):
         n, c, i, cmd = 'nombre', 'cascada', 'icono', 'comando'
