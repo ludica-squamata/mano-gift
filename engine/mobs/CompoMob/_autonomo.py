@@ -13,8 +13,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
     def __init__(self, *args, **kwargs):
         nombre = args[0]['AI']
-        ruta = Md.scripts+nombre+'.py'
-        tree_data = Rs.abrir_json(Md.mobs+'behaviours/'+nombre+'.json')
+        ruta = Md.scripts + nombre + '.py'
+        tree_data = Rs.abrir_json(Md.mobs + 'behaviours/' + nombre + '.json')
         module = machinery.SourceFileLoader("module.name", ruta).load_module()
         self.AI = BehaviourTree(self, tree_data, module)  # function alias!
 
@@ -27,7 +27,7 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
         if self.objetivo in detectados:
             self.velocidad = 2
-            self.AI = movimiento.AI_pursue
+            self.AI = movimiento.ai_pursue
             self.vision = 'circulo'
             self.mover_vis = self.mover_cir_vis
         else:
@@ -39,8 +39,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
     def update(self, *args):
         if not Ed.onPause and not self.dead:
-            detectados = self.oir()+self.ver()
-            #self.determinar_accion(detectados)
+            # detectados = self.oir() + self.ver()
+            # self.determinar_accion(detectados)
             e = self.AI.update()
             if e is not None:
                 self.AI.reset()

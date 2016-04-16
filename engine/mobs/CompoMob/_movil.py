@@ -4,13 +4,13 @@ from ._atribuido import Atribuido
 
 
 class Movil(Atribuido):
-
     def cambiar_direccion(self, direccion=None, img=False):
 
         if direccion in self.direcciones:
             self.direccion = direccion
 
         elif direccion == 'contraria':
+            d = ''
             if self.direccion == 'arriba':
                 d = 'abajo'
             if self.direccion == 'abajo':
@@ -24,11 +24,13 @@ class Movil(Atribuido):
         if img:  # solo vale para el héroe...
             self.image = self.images['S' + self.direccion]
             if direccion == self.direccion:
+                # noinspection PyArgumentList
                 self.mover(*self.direcciones[direccion])
 
+    # noinspection PyMethodOverriding
     def mover(self):
         dx, dy = super().mover(*self.direcciones[self.direccion])
-        self.reubicar(dx,dy)    
+        self.reubicar(dx, dy)
 
     def detectar_colisiones(self, dx, dy):
         col_bordes = False  # colision contra los bordes de la pantalla

@@ -32,7 +32,7 @@ class Nodo:
         else:
             self.image = self.img_i
         self.is_default = False
-    
+
     def restore_status(self):
         self.set_transitable(self._default)
         self.is_default = True
@@ -78,13 +78,13 @@ class Grilla:
         for item in self._modified:
             self._cuadros[item].restore_status()
         self._modified.clear()
-    
-    def set_transitable(self,item,value):
+
+    def set_transitable(self, item, value):
         if item in self._cuadros:
             self._cuadros[item].set_transitable(value)
             if item not in self._modified:
                 self._modified.append(item)
-        
+
     def __getitem__(self, item):
         if type(item) is int:
             if 0 <= item <= self._lenght:

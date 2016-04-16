@@ -87,6 +87,7 @@ class Menu(Ventana):
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:
+            # noinspection PyCallingNonCallable
             self.functions[mode][key]()
 
     def press_button(self):

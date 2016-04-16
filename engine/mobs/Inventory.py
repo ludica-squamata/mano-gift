@@ -1,5 +1,5 @@
 class InventoryError(Exception):
-    def __init__(self, message = None):
+    def __init__(self, message=None):
         self.message = message
 
     def __str__(self):
@@ -43,7 +43,7 @@ class Inventory:
         else:
             return self._contenido[item]
 
-    def __call__(self, tipo = None, espacio = None):
+    def __call__(self, tipo=None, espacio=None):
         subtotales, visto = [], []
         if tipo is None:
             for item in self._contenido:
@@ -80,9 +80,9 @@ class Inventory:
     def cantidad(self, item):
         return self._contenido.count(item)
 
-    def actualizar_maximos(self, nuevoPesoMax, nuevoVolMax):
-        self._volumen_max = nuevoVolMax
-        self._peso_max = nuevoPesoMax
+    def actualizar_maximos(self, nuevopesomax, nuevovolmax):
+        self._volumen_max = nuevovolmax
+        self._peso_max = nuevopesomax
 
     def agregar(self, item):
         if self._volumen_actual + item.volumen <= self._volumen_max:

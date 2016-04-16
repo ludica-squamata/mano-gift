@@ -45,6 +45,7 @@ class Secuence(Composite):
         elif status is Success:
             self.tree.reset()
 
+
 class Selector(Composite):
     name = 'Selector'
 
@@ -78,7 +79,7 @@ class Parallel(Composite):
 
     def __init__(self, tree, idx, children, s=0, f=0):
         super().__init__(tree, idx, children)
-        self.children_status = [i*0 for i in children]
+        self.children_status = [i * 0 for i in children]
         self.success_value = s
         self.failure_value = f
 

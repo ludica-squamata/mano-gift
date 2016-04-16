@@ -22,7 +22,7 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = nombre
         self.tipo = 'Prop'
         self.data = data
-        super().__init__(imagen, x = x, y = y)
+        super().__init__(imagen, x=x, y=y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
 

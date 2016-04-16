@@ -22,7 +22,7 @@ class Salida:
         self.mapY = y
         self.dest = data['dest']
         self.link = data['link']  # string, nombre de la entrada en dest con la cual conecta
-        self.direcciones = data.get('direcciones',['arriba','abajo','izquierda','derecha'])
+        self.direcciones = data.get('direcciones', ['arriba', 'abajo', 'izquierda', 'derecha'])
         self.mask = Mask((w, h))
         self.mask.fill()
         if 'pydevd' in sys.modules:
@@ -47,6 +47,6 @@ class SpriteSalida(AzoeSprite):
     def __init__(self, nombre, x, y, w, h):
         img = Surface((w, h))
         img.fill((255, 255, 0))
-        self.nombre = nombre+'.Sprite'
+        self.nombre = nombre + '.Sprite'
 
         super().__init__(imagen=img, x=x, y=y, z=5000)

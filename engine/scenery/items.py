@@ -1,5 +1,6 @@
 class Item:
     stackable = False
+    tipo = ''
 
     def __init__(self, nombre, imagen, data):
         self.nombre = nombre
@@ -49,14 +50,14 @@ class Consumible(Item):
         if stat == 'salud':
             actual = stat + '_act'
             maximo = stat + '_max'
-            ValActual = getattr(mob, actual)
-            ValMaximo = getattr(mob, maximo)
+            valactual = getattr(mob, actual)
+            valmaximo = getattr(mob, maximo)
 
-            valor = int((mod * ValMaximo) / 100)
-            if valor + ValActual > ValMaximo:
-                valor = ValMaximo
+            valor = int((mod * valmaximo) / 100)
+            if valor + valactual > valmaximo:
+                valor = valmaximo
             else:
-                valor += ValActual
+                valor += valactual
 
             setattr(mob, actual, valor)
 

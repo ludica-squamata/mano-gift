@@ -4,7 +4,7 @@ from .a_star import a_star
 from engine.globs import CUADRO
 
 
-def AI_patrol(mob):
+def ai_patrol(mob):
     curr_p = [mob.mapX, mob.mapY]
     if curr_p == mob.camino[mob.next_p]:
         mob.next_p += 1
@@ -14,36 +14,37 @@ def AI_patrol(mob):
                 mob.camino.reverse()
     punto_proximo = mob.camino[mob.next_p]
 
-    direccion = _determinar_direccion(curr_p, punto_proximo)
+    direccion = determinar_direccion(curr_p, punto_proximo)
     return direccion
 
 
-def AI_pursue(mob):
+def ai_pursue(mob):
     objetivo = mob.objetivo
     curr_p = [mob.mapX, mob.mapY]
     punto_proximo = [objetivo.mapX, objetivo.mapY]
-    direccion = _determinar_direccion(curr_p, punto_proximo)
+    direccion = determinar_direccion(curr_p, punto_proximo)
     return direccion
 
 
-def AI_flee(mob):
+def ai_flee(mob):
     from math import sqrt
-    cX, cY = [mob.mapX, mob.mapY]
+    cx, cy = [mob.mapX, mob.mapY]
     rutas_escape = [[0, 0], [480, 0], [0, 480], [480, 480]]
     dists = []
     dirs = []
     for dx, dy in rutas_escape:
-        dirs.append(_determinar_direccion([cX, cY], [dx, dy]))
-        dists.append(sqrt((dx - cX) ** 2 + (dy - cY) ** 2))
+        dirs.append(determinar_direccion([cx, cy], [dx, dy]))
+        dists.append(sqrt((dx - cx) ** 2 + (dy - cy) ** 2))
 
     direccion = dirs[dists.index(min(dists))]
     return direccion
 
 
 def iniciar_persecucion(mob, objetivo):
-    CURR_POS = int(mob.mapX / 32), int(mob.mapY / 32)
-    OBJ_POS = int(objetivo.mapX / 32), int(objetivo.mapY / 32)
-    ruta = generar_camino(CURR_POS, OBJ_POS, mob.stage.grilla)
+    curr_pos = int(mob.mapX / 32), int(mob.mapY / 32)
+    obj_pos = int(objetivo.mapX / 32), int(objetivo.mapY / 32)
+    ruta = generar_camino(curr_pos, obj_pos, mob.stage.grilla)
+    camino = None
     if type(ruta) == list:
         camino = simplificar_camino(ruta)
     elif ruta is None:
@@ -54,8 +55,8 @@ def iniciar_persecucion(mob, objetivo):
 
 
 def generar_camino(inicio, destino, grilla):
-    '''Genera un camino de puntos de grilla.
-    inicio y destino deben ser un tuple Gx,Gy'''
+    """Genera un camino de puntos de grilla.
+    inicio y destino deben ser un tuple Gx,Gy"""
     ruta = a_star(grilla[inicio], grilla[destino], grilla)
     if type(ruta) == str:
         camino = [[int(i) * CUADRO for i in punto.strip('()').split(',')] for punto in ruta.split(';')]
@@ -67,6 +68,7 @@ def simplificar_camino(camino):
     x, y = camino[0]
     fin = camino[-1]
     simple = []
+    nx, ny = 0, 0
     for i in range(len(camino[1:])):
         dx, dy = camino[i]
         if i + 1 <= len(camino):
@@ -80,12 +82,12 @@ def simplificar_camino(camino):
     return simple
 
 
-def _determinar_direccion(curr_p, next_p):
-    pX, pY = curr_p
-    nX, nY = next_p
+def determinar_direccion(curr_p, next_p):
+    px, py = curr_p
+    nx, ny = next_p
 
-    dx = pX - nX
-    dy = pY - nY
+    dx = px - nx
+    dy = py - ny
 
     if dx > dy:
         if dy < 0:

@@ -18,24 +18,24 @@ class MenuPausa(Menu):
             {m: "Status", p: [x, 171], k: {a: "Equipo", b: "Grupo"}, c: self.new_menu},
             {m: "Grupo", p: [x, 210], k: {a: "Status", b: "Opciones"}, c: self.new_menu},
             {m: "Opciones", p: [x, 249], k: {a: "Grupo", b: "Debug"}, c: self.new_menu},
-            {m: "Debug", p: [x, 288], k: {a: 'Opciones',b:"Personaje"}, c: self.new_menu},
-            {m: "Personaje", p:[x, 327], k: {a: 'Debug',b:"Items"}, c: self.new_menu}
-            ]
+            {m: "Debug", p: [x, 288], k: {a: 'Opciones', b: "Personaje"}, c: self.new_menu},
+            {m: "Personaje", p: [x, 327], k: {a: 'Debug', b: "Items"}, c: self.new_menu}
+        ]
 
         self.establecer_botones(botones, 6)
-        
+
         self.functions.update({
-            'tap':{
-                'hablar':self.press_button,
+            'tap': {
+                'hablar': self.press_button,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo')
             },
-            'hold':{
+            'hold': {
                 'hablar': self.mantener_presion,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo')
             },
-            'release':{
+            'release': {
                 'hablar': self.liberar_presion,
             }
         })
@@ -74,7 +74,7 @@ class MenuPausa(Menu):
         return False
 
     def new_menu(self):
-        EventDispatcher.trigger('SetMode',self.nombre,{'mode': 'NewMenu','value':self.current.nombre})
+        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'NewMenu', 'value': self.current.nombre})
 
     def reset(self):
         """Reseta el presionado de todos los botones, y deja seleccionado

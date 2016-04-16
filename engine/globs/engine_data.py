@@ -62,9 +62,9 @@ class EngineData:
     def on_cambiarmapa(cls, evento):
         if evento.data['mob'] is cls.HERO:
             cls.setear_mapa(evento.data['dest'], evento.data['link'])
-    
+
     @classmethod
-    def on_setkey(cls,event):
+    def on_setkey(cls, event):
         """
         :param event:
         :type event: AzoeEvent
@@ -74,7 +74,7 @@ class EngineData:
 
         if event.data['mode'] == 'SetKey':
             cls.setKey = value
-    
+
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
 EventDispatcher.register(EngineData.on_setkey, "SetMode")

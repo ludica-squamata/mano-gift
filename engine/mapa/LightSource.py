@@ -128,6 +128,7 @@ class DayLight:
         for item in EngineData.MAPA_ACTUAL.properties:
             if self.rect.colliderect(item.rect):
                 if item.proyectaSombra:
+                    # noinspection PyProtectedMember
                     item._luces[4] = 1
 
 __all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']

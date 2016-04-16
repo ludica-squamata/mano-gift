@@ -44,7 +44,7 @@ class MenuEquipo(MenuItems):
             {n: 'mano mala', e: [160, 352], t: [165, 320], k: {a: 'cinto', b: 'anillo 2', i: 'mano buena', d: 'cinto'}},
             {n: 'botas', e: [224, 384], t: [223, 368], k: {a: 'cinto', b: 'anillo 2', i: 'anillo 2'}},
             {n: 'capa', e: [32, 320], t: [32, 304], k: {a: 'brazales', b: 'guantes', d: 'mano buena'}},
-            {n: 'cinto', e: [224, 320], t: [224, 304], k: {a: 'grebas', b: 'botas', i: 'mano mala', }},
+            {n: 'cinto', e: [224, 320], t: [224, 304], k: {a: 'grebas', b: 'botas', i: 'mano mala'}},
             {n: 'guantes', e: [32, 384], t: [22, 368], k: {a: 'capa', b: 'anillo 1', d: 'anillo 1'}},
             {n: 'anillo 1', e: [96, 416], t: [90, 400], k: {a: 'mano buena', i: 'guantes', d: 'anillo 2'}},
             {n: 'anillo 2', e: [160, 416], t: [154, 400], k: {a: 'mano mala', i: 'anillo 1', d: 'botas'}},
@@ -71,36 +71,36 @@ class MenuEquipo(MenuItems):
 
         # determinar qué tecla activa qué función.
         self.functions = {
-            'espacios':{
-                'tap':{
+            'espacios': {
+                'tap': {
                     'hablar': self.cambiar_foco,
                     'arriba': lambda: self.select_one('arriba'),
                     'abajo': lambda: self.select_one('abajo'),
                     'izquierda': lambda: self.select_one('izquierda'),
                     'derecha': lambda: self.select_one('derecha')
                 },
-                'hold':{
+                'hold': {
                     'arriba': lambda: self.select_one('arriba'),
                     'abajo': lambda: self.select_one('abajo'),
                     'izquierda': lambda: self.select_one('izquierda'),
                     'derecha': lambda: self.select_one('derecha')
                 },
-                'release':{
-                    'hablar':self.cambiar_foco
+                'release': {
+                    'hablar': self.cambiar_foco
                 }
             },
-            'items':{
-                'tap':{
+            'items': {
+                'tap': {
                     'hablar': self.equipar_item,
                     'arriba': lambda: self.elegir_fila('arriba'),
                     'abajo': lambda: self.elegir_fila('abajo')
                 },
-                'hold':{
+                'hold': {
                     'arriba': lambda: self.elegir_fila('arriba'),
                     'abajo': lambda: self.elegir_fila('abajo')
                 },
-                'release':{
-                    'hablar':self.equipar_item
+                'release': {
+                    'hablar': self.equipar_item
                 }
             }
         }
@@ -229,8 +229,9 @@ class MenuEquipo(MenuItems):
         :param key: string
         """
         if key in self.functions[self.foco][mode]:
+            # noinspection PyCallingNonCallable
             self.functions[self.foco][mode][key]()
-    
+
     def update(self):
         if self.cambio:
             self.llenar_espacio_selectivo()

@@ -22,11 +22,11 @@ class MenuItems(Menu):
         self.crear_contenido()
         self.crear_espacio_descriptivo((self.canvas.get_width() - 15), 93)
         self.functions.update({
-            'tap':{
+            'tap': {
                 'arriba': lambda: self.elegir_fila('arriba'),
                 'abajo': lambda: self.elegir_fila('abajo')
             },
-            'hold':{
+            'hold': {
                 'arriba': lambda: self.elegir_fila('arriba'),
                 'abajo': lambda: self.elegir_fila('abajo')
             }
@@ -56,7 +56,7 @@ class MenuItems(Menu):
         rect = self.canvas.blit(marco, (7, 340))
         self.description_area = Rect((12, 363), (rect.w - 20, rect.h - 42))
 
-    def elegir_fila(self, direccion = None):
+    def elegir_fila(self, direccion=None):
         if direccion == 'arriba':
             j = -1
         elif direccion == 'abajo':

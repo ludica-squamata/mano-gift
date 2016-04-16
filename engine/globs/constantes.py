@@ -17,7 +17,9 @@ CAPA_OVERLAYS_HUD = 1
 CAPA_OVERLAYS_DIALOGOS = 2  # ocupan un framento de la pantalla
 CAPA_OVERLAYS_MENUS = 3  # ocupan toda o gran parte de la pantalla
 
+# noinspection PyArgumentList
 COLOR_COLISION = Color(255, 0, 255)  # Fuchsia #FF00FF
+# noinspection PyArgumentList
 COLOR_IGNORADO = Color(1, 1, 1)
 
 # constantes de eventos de teclado

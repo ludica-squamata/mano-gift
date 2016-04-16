@@ -250,6 +250,7 @@ class Noche(AzoeSprite):
         for luz in self.luces:
             luz.update()
 
+
 class Tiempo:
     FPS = time.Clock()
     dia, _frames = 0, 0

@@ -1,5 +1,4 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import EngineData as Ed
 from .Inventory import Inventory, InventoryError
 from .CompoMob import Parlante
 from .mob import Mob
@@ -11,6 +10,7 @@ class PC(Mob, Parlante):
         super().__init__(data, x, y, focus=True)
         self.inventario = Inventory(10, 10 + self.fuerza)
 
+    # noinspection PyMethodOverriding
     def mover(self, dx, dy):
         self.moviendose = True
         self.animar_caminar()
