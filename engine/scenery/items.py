@@ -50,14 +50,14 @@ class Consumible(Item):
         if stat == 'salud':
             actual = stat + '_act'
             maximo = stat + '_max'
-            valor_actual = getattr(mob, actual)
-            valor_maximo = getattr(mob, maximo)
+            valactual = getattr(mob, actual)
+            valmaximo = getattr(mob, maximo)
 
-            valor = int((mod * valor_maximo) / 100)
-            if valor + valor_actual > valor_maximo:
-                valor = valor_maximo
+            valor = int((mod * valmaximo) / 100)
+            if valor + valactual > valmaximo:
+                valor = valmaximo
             else:
-                valor += valor_actual
+                valor += valactual
 
             setattr(mob, actual, valor)
 

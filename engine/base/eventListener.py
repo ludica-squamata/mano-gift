@@ -1,11 +1,13 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import ModData as MD
+from engine.globs import ModData as Md
 from importlib import machinery
-import types, sys
+import types
+import sys
+
 
 class EventListener:
-
     event_handlers = {}
+    data = None
 
     def add_listeners(self):
         """
@@ -14,13 +16,15 @@ class EventListener:
         """
         if self.data.get('script') and self.data.get('eventos'):
             # cargar un archivo por ruta
-            loader = machinery.SourceFileLoader("module.name", MD.scripts+self.data['script']+'.py')
+            loader = machinery.SourceFileLoader("module.name", Md.scripts + self.data['script'] + '.py')
+            m = None
             if sys.version_info.minor == 3:
                 m = loader.load_module()
             elif sys.version_info.minor == 4:
                 # en 3.4 lo cambiaron a exec_module()
+                # noinspection PyArgumentList
                 m = loader.exec_module()
-            
+
             for event_name, func_name in self.data['eventos'].items():
                 f = getattr(m, func_name)
                 if f:

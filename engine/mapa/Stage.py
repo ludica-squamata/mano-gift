@@ -1,13 +1,12 @@
-from engine.globs import Constants as Cs, Tiempo, TimeStamp
-from engine.globs import ModData as Md
-from engine.mobs.scripts.a_star import Grilla
-from pygame.sprite import Sprite, LayeredUpdates
+from engine.globs import Tiempo, TimeStamp, ModData as Md, GRUPO_SALIDAS, GRUPO_ITEMS, COLOR_COLISION
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import Resources as Rs
-from .loader import Loader
 from .LightSource import DayLight  # SpotLight
+from .loader import Loader
+from .grilla import Grilla
+from pygame.sprite import Sprite, LayeredUpdates
 from pygame import mask, Rect, Surface
-from engine.globs.eventDispatcher import EventDispatcher
 
 
 class Stage:
@@ -71,7 +70,7 @@ class Stage:
                 Renderer.camara.add_real(salida.sprite)
 
     def add_property(self, obj, _layer, add_interactive=False):
-        if _layer == Cs.GRUPO_SALIDAS:
+        if _layer == GRUPO_SALIDAS:
             self.salidas.append(obj)
         else:
             self.properties.add(obj, layer=_layer)
@@ -116,17 +115,18 @@ class Stage:
             self.del_property(obj.sombra)
         self.del_property(obj)
 
-    # def actualizar_grilla(self):
-    #     for spr in self.properties.get_sprites_from_layer(Cs.GRUPO_ITEMS):
-    #         if spr.solido:  # and not spr.es('empujable'):
-    #             x, y = spr.mapX, spr.mapY
-    #             self.grilla[x, y].transitable = False
+    def actualizar_grilla(self):
+        self.grilla.update()
+        for spr in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
+            if hasattr(spr, 'accion') and spr.accion == 'mover':
+                x, y = spr.mapX // 32, spr.mapY // 32
+                self.grilla.set_transitable((x, y), False)
 
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
     def update(self):
-        # self.actualizar_grilla()
+        self.actualizar_grilla()
         for salida in self.salidas:
             salida.update()
 
@@ -148,7 +148,7 @@ class ChunkMap(Sprite):
         if w < 800 or h < 800:
             img = Surface((800, 800))
             col = img.copy()
-            col.fill(Cs.COLOR_COLISION)
+            col.fill(COLOR_COLISION)
 
             _rect = img.get_rect()
             topleft = imagen.get_rect(center=_rect.center)
@@ -160,7 +160,7 @@ class ChunkMap(Sprite):
             col = colisiones
 
         self.image = img
-        self.mask = mask.from_threshold(col, Cs.COLOR_COLISION, (1, 1, 1, 255))
+        self.mask = mask.from_threshold(col, COLOR_COLISION, (1, 1, 1, 255))
         self.rect = img.get_rect(topleft=(off_x, off_y))
 
         self.cargar_limites(data.get('limites', self.limites))

@@ -1,6 +1,6 @@
 from pygame.sprite import LayeredUpdates
 from pygame import Rect, draw
-from .constantes import Constants as Cs
+from .constantes import ANCHO, ALTO
 import sys
 
 
@@ -12,7 +12,7 @@ class Camara:
     visible = LayeredUpdates()  # objetos que se ven (incluye sombras)
     real = LayeredUpdates()  # objetos reales del mundo (no incluye sombras)
     x, y = 0, 0
-    w, h = Cs.ANCHO, Cs.ALTO
+    w, h = ANCHO, ALTO
     rect = Rect(x, y, w, h)
 
     @classmethod

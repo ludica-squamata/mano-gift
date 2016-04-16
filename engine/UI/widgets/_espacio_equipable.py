@@ -24,7 +24,7 @@ class EspacioEquipable(BaseWidget):
         if item:
             self.ocupar(item)
         self.nombre = nombre
-        self.rect = self.image.get_rect(topleft = (x, y))
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     @staticmethod
     def crear_base(color):

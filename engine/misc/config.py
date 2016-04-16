@@ -1,6 +1,7 @@
 from .resources import Resources
 import os
 
+
 class Config:
     # configuraciones
     data = {}
@@ -9,7 +10,7 @@ class Config:
     __defaults = {
         "mostrar_intro": True,
         "recordar_menus": True,
-        "metodo_de_entrada":'teclado',
+        "metodo_de_entrada": 'teclado',
 
         "teclas": {
             "arriba": 273,
@@ -22,11 +23,11 @@ class Config:
             "cancelar": 97,
             "menu": 13,
             "menu rapido": 122,
-            
+
             "salir": 27
         },
-        
-        "botones":{
+
+        "botones": {
             "abajo": 13,
             "accion": 3,
             "arriba": 12,
@@ -53,7 +54,7 @@ class Config:
         return cls.data
 
     @classmethod
-    def defaults(cls, clave = None):
+    def defaults(cls, clave=None):
         dato = cls.__defaults
         if clave is not None:
             if not isinstance(clave, list):
@@ -66,7 +67,7 @@ class Config:
         return dato
 
     @classmethod
-    def dato(cls, clave = None):
+    def dato(cls, clave=None):
         dato = cls.cargar()
         if clave is not None:
             if not isinstance(clave, list):

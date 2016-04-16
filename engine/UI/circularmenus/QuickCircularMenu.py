@@ -1,6 +1,6 @@
 from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
 from engine.IO.menucircular import CircularMenu
-from engine.globs import EngineData as Ed, Constants as Cs
+from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO
 from pygame import font
 
 

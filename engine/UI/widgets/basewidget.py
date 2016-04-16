@@ -5,8 +5,9 @@ from pygame import Surface, Rect, SRCALPHA
 
 class BaseWidget(Estilo, AzoeSprite):
     enabled = True
-    # canvas = None
     isSelected = False
+    img_sel = None
+    img_uns = None
 
     def __init__(self, img):
         super().__init__(img)
@@ -27,13 +28,13 @@ class BaseWidget(Estilo, AzoeSprite):
         canvas = Surface((ancho, alto))
 
         clip = Rect(0, 0, ancho, alto)
-        canvas.fill(self.bg_bisel_bg, rect = clip)
+        canvas.fill(self.bg_bisel_bg, rect=clip)
 
         clip = Rect(3, 3, ancho, alto)
-        canvas.fill(self.bg_bisel_fg, rect = clip)
+        canvas.fill(self.bg_bisel_fg, rect=clip)
 
         clip = Rect(3, 3, ancho - 7, alto - 7)
-        canvas.fill(self.bg_cnvs, rect = clip)
+        canvas.fill(self.bg_cnvs, rect=clip)
 
         return canvas
 
@@ -41,13 +42,13 @@ class BaseWidget(Estilo, AzoeSprite):
         canvas = Surface((ancho, alto))
 
         clip = Rect(0, 0, ancho, alto)
-        canvas.fill(self.bg_bisel_fg, rect = clip)
+        canvas.fill(self.bg_bisel_fg, rect=clip)
 
         clip = Rect(3, 3, ancho, alto)
-        canvas.fill(self.bg_bisel_bg, rect = clip)
+        canvas.fill(self.bg_bisel_bg, rect=clip)
 
         clip = Rect(3, 3, ancho - 7, alto - 7)
-        canvas.fill(self.bg_cnvs, rect = clip)
+        canvas.fill(self.bg_cnvs, rect=clip)
 
         return canvas
 
@@ -55,10 +56,10 @@ class BaseWidget(Estilo, AzoeSprite):
         marco = Surface([ancho, alto], SRCALPHA)
 
         clip = Rect(0, 0, ancho, alto)
-        marco.fill(self.bg_bisel_bg, rect = clip)
+        marco.fill(self.bg_bisel_bg, rect=clip)
 
         clip = Rect(3, 3, ancho, alto)
-        marco.fill(self.bg_bisel_fg, rect = clip)
+        marco.fill(self.bg_bisel_fg, rect=clip)
 
         clip = Rect(3, 3, ancho - 7, alto - 7)
         marco.fill((0, 0, 0, 0), clip)

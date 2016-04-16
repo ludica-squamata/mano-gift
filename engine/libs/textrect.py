@@ -1,10 +1,13 @@
 #! /usr/bin/env python
 
+
 class TextRectException(BaseException):
-    def __init__(self, message = None):
+    def __init__(self, message=None):
         self.message = message
+
     def __str__(self):
         return self.message
+
 
 def render_textrect(string, font, rect, text_color, background_color, justification=0):
     """Returns a surface containing the passed text string, reformatted
@@ -30,7 +33,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
     """
 
     from pygame import Surface
-    
+
     final_lines = []
 
     requested_lines = string.splitlines()
@@ -44,7 +47,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
             # if any of our words are too long to fit, return.
             for word in words:
                 if font.size(word)[0] >= rect.width:
-                    raise TextRectException ("The word " + word + " is too long to fit in the rect passed.")
+                    raise TextRectException("The word " + word + " is too long to fit in the rect passed.")
             # Start a new line
             accumulated_line = ""
             for word in words:
@@ -67,7 +70,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
     accumulated_height = 0
     for line in final_lines:
         if accumulated_height + font.size(line)[1] >= rect.height:
-            raise TextRectException ("Once word-wrapped, the text string was too tall to fit in the rect.")
+            raise TextRectException("Once word-wrapped, the text string was too tall to fit in the rect.")
         if line != "":
             tempsurface = font.render(line, 1, text_color)
             if justification == 0:
@@ -77,14 +80,15 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
             elif justification == 2:
                 surface.blit(tempsurface, (rect.width - tempsurface.get_width(), accumulated_height))
             else:
-                raise TextRectException ("Invalid justification argument: " + str(justification))
+                raise TextRectException("Invalid justification argument: " + str(justification))
         accumulated_height += font.size(line)[1]
 
     return surface
 
 
 if __name__ == '__main__':
-    import pygame,sys
+    import pygame
+    import sys
     import pygame.font
     from pygame.locals import *
 
@@ -94,10 +98,11 @@ if __name__ == '__main__':
 
     my_font = pygame.font.Font(None, 22)
 
+    # noinspection PyPep8
     my_string = "Hi there! I'm a nice bit of wordwrapped text. Won't you be my friend? Honestly, wordwrapping is easy, with David's fancy new render_textrect() function.\nThis is a new line.\n\nThis is another one.\n\n\nAnother line, you lucky dog."
 
     my_rect = pygame.Rect((40, 40, 300, 300))
-    
+
     rendered_text = render_textrect(my_string, my_font, my_rect, (216, 216, 216), (48, 48, 48), 0)
 
     if rendered_text:
@@ -109,6 +114,3 @@ if __name__ == '__main__':
         pass
     pygame.quit()
     sys.exit()
-
-
-

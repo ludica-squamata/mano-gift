@@ -1,5 +1,5 @@
 from math import tan, radians
-from pygame import Color, Surface, draw, mask, transform
+from pygame import Surface, draw, mask, transform
 from engine.globs import MobGroup
 from ._atribuido import Atribuido
 
@@ -27,18 +27,15 @@ class Sensitivo(Atribuido):
 
         Devuelve un surface."""
 
-        def _ancho(largo):
+        def _ancho(_largo):
             an = radians(40)
-            return round(largo * round(tan(an), 2))
+            return round(_largo * round(tan(an), 2))
 
         ancho = _ancho(largo)
 
-        negro = Color(0, 0, 0)
-        azul = Color(0, 0, 255)
-
         megasurf = Surface((ancho * 2, largo))
-        draw.polygon(megasurf, azul, [[0, 0], [ancho, largo], [ancho * 2, 0]])
-        megasurf.set_colorkey(negro)
+        draw.polygon(megasurf, (0, 0, 255), [[0, 0], [ancho, largo], [ancho * 2, 0]])
+        megasurf.set_colorkey((0, 0, 0))
 
         return megasurf
 
@@ -47,11 +44,9 @@ class Sensitivo(Atribuido):
         """crea un circulo sensorioal, que se usa para que el mob
         detecte otros mobs y objetos"""
 
-        negro = Color(0, 0, 0)
-        azul = Color(0, 0, 255)
         surf = Surface((radio * 2, radio * 2))
-        draw.circle(surf, azul, [radio, radio], radio, 0)
-        surf.set_colorkey(negro)
+        draw.circle(surf, (0, 0, 255), [radio, radio], radio, 0)
+        surf.set_colorkey((0, 0, 0))
         return surf
 
     def mover_tri_vis(self, direccion):
@@ -113,6 +108,7 @@ class Sensitivo(Atribuido):
             self.ultima_direccion = self.direccion
 
         self.mover_vis(direccion)
+        mob = None
         for mob in MobGroup:
             if mob != self:
                 x, y = self.vx - mob.mapX, self.vy - mob.mapY

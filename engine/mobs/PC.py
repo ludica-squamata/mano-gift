@@ -10,6 +10,7 @@ class PC(Parlante,Mob):
         super().__init__(data, x, y, focus=True)
         self.inventario = Inventory(10, 10 + self.fuerza)
 
+    # noinspection PyMethodOverriding
     def mover(self, dx, dy):
         self.moviendose = True
         self.animar_caminar()

@@ -1,7 +1,7 @@
 from random import choice
 from engine.mobs.behaviortrees import Leaf, Success, Failure
 from engine.mobs.scripts.a_star import a_star
-from engine.mobs.scripts.movimiento import _determinar_direccion
+from engine.mobs.scripts.movimiento import determinar_direccion
 from engine.globs import EngineData as Ed
 
 
@@ -64,7 +64,7 @@ class Move(Leaf):
         pi = mapa[e.mapX//32, e.mapY//32]
 
         if pi != pd:
-            direccion = _determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
+            direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             e.cambiar_direccion(direccion)
             e.mover()
 

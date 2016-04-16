@@ -2,7 +2,7 @@ from pygame.sprite import LayeredUpdates
 from pygame.key import name as key_name
 from pygame import Rect, font, joystick
 from engine.UI.widgets import Fila
-from engine.globs.constantes import Constants as Cs
+from engine.globs.constantes import TECLAS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc.config import Config as Cfg
 from engine.libs.textrect import render_textrect
@@ -139,10 +139,10 @@ class MenuOpciones(MenuPausa, Menu):
         nombre = ''
         if opcion.nombre == 'Teclado':
             nombre = 'Gamepad'
-            Cs.TECLAS.asignar(Cfg.dato('botones'))
+            TECLAS.asignar(Cfg.dato('botones'))
         elif opcion.nombre == 'Gamepad':
             nombre = 'Teclado'
-            Cs.TECLAS.asignar(Cfg.dato('teclas'))
+            TECLAS.asignar(Cfg.dato('teclas'))
 
         opcion.set_text(nombre, 88, 1)
         Cfg.asignar('metodo_de_entrada', nombre.lower())

@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, Constants as Cs, ModData as Md
+from engine.globs import EngineData as Ed, ModData as Md, ANCHO, ALTO
 from pygame.sprite import LayeredUpdates
 from engine.UI.widgets import Fila
 from .menu import Menu
@@ -12,24 +12,24 @@ class MenuDebug(Menu):
 
     def __init__(self):
         super().__init__("Mano-Gift: Selector de Escenas")
-        
+
         self.functions.update({
-            'tap':{
-                'hablar':self.cargar_escena,
+            'tap': {
+                'hablar': self.cargar_escena,
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
-            'hold':{
+            'hold': {
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
-            'release':{
-                'hablar':self.cargar_escena
+            'release': {
+                'hablar': self.cargar_escena
             }
         })
-        
+
         self.filas = LayeredUpdates()
-        self.crear_espacio_de_escenas(Cs.ANCHO - 37, Cs.ALTO / 2.4)
+        self.crear_espacio_de_escenas(ANCHO - 37, ALTO / 2.4)
         self.elegir_opcion(0)
 
     @staticmethod
@@ -46,7 +46,7 @@ class MenuDebug(Menu):
         rect = self.canvas.blit(escenas, (7, 40))
         self.draw_space = escenas.subsurface(((0, 0), (rect.w - 8, rect.h - 30)))
         self.draw_space.fill(self.bg_cnvs)
-        self.draw_space_rect = escenas.get_rect(topleft = (11, 65))
+        self.draw_space_rect = escenas.get_rect(topleft=(11, 65))
 
         h = self.fuente_M.get_height() + 1
         self.escenas = self.cargar_escenas()  # lista

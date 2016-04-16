@@ -1,8 +1,8 @@
 from engine.libs import render_tagged_text
-from .widgets import Fila, Ventana
+from .widgets import Fila
 from pygame import Rect, Surface
 from pygame.sprite import LayeredUpdates
-from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.renderer import Renderer
 
 
@@ -15,7 +15,7 @@ class DialogInterface(Ventana):
     w, h = 0, 0
 
     def __init__(self):
-        image = Surface((int(Cs.ANCHO), int(Cs.ALTO / 5)))
+        image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(self.bg_cnvs)
         super().__init__(image)
 
@@ -28,8 +28,8 @@ class DialogInterface(Ventana):
 
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
-        self.ubicar(0, Cs.ALTO - int(Cs.ALTO / 5))
-        Renderer.add_overlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
+        self.ubicar(0, ALTO - int(ALTO / 5))
+        Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
     def destruir(self):
         Ed.DIALOG = None

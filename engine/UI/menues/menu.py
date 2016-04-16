@@ -1,5 +1,5 @@
 from engine.UI.widgets import Ventana
-from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs import EngineData as Ed, ANCHO, ALTO
 from pygame.sprite import LayeredUpdates
 from pygame import Rect
 from engine.libs.textrect import render_textrect
@@ -18,32 +18,32 @@ class Menu(Ventana):
 
     def __init__(self, titulo):
         self.nombre = titulo
-        self.canvas = self.create_raised_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
-        self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
+        self.canvas = self.create_raised_canvas(ANCHO - 20, ALTO - 20)
+        self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, ANCHO - 20)
         self.functions = {
             'tap': {
                 'hablar': lambda: None,
                 'cancelar': lambda: None,
-                'arriba': lambda dummy: None,
-                'abajo': lambda dummy: None,
-                'izquierda': lambda dummy: None,
-                'derecha': lambda dummy: None
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
             },
             'hold': {
                 'hablar': lambda: None,
                 'cancelar': lambda: None,
-                'arriba': lambda dummy: None,
-                'abajo': lambda dummy: None,
-                'izquierda': lambda dummy: None,
-                'derecha': lambda dummy: None
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
             },
             'release': {
                 'hablar': lambda: None,
                 'cancelar': lambda: None,
-                'arriba': lambda dummy: None,
-                'abajo': lambda dummy: None,
-                'izquierda': lambda dummy: None,
-                'derecha': lambda dummy: None
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
             }
         }
         self.botones = LayeredUpdates()
@@ -87,11 +87,18 @@ class Menu(Ventana):
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:
+            # noinspection PyCallingNonCallable
             self.functions[mode][key]()
 
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()
+    
+    def mantener_presion(self):
+        self.current.mantener_presion()
+
+    def liberar_presion(self):
+        self.current.liberar_presion()
 
     def reset(self):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
