@@ -1,4 +1,4 @@
-#from .Prop import Prop
 from .salida import Salida
+from .grilla import Grilla
 from .Stage import Stage
-from .LightSource import ImageLight, SpotLight, GradientSpotLight, SquareLight, GradientSquareLight, DayLight
+from .LightSource import *

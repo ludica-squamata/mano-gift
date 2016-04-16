@@ -130,3 +130,5 @@ class DayLight:
             if self.rect.colliderect(item.rect):
                 if item.proyectaSombra:
                     item._luces[4] = 1
+
+__all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']

@@ -1,11 +1,11 @@
 from engine.globs import Constants as Cs, Tiempo, TimeStamp
 from engine.globs import ModData as Md
-from engine.mobs.scripts.a_star import Grilla
 from pygame.sprite import Sprite, LayeredUpdates
 from engine.globs.renderer import Renderer
 from engine.misc import Resources as Rs
 from .loader import Loader
 from .LightSource import DayLight  # SpotLight
+from .grilla import Grilla
 from pygame import mask, Rect, Surface
 from engine.globs.eventDispatcher import EventDispatcher
 
