@@ -1,5 +1,5 @@
 from engine.UI.widgets import Ventana
-from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs import EngineData as Ed, ANCHO, ALTO
 from pygame.sprite import LayeredUpdates
 from pygame import Rect
 from engine.libs.textrect import render_textrect
@@ -18,8 +18,8 @@ class Menu(Ventana):
 
     def __init__(self, titulo):
         self.nombre = titulo
-        self.canvas = self.create_raised_canvas(Cs.ANCHO - 20, Cs.ALTO - 20)
-        self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, Cs.ANCHO - 20)
+        self.canvas = self.create_raised_canvas(ANCHO - 20, ALTO - 20)
+        self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, ANCHO - 20)
         self.functions = {
             'tap': {
                 'hablar': lambda: None,

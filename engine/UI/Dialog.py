@@ -1,8 +1,8 @@
 from engine.libs import render_tagged_text
-from .widgets import Fila, Ventana
+from .widgets import Fila
 from pygame import Rect, Surface
 from pygame.sprite import LayeredUpdates
-from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.renderer import Renderer
 from .widgets.Ventana import Ventana
 
@@ -16,7 +16,7 @@ class DialogInterface(Ventana):
     w, h = 0, 0
 
     def __init__(self):
-        image = Surface((int(Cs.ANCHO), int(Cs.ALTO / 5)))
+        image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(self.bg_cnvs)
         super().__init__(image)
 
@@ -29,14 +29,14 @@ class DialogInterface(Ventana):
 
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
-        self.ubicar(0, Cs.ALTO-int(Cs.ALTO/5))
-        Renderer.add_overlay(self, Cs.CAPA_OVERLAYS_DIALOGOS)
+        self.ubicar(0, ALTO - int(ALTO / 5))
+        Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
     def destruir(self):
         Ed.DIALOG = None
         Renderer.del_overlay(self)
 
-    def ubicar(self, x = 0, y = 0, z = 0):
+    def ubicar(self, x=0, y=0, z=0):
         if x < 0 or y < 0:
             raise ValueError('Coordenadas inválidas')
         self.rect.move_ip(x, y)
@@ -44,7 +44,7 @@ class DialogInterface(Ventana):
     def set_text(self, texto):
         self.text_rect.y = 3
         width = self.draw_space_rect.width
-        self.rendered_text = render_tagged_text(texto, self.tags, width, bgcolor = self.bg_cnvs)
+        self.rendered_text = render_tagged_text(texto, self.tags, width, bgcolor=self.bg_cnvs)
         self.text_rect.size = self.rendered_text.get_size()
 
     def set_sel_mode(self, opciones):
@@ -90,7 +90,7 @@ class DialogInterface(Ventana):
             for fila in self.filas:
                 fila.ser_deselegido()
             current.ser_elegido()
-            
+
             self.ticks = 0
             return current.item
 
@@ -99,7 +99,7 @@ class DialogInterface(Ventana):
             if not self.draw_space_rect.contains(self.text_rect):
                 if self.text_rect.top + dy < self.draw_space_rect.top:
                     if self.text_rect.bottom + dy > self.draw_space_rect.bottom:
-                        self.text_rect.y += dy*3  # TODO: "3" podría ser un setting
+                        self.text_rect.y += dy * 3  # TODO: "3" podría ser un setting
             self.ticks = 0
 
     def borrar_todo(self):
@@ -128,7 +128,7 @@ class DialogInterface(Ventana):
                 color = self.bg_bisel_fg
 
         # pintar el area de la flecha, si es que hay más contenido que ver.
-        self.image.fill(color, (self.text_rect.right+1, 0, 16, self.draw_space_rect.h+3))
+        self.image.fill(color, (self.text_rect.right + 1, 0, 16, self.draw_space_rect.h + 3))
 
         # dibujar el marco biselado.
         self.image.blit(self.marco, (0, 0))

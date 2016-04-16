@@ -1,6 +1,6 @@
 from pygame import time, Surface, PixelArray, SRCALPHA
 from engine.base import AzoeSprite
-from .constantes import Constants as Cs
+from .constantes import COLOR_IGNORADO
 from engine.globs.eventDispatcher import EventDispatcher
 from .renderer import Renderer
 
@@ -234,7 +234,7 @@ class Noche(AzoeSprite):
                     for x in range(0, image.get_height()):
                         ox, oy = lx + x, ly + y
                         r, g, b, a = lmap(light_array[x, y])
-                        if (r, g, b) != Cs.COLOR_IGNORADO:
+                        if (r, g, b) != COLOR_IGNORADO:
                             _r, _g, _b, _a = imap(pxarray[ox, oy])
                             r = clamp(r + _r)
                             g = clamp(g + _g)

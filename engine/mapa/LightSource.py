@@ -1,5 +1,4 @@
-﻿from engine.globs import Constants, EngineData
-from engine.globs.giftgroups import MobGroup
+﻿from engine.globs import EngineData, COLOR_IGNORADO
 from pygame import Surface, Rect, draw, SRCALPHA
 from engine.misc import Resources
 from engine.base import AzoeSprite
@@ -35,7 +34,7 @@ class LightSource(AzoeSprite):
     def _crear_base(tamanio):
         surf = Surface((tamanio, tamanio), SRCALPHA)
         # este es el color para las secciones que no se renderean,
-        surf.fill(Constants.COLOR_IGNORADO)  # sino siempre se borra un cuadrado. el alpha no importa
+        surf.fill(COLOR_IGNORADO)  # sino siempre se borra un cuadrado. el alpha no importa
         # deberiamos definirlo en documentacion
 
         return surf

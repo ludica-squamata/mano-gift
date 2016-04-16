@@ -1,7 +1,9 @@
-from engine.globs import EngineData as Ed, Constants as Cs, MobGroup, ItemGroup, ModData as Md
+from engine.globs import GRUPO_ITEMS, GRUPO_MOBS, GRUPO_SALIDAS
+from engine.globs import EngineData as Ed, ModData as Md
+from engine.globs import MobGroup, ItemGroup
 from engine.misc import Resources as Rs
-from engine.mobs import PC, NPC
 from engine.scenery import new_prop
+from engine.mobs import PC, NPC
 from .salida import Salida
 
 
@@ -45,7 +47,7 @@ class Loader:
                     prop = new_prop(ref, imagen, x, y)
                     is_interactive = False
 
-                cls.STAGE.add_property(prop, Cs.GRUPO_ITEMS, is_interactive)
+                cls.STAGE.add_property(prop, GRUPO_ITEMS, is_interactive)
 
     @classmethod
     def cargar_mobs(cls, extra_data, capa='capa_ground'):
@@ -60,7 +62,7 @@ class Loader:
                     for x, y in pos[ref]:
                         mob = clase(ref, x, y, data)
                         if capa == 'capa_ground':
-                            cls.STAGE.add_property(mob, Cs.GRUPO_MOBS)
+                            cls.STAGE.add_property(mob, GRUPO_MOBS)
 
     @classmethod
     def cargar_hero(cls, entrada):
@@ -77,11 +79,11 @@ class Loader:
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
         if Ed.HERO not in cls.STAGE.properties:
-            Loader.STAGE.add_property(Ed.HERO, Cs.GRUPO_MOBS)
+            Loader.STAGE.add_property(Ed.HERO, GRUPO_MOBS)
 
     @classmethod
     def cargar_salidas(cls):
         salidas = cls.STAGE.data['salidas']
         for salida in salidas:
             sld = Salida(salida, salidas[salida])
-            cls.STAGE.add_property(sld, Cs.GRUPO_SALIDAS)
+            cls.STAGE.add_property(sld, GRUPO_SALIDAS)

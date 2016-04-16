@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import Constants as Cs
+from engine.globs import CUADRO
 from engine.misc import Config as Cfg
 from engine.UI.widgets import Boton
 from .menu import Menu
@@ -8,7 +8,7 @@ from .menu import Menu
 class MenuPausa(Menu):
     def __init__(self):
         super().__init__("Pausa")
-        x = self.canvas.get_width() - (Cs.CUADRO * 6) - 14  # 460-192-14 = 254
+        x = self.canvas.get_width() - (CUADRO * 6) - 14  # 460-192-14 = 254
         m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
 

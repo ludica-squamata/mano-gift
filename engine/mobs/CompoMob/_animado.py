@@ -1,6 +1,5 @@
-from engine.globs import Tiempo as T, Constants as C
-from engine.misc import Util as U, Resources as r
-from engine.base import ShadowSprite
+from engine.globs import Tiempo, COLOR_COLISION
+from engine.misc import Resources
 from ._movil import Movil
 from pygame import mask
 
@@ -31,7 +30,7 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     @staticmethod
     def cargar_anims(ruta_imgs, seq, alpha=False):
         dicc = {}
-        spritesheet = r.split_spritesheet(ruta_imgs)
+        spritesheet = Resources.split_spritesheet(ruta_imgs)
         idx = -1
         for L in seq:
             for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
@@ -40,13 +39,13 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
                 if not alpha:
                     dicc[key] = spritesheet[idx]
                 else:
-                    dicc[key] = mask.from_threshold(spritesheet[idx], C.COLOR_COLISION, (1, 1, 1, 255))
+                    dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
         return dicc
 
     def animar_caminar(self):
         """cambia la orientación del sprite y controla parte de la animación"""
 
-        self.timer_animacion += T.FPS.get_time()
+        self.timer_animacion += Tiempo.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
@@ -58,7 +57,6 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
                 key = self._step + self.direccion
 
                 self.image = self.imagen_n(key)
-
 
     def animar_ataque(self, limite):
         # construir la animación

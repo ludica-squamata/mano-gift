@@ -1,5 +1,5 @@
 from pygame import display as pantalla, init as py_init, event, font, joystick
-from engine.globs import Constants as Cs, Tiempo, EngineData as Ed, ModData
+from engine.globs import Tiempo, EngineData as Ed, ModData, ANCHO, ALTO
 from engine.misc import Resources as Rs, Config
 from engine.IO.modos import Modo
 import os
@@ -8,7 +8,7 @@ import pygame
 py_init()
 if joystick.get_count():
     joystick.Joystick(0).init()
-tamanio = Cs.ANCHO, Cs.ALTO
+tamanio = ANCHO, ALTO
 ModData.init(Rs.abrir_json("engine.ini"))
 pantalla.set_caption(ModData.data['nombre'])
 pantalla.set_icon(pygame.image.load(ModData.graphs + ModData.data['icono']))

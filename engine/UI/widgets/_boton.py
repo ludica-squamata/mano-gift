@@ -1,11 +1,10 @@
 from .basewidget import BaseWidget
-from engine.globs import Constants as Cs
+from engine.globs import CUADRO
 from pygame import Rect, Surface, draw
 from engine.libs.textrect import render_textrect
 
 
-class Boton (BaseWidget):
-
+class Boton(BaseWidget):
     img_uns = None
     img_sel = None
 
@@ -27,7 +26,7 @@ class Boton (BaseWidget):
         self.img_uns = uns
         self.pos = pos
         super().__init__(self.img_uns)
-        self.rect = self.img_sel.get_rect(topleft = self.pos)
+        self.rect = self.img_sel.get_rect(topleft=self.pos)
 
         self.comando = comando
 
@@ -46,10 +45,10 @@ class Boton (BaseWidget):
         if self.timer <= lt:
             self.image = self.img_pre
 
-        elif lt+1 <= self.timer <= lt*2:
+        elif lt + 1 <= self.timer <= lt * 2:
             self.image = self.img_sel
 
-        elif self.timer == lt*2+1:
+        elif self.timer == lt * 2 + 1:
             self.comando()
 
         else:
@@ -57,26 +56,26 @@ class Boton (BaseWidget):
             self.animar = False
 
     def crear(self, texto, ancho_mod):
-        ancho = Cs.CUADRO * ancho_mod
+        ancho = CUADRO * ancho_mod
 
-        rect = Rect((-1, -1), (ancho - 6, Cs.CUADRO - 6))
+        rect = Rect((-1, -1), (ancho - 6, CUADRO - 6))
 
-        cnvs_pre = Surface((ancho + 6, Cs.CUADRO + 6))
+        cnvs_pre = Surface((ancho + 6, CUADRO + 6))
         cnvs_pre.fill(self.bg_cnvs)
         cnvs_sel = cnvs_pre.copy()
         cnvs_uns = cnvs_pre.copy()
 
-        fnd_pre = self.create_sunken_canvas(ancho, Cs.CUADRO)
-        fnd_uns = self.create_raised_canvas(ancho, Cs.CUADRO)
+        fnd_pre = self.create_sunken_canvas(ancho, CUADRO)
+        fnd_uns = self.create_raised_canvas(ancho, CUADRO)
 
         for i in range(round((ancho + 6) / 3)):
             # linea punteada horizontal superior
             draw.line(cnvs_sel, self.font_high_color, (i * 7, 0), ((i * 7) + 5, 0), 2)
 
             # linea punteada horizontal inferior
-            draw.line(cnvs_sel, self.font_high_color, (i * 7, Cs.CUADRO + 4), ((i * 7) + 5, Cs.CUADRO + 4), 2)
+            draw.line(cnvs_sel, self.font_high_color, (i * 7, CUADRO + 4), ((i * 7) + 5, CUADRO + 4), 2)
 
-        for i in range(round((Cs.CUADRO + 6) / 3)):
+        for i in range(round((CUADRO + 6) / 3)):
             # linea punteada vertical derecha
             draw.line(cnvs_sel, self.font_high_color, (0, i * 7), (0, (i * 7) + 5), 2)
 

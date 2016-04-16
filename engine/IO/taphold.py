@@ -1,4 +1,4 @@
-from engine.globs import Constants as Cs, EngineData as Ed
+from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS
 from engine.misc import Config
 from pygame import event
 from pygame import KEYDOWN, KEYUP
@@ -6,11 +6,11 @@ from pygame import JOYBUTTONDOWN, JOYBUTTONUP, JOYHATMOTION, JOYAXISMOTION
 
 
 def filtrar_eventos_teclado(events):
-    teclas = Cs.TECLAS.devolver()
+    teclas = TECLAS.devolver()
     for _event in events:
         if _event.type == KEYDOWN:
             if Ed.setKey:
-                event.post(event.Event(Cs.TAP, {'key': _event.key, 'type': 'tapping'}))
+                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tapping'}))
             if _event.key in teclas:
                 teclas[_event.key]['pressed'] = True
 
@@ -27,7 +27,7 @@ def filtrar_eventos_teclado(events):
 
 
 def filtrar_eventos_gamepad(events):
-    teclas = Cs.TECLAS.devolver()
+    teclas = TECLAS.devolver()
     for _event in events:
         if _event.type == JOYBUTTONDOWN:
             if _event.button not in (10, 11):
@@ -164,14 +164,14 @@ def get_taphold_events(events, holding=100):
             key['tap'] = False
 
         if key['hold']:
-            event.post(event.Event(Cs.HOLD, {'key': key['key'], 'type': 'holding', 'holding': key['holding']}))
+            event.post(event.Event(HOLD, {'key': key['key'], 'type': 'holding', 'holding': key['holding']}))
 
         elif key['tap']:
-            event.post(event.Event(Cs.TAP, {'key': key['key'], 'type': 'tapping'}))
+            event.post(event.Event(TAP, {'key': key['key'], 'type': 'tapping'}))
             key['tap'] = False
 
         elif key['release']:
-            event.post(event.Event(Cs.RELEASE, {'key': key['key'], 'type': 'release', 'holding': key['held']}))
+            event.post(event.Event(RELEASE, {'key': key['key'], 'type': 'release', 'holding': key['held']}))
             key['release'] = False
             key['held'] = 0
 

@@ -2,7 +2,7 @@
 # animación de introducción. Créditos.
 from pygame import Rect, KEYUP
 from pygame import display as pantalla, event, font
-from engine.globs import Tiempo, Constants
+from engine.globs import Tiempo, TECLAS
 from engine.libs.textrect import render_textrect
 from engine.misc import Util
 
@@ -89,7 +89,7 @@ def intro(fondo):
 
         for _event in event.get():
             if _event.type == KEYUP:
-                if _event.key == Constants.TECLAS.SALIR:
+                if _event.key == TECLAS.SALIR:
                     Util.salir()
                 else:
                     running = False

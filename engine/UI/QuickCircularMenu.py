@@ -1,5 +1,5 @@
 from engine.IO.menucircular import CircularMenu, BaseElement
-from engine.globs import EngineData as Ed, Constants as Cs
+from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO
 from engine.globs.renderer import Renderer
 from pygame import font, Surface, SRCALPHA
 
@@ -149,21 +149,21 @@ class QuickCircularMenu(CircularMenu):
 
     def _change_cube_list(self):
         super()._change_cube_list()
-        Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
-            Renderer.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Renderer.add_overlay(cuadro, CAPA_OVERLAYS_INVENTARIO)
 
     def supress(self):
         super().supress()
-        Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
-            Renderer.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Renderer.add_overlay(cuadro, CAPA_OVERLAYS_INVENTARIO)
 
     def _modify_cube_list(self):
         super()._modify_cube_list()
-        Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+        Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_INVENTARIO)
         for cuadro in self.cubos:
-            Renderer.add_overlay(cuadro, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Renderer.add_overlay(cuadro, CAPA_OVERLAYS_INVENTARIO)
 
     def back(self):
         if self.cascadaActual == 'inicial':
@@ -173,10 +173,10 @@ class QuickCircularMenu(CircularMenu):
 
     def salir(self):
         if self.cascadaActual == 'inicial':
-            Renderer.clear_overlays_from_layer(Cs.CAPA_OVERLAYS_INVENTARIO)
+            Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_INVENTARIO)
             Ed.DIALOGO = None
             Ed.MODO = 'Aventura'
 
     def show(self):
         for cubo in self.cubos:
-            Renderer.add_overlay(cubo, Cs.CAPA_OVERLAYS_INVENTARIO)
+            Renderer.add_overlay(cubo, CAPA_OVERLAYS_INVENTARIO)

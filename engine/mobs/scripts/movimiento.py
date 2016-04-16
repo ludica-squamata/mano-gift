@@ -1,7 +1,7 @@
 # movimiento.py
 # scripts de movimiento para los mobs.
 from .a_star import a_star
-from engine.globs import Constants as C
+from engine.globs import CUADRO
 
 
 def AI_patrol(mob):
@@ -58,7 +58,7 @@ def generar_camino(inicio, destino, grilla):
     inicio y destino deben ser un tuple Gx,Gy'''
     ruta = a_star(grilla[inicio], grilla[destino], grilla)
     if type(ruta) == str:
-        camino = [[int(i) * C.CUADRO for i in punto.strip('()').split(',')] for punto in ruta.split(';')]
+        camino = [[int(i) * CUADRO for i in punto.strip('()').split(',')] for punto in ruta.split(';')]
         return camino
     return ruta
 
