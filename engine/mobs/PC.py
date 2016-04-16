@@ -4,7 +4,7 @@ from .CompoMob import Parlante
 from .mob import Mob
 
 
-class PC(Mob, Parlante):
+class PC(Parlante,Mob):
     
     def __init__(self, data, x, y, ):
         super().__init__(data, x, y, focus=True)

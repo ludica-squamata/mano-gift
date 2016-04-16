@@ -6,6 +6,9 @@
         "commoner":{
             "AI":"wander",
             "dialog":"prueba.json"
+        },
+        "girl":{
+          "AI":"wander"
         }
     },
     "focus":"heroe",

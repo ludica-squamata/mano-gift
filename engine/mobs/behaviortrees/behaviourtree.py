@@ -15,6 +15,11 @@ class BehaviourTree:
     entity = None
 
     def __init__(self, entity, tree_data, scripts):
+        if self.tree_structure is not None:
+            self.tree_structure.clear()
+        self.nodes = []
+        self.shared_context = {}
+
         self.tree_structure = OrderedDict()
         self.entity = entity
         for key in [str(i) for i in range(len(tree_data))]:

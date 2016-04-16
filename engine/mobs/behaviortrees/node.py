@@ -20,7 +20,7 @@ class Node:
     def reset(self):
         pass
 
-        
+
 class Leaf(Node):
     type = 'Leaf'
     process = None
@@ -36,6 +36,7 @@ class Leaf(Node):
         return self.type + ' #' + str(self.idx) + ' (' + self.process_name + ')'
 
     def set_process(self, process):
+        self.process = None
         self.process = MethodType(process, self)
 
     def update(self):
