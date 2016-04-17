@@ -206,11 +206,17 @@ class Dialogo:
     next = 0
 
     def __init__(self, arbol, *locutores):
-        self.frontend = DialogInterface()
         self.dialogo = _ArboldeDialogo(arbol)
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
+
+        for idx in arbol:
+            nodo = arbol[idx]
+            if nodo['loc'] not in self.locutores:
+                raise AttributeError
+
+        self.frontend = DialogInterface()
 
         self.func_lin = {
             'hablar': self.hablar,

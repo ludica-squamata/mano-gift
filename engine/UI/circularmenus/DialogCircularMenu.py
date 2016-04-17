@@ -56,10 +56,10 @@ class DialogElement(LetterElement):
 
     def do_action(self):
         self.parent.salir()
-        if 'dialog' in self.item.data:
+        try:
             Ed.DIALOG = Dialogo(self.item.data['dialog'], *self.parent.locutores)
             Ed.MODO = 'Dialogo'
-        else:
+        except (KeyError, AttributeError):
             for mob in self.parent.locutores:
                 mob.hablando = False
             Ed.MODO = 'Aventura'
