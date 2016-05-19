@@ -19,7 +19,6 @@ class Config:
             "izquierda": 276,
 
             "accion": 120,
-            "hablar": 115,
             "cancelar": 97,
             "menu": 13,
             "menu rapido": 122,
@@ -33,7 +32,6 @@ class Config:
             "arriba": 12,
             "cancelar": 1,
             "derecha": 10,
-            "hablar": 2,
             "izquierda": 11,
             "menu": 8,
             "menu rapido": 0,

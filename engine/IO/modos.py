@@ -44,13 +44,7 @@ class Modo:
         dx, dy = cls.dx, cls.dy
         for event in get_taphold_events(events):
             if event.type == TAP:
-                if event.key == TECLAS.HABLAR:
-                    if Ed.HERO.iniciar_dialogo():
-                        Ed.MODO = 'Dialogo'
-                    else:
-                        Ed.MODO = 'Aventura'
-
-                elif event.key == TECLAS.MENU_RAPIDO:
+                if event.key == TECLAS.MENU_RAPIDO:
                     Ed.MODO = 'Dialogo'
                     if Ed.MENU_RAPIDO is None:
                         Ed.MENU_RAPIDO = QuickCircularMenu()
@@ -59,7 +53,10 @@ class Modo:
                     Ed.DIALOG.show()
 
                 elif event.key == TECLAS.ACCION:
-                    Ed.HERO.accion()
+                    if Ed.HERO.accion():
+                        Ed.MODO = 'Dialogo'
+                    else:
+                        Ed.MODO = 'Aventura'
 
                 elif event.key == TECLAS.MENU:
                     cls.pop_menu('Pausa')
@@ -111,7 +108,7 @@ class Modo:
                 elif event.key == TECLAS.DERECHA:
                     Ed.DIALOG.use_function('tap', 'derecha')
 
-                elif event.key == TECLAS.HABLAR:
+                elif event.key == TECLAS.ACCION:
                     Ed.DIALOG.use_function('tap', 'hablar')
 
                 elif event.key == TECLAS.MENU_RAPIDO:
@@ -171,8 +168,8 @@ class Modo:
                 elif event.key == TECLAS.ABAJO:
                     Ed.menu_actual.use_function('tap', 'abajo')
 
-                elif event.key == TECLAS.HABLAR:
-                    Ed.menu_actual.use_function('tap', 'hablar')
+                elif event.key == TECLAS.ACCION:
+                    Ed.menu_actual.use_function('tap', 'accion')
 
                 elif event.key == TECLAS.CANCELAR_DIALOGO:
                     previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
@@ -182,8 +179,8 @@ class Modo:
                         cls.end_dialog(CAPA_OVERLAYS_MENUS)
 
             elif event.type == HOLD:
-                if event.key == TECLAS.HABLAR:
-                    Ed.menu_actual.use_function('hold', 'hablar')
+                if event.key == TECLAS.ACCION:
+                    Ed.menu_actual.use_function('hold', 'accion')
 
                 elif event.key == TECLAS.IZQUIERDA:
                     Ed.menu_actual.use_function('hold', 'izquierda')
@@ -198,8 +195,8 @@ class Modo:
                     Ed.menu_actual.use_function('hold', 'abajo')
 
             elif event.type == RELEASE:
-                if event.key == TECLAS.HABLAR:
-                    Ed.menu_actual.use_function('release', 'hablar')
+                if event.key == TECLAS.ACCION:
+                    Ed.menu_actual.use_function('release', 'accion')
 
         if cls.newMenu:
             cls.pop_menu()

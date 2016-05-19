@@ -15,7 +15,7 @@ class MenuDebug(Menu):
 
         self.functions.update({
             'tap': {
-                'hablar': self.cargar_escena,
+                'accion': self.cargar_escena,
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
@@ -24,7 +24,7 @@ class MenuDebug(Menu):
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
             'release': {
-                'hablar': self.cargar_escena
+                'accion': self.cargar_escena
             }
         })
 

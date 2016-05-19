@@ -9,10 +9,11 @@ def filtrar_eventos_teclado(events):
     teclas = TECLAS.devolver()
     for _event in events:
         if _event.type == KEYDOWN:
-            if Ed.setKey:
-                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tapping'}))
             if _event.key in teclas:
                 teclas[_event.key]['pressed'] = True
+            elif Ed.setKey:
+                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tapping'}))
+            
 
         elif _event.type == KEYUP:
             if _event.key in teclas:

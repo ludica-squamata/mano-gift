@@ -32,16 +32,15 @@ class PC(Mob, Parlante):
         
     def accion(self):
         x, y = self.direcciones[self.direccion]
-
-        if self.estado == 'cmb':
-            # la animacion de ataque se hace siempre,
-            # sino pareciera que no pasa nada
-            self.atacando = True
-            sprite = self._interact_with_mobs(x, y)
-            if issubclass(sprite.__class__, Mob):
-                if self.estado == 'cmb':
-                    x, y = x * self.fuerza, y * self.fuerza
-                    self.atacar(sprite, x, y)
+        
+        sprite = self._interact_with_mobs(x, y)
+        if sprite is not None:
+            if self.estado == 'cmb':
+                self.atacando = True
+                x, y = x * self.fuerza, y * self.fuerza
+                self.atacar(sprite, x, y)
+            else:
+                return self.iniciar_dialogo(x, y)
         else:
             sprite = self._interact_with_props(x, y)
             if hasattr(sprite, 'accion'):
@@ -85,8 +84,7 @@ class PC(Mob, Parlante):
         
         super().update()
 
-    def iniciar_dialogo(self):
-        x, y = self.direcciones[self.direccion]
+    def iniciar_dialogo(self, x, y):
         if x:
             if x > 0:
                 post_dir = 'izquierda'

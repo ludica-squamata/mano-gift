@@ -73,7 +73,7 @@ class MenuEquipo(MenuItems):
         self.functions = {
             'espacios': {
                 'tap': {
-                    'hablar': self.cambiar_foco,
+                    'accion': self.cambiar_foco,
                     'arriba': lambda: self.select_one('arriba'),
                     'abajo': lambda: self.select_one('abajo'),
                     'izquierda': lambda: self.select_one('izquierda'),
@@ -86,12 +86,12 @@ class MenuEquipo(MenuItems):
                     'derecha': lambda: self.select_one('derecha')
                 },
                 'release': {
-                    'hablar': self.cambiar_foco
+                    'accion': self.cambiar_foco
                 }
             },
             'items': {
                 'tap': {
-                    'hablar': self.equipar_item,
+                    'accion': self.equipar_item,
                     'arriba': lambda: self.elegir_fila('arriba'),
                     'abajo': lambda: self.elegir_fila('abajo')
                 },
@@ -100,7 +100,7 @@ class MenuEquipo(MenuItems):
                     'abajo': lambda: self.elegir_fila('abajo')
                 },
                 'release': {
-                    'hablar': self.equipar_item
+                    'accion': self.equipar_item
                 }
             }
         }

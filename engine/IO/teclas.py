@@ -25,7 +25,6 @@ class Teclas:
         self.DERECHA = data['derecha']
 
         self.ACCION = data['accion']
-        self.HABLAR = data['hablar']
         self.CANCELAR_DIALOGO = data['cancelar']
         self.MENU_RAPIDO = data['menu rapido']
 

@@ -26,17 +26,17 @@ class MenuPausa(Menu):
 
         self.functions.update({
             'tap': {
-                'hablar': self.press_button,
+                'accion': self.press_button,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo')
             },
             'hold': {
-                'hablar': self.mantener_presion,
+                'accion': self.mantener_presion,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo')
             },
             'release': {
-                'hablar': self.liberar_presion,
+                'accion': self.liberar_presion,
             }
         })
 

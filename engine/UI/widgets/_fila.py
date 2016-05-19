@@ -15,6 +15,7 @@ class Fila(BaseWidget):
     def __init__(self, item, w, x, y, tag=None, justification=0):
         self.item = item
         self.ancho = w
+        self.justification = justification
         if type(item) == str:
             self.set_text(item, w, justification)
         elif hasattr(self.item, 'texto'):
@@ -64,6 +65,9 @@ class Fila(BaseWidget):
 
         self.image = self.img_uns
         self.nombre = texto
+    
+    def reset_text(self, texto):
+        self.set_text(texto, self.ancho, self.justification)
 
     def update(self):
         if not hasattr(self.item, 'texto'):

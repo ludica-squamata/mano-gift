@@ -65,14 +65,14 @@ class MenuPersonaje(Menu):
         self.functions.update({  # obsérvese que es dict.update()
             'teclas': {
                 'tap': {
-                    'hablar': self.input_character,
+                    'accion': self.input_character,
                     'arriba': lambda: self.movercursor(0, -1),
                     'abajo': lambda: self.movercursor(0, 1),
                     'izquierda': lambda: self.movercursor(-1, 0),
                     'derecha': lambda: self.movercursor(1, 0)
                 },
                 'hold': {
-                    'hablar': self.input_character,
+                    'accion': self.input_character,
                     'arriba': lambda: self.movercursor(0, -1),
                     'abajo': lambda: self.movercursor(0, 1),
                     'izquierda': lambda: self.movercursor(-1, 0),
@@ -81,17 +81,17 @@ class MenuPersonaje(Menu):
             },
             'botones': {
                 'tap': {
-                    'hablar': self.press_button,
+                    'accion': self.press_button,
                     'izquierda': lambda: self.cambiar_foco('teclas'),
                     'arriba': lambda: self.cambiar_foco('teclas'),
                 },
                 'hold': {
-                    'hablar': self.mantener_presion,
+                    'accion': self.mantener_presion,
                     'izquierda': lambda: self.cambiar_foco('teclas'),
                     'arriba': lambda: self.cambiar_foco('teclas'),
                 },
                 'release': {
-                    'hablar': self.liberar_presion
+                    'accion': self.liberar_presion
                 }
             }})
 
