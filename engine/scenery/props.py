@@ -1,10 +1,13 @@
 from engine.base import ShadowSprite, EventListener
+from engine.globs import ItemGroup, ModData
 from engine.misc import Resources
 from pygame import mask
 from .items import *
 
 
 class Escenografia(ShadowSprite, EventListener):
+    accion = None
+
     def __init__(self, nombre, imagen, x, y, data):
         """
         :param nombre:
@@ -25,6 +28,11 @@ class Escenografia(ShadowSprite, EventListener):
         super().__init__(imagen, x=x, y=y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
+        try:
+            dialogo = Resources.abrir_json(ModData.dialogos + self.nombre + '.json')
+            self.data.update({'dialog': dialogo})
+        except IOError:
+            pass
 
         self.add_listeners()  # carga de event listeners
 
@@ -35,6 +43,7 @@ class Agarrable(Escenografia):
         super().__init__(nombre, imagen, x, y, data)
         self.subtipo = data['subtipo']
         self.accion = 'agarrar'
+        ItemGroup[self.nombre] = self
 
     def __call__(self):
         args = self.nombre, self.image, self.data
@@ -60,6 +69,7 @@ class Movible(Escenografia):
             data['propiedades'] = p
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'mover'
+        ItemGroup[self.nombre] = self
 
     def mover(self, dx, dy):
         col_mapa = False
@@ -89,6 +99,7 @@ class Operable(Escenografia):
     def __init__(self, nombre, imagen, x, y, data):
         super().__init__(nombre, imagen, x, y, data)
         self.accion = 'operar'
+        ItemGroup[self.nombre] = self
 
         for estado in data['operable']:
             idx = estado['ID']

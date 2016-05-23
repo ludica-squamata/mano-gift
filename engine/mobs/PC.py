@@ -4,7 +4,7 @@ from .CompoMob import Parlante
 from .mob import Mob
 
 
-class PC(Mob, Parlante):
+class PC(Parlante,Mob):
     
     def __init__(self, data, x, y, ):
         super().__init__(data, x, y, focus=True)
@@ -85,22 +85,35 @@ class PC(Mob, Parlante):
         super().update()
 
     def iniciar_dialogo(self, x, y):
+        inter_dir = ''
+        self_dir = ''
         if x:
             if x > 0:
-                post_dir = 'izquierda'
+                inter_dir = 'izquierda'
+                self_dir = 'derecha'
             else:
-                post_dir = 'derecha'
+                inter_dir = 'derecha'
+                self_dir = 'izquierda'
         elif y:
             if y < 0:
-                post_dir = 'abajo'
+                inter_dir = 'abajo'
+                self_dir = 'arriba'
             else:
-                post_dir = 'arriba'
-        else:
-            # esto nunca sucede; está por una correcion de PyCharm
-            post_dir = ''
+                inter_dir = 'arriba'
+                self_dir = 'abajo'
 
         sprite = self._interact_with_mobs(x, y)
         if sprite is not None:
-            sprite.iniciar_dialogo(post_dir)
+            # este check va a cambiar.
+            sprite.iniciar_dialogo(inter_dir)
+            self.cambiar_direccion(self_dir)
+            if self.iniciativa < sprite.iniciativa:
+                # la iniciativa la gana el NPC si se acerca a hablarle al heroe
+                super().hablar(sprite)
+            else:
+                # si es el player el que toca Hablar, entonces se abre el menú
+                self.elegir_tema(sprite)
 
-        return super().hablar(sprite)
+            return True
+
+        return False

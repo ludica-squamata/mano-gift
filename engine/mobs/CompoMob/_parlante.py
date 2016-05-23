@@ -1,6 +1,8 @@
-from ._atribuido import Atribuido
+from engine.UI.circularmenus import DialogCircularMenu
+from engine.globs import EngineData as Ed, ModData as Md
+from engine.misc import Resources as Rs
 from engine.IO.dialogo import Dialogo
-from engine.globs import EngineData as Ed
+from ._atribuido import Atribuido
 
 
 class Parlante(Atribuido):
@@ -8,12 +10,19 @@ class Parlante(Atribuido):
     conversaciones = []  # registro de los temas conversados
     hablante = True
 
+    def __init__(self, *args, **kwargs):
+        if 'dialog' in args[0]:
+            args[0]['dialog'] = Rs.abrir_json(Md.dialogos + args[0]['dialog'])
+        super().__init__(*args, **kwargs)
+
     def hablar(self, sprite):
-        if sprite is not None:
-            if sprite.hablante:
-                self.interlocutor = sprite
-                self.interlocutor.hablando = True
-                sprite.interlocutor = self
-                Ed.DIALOG = Dialogo(sprite.dialogo, self, sprite)
-                return True
-        return False
+        if sprite.hablante:
+            self.interlocutor = sprite
+            sprite.interlocutor = self
+            Ed.DIALOG = Dialogo(sprite.dialogo, self, sprite)
+
+    def elegir_tema(self, sprite):
+        if sprite.hablante:
+            self.interlocutor = sprite
+            sprite.interlocutor = self
+            Ed.DIALOG = DialogCircularMenu(sprite, self)

@@ -24,7 +24,8 @@
         "mobs": {
             "enemies":{},
             "npcs":{
-                "commoner":[[832,464]]
+                "commoner":[[832,464]],
+                "girl":[[632,464]]
             }
         }
     },

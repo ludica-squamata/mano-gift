@@ -1,10 +1,9 @@
 from engine.libs import render_tagged_text
-from .widgets import Fila
+from .widgets import Fila, Ventana
 from pygame import Rect, Surface
 from pygame.sprite import LayeredUpdates
 from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.renderer import Renderer
-from .widgets.Ventana import Ventana
 
 
 class DialogInterface(Ventana):

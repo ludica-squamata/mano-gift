@@ -67,6 +67,9 @@ class MobGroup:
     def __str__(self):
         return 'MobGroup keys (' + ','.join([self._group[i].nombre for i in self._indexes]) + ')'
 
+    def contents(self):
+        return [self._group[key] for key in self._group]
+
 
 class ItemGroup:
 
@@ -134,6 +137,9 @@ class ItemGroup:
     def delete_item(self, event):
         nombre = event.data['obj'].nombre
         del self[nombre]
+
+    def contents(self):
+        return [self._group[key][0] for key in self._group]
 
 MobGroup = MobGroup()
 ItemGroup = ItemGroup()
