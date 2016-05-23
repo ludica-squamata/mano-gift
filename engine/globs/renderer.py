@@ -232,7 +232,9 @@ class Renderer:
         cls.camara.update(cls.use_focus)
 
         for over in cls.overlays:
-            if over.active:
+            if hasattr(over,'active') and over.active:
+                over.update()
+            else:
                 over.update()
         ret = cls.camara.draw(fondo)
         ret += cls.overlays.draw(fondo)

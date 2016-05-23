@@ -70,7 +70,6 @@ class MobGroup:
     def contents(self):
         return [self._group[key] for key in self._group]
 
-
 class ItemGroup:
 
     _group = {}
@@ -94,8 +93,10 @@ class ItemGroup:
         self._lenght += 1
 
     def __getitem__(self, key):
-        if key in self._group:
-            return self._group[key][0]
+        if hasattr(key, "nombre"):
+            if key.nombre in self._group:
+                return self._group[key.nombre][self._group[key.nombre].index(key)]
+
         elif type(key) is int:
             if 0 <= key <= self._lenght:
                 name = self._indexes[key]
@@ -107,17 +108,20 @@ class ItemGroup:
             raise KeyError
 
     def __delitem__(self, key):
-        if key in self._group:
-            if len(self._group[key]) > 1:
-                del self._group[key][0]
-            else:
-                del self._group[key]
-            self._indexes.remove(key)
-
-        elif type(key) is int:
+        
+        if type(key) is int:
             if 0 <= key <= self._lenght:
                 del self._indexes[key]
                 del self[key]
+
+        elif hasattr(key, "nombre"):
+            if key.nombre in self._group:
+                if len(self._group[key.nombre]) > 1:
+                    del self._group[key.nombre][self._group[key.nombre].index(key)]
+                else:
+                    del self._group[key.nombre]
+            self._indexes.remove(key.nombre)
+
         else:
             raise KeyError
 
@@ -135,8 +139,8 @@ class ItemGroup:
         return self._lenght
 
     def delete_item(self, event):
-        nombre = event.data['obj'].nombre
-        del self[nombre]
+        obj = event.data['obj']
+        del self[obj]
 
     def contents(self):
         return [self._group[key][0] for key in self._group]

@@ -199,3 +199,8 @@ class CircularMenu:
         for cuadro in self.cubos:
             angulo += separacion
             cuadro.change_angle(angulo, *self.puntos[angulo])
+
+    def check_on_spot(self):
+        for cuadro in self.cubos:
+            if cuadro.in_place:
+                return cuadro
