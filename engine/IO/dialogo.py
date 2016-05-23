@@ -211,11 +211,6 @@ class Dialogo:
         for loc in locutores:
             self.locutores[loc.nombre] = loc
 
-        for idx in arbol:
-            nodo = arbol[idx]
-            if nodo['loc'] not in self.locutores:
-                raise AttributeError
-
         self.frontend = DialogInterface()
 
         self.func_lin = {
@@ -238,6 +233,16 @@ class Dialogo:
 
         # empezar con el primer nodo
         self.hablar()
+
+    @classmethod
+    def pre_init(cls, arbol, *locutores):
+        arb = arbol.copy()
+        meta = arb.pop('metadata', False)
+        if meta:
+            for loc in locutores:
+                if loc.nombre not in meta['locutors']:
+                    return False
+        return True
 
     def use_function(self, mode, key):
         del mode

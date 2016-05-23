@@ -56,10 +56,11 @@ class DialogElement(LetterElement):
 
     def do_action(self):
         self.parent.salir()
-        try:
+        arbol = self.item.data['dialog']
+        if Dialogo.pre_init(arbol, *self.parent.locutores):
             Ed.DIALOG = Dialogo(self.item.data['dialog'], *self.parent.locutores)
             Ed.MODO = 'Dialogo'
-        except (KeyError, AttributeError):
+        else:
             for mob in self.parent.locutores:
                 mob.hablando = False
             Ed.MODO = 'Aventura'
@@ -83,9 +84,12 @@ class DialogCircularMenu(RenderedCircularMenu, CircularMenu):
     def __init__(self, *locutores):
         n, c, i, = 'nombre', 'cascada', 'icono'
         self.locutores = locutores
+        p = [prop for prop in ItemGroup.contents()+Ed.HERO.inventario() if hasattr(prop, "data") and "dialog" in prop.data]
+        m = [mob for mob in MobGroup.contents() if 'dialog' in mob.data]
+        
         opciones = [
-            {n: 'Mobs', c: MobGroup.contents(), i: 'M'},
-            {n: 'Props', c: ItemGroup.contents()+Ed.HERO.inventario(), i: 'P'}
+            {n: 'Mobs', c: m, i: 'M'},
+            {n: 'Props', c: p, i: 'P'}
         ]
 
         cascadas = {'inicial': []}
