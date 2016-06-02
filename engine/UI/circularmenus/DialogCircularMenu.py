@@ -1,8 +1,9 @@
-from engine.globs import MobGroup, ItemGroup, EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
+from engine.globs import MobGroup, ItemGroup, EngineData as Ed, CAPA_OVERLAYS_DIALOGOS, ModData
 from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
 from engine.IO.menucircular import CircularMenu
 from engine.IO.dialogo import Dialogo
-
+from os import path, listdir
+from engine.misc import Resources as Rs
 
 class DialogElement(LetterElement):
     active = True
@@ -10,17 +11,18 @@ class DialogElement(LetterElement):
 
     def __init__(self, parent, item):
 
-        if type(item) is dict:
+        if 'cascada' in item:
             nombre = item['nombre']
             icono = item['icono']
             cascada = item.get('cascada')
             self.item = None
         else:
-            nombre = item.nombre
-            if item.tipo == 'Mob':
-                icono = item.idle_walk_img['Sabajo']
+            data = item['head']
+            nombre = data['name']
+            if data['icon']:
+                icono = Rs.cargar_imagen(data['icon'])
             else:
-                icono = item.image
+                icono = nombre[0].upper()
             cascada = None
             self.item = item
 
@@ -55,15 +57,16 @@ class DialogElement(LetterElement):
         return image
 
     def do_action(self):
-        self.parent.salir()
-        arbol = self.item.data['dialog']
-        if Dialogo.pre_init(arbol, *self.parent.locutores):
-            Ed.DIALOG = Dialogo(self.item.data['dialog'], *self.parent.locutores)
-            Ed.MODO = 'Dialogo'
-        else:
-            for mob in self.parent.locutores:
-                mob.hablando = False
-            Ed.MODO = 'Aventura'
+        
+        if self.item is not None:
+            self.parent.salir()
+            if Dialogo.pre_init(self.item['head'], *self.parent.locutores):
+                Ed.DIALOG = Dialogo(self.item['body'], *self.parent.locutores)
+                Ed.MODO = 'Dialogo'
+            else:
+                for mob in self.parent.locutores:
+                    mob.hablando = False
+                Ed.MODO = 'Aventura'
 
         return True
 
@@ -84,19 +87,19 @@ class DialogCircularMenu(RenderedCircularMenu, CircularMenu):
     def __init__(self, *locutores):
         n, c, i, = 'nombre', 'cascada', 'icono'
         self.locutores = locutores
-        p = [prop for prop in ItemGroup.contents()+Ed.HERO.inventario() if hasattr(prop, "data") and "dialog" in prop.data]
-        m = [mob for mob in MobGroup.contents() if 'dialog' in mob.data]
-        
-        opciones = [
-            {n: 'Mobs', c: m, i: 'M'},
-            {n: 'Props', c: p, i: 'P'}
-        ]
+
+        opciones = []
+        for script in listdir(ModData.dialogos):
+            ruta = ModData.dialogos + script
+            if path.isfile(ruta):
+                file = Rs.abrir_json(ruta)
+                if file['head']['class'] == 'chosen':
+                        opciones.append(file)
 
         cascadas = {'inicial': []}
         for opt in opciones:
             obj = DialogElement(self, opt)
             cascadas['inicial'].append(obj)
-            cascadas[obj.nombre] = obj.cascada
 
         super().__init__(cascadas)
         self.show()

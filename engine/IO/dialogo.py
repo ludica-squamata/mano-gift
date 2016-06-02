@@ -219,7 +219,6 @@ class Dialogo:
             'abajo': self.desplazar_texto,
             'izquierda': lambda key: None,
             'derecha': lambda key: None,
-            'inventario': self.mostrar,
             'cancelar': self.cerrar}
 
         self.func_sel = {
@@ -228,20 +227,16 @@ class Dialogo:
             'abajo': self.elegir_opcion,
             'izquierda': lambda key: None,
             'derecha': lambda key: None,
-            'inventario': lambda: None,
             'cancelar': self.cerrar}
 
         # empezar con el primer nodo
         self.hablar()
 
     @classmethod
-    def pre_init(cls, arbol, *locutores):
-        arb = arbol.copy()
-        meta = arb.pop('metadata', False)
-        if meta:
-            for loc in locutores:
-                if loc.nombre not in meta['locutors']:
-                    return False
+    def pre_init(cls, meta, *locutores):        
+        for loc in locutores:
+            if loc.nombre not in meta['locutors']:
+                return False
         return True
 
     def use_function(self, mode, key):
@@ -338,10 +333,6 @@ class Dialogo:
             self.frontend.scroll(+1)
         elif direccion == 'abajo':
             self.frontend.scroll(-1)
-
-    @staticmethod
-    def mostrar():
-        print(NotImplemented)
 
     def cerrar(self):
         for loc in self.locutores:
