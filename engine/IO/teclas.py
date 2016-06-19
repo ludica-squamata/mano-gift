@@ -1,7 +1,6 @@
 class Teclas:
     ARRIBA, ABAJO, IZQUIERDA, DERECHA = 0, 0, 0, 0
-    ACCION, HABLAR, CANCELAR_DIALOGO = 0, 0, 0
-    MENU, SALIR, MENU_RAPIDO = 0, 0, 0
+    ACCION, CONTEXTUAL, MENU = 0, 0, 0
 
     _keydict = None
 
@@ -25,11 +24,8 @@ class Teclas:
         self.DERECHA = data['derecha']
 
         self.ACCION = data['accion']
-        self.CANCELAR_DIALOGO = data['cancelar']
-        self.MENU_RAPIDO = data['menu rapido']
-
+        self.CONTEXTUAL = data['contextual']
         self.MENU = data['menu']
-        self.SALIR = data['salir']
 
         self._keydict = self._crear_keydict()
 
@@ -41,9 +37,7 @@ class Teclas:
             'derecha': self.DERECHA,
             'izquierda': self.IZQUIERDA,
             'accion': self.ACCION,
-            'hablar': self.HABLAR,
-            'cancelar': self.CANCELAR_DIALOGO,
-            'menu rápido': self.MENU_RAPIDO,
+            'contextual': self.CONTEXTUAL,
             'menu': self.MENU,
         }
 

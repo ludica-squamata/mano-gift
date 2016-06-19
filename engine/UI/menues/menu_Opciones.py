@@ -1,6 +1,6 @@
-from pygame.sprite import LayeredUpdates
+from pygame.sprite import LayeredUpdates, Sprite
 from pygame.key import name as key_name
-from pygame import Rect, font, joystick
+from pygame import Rect, font, joystick, Surface
 from engine.UI.widgets import Fila
 from engine.globs.constantes import TECLAS
 from engine.globs.eventDispatcher import EventDispatcher
@@ -13,23 +13,24 @@ from .menu import Menu
 class MenuOpciones(MenuPausa, Menu):
     curr_input = ''
     input_device = 'teclado'
-    
+
     def __init__(self):
         Menu.__init__(self, 'Opciones')
         self.data = Cfg.cargar()
-        
+
         if self.data['metodo_de_entrada'] == 'teclado':
             self.curr_input = 'teclas'
         elif self.data['metodo_de_entrada'] == 'gamepad':
             self.curr_input = 'botones'
-        
+
         self.botones = LayeredUpdates()
         self.espacios = LayeredUpdates()
-        self.establecer_botones(self.crear_botones_config(), 6)
-        self.establecer_botones(self.crear_botones_teclas(), 4)
+        self.establecer_botones(self.create_config_btns(), 6)
+        self.establecer_botones(self.crear_restore_btn(), 6)
+        self.establecer_botones(self.create_key_btns(), 4)
         self.crear_espacios_config()
-        self.create_notice()
-        
+        self.notice, self.notice_area = self.create_notice()
+
         self.functions.update({
             'tap': {
                 'accion': self.press_button,
@@ -50,21 +51,21 @@ class MenuOpciones(MenuPausa, Menu):
             }
         })
 
-    def crear_botones_config(self):
+    def create_config_btns(self):
         m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
         cmd1 = self.cambiar_booleano
         cmd2 = self.set_input_device
         if joystick.get_count():
             botones = [
-                {m: "Mostrar Intro", c: cmd1, k: {d: "Arriba", b: "Recordar Menus", a: "Salir",}},
-                {m: "Recordar Menus", c: cmd1, k: {b: "Metodo de Entrada", a: "Mostrar Intro", d:"Abajo"}},
-                {m: "Metodo de Entrada", c: cmd2, k: {b: "Arriba", a: "Recordar Menus", d:"Derecha"}}
+                {m: "Mostrar Intro", c: cmd1, k: {d: "Arriba", b: "Recordar Menus", a: "Defaults"}},
+                {m: "Recordar Menus", c: cmd1, k: {b: "Metodo de Entrada", a: "Mostrar Intro", d: "Abajo"}},
+                {m: "Metodo de Entrada", c: cmd2, k: {b: "Arriba", a: "Recordar Menus", d: "Derecha"}}
             ]
         else:
             botones = [
                 {m: "Mostrar Intro", c: cmd1, k: {b: "Recordar Menus", a: "Salir", d: "Arriba"}},
-                {m: "Recordar Menus", c: cmd1, k: {d: "Abajo", a: "Mostrar Intro", b:"Arriba"}}
+                {m: "Recordar Menus", c: cmd1, k: {d: "Abajo", a: "Mostrar Intro", b: "Arriba"}}
             ]
 
         for i in range(len(botones)):
@@ -72,7 +73,7 @@ class MenuOpciones(MenuPausa, Menu):
 
         return botones
 
-    def crear_botones_teclas(self):
+    def create_key_btns(self):
         # abreviaturas para hacer más legible el código
         m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
@@ -87,15 +88,25 @@ class MenuOpciones(MenuPausa, Menu):
             {m: "Derecha", c: cmd, k: {b: "Izquierda", a: "Abajo", i: special}},
             {m: "Izquierda", c: cmd, k: {b: "Menu", a: "Derecha"}},
             {m: "Menu", c: cmd, k: {b: "Accion", a: "Izquierda"}},
-            {m: "Accion", c: cmd, k: {b: "Menu Rapido", a: "Menu"}},
-            {m: "Menu Rapido", c: cmd, k: {b: "Cancelar", a: "Accion"}},
-            {m: "Cancelar", c: cmd, k: {b: "Salir", a: "Menu Rapido"}},
-            {m: "Salir", c: cmd, k: {b: "Mostrar Intro", a: "Cancelar"}}]
-            
+            {m: "Accion", c: cmd, k: {b: "Contextual", a: "Menu"}},
+            {m: "Contextual", c: cmd, k: {b: "Defaults", a: "Accion", i: "Defaults"}}]
+
         for i in range(len(botones)):
             botones[i][p] = [326 + 75 + 3, 38 * i + 64]
 
         return botones
+
+    def crear_restore_btn(self):
+        n, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
+        a, b, d = 'arriba', 'abajo', 'derecha'
+        dirs = {b: "Mostrar Intro", d: "Contextual"}
+        if joystick.get_count():
+            dirs.update({a: "Metodo de Entrada"})
+        else:
+            dirs.update({a: "Recordar Menus"})
+        y = self.canvas.get_height() - 32 - 15
+        btn = {n: 'Defaults', c: self.restore_defaults, p: [6, y], k: dirs}
+        return [btn]
 
     def crear_espacios_config(self):
         esp = None
@@ -122,6 +133,14 @@ class MenuOpciones(MenuPausa, Menu):
                 nom = key_name(texto)
                 esp = Fila(nom, 75, x - 75 - 3, y + 9, justification=1)
 
+            elif nom == 'defaults':
+                spr = Sprite()
+                spr.nombre = 'dummy space'
+                spr.image = Surface((0, 0))
+                spr.rect = spr.image.get_rect()
+
+                esp = spr
+
             self.espacios.add(esp)
 
     def elegir_boton_espacio(self, n=None):
@@ -143,20 +162,20 @@ class MenuOpciones(MenuPausa, Menu):
             Cfg.asignar('mostrar_intro', not Cfg.dato('mostrar_intro'))
         elif boton.nombre == 'Recordar Menus':
             Cfg.asignar('recordar_menus', not Cfg.dato('recordar_menus'))
-        
+
         self.mostrar_aviso()
 
     def set_input_device(self):
         boton, opcion = self.elegir_boton_espacio()
-        
+
         if self.input_device == 'teclado':
             self.input_device = 'gamepad'
             self.curr_input = 'botones'
-            
+
         elif self.input_device == 'gamepad':
             self.input_device = 'teclado'
             self.curr_input = 'teclas'
-        
+
         # este bloque cambia todos los espacios por los nombres de las teclas del nuevo input.
         # key names para las teclas del teclado, números para los botones del gamepad.
         opcion.reset_text(self.input_device.title())
@@ -169,7 +188,7 @@ class MenuOpciones(MenuPausa, Menu):
                     espacio.reset_text(key_name(txt))
                 else:
                     espacio.reset_text(str(txt))
-        
+
         self.mostrar_aviso()
 
     def set_tecla(self):
@@ -185,36 +204,59 @@ class MenuOpciones(MenuPausa, Menu):
         """Cambia la tecla elgida por el nuevo input
         :param tcl: int
         """
-        
+
         i_boton, i_tecla = None, None
         # elige segun la posición del cursor.
         boton, tecla = self.elegir_boton_espacio()
-        
+
         i = -1
         # si la tecla elegida ya está asignada a un comando...
         for fila in self.espacios:
             i += 1
             if key_name(tcl) == fila.nombre:
-                #i_x son el boton y la tecla que ya existen
+                # i_x son el boton y la tecla que ya existen
                 i_boton, i_tecla = self.elegir_boton_espacio(i)
-                
+
                 break
-        
+
         tecla.ser_deselegido()
         if i_tecla is not None:
             # acá, si tcl ya está asignada a otro comando, se intercambian las teclas entre esos comandos.
             i_tecla.reset_text(tecla.nombre)
             idx = Cfg.dato(self.curr_input + '/' + i_boton.nombre.lower())
             Cfg.asignar(self.curr_input + '/' + i_boton.nombre.lower(), idx)
-        
+
         if tecla.nombre != key_name(tcl):
             # acá comprobamos que la tecla elegida sea de hecho distinta a la que ya está
             tecla.reset_text(key_name(tcl))
             Cfg.asignar(self.curr_input + '/' + boton.nombre.lower(), tcl)
-            
+
             # porque si no lo es, no hay que mostrar el aviso de los cambios.
             self.mostrar_aviso()
-            
+
+    def restore_defaults(self):
+        data = Cfg.defaults()
+        for idx in range(len(self.botones)):
+            boton, espacio = self.elegir_boton_espacio(idx)
+            nom = boton.nombre.lower()
+            if nom in data['teclas']:
+                txt = data['teclas'][nom]
+                espacio.reset_text(key_name(txt))
+                Cfg.asignar('teclas/'+nom, txt)
+            else:
+                nom = nom.replace(' ', '_')
+                if nom in data:
+                    if type(data[nom]) is str:
+                        txt = data[nom].title()
+                    elif data[nom]:
+                        txt = 'Sí'
+                    else:
+                        txt = 'No'
+                    espacio.reset_text(txt)
+                    Cfg.asignar(nom, data[nom])
+
+        self.canvas.fill(self.bg_cnvs, self.notice_area)
+
     def create_notice(self):
         """Crea el aviso de que la configuración cambiará al salir del menú"""
         texto = 'Los cambios tendrán efecto al salir de este menú'
@@ -223,10 +265,9 @@ class MenuOpciones(MenuPausa, Menu):
         x, y = self.canvas.get_width() - w - 15, self.canvas.get_height() - h - 15
         rect = Rect(x, y, w, h + 1)
         render = render_textrect(texto, fuente, rect, self.font_low_color, self.bg_cnvs)
-        
-        self.notice = render
-        self.notice_area = rect
-        
+
+        return render, rect
+
     def mostrar_aviso(self):
         """Muestra el aviso del cambio en la configuración"""
         self.canvas.blit(self.notice, self.notice_area)
@@ -235,8 +276,8 @@ class MenuOpciones(MenuPausa, Menu):
         TECLAS.asignar(Cfg.dato(self.curr_input))
         Cfg.asignar('metodo_de_entrada', self.input_device)
         Cfg.guardar()
-        
-        self.canvas.fill(self.bg_cnvs,self.notice_area)
+
+        self.canvas.fill(self.bg_cnvs, self.notice_area)
         return True
 
     def update(self):

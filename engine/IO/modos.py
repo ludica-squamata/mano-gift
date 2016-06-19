@@ -4,7 +4,7 @@ from engine.globs.renderer import Renderer
 from engine.globs import TAP, HOLD, RELEASE, TECLAS, CAPA_OVERLAYS_MENUS
 from engine.misc import Util
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1, K_F2, K_F3, K_F4
+from pygame import KEYDOWN, QUIT, K_ESCAPE
 from engine.UI.menues import *
 from engine.UI import QuickCircularMenu
 
@@ -24,18 +24,6 @@ class Modo:
                 if event.key == K_ESCAPE:
                     Util.salir()
 
-                elif event.key == K_F1:
-                    Ed.HERO.z += 1
-
-                elif event.key == K_F2:
-                    Ed.HERO.z -= 1
-
-                elif event.key == K_F3:
-                    Ed.HERO.z += 10
-
-                elif event.key == K_F4:
-                    Ed.HERO.z -= 10
-
         EventDispatcher.process()
 
     @classmethod
@@ -44,7 +32,7 @@ class Modo:
         dx, dy = cls.dx, cls.dy
         for event in get_taphold_events(events):
             if event.type == TAP:
-                if event.key == TECLAS.MENU_RAPIDO:
+                if event.key == TECLAS.CONTEXTUAL:
                     Ed.MODO = 'Dialogo'
                     if Ed.MENU_RAPIDO is None:
                         Ed.MENU_RAPIDO = QuickCircularMenu()
@@ -111,10 +99,7 @@ class Modo:
                 elif event.key == TECLAS.ACCION:
                     Ed.DIALOG.use_function('tap', 'hablar')
 
-                elif event.key == TECLAS.MENU_RAPIDO:
-                    Ed.DIALOG.use_function('tap', 'inventario')
-
-                elif event.key == TECLAS.CANCELAR_DIALOGO:
+                elif event.key == TECLAS.CONTEXTUAL:
                     Ed.DIALOG.use_function('tap', 'cancelar')
 
             elif event.type == HOLD:
@@ -171,7 +156,7 @@ class Modo:
                 elif event.key == TECLAS.ACCION:
                     Ed.menu_actual.use_function('tap', 'accion')
 
-                elif event.key == TECLAS.CANCELAR_DIALOGO:
+                elif event.key == TECLAS.CONTEXTUAL:
                     previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
                     if previo:
                         cls.pop_menu(Ed.menu_previo)

@@ -19,23 +19,18 @@ class Config:
             "izquierda": 276,
 
             "accion": 120,
-            "cancelar": 97,
             "menu": 13,
-            "menu rapido": 122,
-
-            "salir": 27
+            "contextual": 122,
         },
 
         "botones": {
             "abajo": 13,
             "accion": 3,
             "arriba": 12,
-            "cancelar": 1,
+            "contextual": 1,
             "derecha": 10,
             "izquierda": 11,
-            "menu": 8,
-            "menu rapido": 0,
-            "salir": 9
+            "menu": 8
         }
     }
 

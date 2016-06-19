@@ -1,8 +1,8 @@
 # intro.py
 # animación de introducción. Créditos.
-from pygame import Rect, KEYUP
+from pygame import Rect, KEYUP, K_ESCAPE
 from pygame import display as pantalla, event, font
-from engine.globs import Tiempo, TECLAS
+from engine.globs import Tiempo
 from engine.libs.textrect import render_textrect
 from engine.misc import Util
 
@@ -89,7 +89,7 @@ def intro(fondo):
 
         for _event in event.get():
             if _event.type == KEYUP:
-                if _event.key == TECLAS.SALIR:
+                if _event.key == K_ESCAPE:
                     Util.salir()
                 else:
                     running = False
