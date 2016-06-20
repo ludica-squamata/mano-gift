@@ -4,9 +4,11 @@ from .CompoMob import Parlante
 from .mob import Mob
 
 
-class PC(Parlante,Mob):
-    
-    def __init__(self, data, x, y, ):
+class PC(Parlante, Mob):
+    moviendose = False
+    atacando = False
+
+    def __init__(self, data, x, y):
         super().__init__(data, x, y, focus=True)
         self.inventario = Inventory(10, 10 + self.fuerza)
 
@@ -14,29 +16,29 @@ class PC(Parlante,Mob):
     def mover(self, dx, dy):
         self.moviendose = True
         self.animar_caminar()
+        direccion = ''
         if dx > 0:
-            self.cambiar_direccion('derecha')
+            direccion = 'derecha'
         elif dx < -0:
-            self.cambiar_direccion('izquierda')
-
-        if dy < 0:
-            self.cambiar_direccion('arriba')
+            direccion = 'izquierda'
+        elif dy < 0:
+            direccion = 'arriba'
         elif dy > 0:
-            self.cambiar_direccion('abajo')
+            direccion = 'abajo'
 
+        self.cambiar_direccion(direccion)
         dx, dy = dx * self.velocidad, dy * self.velocidad
-        if not self.detectar_colisiones(dx, 0):
-            self.reubicar(dx, 0)  # el heroe se mueve en el mapa, no en la camara
-        if not self.detectar_colisiones(0, dy):
-            self.reubicar(0, dy)
-        
+        if not self.detectar_colisiones(dx, dy):
+            self.reubicar(dx, dy)
+
     def accion(self):
         x, y = self.direcciones[self.direccion]
-        
+
         sprite = self._interact_with_mobs(x, y)
+        if self.estado == 'cmb':
+            self.atacando = True
         if sprite is not None:
             if self.estado == 'cmb':
-                self.atacando = True
                 x, y = x * self.fuerza, y * self.fuerza
                 self.atacar(sprite, x, y)
             else:
@@ -81,7 +83,7 @@ class PC(Parlante,Mob):
         self.moviendose = False
         if self.atacando:
             self.animar_ataque(5)
-        
+
         super().update()
 
     def iniciar_dialogo(self, x, y):
