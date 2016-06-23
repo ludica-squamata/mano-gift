@@ -2,10 +2,13 @@ from .props import *
 from .items import *
 
 
-def new_prop(nombre, imagen, x, y, data=None):
-    if data is None:
+def new_prop(nombre, x, y, data = None, img = None):
+    if data is None and img is None:
+        raise TypeError
+    elif data is None:
         data = {}
-    args = nombre, imagen, x, y, data
+
+    args = nombre, x, y, data
     tipo = data.get('tipo')
     if tipo == 'agarrable':
         prop = Agarrable(*args)
@@ -17,7 +20,9 @@ def new_prop(nombre, imagen, x, y, data=None):
         prop = Operable(*args)
     elif tipo == 'destruible':
         prop = Destruible(*args)
+    elif tipo == 'estructura3D':
+        prop = Estructura3D(*args).props
     else:
-        prop = Escenografia(*args)
+        prop = Escenografia(nombre, x, y, data=data, imagen=img)
 
     return prop

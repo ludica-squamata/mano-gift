@@ -30,23 +30,22 @@ class Loader:
         for ref in pos:
             try:
                 data = Rs.abrir_json(Md.items + ref + '.json')
-                if ref in imgs:
-                    imagen = Rs.cargar_imagen(imgs[ref])
-                else:
-                    imagen = Rs.cargar_imagen(data['image'])
             except IOError:
                 data = False
-                imagen = Rs.cargar_imagen(imgs[ref])
 
             for x, y in pos[ref]:
                 if data:
-                    prop = new_prop(ref, imagen, x, y, data)
+                    prop = new_prop(ref, x, y, data=data)
                     is_interactive = True
                 else:
-                    prop = new_prop(ref, imagen, x, y)
+                    prop = new_prop(ref, x, y, img=imgs[ref])
                     is_interactive = False
-
-                cls.STAGE.add_property(prop, GRUPO_ITEMS, is_interactive)
+                
+                if type(prop) is list:
+                    for p in prop:
+                        cls.STAGE.add_property(p, GRUPO_ITEMS, is_interactive)
+                else:
+                    cls.STAGE.add_property(prop, GRUPO_ITEMS, is_interactive)
 
     @classmethod
     def cargar_mobs(cls, extra_data, capa='capa_ground'):

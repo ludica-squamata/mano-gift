@@ -1,0 +1,18 @@
+{
+  "tipo":"estructura3D",
+  "nombre":"Casa",
+  "componentes":{
+    "frente":{
+      "casa":[[0,0,0]],
+      "puerta":[[69,133,1]]
+    },
+    "lado":{},
+    "reverso":{}
+  },
+  "referencias":{
+    "casa":"props/casa.png",
+    "puerta":"data/items/puerta.json"
+  },
+  "cara":"frente",
+  "proyecta_sombra":true
+}

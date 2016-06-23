@@ -4,11 +4,10 @@ from engine.misc import Resources
 from pygame import mask
 from .items import *
 
-
 class Escenografia(ShadowSprite, EventListener):
     accion = None
 
-    def __init__(self, nombre, imagen, x, y, data):
+    def __init__(self, nombre, x, y, data=None, imagen=None):
         """
         :param nombre:
         :param imagen:
@@ -25,7 +24,9 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = nombre
         self.tipo = 'Prop'
         self.data = data
-        super().__init__(imagen, x=x, y=y)
+        if imagen is None:
+            imagen = data.get('image')
+        super().__init__(imagen=imagen, x=x, y=y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
         try:
@@ -38,9 +39,9 @@ class Escenografia(ShadowSprite, EventListener):
 
 
 class Agarrable(Escenografia):
-    def __init__(self, nombre, imagen, x, y, data):
+    def __init__(self, nombre, x, y, data):
         data.setdefault('proyecta_sombra', False)
-        super().__init__(nombre, imagen, x, y, data)
+        super().__init__(nombre, x, y, data)
         self.subtipo = data['subtipo']
         self.accion = 'agarrar'
         ItemGroup[self.nombre] = self
@@ -62,12 +63,12 @@ class Agarrable(Escenografia):
 
 
 class Movible(Escenografia):
-    def __init__(self, nombre, imagen, x, y, data):
+    def __init__(self, nombre, x, y, data):
         p = data.get('propiedades', ['solido'])
         if 'solido' not in p:
             p.append('solido')
             data['propiedades'] = p
-        super().__init__(nombre, imagen, x, y, data)
+        super().__init__(nombre, x, y, data)
         self.accion = 'mover'
         ItemGroup[self.nombre] = self
 
@@ -87,8 +88,8 @@ class Movible(Escenografia):
 
 
 class Trepable(Escenografia):
-    def __init__(self, nombre, imagen, x, y, data):
-        super().__init__(nombre, imagen, x, y, data)
+    def __init__(self, nombre, x, y, data):
+        super().__init__(nombre, x, y, data)
         self.accion = 'trepar'
 
 
@@ -96,8 +97,8 @@ class Operable(Escenografia):
     estados = {}
     estado_actual = 0
 
-    def __init__(self, nombre, imagen, x, y, data):
-        super().__init__(nombre, imagen, x, y, data)
+    def __init__(self, nombre, x, y, data):
+        super().__init__(nombre, x, y, data)
         self.accion = 'operar'
         ItemGroup[self.nombre] = self
 
@@ -126,6 +127,33 @@ class Operable(Escenografia):
 
 
 class Destruible(Escenografia):
-    def __init__(self, nombre, imagen, x, y, data):
-        super().__init__(nombre, imagen, x, y, data)
+    def __init__(self, nombre, x, y, data):
+        super().__init__(nombre, x, y, data)
         self.accion = 'romper'
+
+
+class Estructura3D:
+    def __init__(self, nombre, x, y, data):
+        self.nombre = nombre
+        self.props = self.build_face(data, x, y, data.get('cara','frente'))
+    
+    @staticmethod
+    def build_face(data, dx, dy, face):
+        from engine.scenery import new_prop
+        imagenes = {}
+        props = []
+        for nombre in data['componentes'][face]:
+            ruta = data['referencias'][nombre]
+            for x,y,z in data['componentes'][face][nombre]:
+                if ruta.endswith('.json'):
+                    propdata = Resources.abrir_json(ruta)
+                    if 'cara' not in propdata:
+                        propdata.update({'cara':face})
+                    prop = new_prop(nombre, dx+x, dy+y, data = propdata)
+                        
+                elif ruta.endswith('.png'):
+                    prop = new_prop(nombre, dx+x, dy+y, img = ruta)
+                
+                props.append(prop)
+        
+        return props
