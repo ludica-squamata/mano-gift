@@ -64,9 +64,7 @@ class DialogElement(LetterElement):
                 Ed.DIALOG = Dialogo(self.item['body'], *self.parent.locutores)
                 Ed.MODO = 'Dialogo'
             else:
-                for mob in self.parent.locutores:
-                    mob.hablando = False
-                Ed.MODO = 'Aventura'
+                self.parent.cerrar()
 
         return True
 
@@ -103,8 +101,20 @@ class DialogCircularMenu(RenderedCircularMenu, CircularMenu):
 
         super().__init__(cascadas)
         self.show()
-        # self.functions['tap'].update({'inventario': self.back})
+        self.functions['tap'].update({'cancelar': self.back})
 
+    def cerrar(self):
+        for mob in self.locutores:
+            mob.hablando = False
+        Ed.MODO = 'Aventura'
+        self.salir()
+            
     def salir(self):
         self.cascadaActual = 'inicial'
         super().salir()
+    
+    def back(self):
+        if self.cascadaActual == 'inicial':
+            self.cerrar()
+        else:
+            super().back()
