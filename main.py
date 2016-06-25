@@ -23,10 +23,12 @@ if Config.dato('mostrar_intro'):
 event.set_blocked([1, 4, 5, 6, 17])
 # all mouse- and video-related events
 
-Modo.pop_menu('Debug')
+Modo.pop_menu('Personaje')
+cambios = []
 while True:
     Tiempo.update(60)
     events = event.get()
+    ModData.SCRIPT.update()
     Modo.juego(events)
     if Ed.MODO == 'Aventura':
         cambios = Modo.aventura(events, fondo)

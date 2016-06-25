@@ -71,6 +71,11 @@ class EventDispatcher:
                 for listener in cls._oyentes[evento.tipo]:
                     listener(evento)
             l -= 1
+    
+    @classmethod
+    def get_queqed(cls):
+        for item in cls._cola:
+            print(item)
 
 
 class GiftEvent:

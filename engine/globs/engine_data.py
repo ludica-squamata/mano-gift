@@ -20,6 +20,7 @@ class EngineData:
     onPause = False
     scene_data = None
     setKey = False
+    char_name = ''
 
     @classmethod
     def setear_escena(cls, nombre):
@@ -74,6 +75,13 @@ class EngineData:
 
         if event.data['mode'] == 'SetKey':
             cls.setKey = value
+    
+    @classmethod
+    def end_dialog(cls, layer):
+        Renderer.clear_overlays_from_layer(layer)
+        cls.DIALOG = None
+        cls.MODO = 'Aventura'
+        cls.onPause = False
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")

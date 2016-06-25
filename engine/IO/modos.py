@@ -225,12 +225,4 @@ class Modo:
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
-    @staticmethod
-    def end_dialog(layer):
-        Renderer.clear_overlays_from_layer(layer)
-        Ed.DIALOG = None
-        Ed.MODO = 'Aventura'
-        Ed.onPause = False
-
-
 EventDispatcher.register(Modo.toggle_mode, 'SetMode')

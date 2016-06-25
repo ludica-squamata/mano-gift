@@ -15,6 +15,7 @@ class ModData:
     items = ''
     scripts = ''
     scenes = ''
+    SCRIPT = None
 
     @classmethod
     def init(cls, ini):
@@ -54,6 +55,8 @@ class ModData:
                         # lo resolví mmás fácil. Si ésta clase no tiene el nombre ya...
                         setattr(cls, name, (getattr(module, name)))
                         # añadirlo.
+                    elif name == 'script':
+                        cls.SCRIPT = module.Script
 
         else:
             Util.salir('No data in mod folder')

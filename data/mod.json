@@ -1,17 +1,15 @@
 {
-    "nombre":"Proyecto Mano-Gift",
-    "icono":"favicon.png",
-    "inicial":"casas y arboles",
-    "initial_mode":"Aventura",
-    "folders":{
-        "graficos":"grafs",
-        "dialogos":"dialogs",
-        "mapas":"maps",
-        "mobs":"mobs",
-        "quest":"quests",
-        "items":"items",
-        "scripts":"scripts",
-        "scenes":"scenes"
-    },
-    "use_latitude":true
+  "nombre":"Proyecto Mano-Gift",
+  "icono":"favicon.png",
+  "folders":{
+    "graficos":"grafs",
+    "dialogos":"dialogs",
+    "mapas":"maps",
+    "mobs":"mobs",
+    "quest":"quests",
+    "items":"items",
+    "scripts":"scripts",
+    "scenes":"scenes"
+  },
+  "use_latitude":true
 }

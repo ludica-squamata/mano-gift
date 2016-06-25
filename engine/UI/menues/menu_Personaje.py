@@ -1,6 +1,6 @@
 from engine.misc import Resources
 from engine.libs import render_textrect
-from engine.globs import Tiempo
+from engine.globs import Tiempo, EngineData, CAPA_OVERLAYS_MENUS
 from pygame import font, Rect, Surface, draw
 from pygame.sprite import LayeredUpdates, Sprite
 from .menu import Menu
@@ -192,8 +192,8 @@ class MenuPersonaje(Menu):
             self.select_line(-1)
 
     def aceptar(self):
-        name = ''.join([spr.key for spr in self.area_input])
-        print(name)
+        EngineData.char_name = ''.join([spr.key for spr in self.area_input])
+        EngineData.end_dialog(CAPA_OVERLAYS_MENUS)
 
     def movercursor(self, dx, dy):
         """Desplaza el cursor por el teclado en pantalla y controla los limites."""
