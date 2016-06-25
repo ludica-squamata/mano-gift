@@ -32,8 +32,7 @@ class DialogInterface(Ventana):
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
     def destruir(self):
-        Ed.DIALOG = None
-        Renderer.del_overlay(self)
+        Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
 
     def ubicar(self, x=0, y=0, z=0):
         if x < 0 or y < 0:

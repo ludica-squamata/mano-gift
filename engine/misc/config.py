@@ -37,8 +37,8 @@ class Config:
     @classmethod
     def cargar(cls):
         if not len(cls.data):
-            if os.path.isfile('config.json'):
-                cls.data = Resources.abrir_json('config.json')
+            if os.path.isfile('save/config.json'):
+                cls.data = Resources.abrir_json('save/config.json')
             else:
                 cls.data = cls.defaults()
                 cls.__changed = True
@@ -92,4 +92,4 @@ class Config:
     @classmethod
     def guardar(cls):
         if cls.__changed:
-            Resources.guardar_json('config.json', cls.data)
+            Resources.guardar_json('save/config.json', cls.data)

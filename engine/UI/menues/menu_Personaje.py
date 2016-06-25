@@ -194,6 +194,7 @@ class MenuPersonaje(Menu):
     def aceptar(self):
         EngineData.char_name = ''.join([spr.key for spr in self.area_input])
         EngineData.end_dialog(CAPA_OVERLAYS_MENUS)
+        EngineData.menu_previo = ''
 
     def movercursor(self, dx, dy):
         """Desplaza el cursor por el teclado en pantalla y controla los limites."""

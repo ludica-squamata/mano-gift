@@ -144,16 +144,22 @@ class Estructura3D:
         props = []
         for nombre in data['componentes'][face]:
             ruta = data['referencias'][nombre]
+            imagen = None
+            propdata = None
             for x,y,z in data['componentes'][face][nombre]:
-                if ruta.endswith('.json'):
+                if type(ruta) is dict:
+                    propdata = ruta.copy()
+
+                elif ruta.endswith('.json'):
                     propdata = Resources.abrir_json(ruta)
-                    if 'cara' not in propdata:
-                        propdata.update({'cara':face})
-                    prop = new_prop(nombre, dx+x, dy+y, data = propdata)
-                        
+
                 elif ruta.endswith('.png'):
-                    prop = new_prop(nombre, dx+x, dy+y, img = ruta)
+                    imagen = ruta
+
+                if propdata and 'cara' not in propdata:
+                    propdata.update({'cara':face})
                 
+                prop = new_prop(nombre, dx+x, dy+y, img = imagen, data = propdata)
                 props.append(prop)
-        
+
         return props

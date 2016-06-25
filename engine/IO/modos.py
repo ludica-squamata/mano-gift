@@ -161,7 +161,7 @@ class Modo:
                     if previo:
                         cls.pop_menu(Ed.menu_previo)
                     elif previo is not None:
-                        cls.end_dialog(CAPA_OVERLAYS_MENUS)
+                        Ed.end_dialog(CAPA_OVERLAYS_MENUS)
 
             elif event.type == HOLD:
                 if event.key == TECLAS.ACCION:

@@ -11,7 +11,24 @@
   },
   "referencias":{
     "casa":"props/casa.png",
-    "puerta":"data/items/puerta.json"
+    "puerta":{
+        "ID":4,"tipo":"operable",
+        "peso":10, "volumen":5,
+        "image":"props/puerta_c.png",
+        "propiedades":["solido"],
+        "proyecta_sombra":false,
+        "operable":[
+            {"ID":0,
+             "image":"props/puerta_c.png",
+             "solido":true,
+             "next":1
+            },
+            {"ID":1,
+             "image":"props/puerta_a.png",
+             "solido":false,
+             "next":0
+            }]
+    }
   },
   "cara":"frente",
   "proyecta_sombra":true

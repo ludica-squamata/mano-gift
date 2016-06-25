@@ -39,6 +39,8 @@ class ModData:
             cls.scripts = root + data['folders']['scripts'] + '/'
             cls.scenes = root + data['folders']['scenes'] + '/'
 
+            cls.save = cls._open_save_folder()
+
             for script in listdir(cls.scripts):
                 # lo convertí en un loop para poder agregar, por ejemplo,
                 # una pantalla de gameover sin tener que buscar ese nombre
@@ -57,8 +59,6 @@ class ModData:
                         # añadirlo.
                     elif name == 'script':
                         cls.SCRIPT = module.Script
-
-            cls._open_save_folder()
 
         else:
             Util.salir('No data in mod folder')
@@ -89,5 +89,5 @@ class ModData:
         ruta = path.normpath(path.join(cwd(),'save'))
         if not path.exists(ruta):
             mkdir(ruta)
-        else:
-            print(listdir(ruta))
+
+        return ruta
