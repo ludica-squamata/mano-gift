@@ -1,4 +1,4 @@
-from os import getcwd as cwd, path, listdir
+from os import getcwd as cwd, path, listdir, mkdir
 from importlib import machinery
 
 
@@ -58,6 +58,8 @@ class ModData:
                     elif name == 'script':
                         cls.SCRIPT = module.Script
 
+            cls._open_save_folder()
+
         else:
             Util.salir('No data in mod folder')
 
@@ -81,3 +83,11 @@ class ModData:
 
         data = Resources.abrir_json(ruta)
         return data
+    
+    @classmethod
+    def _open_save_folder(cls):
+        ruta = path.normpath(path.join(cwd(),'save'))
+        if not path.exists(ruta):
+            mkdir(ruta)
+        else:
+            print(listdir(ruta))
