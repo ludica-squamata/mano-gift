@@ -27,6 +27,12 @@ class Resources:
 
     @staticmethod
     def abrir_json(archivo):
+        """
+        :param archivo:
+        :type archivo:str
+        :return:
+        :rtype: dict
+        """
         ex = open(archivo, 'r')
         data = json.load(ex)
         ex.close()

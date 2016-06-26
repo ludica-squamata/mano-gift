@@ -4,6 +4,7 @@ from engine.misc import Resources
 from pygame import mask
 from .items import *
 
+
 class Escenografia(ShadowSprite, EventListener):
     accion = None
 
@@ -37,6 +38,8 @@ class Escenografia(ShadowSprite, EventListener):
 
         self.add_listeners()  # carga de event listeners
 
+    def __repr__(self):
+        return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
 
 class Agarrable(Escenografia):
     def __init__(self, nombre, x, y, data):
@@ -135,8 +138,8 @@ class Destruible(Escenografia):
 class Estructura3D:
     def __init__(self, nombre, x, y, data):
         self.nombre = nombre
-        self.props = self.build_face(data, x, y, data.get('cara','frente'))
-    
+        self.props = self.build_face(data, x, y, data.get('cara', 'frente'))
+
     @staticmethod
     def build_face(data, dx, dy, face):
         from engine.scenery import new_prop
@@ -146,7 +149,7 @@ class Estructura3D:
             ruta = data['referencias'][nombre]
             imagen = None
             propdata = None
-            for x,y,z in data['componentes'][face][nombre]:
+            for x, y, z in data['componentes'][face][nombre]:
                 if type(ruta) is dict:
                     propdata = ruta.copy()
 
@@ -157,9 +160,9 @@ class Estructura3D:
                     imagen = ruta
 
                 if propdata and 'cara' not in propdata:
-                    propdata.update({'cara':face})
-                
-                prop = new_prop(nombre, dx+x, dy+y, img = imagen, data = propdata)
+                    propdata.update({'cara': face})
+
+                prop = new_prop(nombre, dx + x, dy + y, img=imagen, data=propdata)
                 props.append(prop)
 
         return props

@@ -9,6 +9,7 @@ from .tiempo import Tiempo
 class EngineData:
     mapas = {}
     MAPA_ACTUAL = None
+    """:type : engine.mapa.Stage.Stage"""
     HERO = None
     DIALOG = None
     HUD = None
