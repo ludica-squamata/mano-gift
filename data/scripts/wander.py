@@ -1,7 +1,6 @@
 from random import choice
 from engine.mobs.behaviortrees import Leaf, Success, Failure
-from engine.mobs.scripts.a_star import a_star
-from engine.mobs.scripts.movimiento import determinar_direccion
+from engine.mobs.scripts.a_star import a_star, determinar_direccion
 from engine.globs import EngineData as Ed
 
 

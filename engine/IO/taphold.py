@@ -13,7 +13,6 @@ def filtrar_eventos_teclado(events):
                 teclas[_event.key]['pressed'] = True
             elif Ed.setKey:
                 event.post(event.Event(TAP, {'key': _event.key, 'type': 'tapping'}))
-            
 
         elif _event.type == KEYUP:
             if _event.key in teclas:

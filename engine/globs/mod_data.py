@@ -1,5 +1,6 @@
-from os import getcwd as cwd, path, listdir, mkdir
+from os import getcwd as cwd, path, listdir
 from importlib import machinery
+from engine.misc import Util, Resources
 
 
 class ModData:
@@ -19,7 +20,6 @@ class ModData:
 
     @classmethod
     def init(cls, ini):
-        from engine.misc import Util
 
         if not cls._find_mod_folder(ini):
             Util.salir("la ruta no existe")
@@ -38,8 +38,6 @@ class ModData:
             cls.items = root + data['folders']['items'] + '/'
             cls.scripts = root + data['folders']['scripts'] + '/'
             cls.scenes = root + data['folders']['scenes'] + '/'
-
-            cls.save = cls._open_save_folder()
 
             for script in listdir(cls.scripts):
                 # lo convertí en un loop para poder agregar, por ejemplo,
@@ -76,18 +74,9 @@ class ModData:
 
     @classmethod
     def _get_file_data(cls, filename):
-        from engine.misc import Resources
         ruta = cls.mod_folder + filename
         if not path.exists(ruta):
             return None
 
         data = Resources.abrir_json(ruta)
         return data
-    
-    @classmethod
-    def _open_save_folder(cls):
-        ruta = path.normpath(path.join(cwd(),'save'))
-        if not path.exists(ruta):
-            mkdir(ruta)
-
-        return ruta

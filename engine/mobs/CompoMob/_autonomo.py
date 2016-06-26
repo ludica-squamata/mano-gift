@@ -1,4 +1,3 @@
-from engine.mobs.scripts import movimiento
 from engine.mobs.behaviortrees import BehaviourTree
 from . import Sensitivo, Animado
 from engine.globs import EngineData as Ed, ModData as Md
@@ -27,7 +26,7 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
         if self.objetivo in detectados:
             self.velocidad = 2
-            self.AI = movimiento.ai_pursue
+            # self.AI = movimiento.ai_pursue
             self.vision = 'circulo'
             self.mover_vis = self.mover_cir_vis
         else:

@@ -33,12 +33,13 @@ class Config:
             "menu": 8
         }
     }
+    savedir = os.path.join(os.getcwd(), "save")
 
     @classmethod
     def cargar(cls):
         if not len(cls.data):
-            if os.path.isfile('save/config.json'):
-                cls.data = Resources.abrir_json('save/config.json')
+            if os.path.isfile(os.path.join(cls.savedir, 'config.json')):
+                cls.data = Resources.abrir_json(os.path.join(cls.savedir, 'config.json'))
             else:
                 cls.data = cls.defaults()
                 cls.__changed = True
@@ -92,6 +93,6 @@ class Config:
     @classmethod
     def guardar(cls):
         if cls.__changed:
-            if not os.path.exists('save'):
+            if not os.path.exists(cls.savedir):
                 os.mkdir('save')
-            Resources.guardar_json('save/config.json', cls.data)
+            Resources.guardar_json(os.path.join(cls.savedir, 'config.json'), cls.data)

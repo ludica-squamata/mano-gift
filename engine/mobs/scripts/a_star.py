@@ -78,3 +78,24 @@ def reconstruir_camino(camino, nodo_actual):
         return p
     else:
         return [nodo_actual]
+
+
+def determinar_direccion(curr_p, next_p):
+    px, py = curr_p
+    nx, ny = next_p
+
+    dx = px - nx
+    dy = py - ny
+
+    if dx > dy:
+        if dy < 0:
+            direccion = 'abajo'
+        else:
+            direccion = 'izquierda'
+    else:
+        if dx < 0:
+            direccion = 'derecha'
+        else:
+            direccion = 'arriba'
+
+    return direccion
