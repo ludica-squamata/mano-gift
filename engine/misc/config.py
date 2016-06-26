@@ -92,4 +92,6 @@ class Config:
     @classmethod
     def guardar(cls):
         if cls.__changed:
+            if not os.path.exists('save'):
+                os.mkdir('save')
             Resources.guardar_json('save/config.json', cls.data)
