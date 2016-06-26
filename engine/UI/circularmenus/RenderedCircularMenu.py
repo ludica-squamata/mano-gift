@@ -33,6 +33,7 @@ class LetterElement(BaseElement):
         cx, cy = Renderer.camara.rect.center
         
         self.title = Sprite()
+        self.title.active = True
         self.title.image = fuente.render(self.nombre, 1, (0, 0, 0),(125,125,125))
         self.title.rect = self.title.image.get_rect(center=(cx,cy+100))
 
