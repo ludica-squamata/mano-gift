@@ -159,7 +159,7 @@ class Modo:
                 elif event.key == TECLAS.CONTEXTUAL:
                     previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
                     if previo:
-                        cls.pop_menu(Ed.menu_previo)
+                        cls.pop_menu(previo=True)
                     elif previo is not None:
                         Ed.end_dialog(CAPA_OVERLAYS_MENUS)
 
@@ -201,12 +201,15 @@ class Modo:
             cls.newMenu = value
 
     @classmethod
-    def pop_menu(cls, titulo=None):
+    def pop_menu(cls, titulo=None, previo=False):
         if titulo is None:
             titulo = cls.newMenu
 
-        if Ed.menu_previo == '' and Ed.menu_previo != titulo:
-            Ed.menu_previo = titulo
+        if previo:
+            del Ed.acceso_menues[-1]
+            titulo = Ed.acceso_menues[-1]
+        else:
+            Ed.acceso_menues.append(titulo)
 
         if titulo not in Ed.MENUS:
             try:

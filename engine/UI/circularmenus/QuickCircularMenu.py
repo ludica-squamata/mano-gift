@@ -1,6 +1,7 @@
 from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
 from engine.IO.menucircular import CircularMenu
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO
+from engine.globs.eventDispatcher import EventDispatcher
 from pygame import font
 
 
@@ -109,7 +110,7 @@ class CommandElement(LetterElement):
 
 
 class QuickCircularMenu(RenderedCircularMenu, CircularMenu):
-    radius = 20
+    radius = 15
     layer = CAPA_OVERLAYS_INVENTARIO
 
     def __init__(self):
@@ -117,6 +118,7 @@ class QuickCircularMenu(RenderedCircularMenu, CircularMenu):
 
         opciones = [
             {n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
+            {n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
             {n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
             {n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'}
         ]

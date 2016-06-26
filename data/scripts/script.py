@@ -1,6 +1,6 @@
 # script.py
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import EngineData as Ed
+from engine.globs import EngineData
 
 
 class Script:
@@ -8,6 +8,6 @@ class Script:
 
     @classmethod
     def update(cls):
-        if Ed.char_name and not cls.mapa:
+        if EngineData.char_name and not cls.mapa:
             cls.mapa = True
-            EventDispatcher.trigger("nuevo", "Script", {'char_name': Ed.char_name})
+            EventDispatcher.trigger("nuevo", "Script", {'char_name': EngineData.char_name})

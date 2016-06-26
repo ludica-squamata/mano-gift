@@ -6,6 +6,7 @@ CUADRO = 32
 ANCHO = 640
 ALTO = 480
 TECLAS = Teclas(Config.dato('teclas'))
+SAVEFD = Config.savedir
 
 GRUPO_ITEMS = 0
 GRUPO_SALIDAS = 1

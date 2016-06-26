@@ -23,7 +23,7 @@ if Config.dato('mostrar_intro'):
 event.set_blocked([1, 4, 5, 6, 17])
 # all mouse- and video-related events
 
-Modo.pop_menu('Personaje')
+Modo.pop_menu('Principal')
 cambios = []
 while True:
     Tiempo.update(60)

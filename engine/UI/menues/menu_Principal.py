@@ -1,26 +1,24 @@
-from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import CUADRO, EngineData
-from engine.misc import Config as Cfg
 from .menu import Menu
+from engine.globs.eventDispatcher import EventDispatcher
+from engine.misc.config import Config as Cfg
 
 
-class MenuPausa(Menu):
+class MenuPrincipal(Menu):
     def __init__(self):
-        super().__init__("Pausa")
-        x = self.canvas.get_width() - (CUADRO * 6) - 14  # 460-192-14 = 254
-        m, k = 'nombre', 'direcciones'
+        super().__init__('Principal', "Azoe's Gifts")
+
+        x = self.rect.centerx - (32 * 3) - 10
+
+        m, k, c = 'nombre', 'direcciones', 'comando'
         a, b = 'arriba', 'abajo'
 
         botones = [
-            {m: "Items", k: {a: "Principal", b: "Equipo"}},
-            {m: "Equipo", k: {a: "Items", b: "Status"}},
-            {m: "Status", k: {a: "Equipo", b: "Grupo"}},
-            {m: "Grupo", k: {a: "Status", b: "Opciones"}},
-            {m: "Opciones", k: {a: "Grupo", b: "Items"}},
+            {m: "Nuevo", k: {a: "Opciones", b: "Cargar"}, c: lambda: self.new_menu('Personaje')},
+            {m: "Cargar", k: {a: "Nuevo", b: "Opciones"}, c: lambda: self.new_menu('Debug')},
+            {m: "Opciones", k: {a: "Cargar", b: "Nuevo"}, c: lambda: self.new_menu('Opciones')},
         ]
         for i in range(len(botones)):
-            botones[i]['pos'] = [x, 39 * i + 100],
-            botones[i]['comando'] = self.new_menu
+            botones[i]['pos'] = [x, 50 * i + 120],
 
         self.establecer_botones(botones, 6)
 
@@ -40,12 +38,11 @@ class MenuPausa(Menu):
             }
         })
 
-    def cancelar(self):
-        EngineData.acceso_menues.clear()
-        return False
+    def new_menu(self, titulo):
+        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'NewMenu', 'value': titulo})
 
-    def new_menu(self):
-        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'NewMenu', 'value': self.current.nombre})
+    def cancelar(self):
+        pass
 
     def reset(self):
         """Reseta el presionado de todos los botones, y deja seleccionado

@@ -175,6 +175,8 @@ class MenuPersonaje(Menu):
 
     def cancelar(self):
         if self.foco == 'teclas':
+            if not len(self.area_input):
+                return True
             self.erase_character()
         else:
             self.cambiar_foco('teclas')
@@ -194,7 +196,6 @@ class MenuPersonaje(Menu):
     def aceptar(self):
         EngineData.char_name = ''.join([spr.key for spr in self.area_input])
         EngineData.end_dialog(CAPA_OVERLAYS_MENUS)
-        EngineData.menu_previo = ''
 
     def movercursor(self, dx, dy):
         """Desplaza el cursor por el teclado en pantalla y controla los limites."""

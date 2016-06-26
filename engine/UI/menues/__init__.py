@@ -4,6 +4,7 @@ from .menu_Equipo import MenuEquipo
 from .menu_Opciones import MenuOpciones
 from .menu_Debug import MenuDebug
 from .menu_Personaje import MenuPersonaje
+from .menu_Principal import MenuPrincipal
 from .menu import Menu
 
 __all__ = [
@@ -13,5 +14,6 @@ __all__ = [
     'MenuEquipo',
     'MenuOpciones',
     'MenuDebug',
-    'MenuPersonaje'
+    'MenuPersonaje',
+    'MenuPrincipal'
     ]

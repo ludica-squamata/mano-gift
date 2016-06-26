@@ -6,16 +6,15 @@ from engine.globs.constantes import TECLAS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc.config import Config as Cfg
 from engine.libs.textrect import render_textrect
-from .menu_Pausa import MenuPausa
 from .menu import Menu
 
 
-class MenuOpciones(MenuPausa, Menu):
+class MenuOpciones(Menu):
     curr_input = ''
     input_device = 'teclado'
 
     def __init__(self):
-        Menu.__init__(self, 'Opciones')
+        super().__init__('Opciones')
         self.data = Cfg.cargar()
 
         if self.data['metodo_de_entrada'] == 'teclado':
@@ -75,24 +74,24 @@ class MenuOpciones(MenuPausa, Menu):
 
     def create_key_btns(self):
         # abreviaturas para hacer más legible el código
-        m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
+        m, k = 'nombre', 'direcciones'
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
-        cmd = self.set_tecla
         if joystick.get_count():
             special = "Metodo de Entrada"
         else:
             special = "Recordar Menus"
         botones = [
-            {m: "Arriba", c: cmd, k: {b: "Abajo", a: special, i: "Mostrar Intro"}},
-            {m: "Abajo", c: cmd, k: {b: "Derecha", a: "Arriba", i: "Recordar Menus"}},
-            {m: "Derecha", c: cmd, k: {b: "Izquierda", a: "Abajo", i: special}},
-            {m: "Izquierda", c: cmd, k: {b: "Menu", a: "Derecha"}},
-            {m: "Menu", c: cmd, k: {b: "Accion", a: "Izquierda"}},
-            {m: "Accion", c: cmd, k: {b: "Contextual", a: "Menu"}},
-            {m: "Contextual", c: cmd, k: {b: "Defaults", a: "Accion", i: "Defaults"}}]
+            {m: "Arriba", k: {b: "Abajo", a: special, i: "Mostrar Intro"}},
+            {m: "Abajo", k: {b: "Derecha", a: "Arriba", i: "Recordar Menus"}},
+            {m: "Derecha", k: {b: "Izquierda", a: "Abajo", i: special}},
+            {m: "Izquierda", k: {b: "Menu", a: "Derecha"}},
+            {m: "Menu", k: {b: "Accion", a: "Izquierda"}},
+            {m: "Accion", k: {b: "Contextual", a: "Menu"}},
+            {m: "Contextual", k: {b: "Defaults", a: "Accion", i: "Defaults"}}]
 
         for i in range(len(botones)):
-            botones[i][p] = [326 + 75 + 3, 38 * i + 64]
+            botones[i]['pos'] = [326 + 75 + 3, 38 * i + 64]
+            botones[i]['comando'] = self.set_tecla
 
         return botones
 

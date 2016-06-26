@@ -1,4 +1,4 @@
-from engine.UI.widgets import Ventana
+from engine.UI.widgets import Ventana, Boton
 from engine.globs import EngineData as Ed, ANCHO, ALTO
 from pygame.sprite import LayeredUpdates
 from pygame import Rect
@@ -16,9 +16,11 @@ class Menu(Ventana):
     newMenu = False
     active = True
 
-    def __init__(self, titulo):
-        self.nombre = titulo
+    def __init__(self, nombre, titulo=None):
+        self.nombre = nombre
         self.canvas = self.create_raised_canvas(ANCHO - 20, ALTO - 20)
+        if titulo is None:
+            titulo = nombre
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, ANCHO - 20)
         self.functions = {
             'tap': {
@@ -50,7 +52,7 @@ class Menu(Ventana):
         super().__init__(self.canvas)
         self.ubicar(10, 10)
 
-        Ed.MENUS[titulo] = self
+        Ed.MENUS[nombre] = self
 
     def crear_titulo(self, titulo, fg_color, bg_color, ancho):
         ttl_rect = Rect((3, 3), (ancho - 7, 30))
@@ -103,6 +105,37 @@ class Menu(Ventana):
     def reset(self):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
         self.active = True
+
+    def select_one(self, direccion):
+        self.deselect_all(self.botones)
+        if len(self.botones) > 0:
+            current = self.botones.get_sprite(self.cur_btn)
+            if direccion in current.direcciones:
+                selected = current.direcciones[direccion]
+            else:
+                selected = current.nombre
+
+            for i in range(len(self.botones)):
+                boton = self.botones.get_sprite(i)
+                if boton.nombre == selected:
+                    boton.ser_elegido()
+                    self.mover_cursor(boton)
+                    break
+
+            self.botones.draw(self.canvas)
+
+    def establecer_botones(self, botones, ancho_mod):
+        for btn in botones:
+            boton = Boton(btn['nombre'], ancho_mod, btn['comando'], btn['pos'])
+            for direccion in ['arriba', 'abajo', 'izquierda', 'derecha']:
+                if direccion in btn['direcciones']:
+                    boton.direcciones[direccion] = btn['direcciones'][direccion]
+
+            self.botones.add(boton)
+
+        self.cur_btn = 0
+        self.select_one(0)
+        self.reset()
 
     def __repr__(self):
         return 'Menu_' + self.nombre + ' (en ' + str(len(self.groups())) + ' grupos)'

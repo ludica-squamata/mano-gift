@@ -4,6 +4,7 @@ from .mod_data import ModData
 from .giftgroups import MobGroup
 from .renderer import Renderer
 from .tiempo import Tiempo
+from .constantes import SAVEFD
 
 
 class EngineData:
@@ -15,7 +16,7 @@ class EngineData:
     HUD = None
     MENU_RAPIDO = None
     menu_actual = ''
-    menu_previo = ''
+    acceso_menues = []
     MENUS = {}
     MODO = ''
     onPause = False
@@ -84,6 +85,17 @@ class EngineData:
         cls.MODO = 'Aventura'
         cls.onPause = False
 
+    @classmethod
+    def salvar(cls, event):
+        data = {
+            'name': cls.char_name,
+            'mapa': cls.MAPA_ACTUAL.nombre
+        }
+        data.update(event.data)
+
+        Resources.guardar_json(SAVEFD+'/save.json', data)
+
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
 EventDispatcher.register(EngineData.on_setkey, "SetMode")
+EventDispatcher.register(EngineData.salvar, "Save")
