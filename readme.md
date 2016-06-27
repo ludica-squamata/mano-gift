@@ -1,5 +1,17 @@
 ﻿# Features por año
 
+## 2016 (al 27/6)
+- Added support for Custom QuickCircularMenu
+- Main menu, Guardar partida, Cargar partida
+- Estructuras 3D
+- Dos Keys para todos los comandos
+- Dialogs con Head
+- Menu Personaje
+- Los Elementos de diálogo pueden lanzar eventos
+- Evento de Gameover
+- Added Behaviour Trees
+- Los props también pueden ser el foco de la camara.
+
 ## 2015
 - Mundo Infinito
 - Tagged text
