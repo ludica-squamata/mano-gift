@@ -34,10 +34,7 @@ class Modo:
             if event.type == TAP:
                 if event.key == TECLAS.CONTEXTUAL:
                     Ed.MODO = 'Dialogo'
-                    if Ed.MENU_RAPIDO is None:
-                        Ed.MENU_RAPIDO = QuickCircularMenu()
-
-                    Ed.DIALOG = Ed.MENU_RAPIDO
+                    Ed.DIALOG = QuickCircularMenu()
                     Ed.DIALOG.show()
 
                 elif event.key == TECLAS.ACCION:

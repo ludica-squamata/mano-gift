@@ -57,7 +57,6 @@ class DialogElement(LetterElement):
         return image
 
     def do_action(self):
-        
         if self.item is not None:
             self.parent.salir()
             if Dialogo.pre_init(self.item['head'], *self.parent.locutores):
@@ -67,15 +66,6 @@ class DialogElement(LetterElement):
                 self.parent.cerrar()
 
         return True
-
-    def update(self):
-        super().update()
-        if self.in_place:
-            self.image = self.img_sel
-            self.rect = self.rect_sel
-        else:
-            self.image = self.img_uns
-            self.rect = self.rect_uns
 
 
 class DialogCircularMenu(RenderedCircularMenu, CircularMenu):

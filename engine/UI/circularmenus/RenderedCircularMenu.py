@@ -30,12 +30,20 @@ class LetterElement(BaseElement):
 
     def _crear_titulo(self):
         fuente = font.SysFont('Verdana', 15, bold=True)
-        cx, cy = Renderer.camara.rect.center
+        w, h = fuente.size(self.nombre)
+        negro = 0, 0, 0
+        gris = 125, 125, 125
 
         self.title = Sprite()
         self.title.active = True
-        self.title.image = fuente.render(self.nombre, 1, (0, 0, 0), (125, 125, 125))
-        self.title.rect = self.title.image.get_rect(center=(cx, cy - 40))
+        self.title.image = Surface((w + 6, h + 2))
+        self.title.image.fill(gris, (1, 1, w + 4, h))
+        self.title.image.blit(fuente.render(self.nombre, 1, negro, gris), (2, 1))
+        self.title.rect = self.title.image.get_rect()
+
+    def update(self):
+        super().update()
+        self.title.rect.center = (self.rect.centerx, self.rect.bottom + 15)
 
 
 class RenderedCircularMenu(CircularMenu):
@@ -51,7 +59,8 @@ class RenderedCircularMenu(CircularMenu):
         Renderer.clear_overlays_from_layer(self.layer)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, self.layer)
-        Renderer.add_overlay(self.last_on_spot.title, self.layer)
+        if self.last_on_spot is not None:
+            Renderer.add_overlay(self.last_on_spot.title, self.layer)
 
     def _change_cube_list(self):
         super()._change_cube_list()

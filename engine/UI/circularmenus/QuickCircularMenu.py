@@ -64,19 +64,6 @@ class InventoryElement(LetterElement):
                 return Ed.HERO.usar_item(self.item)
         return True
 
-    def update(self):
-        super().update()
-        if self.item is not None:
-            self.img_uns = self._crear_icono_image(self.item.image, 21, 21)
-            self.img_sel = self._crear_icono_image(self.item.image, 33, 33)
-
-        if self.in_place:
-            self.image = self.img_sel
-            self.rect = self.rect_sel
-        else:
-            self.image = self.img_uns
-            self.rect = self.rect_uns
-
 
 class CommandElement(LetterElement):
     active = True
