@@ -14,7 +14,7 @@ class EngineData:
     HERO = None
     DIALOG = None
     HUD = None
-    MENU_RAPIDO = None
+    current_qcm_idx = 0
     menu_actual = ''
     acceso_menues = []
     MENUS = {}

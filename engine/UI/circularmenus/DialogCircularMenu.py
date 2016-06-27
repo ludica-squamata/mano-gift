@@ -1,9 +1,10 @@
-from engine.globs import MobGroup, ItemGroup, EngineData as Ed, CAPA_OVERLAYS_DIALOGOS, ModData
+from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS, ModData
 from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
 from engine.IO.menucircular import CircularMenu
 from engine.IO.dialogo import Dialogo
 from os import path, listdir
 from engine.misc import Resources as Rs
+
 
 class DialogElement(LetterElement):
     active = True
@@ -73,20 +74,23 @@ class DialogCircularMenu(RenderedCircularMenu, CircularMenu):
     layer = CAPA_OVERLAYS_DIALOGOS
 
     def __init__(self, *locutores):
-        n, c, i, = 'nombre', 'cascada', 'icono'
         self.locutores = locutores
 
         opciones = []
+        idx = -1
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
                 file = Rs.abrir_json(ruta)
                 if file['head']['class'] == 'chosen':
-                        opciones.append(file)
+                    idx += 1
+                    file.update({'idx': idx})
+                    opciones.append(file)
 
         cascadas = {'inicial': []}
         for opt in opciones:
             obj = DialogElement(self, opt)
+            obj.idx = opt['idx']
             cascadas['inicial'].append(obj)
 
         super().__init__(cascadas)
@@ -98,11 +102,11 @@ class DialogCircularMenu(RenderedCircularMenu, CircularMenu):
             mob.hablando = False
         Ed.MODO = 'Aventura'
         self.salir()
-            
+
     def salir(self):
         self.cascadaActual = 'inicial'
         super().salir()
-    
+
     def back(self):
         if self.cascadaActual == 'inicial':
             self.cerrar()

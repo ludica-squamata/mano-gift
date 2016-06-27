@@ -100,22 +100,23 @@ class QuickCircularMenu(RenderedCircularMenu, CircularMenu):
     radius = 15
     layer = CAPA_OVERLAYS_INVENTARIO
 
-    def __init__(self):
-        n, c, i, cmd = 'nombre', 'cascada', 'icono', 'comando'
+    def __init__(self, first):
+        n, c, i, cmd, j = 'nombre', 'cascada', 'icono', 'comando', 'idx'
 
         opciones = [
-            {n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
-            {n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
-            {n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
-            {n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'}
+            {j: 0, n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
+            {j: 1, n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
+            {j: 2, n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
+            {j: 3, n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'}
         ]
 
         cascadas = {'inicial': []}
-        for opt in opciones:
+        for opt in [opciones[first]] + opciones[first + 1:] + opciones[:first]:
             if 'comando' in opt:
                 obj = CommandElement(self, opt)
             else:
                 obj = InventoryElement(self, opt)
+            obj.idx = opt['idx']
             cascadas['inicial'].append(obj)
             cascadas[obj.nombre] = obj.cascada
 
@@ -127,3 +128,7 @@ class QuickCircularMenu(RenderedCircularMenu, CircularMenu):
             self.salir()
         else:
             super().back()
+
+    def stop_everything(self, on_spot):
+        super().stop_everything(on_spot)
+        Ed.current_qcm_idx = self.last_on_spot.idx
