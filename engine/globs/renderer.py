@@ -209,6 +209,14 @@ class Renderer:
     overlays = LayeredUpdates()
 
     @classmethod
+    def set_focus(cls, spr=None):
+        if spr is not None:
+            cls.camara.set_focus(spr)
+            cls.use_focus = True
+        else:
+            cls.use_focus = False
+
+    @classmethod
     def clear(cls):
         cls.camara.clear()
         cls.overlays.empty()

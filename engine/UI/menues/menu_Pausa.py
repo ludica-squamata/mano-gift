@@ -1,6 +1,9 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import CUADRO, EngineData
 from engine.misc import Config as Cfg
+from engine.libs import render_textrect
+from pygame.font import SysFont
+from pygame import Rect
 from .menu import Menu
 
 
@@ -23,6 +26,15 @@ class MenuPausa(Menu):
             botones[i]['comando'] = self.new_menu
 
         self.establecer_botones(botones, 6)
+
+        r = self.canvas.blit(EngineData.HERO.diag_face, (6, 100))
+        fuente = SysFont('Verdana', 22)
+        w = self.canvas.get_width() - r.right - CUADRO*6 - 20
+        h = fuente.size(EngineData.char_name)[1]
+        rect = Rect(r.right+2, 0, w, h+1)
+        rect.centery = r.centery
+        render = render_textrect(EngineData.char_name, fuente, rect, self.font_none_color, self.bg_cnvs)
+        self.canvas.blit(render, rect)
 
         self.functions.update({
             'tap': {

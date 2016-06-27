@@ -1,0 +1,14 @@
+{
+  "stage":{"mapa":"casas y arboles","entrada":"puerta"},
+  "tiempo":{"dia":0,"hora":[16,0]},
+  "mobs":{
+    "commoner":{
+      "AI":"wander",
+      "dialog":"prueba.json"
+    },
+    "girl":{
+      "AI":"wander"
+      }
+  },
+  "focus":"heroe"
+}

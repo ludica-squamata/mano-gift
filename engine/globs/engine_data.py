@@ -1,10 +1,11 @@
 from .eventDispatcher import EventDispatcher
 from engine.misc import Resources
 from .mod_data import ModData
-from .giftgroups import MobGroup
+from .giftgroups import MobGroup, ItemGroup
 from .renderer import Renderer
 from .tiempo import Tiempo
 from .constantes import SAVEFD
+import os.path
 
 
 class EngineData:
@@ -25,26 +26,54 @@ class EngineData:
     char_name = ''
 
     @classmethod
-    def setear_escena(cls, nombre):
-        cls.MODO = 'Aventura'
-        scene_data = Resources.abrir_json(ModData.scenes + nombre + '.scene')
-        cls.scene_data = scene_data
-        stage, entrada = scene_data['stage']
-        cls.setear_mapa(stage, entrada)
-        Tiempo.setear_momento(scene_data['dia'], *scene_data['hora'])
-        focus = scene_data.get('focus', False)
-        if focus:
-            if focus in MobGroup:
-                focus = MobGroup[scene_data['focus']]
-            else:
-                for prop in cls.MAPA_ACTUAL.properties:
-                    if focus == prop.nombre:
-                        focus = prop
+    def load_savefile(cls, filename):
+        data = Resources.abrir_json(SAVEFD+'/'+filename)
+        cls.char_name = data['name']
+        cls.setear_escena(data['mapa'], data['scene'])
 
-            Renderer.camara.set_focus(focus)
-            Renderer.use_focus = True
+    @classmethod
+    def setear_escena(cls, nombre, idx):
+        cls.MODO = 'Aventura'
+        cls.onPause = False
+        cls.acceso_menues.clear()
+
+        ruta = ModData.scenes + nombre + '-' + str(idx) + '.json'
+        if os.path.isfile(ruta):
+            cls.scene_data = Resources.abrir_json(ruta)
+
+            if 'stage' in cls.scene_data:
+                mapa = cls.scene_data['stage']['mapa']
+                entrada = cls.scene_data['stage']['entrada']
+                cls.setear_mapa(mapa, entrada)
+
+            if 'mobs' in cls.scene_data:
+                # este es un hook para modificar la IA de los mobs
+                # si así la escena lo demandara.
+                pass
+
+            if 'tiempo' in cls.scene_data:
+                dia = cls.scene_data['tiempo']['dia']
+                hora = cls.scene_data['tiempo']['hora']
+                Tiempo.setear_momento(dia, *hora)
+
+            if 'focus' in cls.scene_data:
+                # la escena puede no especificar un foco
+                # lo que implica que el foco no cambia,
+                # no que se vuelva None necesariamente.
+                focus = cls.scene_data.get('focus', False)
+                if focus:
+                    if focus in MobGroup:
+                        focus = MobGroup[focus]
+
+                    elif focus in ItemGroup:
+                        focus = ItemGroup[focus]
+
+                    Renderer.set_focus(focus)
+                else:
+                    Renderer.set_focus()
+
         else:
-            Renderer.use_focus = False
+            raise OSError('la Escena no existe')
 
     @classmethod
     def setear_mapa(cls, nombre, entrada):
@@ -53,7 +82,7 @@ class EngineData:
         from engine.mapa import Stage
         from engine.mapa.loader import Loader
         if nombre not in cls.mapas:
-            cls.mapas[nombre] = Stage(nombre, cls.scene_data['mobs'], entrada)
+            cls.mapas[nombre] = Stage(nombre, cls.scene_data.get('mobs', {}), entrada)
         else:
             Loader.set_stage(cls.mapas[nombre])
             Loader.cargar_hero(entrada)
@@ -89,7 +118,8 @@ class EngineData:
     def salvar(cls, event):
         data = {
             'name': cls.char_name,
-            'mapa': cls.MAPA_ACTUAL.nombre
+            'mapa': cls.MAPA_ACTUAL.nombre,
+            'scene': cls.scene_data['ID']
         }
         data.update(event.data)
 
