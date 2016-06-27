@@ -12,9 +12,9 @@ class InventoryElement(LetterElement):
     def __init__(self, parent, item):
 
         if type(item) is dict:
-            nombre = item['nombre']
-            icono = item['icono']
-            cascada = item.get('cascada')
+            nombre = item['name']
+            icono = item['icon']
+            cascada = item.get('csc')
             self.item = None
         else:
             nombre = item.nombre
@@ -71,9 +71,9 @@ class CommandElement(LetterElement):
 
     def __init__(self, parent, item):
 
-        nombre = item['nombre']
-        icono = item['icono']
-        self.command = item['comando']
+        nombre = item['name']
+        icono = item['icon']
+        self.command = item['cmd']
 
         super().__init__(parent, nombre)
 
@@ -100,19 +100,20 @@ class QuickCircularMenu(RenderedCircularMenu, CircularMenu):
     radius = 15
     layer = CAPA_OVERLAYS_INVENTARIO
 
-    def __init__(self, first):
-        n, c, i, cmd, j = 'nombre', 'cascada', 'icono', 'comando', 'idx'
+    def __init__(self, first, opciones=None):
+        n, c, i, cmd, j = 'name', 'csc', 'icon', 'cmd', 'idx'
 
-        opciones = [
-            {j: 0, n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
-            {j: 1, n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
-            {j: 2, n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
-            {j: 3, n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'}
-        ]
+        if opciones is None:
+            opciones = [
+                {j: 0, n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
+                {j: 1, n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
+                {j: 2, n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
+                {j: 3, n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'}
+            ]
 
         cascadas = {'inicial': []}
         for opt in [opciones[first]] + opciones[first + 1:] + opciones[:first]:
-            if 'comando' in opt:
+            if 'cmd' in opt:
                 obj = CommandElement(self, opt)
             else:
                 obj = InventoryElement(self, opt)

@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed
+from engine.globs import EngineData as Ed, ModData as Md
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.globs import TAP, HOLD, RELEASE, TECLAS, CAPA_OVERLAYS_MENUS
@@ -34,7 +34,7 @@ class Modo:
             if event.type == TAP:
                 if event.key == TECLAS.CONTEXTUAL:
                     Ed.MODO = 'Dialogo'
-                    Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx)
+                    Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
                     Ed.DIALOG.show()
 
                 elif event.key == TECLAS.ACCION:

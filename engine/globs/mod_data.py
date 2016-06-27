@@ -17,6 +17,7 @@ class ModData:
     scripts = ''
     scenes = ''
     SCRIPT = None
+    QMC = []
 
     @classmethod
     def init(cls, ini):
@@ -43,6 +44,7 @@ class ModData:
                 # lo convertí en un loop para poder agregar, por ejemplo,
                 # una pantalla de gameover sin tener que buscar ese nombre
                 ruta = cls.scripts + script
+
                 if path.isfile(ruta):
                     name = script.rstrip('.py')
                     # if sys.version_info.minor == 3:  # python 3.3
@@ -57,6 +59,19 @@ class ModData:
                         # añadirlo.
                     elif name == 'script':
                         cls.SCRIPT = module.Script
+
+                    elif name == 'circularmenu':
+                        i = -1
+                        for d in cls.data.get('circularmenu', []):
+                            if hasattr(module, d['name']):
+                                i += 1
+                                d.update({'idx': i})
+                                spec = getattr(module, d['name'])
+                                if type(spec) is list:
+                                    d.update({'csc': spec})
+                                else:
+                                    d.update({'cmd': spec})
+                                cls.QMC.append(d)
 
         else:
             Util.salir('No data in mod folder')
