@@ -17,7 +17,7 @@ class ModData:
     scripts = ''
     scenes = ''
     SCRIPT = None
-    QMC = []
+    QMC = None
 
     @classmethod
     def init(cls, ini):
@@ -61,6 +61,7 @@ class ModData:
                         cls.SCRIPT = module.Script
 
                     elif name == 'circularmenu':
+                        cls.QMC = []
                         i = -1
                         for d in cls.data.get('circularmenu', []):
                             if hasattr(module, d['name']):
