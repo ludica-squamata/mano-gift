@@ -5,7 +5,7 @@ from .menu import Menu
 import os
 
 
-class MenuDebug(Menu):
+class MenuCargar(Menu):
     archivos = []
     draw_space = None
     draw_space_rect = None
