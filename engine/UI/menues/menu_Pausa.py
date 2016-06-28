@@ -15,27 +15,19 @@ class MenuPausa(Menu):
         a, b = 'arriba', 'abajo'
 
         botones = [
-            {m: "Items", k: {a: "Principal", b: "Equipo"}},
+            {m: "Items", k: {a: "Cargar", b: "Equipo"}},
             {m: "Equipo", k: {a: "Items", b: "Status"}},
             {m: "Status", k: {a: "Equipo", b: "Grupo"}},
             {m: "Grupo", k: {a: "Status", b: "Opciones"}},
-            {m: "Opciones", k: {a: "Grupo", b: "Items"}},
+            {m: "Opciones", k: {a: "Grupo", b: "Cargar"}},
+            {m: "Cargar", k: {a: "Opciones", "b": "Items"}},
         ]
         for i in range(len(botones)):
             botones[i]['pos'] = [x, 39 * i + 100],
             botones[i]['comando'] = self.new_menu
 
         self.establecer_botones(botones, 6)
-
-        r = self.canvas.blit(EngineData.HERO.diag_face, (6, 100))
-        fuente = SysFont('Verdana', 22)
-        w = self.canvas.get_width() - r.right - CUADRO*6 - 20
-        h = fuente.size(EngineData.char_name)[1]
-        rect = Rect(r.right+2, 0, w, h+1)
-        rect.centery = r.centery
-        render = render_textrect(EngineData.char_name, fuente, rect, self.font_none_color, self.bg_cnvs)
-        self.canvas.blit(render, rect)
-
+        self.update_charname_display()
         self.functions.update({
             'tap': {
                 'accion': self.press_button,
@@ -51,6 +43,16 @@ class MenuPausa(Menu):
                 'accion': self.liberar_presion,
             }
         })
+
+    def update_charname_display(self):
+        r = self.canvas.blit(EngineData.HERO.diag_face, (6, 100))
+        fuente = SysFont('Verdana', 22)
+        w = self.canvas.get_width() - r.right - CUADRO * 6 - 20
+        h = fuente.size(EngineData.char_name)[1]
+        rect = Rect(r.right + 2, 0, w, h + 1)
+        rect.centery = r.centery
+        render = render_textrect(EngineData.char_name, fuente, rect, self.font_none_color, self.bg_cnvs)
+        self.canvas.blit(render, rect)
 
     def cancelar(self):
         EngineData.acceso_menues.clear()
@@ -68,6 +70,7 @@ class MenuPausa(Menu):
         selected = self.botones.get_sprite(self.cur_btn)
         selected.ser_elegido()
         self.current = selected
+        self.update_charname_display()
 
         self.active = True
 

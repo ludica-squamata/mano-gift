@@ -14,7 +14,7 @@ class MenuPrincipal(Menu):
 
         botones = [
             {m: "Nuevo", k: {a: "Opciones", b: "Cargar"}, c: lambda: self.new_menu('Personaje')},
-            {m: "Cargar", k: {a: "Nuevo", b: "Opciones"}, c: lambda: self.new_menu('Debug')},
+            {m: "Cargar", k: {a: "Nuevo", b: "Opciones"}, c: lambda: self.new_menu('Cargar')},
             {m: "Opciones", k: {a: "Cargar", b: "Nuevo"}, c: lambda: self.new_menu('Opciones')},
         ]
         for i in range(len(botones)):
