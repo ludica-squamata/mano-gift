@@ -36,6 +36,7 @@ class Stage:
         self.grilla = Grilla(self.mapa.mask, 32)
         self.properties = LayeredUpdates()
         self.salidas = []
+        self.entrada = entrada
         self.cargar_timestamps()
         Loader.set_stage(self)
         Loader.load_everything(entrada, mobs_data)

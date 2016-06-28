@@ -194,7 +194,7 @@ class MenuPersonaje(Menu):
             self.select_line(-1)
 
     def aceptar(self):
-        EngineData.char_name = ''.join([spr.key for spr in self.area_input])
+        EngineData.new_game(''.join([spr.key for spr in self.area_input]))
         EngineData.end_dialog(CAPA_OVERLAYS_MENUS)
 
     def movercursor(self, dx, dy):

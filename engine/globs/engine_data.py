@@ -27,24 +27,31 @@ class EngineData:
 
     @classmethod
     def load_savefile(cls, filename):
-        data = Resources.abrir_json(SAVEFD+'/'+filename)
+        data = Resources.abrir_json(SAVEFD + '/' + filename)
         cls.char_name = data['name']
-        cls.setear_escena(data['mapa'], data['scene'])
+        if 'scene' in data:
+            cls.setear_escena(data['scene'], savedata=data)
 
     @classmethod
-    def setear_escena(cls, nombre, idx):
+    def setear_escena(cls, idx, savedata=None):
         cls.MODO = 'Aventura'
         cls.onPause = False
         cls.acceso_menues.clear()
+        if savedata is None:
+            savedata = {}
 
-        ruta = ModData.scenes + nombre + '-' + str(idx) + '.json'
+        ruta = ModData.scenes + str(idx) + '.json'
         if os.path.isfile(ruta):
             cls.scene_data = Resources.abrir_json(ruta)
-
-            if 'stage' in cls.scene_data:
+            cls.scene_data.update({'ID': idx})
+            mapa, entrada = None, None  # para corregir una advertencia de PyCharm
+            if 'mapa' in savedata:
+                mapa = savedata['mapa']
+                entrada = savedata['link']
+            elif 'stage' in cls.scene_data:
                 mapa = cls.scene_data['stage']['mapa']
                 entrada = cls.scene_data['stage']['entrada']
-                cls.setear_mapa(mapa, entrada)
+            cls.setear_mapa(mapa, entrada)
 
             if 'mobs' in cls.scene_data:
                 # este es un hook para modificar la IA de los mobs
@@ -106,7 +113,7 @@ class EngineData:
 
         if event.data['mode'] == 'SetKey':
             cls.setKey = value
-    
+
     @classmethod
     def end_dialog(cls, layer):
         Renderer.clear_overlays_from_layer(layer)
@@ -116,14 +123,25 @@ class EngineData:
 
     @classmethod
     def salvar(cls, event):
-        data = {
-            'name': cls.char_name,
+        data = Resources.abrir_json(SAVEFD + '/' + cls.char_name + '.json')
+        data.update({
             'mapa': cls.MAPA_ACTUAL.nombre,
+            'link': cls.MAPA_ACTUAL.entrada,
             'scene': cls.scene_data['ID']
         }
+        )
+
         data.update(event.data)
 
-        Resources.guardar_json(SAVEFD+'/save.json', data)
+        Resources.guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
+
+    @classmethod
+    def new_game(cls, char_name):
+        cls.char_name = char_name
+        data = {
+            "name": char_name
+        }
+        Resources.guardar_json(SAVEFD + '/' + char_name + '.json', data)
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")

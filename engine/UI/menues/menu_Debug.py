@@ -30,13 +30,18 @@ class MenuDebug(Menu):
 
         self.filas = LayeredUpdates()
         self.create_draw_space(ANCHO - 37, ALTO / 2.4)
-        self.elegir_opcion(0)
+        if len(self.filas):
+            self.elegir_opcion(0)
+
+    def use_function(self,mode,key):
+        if len(self.filas):
+            super().use_function(mode,key)
 
     @staticmethod
     def load_save_files():
         ok = []
         for file in os.listdir(SAVEFD):
-            if file != 'config.json':
+            if file.endswith('.json') and file != 'config.json':
                 ok.append(file.split('.')[0])
 
         return ok

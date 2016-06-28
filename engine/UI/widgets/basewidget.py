@@ -14,15 +14,15 @@ class BaseWidget(Estilo, AzoeSprite):
 
     def ser_elegido(self):
         """Cambia la imagen a la versión resaltada"""
-
-        self.image = self.img_sel
-        self.isSelected = True
+        if self.enabled:
+            self.image = self.img_sel
+            self.isSelected = True
 
     def ser_deselegido(self):
         """Cambia la imagen a la versión no elegida"""
-
-        self.image = self.img_uns
-        self.isSelected = False
+        if self.enabled:
+            self.image = self.img_uns
+            self.isSelected = False
 
     def create_raised_canvas(self, ancho, alto):
         canvas = Surface((ancho, alto))
