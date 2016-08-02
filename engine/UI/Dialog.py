@@ -2,7 +2,7 @@ from engine.libs import render_tagged_text
 from .widgets import Fila, Ventana
 from pygame import Rect, Surface
 from pygame.sprite import LayeredUpdates
-from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.renderer import Renderer
 
 
@@ -12,11 +12,14 @@ class DialogInterface(Ventana):
     active = True
     loc_img = None
     loc_rect = None
+    menu = None
     w, h = 0, 0
+    sel_mode = False
 
-    def __init__(self):
+    def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(self.bg_cnvs)
+        self.parent = parent
         super().__init__(image)
 
         self.filas = LayeredUpdates()
@@ -31,9 +34,6 @@ class DialogInterface(Ventana):
         self.ubicar(0, ALTO - int(ALTO / 5))
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
-    def destruir(self):
-        Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
-
     def ubicar(self, x=0, y=0, z=0):
         if x < 0 or y < 0:
             raise ValueError('Coordenadas inválidas')
@@ -46,14 +46,36 @@ class DialogInterface(Ventana):
         self.text_rect.size = self.rendered_text.get_size()
 
     def set_sel_mode(self, opciones):
+        self.menu.supress_all()
+        self.borrar_todo()
+
+        for i in range(len(sorted(opciones, key=lambda o: o.indice))):
+            opt = opciones[i]
+            print(opt)
+            obj = {'idx': i+1, 'icon': str(opt.indice), 'name': str(opt.leads), 'item': opciones[i]}
+            self.menu.add_element(0, obj)
+
         self.opciones = len(opciones)
-        h = self.altura_del_texto
-        x = self.draw_space_rect.x
-        w = self.draw_space_rect.w
-        for i in range(self.opciones):
-            opcion = Fila(opciones[i], w, x, i * h + i + 3)
-            self.filas.add(opcion)
-        self.elegir_opcion(0)
+        self.menu.actual = self.menu.cubos.get_sprite(0)
+        self.set_text(opciones[0].texto)
+        self.sel_mode = True
+        # self.opciones = len(opciones)
+        # h = self.altura_del_texto
+        # x = self.draw_space_rect.x
+        # w = self.draw_space_rect.w
+        # for i in range(self.opciones):
+        #     opcion = Fila(opciones[i], w, x, i * h + i + 3)
+        #     self.filas.add(opcion)
+        # self.elegir_opcion(0)
+
+    def set_menu(self, menu):
+        self.menu = menu
+
+    def rotar_menu(self, delta):
+        self.menu.turn(delta)
+
+    def detener_menu(self):
+        self.menu.stop()
 
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
@@ -112,18 +134,25 @@ class DialogInterface(Ventana):
 
         color = self.bg_cnvs  # TODO: estos colores deberían ser otros
 
-        if len(self.filas):
-            filas = [fila for fila in self.filas if self.draw_space_rect.contains(fila.rect)]
-            if len(self.filas) > len(filas):
-                color = self.bg_bisel_bg
-            for fila in filas:
-                self.image.blit(fila.image, fila.rect)
+        # if len(self.filas):
+        #     filas = [fila for fila in self.filas if self.draw_space_rect.contains(fila.rect)]
+        #     if len(self.filas) > len(filas):
+        #         color = self.bg_bisel_bg
+        #     for fila in filas:
+        #         self.image.blit(fila.image, fila.rect)
+        #
+        # else:
+        #     # si no hay filas, la imagen es lo que sale de set_text.
+        #     self.image.blit(self.rendered_text, self.text_rect)
+        #     if not self.draw_space_rect.contains(self.text_rect):
+        #         color = self.bg_bisel_fg
+        if self.sel_mode:
+            self.set_text(self.menu.actual.item.texto)
+            self.sel = self.menu.actual.item
 
-        else:
-            # si no hay filas, la imagen es lo que sale de set_text.
-            self.image.blit(self.rendered_text, self.text_rect)
-            if not self.draw_space_rect.contains(self.text_rect):
-                color = self.bg_bisel_fg
+        self.image.blit(self.rendered_text, self.text_rect)
+        if not self.draw_space_rect.contains(self.text_rect):
+            color = self.bg_bisel_fg
 
         # pintar el area de la flecha, si es que hay más contenido que ver.
         self.image.fill(color, (self.text_rect.right + 1, 0, 16, self.draw_space_rect.h + 3))
