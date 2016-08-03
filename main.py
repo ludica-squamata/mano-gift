@@ -28,7 +28,6 @@ cambios = []
 while True:
     Tiempo.update(60)
     events = event.get()
-    ModData.SCRIPT.update()
     Modo.juego(events)
     if Ed.MODO == 'Aventura':
         cambios = Modo.aventura(events, fondo)

@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, ANCHO, ALTO, SAVEFD
+from engine.globs import EngineData, ANCHO, ALTO, SAVEFD
 from pygame.sprite import LayeredUpdates
 from engine.UI.widgets import Fila
 from .menu import Menu
@@ -15,7 +15,7 @@ class MenuCargar(Menu):
 
         self.functions.update({
             'tap': {
-                'accion': lambda: Ed.load_savefile(self.archivos[self.sel]+'.json'),
+                'accion': self.cargar,
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
@@ -24,7 +24,7 @@ class MenuCargar(Menu):
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
             'release': {
-                'accion': lambda: Ed.load_savefile(self.archivos[self.sel]+'.json')
+                'accion': self.cargar
             }
         })
 
@@ -33,9 +33,9 @@ class MenuCargar(Menu):
         if len(self.filas):
             self.elegir_opcion(0)
 
-    def use_function(self,mode,key):
+    def use_function(self, mode, key):
         if len(self.filas):
-            super().use_function(mode,key)
+            super().use_function(mode, key)
 
     @staticmethod
     def load_save_files():
@@ -70,6 +70,10 @@ class MenuCargar(Menu):
         self.posicionar_cursor(i)
         elegido = self.filas.get_sprite(self.sel)
         elegido.ser_elegido()
+
+    def cargar(self):
+        EngineData.load_savefile(self.archivos[self.sel] + '.json')
+        EngineData.end_dialog(self.layer)
 
     def update(self):
         self.filas.draw(self.draw_space)

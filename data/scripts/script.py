@@ -1,11 +1,21 @@
 # script.py
+
+from engine.globs import ModState
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import EngineData
 
 
-class Script:
+def boton_step(nombre, data):
+    ModState.set(nombre + '.pressed', data['pressed'])
+    EventDispatcher.trigger('button_activated', 'boton', {})
 
-    @classmethod
-    def update(cls):
-        if EngineData.char_name and EngineData.MAPA_ACTUAL is None:
-            EventDispatcher.trigger("nuevo", "Script", {'scene': 0})
+
+def door_activate(puerta, event):
+    del event  # es irrelevante, pero EventDispatcher llama la funcion con dos argumentos.
+    btn1_activo = ModState.get('boton_azul.pressed')
+    btn2_activo = ModState.get('boton_verde.pressed')
+    if btn1_activo and btn2_activo:
+        puerta.operar(1)
+    else:
+        puerta.operar(0)
+    ModState.set('puerta.open', btn1_activo and btn2_activo)
+    # este valor lo puede usar la rutina de load game para setear el estado correcto del objeto

@@ -1,0 +1,38 @@
+{
+  "tipo":"estructura3D",
+  "nombre":"casa_cerrada",
+  "componentes":{
+    "frente":{
+      "casa":[[0,0,0]],
+      "puerta_cerrada":[[69,133,1]]
+    },
+    "lado":{},
+    "reverso":{}
+  },
+  "referencias":{
+    "casa":"props/casa.png",
+    "puerta_cerrada":{
+      "ID":4,"tipo":"operable",
+      "peso":10, "volumen":5,
+      "image":"props/puerta_c.png",
+      "propiedades":["solido"],
+      "proyecta_sombra":false,
+      "operable":[
+        {"ID":0,
+         "image":"props/puerta_c.png",
+         "solido":true,
+         "next":1
+        },
+        {"ID":1,
+         "image":"props/puerta_a.png",
+         "solido":false,
+         "next":0
+        }
+      ],
+      "script": "script.py",
+      "eventos":{"button_activated": "door_activate"}
+    }
+  },
+  "cara":"frente",
+  "proyecta_sombra":true
+}

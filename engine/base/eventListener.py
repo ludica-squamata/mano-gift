@@ -16,14 +16,13 @@ class EventListener:
         """
         if self.data.get('script') and self.data.get('eventos'):
             # cargar un archivo por ruta
-            loader = machinery.SourceFileLoader("module.name", Md.scripts + self.data['script'] + '.py')
-            m = None
-            if sys.version_info.minor == 3:
-                m = loader.load_module()
-            elif sys.version_info.minor == 4:
-                # en 3.4 lo cambiaron a exec_module()
-                # noinspection PyArgumentList
-                m = loader.exec_module()
+            loader = machinery.SourceFileLoader("module.name", Md.scripts + self.data['script'])
+            # if sys.version_info.minor == 3:
+            m = loader.load_module()
+            # elif sys.version_info.minor == 4:
+            # en 3.4 lo cambiaron a exec_module()
+            # noinspection PyArgumentList
+            # m = loader.exec_module()
 
             for event_name, func_name in self.data['eventos'].items():
                 f = getattr(m, func_name)

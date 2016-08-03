@@ -57,8 +57,6 @@ class ModData:
                         # lo resolví mmás fácil. Si ésta clase no tiene el nombre ya...
                         setattr(cls, name, (getattr(module, name)))
                         # añadirlo.
-                    elif name == 'script':
-                        cls.SCRIPT = module.Script
 
                     elif name == 'circularmenu':
                         cls.QMC = []
@@ -96,3 +94,10 @@ class ModData:
 
         data = Resources.abrir_json(ruta)
         return data
+
+    @classmethod
+    def get_script_method(cls, scriptname, methodname):
+        ruta = cls.scripts + scriptname
+        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        if hasattr(module, methodname):
+            return getattr(module, methodname)

@@ -1,6 +1,6 @@
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS, GRUPO_SALIDAS
 from engine.globs import EngineData as Ed, ModData as Md
-from engine.globs import MobGroup, ItemGroup
+from engine.globs import MobGroup
 from engine.misc import Resources as Rs
 from engine.scenery import new_prop
 from engine.mobs import PC, NPC
@@ -36,7 +36,7 @@ class Loader:
             for x, y in pos[ref]:
                 if data:
                     prop = new_prop(ref, x, y, data=data)
-                    is_interactive = True
+                    is_interactive = hasattr(prop, 'accion')
                 else:
                     prop = new_prop(ref, x, y, img=imgs[ref])
                     is_interactive = False

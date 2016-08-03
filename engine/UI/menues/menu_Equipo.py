@@ -1,4 +1,4 @@
-from .menu_Items import MenuItems
+from .menu import Menu
 from pygame import Surface, Rect
 from pygame.sprite import LayeredUpdates
 from engine.misc import Resources as Rs
@@ -7,7 +7,7 @@ from engine.globs import EngineData as Ed
 from engine.UI.widgets import Fila, EspacioEquipable
 
 
-class MenuEquipo(MenuItems):
+class MenuEquipo(Menu):
     espacios = None
     filas = None
     current = ''
@@ -19,7 +19,7 @@ class MenuEquipo(MenuItems):
     def __init__(self):
         """Crea e inicaliza las varibales del menú Equipo."""
 
-        super(MenuItems, self).__init__('Equipo')
+        super().__init__('Equipo')
         self.espacios = LayeredUpdates()  # grupo de espacios equipables.
         self.filas = LayeredUpdates()  # grupo de items del espacio de selección.
         self.altura_del_texto = self.fuente_MP.get_height() + 1  # se utiliza para trazar lineas
@@ -153,6 +153,21 @@ class MenuEquipo(MenuItems):
                 break
 
         self.espacios.draw(self.canvas)
+
+    def elegir_fila(self, direccion=None):
+        if direccion == 'arriba':
+            j = -1
+        elif direccion == 'abajo':
+            j = +1
+        else:
+            j = 0
+
+        if self.opciones > 0:
+            for fila in self.filas:
+                fila.ser_deselegido()
+            self.posicionar_cursor(j)
+            self.mover_cursor(self.filas.get_sprite(self.sel))
+            self.current.ser_elegido()
 
     def crear_espacio_selectivo(self, ancho, alto):
         """Crea el marco donde aparecerán las listas de items que se correspondan

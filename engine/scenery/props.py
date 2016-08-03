@@ -41,6 +41,7 @@ class Escenografia(ShadowSprite, EventListener):
     def __repr__(self):
         return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
 
+
 class Agarrable(Escenografia):
     def __init__(self, nombre, x, y, data):
         data.setdefault('proyecta_sombra', False)
@@ -102,6 +103,7 @@ class Operable(Escenografia):
 
     def __init__(self, nombre, x, y, data):
         super().__init__(nombre, x, y, data)
+        self.estados = {}
         self.accion = 'operar'
         ItemGroup[self.nombre] = self
 
@@ -115,18 +117,22 @@ class Operable(Escenografia):
                     self.estados[idx].update({'image': img, 'mask': mascara})
                 elif attr == 'next':
                     self.estados[idx].update({'next': estado[attr]})
+                elif attr == 'event':
+                    f = ModData.get_script_method(self.data['script'], estado[attr])
+                    self.estados[idx].update({'event': f})
                 else:
                     self.estados[idx].update({attr: estado[attr]})
 
-        self.image = self.estados[self.estado_actual]['image']
-        self.mask = self.estados[self.estado_actual]['mask']
-        self.solido = self.estados[self.estado_actual]['solido']
-
-    def operar(self):
-        self.estado_actual = self.estados[self.estado_actual]['next']
+    def operar(self, estado=None):
+        if estado is None:
+            self.estado_actual = self.estados[self.estado_actual]['next']
+        else:
+            self.estado_actual = estado
         for attr in self.estados[self.estado_actual]:
             if hasattr(self, attr):
                 setattr(self, attr, self.estados[self.estado_actual][attr])
+            elif attr == 'event':
+                self.estados[self.estado_actual][attr](self.nombre, self.estados[self.estado_actual])
 
 
 class Destruible(Escenografia):
@@ -143,7 +149,6 @@ class Estructura3D:
     @staticmethod
     def build_face(data, dx, dy, face):
         from engine.scenery import new_prop
-        imagenes = {}
         props = []
         for nombre in data['componentes'][face]:
             ruta = data['referencias'][nombre]

@@ -139,9 +139,11 @@ class EngineData:
     def new_game(cls, char_name):
         cls.char_name = char_name
         data = {
-            "name": char_name
+            "name": char_name,
+            "scene": 0
         }
         Resources.guardar_json(SAVEFD + '/' + char_name + '.json', data)
+        cls.setear_escena(data['scene'])
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")

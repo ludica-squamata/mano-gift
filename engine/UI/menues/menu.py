@@ -1,5 +1,5 @@
 from engine.UI.widgets import Ventana, Boton
-from engine.globs import EngineData as Ed, ANCHO, ALTO
+from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_MENUS
 from pygame.sprite import LayeredUpdates
 from pygame import Rect
 from engine.libs.textrect import render_textrect
@@ -15,6 +15,7 @@ class Menu(Ventana):
     canvas = None
     newMenu = False
     active = True
+    layer = CAPA_OVERLAYS_MENUS
 
     def __init__(self, nombre, titulo=None):
         self.nombre = nombre
