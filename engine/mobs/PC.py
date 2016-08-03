@@ -54,7 +54,7 @@ class PC(Parlante, Mob):
                     except InventoryError as Error:
                         print(Error)
 
-                elif sprite.accion == 'operar':
+                elif sprite.accion == 'operar' and sprite.enabled:
                     sprite.operar()
 
     def atacar(self, sprite, x, y):

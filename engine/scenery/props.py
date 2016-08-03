@@ -100,11 +100,13 @@ class Trepable(Escenografia):
 class Operable(Escenografia):
     estados = {}
     estado_actual = 0
+    enabled = True
 
     def __init__(self, nombre, x, y, data):
         super().__init__(nombre, x, y, data)
         self.estados = {}
         self.accion = 'operar'
+        self.enabled = self.data.get('enabled', True)
         ItemGroup[self.nombre] = self
 
         for estado in data['operable']:

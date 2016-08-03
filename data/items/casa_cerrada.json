@@ -17,6 +17,7 @@
       "image":"props/puerta_c.png",
       "propiedades":["solido"],
       "proyecta_sombra":false,
+      "enabled":false,
       "operable":[
         {"ID":0,
          "image":"props/puerta_c.png",
