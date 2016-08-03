@@ -41,7 +41,7 @@ class ShadowSprite(AzoeSprite):
 
     def __init__(self, *args, **kwargs):
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
+        self._luces = [0, 0, 0, 0, 1, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
 
         super().__init__(*args, **kwargs)
 
@@ -161,23 +161,24 @@ class ShadowSprite(AzoeSprite):
         if self._prevLuces is None or self._luces != self._prevLuces:
             self._prevLuces = self._luces[:]
             # las luces de lados contrarios se anulan
-            # for i in range(0, 7):
-            #     if (self._luces[(i + 4) % 7] - self._luces[i]) == 1:  # bool
-            #         self._sombras[i] = 1
-            #     else:
-            #         self._sombras[i] = 0
+            for i in range(0, 7):
+                if (self._luces[(i + 4) % 7] - self._luces[i]) == 1:  # bool
+                    self._sombras[i] = 1
+                else:
+                    self._sombras[i] = 0
 
             # loop unrolling para evitar el costo de %, aunque solo es necesario cada vez que cambian las luces
-            self._sombras[0] = self._luces[4] - self._luces[0]
-            self._sombras[1] = self._luces[5] - self._luces[1]
-            self._sombras[2] = self._luces[6] - self._luces[2]
-            self._sombras[3] = self._luces[7] - self._luces[3]
-            self._sombras[4] = self._luces[0] - self._luces[4]
-            self._sombras[5] = self._luces[1] - self._luces[5]
-            self._sombras[6] = self._luces[2] - self._luces[6]
-            self._sombras[7] = self._luces[3] - self._luces[7]
+            # self._sombras[0] = self._luces[4] - self._luces[0]
+            # self._sombras[1] = self._luces[5] - self._luces[1]
+            # self._sombras[2] = self._luces[6] - self._luces[2]
+            # self._sombras[3] = self._luces[7] - self._luces[3]
+            # self._sombras[4] = self._luces[0] - self._luces[4]
+            # self._sombras[5] = self._luces[1] - self._luces[5]
+            # self._sombras[6] = self._luces[2] - self._luces[6]
+            # self._sombras[7] = self._luces[3] - self._luces[7]
 
             if any(self._sombras):
+                Renderer.camara.remove_obj(self.sombra)
                 self.crear_sombras()
 
     def update(self, *args):

@@ -1,4 +1,5 @@
 ﻿from engine.globs import EngineData, COLOR_IGNORADO
+from engine.globs.eventDispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA
 from engine.misc import Resources
 from engine.base import AzoeSprite
@@ -116,6 +117,7 @@ class GradientSquareLight(LightSource):
 
 class DayLight:
     """Luz de día, ocupa toda la pantalla"""
+    posicion = 4
 
     def __init__(self, tamanio):  # el tamanio podría ser fijo de 1024
         self.rect = Rect(0, 0, tamanio, tamanio)  # la posición podría ser variable.
@@ -124,11 +126,23 @@ class DayLight:
         self.nombre = 'sol'
         self.check = True
 
-    def update(self):
+        EventDispatcher.register(self.movimiento_por_rotacion, 'hora')
+
+    def movimiento_por_rotacion(self, event):
+        # SO, O, NO, N, NE, E, SE, S #sombra
+        # NE, E, SE, S, SO, O, NO, N # luz
+        # 0 , 1, 2 , 3, 4,  5, 6,  7
+        h = event.data['hora'].h
+        # esto está bastante mal hecho, pero demuestra lo que quiero que pase.
+        if h == 10:
+            p = 4
+        else:
+            p = 2
+
+        self.posicion = p
         for item in EngineData.MAPA_ACTUAL.properties:
-            if self.rect.colliderect(item.rect):
-                if item.proyectaSombra:
-                    # noinspection PyProtectedMember
-                    item._luces[4] = 1
+            if item.proyectaSombra:
+                # noinspection PyProtectedMember
+                item._luces[self.posicion] = 1
 
 __all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']

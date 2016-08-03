@@ -242,13 +242,13 @@ class Noche(AzoeSprite):
                             a = clamp(_a - (255 - a))
                             pxarray[ox, oy] = r, g, b, a
             self.luces.append(light)
-            light.update()
+            # light.update()
         nch = pxarray.make_surface()
         self.image = nch
     
-    def update(self):
-        for luz in self.luces:
-            luz.update()
+    # def update(self):
+    #     for luz in self.luces:
+    #         luz.update()
 
 
 class Tiempo:

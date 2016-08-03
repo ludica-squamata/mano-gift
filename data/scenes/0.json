@@ -1,6 +1,6 @@
 {
   "stage":{"mapa":"casas y arboles","entrada":"puerta"},
-  "tiempo":{"dia":0,"hora":[16,0]},
+  "tiempo":{"dia":0,"hora":[9,54]},
   "mobs":{
     "commoner":{
       "AI":"wander",

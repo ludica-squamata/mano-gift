@@ -48,8 +48,9 @@ class Camara:
 
     @classmethod
     def add_visible(cls, obj):
-        if obj not in cls.visible:
-            cls.visible.add(obj, layer=obj.z)
+        if obj in cls.visible:
+            cls.remove_obj(obj)
+        cls.visible.add(obj, layer=obj.z)
 
     @classmethod
     def remove_obj(cls, obj):
