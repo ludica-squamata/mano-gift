@@ -46,10 +46,11 @@ class Stage:
 
     def register_at_renderer(self):
         Renderer.camara.set_background(self.mapa)
+        luz_del_sol = DayLight(1024)
         if Tiempo.noche is None:
             Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
         if self.data['ambiente'] == 'exterior':
-            Tiempo.noche.set_lights(DayLight(1024))
+            Tiempo.noche.set_lights(luz_del_sol)
         # elif self.data['ambiente'] == 'interior':
         #     pass 
         for obj in self.properties:
@@ -65,6 +66,8 @@ class Stage:
 
             if obj not in Renderer.camara.real:
                 Renderer.camara.add_real(obj)
+
+        luz_del_sol.add_objs([obj for obj in self.properties if obj.proyectaSombra])
 
         for salida in self.salidas:
             if salida.sprite is not None:

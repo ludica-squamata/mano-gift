@@ -241,7 +241,7 @@ class Noche(AzoeSprite):
                             b = clamp(b + _b)
                             a = clamp(_a - (255 - a))
                             pxarray[ox, oy] = r, g, b, a
-            self.luces.append(light)
+            # self.luces.append(light)
             # light.update()
         nch = pxarray.make_surface()
         self.image = nch

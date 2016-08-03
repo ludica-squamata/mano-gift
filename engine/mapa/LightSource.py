@@ -1,6 +1,7 @@
-﻿from engine.globs import EngineData, COLOR_IGNORADO
+﻿from engine.globs import COLOR_IGNORADO
 from engine.globs.eventDispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA
+from pygame.sprite import LayeredUpdates
 from engine.misc import Resources
 from engine.base import AzoeSprite
 
@@ -118,15 +119,26 @@ class GradientSquareLight(LightSource):
 class DayLight:
     """Luz de día, ocupa toda la pantalla"""
     posicion = 4
+    layer = -1
 
     def __init__(self, tamanio):  # el tamanio podría ser fijo de 1024
         self.rect = Rect(0, 0, tamanio, tamanio)  # la posición podría ser variable.
         self.color = 0, 0, 0, 0  # el color podría ser una constante.
         self.estatico = True
         self.nombre = 'sol'
-        self.check = True
+        self.sprites_iluminados = LayeredUpdates()
 
         EventDispatcher.register(self.movimiento_por_rotacion, 'hora')
+
+    def add_objs(self, iluminables):
+        names = []
+        layer = -1
+        for obj in iluminables:
+            if obj.nombre not in names:
+                names.append(obj.nombre)
+                layer += 1
+            self.sprites_iluminados.add(obj, layer=layer)
+        self.generar_sombras()
 
     def movimiento_por_rotacion(self, event):
         # SO, O, NO, N, NE, E, SE, S #sombra
@@ -140,9 +152,19 @@ class DayLight:
             p = 2
 
         self.posicion = p
-        for item in EngineData.MAPA_ACTUAL.properties:
-            if item.proyectaSombra:
-                # noinspection PyProtectedMember
-                item._luces[self.posicion] = 1
+
+        for item in self.sprites_iluminados:
+            # noinspection PyProtectedMember
+            item._luces[self.posicion] = 1
+
+        self.generar_sombras()
+
+    def generar_sombras(self):
+        for layer in self.sprites_iluminados.layers():
+            sprites = self.sprites_iluminados.get_sprites_from_layer(layer)
+            args = sprites[0].update_sombra()
+            if args is not None:
+                for sprite in sprites:
+                    sprite.add_shadow(*args)
 
 __all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']

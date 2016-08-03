@@ -3,14 +3,14 @@
   "nombre":"casa_cerrada",
   "componentes":{
     "frente":{
-      "casa":[[0,0,0]],
+      "casa_cerrada":[[0,0,0]],
       "puerta_cerrada":[[69,133,1]]
     },
     "lado":{},
     "reverso":{}
   },
   "referencias":{
-    "casa":"props/casa.png",
+    "casa_cerrada":"props/casa.png",
     "puerta_cerrada":{
       "ID":4,"tipo":"operable",
       "peso":10, "volumen":5,

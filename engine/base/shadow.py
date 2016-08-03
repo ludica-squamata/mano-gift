@@ -45,6 +45,12 @@ class ShadowSprite(AzoeSprite):
 
         super().__init__(*args, **kwargs)
 
+    def add_shadow(self, *args):
+        Renderer.camara.remove_obj(self.sombra)
+        self.sombra = Sombra(self, *args)
+
+        Renderer.camara.add_visible(self.sombra)
+
     def crear_sombras(self):
 
         h = self.rect.h
@@ -72,8 +78,7 @@ class ShadowSprite(AzoeSprite):
 
             draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
-        self.sombra = Sombra(self, h_2, t_surface)
-        Renderer.camara.add_visible(self.sombra)
+        return h_2, t_surface
 
     @staticmethod
     def _crear_sombra(surface, arg=None, _mask=None):
@@ -178,12 +183,11 @@ class ShadowSprite(AzoeSprite):
             # self._sombras[7] = self._luces[3] - self._luces[7]
 
             if any(self._sombras):
-                Renderer.camara.remove_obj(self.sombra)
-                self.crear_sombras()
+                return self.crear_sombras()
 
     def update(self, *args):
-        if self.proyectaSombra:
-            self.update_sombra()
+        # if self.proyectaSombra:
+        #     self.update_sombra()
         if self.sombra is not None:
             self.sombra.z = self.z-1
         super().update(*args)
