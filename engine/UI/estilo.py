@@ -12,8 +12,11 @@ class Estilo:
     fuente_Mb = font.SysFont(__fuente, 16, bold=True)
     fuente_M = font.SysFont(__fuente, 16)
     fuente_I = font.SysFont(__fuente, 15)
+    fuente_Ib = font.SysFont(__fuente, 15, bold=True)
+    fuente_Ii = font.SysFont(__fuente, 15, italic=True)
     fuente_P = font.SysFont(__fuente, 14)
     fuente_Pi = font.SysFont(__fuente, 14, italic=True)
+    fuente_Pb = font.SysFont(__fuente, 14, bold=True)
     fuente_MP = font.SysFont(__fuente, 12)
 
     fuente_Mu = font.SysFont(__fuente, 16)

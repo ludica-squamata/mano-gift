@@ -1,49 +1,52 @@
 from engine.IO.menucircular import CircularMenu, BaseElement
-from pygame import font, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
 from engine.globs import EngineData as Ed
+from pygame import Surface, SRCALPHA
+from engine.UI.estilo import Estilo
 from pygame.sprite import Sprite
 
 
-class LetterElement(BaseElement):
-    def __init__(self, parent, nombre):
-        super().__init__(parent, nombre)
-        self._crear_titulo()
-
-    @staticmethod
-    def _crear_base(w, h):
+class LetterElement(BaseElement, Estilo):
+    def _crear_base(self, w, h):
         image = Surface((w, h), SRCALPHA)
-        image.fill((0, 0, 0, 255))
-        image.fill((125, 125, 125, 200), (1, 1, w - 2, h - 2))
+        image.fill(self.font_none_color)
+        gris = self.bg_cnvs
+        gris.a = 200
+        image.fill(gris, (1, 1, w - 2, h - 2))
 
         rect = image.get_rect()
         return image, rect
 
     def _crear_icono_texto(self, icono, w, h):
         image, _rect = self._crear_base(w, h)
-
-        fuente = font.SysFont('Verdana', 15, bold=True)
-        render = fuente.render(icono, 1, (0, 0, 0))
+        render = self.fuente_Ib.render(icono, 1, (0, 0, 0))
         renderect = render.get_rect(center=_rect.center)
         image.blit(render, renderect)
         return image
 
-    def _crear_titulo(self):
-        fuente = font.SysFont('Verdana', 15, bold=True)
-        w, h = fuente.size(self.nombre)
-        negro = 0, 0, 0
-        gris = 125, 125, 125
 
-        self.title = Sprite()
-        self.title.active = True
-        self.title.image = Surface((w + 6, h + 2))
-        self.title.image.fill(gris, (1, 1, w + 4, h))
-        self.title.image.blit(fuente.render(self.nombre, 1, negro, gris), (2, 1))
-        self.title.rect = self.title.image.get_rect()
+class Title(Sprite, Estilo):
+    active = True
 
-    def update(self):
-        super().update()
-        self.title.rect.center = (self.rect.centerx, self.rect.bottom + 15)
+    def __init__(self, parent, nombre):
+        super().__init__()
+        self.nombre = nombre
+        self.parent = parent
+
+        w, h = self.fuente_Ib.size(self.nombre)
+        negro = self.font_none_color
+        gris = self.bg_cnvs
+
+        self.image = Surface((w + 6, h + 2))
+        self.image.fill(gris, (1, 1, w + 4, h))
+        self.image.blit(self.fuente_Ib.render(nombre, 1, negro, gris), (2, 1))
+        self.rect = self.image.get_rect(center=(self.parent.rect.centerx, self.parent.rect.bottom + 15))
+
+    def center(self, rect):
+        self.rect.center = (rect.centerx, rect.bottom + 15)
+
+    def update(self, *args):
+        self.center(self.parent.rect)
 
 
 class RenderedCircularMenu(CircularMenu):
@@ -77,6 +80,7 @@ class RenderedCircularMenu(CircularMenu):
     def stop_everything(self, on_spot):
         super().stop_everything(on_spot)
         self.last_on_spot = on_spot
+        on_spot.title.update()
         Renderer.add_overlay(on_spot.title, self.layer)
 
     def turn(self, delta):

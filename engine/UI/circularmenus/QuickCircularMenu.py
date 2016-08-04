@@ -1,8 +1,7 @@
-from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
+from .RenderedCircularMenu import RenderedCircularMenu, LetterElement, Title
 from engine.IO.menucircular import CircularMenu
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import font
 
 
 class InventoryElement(LetterElement):
@@ -28,8 +27,8 @@ class InventoryElement(LetterElement):
             self.img_uns = self._crear_icono_texto(icono, 21, 21)
             self.img_sel = self._crear_icono_texto(icono, 33, 33)
         else:
-            self.img_uns = self._crear_icono_image(icono, 21, 21)
-            self.img_sel = self._crear_icono_image(icono, 33, 33)
+            self.img_uns = self._crear_icono_image(21, 21)
+            self.img_sel = self._crear_icono_image(33, 33)
 
         self.rect_uns = self.img_uns.get_rect()
         self.rect_sel = self.img_sel.get_rect()
@@ -40,20 +39,22 @@ class InventoryElement(LetterElement):
         else:
             self.image = self.img_uns
             self.rect = self.rect_uns
+        self.title = Title(self, nombre)
 
         if cascada is not None:
-            for item in cascada:
-                self.cascada.append(InventoryElement(self.parent, item))
+            for j in range(len(cascada)):
+                obj = InventoryElement(self.parent, cascada[j])
+                obj.idx = j
+                self.cascada.append(obj)
 
-    def _crear_icono_image(self, icono, w, h):
+    def _crear_icono_image(self, w, h):
         image, _rect = self._crear_base(w, h)
-        fuente = font.SysFont('Verdana', 12)
         cant = Ed.HERO.inventario.cantidad(self.item)
-        render = fuente.render(str(cant), 1, (0, 0, 0))
+        render = self.fuente_MP.render(str(cant), 1, self.font_none_color)
         renderect = render.get_rect(bottomright=_rect.bottomright)
-        iconrect = icono.get_rect(center=_rect.center)
+        iconrect = self.item.image.get_rect(center=_rect.center)
 
-        image.blit(icono, iconrect)
+        image.blit(self.item.image, iconrect)
         image.blit(render, renderect)
 
         return image
@@ -61,7 +62,11 @@ class InventoryElement(LetterElement):
     def do_action(self):
         if self.item is not None:
             if hasattr(self.item, 'usar'):
-                return Ed.HERO.usar_item(self.item)
+                value = Ed.HERO.usar_item(self.item)
+                self.img_uns = self._crear_icono_image(21, 21)
+                self.img_sel = self._crear_icono_image(33, 33)
+                self.image = self.img_sel
+                return value
         return True
 
 
@@ -89,6 +94,7 @@ class CommandElement(LetterElement):
         else:
             self.image = self.img_uns
             self.rect = self.rect_uns
+        self.title = Title(self, nombre)
 
     def do_action(self):
         self.command()

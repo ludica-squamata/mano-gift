@@ -1,5 +1,5 @@
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS, ModData
-from .RenderedCircularMenu import RenderedCircularMenu, LetterElement
+from .RenderedCircularMenu import RenderedCircularMenu, LetterElement, Title
 from engine.IO.menucircular import CircularMenu
 from engine.IO.dialogo import Dialogo
 from os import path, listdir
@@ -38,6 +38,7 @@ class DialogElement(LetterElement):
 
         self.rect_uns = self.img_uns.get_rect()
         self.rect_sel = self.img_sel.get_rect()
+        self.title = Title(self, nombre)
 
         if self.in_place:
             self.image = self.img_sel
