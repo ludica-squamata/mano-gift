@@ -62,15 +62,18 @@ class HUD:
     def __init__(self):
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
-        dx, dy = _rect.centerx, _rect.bottom - 33
-        self.BarraVida = ProgressBar(Ed.HERO.salud_max, (200, 50, 50), (100, 0, 0), dx - w - 1, dy - 11, w, h)
-        self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx + 2, dy - 11, w, h)
+        dx, dy = _rect.x+3, _rect.y + 33
+        self.BarraVida = ProgressBar(Ed.HERO.salud_max, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
+
+    def show(self):
         Renderer.add_overlay(self.BarraVida, CAPA_OVERLAYS_HUD)
         Renderer.add_overlay(self.BarraMana, CAPA_OVERLAYS_HUD)
 
-    def usar_funcion(self, tecla):
-        pass
+    @staticmethod
+    def hide():
+        Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_HUD)
 
     def update(self):
         self.BarraVida.set_variable(actual=Ed.HERO.salud_act)

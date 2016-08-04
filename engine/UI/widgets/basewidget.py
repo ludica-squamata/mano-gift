@@ -9,9 +9,6 @@ class BaseWidget(Estilo, AzoeSprite):
     img_sel = None
     img_uns = None
 
-    def __init__(self, img):
-        super().__init__(img)
-
     def ser_elegido(self):
         """Cambia la imagen a la versión resaltada"""
         if self.enabled:

@@ -120,6 +120,7 @@ class EngineData:
         cls.DIALOG = None
         cls.MODO = 'Aventura'
         cls.onPause = False
+        cls.HUD.show()
 
     @classmethod
     def salvar(cls, event):

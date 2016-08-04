@@ -1,5 +1,6 @@
 from engine.IO.dialogo import Dialogo
 from .LetterElement import LetterElement
+from .title import Title
 from engine.misc import Resources as Rs
 from engine.globs import EngineData as Ed
 
@@ -51,6 +52,8 @@ class DialogElement(LetterElement):
         else:
             self.image = self.img_uns
             self.rect = self.rect_uns
+
+        self.title = Title(self, nombre)
 
         if cascada is not None:
             for item in cascada:

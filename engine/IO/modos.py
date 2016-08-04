@@ -223,6 +223,8 @@ class Modo:
         Ed.MODO = 'Menu'
         Ed.onPause = True
         Ed.menu_actual = menu
+        if Ed.HUD is not None:
+            Ed.HUD.hide()
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 

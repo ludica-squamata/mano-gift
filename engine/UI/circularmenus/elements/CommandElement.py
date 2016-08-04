@@ -1,4 +1,5 @@
 from .LetterElement import LetterElement
+from .title import Title
 
 
 class CommandElement(LetterElement):
@@ -25,6 +26,8 @@ class CommandElement(LetterElement):
         else:
             self.image = self.img_uns
             self.rect = self.rect_uns
+
+        self.title = Title(self, nombre)
 
     def do_action(self):
         self.command()

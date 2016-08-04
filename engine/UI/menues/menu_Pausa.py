@@ -15,12 +15,11 @@ class MenuPausa(Menu):
         a, b = 'arriba', 'abajo'
 
         botones = [
-            {m: "Items", k: {a: "Cargar", b: "Equipo"}},
-            {m: "Equipo", k: {a: "Items", b: "Status"}},
+            {m: "Equipo", k: {a: "Cargar", b: "Status"}},
             {m: "Status", k: {a: "Equipo", b: "Grupo"}},
             {m: "Grupo", k: {a: "Status", b: "Opciones"}},
             {m: "Opciones", k: {a: "Grupo", b: "Cargar"}},
-            {m: "Cargar", k: {a: "Opciones", "b": "Items"}},
+            {m: "Cargar", k: {a: "Opciones", "b": "Equipo"}},
         ]
         for i in range(len(botones)):
             botones[i]['pos'] = [x, 39 * i + 100],

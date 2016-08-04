@@ -1,8 +1,6 @@
-from .RenderedCircularMenu import RenderedCircularMenu
-from .RenderedCircularMenu import RenderedCircularMenu, LetterElement, Title
-from engine.IO.menucircular import CircularMenu
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO
 from engine.globs.eventDispatcher import EventDispatcher
+from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import CommandElement, InventoryElement
 
 

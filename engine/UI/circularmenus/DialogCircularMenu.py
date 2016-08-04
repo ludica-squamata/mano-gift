@@ -1,8 +1,8 @@
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_CIRCULAR, ModData
-from .RenderedCircularMenu import RenderedCircularMenu, Title
+from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import DialogElement, CommandElement
-from os import path, listdir
 from engine.misc import Resources as Rs
+from os import path, listdir
 
 
 class DialogCircularMenu(RenderedCircularMenu):

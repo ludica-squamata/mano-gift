@@ -39,11 +39,15 @@ class RenderedCircularMenu(CircularMenu):
         super().stop_everything(on_spot)
         self.last_on_spot = on_spot
         on_spot.title.update()
+        if hasattr(on_spot, 'description'):
+            Renderer.add_overlay(on_spot.description, self.layer)
         Renderer.add_overlay(on_spot.title, self.layer)
 
     def turn(self, delta):
         super().turn(delta)
         Renderer.del_overlay(self.last_on_spot.title)
+        if hasattr(self.last_on_spot, 'description'):
+            Renderer.del_overlay(self.last_on_spot.description)
 
     def show(self):
         Renderer.add_overlay(self.last_on_spot.title, self.layer)
@@ -55,3 +59,7 @@ class RenderedCircularMenu(CircularMenu):
             Renderer.clear_overlays_from_layer(self.layer)
             Ed.DIALOGO = None
             Ed.MODO = 'Aventura'
+
+    def update(self):
+        # this hook is necesary
+        pass
