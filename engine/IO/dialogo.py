@@ -1,5 +1,6 @@
 ﻿from engine.UI import DialogInterface
 from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
 
 
 class Elemento:
@@ -13,6 +14,7 @@ class Elemento:
     leads = None
     reqs = None
     event_data = None
+    texto = ''
 
     def __init__(self, indice, data):
         self.leads = None
@@ -28,6 +30,8 @@ class Elemento:
 
         if type(self.leads) is list:
             self.hasLeads = True
+
+        del data
 
     def post_event(self):
         EventDispatcher.trigger('DialogEvent', self, self.event_data)
@@ -211,23 +215,39 @@ class Dialogo:
         for loc in locutores:
             self.locutores[loc.nombre] = loc
 
-        self.frontend = DialogInterface()
+        self.frontend = DialogInterface(self)
 
         self.func_lin = {
-            'hablar': self.hablar,
-            'arriba': self.desplazar_texto,
-            'abajo': self.desplazar_texto,
-            'izquierda': lambda key: None,
-            'derecha': lambda key: None,
-            'cancelar': self.cerrar}
+            'tap': {
+                'hablar': self.hablar,
+                'cancelar': self.cerrar
+            },
+            'hold': {
+                'arriba': lambda: self.desplazar_texto('arriba'),
+                'abajo': lambda: self.desplazar_texto('arriba'),
+            },
+        }
 
         self.func_sel = {
-            'hablar': self.confirmar_seleccion,
-            'arriba': self.elegir_opcion,
-            'abajo': self.elegir_opcion,
-            'izquierda': lambda key: None,
-            'derecha': lambda key: None,
-            'cancelar': self.cerrar}
+            'tap': {
+                'hablar': self.confirmar_seleccion,
+                'cancelar': self.cerrar,
+                'arriba': lambda: self.elegir_opcion('arriba'),
+                'abajo': lambda: self.elegir_opcion('abajo'),
+                'izquierda': self.frontend.detener_menu,
+                'derecha': self.frontend.detener_menu,
+            },
+            'hold': {
+                'arriba': lambda: self.elegir_opcion('arriba'),
+                'abajo': lambda: self.elegir_opcion('abajo'),
+                'izquierda': lambda: self.frontend.rotar_menu(-1),
+                'derecha': lambda: self.frontend.rotar_menu(+1),
+            },
+            'release': {
+                'izquierda': self.frontend.detener_menu,
+                'derecha': self.frontend.detener_menu,
+            }
+        }
 
         # empezar con el primer nodo
         self.hablar()
@@ -240,20 +260,14 @@ class Dialogo:
         return True
 
     def use_function(self, mode, key):
-        del mode
-        self.usar_funcion(key)
-
-    def usar_funcion(self, tecla):
         if self.SelMode:
-            funciones = self.func_sel
+            functions = self.func_sel
         else:
-            funciones = self.func_lin
+            functions = self.func_lin
 
-        if tecla in funciones:
-            if tecla in ['arriba', 'abajo', 'izquierda', 'derecha']:
-                funciones[tecla](tecla)
-            else:
-                funciones[tecla]()
+        if mode in functions:
+            if key in functions[mode]:
+                functions[mode][key]()
 
     def hablar(self):
 
@@ -295,8 +309,8 @@ class Dialogo:
                 self.frontend.borrar_todo()
                 self.frontend.set_loc_img(loc)
                 self.frontend.set_sel_mode(show)
-                self.next = show[0].leads
-                self.sel = show[0]
+                # self.next = show[0].leads
+                # self.sel = show[0]
 
         elif type(actual) is Elemento:
             self.mostrar_nodo(actual)
@@ -338,5 +352,11 @@ class Dialogo:
         for loc in self.locutores:
             mob = self.locutores[loc]
             mob.hablando = False
-        self.frontend.destruir()
+            Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
         del self.dialogo
+
+    def update(self):
+
+        self.sel = self.frontend.sel
+        if hasattr(self.sel, 'leads'):
+            self.next = self.sel.leads

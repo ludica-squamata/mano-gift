@@ -1,52 +1,6 @@
-from engine.IO.menucircular import CircularMenu, BaseElement
+from engine.IO.menucircular import CircularMenu
 from engine.globs.renderer import Renderer
 from engine.globs import EngineData as Ed
-from pygame import Surface, SRCALPHA
-from engine.UI.estilo import Estilo
-from pygame.sprite import Sprite
-
-
-class LetterElement(BaseElement, Estilo):
-    def _crear_base(self, w, h):
-        image = Surface((w, h), SRCALPHA)
-        image.fill(self.font_none_color)
-        gris = self.bg_cnvs
-        gris.a = 200
-        image.fill(gris, (1, 1, w - 2, h - 2))
-
-        rect = image.get_rect()
-        return image, rect
-
-    def _crear_icono_texto(self, icono, w, h):
-        image, _rect = self._crear_base(w, h)
-        render = self.fuente_Ib.render(icono, 1, (0, 0, 0))
-        renderect = render.get_rect(center=_rect.center)
-        image.blit(render, renderect)
-        return image
-
-
-class Title(Sprite, Estilo):
-    active = True
-
-    def __init__(self, parent, nombre):
-        super().__init__()
-        self.nombre = nombre
-        self.parent = parent
-
-        w, h = self.fuente_Ib.size(self.nombre)
-        negro = self.font_none_color
-        gris = self.bg_cnvs
-
-        self.image = Surface((w + 6, h + 2))
-        self.image.fill(gris, (1, 1, w + 4, h))
-        self.image.blit(self.fuente_Ib.render(nombre, 1, negro, gris), (2, 1))
-        self.rect = self.image.get_rect(center=(self.parent.rect.centerx, self.parent.rect.bottom + 15))
-
-    def center(self, rect):
-        self.rect.center = (rect.centerx, rect.bottom + 15)
-
-    def update(self, *args):
-        self.center(self.parent.rect)
 
 
 class RenderedCircularMenu(CircularMenu):
@@ -71,6 +25,10 @@ class RenderedCircularMenu(CircularMenu):
 
     def supress(self):
         super().supress()
+        self._update_rendered()
+
+    def supress_all(self):
+        super().supress_all()
         self._update_rendered()
 
     def _modify_cube_list(self):

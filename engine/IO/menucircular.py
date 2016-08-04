@@ -61,8 +61,8 @@ class BaseElement(Sprite):
 
     def update(self):
         self.circular(self.delta)
-        self.rect_sel.center = self.puntos[self.angle]
-        self.rect_uns.center = self.puntos[self.angle]
+        self.rect_sel.center = self.parent.puntos[self.angle]
+        self.rect_uns.center = self.parent.puntos[self.angle]
 
         if self.check_placement():
             self.parent.actual = self
@@ -101,7 +101,7 @@ class CircularMenu:
                 for item in grupo:
                     angle += separacion
                     item.change_angle(angle, *puntos[angle])
-                    item.puntos = puntos
+                    # item.puntos = puntos
                 self.cascadas[key] = {'items': cascadas[key], 'radius': radius, 'puntos': puntos}
 
         self.cubos.add(*self.cascadas['inicial']['items'])
@@ -142,7 +142,7 @@ class CircularMenu:
         for cubo in self.cubos:
             cubo.stop = False
             cubo.delta = delta * 3
-            cubo.puntos = self.cascadas[self.cascadaActual]['puntos']
+            # cubo.puntos = self.cascadas[self.cascadaActual]['puntos']
         self.stopped = False
 
     def stop(self):
@@ -184,9 +184,22 @@ class CircularMenu:
             self.cascadaAnterior = ''
             self._change_cube_list()
 
+    def add_element(self, cascada, item):
+        if cascada in self.cascadas:
+            self.cascadas[cascada]['items'].append(item)
+        # else:
+        #     print(self.cascadas)
+        self._change_cube_list()
+        self._modify_cube_list()
+
     def supress(self):
         self.cubos.remove(self.actual)
         self.cascadas[self.cascadaActual]['items'].remove(self.actual)
+
+    def supress_all(self):
+        for cuadro in self.cubos:
+            self.cascadas[self.cascadaActual]['items'].remove(cuadro)
+        self.cubos.empty()
 
     def _change_cube_list(self):
         self.cubos.empty()

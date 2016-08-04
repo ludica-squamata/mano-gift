@@ -1,6 +1,6 @@
 {
   "head":{
-    "class":"scripted",
+    "class":"chosen",
     "conditional_tags":[],
     "style":"",
     "locutors":["heroe", "commoner"],
@@ -23,7 +23,7 @@
     "txt":"O quizás esta otra."},
 
     "4":{"type":"branch","leads":10,"loc":"heroe","reqs":{"attrs":{"carisma":9}},
-    "txt":"¿Es esta la opcion oculta por mi <b>carisma</b>?"},
+    "txt":"¿Es esta la opción oculta por mi <b>carisma</b>?"},
 
     "5":{"type":"branch","leads":11,"loc":"heroe","reqs":{"objects":["star"]},
     "txt":"Aquí tengo una <b>estrella</b> que encontré."},
@@ -47,7 +47,7 @@
     "txt":"Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."},
 
     "12":{"type":"exclusive","leads":[13,14],"loc":"commoner",
-    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrias que ver un fragmento distinto."},
+    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de di?logo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."},
 
     "13":{"type":"node","leads":16,"loc":"commoner","reqs":{"loc":"heroe","attrs":{"carisma":9}},
     "txt":"Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."},
