@@ -2,7 +2,7 @@ from .props import *
 from .items import *
 
 
-def new_prop(nombre, x, y, data = None, img = None):
+def new_prop(nombre, x, y, data=None, img=None):
     if data is None and img is None:
         raise TypeError
     elif data is None:

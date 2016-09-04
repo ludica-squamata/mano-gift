@@ -1,7 +1,6 @@
 from engine.mobs.behaviortrees import BehaviourTree
 from . import Sensitivo, Animado
 from engine.globs import EngineData as Ed, ModData as Md
-from importlib import machinery
 from engine.misc.resources import Resources as Rs
 
 
@@ -12,9 +11,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
     def __init__(self, *args, **kwargs):
         nombre = args[0]['AI']
-        ruta = Md.scripts + nombre + '.py'
         tree_data = Rs.abrir_json(Md.mobs + 'behaviours/' + nombre + '.json')
-        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        module = Rs.load_module_from_script(nombre)
         self.AI = BehaviourTree(self, tree_data, module)  # function alias!
 
         self._AI = self.AI  # copia de la AI original

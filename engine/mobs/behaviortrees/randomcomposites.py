@@ -12,7 +12,7 @@ class RandomComposite(Composite):
         self.explored_children.append(self.children[self.current_id])
 
 
-class RandomSecuence(Secuence):
+class RandomSequence(Sequence):
     explored_children = []
 
     def get_child_status(self, status):

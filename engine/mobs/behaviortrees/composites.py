@@ -1,7 +1,7 @@
 from .status import *
 from .node import Node
 
-__all__ = ['Composite', 'Secuence', 'Selector', 'Parallel']
+__all__ = ['Composite', 'Sequence', 'Selector', 'Parallel']
 
 
 class Composite(Node):
@@ -23,8 +23,8 @@ class Composite(Node):
         self.current_id = -1
 
 
-class Secuence(Composite):
-    name = 'Secuence'
+class Sequence(Composite):
+    name = 'Sequence'
 
     def __repr__(self):
         lista = [str(c.idx) for c in self.children]

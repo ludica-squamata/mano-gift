@@ -1,4 +1,5 @@
 from pygame import image, Rect
+from importlib import machinery
 import json
 
 
@@ -43,3 +44,10 @@ class Resources:
         ex = open(archivo, 'w')
         json.dump(datos, ex, sort_keys=True, indent=4, separators=(',', ': '))
         ex.close()
+
+    @staticmethod
+    def load_module_from_script(name):
+        from engine.globs.mod_data import ModData as Md
+        ruta = Md.scripts + name + '.py'
+        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        return module

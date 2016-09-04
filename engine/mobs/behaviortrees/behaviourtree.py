@@ -1,8 +1,10 @@
 from collections import OrderedDict
+from types import FunctionType
+from engine.globs import ModData as Md
+from engine.misc import Resources as Rs
 from .composites import *
 from .decorators import *
-from .node import Leaf
-from types import FunctionType
+from .leaves import Leaf
 
 
 class BehaviourTree:
@@ -22,8 +24,10 @@ class BehaviourTree:
 
         self.tree_structure = OrderedDict()
         self.entity = entity
+        tree_data = self.analyze_tree(tree_data)
         for key in [str(i) for i in range(len(tree_data))]:
             node = None
+            process = None
             data = tree_data[key]
             idx = int(key)
             self.tree_structure[idx] = []
@@ -33,8 +37,8 @@ class BehaviourTree:
                 self.tree_structure[idx].extend(data['children'])
                 if name == 'Selector':
                     node = Selector(self, idx, data['children'])
-                elif name == 'Secuence':
-                    node = Secuence(self, idx, data['children'])
+                elif name == 'Sequence':
+                    node = Sequence(self, idx, data['children'])
 
             elif 'child' in data:  # decorator
                 self.tree_structure[idx].append(int(data['child']))
@@ -48,21 +52,19 @@ class BehaviourTree:
                     node = Inverter(self, idx, data['child'])
 
             else:  # leaf
-                process = None
-                for entry in data['context']:
-                    self.shared_context[entry] = None
                 if name in globals():
                     process = globals()[name]
 
                 elif hasattr(scripts, name):
                     process = getattr(scripts, name)
 
+                arg = data.get('arg', None)
                 if isinstance(process, FunctionType):
-                    node = Leaf(self, idx, data['context'], name)
+                    node = Leaf(self, idx, name, arg)
                     node.set_process(process)
 
                 elif issubclass(process, Leaf):
-                    node = process(self, idx, data['context'], name)
+                    node = process(self, idx, name, arg)
 
             self.nodes.append(node)
 
@@ -72,6 +74,38 @@ class BehaviourTree:
 
     def __repr__(self):
         return 'BehaviourTree: current node #' + str(self.to_check.idx)
+
+    def analyze_tree(self, tree_data):
+        key = None
+        new_tree = None
+
+        for key in [str(i) for i in range(len(tree_data))]:
+            idx = int(key)
+            name = tree_data[key]['name']
+            if name == 'ExtenderLeaf':
+                an_tree = tree_data[key]['tree']
+                new_tree = self.extend_tree(an_tree, idx)
+                Rs.load_module_from_script(an_tree)
+                break
+
+        if new_tree:
+            del tree_data[key]
+            tree_data.update(new_tree)
+        return tree_data
+
+    @staticmethod
+    def extend_tree(an_tree_data, idx):
+        tree_extension = Rs.abrir_json(Md.mobs + 'behaviours/' + an_tree_data + '.json')
+        new_tree = {}
+        for kex in tree_extension:
+            if 'children' in tree_extension[kex]:
+                for i in range(len(tree_extension[kex]['children'])):
+                    tree_extension[kex]['children'][i] += idx
+            elif 'child' in tree_extension[kex]:
+                tree_extension[kex]['child'] += idx
+            idy = str(int(kex) + idx)
+            new_tree[idy] = tree_extension[kex]
+        return new_tree
 
     def set_parents(self):
         for idx in self.tree_structure.keys():
