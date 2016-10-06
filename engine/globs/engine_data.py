@@ -1,11 +1,9 @@
 from .eventDispatcher import EventDispatcher
 from engine.misc import Resources
-from .mod_data import ModData
-from .giftgroups import MobGroup, ItemGroup
+from .giftgroups import MobGroup
 from .renderer import Renderer
 from .tiempo import Tiempo
 from .constantes import SAVEFD
-import os.path
 
 
 class EngineData:
@@ -26,70 +24,13 @@ class EngineData:
     char_name = ''
 
     @classmethod
-    def load_savefile(cls, filename):
-        data = Resources.abrir_json(SAVEFD + '/' + filename)
-        cls.char_name = data['name']
-        if 'scene' in data:
-            cls.setear_escena(data['scene'], savedata=data)
-
-    @classmethod
-    def setear_escena(cls, idx, savedata=None):
-        cls.MODO = 'Aventura'
-        cls.onPause = False
-        cls.acceso_menues.clear()
-        if savedata is None:
-            savedata = {}
-
-        ruta = ModData.scenes + str(idx) + '.json'
-        if os.path.isfile(ruta):
-            cls.scene_data = Resources.abrir_json(ruta)
-            cls.scene_data.update({'ID': idx})
-            mapa, entrada = None, None  # para corregir una advertencia de PyCharm
-            if 'mapa' in savedata:
-                mapa = savedata['mapa']
-                entrada = savedata['link']
-            elif 'stage' in cls.scene_data:
-                mapa = cls.scene_data['stage']['mapa']
-                entrada = cls.scene_data['stage']['entrada']
-            cls.setear_mapa(mapa, entrada)
-
-            if 'mobs' in cls.scene_data:
-                # este es un hook para modificar la IA de los mobs
-                # si así la escena lo demandara.
-                pass
-
-            if 'tiempo' in cls.scene_data:
-                dia = cls.scene_data['tiempo']['dia']
-                hora = cls.scene_data['tiempo']['hora']
-                Tiempo.setear_momento(dia, *hora)
-
-            if 'focus' in cls.scene_data:
-                # la escena puede no especificar un foco
-                # lo que implica que el foco no cambia,
-                # no que se vuelva None necesariamente.
-                focus = cls.scene_data.get('focus', False)
-                if focus:
-                    if focus in MobGroup:
-                        focus = MobGroup[focus]
-
-                    elif focus in ItemGroup:
-                        focus = ItemGroup[focus]
-
-                    Renderer.set_focus(focus)
-                else:
-                    Renderer.set_focus()
-
-        else:
-            raise OSError('la Escena no existe')
-
-    @classmethod
     def setear_mapa(cls, nombre, entrada):
         Renderer.clear()
         from engine.UI.hud import HUD
         from engine.mapa import Stage
         from engine.mapa.loader import Loader
         if nombre not in cls.mapas:
-            cls.mapas[nombre] = Stage(nombre, cls.scene_data.get('mobs', {}), entrada)
+            cls.mapas[nombre] = Stage(nombre, entrada)
         else:
             Loader.set_stage(cls.mapas[nombre])
             Loader.cargar_hero(entrada)
@@ -120,7 +61,8 @@ class EngineData:
         cls.DIALOG = None
         cls.MODO = 'Aventura'
         cls.onPause = False
-        cls.HUD.show()
+        if cls.HUD is not None:
+            cls.HUD.show()
 
     @classmethod
     def salvar(cls, event):
@@ -128,23 +70,31 @@ class EngineData:
         data.update({
             'mapa': cls.MAPA_ACTUAL.nombre,
             'link': cls.MAPA_ACTUAL.entrada,
-            'scene': cls.scene_data['ID']
-        }
-        )
+            'tiempo': list(Tiempo.get_time()),
+            'focus': Renderer.camara.focus.nombre
+            })
 
         data.update(event.data)
-
         Resources.guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
 
     @classmethod
     def new_game(cls, char_name):
         cls.char_name = char_name
-        data = {
-            "name": char_name,
-            "scene": 0
-        }
-        Resources.guardar_json(SAVEFD + '/' + char_name + '.json', data)
-        cls.setear_escena(data['scene'])
+        Resources.guardar_json(SAVEFD + '/' + char_name + '.json', {"name": char_name})
+        EventDispatcher.trigger('NuevoJuego', 'engine', {})
+
+    @classmethod
+    def load_savefile(cls, filename):
+        data = Resources.abrir_json(SAVEFD + '/' + filename)
+        cls.char_name = data['name']
+        EventDispatcher.trigger('NuevoJuego', 'engine', {'savegame': data})
+
+    @classmethod
+    def cargar_juego(cls, mapa, entrada, dia, hora, minutos, focus):
+        cls.acceso_menues.clear()
+        cls.setear_mapa(mapa, entrada)
+        Tiempo.set_time(dia, hora, minutos)
+        Renderer.set_focus(MobGroup[focus])
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")

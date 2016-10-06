@@ -5,6 +5,7 @@ from engine.misc import Resources as Rs
 from .LightSource import DayLight  # SpotLight
 from .loader import Loader
 from .grilla import Grilla
+from .cuadrante import Cuadrante
 from pygame.sprite import Sprite, LayeredUpdates
 from pygame import mask, Rect, Surface
 
@@ -12,6 +13,7 @@ from pygame import mask, Rect, Surface
 class Stage:
     properties = None
     interactives = []
+    cuadrantes = []
     chunks = None
     mapa = None
     data = {}
@@ -22,7 +24,7 @@ class Stage:
     atardece = None
     anochece = None
 
-    def __init__(self, nombre, mobs_data, entrada):
+    def __init__(self, nombre, entrada):
         self.chunks = LayeredUpdates()
         self.interactives.clear()
         self.nombre = nombre
@@ -33,16 +35,22 @@ class Stage:
         self.chunks.add(ChunkMap(self, self.data, self.nombre, self.offset_x, self.offset_y))
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
+        self.crear_cuadrantes()
         self.grilla = Grilla(self.mapa.mask, 32)
         self.properties = LayeredUpdates()
         self.salidas = []
         self.entrada = entrada
         self.cargar_timestamps()
         Loader.set_stage(self)
-        Loader.load_everything(entrada, mobs_data)
+        Loader.load_everything(entrada)
 
         EventDispatcher.register(self.anochecer, 'hora')
         EventDispatcher.register(self.del_interactive, 'DelItem', 'MobMuerto')
+
+    def crear_cuadrantes(self):
+        w = self.rect.w // 2
+        h = self.rect.h // 2
+        self.cuadrantes = [Cuadrante(x, y, w, h) for x in range(2) for y in range(2)]
 
     def register_at_renderer(self):
         Renderer.camara.set_background(self.mapa)
@@ -72,6 +80,11 @@ class Stage:
         for salida in self.salidas:
             if salida.sprite is not None:
                 Renderer.camara.add_real(salida.sprite)
+
+        for obj in self.properties:
+            for quadrant in self.cuadrantes:
+                if quadrant.contains(obj):
+                    quadrant.add(obj)
 
     def add_property(self, obj, _layer, add_interactive=False):
         if _layer == GRUPO_SALIDAS:
@@ -131,6 +144,8 @@ class Stage:
 
     def update(self):
         self.actualizar_grilla()
+        for cuadrante in self.cuadrantes:
+            cuadrante.update()
         for salida in self.salidas:
             salida.update()
 

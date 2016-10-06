@@ -1,21 +1,26 @@
 {
-    "ID":1,"nombre":"commoner",
-    "salud":2,"fuerza":2,
-    "velocidad":1,
-    "iniciativa":10,
-    "carisma":5,
-    "imagenes":{
-        "idle":"mobs/imagenes/commoner12.png",
-        "atk":null,
-        "death":null,
-        "diag_face":"mobs/imagenes/npc_face.png"
-    },
-    "alphas":{
-        "idle":"mobs/colisiones/human_walk.png",
-        "atk":null,
-        "death":null
-    },
-    
-    "clase":"NPCSocial",
-    "propiedades":["pasiva"]
+  "ID":1,"nombre":"commoner",
+  "salud":2,"fuerza":2,
+  "velocidad":1,
+  "iniciativa":10,
+  "carisma":5,
+  "imagenes":{
+    "idle":"mobs/imagenes/commoner12.png",
+    "atk":null,
+    "death":null,
+    "diag_face":"mobs/imagenes/npc_face.png"
+  },
+  "alphas":{
+    "idle":"mobs/colisiones/human_walk.png",
+    "atk":null,
+    "death":null
+  },
+  "states":[
+    {
+      "ID":0,
+      "AI":"wander",
+      "dialog":"prueba.json"
+    }
+  ],
+  "propiedades":["pasiva"]
 }

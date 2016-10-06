@@ -11,8 +11,10 @@ class Parlante(Atribuido):
     hablante = True
 
     def __init__(self, *args, **kwargs):
-        if 'dialog' in args[0]:
-            args[0]['dialog'] = Rs.abrir_json(Md.dialogos + args[0]['dialog'])
+        if 'states' in args[0]:
+            if 'dialog' in args[0]['states'][0]:
+                nombre = args[0]['states'][0]['dialog']
+                args[0]['states'][0]['dialog'] = Rs.abrir_json(Md.dialogos + nombre)
         super().__init__(*args, **kwargs)
 
     def hablar(self, sprite):

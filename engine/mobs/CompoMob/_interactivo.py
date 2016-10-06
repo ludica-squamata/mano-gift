@@ -6,22 +6,16 @@ from pygame import Rect
 class Interactivo(Atribuido):
     # el nombre no es del todo correcto, pero no existe palabra en castellano
     # para lo que sería un interactuante. Al menos, el dRAE dice que no existe.
-    def __init__(self, *args, **kwargs):
-        self._rect_h = Rect((0, 0), (8 * 5, 32))
-        self._rect_v = Rect((0, 0), (32, 8 * 5))
+    idx_quadrant = 0
 
-        self._interaction_rect = None
+    def __init__(self, *args, **kwargs):
+        self._interaction_rect = Rect((0, 0), (32, 32))
         super().__init__(*args, **kwargs)
 
-    def _orient_interaction_rect(self, x, y):
-        """Orienta el rect de interacción. Función simplificada."""
+    def _aling_interaction_rect(self, x, y):
+        """Alinea el rect de interacción. Función simplificada."""
 
-        if x != 0:
-            self._interaction_rect = self._rect_h.copy()
-        if y != 0:
-            self._interaction_rect = self._rect_v.copy()
-
-        _rect = self.rect.copy()
+        _rect = Rect(self.mapX, self.mapY, self.rect.w, self.rect.h)
         if x < 0:
             self._interaction_rect.right = _rect.centerx
         elif x > 0:
@@ -36,18 +30,44 @@ class Interactivo(Atribuido):
         else:
             self._interaction_rect.y = _rect.y
 
-    def _interact_with_props(self, x, y):
+    @staticmethod
+    def _interact_with_props(item):
         """Selecciona a un prop utilizando el rect de interacción"""
-        self._orient_interaction_rect(x, y)
-        for prop in ItemGroup:
-            if prop.image is not None:
-                if self._interaction_rect.colliderect(prop.rect):
-                    return prop
+        if item.image is not None:
+            return item
 
-    def _interact_with_mobs(self, x, y):
+    @staticmethod
+    def _interact_with_mobs(item):
         """Selecciona a un mob utilizando el rect de interacción"""
-        self._orient_interaction_rect(x, y)
-        for mob in MobGroup:
-            if mob != self:
-                if self._interaction_rect.colliderect(mob.rect):
-                    return mob
+        if item in MobGroup:
+            return item
+
+    def quadrant_interaction(self, x, y):
+        self._aling_interaction_rect(x, y)
+        cuadrante = self.stage.cuadrantes[self.idx_quadrant]
+        # if not cuadrante.rect.contains(self._interaction_rect):
+        #     dx, dy = self.idx_quadrant // 2, self.idx_quadrant % 2
+        #     idx = (dy + y) * 2 + (dx + x)
+        #     cdr = self.stage.cuadrantes[idx]
+        #     print('contains2', cdr.rect.colliderect(self._interaction_rect), idx)
+        #     if self.direccion == 'arriba':
+        #         print('topleft', cdr.rect.collidepoint(self._interaction_rect.topleft))
+        #         print('topright', cdr.rect.collidepoint(self._interaction_rect.topright))
+        #     elif self.direccion == 'abajo':
+        #         print('bottomleft', cdr.rect.collidepoint(self._interaction_rect.bottomleft))
+        #         print('bottomright', cdr.rect.collidepoint(self._interaction_rect.bottomright))
+        #     elif self.direccion == 'derecha':
+        #         print('topleft', cdr.rect.collidepoint(self._interaction_rect.topleft))
+        #         print('bottomleft', cdr.rect.collidepoint(self._interaction_rect.bottomleft))
+        #     elif self.direccion == 'izquierda':
+        #         print('topright', cdr.rect.collidepoint(self._interaction_rect.topright))
+        #         print('bottomright', cdr.rect.collidepoint(self._interaction_rect.bottomright))
+        for item in cuadrante:
+            if item is not self:
+                _rect = Rect(item.mapX, item.mapY, item.rect.w, item.rect.h)
+                # los sprites deberian tener un "mapRect" completo.
+                if self._interaction_rect.colliderect(_rect):
+                    if item.tipo == 'Mob':
+                        return self._interact_with_mobs(item)
+                    else:
+                        return self._interact_with_props(item)

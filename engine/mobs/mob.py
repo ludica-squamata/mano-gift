@@ -10,7 +10,6 @@ class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido p
     mascaras = None  # {}
 
     hablante = False
-    moviendose = False
     mana = 1
 
     cmb_pos_img = {}  # combat position images.

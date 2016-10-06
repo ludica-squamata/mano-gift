@@ -70,6 +70,7 @@ class MobGroup:
     def contents(self):
         return [self._group[key] for key in self._group]
 
+
 class ItemGroup:
 
     _group = {}
@@ -120,7 +121,7 @@ class ItemGroup:
                     del self._group[key.nombre][self._group[key.nombre].index(key)]
                 else:
                     del self._group[key.nombre]
-            self._indexes.remove(key.nombre)
+                self._indexes.remove(key.nombre)
 
         else:
             raise KeyError

@@ -80,3 +80,11 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     def mover(self):
         self.animar_caminar()
         super().mover()
+
+    def accion(self):
+        if self.estado == 'cmb':
+            self.atacando = True
+
+    def update(self):
+        if self.atacando:
+            self.animar_ataque(5)
