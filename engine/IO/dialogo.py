@@ -224,7 +224,7 @@ class Dialogo:
             },
             'hold': {
                 'arriba': lambda: self.desplazar_texto('arriba'),
-                'abajo': lambda: self.desplazar_texto('arriba'),
+                'abajo': lambda: self.desplazar_texto('abajo'),
             },
         }
 
