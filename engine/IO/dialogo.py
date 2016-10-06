@@ -309,8 +309,6 @@ class Dialogo:
                 self.frontend.borrar_todo()
                 self.frontend.set_loc_img(loc)
                 self.frontend.set_sel_mode(show)
-                # self.next = show[0].leads
-                # self.sel = show[0]
 
         elif type(actual) is Elemento:
             self.mostrar_nodo(actual)
@@ -323,6 +321,7 @@ class Dialogo:
             self.sel.post_event()
         self.dialogo.set_chosen(self.next)
         self.SelMode = False
+        self.frontend.exit_sel_mode()
         self.hablar()
 
     def mostrar_nodo(self, nodo):
@@ -352,7 +351,7 @@ class Dialogo:
         for loc in self.locutores:
             mob = self.locutores[loc]
             mob.hablando = False
-            Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+        Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
         del self.dialogo
 
     def update(self):

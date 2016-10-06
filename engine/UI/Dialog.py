@@ -59,14 +59,6 @@ class DialogInterface(Ventana):
         self.menu.actual = self.menu.cubos.get_sprite(0)
         self.set_text(opciones[0].texto)
         self.sel_mode = True
-        # self.opciones = len(opciones)
-        # h = self.altura_del_texto
-        # x = self.draw_space_rect.x
-        # w = self.draw_space_rect.w
-        # for i in range(self.opciones):
-        #     opcion = Fila(opciones[i], w, x, i * h + i + 3)
-        #     self.filas.add(opcion)
-        # self.elegir_opcion(0)
 
     def set_menu(self, menu):
         self.menu = menu
@@ -76,6 +68,10 @@ class DialogInterface(Ventana):
 
     def detener_menu(self):
         self.menu.stop()
+
+    def exit_sel_mode(self):
+        self.sel_mode = False
+        Renderer.clear_overlays_from_layer(self.menu.layer)
 
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
@@ -124,7 +120,6 @@ class DialogInterface(Ventana):
 
     def borrar_todo(self):
         self.image.fill(self.bg_cnvs)
-        self.filas.empty()
         self.rendered_text = None
         self.sel = 0
 
@@ -134,18 +129,6 @@ class DialogInterface(Ventana):
 
         color = self.bg_cnvs  # TODO: estos colores deberían ser otros
 
-        # if len(self.filas):
-        #     filas = [fila for fila in self.filas if self.draw_space_rect.contains(fila.rect)]
-        #     if len(self.filas) > len(filas):
-        #         color = self.bg_bisel_bg
-        #     for fila in filas:
-        #         self.image.blit(fila.image, fila.rect)
-        #
-        # else:
-        #     # si no hay filas, la imagen es lo que sale de set_text.
-        #     self.image.blit(self.rendered_text, self.text_rect)
-        #     if not self.draw_space_rect.contains(self.text_rect):
-        #         color = self.bg_bisel_fg
         if self.sel_mode:
             self.set_text(self.menu.actual.item.texto)
             self.sel = self.menu.actual.item

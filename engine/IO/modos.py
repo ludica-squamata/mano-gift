@@ -125,8 +125,9 @@ class Modo:
                 elif event.key == TECLAS.ABAJO:
                     Ed.DIALOG.use_function('release', 'abajo')
 
-        Ed.DIALOG.update()
-        if Ed.DIALOG is None:
+        if Ed.DIALOG is not None:
+            Ed.DIALOG.update()
+        else:
             Ed.MODO = "Aventura"
 
         return Renderer.update(fondo)
