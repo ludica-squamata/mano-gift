@@ -12,11 +12,8 @@ class ModData:
     dialogos = ''
     mapas = ''
     mobs = ''
-    quests = ''
     items = ''
     scripts = ''
-    scenes = ''
-    SCRIPT = None
     QMC = None
 
     @classmethod
@@ -35,10 +32,8 @@ class ModData:
             cls.dialogos = root + data['folders']['dialogos'] + '/'
             cls.mapas = root + data['folders']['mapas'] + '/'
             cls.mobs = root + data['folders']['mobs'] + '/'
-            cls.quests = root + data['folders']['quest'] + '/'
             cls.items = root + data['folders']['items'] + '/'
             cls.scripts = root + data['folders']['scripts'] + '/'
-            cls.scenes = root + data['folders']['scenes'] + '/'
 
             for script in listdir(cls.scripts):
                 # lo convertí en un loop para poder agregar, por ejemplo,

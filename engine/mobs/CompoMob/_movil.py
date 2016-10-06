@@ -9,18 +9,6 @@ class Movil(Atribuido):
         if direccion in self.direcciones:
             self.direccion = direccion
 
-        elif direccion == 'contraria':
-            d = ''
-            if self.direccion == 'arriba':
-                d = 'abajo'
-            if self.direccion == 'abajo':
-                d = 'arriba'
-            if self.direccion == 'derecha':
-                d = 'izquierda'
-            if self.direccion == 'izquierda':
-                d = 'derecha'
-            self.direccion = d
-
         if img:  # solo vale para el héroe...
             self.image = self.images['S' + self.direccion]
             if direccion == self.direccion:

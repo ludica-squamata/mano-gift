@@ -15,10 +15,10 @@ class Loader:
         cls.STAGE = stage
 
     @classmethod
-    def load_everything(cls, entrada, mobs_data):
+    def load_everything(cls, entrada):
         cls.cargar_hero(entrada)
         cls.cargar_props()
-        cls.cargar_mobs(mobs_data)
+        cls.cargar_mobs()
         cls.cargar_salidas()
 
     @classmethod
@@ -48,17 +48,14 @@ class Loader:
                     cls.STAGE.add_property(prop, GRUPO_ITEMS, is_interactive)
 
     @classmethod
-    def cargar_mobs(cls, extra_data, capa='capa_ground'):
+    def cargar_mobs(cls, capa='capa_ground'):
         for key in cls.STAGE.data[capa]['mobs']:
             pos = cls.STAGE.data[capa]['mobs'][key]
             if key == 'npcs':
-                clase = NPC
-
                 for ref in pos:
                     data = Rs.abrir_json(Md.mobs + ref + '.json')
-                    data.update(extra_data[ref])
                     for x, y in pos[ref]:
-                        mob = clase(ref, x, y, data)
+                        mob = NPC(ref, x, y, data)
                         if capa == 'capa_ground':
                             cls.STAGE.add_property(mob, GRUPO_MOBS)
 

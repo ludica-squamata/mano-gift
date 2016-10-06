@@ -30,6 +30,7 @@ class Escenografia(ShadowSprite, EventListener):
         super().__init__(imagen=imagen, x=x, y=y)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
+        self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         try:
             dialogo = Resources.abrir_json(ModData.dialogos + self.nombre + '.json')
             self.data.update({'dialog': dialogo})

@@ -5,8 +5,6 @@ from .mob import Mob
 
 
 class PC(Parlante, Mob):
-    moviendose = False
-    atacando = False
 
     def __init__(self, data, x, y):
         super().__init__(data, x, y, focus=True)
@@ -14,7 +12,7 @@ class PC(Parlante, Mob):
 
     # noinspection PyMethodOverriding
     def mover(self, dx, dy):
-        self.moviendose = True
+        # print(self.idx_quadrant)
         self.animar_caminar()
         direccion = ''
         if dx > 0:
@@ -32,30 +30,28 @@ class PC(Parlante, Mob):
             self.reubicar(dx, dy)
 
     def accion(self):
+        super().accion()
         x, y = self.direcciones[self.direccion]
-
-        sprite = self._interact_with_mobs(x, y)
-        if self.estado == 'cmb':
-            self.atacando = True
+        sprite = self.quadrant_interaction(x, y)
         if sprite is not None:
-            if self.estado == 'cmb':
-                x, y = x * self.fuerza, y * self.fuerza
-                self.atacar(sprite, x, y)
-            else:
-                return self.iniciar_dialogo(x, y)
-        else:
-            sprite = self._interact_with_props(x, y)
-            if hasattr(sprite, 'accion'):
-                if sprite.accion == 'agarrar':
-                    try:
+            if sprite.tipo == 'Mob':
+                if self.estado == 'cmb':
+                    x, y = x * self.fuerza, y * self.fuerza
+                    self.atacar(sprite, x, y)
+                else:
+                    return self.iniciar_dialogo(sprite, x, y)
+            elif sprite.tipo == 'Prop':
+                if hasattr(sprite, 'accion'):
+                    if sprite.accion == 'agarrar':
                         item = sprite()
                         self.inventario.agregar(item)
                         EventDispatcher.trigger('DelItem', self.tipo, {'obj': sprite})
-                    except InventoryError as Error:
-                        print(Error)
 
-                elif sprite.accion == 'operar' and sprite.enabled:
-                    sprite.operar()
+                    elif sprite.accion == 'operar' and sprite.enabled:
+                        sprite.operar()
+
+                else:
+                    print(sprite.nombre, sprite.descripcion)
 
     def atacar(self, sprite, x, y):
         sprite.reubicar(x, y)
@@ -79,14 +75,7 @@ class PC(Parlante, Mob):
         self.cambiar_direccion(self.direccion)
         self.animar_caminar()
 
-    def update(self):
-        self.moviendose = False
-        if self.atacando:
-            self.animar_ataque(5)
-
-        super().update()
-
-    def iniciar_dialogo(self, x, y):
+    def iniciar_dialogo(self, sprite, x, y):
         inter_dir = ''
         self_dir = ''
         if x:
@@ -104,7 +93,6 @@ class PC(Parlante, Mob):
                 inter_dir = 'arriba'
                 self_dir = 'abajo'
 
-        sprite = self._interact_with_mobs(x, y)
         if sprite is not None:
             # este check va a cambiar.
             sprite.iniciar_dialogo(inter_dir)

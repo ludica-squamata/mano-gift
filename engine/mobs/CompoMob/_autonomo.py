@@ -11,7 +11,7 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     objetivo = None  # el mob al que este cazador está persiguiendo
 
     def __init__(self, *args, **kwargs):
-        nombre = args[0]['AI']
+        nombre = args[0]['states'][0]['AI']
         ruta = Md.scripts + nombre + '.py'
         tree_data = Rs.abrir_json(Md.mobs + 'behaviours/' + nombre + '.json')
         module = machinery.SourceFileLoader("module.name", ruta).load_module()
