@@ -1,7 +1,7 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import CUADRO, EngineData
-from engine.misc import Config as Cfg
 from engine.libs import render_textrect
+from engine.misc import Config as Cfg
 from pygame.font import SysFont
 from pygame import Rect
 from .menu import Menu
@@ -49,9 +49,12 @@ class MenuPausa(Menu):
         w = self.canvas.get_width() - r.right - CUADRO * 6 - 20
         h = fuente.size(EngineData.char_name)[1]
         rect = Rect(r.right + 2, 0, w, h + 1)
-        rect.centery = r.centery
+        rect.centery = r.centery-10
         render = render_textrect(EngineData.char_name, fuente, rect, self.font_none_color, self.bg_cnvs)
         self.canvas.blit(render, rect)
+
+        self.canvas.blit(EngineData.HUD.BarraVida.image, (r.right + 2, r.centery + 4))
+        self.canvas.blit(EngineData.HUD.BarraMana.image, (r.right + 2, r.centery + 16))
 
     def cancelar(self):
         EngineData.acceso_menues.clear()

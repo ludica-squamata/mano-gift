@@ -95,6 +95,7 @@ class EngineData:
         cls.setear_mapa(mapa, entrada)
         Tiempo.set_time(dia, hora, minutos)
         Renderer.set_focus(MobGroup[focus])
+        cls.HUD.show()
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
