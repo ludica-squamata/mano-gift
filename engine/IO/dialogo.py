@@ -232,14 +232,14 @@ class Dialogo:
             'tap': {
                 'hablar': self.confirmar_seleccion,
                 'cancelar': self.cerrar,
-                'arriba': lambda: self.elegir_opcion('arriba'),
-                'abajo': lambda: self.elegir_opcion('abajo'),
+                'arriba': lambda: self.desplazar_texto('arriba'),
+                'abajo': lambda: self.desplazar_texto('abajo'),
                 'izquierda': self.frontend.detener_menu,
                 'derecha': self.frontend.detener_menu,
             },
             'hold': {
-                'arriba': lambda: self.elegir_opcion('arriba'),
-                'abajo': lambda: self.elegir_opcion('abajo'),
+                'arriba': lambda: self.desplazar_texto('arriba'),
+                'abajo': lambda: self.desplazar_texto('abajo'),
                 'izquierda': lambda: self.frontend.rotar_menu(-1),
                 'derecha': lambda: self.frontend.rotar_menu(+1),
             },
@@ -333,14 +333,6 @@ class Dialogo:
         self.frontend.set_loc_img(loc)
         self.frontend.set_text(nodo.texto)
 
-    def elegir_opcion(self, direccion):
-        if direccion == 'arriba':
-            self.sel = self.frontend.elegir_opcion(-1)
-        elif direccion == 'abajo':
-            self.sel = self.frontend.elegir_opcion(+1)
-        if self.sel is not None:
-            self.next = self.sel.leads
-
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':
             self.frontend.scroll(+1)
@@ -352,10 +344,11 @@ class Dialogo:
             mob = self.locutores[loc]
             mob.hablando = False
         Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+        if self.SelMode:
+            self.frontend.exit_sel_mode()
         del self.dialogo
 
     def update(self):
-
         self.sel = self.frontend.sel
         if hasattr(self.sel, 'leads'):
             self.next = self.sel.leads

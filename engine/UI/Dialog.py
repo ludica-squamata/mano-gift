@@ -1,9 +1,8 @@
-from engine.libs import render_tagged_text
-from .widgets import Fila, Ventana
-from pygame import Rect, Surface
-from pygame.sprite import LayeredUpdates
 from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
+from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
+from pygame import Rect, Surface
+from .widgets import Ventana
 
 
 class DialogInterface(Ventana):
@@ -22,12 +21,13 @@ class DialogInterface(Ventana):
         self.parent = parent
         super().__init__(image)
 
-        self.filas = LayeredUpdates()
         self.marco = self.crear_marco(*self.rect.size)
         self.w, self.h = self.image.get_size()
-        self.draw_space_rect = Rect((3, 3), (self.w - 115, self.h - 7))
+        self.draw_space_rect = Rect((3, 3), (self.w - 6, self.h - 7))
         self.erase_area = Rect(3, 3, self.w - 7, self.h - 7)
         self.text_rect = Rect(0, 3, 0, 0)
+        self.loc_rect = Rect(0, 0, 0, 0)
+        self.arrow_width = 16
 
         self.fuente = self.fuente_M
         self.altura_del_texto = self.fuente.get_height()
@@ -42,17 +42,19 @@ class DialogInterface(Ventana):
     def set_text(self, texto):
         self.text_rect.y = 3
         width = self.draw_space_rect.width
+        if not self.loc_rect.x:
+            self.text_rect.x = 6
+        else:
+            width -= self.loc_rect.w+self.arrow_width+1
         self.rendered_text = render_tagged_text(texto, self.tags, width, bgcolor=self.bg_cnvs)
         self.text_rect.size = self.rendered_text.get_size()
 
     def set_sel_mode(self, opciones):
         self.menu.supress_all()
-        self.borrar_todo()
 
         for i in range(len(sorted(opciones, key=lambda o: o.indice))):
             opt = opciones[i]
-            print(opt)
-            obj = {'idx': i+1, 'icon': str(opt.indice), 'name': str(opt.leads), 'item': opciones[i]}
+            obj = {'idx': i + 1, 'icon': str(opt.indice), 'name': str(opt.leads), 'item': opciones[i]}
             self.menu.add_element(0, obj)
 
         self.opciones = len(opciones)
@@ -77,38 +79,15 @@ class DialogInterface(Ventana):
         """carga y dibuja la imagen de quien está hablando. También setea
         la posición del texto a izquierda o derecha según la "cara" del hablante"""
         self.loc_img = locutor.diag_face
+        self.loc_rect = self.loc_img.get_rect(y=3)
         if locutor.direccion == 'derecha' or locutor.direccion == 'abajo':
-            self.loc_rect = 3, 3
-            self.text_rect.x = 96
-            self.draw_space_rect.x = 96
+            self.loc_rect.x = 3
+            self.text_rect.x = self.loc_rect.w + 6
+            self.draw_space_rect.x = self.loc_rect.w + 6
         else:
-            self.loc_rect = self.w - 93, 3
-            self.text_rect.x = 3
-            self.draw_space_rect.x = 3
-
-    def elegir_opcion(self, dy):
-        if self.ticks > 10:
-            # get the option's position
-            self.posicionar_cursor(dy)
-
-            # get current's sprite, self.sel is current's ID
-            current = self.filas.get_sprite(self.sel)
-            h = self.altura_del_texto
-            if not self.draw_space_rect.contains(current.rect):
-                if current.rect.y < 0:
-                    for op in self.filas.sprites():
-                        op.rect.y += h + 1
-                elif current.rect.y < self.draw_space_rect.bottom:
-                    for op in self.filas.sprites():
-                        op.rect.y -= h + 1
-
-            # deselect all and select the chosen one
-            for fila in self.filas:
-                fila.ser_deselegido()
-            current.ser_elegido()
-
-            self.ticks = 0
-            return current.item
+            self.loc_rect.x = self.w - self.loc_rect.w
+            self.text_rect.x = 6
+            self.draw_space_rect.x = 6
 
     def scroll(self, dy):
         if self.ticks > 10:
@@ -125,20 +104,22 @@ class DialogInterface(Ventana):
 
     def update(self):
         self.ticks += 1
-        self.image.blit(self.loc_img, self.loc_rect)
+        self.image.fill(self.bg_cnvs, self.erase_area)
+        if self.loc_img is not None:
+            self.image.blit(self.loc_img, self.loc_rect)
 
-        color = self.bg_cnvs  # TODO: estos colores deberían ser otros
-
-        if self.sel_mode:
+        if self.sel_mode and self.menu.stopped:
             self.set_text(self.menu.actual.item.texto)
             self.sel = self.menu.actual.item
 
         self.image.blit(self.rendered_text, self.text_rect)
         if not self.draw_space_rect.contains(self.text_rect):
             color = self.bg_bisel_fg
+            x, y = self.text_rect.right + 1, 0
+            w, h = self.arrow_width, self.draw_space_rect.h + 3
 
-        # pintar el area de la flecha, si es que hay más contenido que ver.
-        self.image.fill(color, (self.text_rect.right + 1, 0, 16, self.draw_space_rect.h + 3))
+            # pintar el area de la flecha, si es que hay más contenido que ver.
+            self.image.fill(color, (x, y, w, h))
 
         # dibujar el marco biselado.
         self.image.blit(self.marco, (0, 0))

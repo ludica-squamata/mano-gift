@@ -1,6 +1,8 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from .Inventory import Inventory, InventoryError
+from engine.globs import EngineData
+from .Inventory import Inventory
 from .CompoMob import Parlante
+from engine.UI.propdescription import PropDescription
 from .mob import Mob
 
 
@@ -40,7 +42,7 @@ class PC(Parlante, Mob):
                     self.atacar(sprite, x, y)
                 else:
                     return self.iniciar_dialogo(sprite, x, y)
-            elif sprite.tipo == 'Prop':
+            elif sprite.tipo == 'Prop':                
                 if hasattr(sprite, 'accion'):
                     if sprite.accion == 'agarrar':
                         item = sprite()
@@ -50,8 +52,9 @@ class PC(Parlante, Mob):
                     elif sprite.accion == 'operar' and sprite.enabled:
                         sprite.operar()
 
-                else:
-                    print(sprite.nombre, sprite.descripcion)
+                    else:
+                        EngineData.DIALOG = PropDescription(sprite)
+                        return True
 
     def atacar(self, sprite, x, y):
         sprite.reubicar(x, y)
