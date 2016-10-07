@@ -6,7 +6,7 @@ class PropDescription:
     def __init__(self, item):
         self.item = item
         self.frontend = DialogInterface(self)
-        self.frontend.set_text(self.item.descripcion)
+        self.frontend.set_text(item.nombre+': '+self.item.descripcion)
 
         self.functions = {
             'tap': {

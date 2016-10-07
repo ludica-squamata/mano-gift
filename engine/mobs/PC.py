@@ -42,8 +42,8 @@ class PC(Parlante, Mob):
                     self.atacar(sprite, x, y)
                 else:
                     return self.iniciar_dialogo(sprite, x, y)
-            elif sprite.tipo == 'Prop':                
-                if hasattr(sprite, 'accion'):
+            elif sprite.tipo == 'Prop':
+                if sprite.accion is not None:
                     if sprite.accion == 'agarrar':
                         item = sprite()
                         self.inventario.agregar(item)
@@ -52,9 +52,9 @@ class PC(Parlante, Mob):
                     elif sprite.accion == 'operar' and sprite.enabled:
                         sprite.operar()
 
-                    else:
-                        EngineData.DIALOG = PropDescription(sprite)
-                        return True
+                else:
+                    EngineData.DIALOG = PropDescription(sprite)
+                    return True
 
     def atacar(self, sprite, x, y):
         sprite.reubicar(x, y)

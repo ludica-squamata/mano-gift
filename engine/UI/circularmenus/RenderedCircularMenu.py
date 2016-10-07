@@ -16,8 +16,11 @@ class RenderedCircularMenu(CircularMenu):
         Renderer.clear_overlays_from_layer(self.layer)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, self.layer)
+
         if self.last_on_spot is not None:
             Renderer.add_overlay(self.last_on_spot.title, self.layer)
+            if hasattr(self.last_on_spot, 'description'):
+                Renderer.add_overlay(self.last_on_spot.description, self.layer)
 
     def _change_cube_list(self):
         super()._change_cube_list()
@@ -53,6 +56,8 @@ class RenderedCircularMenu(CircularMenu):
         Renderer.add_overlay(self.last_on_spot.title, self.layer)
         for cubo in self.cubos:
             Renderer.add_overlay(cubo, self.layer)
+        if hasattr(self.last_on_spot, 'description'):
+            Renderer.add_overlay(self.last_on_spot.description, self.layer)
 
     def salir(self):
         if self.cascadaActual == 'inicial':
