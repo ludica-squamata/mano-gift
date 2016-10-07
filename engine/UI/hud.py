@@ -2,6 +2,7 @@ from pygame import Surface, Rect, draw
 from pygame.sprite import Sprite
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_HUD, ANCHO, CUADRO
 from engine.globs.renderer import Renderer
+from engine.UI.estilo import Estilo
 
 
 class ProgressBar(Sprite):
@@ -56,20 +57,30 @@ class ProgressBar(Sprite):
         self._subdividir()
 
 
+class CharacterName(Sprite, Estilo):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = self.fuente_Mb.render(Ed.char_name, 1, self.font_none_color)
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.active = True
+
+
 class HUD:
     # ya no es clase base. próximamente será una clase que agrupe
     # y registre en el renderer todos los elementos del hud.
     def __init__(self):
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
-        dx, dy = _rect.x+3, _rect.y + 33
+        dx, dy = _rect.x+3, _rect.y + 50
         self.BarraVida = ProgressBar(Ed.HERO.salud_max, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
         self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
+        self.screen_name = CharacterName(dx, dy - 30)
 
     def show(self):
         Renderer.add_overlay(self.BarraVida, CAPA_OVERLAYS_HUD)
         Renderer.add_overlay(self.BarraMana, CAPA_OVERLAYS_HUD)
+        Renderer.add_overlay(self.screen_name, CAPA_OVERLAYS_HUD)
 
     @staticmethod
     def hide():
