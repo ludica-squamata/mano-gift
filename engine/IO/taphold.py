@@ -152,7 +152,7 @@ def get_taphold_events(events, holding=100):
         key = teclas[tcl]
         if key['pressed']:
             key['holding'] += 10
-            key['held'] += 1
+            key['held'] += 10
         else:
             key['hold'] = False
             key['holding'] = 0
@@ -164,14 +164,17 @@ def get_taphold_events(events, holding=100):
             key['tap'] = False
 
         if key['hold']:
-            event.post(event.Event(HOLD, {'key': key['key'], 'type': 'holding', 'holding': key['holding']}))
+            data = {'nom': key['nom'], 'key': key['key'], 'type': 'hold', 'value': key['holding']}
+            event.post(event.Event(HOLD, data))
 
         elif key['tap']:
-            event.post(event.Event(TAP, {'key': key['key'], 'type': 'tapping'}))
+            data = {'nom': key['nom'], 'key': key['key'], 'type': 'tap'}
+            event.post(event.Event(TAP, data))
             key['tap'] = False
 
         elif key['release']:
-            event.post(event.Event(RELEASE, {'key': key['key'], 'type': 'release', 'holding': key['held']}))
+            data = {'nom': key['nom'], 'key': key['key'], 'type': 'release', 'value': key['held']}
+            event.post(event.Event(RELEASE, data))
             key['release'] = False
             key['held'] = 0
 

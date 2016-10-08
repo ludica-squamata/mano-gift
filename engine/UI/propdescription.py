@@ -1,5 +1,6 @@
 from .Dialog import DialogInterface
 from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS
+from engine.globs.eventDispatcher import EventDispatcher
 
 
 class PropDescription:
@@ -10,8 +11,8 @@ class PropDescription:
 
         self.functions = {
             'tap': {
-                'hablar': lambda: EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS),
-                'cancelar': lambda: EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS),
+                'accion': self.salir,
+                'contextual': self.salir,
                 'arriba': lambda: self.desplazar_texto('arriba'),
                 'abajo': lambda: self.desplazar_texto('abajo'),
             },
@@ -20,6 +21,14 @@ class PropDescription:
                 'abajo': lambda: self.desplazar_texto('abajo'),
             }
         }
+
+        EventDispatcher.register(self.listener, 'key')
+
+    def listener(self, event):
+        self.use_function(event.data['type'], event.data['nom'])
+
+    def deregister(self):
+        EventDispatcher.deregister(self.listener, 'key')
 
     def use_function(self, mode, key):
         if mode in self.functions:
@@ -31,6 +40,10 @@ class PropDescription:
             self.frontend.scroll(+1)
         elif direccion == 'abajo':
             self.frontend.scroll(-1)
+
+    def salir(self):
+        self.deregister()
+        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
 
     def update(self):
         pass

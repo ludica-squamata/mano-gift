@@ -56,6 +56,8 @@ class DialogInterface(Ventana):
             opt = opciones[i]
             obj = {'idx': i + 1, 'icon': str(opt.indice), 'name': str(opt.leads), 'item': opciones[i]}
             self.menu.add_element(0, obj)
+            # Este overwrite es necesario porque si no do_action() hace otra cosa.
+            self.menu.cubos.get_sprite(i).do_action = lambda: True
 
         self.opciones = len(opciones)
         self.menu.actual = self.menu.cubos.get_sprite(0)
@@ -74,6 +76,7 @@ class DialogInterface(Ventana):
     def exit_sel_mode(self):
         self.sel_mode = False
         Renderer.clear_overlays_from_layer(self.menu.layer)
+        self.menu.cubos.empty()
 
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea

@@ -67,14 +67,16 @@ class DialogElement(LetterElement):
         return image
 
     def do_action(self):
-        if self.item is not None:
-            # self.parent.salir()
-            if Dialogo.pre_init(self.item['head'], *self.parent.locutores):
-                self.parent.supress_all()
-                Ed.DIALOG = Dialogo(self.item['body'], *self.parent.locutores)
-                Ed.DIALOG.frontend.set_menu(self.parent)
-                Ed.MODO = 'Dialogo'
-            else:
-                self.parent.cerrar()
+        if self.active:
+            if self.item is not None:
+                # self.parent.salir()
+                if Dialogo.pre_init(self.item['head'], *self.parent.locutores):
+                    self.parent.supress_all()
+                    Ed.DIALOG = Dialogo(self.item['body'], *self.parent.locutores)
+                    Ed.DIALOG.frontend.set_menu(self.parent)
+                    Ed.MODO = 'Dialogo'
+                    self.active = False
+                else:
+                    self.parent.cerrar()
 
-        return True
+            return True

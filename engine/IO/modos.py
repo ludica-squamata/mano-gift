@@ -80,50 +80,7 @@ class Modo:
     @staticmethod
     def dialogo(events, fondo):
         for event in get_taphold_events(events):
-            if event.type == TAP:
-                if event.key == TECLAS.ARRIBA:
-                    Ed.DIALOG.use_function('tap', 'arriba')
-
-                elif event.key == TECLAS.ABAJO:
-                    Ed.DIALOG.use_function('tap', 'abajo')
-
-                elif event.key == TECLAS.IZQUIERDA:
-                    Ed.DIALOG.use_function('tap', 'izquierda')
-
-                elif event.key == TECLAS.DERECHA:
-                    Ed.DIALOG.use_function('tap', 'derecha')
-
-                elif event.key == TECLAS.ACCION:
-                    Ed.DIALOG.use_function('tap', 'hablar')
-
-                elif event.key == TECLAS.CONTEXTUAL:
-                    Ed.DIALOG.use_function('tap', 'cancelar')
-
-            elif event.type == HOLD:
-                if event.key == TECLAS.IZQUIERDA:
-                    Ed.DIALOG.use_function('hold', 'izquierda')
-
-                elif event.key == TECLAS.DERECHA:
-                    Ed.DIALOG.use_function('hold', 'derecha')
-
-                elif event.key == TECLAS.ARRIBA:
-                    Ed.DIALOG.use_function('hold', 'arriba')
-
-                elif event.key == TECLAS.ABAJO:
-                    Ed.DIALOG.use_function('hold', 'abajo')
-
-            elif event.type == RELEASE:
-                if event.key == TECLAS.IZQUIERDA:
-                    Ed.DIALOG.use_function('release', 'izquierda')
-
-                elif event.key == TECLAS.DERECHA:
-                    Ed.DIALOG.use_function('release', 'derecha')
-
-                elif event.key == TECLAS.ARRIBA:
-                    Ed.DIALOG.use_function('release', 'arriba')
-
-                elif event.key == TECLAS.ABAJO:
-                    Ed.DIALOG.use_function('release', 'abajo')
+            EventDispatcher.trigger('key', 'Modos', event.__dict__)
 
         if Ed.DIALOG is not None:
             Ed.DIALOG.update()
@@ -228,5 +185,6 @@ class Modo:
             Ed.HUD.hide()
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
+
 
 EventDispatcher.register(Modo.toggle_mode, 'SetMode')

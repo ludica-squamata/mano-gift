@@ -1,5 +1,6 @@
 ﻿from pygame.sprite import Sprite, LayeredUpdates
 from math import sin, cos, radians
+from engine.globs.eventDispatcher import EventDispatcher
 
 
 class BaseElement(Sprite):
@@ -109,8 +110,8 @@ class CircularMenu:
 
         self.functions = {
             'tap': {
-                'hablar': self.accept,
-                'cancelar': self.back,
+                'accion': self.accept,
+                'contextual': self.back,
                 'izquierda': self.stop,
                 'derecha': self.stop
             },
@@ -123,6 +124,14 @@ class CircularMenu:
                 'derecha': self.stop
             }
         }
+        EventDispatcher.register(self.listener, 'key')
+
+    def listener(self, event):
+        # print('menucircular', event)
+        self.use_function(event.data['type'], event.data['nom'])
+
+    def deregister(self):
+        EventDispatcher.deregister(self.listener, 'key')
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:

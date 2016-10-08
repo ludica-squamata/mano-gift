@@ -219,8 +219,8 @@ class Dialogo:
 
         self.func_lin = {
             'tap': {
-                'hablar': self.hablar,
-                'cancelar': self.cerrar
+                'accion': self.hablar,
+                'contextual': self.cerrar
             },
             'hold': {
                 'arriba': lambda: self.desplazar_texto('arriba'),
@@ -230,8 +230,8 @@ class Dialogo:
 
         self.func_sel = {
             'tap': {
-                'hablar': self.confirmar_seleccion,
-                'cancelar': self.cerrar,
+                'accion': self.confirmar_seleccion,
+                'contextual': self.cerrar,
                 'arriba': lambda: self.desplazar_texto('arriba'),
                 'abajo': lambda: self.desplazar_texto('abajo'),
                 'izquierda': self.frontend.detener_menu,
@@ -249,8 +249,13 @@ class Dialogo:
             }
         }
 
-        # empezar con el primer nodo
-        self.hablar()
+        EventDispatcher.register(self.listener, 'key')
+
+    def listener(self, event):
+        self.use_function(event.data['type'], event.data['nom'])
+
+    def deregister(self):
+        EventDispatcher.deregister(self.listener, 'key')
 
     @classmethod
     def pre_init(cls, meta, *locutores):        
@@ -304,11 +309,11 @@ class Dialogo:
                                 if obj not in loc.inventario:
                                     actual.supress(nodo)
 
-                show = actual.show()
+                to_show = actual.show()
                 self.SelMode = True
                 self.frontend.borrar_todo()
                 self.frontend.set_loc_img(loc)
-                self.frontend.set_sel_mode(show)
+                self.frontend.set_sel_mode(to_show)
 
         elif type(actual) is Elemento:
             self.mostrar_nodo(actual)
@@ -332,6 +337,7 @@ class Dialogo:
         loc = self.locutores[nodo.locutor]
         self.frontend.set_loc_img(loc)
         self.frontend.set_text(nodo.texto)
+        self.frontend.menu.deregister()
 
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':
@@ -340,6 +346,7 @@ class Dialogo:
             self.frontend.scroll(-1)
 
     def cerrar(self):
+        self.deregister()
         for loc in self.locutores:
             mob = self.locutores[loc]
             mob.hablando = False
