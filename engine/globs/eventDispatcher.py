@@ -6,7 +6,6 @@ class EventDispatcher:
     manejador de eventos
     """
     _oyentes = {}  # {evento1:[funciones],evento2:[funciones]}
-    _nuevos_oyentes = {}
     _cola = deque()
 
     @classmethod
@@ -55,7 +54,6 @@ class EventDispatcher:
         
         event = GiftEvent(*event_data)
         cls._cola.append(event)
-        # print(cls._cola)
 
     @classmethod
     def process(cls):
@@ -66,16 +64,13 @@ class EventDispatcher:
         :return:None
         """
         _cola = cls._cola
-        l = len(_cola)
-        while l > 0:
+        l = 0
+        while len(_cola) - l > 0:
             evento = _cola.popleft()
             if evento.tipo in cls._oyentes:
                 for listener in cls._oyentes[evento.tipo]:
-                    # if listener not in cls._nuevos_oyentes[evento.tipo]:
-                        listener(evento)
-                    # else:
-                        # cls._nuevos_oyentes[evento.tipo].remove(listener)
-            l -= 1
+                    listener(evento)
+            l += 1
     
     @classmethod
     def get_queqed(cls):

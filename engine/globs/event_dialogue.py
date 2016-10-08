@@ -2,8 +2,9 @@ from .eventDispatcher import EventDispatcher
 
 
 class EventDialogue:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         EventDispatcher.register(self.listener, 'key')
+        super().__init__(*args, **kwargs)
 
     def listener(self, event):
         try:

@@ -59,7 +59,8 @@ class EngineData:
     def end_dialog(cls, layer):
         Renderer.clear_overlays_from_layer(layer)
         cls.DIALOG = None
-        cls.MODO = 'Aventura'
+        # cls.MODO = 'Aventura'
+        cls.menu_actual.deregister()
         cls.onPause = False
         if cls.HUD is not None:
             cls.HUD.show()
@@ -95,6 +96,7 @@ class EngineData:
         cls.setear_mapa(mapa, entrada)
         Tiempo.set_time(dia, hora, minutos)
         Renderer.set_focus(MobGroup[focus])
+        cls.MODO = 'Aventura'
         cls.HUD.show()
 
 

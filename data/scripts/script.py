@@ -40,7 +40,7 @@ def init_game(event):
         dia, hora, minutos = 0, 9, 54
         focus = 'heroe'
 
-    EngineData.cargar_juego(mapa,entrada,dia,hora,minutos,focus)
+    EngineData.cargar_juego(mapa, entrada, dia, hora, minutos, focus)
 
-
-EventDispatcher.register(init_game, 'NuevoJuego')
+if 'NuevoJuego' not in EventDispatcher._oyentes:
+    EventDispatcher.register(init_game, 'NuevoJuego')

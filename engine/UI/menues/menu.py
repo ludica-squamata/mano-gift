@@ -1,11 +1,12 @@
-from engine.UI.widgets import Ventana, Boton
 from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_MENUS
+from engine.globs.event_dialogue import EventDialogue
+from engine.libs.textrect import render_textrect
+from engine.UI.widgets import Ventana, Boton
 from pygame.sprite import LayeredUpdates
 from pygame import Rect
-from engine.libs.textrect import render_textrect
 
 
-class Menu(Ventana):
+class Menu(EventDialogue, Ventana):
     botones = None
     filas = None
     keyup = {}
@@ -25,24 +26,24 @@ class Menu(Ventana):
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, ANCHO - 20)
         self.functions = {
             'tap': {
-                'hablar': lambda: None,
-                'cancelar': lambda: None,
+                'accion': lambda: None,
+                'contextual': lambda: None,
                 'arriba': lambda: None,
                 'abajo': lambda: None,
                 'izquierda': lambda: None,
                 'derecha': lambda: None,
             },
             'hold': {
-                'hablar': lambda: None,
-                'cancelar': lambda: None,
+                'accion': lambda: None,
+                'contextual': lambda: None,
                 'arriba': lambda: None,
                 'abajo': lambda: None,
                 'izquierda': lambda: None,
                 'derecha': lambda: None,
             },
             'release': {
-                'hablar': lambda: None,
-                'cancelar': lambda: None,
+                'accion': lambda: None,
+                'contextual': lambda: None,
                 'arriba': lambda: None,
                 'abajo': lambda: None,
                 'izquierda': lambda: None,

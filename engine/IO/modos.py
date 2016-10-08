@@ -92,25 +92,26 @@ class Modo:
     @classmethod
     def menu(cls, events, fondo):
         for event in get_taphold_events(events):
+            EventDispatcher.trigger('key', 'Modos', event.__dict__)
             if event.type == TAP:
                 if Ed.setKey:
                     Ed.menu_actual.cambiar_tecla(event.key)
                     Ed.setKey = False
 
-                elif event.key == TECLAS.IZQUIERDA:
-                    Ed.menu_actual.use_function('tap', 'izquierda')
-
-                elif event.key == TECLAS.DERECHA:
-                    Ed.menu_actual.use_function('tap', 'derecha')
-
-                elif event.key == TECLAS.ARRIBA:
-                    Ed.menu_actual.use_function('tap', 'arriba')
-
-                elif event.key == TECLAS.ABAJO:
-                    Ed.menu_actual.use_function('tap', 'abajo')
-
-                elif event.key == TECLAS.ACCION:
-                    Ed.menu_actual.use_function('tap', 'accion')
+                # elif event.key == TECLAS.IZQUIERDA:
+                #     Ed.menu_actual.use_function('tap', 'izquierda')
+                #
+                # elif event.key == TECLAS.DERECHA:
+                #     Ed.menu_actual.use_function('tap', 'derecha')
+                #
+                # elif event.key == TECLAS.ARRIBA:
+                #     Ed.menu_actual.use_function('tap', 'arriba')
+                #
+                # elif event.key == TECLAS.ABAJO:
+                #     Ed.menu_actual.use_function('tap', 'abajo')
+                #
+                # elif event.key == TECLAS.ACCION:
+                #     Ed.menu_actual.use_function('tap', 'accion')
 
                 elif event.key == TECLAS.CONTEXTUAL:
                     previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
@@ -118,6 +119,7 @@ class Modo:
                         cls.pop_menu(previo=True)
                     elif previo is not None:
                         Ed.end_dialog(CAPA_OVERLAYS_MENUS)
+                        Ed.MODO = 'Aventura'
 
             elif event.type == HOLD:
                 if event.key == TECLAS.ACCION:
