@@ -1,9 +1,9 @@
-from .Dialog import DialogInterface
+from .DialogInterface import DialogInterface
 from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dialogue import EventDialogue
 
 
-class PropDescription:
+class PropDescription (EventDialogue):
     def __init__(self, item):
         self.item = item
         self.frontend = DialogInterface(self)
@@ -22,13 +22,7 @@ class PropDescription:
             }
         }
 
-        EventDispatcher.register(self.listener, 'key')
-
-    def listener(self, event):
-        self.use_function(event.data['type'], event.data['nom'])
-
-    def deregister(self):
-        EventDispatcher.deregister(self.listener, 'key')
+        super().__init__()
 
     def use_function(self, mode, key):
         if mode in self.functions:

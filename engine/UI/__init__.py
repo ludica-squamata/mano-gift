@@ -1,4 +1,4 @@
-from .Dialog import DialogInterface
+from .DialogInterface import DialogInterface
 from .circularmenus import QuickCircularMenu
 from .hud import ProgressBar, HUD
 from .menues import *

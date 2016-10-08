@@ -1,5 +1,6 @@
 ﻿from engine.UI import DialogInterface
 from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dialogue import EventDialogue
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
 
 
@@ -204,7 +205,7 @@ class _ArboldeDialogo:
             return self._future
 
 
-class Dialogo:
+class Dialogo (EventDialogue):
     SelMode = False
     sel = 0
     next = 0
@@ -249,13 +250,7 @@ class Dialogo:
             }
         }
 
-        EventDispatcher.register(self.listener, 'key')
-
-    def listener(self, event):
-        self.use_function(event.data['type'], event.data['nom'])
-
-    def deregister(self):
-        EventDispatcher.deregister(self.listener, 'key')
+        super().__init__()
 
     @classmethod
     def pre_init(cls, meta, *locutores):        

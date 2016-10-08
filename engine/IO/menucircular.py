@@ -1,6 +1,6 @@
 ﻿from pygame.sprite import Sprite, LayeredUpdates
 from math import sin, cos, radians
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dialogue import EventDialogue
 
 
 class BaseElement(Sprite):
@@ -75,7 +75,7 @@ class BaseElement(Sprite):
             self.deselect()
 
 
-class CircularMenu:
+class CircularMenu (EventDialogue):
     cubos = None  # cascada actualmente visible
     cascadaActual = 'inicial'
     cascadaAnterior = ''
@@ -124,14 +124,7 @@ class CircularMenu:
                 'derecha': self.stop
             }
         }
-        EventDispatcher.register(self.listener, 'key')
-
-    def listener(self, event):
-        # print('menucircular', event)
-        self.use_function(event.data['type'], event.data['nom'])
-
-    def deregister(self):
-        EventDispatcher.deregister(self.listener, 'key')
+        super().__init__()
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:
