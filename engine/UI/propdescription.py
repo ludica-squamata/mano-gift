@@ -29,6 +29,13 @@ class PropDescription (EventAware):
             if key in self.functions[mode]:
                 self.functions[mode][key]()
 
+    def listener(self, event):
+        try:
+            if event.origin == 'Modo.Dialogo':
+                self.use_function(event.data['type'], event.data['nom'])
+        except KeyError:
+            pass
+
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':
             self.frontend.scroll(+1)
