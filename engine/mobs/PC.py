@@ -1,4 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dialogue import EventAware
 from engine.globs import EngineData
 from .Inventory import Inventory
 from .CompoMob import Parlante
@@ -6,11 +7,45 @@ from engine.UI.propdescription import PropDescription
 from .mob import Mob
 
 
-class PC(Parlante, Mob):
+class PC(EventAware, Parlante, Mob):
 
     def __init__(self, data, x, y):
         super().__init__(data, x, y, focus=True)
         self.inventario = Inventory(10, 10 + self.fuerza)
+        self.functions = {
+            'tap': {
+                'accion': lambda: None,
+                'contextual': lambda: None,
+                'arriba': lambda: self.cambiar_direccion('arriba', True),
+                'abajo': lambda: self.cambiar_direccion('abajo', True),
+                'izquierda': lambda: self.cambiar_direccion('izquierda', True),
+                'derecha': lambda: self.cambiar_direccion('derecha', True),
+            },
+            'hold': {
+                'accion': lambda: None,
+                'contextual': lambda: None,
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
+            },
+            'release': {
+                'accion': lambda: None,
+                'contextual': lambda: None,
+                'arriba': lambda: None,
+                'abajo': lambda: None,
+                'izquierda': lambda: None,
+                'derecha': lambda: None,
+            }
+        }
+
+    def use_function(self, mode, key):
+        if key in self.functions[mode]:
+            # noinspection PyCallingNonCallable
+            self.functions[mode][key]()
+
+    def open_qcm(self):
+        pass
 
     # noinspection PyMethodOverriding
     def mover(self, dx, dy):

@@ -1,6 +1,6 @@
 ﻿from engine.UI import DialogInterface
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.event_dialogue import EventDialogue
+from engine.globs.event_dialogue import EventAware
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
 
 
@@ -205,7 +205,7 @@ class _ArboldeDialogo:
             return self._future
 
 
-class Dialogo (EventDialogue):
+class Dialogo (EventAware):
     SelMode = False
     sel = 0
     next = 0

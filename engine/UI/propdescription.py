@@ -1,9 +1,9 @@
 from .DialogInterface import DialogInterface
 from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS
-from engine.globs.event_dialogue import EventDialogue
+from engine.globs.event_dialogue import EventAware
 
 
-class PropDescription (EventDialogue):
+class PropDescription (EventAware):
     def __init__(self, item):
         self.item = item
         self.frontend = DialogInterface(self)

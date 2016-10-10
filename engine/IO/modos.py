@@ -32,30 +32,13 @@ class Modo:
         Ed.HUD.update()
         dx, dy = cls.dx, cls.dy
         for event in get_taphold_events(events):
+            EventDispatcher.trigger('key', 'Modo.Aventura', event.__dict__)
             if event.type == TAP:
-                if event.key == TECLAS.CONTEXTUAL:
-                    Ed.MODO = 'Dialogo'
-                    Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
-                    Ed.DIALOG.show()
-
-                elif event.key == TECLAS.ACCION:
+                if event.key == TECLAS.ACCION:
                     if Ed.HERO.accion():
                         Ed.MODO = 'Dialogo'
                     else:
                         Ed.MODO = 'Aventura'
-
-                elif event.key == TECLAS.MENU:
-                    Ed.MODO = 'Menu'
-                    EventDispatcher.trigger('SetMode', 'Modos', {'mode': 'NewMenu', 'value': 'Pausa'})
-
-                elif event.key == TECLAS.IZQUIERDA:
-                    Ed.HERO.cambiar_direccion('izquierda', True)
-                elif event.key == TECLAS.DERECHA:
-                    Ed.HERO.cambiar_direccion('derecha', True)
-                elif event.key == TECLAS.ARRIBA:
-                    Ed.HERO.cambiar_direccion('arriba', True)
-                elif event.key == TECLAS.ABAJO:
-                    Ed.HERO.cambiar_direccion('abajo', True)
 
             elif event.type == HOLD:
                 if event.key == TECLAS.IZQUIERDA:
@@ -82,7 +65,7 @@ class Modo:
     @staticmethod
     def dialogo(events, fondo):
         for event in get_taphold_events(events):
-            EventDispatcher.trigger('key', 'Modos', event.__dict__)
+            EventDispatcher.trigger('key', 'Modo.Dialogo', event.__dict__)
 
         if Ed.DIALOG is not None:
             Ed.DIALOG.update()
@@ -94,10 +77,10 @@ class Modo:
     @classmethod
     def menu(cls, events, fondo):
         for event in get_taphold_events(events):
-            EventDispatcher.trigger('key', 'Modos', event.__dict__)
+            EventDispatcher.trigger('key', 'Modo.Menu', event.__dict__)
             if (event.type == TAP or event.type == RELEASE) and Ed.setKey:
                 Ed.menu_actual.cambiar_tecla(event.key)
-                Ed.setKey = False
+                EventDispatcher.trigger('ToggleSetKey', 'Modo.Menu', {'value': False})
 
         if cls.newMenu:
             cls.pop_menu()
@@ -106,7 +89,7 @@ class Modo:
         return Renderer.update(fondo)
 
     @classmethod
-    def toggle_mode(cls, event):
+    def change_menu(cls, event):
         """
         :param event:
         :type event:AzoeEvent
@@ -118,6 +101,19 @@ class Modo:
         elif event.data['mode'] == 'Previous':
             cls.newMenu = True
             cls.previo = True
+
+    @classmethod
+    def toggle_mode(cls, event):
+        nombre = event.data.get('nom', None)
+        if Ed.MODO == 'Aventura':
+            if nombre == 'menu':
+                Ed.MODO = 'Menu'
+                EventDispatcher.trigger('SetMode', 'Modos', {'mode': 'NewMenu', 'value': 'Pausa'})
+
+            elif nombre == 'contextual':
+                Ed.MODO = 'Dialogo'
+                Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
+                Ed.DIALOG.show()
 
     @classmethod
     def pop_menu(cls, titulo=None):
@@ -151,5 +147,5 @@ class Modo:
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
-
-EventDispatcher.register(Modo.toggle_mode, 'SetMode')
+EventDispatcher.register(Modo.change_menu, 'SetMode')
+EventDispatcher.register(Modo.toggle_mode, 'key')

@@ -1,6 +1,6 @@
 ﻿from pygame.sprite import Sprite, LayeredUpdates
 from math import sin, cos, radians
-from engine.globs.event_dialogue import EventDialogue
+from engine.globs.event_dialogue import EventAware
 
 
 class BaseElement(Sprite):
@@ -75,7 +75,7 @@ class BaseElement(Sprite):
             self.deselect()
 
 
-class CircularMenu (EventDialogue):
+class CircularMenu (EventAware):
     cubos = None  # cascada actualmente visible
     cascadaActual = 'inicial'
     cascadaAnterior = ''

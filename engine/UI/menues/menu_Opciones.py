@@ -199,7 +199,7 @@ class MenuOpciones(Menu):
         boton.ser_presionado()
         tecla.ser_elegido()
 
-        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'SetKey', 'value': True})
+        EventDispatcher.trigger('ToggleSetKey', self.nombre, {'value': True})
 
     def cambiar_tecla(self, tcl):
         """Cambia la tecla elgida por el nuevo input

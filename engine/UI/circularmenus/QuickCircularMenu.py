@@ -30,7 +30,14 @@ class QuickCircularMenu(RenderedCircularMenu):
             cascadas[obj.nombre] = obj.cascada
 
         super().__init__(cascadas)
-        self.functions['tap'].update({'inventario': self.back})
+        self.functions['tap'].update({'contextual': self.back})
+
+    def listener(self, event):
+        try:
+            if event.origin == 'Modo.Dialogo':
+                self.use_function(event.data['type'], event.data['nom'])
+        except KeyError:
+            pass
 
     def back(self):
         if self.cascadaActual == 'inicial':

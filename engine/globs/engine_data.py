@@ -50,10 +50,7 @@ class EngineData:
         :type event: AzoeEvent
         :return:
         """
-        value = event.data['value']
-
-        if event.data['mode'] == 'SetKey':
-            cls.setKey = value
+        cls.setKey = event.data['value']
 
     @classmethod
     def end_dialog(cls, layer):
@@ -101,5 +98,5 @@ class EngineData:
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
-EventDispatcher.register(EngineData.on_setkey, "SetMode")
+EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
 EventDispatcher.register(EngineData.salvar, "Save")
