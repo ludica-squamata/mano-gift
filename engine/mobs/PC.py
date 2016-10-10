@@ -14,7 +14,7 @@ class PC(EventAware, Parlante, Mob):
         self.inventario = Inventory(10, 10 + self.fuerza)
         self.functions = {
             'tap': {
-                'accion': lambda: None,
+                'accion': self.accion,
                 'contextual': lambda: None,
                 'arriba': lambda: self.cambiar_direccion('arriba', True),
                 'abajo': lambda: self.cambiar_direccion('abajo', True),
@@ -44,13 +44,8 @@ class PC(EventAware, Parlante, Mob):
             # noinspection PyCallingNonCallable
             self.functions[mode][key]()
 
-    def open_qcm(self):
-        pass
-
     # noinspection PyMethodOverriding
     def mover(self, dx, dy):
-        # print(self.idx_quadrant)
-        self.animar_caminar()
         direccion = ''
         if dx > 0:
             direccion = 'derecha'
@@ -61,10 +56,11 @@ class PC(EventAware, Parlante, Mob):
         elif dy > 0:
             direccion = 'abajo'
 
-        self.cambiar_direccion(direccion)
+        if direccion != self.direccion:
+            self.cambiar_direccion(direccion)
         dx, dy = dx * self.velocidad, dy * self.velocidad
         if not self.detectar_colisiones(dx, dy):
-            self.reubicar(dx, dy)
+            super().mover()
 
     def accion(self):
         super().accion()
@@ -76,7 +72,10 @@ class PC(EventAware, Parlante, Mob):
                     x, y = x * self.fuerza, y * self.fuerza
                     self.atacar(sprite, x, y)
                 else:
-                    return self.iniciar_dialogo(sprite, x, y)
+                    self.iniciar_dialogo(sprite, x, y)
+                    EngineData.MODO = 'Dialogo'
+                    self.deregister()
+
             elif sprite.tipo == 'Prop':
                 if sprite.accion is not None:
                     if sprite.accion == 'agarrar':
@@ -89,7 +88,8 @@ class PC(EventAware, Parlante, Mob):
 
                 else:
                     EngineData.DIALOG = PropDescription(sprite)
-                    return True
+                    EngineData.MODO = 'Dialogo'
+                    self.deregister()
 
     def atacar(self, sprite, x, y):
         sprite.reubicar(x, y)
@@ -141,7 +141,3 @@ class PC(EventAware, Parlante, Mob):
             else:
                 # si es el player el que toca Hablar, entonces se abre el menú
                 self.elegir_tema(sprite)
-
-            return True
-
-        return False

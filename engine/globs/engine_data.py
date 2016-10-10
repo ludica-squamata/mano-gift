@@ -60,6 +60,7 @@ class EngineData:
         cls.onPause = False
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
+            cls.HERO.register()
             cls.HUD.show()
 
     @classmethod

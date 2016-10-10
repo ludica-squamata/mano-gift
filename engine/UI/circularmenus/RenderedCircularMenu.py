@@ -11,6 +11,13 @@ class RenderedCircularMenu(CircularMenu):
         super().__init__(cascadas, cx, cy)
         self.last_on_spot = self.check_on_spot()
 
+    def listener(self, event):
+        try:
+            if event.origin == 'Modo.Dialogo':
+                self.use_function(event.data['type'], event.data['nom'])
+        except KeyError:
+            pass
+
     def _update_rendered(self):
         self.last_on_spot = self.check_on_spot()
         Renderer.clear_overlays_from_layer(self.layer)

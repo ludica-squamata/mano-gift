@@ -251,6 +251,7 @@ class Dialogo (EventAware):
         }
 
         super().__init__()
+        self.hablar()
 
     @classmethod
     def pre_init(cls, meta, *locutores):        
@@ -332,7 +333,7 @@ class Dialogo (EventAware):
         loc = self.locutores[nodo.locutor]
         self.frontend.set_loc_img(loc)
         self.frontend.set_text(nodo.texto)
-        self.frontend.menu.deregister()
+        # self.frontend.menu.deregister()
 
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':

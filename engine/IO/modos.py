@@ -33,14 +33,8 @@ class Modo:
         dx, dy = cls.dx, cls.dy
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Aventura', event.__dict__)
-            if event.type == TAP:
-                if event.key == TECLAS.ACCION:
-                    if Ed.HERO.accion():
-                        Ed.MODO = 'Dialogo'
-                    else:
-                        Ed.MODO = 'Aventura'
 
-            elif event.type == HOLD:
+            if event.type == HOLD:
                 if event.key == TECLAS.IZQUIERDA:
                     dx = -1
                 elif event.key == TECLAS.DERECHA:

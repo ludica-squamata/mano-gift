@@ -76,6 +76,7 @@ class DialogElement(LetterElement):
                     Ed.DIALOG.frontend.set_menu(self.parent)
                     Ed.MODO = 'Dialogo'
                     self.active = False
+                    self.parent.deregister()
                 else:
                     self.parent.cerrar()
 

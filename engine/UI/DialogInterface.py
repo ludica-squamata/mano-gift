@@ -66,6 +66,7 @@ class DialogInterface(Ventana):
 
     def set_menu(self, menu):
         self.menu = menu
+        self.menu.deregister()
 
     def rotar_menu(self, delta):
         self.menu.turn(delta)
