@@ -33,6 +33,7 @@ class MenuOpciones(Menu):
         self.functions.update({
             'tap': {
                 'accion': self.press_button,
+                'contextual': self.cancelar,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo'),
                 'izquierda': lambda: self.select_one('izquierda'),
@@ -47,6 +48,7 @@ class MenuOpciones(Menu):
             },
             'release': {
                 'accion': self.liberar_presion,
+                'contextual': self.cancelar
             }
         })
 
@@ -277,7 +279,7 @@ class MenuOpciones(Menu):
         Cfg.guardar()
 
         self.canvas.fill(self.bg_cnvs, self.notice_area)
-        return True
+        super().cancelar()
 
     def update(self):
         self.botones.update()

@@ -59,10 +59,10 @@ class EngineData:
     def end_dialog(cls, layer):
         Renderer.clear_overlays_from_layer(layer)
         cls.DIALOG = None
-        # cls.MODO = 'Aventura'
-        cls.menu_actual.deregister()
+        # cls.menu_actual.deregister()  # no estoy seguro de que se pueda usar todas las veces.
         cls.onPause = False
         if cls.HUD is not None:
+            cls.MODO = 'Aventura'
             cls.HUD.show()
 
     @classmethod

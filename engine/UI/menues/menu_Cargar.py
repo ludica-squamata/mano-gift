@@ -16,6 +16,7 @@ class MenuCargar(Menu):
         self.functions.update({
             'tap': {
                 'accion': self.cargar,
+                'contextual': self.cancelar,
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
@@ -24,7 +25,8 @@ class MenuCargar(Menu):
                 'abajo': lambda: self.elegir_opcion('abajo'),
             },
             'release': {
-                'accion': self.cargar
+                'accion': self.cargar,
+                'contextual': self.cancelar
             }
         })
 
@@ -73,6 +75,7 @@ class MenuCargar(Menu):
 
     def cargar(self):
         EngineData.load_savefile(self.archivos[self.sel] + '.json')
+        self.deregister()
         EngineData.end_dialog(self.layer)
 
     def update(self):

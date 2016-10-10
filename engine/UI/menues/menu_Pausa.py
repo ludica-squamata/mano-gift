@@ -19,7 +19,7 @@ class MenuPausa(Menu):
             {m: "Status", k: {a: "Equipo", b: "Grupo"}},
             {m: "Grupo", k: {a: "Status", b: "Opciones"}},
             {m: "Opciones", k: {a: "Grupo", b: "Cargar"}},
-            {m: "Cargar", k: {a: "Opciones", "b": "Equipo"}},
+            {m: "Cargar", k: {a: "Opciones", b: "Equipo"}},
         ]
         for i in range(len(botones)):
             botones[i]['pos'] = [x, 39 * i + 100],
@@ -30,6 +30,7 @@ class MenuPausa(Menu):
         self.functions.update({
             'tap': {
                 'accion': self.press_button,
+                'contextual': self.cancelar,
                 'arriba': lambda: self.select_one('arriba'),
                 'abajo': lambda: self.select_one('abajo')
             },
@@ -58,9 +59,10 @@ class MenuPausa(Menu):
 
     def cancelar(self):
         EngineData.acceso_menues.clear()
-        return False
+        EngineData.end_dialog(self.layer)
 
     def new_menu(self):
+        self.deregister()
         EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'NewMenu', 'value': self.current.nombre})
 
     def reset(self):

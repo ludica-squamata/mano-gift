@@ -66,6 +66,7 @@ class MenuPersonaje(Menu):
             'teclas': {
                 'tap': {
                     'accion': self.input_character,
+                    'contextual': self.cancelar,
                     'arriba': lambda: self.movercursor(0, -1),
                     'abajo': lambda: self.movercursor(0, 1),
                     'izquierda': lambda: self.movercursor(-1, 0),
@@ -77,6 +78,9 @@ class MenuPersonaje(Menu):
                     'abajo': lambda: self.movercursor(0, 1),
                     'izquierda': lambda: self.movercursor(-1, 0),
                     'derecha': lambda: self.movercursor(1, 0)
+                },
+                'release': {
+                    'contextual': self.cancelar
                 }
             },
             'botones': {
@@ -176,7 +180,7 @@ class MenuPersonaje(Menu):
     def cancelar(self):
         if self.foco == 'teclas':
             if not len(self.area_input):
-                return True
+                super().cancelar()
             self.erase_character()
         else:
             self.cambiar_foco('teclas')

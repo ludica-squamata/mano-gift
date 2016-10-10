@@ -74,6 +74,7 @@ class MenuEquipo(Menu):
             'espacios': {
                 'tap': {
                     'accion': self.cambiar_foco,
+                    'contextual': self.cancelar,
                     'arriba': lambda: self.select_one('arriba'),
                     'abajo': lambda: self.select_one('abajo'),
                     'izquierda': lambda: self.select_one('izquierda'),
@@ -86,12 +87,14 @@ class MenuEquipo(Menu):
                     'derecha': lambda: self.select_one('derecha')
                 },
                 'release': {
-                    'accion': self.cambiar_foco
+                    'accion': self.cambiar_foco,
+                    'contextual': self.cancelar
                 }
             },
             'items': {
                 'tap': {
                     'accion': self.equipar_item,
+                    'contextual': self.cancelar,
                     'arriba': lambda: self.elegir_fila('arriba'),
                     'abajo': lambda: self.elegir_fila('abajo')
                 },
@@ -100,7 +103,8 @@ class MenuEquipo(Menu):
                     'abajo': lambda: self.elegir_fila('abajo')
                 },
                 'release': {
-                    'accion': self.equipar_item
+                    'accion': self.equipar_item,
+                    'contextual': self.cancelar
                 }
             }
         }
@@ -233,6 +237,7 @@ class MenuEquipo(Menu):
 
     def cancelar(self):
         if self.foco == 'espacios':
+            self.deregister()
             return super().cancelar()
         else:
             self.current.isSelected = False

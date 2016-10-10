@@ -28,14 +28,13 @@ cambios = []
 while True:
     Tiempo.update(60)
     events = event.get()
-
+    Modo.juego(events)
     if Ed.MODO == 'Aventura':
         cambios = Modo.aventura(events, fondo)
     elif Ed.MODO == 'Dialogo':
         cambios = Modo.dialogo(events, fondo)
     elif Ed.MODO == 'Menu':
         cambios = Modo.menu(events, fondo)
-    Modo.juego(events)
 
     cambios.append(fondo.blit(fuente.render(str(int(Tiempo.FPS.get_fps())), True, rojo), (10, 0)))
     cambios.append(fondo.blit(fuente.render(str(Tiempo.clock.timestamp()), True, rojo), (570, 0)))

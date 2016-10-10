@@ -12,6 +12,7 @@ from engine.UI import QuickCircularMenu
 class Modo:
     dx, dy = 0, 0
     newMenu = False
+    previo = False
     setKey = False
 
     @classmethod
@@ -44,7 +45,8 @@ class Modo:
                         Ed.MODO = 'Aventura'
 
                 elif event.key == TECLAS.MENU:
-                    cls.pop_menu('Pausa')
+                    Ed.MODO = 'Menu'
+                    EventDispatcher.trigger('SetMode', 'Modos', {'mode': 'NewMenu', 'value': 'Pausa'})
 
                 elif event.key == TECLAS.IZQUIERDA:
                     Ed.HERO.cambiar_direccion('izquierda', True)
@@ -93,53 +95,9 @@ class Modo:
     def menu(cls, events, fondo):
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modos', event.__dict__)
-            if event.type == TAP:
-                if Ed.setKey:
-                    Ed.menu_actual.cambiar_tecla(event.key)
-                    Ed.setKey = False
-
-                # elif event.key == TECLAS.IZQUIERDA:
-                #     Ed.menu_actual.use_function('tap', 'izquierda')
-                #
-                # elif event.key == TECLAS.DERECHA:
-                #     Ed.menu_actual.use_function('tap', 'derecha')
-                #
-                # elif event.key == TECLAS.ARRIBA:
-                #     Ed.menu_actual.use_function('tap', 'arriba')
-                #
-                # elif event.key == TECLAS.ABAJO:
-                #     Ed.menu_actual.use_function('tap', 'abajo')
-                #
-                # elif event.key == TECLAS.ACCION:
-                #     Ed.menu_actual.use_function('tap', 'accion')
-
-                elif event.key == TECLAS.CONTEXTUAL:
-                    previo = Ed.menu_actual.cancelar()  # podría ser usar_funcion
-                    if previo:
-                        cls.pop_menu(previo=True)
-                    elif previo is not None:
-                        Ed.end_dialog(CAPA_OVERLAYS_MENUS)
-                        Ed.MODO = 'Aventura'
-
-            elif event.type == HOLD:
-                if event.key == TECLAS.ACCION:
-                    Ed.menu_actual.use_function('hold', 'accion')
-
-                elif event.key == TECLAS.IZQUIERDA:
-                    Ed.menu_actual.use_function('hold', 'izquierda')
-
-                elif event.key == TECLAS.DERECHA:
-                    Ed.menu_actual.use_function('hold', 'derecha')
-
-                elif event.key == TECLAS.ARRIBA:
-                    Ed.menu_actual.use_function('hold', 'arriba')
-
-                elif event.key == TECLAS.ABAJO:
-                    Ed.menu_actual.use_function('hold', 'abajo')
-
-            elif event.type == RELEASE:
-                if event.key == TECLAS.ACCION:
-                    Ed.menu_actual.use_function('release', 'accion')
+            if (event.type == TAP or event.type == RELEASE) and Ed.setKey:
+                Ed.menu_actual.cambiar_tecla(event.key)
+                Ed.setKey = False
 
         if cls.newMenu:
             cls.pop_menu()
@@ -154,16 +112,19 @@ class Modo:
         :type event:AzoeEvent
         :return:
         """
-        value = event.data['value']
+
         if event.data['mode'] == 'NewMenu':
-            cls.newMenu = value
+            cls.newMenu = event.data['value']
+        elif event.data['mode'] == 'Previous':
+            cls.newMenu = True
+            cls.previo = True
 
     @classmethod
-    def pop_menu(cls, titulo=None, previo=False):
+    def pop_menu(cls, titulo=None):
         if titulo is None:
             titulo = cls.newMenu
 
-        if previo:
+        if cls.previo:
             del Ed.acceso_menues[-1]
             titulo = Ed.acceso_menues[-1]
         else:
@@ -180,9 +141,11 @@ class Modo:
             menu.reset()
 
         cls.newMenu = False
+        cls.previo = False
         Ed.MODO = 'Menu'
         Ed.onPause = True
         Ed.menu_actual = menu
+        Ed.menu_actual.register()
         if Ed.HUD is not None:
             Ed.HUD.hide()
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)

@@ -39,6 +39,7 @@ class MenuPrincipal(Menu):
         })
 
     def new_menu(self, titulo):
+        self.deregister()
         EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'NewMenu', 'value': titulo})
 
     def cancelar(self):

@@ -1,4 +1,5 @@
 from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_MENUS
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_dialogue import EventDialogue
 from engine.libs.textrect import render_textrect
 from engine.UI.widgets import Ventana, Boton
@@ -86,8 +87,8 @@ class Menu(EventDialogue, Ventana):
 
     def cancelar(self):
         """Esta funcion es un hook para otras funciones del mismo nombre."""
-        self.active = False
-        return True
+        self.deregister()
+        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'Previous', 'value': None})
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:
