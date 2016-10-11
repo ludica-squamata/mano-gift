@@ -1,7 +1,6 @@
-from engine.globs import EngineData as Ed, ModData as Md
+from engine.globs import EngineData as Ed, ModData as Md, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.globs import TAP, RELEASE, CAPA_OVERLAYS_MENUS
 from engine.misc import Util
 from .taphold import get_taphold_events
 from pygame import KEYDOWN, QUIT, K_ESCAPE
@@ -28,7 +27,6 @@ class Modo:
 
     @classmethod
     def aventura(cls, events, fondo):
-        Ed.HUD.update()
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Aventura', event.__dict__)
 
@@ -47,9 +45,6 @@ class Modo:
     def menu(cls, events, fondo):
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Menu', event.__dict__)
-            if (event.type == TAP or event.type == RELEASE) and Ed.setKey:
-                Ed.menu_actual.cambiar_tecla(event.key)
-                EventDispatcher.trigger('ToggleSetKey', 'Modo.Menu', {'value': False})
 
         if cls.newMenu:
             cls.pop_menu()
@@ -78,6 +73,7 @@ class Modo:
         if Ed.MODO == 'Aventura':
             if nombre == 'menu':
                 Ed.MODO = 'Menu'
+                Ed.HERO.deregister()
                 EventDispatcher.trigger('SetMode', 'Modos', {'mode': 'NewMenu', 'value': 'Pausa'})
 
             elif nombre == 'contextual' and tipo == 'tap':

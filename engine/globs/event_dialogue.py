@@ -10,7 +10,10 @@ class EventAware:
         try:
             self.use_function(event.data['type'], event.data['nom'])
         except KeyError:
-            pass
+            self.new_key_event(event)
+
+    def new_key_event(self, event):
+        pass
 
     def register(self):
         EventDispatcher.register(self.listener, 'key')
@@ -20,3 +23,4 @@ class EventAware:
 
     def use_function(self, mode, key):
         pass
+

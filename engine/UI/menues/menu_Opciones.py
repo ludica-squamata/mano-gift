@@ -201,6 +201,10 @@ class MenuOpciones(Menu):
 
         EventDispatcher.trigger('ToggleSetKey', self.nombre, {'value': True})
 
+    def new_key_event(self, event):
+        self.cambiar_tecla(event.data['key'])
+        EventDispatcher.trigger('ToggleSetKey', 'Modo.Menu', {'value': False})
+
     def cambiar_tecla(self, tcl):
         """Cambia la tecla elgida por el nuevo input
         :param tcl: int

@@ -1,8 +1,9 @@
-from pygame import Surface, Rect, draw
-from pygame.sprite import Sprite
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_HUD, ANCHO, CUADRO
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
+from pygame import Surface, Rect, draw
 from engine.UI.estilo import Estilo
+from pygame.sprite import Sprite
 
 
 class ProgressBar(Sprite):
@@ -51,7 +52,13 @@ class ProgressBar(Sprite):
             if hasattr(self, var):
                 setattr(self, var, kwargs[var])
 
-    def update(self):
+    def event_update(self, event):
+        mob = event.data['mob']
+        if mob.nombre == 'heroe': # incorrecto.
+            self.set_variable(actual=mob.salud_act)
+        self.actualizar()
+
+    def actualizar(self):
         self.image.blit(self._dibujar_fondo(), self.draw_area_rect)
         self.image.fill(self.colorAct, self._actual())
         self._subdividir()
@@ -74,10 +81,17 @@ class HUD:
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x+3, _rect.y + 50
-        self.BarraVida = ProgressBar(Ed.HERO.salud_max, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        self.BarraVida = ProgressBar(Ed.HERO.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
         self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(dx, dy - 30)
+        
+        EventDispatcher.register(self.BarraVida.event_update,'MobHerido')
+        # EventDispatcher.register(self.BarraMana.event_update,'')
+        # EventDispatcher.register(self.BarraVida.event_update,'')
+        
+        self.BarraVida.actualizar()
+        self.BarraMana.actualizar()
 
     def show(self):
         if not self.is_shown:
@@ -89,6 +103,3 @@ class HUD:
     def hide(self):
         self.is_shown = False
         Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_HUD)
-
-    def update(self):
-        self.BarraVida.set_variable(actual=Ed.HERO.salud_act)

@@ -86,6 +86,7 @@ class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido p
 
     def recibir_danio(self, danio):
         self.salud_act -= danio
+        EventDispatcher.trigger('MobHerido', self.tipo, {'mob': self})
 
         if self.salud_act <= 0:
             if self.death_img is not None:
