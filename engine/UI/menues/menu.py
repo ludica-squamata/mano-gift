@@ -88,7 +88,7 @@ class Menu(EventAware, Ventana):
     def cancelar(self):
         """Esta funcion es un hook para otras funciones del mismo nombre."""
         self.deregister()
-        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'Previous', 'value': None})
+        EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Previous'})
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:

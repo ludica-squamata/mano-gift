@@ -9,8 +9,8 @@ from engine.UI import QuickCircularMenu
 
 
 class Modo:
-    newMenu = False
-    previo = False
+    # newMenu = False
+    # previo = False
     setKey = False
 
     @classmethod
@@ -25,8 +25,8 @@ class Modo:
 
         EventDispatcher.process()
 
-    @classmethod
-    def aventura(cls, events, fondo):
+    @staticmethod
+    def aventura(events, fondo):
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Aventura', event.__dict__)
 
@@ -41,13 +41,10 @@ class Modo:
         Ed.DIALOG.update()
         return Renderer.update(fondo)
 
-    @classmethod
-    def menu(cls, events, fondo):
+    @staticmethod
+    def menu(events, fondo):
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Menu', event.__dict__)
-
-        if cls.newMenu:
-            cls.pop_menu()
 
         Ed.menu_actual.update()
         return Renderer.update(fondo)
@@ -60,11 +57,7 @@ class Modo:
         :return:
         """
 
-        if event.data['mode'] == 'NewMenu':
-            cls.newMenu = event.data['value']
-        elif event.data['mode'] == 'Previous':
-            cls.newMenu = True
-            cls.previo = True
+        cls.pop_menu(titulo=event.data['value'])
 
     @classmethod
     def toggle_mode(cls, event):
@@ -74,7 +67,7 @@ class Modo:
             if nombre == 'menu':
                 Ed.MODO = 'Menu'
                 Ed.HERO.deregister()
-                EventDispatcher.trigger('SetMode', 'Modos', {'mode': 'NewMenu', 'value': 'Pausa'})
+                EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
 
             elif nombre == 'contextual' and tipo == 'tap':
                 Ed.MODO = 'Dialogo'
@@ -88,10 +81,8 @@ class Modo:
 
     @classmethod
     def pop_menu(cls, titulo=None):
-        if titulo is None:
-            titulo = cls.newMenu
 
-        if cls.previo:
+        if titulo == 'Previous':
             del Ed.acceso_menues[-1]
             titulo = Ed.acceso_menues[-1]
         else:
@@ -107,8 +98,6 @@ class Modo:
             menu = Ed.MENUS[titulo]
             menu.reset()
 
-        cls.newMenu = False
-        cls.previo = False
         Ed.MODO = 'Menu'
         Ed.onPause = True
         Ed.menu_actual = menu
@@ -118,5 +107,5 @@ class Modo:
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
-EventDispatcher.register(Modo.change_menu, 'SetMode')
+EventDispatcher.register(Modo.change_menu, 'OpenMenu')
 EventDispatcher.register(Modo.toggle_mode, 'key')

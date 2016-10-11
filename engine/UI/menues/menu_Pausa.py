@@ -63,7 +63,7 @@ class MenuPausa(Menu):
 
     def new_menu(self):
         self.deregister()
-        EventDispatcher.trigger('SetMode', self.nombre, {'mode': 'NewMenu', 'value': self.current.nombre})
+        EventDispatcher.trigger('OpenMenu', self.nombre, {'value': self.current.nombre})
 
     def reset(self):
         """Reseta el presionado de todos los botones, y deja seleccionado
