@@ -68,6 +68,8 @@ class CharacterName(Sprite, Estilo):
 class HUD:
     # ya no es clase base. próximamente será una clase que agrupe
     # y registre en el renderer todos los elementos del hud.
+    is_shown = False
+
     def __init__(self):
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
@@ -78,12 +80,14 @@ class HUD:
         self.screen_name = CharacterName(dx, dy - 30)
 
     def show(self):
-        Renderer.add_overlay(self.BarraVida, CAPA_OVERLAYS_HUD)
-        Renderer.add_overlay(self.BarraMana, CAPA_OVERLAYS_HUD)
-        Renderer.add_overlay(self.screen_name, CAPA_OVERLAYS_HUD)
+        if not self.is_shown:
+            Renderer.add_overlay(self.BarraVida, CAPA_OVERLAYS_HUD)
+            Renderer.add_overlay(self.BarraMana, CAPA_OVERLAYS_HUD)
+            Renderer.add_overlay(self.screen_name, CAPA_OVERLAYS_HUD)
+            self.is_shown = True
 
-    @staticmethod
-    def hide():
+    def hide(self):
+        self.is_shown = False
         Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_HUD)
 
     def update(self):

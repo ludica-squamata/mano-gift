@@ -1,7 +1,7 @@
 from engine.globs import EngineData as Ed, ModData as Md
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.globs import TAP, HOLD, RELEASE, TECLAS, CAPA_OVERLAYS_MENUS
+from engine.globs import TAP, RELEASE, CAPA_OVERLAYS_MENUS
 from engine.misc import Util
 from .taphold import get_taphold_events
 from pygame import KEYDOWN, QUIT, K_ESCAPE
@@ -10,7 +10,6 @@ from engine.UI import QuickCircularMenu
 
 
 class Modo:
-    dx, dy = 0, 0
     newMenu = False
     previo = False
     setKey = False
@@ -30,29 +29,9 @@ class Modo:
     @classmethod
     def aventura(cls, events, fondo):
         Ed.HUD.update()
-        dx, dy = cls.dx, cls.dy
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Aventura', event.__dict__)
 
-            if event.type == HOLD:
-                if event.key == TECLAS.IZQUIERDA:
-                    dx = -1
-                elif event.key == TECLAS.DERECHA:
-                    dx = +1
-                elif event.key == TECLAS.ARRIBA:
-                    dy = -1
-                elif event.key == TECLAS.ABAJO:
-                    dy = +1
-
-            elif event.type == RELEASE:
-                if event.key == TECLAS.IZQUIERDA or event.key == TECLAS.DERECHA:
-                    dx = 0
-                elif event.key == TECLAS.ABAJO or event.key == TECLAS.ARRIBA:
-                    dy = 0
-
-        if dx != 0 or dy != 0:
-            Ed.HERO.mover(dx, dy)
-        cls.dx, cls.dy = dx, dy
         Ed.MAPA_ACTUAL.update()
         return Renderer.update(fondo)
 
@@ -61,11 +40,7 @@ class Modo:
         for event in get_taphold_events(events):
             EventDispatcher.trigger('key', 'Modo.Dialogo', event.__dict__)
 
-        if Ed.DIALOG is not None:
-            Ed.DIALOG.update()
-        else:
-            Ed.MODO = "Aventura"
-
+        Ed.DIALOG.update()
         return Renderer.update(fondo)
 
     @classmethod
@@ -106,8 +81,13 @@ class Modo:
 
             elif nombre == 'contextual':
                 Ed.MODO = 'Dialogo'
+                Ed.HERO.deregister()
                 Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
                 Ed.DIALOG.show()
+
+        elif Ed.MODO == 'Dialogo':
+            if nombre == 'contextual':
+                Ed.HERO.register()
 
     @classmethod
     def pop_menu(cls, titulo=None):

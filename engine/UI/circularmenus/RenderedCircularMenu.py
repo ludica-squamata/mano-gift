@@ -1,6 +1,6 @@
 from engine.IO.menucircular import CircularMenu
 from engine.globs.renderer import Renderer
-from engine.globs import EngineData as Ed
+from engine.globs import EngineData
 
 
 class RenderedCircularMenu(CircularMenu):
@@ -69,8 +69,9 @@ class RenderedCircularMenu(CircularMenu):
     def salir(self):
         if self.cascadaActual == 'inicial':
             Renderer.clear_overlays_from_layer(self.layer)
-            Ed.DIALOGO = None
-            Ed.MODO = 'Aventura'
+            EngineData.DIALOGO = None
+            EngineData.MODO = 'Aventura'
+            self.deregister()
 
     def update(self):
         # this hook is necesary

@@ -54,9 +54,8 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
                 else:
                     self._step = 'D'
 
-                key = self._step + self.direccion
-
-                self.image = self.imagen_n(key)
+        key = self._step + self.direccion
+        self.image = self.imagen_n(key)
 
     def animar_ataque(self, limite):
         # construir la animación

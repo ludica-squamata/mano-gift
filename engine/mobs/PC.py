@@ -24,10 +24,10 @@ class PC(EventAware, Parlante, Mob):
             'hold': {
                 'accion': lambda: None,
                 'contextual': lambda: None,
-                'arriba': lambda: None,
-                'abajo': lambda: None,
-                'izquierda': lambda: None,
-                'derecha': lambda: None,
+                'arriba': lambda: self.mover(0, -1),
+                'abajo': lambda: self.mover(0, +1),
+                'izquierda': lambda: self.mover(-1, 0),
+                'derecha': lambda: self.mover(+1, 0),
             },
             'release': {
                 'accion': lambda: None,
@@ -107,11 +107,9 @@ class PC(EventAware, Parlante, Mob):
         elif self.estado == 'cmb':
             self.establecer_estado('idle')
 
-        self.image = self.images['S' + self.direccion]
-        self.mask = self.mascaras['S' + self.direccion]
-
         self.cambiar_direccion(self.direccion)
         self.animar_caminar()
+        self.register()
 
     def iniciar_dialogo(self, sprite, x, y):
         inter_dir = ''
