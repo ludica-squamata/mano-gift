@@ -87,3 +87,9 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     def update(self):
         if self.atacando:
             self.animar_ataque(5)
+
+    def detener_movimiento(self):
+        super().detener_movimiento()
+        key = 'S' + self.direccion
+        self.image = self.imagen_n(key)
+

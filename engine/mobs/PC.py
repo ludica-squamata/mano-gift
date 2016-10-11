@@ -32,10 +32,10 @@ class PC(EventAware, Parlante, Mob):
             'release': {
                 'accion': lambda: None,
                 'contextual': lambda: None,
-                'arriba': lambda: None,
-                'abajo': lambda: None,
-                'izquierda': lambda: None,
-                'derecha': lambda: None,
+                'arriba': self.detener_movimiento,
+                'abajo': self.detener_movimiento,
+                'izquierda': self.detener_movimiento,
+                'derecha': self.detener_movimiento,
             }
         }
 

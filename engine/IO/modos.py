@@ -74,12 +74,13 @@ class Modo:
     @classmethod
     def toggle_mode(cls, event):
         nombre = event.data.get('nom', None)
+        tipo = event.data.get('type', None)
         if Ed.MODO == 'Aventura':
             if nombre == 'menu':
                 Ed.MODO = 'Menu'
                 EventDispatcher.trigger('SetMode', 'Modos', {'mode': 'NewMenu', 'value': 'Pausa'})
 
-            elif nombre == 'contextual':
+            elif nombre == 'contextual' and tipo == 'tap':
                 Ed.MODO = 'Dialogo'
                 Ed.HERO.deregister()
                 Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)

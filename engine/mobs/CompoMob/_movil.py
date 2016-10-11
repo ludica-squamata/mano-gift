@@ -56,3 +56,6 @@ class Movil(Atribuido):
         #     col_bordes = True
 
         return any([col_bordes, col_mobs, col_props, col_mapa])
+
+    def detener_movimiento(self):
+        pass
