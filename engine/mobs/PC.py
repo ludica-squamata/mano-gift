@@ -86,7 +86,7 @@ class PC(EventAware, Parlante, Mob):
                     elif sprite.accion == 'operar' and sprite.enabled:
                         sprite.operar()
 
-                else:
+                elif self.estado != 'cmb':
                     EngineData.DIALOG = PropDescription(sprite)
                     EngineData.MODO = 'Dialogo'
                     self.deregister()

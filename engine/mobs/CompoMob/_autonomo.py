@@ -12,7 +12,6 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
     def __init__(self, *args, **kwargs):
         nombre = args[0]['states'][0]['AI']
-        ruta = Md.scripts + nombre + '.py'
         tree_data = Rs.abrir_json(Md.mobs + 'behaviours/' + nombre + '.json')
         module = Rs.load_module_from_script(nombre)
         self.AI = BehaviourTree(self, tree_data, module)  # function alias!

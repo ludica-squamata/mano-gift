@@ -9,10 +9,14 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     atacando = False
     death_img = None  # sprite del mob muerto.
     dead = False
-    _step = 'S'
 
-    cmb_atk_img = None
-    cmb_atk_alpha = None
+    _step = 'S'
+    estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
+
+    cmb_atk_img = {}  # combat position images.
+    cmb_atk_alpha = {}  # combat position images's alpha.
+    cmb_walk_img = {}  # combat walking images.
+    cmb_walk_alpha = {}  # combat walking images's alpha.
 
     atk_counter = 0
     atk_img_index = -1
@@ -49,10 +53,10 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
-                if self._step == 'D':
-                    self._step = 'I'
+                if self._step == 'R':
+                    self._step = 'L'
                 else:
-                    self._step = 'D'
+                    self._step = 'R'
 
         key = self._step + self.direccion
         self.image = self.imagen_n(key)
@@ -69,12 +73,16 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
         if self.atk_counter > limite:
             self.atk_counter = 0
             self.atk_img_index += 1
-            if self.atk_img_index > len(frames) - 1:
+            if self.atk_img_index < len(frames):
+                self.image = frames[self.atk_img_index]
+                self.mask = alphas[self.atk_img_index]
+            else:
                 self.atk_img_index = 0
                 self.atacando = False
-
-            self.image = frames[self.atk_img_index]
-            self.mask = alphas[self.atk_img_index]
+                self.images = self.cmb_walk_img
+                self.mascaras = self.cmb_walk_alpha
+                self.image = self.images['S' + self.direccion]
+                self.mask = self.mascaras['S' + self.direccion]
 
     def mover(self):
         self.animar_caminar()
@@ -92,4 +100,3 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
         super().detener_movimiento()
         key = 'S' + self.direccion
         self.image = self.imagen_n(key)
-

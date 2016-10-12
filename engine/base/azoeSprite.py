@@ -12,6 +12,7 @@ class AzoeSprite(sprite.Sprite):
     nombre = ''  # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True  # si es solido, colisiona; si no, no.
     images = None
+    mascaras = None
     data = None  # info importada de un json
     z = 0
     stage = None  # stage donde existe el mob

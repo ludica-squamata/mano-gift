@@ -6,26 +6,19 @@ from engine.globs.eventDispatcher import EventDispatcher
 
 
 class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .velocidad
-    tipo = "Mob"
-    mascaras = None  # {}
-
     hablante = False
     mana = 1
 
-    cmb_pos_img = {}  # combat position images.
-    cmb_pos_alpha = {}  # combat position images's alpha.
-    cmb_walk_img = {}  # combat walking images.
-    cmb_walk_alpha = {}  # combat walking images's alpha.
     idle_walk_img = {}  # imagenes normales
     idle_walk_alpha = {}
-    estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
     def __init__(self, data, x, y, focus=False):
+        self.tipo = "Mob"
         self.images = {}
         self.mascaras = {}
         self.data = data
 
-        dirs = ['S', 'I', 'D']
+        dirs = ['S', 'L', 'R']
         imgs = data['imagenes']
         alpha = data['alphas']
         for key in imgs:
