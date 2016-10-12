@@ -39,9 +39,10 @@ class ShadowSprite(AzoeSprite):
     _prevLuces = None
     """:type : list"""
 
-    def __init__(self, *args, **kwargs):
-        self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._luces = [0, 0, 0, 0, 1, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
+    def __init__(self, *args, **kwargs):          # 4 , 5, 6 , 7,  0, 1,  2, 3
+        self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
+        self._luces = [0, 0, 0, 0, 0, 0, 1, 0]    # NE, E, SE, S, SO, O, NO, N
+                                                  # 0 , 1, 2 , 3, 4,  5, 6,  7
 
         super().__init__(*args, **kwargs)
 
@@ -51,32 +52,61 @@ class ShadowSprite(AzoeSprite):
 
         Renderer.camara.add_visible(self.sombra)
 
+    # def dark_overlay(self):
+    #     for y in range(h):
+    #         for x in range(w):
+    #             if _mask.get_at((x, y)):
+    #                 pxarray[x, y] = shadow_color
+
     def crear_sombras(self):
 
         h = self.rect.h
-        # w = self.rect.w
-        h_2 = h / 2
+        w = self.rect.w
+        h_2 = h // 2
+        w_2 = w // 2
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
         """:type t_surface: SurfaceType"""
 
         surface = self.image
 
-        # Sombra Noreste
-        if self._sombras[0] == 1:
+        if self._sombras[0]:  # Luz: 4
+            # print('Luz 4: NE')
             img = self._crear_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
-        if self._sombras[5] == 1:
+        if self._sombras[6]:  # Luz: 3
+            # print('Luz 3: NO')
             img = self._crear_sombra(surface, "NO")
             t_surface.blit(img, (0, 0))
-        if self._sombras[1] == 1:
-            img = self._crear_sombra(surface, "E")
-            t_surface.blit(img, (h_2, 0))
+        if self._sombras[4]:  # Luz: 1
+            print('Luz 1: SO')
+            img = self._crear_sombra(surface, "SO")
+            t_surface.blit(img, (w_2, h_2-4))
+        if self._sombras[2]:  # Luz: 6
+            print('Luz 6: SE')
+            img = self._crear_sombra(surface, "SE")
+            t_surface.blit(img, (w_2, h_2-4))
+        if self._sombras[1]:  # Luz: 5
+            print('Luz 5: E')
+            # img = self._crear_sombra(surface, "E")
+            # t_surface.blit(img, (h_2, 0))
+        if self._sombras[5]:  # Luz: 2
+            print('Luz 2: O')
+            # img = self._crear_sombra(surface, "O")
+            # t_surface.blit(img, (h_2, 0))
+        if self._sombras[7]:  # Luz: 3
+            print('Luz 3: N')
+            # img = self._crear_sombra(surface, "N")
+            # t_surface.blit(img, (h_2, 0))
+        if self._sombras[3]:  # Luz: 7
+            print('Luz 7: S')
+            # img = self._crear_sombra(surface, "S")
+            # t_surface.blit(img, (h_2, 0))
 
-        if 'pydevd' in sys.modules:
-            from pygame import draw, Rect
-
-            draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
+        # if 'pydevd' in sys.modules:
+        #     from pygame import draw, Rect
+        #
+        #     draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
         return h_2, t_surface
 
@@ -102,6 +132,7 @@ class ShadowSprite(AzoeSprite):
                 for x in range(w):
                     if _mask.get_at((x, y)):
                         pxarray[x + dd, y] = shadow_color
+
         if arg == 'NO':
             d = h / 2
             nw = w + d
@@ -113,6 +144,43 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         pxarray[x + dd, y] = shadow_color
 
+        if arg == 'SE':
+            d = h // 2
+            nw = w + d
+            nh = h + d
+
+            pxarray = PixelArray(Surface((nw, nh), 0, surface))
+            for y in range(h):
+                dd = floor(d * (1 - (y / h)))
+                for x in range(w):
+                    if _mask.get_at((x, y)):
+                        ax = x + dd - 1
+                        ay = (nh - y) - 1
+                        pxarray[ax, ay] = shadow_color
+
+        if arg == 'SO':
+            d = h / 2
+            nw = w + d
+
+            pxarray = PixelArray(Surface((nw, h*2), 0, surface))
+            for y in range(h):
+                dd = floor(d * (y / h))
+                for x in range(w):
+                    if _mask.get_at((x, y)):
+                        pxarray[x + dd, y] = shadow_color
+
+        if arg == 'S':
+            pass
+
+        if arg == 'N':
+            pass
+
+        if arg == 'E':
+            pass
+
+        if arg == 'O':
+            pass
+
         return pxarray.make_surface().convert_alpha()
 
     def recibir_luz(self, source):
@@ -122,7 +190,6 @@ class ShadowSprite(AzoeSprite):
         :return:
         """
         # tolerancia = 10
-        luces = self._luces
         if self.proyectaSombra:
             # calcular direccion de origen
             dx = self.rect.centerX - source.rect.centerX
@@ -131,23 +198,23 @@ class ShadowSprite(AzoeSprite):
             # marcar direccion como iluminada
             if dx > 0:
                 if dy > 0:
-                    luces[0] = True  # noreste
+                    self._luces[0] = True  # noreste
                 elif dy < 0:
-                    luces[2] = True  # sureste
+                    self._luces[2] = True  # sureste
                 else:
-                    luces[1] = True  # este
+                    self._luces[1] = True  # este
             elif dx < 0:
                 if dy > 0:
-                    luces[6] = True  # noroeste
+                    self._luces[6] = True  # noroeste
                 elif dy < 0:
-                    luces[4] = True  # suroeste
+                    self._luces[4] = True  # suroeste
                 else:
-                    luces[5] = True  # oeste
+                    self._luces[5] = True  # oeste
             else:
                 if dy > 0:
-                    luces[7] = True  # norte
+                    self._luces[7] = True  # norte
                 else:
-                    luces[3] = True  # sur
+                    self._luces[3] = True  # sur
 
     def update_sombra(self):
         """

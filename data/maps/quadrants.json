@@ -5,7 +5,8 @@
   },
   "capa_ground":{
     "props": {
-      "star":[[210,502]]
+      "star":[[210,502]],
+      "arbol":[[320,320]]
     },
     "mobs": {
         "enemies":{},
@@ -20,7 +21,7 @@
   },
   "salidas":{
   },
-  "refs":{},
+  "refs":{"arbol":"props/arbol_escalado.png"},
   "ambiente":"exterior",
   "amanece":[19,0],
   "atardece":[17,0],
