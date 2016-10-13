@@ -1,7 +1,7 @@
 from pygame import mask, PixelArray, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
 from .azoeSprite import AzoeSprite
-import sys
+from pygame import draw, Rect
 
 
 class Sombra(AzoeSprite):
@@ -41,7 +41,7 @@ class ShadowSprite(AzoeSprite):
 
     def __init__(self, *args, **kwargs):          # 4 , 5, 6 , 7,  0, 1,  2, 3
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
-        self._luces = [0, 0, 0, 0, 0, 0, 1, 0]    # NE, E, SE, S, SO, O, NO, N
+        self._luces = [0, 1, 0, 0, 0, 0, 0, 0]    # NE, E, SE, S, SO, O, NO, N
                                                   # 0 , 1, 2 , 3, 4,  5, 6,  7
 
         super().__init__(*args, **kwargs)
@@ -63,29 +63,25 @@ class ShadowSprite(AzoeSprite):
         h = self.rect.h
         w = self.rect.w
         h_2 = h // 2
-        w_2 = w // 2
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
+        centerx = t_surface.get_width()//4
         """:type t_surface: SurfaceType"""
 
         surface = self.image
 
         if self._sombras[0]:  # Luz: 4
-            # print('Luz 4: NE')
             img = self._crear_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
         if self._sombras[6]:  # Luz: 3
-            # print('Luz 3: NO')
             img = self._crear_sombra(surface, "NO")
             t_surface.blit(img, (0, 0))
         if self._sombras[4]:  # Luz: 1
-            print('Luz 1: SO')
             img = self._crear_sombra(surface, "SO")
-            t_surface.blit(img, (w_2, h_2-4))
+            t_surface.blit(img, (3, h_2-6))
         if self._sombras[2]:  # Luz: 6
-            print('Luz 6: SE')
             img = self._crear_sombra(surface, "SE")
-            t_surface.blit(img, (w_2, h_2-4))
+            t_surface.blit(img, (centerx, h_2-4))
         if self._sombras[1]:  # Luz: 5
             print('Luz 5: E')
             # img = self._crear_sombra(surface, "E")
@@ -103,10 +99,7 @@ class ShadowSprite(AzoeSprite):
             # img = self._crear_sombra(surface, "S")
             # t_surface.blit(img, (h_2, 0))
 
-        # if 'pydevd' in sys.modules:
-        #     from pygame import draw, Rect
-        #
-        #     draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
+        draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
         return h_2, t_surface
 
@@ -121,11 +114,11 @@ class ShadowSprite(AzoeSprite):
 
         shadow_color = 0, 0, 0, 150
         pxarray = None
+        d = h // 2
+        nw = w + d
+        nh = h + d
 
         if arg == 'NE':
-            d = h / 2
-            nw = w + d
-
             pxarray = PixelArray(Surface((nw, h), 0, surface))
             for y in range(h):
                 dd = floor(d * (1 - (y / h)))
@@ -134,9 +127,6 @@ class ShadowSprite(AzoeSprite):
                         pxarray[x + dd, y] = shadow_color
 
         if arg == 'NO':
-            d = h / 2
-            nw = w + d
-
             pxarray = PixelArray(Surface((nw, h), 0, surface))
             for y in range(h):
                 dd = floor(d * (y / h))
@@ -145,10 +135,6 @@ class ShadowSprite(AzoeSprite):
                         pxarray[x + dd, y] = shadow_color
 
         if arg == 'SE':
-            d = h // 2
-            nw = w + d
-            nh = h + d
-
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
             for y in range(h):
                 dd = floor(d * (1 - (y / h)))
@@ -159,15 +145,14 @@ class ShadowSprite(AzoeSprite):
                         pxarray[ax, ay] = shadow_color
 
         if arg == 'SO':
-            d = h / 2
-            nw = w + d
-
-            pxarray = PixelArray(Surface((nw, h*2), 0, surface))
+            pxarray = PixelArray(Surface((nw, nh), 0, surface))
             for y in range(h):
                 dd = floor(d * (y / h))
                 for x in range(w):
                     if _mask.get_at((x, y)):
-                        pxarray[x + dd, y] = shadow_color
+                        ax = x + dd - 1
+                        ay = (nh - y) - 1
+                        pxarray[ax, ay] = shadow_color
 
         if arg == 'S':
             pass
