@@ -5,7 +5,7 @@ from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
 
 
-class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido para tener .velocidad
+class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido para tener .velocidad
     hablante = False
     mana = 1
 
@@ -64,8 +64,6 @@ class Mob(Interactivo, Equipado, Animado, ShadowSprite):  # Movil es Atribuido p
 
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
-
-        self.sombra = None  # dumyval
 
     def establecer_estado(self, estado):
         self.estado = estado

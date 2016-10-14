@@ -13,7 +13,7 @@ class Movil(Atribuido):
             self.image = self.images['S' + self.direccion]
             if direccion == self.direccion:
                 # noinspection PyArgumentList
-                self.mover(*self.direcciones[direccion])
+                self.mover(direccion)
 
     # noinspection PyMethodOverriding
     def mover(self):

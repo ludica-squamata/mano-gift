@@ -149,7 +149,7 @@ class DayLight:
         if h == 10:
             p = 4
         else:
-            p = 2
+            p = 3
 
         self.posicion = p
 

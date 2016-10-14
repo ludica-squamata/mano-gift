@@ -24,10 +24,10 @@ class PC(EventAware, Parlante, Mob):
             'hold': {
                 'accion': lambda: None,
                 'contextual': lambda: None,
-                'arriba': lambda: self.mover(0, -1),
-                'abajo': lambda: self.mover(0, +1),
-                'izquierda': lambda: self.mover(-1, 0),
-                'derecha': lambda: self.mover(+1, 0),
+                'arriba': lambda: self.mover('arriba'),
+                'abajo': lambda: self.mover('abajo'),
+                'izquierda': lambda: self.mover('izquierda'),
+                'derecha': lambda: self.mover('derecha'),
             },
             'release': {
                 'accion': lambda: None,
@@ -45,16 +45,16 @@ class PC(EventAware, Parlante, Mob):
             self.functions[mode][key]()
 
     # noinspection PyMethodOverriding
-    def mover(self, dx, dy):
-        direccion = ''
-        if dx > 0:
-            direccion = 'derecha'
-        elif dx < -0:
-            direccion = 'izquierda'
-        elif dy < 0:
-            direccion = 'arriba'
-        elif dy > 0:
-            direccion = 'abajo'
+    def mover(self, direccion):
+        dx, dy = 0, 0
+        if direccion == 'derecha':
+            dx = +1
+        elif direccion == 'izquierda':
+            dx = -1
+        elif direccion == 'arriba':
+            dy = +1
+        elif direccion == 'abajo':
+            dy = -1
 
         if direccion != self.direccion:
             self.cambiar_direccion(direccion)

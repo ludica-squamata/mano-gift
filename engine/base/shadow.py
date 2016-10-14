@@ -41,10 +41,11 @@ class ShadowSprite(AzoeSprite):
 
     def __init__(self, *args, **kwargs):          # 4 , 5, 6 , 7,  0, 1,  2, 3
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
-        self._luces = [0, 1, 0, 0, 0, 0, 0, 0]    # NE, E, SE, S, SO, O, NO, N
+        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]    # NE, E, SE, S, SO, O, NO, N
                                                   # 0 , 1, 2 , 3, 4,  5, 6,  7
 
         super().__init__(*args, **kwargs)
+        self.previousimage = self.image
 
     def add_shadow(self, *args):
         Renderer.camara.remove_obj(self.sombra)
@@ -99,7 +100,7 @@ class ShadowSprite(AzoeSprite):
             # img = self._crear_sombra(surface, "S")
             # t_surface.blit(img, (h_2, 0))
 
-        draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
+        # draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
         return h_2, t_surface
 
@@ -237,9 +238,14 @@ class ShadowSprite(AzoeSprite):
             if any(self._sombras):
                 return self.crear_sombras()
 
+    def image_has_chaged(self):
+        if self.image != self.previousimage and self.sombra is not None:
+            self.add_shadow(*self.crear_sombras())
+            self.previousimage = self.image
+
     def update(self, *args):
-        # if self.proyectaSombra:
-        #     self.update_sombra()
+        if self.proyectaSombra:
+            self.image_has_chaged()
         if self.sombra is not None:
             self.sombra.z = self.z-1
         super().update(*args)
@@ -248,8 +254,3 @@ class ShadowSprite(AzoeSprite):
         super().ubicar(dx, dy)
         if self.sombra is not None:
             self.sombra.ubicar(dx, dy)
-
-    def reubicar(self, dx, dy):
-        super().reubicar(dx, dy)
-        if self.sombra is not None:
-            self.sombra.reubicar(dx, dy)
