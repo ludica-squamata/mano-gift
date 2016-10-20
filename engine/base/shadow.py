@@ -72,12 +72,6 @@ class ShadowSprite(AzoeSprite):
 
         Renderer.camara.add_visible(self.sombra)
 
-    # def dark_overlay(self):
-    #     for y in range(h):
-    #         for x in range(w):
-    #             if _mask.get_at((x, y)):
-    #                 pxarray[x, y] = shadow_color
-
     def crear_sombras(self):
 
         h = self.rect.h
@@ -169,7 +163,7 @@ class ShadowSprite(AzoeSprite):
 
         if arg == 'SE':
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
-            for y in range(h):
+            for y in range(h-3):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
                     if _mask.get_at((x, y)):
@@ -179,7 +173,7 @@ class ShadowSprite(AzoeSprite):
 
         if arg == 'SO':
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
-            for y in range(h):
+            for y in range(h-5):
                 dd = floor(d * (y / h))
                 for x in range(w):
                     if _mask.get_at((x, y)):
@@ -198,6 +192,26 @@ class ShadowSprite(AzoeSprite):
 
         if arg == 'O':
             pass
+
+        return pxarray.make_surface().convert_alpha()
+
+    @staticmethod
+    def dark_overlay(surface, start=0, stop=0):
+        w, h = surface.get_size()
+        pxarray = PixelArray(Surface((w, h), 0, surface))
+        _mask = mask.from_surface(surface)
+        shadow_color = 0, 0, 0, 150
+
+        if stop == 0:
+            stop = w
+        # 0, w
+        # 0, w//2
+        # w//2, w
+
+        for y in range(h):
+            for x in range(start, stop):
+                if _mask.get_at((x, y)):
+                    pxarray[x, y] = shadow_color
 
         return pxarray.make_surface().convert_alpha()
 
