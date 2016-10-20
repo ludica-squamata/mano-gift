@@ -22,8 +22,8 @@ class PC(EventAware, Parlante, Mob):
                 'derecha': lambda: self.cambiar_direccion('derecha', True),
             },
             'hold': {
-                'accion': lambda: None,
-                'contextual': lambda: None,
+                'accion': lambda: self.sombra.fade(-10),
+                'contextual': lambda: self.sombra.fade(+10),
                 'arriba': lambda: self.mover('arriba'),
                 'abajo': lambda: self.mover('abajo'),
                 'izquierda': lambda: self.mover('izquierda'),
@@ -46,20 +46,9 @@ class PC(EventAware, Parlante, Mob):
 
     # noinspection PyMethodOverriding
     def mover(self, direccion):
-        dx, dy = 0, 0
-        if direccion == 'derecha':
-            dx = +1
-        elif direccion == 'izquierda':
-            dx = -1
-        elif direccion == 'arriba':
-            dy = +1
-        elif direccion == 'abajo':
-            dy = -1
-
         if direccion != self.direccion:
             self.cambiar_direccion(direccion)
-        dx, dy = dx * self.velocidad, dy * self.velocidad
-        if not self.detectar_colisiones(dx, dy):
+        if not self.detectar_colisiones():
             super().mover()
 
     def accion(self):

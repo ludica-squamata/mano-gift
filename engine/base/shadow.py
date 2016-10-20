@@ -8,12 +8,13 @@ class Sombra(AzoeSprite):
     dif_x = 0
     alpha = 0
 
-    def __init__(self, spr, dfx, img):
+    def __init__(self, spr, dfx, img, mascara, dz):
         self.spr = spr
         self.tipo = "sombra"
         self.nombre = "sombra de " + self.spr.nombre
-        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z-1)
-        self.alpha = self.image.get_alpha()
+        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z + dz - 1)
+        self.mask = mascara
+        self.alpha = 150
         self.dif_x = dfx
 
     def ubicar(self, x, y):
@@ -21,8 +22,21 @@ class Sombra(AzoeSprite):
         :param y: int
         :param x: int
         """
-        
+
         super().ubicar(x - self.dif_x, y)
+
+    def fade(self, value):
+        w, h = self.image.get_size()
+        surface = self.image.copy()
+        pxarray = PixelArray(surface)
+        self.alpha += value
+        if 0 <= self.alpha <= 150:
+            for y in range(h):
+                for x in range(w):
+                    if self.mask.get_at((x, y)):
+                        pxarray[x, y] = 0, 0, 0, self.alpha
+            self.image = pxarray.make_surface()
+            del pxarray
 
     def __repr__(self):
         return self.nombre
@@ -39,10 +53,15 @@ class ShadowSprite(AzoeSprite):
     _prevLuces = None
     """:type : list"""
 
-    def __init__(self, *args, **kwargs):          # 4 , 5, 6 , 7,  0, 1,  2, 3
-        self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]  # SO, O, NO, N, NE, E, SE, S
-        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]    # NE, E, SE, S, SO, O, NO, N
-                                                  # 0 , 1, 2 , 3, 4,  5, 6,  7
+    def __init__(self, *args, **kwargs):
+
+        self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
+        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        # 4 , 5, 6 , 7,  0, 1,  2, 3
+        # SO, O, NO, N, NE, E, SE, S # sombras
+        # NE, E, SE, S, SO, O, NO, N # luces
+        # 0 , 1, 2 , 3, 4,  5, 6,  7
 
         super().__init__(*args, **kwargs)
         self.previousimage = self.image
@@ -62,27 +81,40 @@ class ShadowSprite(AzoeSprite):
     def crear_sombras(self):
 
         h = self.rect.h
-        w = self.rect.w
+        # w = self.rect.w
         h_2 = h // 2
+        z = 0
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
-        centerx = t_surface.get_width()//4
+        centerx = t_surface.get_width() // 4
         """:type t_surface: SurfaceType"""
 
         surface = self.image
+        mascara = mask.from_surface(t_surface)
+        mascara.clear()
 
         if self._sombras[0]:  # Luz: 4
             img = self._crear_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
         if self._sombras[6]:  # Luz: 3
             img = self._crear_sombra(surface, "NO")
             t_surface.blit(img, (0, 0))
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
         if self._sombras[4]:  # Luz: 1
             img = self._crear_sombra(surface, "SO")
-            t_surface.blit(img, (3, h_2-6))
+            t_surface.blit(img, (3, h_2 - 6))
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
+            z = h
         if self._sombras[2]:  # Luz: 6
             img = self._crear_sombra(surface, "SE")
-            t_surface.blit(img, (centerx, h_2-4))
+            t_surface.blit(img, (centerx, h_2 - 4))
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
+            z = h
         if self._sombras[1]:  # Luz: 5
             print('Luz 5: E')
             # img = self._crear_sombra(surface, "E")
@@ -102,7 +134,7 @@ class ShadowSprite(AzoeSprite):
 
         # draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
 
-        return h_2, t_surface
+        return h_2, t_surface, mascara, z
 
     @staticmethod
     def _crear_sombra(surface, arg=None, _mask=None):
@@ -246,8 +278,8 @@ class ShadowSprite(AzoeSprite):
     def update(self, *args):
         if self.proyectaSombra:
             self.image_has_chaged()
-        if self.sombra is not None:
-            self.sombra.z = self.z-1
+        # if self.sombra is not None:
+        #     self.sombra.z = self.z-1
         super().update(*args)
 
     def ubicar(self, dx, dy):

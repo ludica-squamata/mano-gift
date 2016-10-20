@@ -20,7 +20,8 @@ class Movil(Atribuido):
         dx, dy = super().mover(*self.direcciones[self.direccion])
         self.reubicar(dx, dy)
 
-    def detectar_colisiones(self, dx, dy):
+    def detectar_colisiones(self):
+        dx, dy = super().mover(*self.direcciones[self.direccion])
         col_bordes = False  # colision contra los bordes de la pantalla
         col_mobs = False  # colision contra otros mobs
         col_props = False  # colision contra los props

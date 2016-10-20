@@ -6,7 +6,7 @@
   "capa_ground":{
     "props": {
       "star":[[210,502]],
-      "arbol":[[320,320]]
+      "arbol":[[600,320]]
     },
     "mobs": {
         "enemies":{},

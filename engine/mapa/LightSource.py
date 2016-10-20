@@ -146,15 +146,16 @@ class DayLight:
         # 0 , 1, 2 , 3, 4,  5, 6,  7
         h = event.data['hora'].h
         # esto está bastante mal hecho, pero demuestra lo que quiero que pase.
-        if h == 10:
+        if h == 1:
             p = 4
         else:
-            p = 3
+            p = 1
 
         self.posicion = p
 
         for item in self.sprites_iluminados:
             # noinspection PyProtectedMember
+            item._luces = [0, 0, 0, 0, 0, 0, 0, 0]
             item._luces[self.posicion] = 1
 
         self.generar_sombras()
