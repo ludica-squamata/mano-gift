@@ -1,27 +1,47 @@
 from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS
 from engine.misc import Config
 from pygame import event
+from pygame.key import get_pressed
 from pygame import KEYDOWN, KEYUP
 from pygame import JOYBUTTONDOWN, JOYBUTTONUP, JOYHATMOTION, JOYAXISMOTION
 
+pressed_keys = []
 
 def filtrar_eventos_teclado(events):
     teclas = TECLAS.devolver()
+    global pressed_keys
+    
     for _event in events:
         if _event.type == KEYDOWN:
             if _event.key in teclas:
                 teclas[_event.key]['pressed'] = True
+                pressed_keys.append(_event.key)
             elif Ed.setKey:
                 event.post(event.Event(TAP, {'key': _event.key, 'type': 'tap'}))
-
+            
         elif _event.type == KEYUP:
             if _event.key in teclas:
                 key = teclas[_event.key]
                 key['pressed'] = False
+                if _event.key in pressed_keys:
+                    pressed_keys.remove(_event.key)
+                
                 if not key['hold']:
                     key['tap'] = True
                 else:
                     key['release'] = True
+    
+    _keys = get_pressed()
+    for _key in pressed_keys:
+        if not _keys[_key]:
+            key = teclas[_key]
+            key['pressed'] = False
+            pressed_keys.remove(_key)
+            if not key['hold']:
+                key['tap'] = True
+            else:
+                key['release'] = True
+    
 
     return teclas
 
