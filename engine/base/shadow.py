@@ -1,3 +1,4 @@
+from engine.globs.eventDispatcher import EventDispatcher
 from pygame import mask, PixelArray, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
 from .azoeSprite import AzoeSprite
@@ -61,10 +62,11 @@ class ShadowSprite(AzoeSprite):
         # 4 , 5, 6 , 7,  0, 1,  2, 3
         # SO, O, NO, N, NE, E, SE, S # sombras
         # NE, E, SE, S, SO, O, NO, N # luces
-        # 0 , 1, 2 , 3, 4,  5, 6,  7
+        # 0 , 1, 2 , 0, 4,  5, 6,  7
 
         super().__init__(*args, **kwargs)
         self.previousimage = self.image
+        EventDispatcher.register(self.update_luces,'MovimientoSolar')
 
     def add_shadow(self, *args):
         Renderer.camara.remove_obj(self.sombra)
@@ -88,22 +90,26 @@ class ShadowSprite(AzoeSprite):
         mascara.clear()
 
         if self._sombras[0]:  # Luz: 4
+            print('Luz 4: NE')
             img = self._crear_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
         if self._sombras[6]:  # Luz: 3
+            print('Luz 3: NO')
             img = self._crear_sombra(surface, "NO")
             t_surface.blit(img, (0, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
         if self._sombras[4]:  # Luz: 1
+            print('Luz 1: SO')
             img = self._crear_sombra(surface, "SO")
             t_surface.blit(img, (3, h_2 - 6))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             z = h
         if self._sombras[2]:  # Luz: 6
+            print('Luz 6: SE')
             img = self._crear_sombra(surface, "SE")
             t_surface.blit(img, (centerx, h_2 - 4))
             _draw = mask.from_surface(t_surface, 100)
@@ -121,8 +127,8 @@ class ShadowSprite(AzoeSprite):
             print('Luz 3: N')
             # img = self._crear_sombra(surface, "N")
             # t_surface.blit(img, (h_2, 0))
-        if self._sombras[3]:  # Luz: 7
-            print('Luz 7: S')
+        if self._sombras[3]:  # Luz: 0
+            print('Luz 0: S')
             # img = self._crear_sombra(surface, "S")
             # t_surface.blit(img, (h_2, 0))
 
@@ -282,16 +288,23 @@ class ShadowSprite(AzoeSprite):
             # self._sombras[7] = self._luces[3] - self._luces[7]
 
             if any(self._sombras):
-                return self.crear_sombras()
-
+                self.add_shadow(*self.crear_sombras())
+    
+    def update_luces(self, event):
+        # self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+        p = event.data['light']
+        self._luces[p] = 1
+        if self.proyectaSombra:
+            self.update_sombra()
+        
     def image_has_chaged(self):
         if self.image != self.previousimage and self.sombra is not None:
             self.add_shadow(*self.crear_sombras())
             self.previousimage = self.image
 
     def update(self, *args):
-        if self.proyectaSombra:
-            self.image_has_chaged()
+        # if self.proyectaSombra:
+        #     self.image_has_chaged()
         # if self.sombra is not None:
         #     self.sombra.z = self.z-1
         super().update(*args)

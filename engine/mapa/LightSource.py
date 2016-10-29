@@ -1,7 +1,6 @@
 ﻿from engine.globs import COLOR_IGNORADO
 from engine.globs.eventDispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA
-from pygame.sprite import LayeredUpdates
 from engine.misc import Resources
 from engine.base import AzoeSprite
 
@@ -125,47 +124,19 @@ class DayLight:
         self.rect = Rect(0, 0, tamanio, tamanio)  # la posición podría ser variable.
         self.color = 0, 0, 0, 0  # el color podría ser una constante.
         self.estatico = True
-        self.nombre = 'sol'
-        self.sprites_iluminados = LayeredUpdates()
+        self.nombre = 'Sol'
 
         EventDispatcher.register(self.movimiento_por_rotacion, 'hora')
 
-    def add_objs(self, iluminables):
-        names = []
-        layer = -1
-        for obj in iluminables:
-            if obj.nombre not in names:
-                names.append(obj.nombre)
-                layer += 1
-            self.sprites_iluminados.add(obj, layer=layer)
-        self.generar_sombras()
-
     def movimiento_por_rotacion(self, event):
-        # SO, O, NO, N, NE, E, SE, S #sombra
-        # NE, E, SE, S, SO, O, NO, N # luz
-        # 0 , 1, 2 , 3, 4,  5, 6,  7
         h = event.data['hora'].h
         # esto está bastante mal hecho, pero demuestra lo que quiero que pase.
         if h == 1:
-            p = 4
-        else:
             p = 1
+        else:
+            p = 4
+        self.rect.y -= 100
 
-        self.posicion = p
-
-        for item in self.sprites_iluminados:
-            # noinspection PyProtectedMember
-            item._luces = [0, 0, 0, 0, 0, 0, 0, 0]
-            item._luces[self.posicion] = 1
-
-        self.generar_sombras()
-
-    def generar_sombras(self):
-        for layer in self.sprites_iluminados.layers():
-            sprites = self.sprites_iluminados.get_sprites_from_layer(layer)
-            args = sprites[0].update_sombra()
-            if args is not None:
-                for sprite in sprites:
-                    sprite.add_shadow(*args)
+        EventDispatcher.trigger('MovimientoSolar', self.nombre, {"light": p})
 
 __all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']

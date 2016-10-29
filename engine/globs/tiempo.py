@@ -197,7 +197,7 @@ class TimeStamp:
 
 
 class Noche(AzoeSprite):
-    luces = []
+    # luces = []
     solido = False
     proyectaSombra = False
     nombre = 'Noche'
@@ -220,7 +220,7 @@ class Noche(AzoeSprite):
         pxarray = PixelArray(self.image)
 
         for light in lights:
-            if light.nombre == 'sol':
+            if light.nombre == 'Sol':
                 # chapuza para velocidad
                 self.image.fill(light.color, light.rect)
             else:

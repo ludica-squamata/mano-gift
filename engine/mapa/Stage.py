@@ -75,7 +75,7 @@ class Stage:
             if obj not in Renderer.camara.real:
                 Renderer.camara.add_real(obj)
 
-        luz_del_sol.add_objs([obj for obj in self.properties if obj.proyectaSombra])
+        # luz_del_sol.add_objs([obj for obj in self.properties if obj.proyectaSombra])
 
         for salida in self.salidas:
             if salida.sprite is not None:

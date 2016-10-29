@@ -40,7 +40,7 @@ class Loader:
                 else:
                     prop = new_prop(ref, x, y, img=imgs[ref])
                     is_interactive = False
-                
+
                 if type(prop) is list:
                     for p in prop:
                         cls.STAGE.add_property(p, GRUPO_ITEMS, is_interactive)
@@ -51,13 +51,11 @@ class Loader:
     def cargar_mobs(cls, capa='capa_ground'):
         for key in cls.STAGE.data[capa]['mobs']:
             pos = cls.STAGE.data[capa]['mobs'][key]
-            if key == 'npcs':
-                for ref in pos:
-                    data = Rs.abrir_json(Md.mobs + ref + '.json')
-                    for x, y in pos[ref]:
-                        mob = NPC(ref, x, y, data)
-                        if capa == 'capa_ground':
-                            cls.STAGE.add_property(mob, GRUPO_MOBS)
+            for ref in pos:
+                data = Rs.abrir_json(Md.mobs + ref + '.json')
+                for x, y in pos[ref]:
+                    mob = NPC(ref, x, y, data)
+                    cls.STAGE.add_property(mob, GRUPO_MOBS)
 
     @classmethod
     def cargar_hero(cls, entrada):
