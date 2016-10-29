@@ -15,20 +15,19 @@ class Interactivo(Atribuido):
     def _aling_interaction_rect(self, x, y):
         """Alinea el rect de interacción. Función simplificada."""
 
-        _rect = Rect(self.mapX, self.mapY, self.rect.w, self.rect.h)
         if x < 0:
-            self._interaction_rect.right = _rect.centerx
+            self._interaction_rect.right = self.mapRect.centerx
         elif x > 0:
-            self._interaction_rect.left = _rect.centerx
+            self._interaction_rect.left = self.mapRect.centerx
         else:
-            self._interaction_rect.x = _rect.x
+            self._interaction_rect.x = self.mapRect.x
 
         if y < 0:
-            self._interaction_rect.bottom = _rect.centery
+            self._interaction_rect.bottom = self.mapRect.centery
         elif y > 0:
-            self._interaction_rect.top = _rect.centery
+            self._interaction_rect.top = self.mapRect.centery
         else:
-            self._interaction_rect.y = _rect.y
+            self._interaction_rect.y = self.mapRect.y
 
     @staticmethod
     def _interact_with_props(item):
@@ -64,9 +63,9 @@ class Interactivo(Atribuido):
         #         print('bottomright', cdr.rect.collidepoint(self._interaction_rect.bottomright))
         for item in cuadrante:
             if item is not self:
-                _rect = Rect(item.mapX, item.mapY, item.rect.w, item.rect.h)
+
                 # los sprites deberian tener un "mapRect" completo.
-                if self._interaction_rect.colliderect(_rect):
+                if self._interaction_rect.colliderect(item.mapRect):
                     if item.tipo == 'Mob':
                         return self._interact_with_mobs(item)
                     else:

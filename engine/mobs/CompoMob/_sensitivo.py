@@ -53,7 +53,7 @@ class Sensitivo(Atribuido):
         """Gira el triangulo de la visión.
 
         Devuelve el surface del triangulo rotado, y la posicion en x e y"""
-        tx, ty, tw, th = self.mapX, self.mapY, self.rect.w, self.rect.h
+        tx, ty, tw, th = self.mapRect
         img = self.tri_vis
         if direccion == 'abajo':
             surf = transform.flip(img, False, True)
@@ -90,7 +90,7 @@ class Sensitivo(Atribuido):
         para moverla. El argumento dummy viene a ser la direccion,
         pero como no hay que girar el circulo, es indistinta."""
 
-        tx, ty, tw, th = self.mapX, self.mapY, self.rect.w, self.rect.h
+        tx, ty, tw, th = self.mapRect
         w, h = sentido.get_size()
         x = int(tx + (tw / 2) - (w / 2))
         y = int(ty + (th / 2) - (h / 2))

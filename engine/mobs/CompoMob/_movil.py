@@ -28,10 +28,10 @@ class Movil(Atribuido):
         col_mapa = False  # colision contra las cajas de colision del propio mapa
 
         if self.solido:
-            if self.stage.mapa.mask.overlap(self.mask, (self.mapX + dx, self.mapY)) is not None:
+            if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
                 col_mapa = True
 
-            if self.stage.mapa.mask.overlap(self.mask, (self.mapX, self.mapY + dy)) is not None:
+            if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
                 col_mapa = True
 
             for spr in self.stage.properties.get_sprites_from_layer(GRUPO_ITEMS):

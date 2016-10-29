@@ -31,7 +31,7 @@ class Cuadrante:
             self.itemgroup.remove(item)
 
     def contains(self, item):
-        return self.rect.collidepoint((item.mapX, item.mapY))
+        return self.rect.collidepoint(item.mapRect.topleft)
 
     def __getitem__(self, item):
         return item
@@ -44,7 +44,7 @@ class Cuadrante:
     def update_mobs(self):
         self.mobgroup.empty()
         for mob in MobGroup:
-            if self.rect.collidepoint((mob.mapX, mob.mapY)):
+            if self.rect.collidepoint(mob.mapRect.topleft):
                 self.mobgroup.add(mob)
                 mob.idx_quadrant = self.idx
 

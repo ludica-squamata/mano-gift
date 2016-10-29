@@ -27,7 +27,7 @@ class GetRoute(Leaf):
         prox = self.tree.get_context('next')
         pd = self.tree.get_context('punto_final')
         
-        pi = mapa[e.mapX//32, e.mapY//32]
+        pi = mapa[e.mapRect.x//32, e.mapRect.y//32]
         ruta = a_star(pi, pd, mapa)
         
         self.tree.set_context('camino', ruta)
@@ -42,7 +42,7 @@ class NextPosition(Leaf):
         mapa = self.tree.get_context('mapa')
         camino = self.tree.get_context('camino')
         prox = self.tree.get_context('next')
-        curr_p = mapa[e.mapX // 32, e.mapY // 32]
+        curr_p = mapa[e.mapRect.x//32, e.mapRect.y//32]
 
         if curr_p == self.tree.get_context('punto_final'):
             return Failure
@@ -60,7 +60,7 @@ class Move(Leaf):
         e = self.tree.entity
         mapa = self.tree.shared_context['mapa']
         pd = self.tree.shared_context['punto_proximo']
-        pi = mapa[e.mapX//32, e.mapY//32]
+        pi = mapa[e.mapRect.x//32, e.mapRect.y//32]
 
         if pi != pd:
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))

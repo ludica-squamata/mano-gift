@@ -68,8 +68,8 @@ class Stage:
             obj.sombra = None
             obj._prevLuces = None
 
-            x = self.rect.x + obj.mapX
-            y = self.rect.y + obj.mapY
+            x = self.rect.x + obj.mapRect.x
+            y = self.rect.y + obj.mapRect.y
             obj.ubicar(x, y)
 
             if obj not in Renderer.camara.real:
@@ -136,7 +136,7 @@ class Stage:
         self.grilla.update()
         for spr in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
             if hasattr(spr, 'accion') and spr.accion == 'mover':
-                x, y = spr.mapX // 32, spr.mapY // 32
+                x, y = spr.mapRect.x // 32, spr.mapRect.y // 32
                 self.grilla.set_transitable((x, y), False)
 
     def __repr__(self):

@@ -155,8 +155,8 @@ class Camara:
 
     @classmethod
     def panear(cls):
-        new_x = cls.focus.rect.x - cls.focus.mapX
-        new_y = cls.focus.rect.y - cls.focus.mapY
+        new_x = cls.focus.rect.x - cls.focus.mapRect.x
+        new_y = cls.focus.rect.y - cls.focus.mapRect.y
 
         dx = new_x - cls.bg.rect.x
         dy = new_y - cls.bg.rect.y
@@ -180,8 +180,8 @@ class Camara:
             spr.rect.move_ip(dx, dy)
 
         for spr in cls.real:
-            x = cls.bg.rect.x + spr.mapX
-            y = cls.bg.rect.y + spr.mapY
+            x = cls.bg.rect.x + spr.mapRect.x
+            y = cls.bg.rect.y + spr.mapRect.y
             spr.ubicar(x, y)
 
     @classmethod

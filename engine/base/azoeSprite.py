@@ -1,11 +1,9 @@
-from pygame import sprite, mask, Surface
+from pygame import sprite, mask, Surface, Rect
 from engine.misc import Resources
 
 
 class AzoeSprite(sprite.Sprite):
     # mapX y mapY estan medidas en pixeles y son relativas al mapa
-    mapX = 0
-    mapY = 0
     stageX = 0
     stageY = 0
     tipo = ''
@@ -69,16 +67,15 @@ class AzoeSprite(sprite.Sprite):
         else:
             self.z = self.rect.bottom
 
-        self.mapX = x
-        self.mapY = y
+        self.mapRect = Rect(x, y, *self.rect.size)
         self.stageX = x
         self.stageY = y
         self.solido = True
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
-        self.mapX += dx
-        self.mapY += dy
+        self.mapRect.x += dx
+        self.mapRect.y += dy
         self.stageX += dx
         self.stageY += dy
         self.z += dy
@@ -92,8 +89,8 @@ class AzoeSprite(sprite.Sprite):
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
-            x = self.mapX - (other.mapX - off_x)
-            y = self.mapY - (other.mapY - off_y)
+            x = self.mapRect.x - (other.mapRect.x - off_x)
+            y = self.mapRect.y - (other.mapRect.y - off_y)
             if other.mask.overlap(self.mask, (x, y)):
                 return True
         return False

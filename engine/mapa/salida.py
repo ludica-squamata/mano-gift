@@ -1,4 +1,4 @@
-from pygame import Mask, Surface
+from pygame import Mask, Surface, Rect
 from engine.globs import MobGroup
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.base import AzoeSprite
@@ -18,8 +18,7 @@ class Salida:
     def __init__(self, nombre, data):
         self.nombre = self.tipo + '.' + nombre
         x, y, w, h = data['rect']
-        self.mapX = x
-        self.mapY = y
+        self.mapRect = Rect(x, y, w, h)
         self.dest = data['dest']
         self.link = data['link']  # string, nombre de la entrada en dest con la cual conecta
         self.direcciones = data.get('direcciones', ['arriba', 'abajo', 'izquierda', 'derecha'])
