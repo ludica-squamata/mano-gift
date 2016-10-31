@@ -52,8 +52,8 @@ class Menu(EventAware, Ventana):
             }
         }
         self.botones = LayeredUpdates()
-        super().__init__(self.canvas)
-        self.ubicar(10, 10)
+        super().__init__(self.canvas, center=True)
+        # self.ubicar(10, 10)
 
         Ed.MENUS[nombre] = self
 

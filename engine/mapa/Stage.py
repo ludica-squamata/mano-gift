@@ -186,14 +186,14 @@ class ChunkMap(Sprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
-
-    def ubicar(self, x, y):
-        """Coloca al sprite en pantalla
-        :param y: int
-        :param x: int
-        """
-        self.rect.x = x
-        self.rect.y = y
+    #
+    # def ubicar(self, x, y):
+    #     """Coloca al sprite en pantalla
+    #     :param y: int
+    #     :param x: int
+    #     """
+    #     self.rect.x = x
+    #     self.rect.y = y
 
     def cargar_limites(self, limites):
 
@@ -244,12 +244,12 @@ class ChunkMap(Sprite):
                 self.stage.rect.inflate_ip(mapa.rect.w, 0)
                 if ady == 'izq':
                     for spr in self.stage.properties:
-                        spr.stageX += mapa.rect.w
+                        spr.stageRect.x += mapa.rect.w
             elif ady == 'sup' or ady == 'inf':
                 self.stage.rect.inflate_ip(0, mapa.rect.h)
                 if ady == 'sup':
                     for spr in self.stage.properties:
-                        spr.stageY += mapa.rect.h
+                        spr.stageRect.y += mapa.rect.h
 
             return mapa
         except IOError:

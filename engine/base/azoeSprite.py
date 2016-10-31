@@ -3,9 +3,6 @@ from engine.misc import Resources
 
 
 class AzoeSprite(sprite.Sprite):
-    # mapX y mapY estan medidas en pixeles y son relativas al mapa
-    stageX = 0
-    stageY = 0
     tipo = ''
     nombre = ''  # Para diferenciar mobs del mismo tipo (enemy por ejemplo)
     solido = True  # si es solido, colisiona; si no, no.
@@ -14,6 +11,9 @@ class AzoeSprite(sprite.Sprite):
     data = None  # info importada de un json
     z = 0
     stage = None  # stage donde existe el mob
+
+    mapRect = None  # mapX y mapY
+    stageRect = None  # stageX y stageY
 
     IMAGEN_D = 'abajo'
     IMAGEN_U = 'arriba'
@@ -67,25 +67,23 @@ class AzoeSprite(sprite.Sprite):
         else:
             self.z = self.rect.bottom
 
-        self.mapRect = Rect(x, y, *self.rect.size)
-        self.stageX = x
-        self.stageY = y
+        self.mapRect = Rect(0, 0, *self.rect.size)
+        self.mapRect.center = x, y
+        self.stageRect = Rect(0, 0, *self.rect.size)
+        self.stageRect.center = x, y
         self.solido = True
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
-        self.mapRect.x += dx
-        self.mapRect.y += dy
-        self.stageX += dx
-        self.stageY += dy
+        self.mapRect.move_ip(dx, dy)
+        self.stageRect.move_ip(dx, dy)
         self.z += dy
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
-        self.stageX = x
-        self.stageY = y
+        self.stageRect.center = x, y
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:

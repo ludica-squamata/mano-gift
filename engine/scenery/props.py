@@ -79,10 +79,10 @@ class Movible(Escenografia):
 
     def mover(self, dx, dy):
         col_mapa = False
-        if self.stage.mapa.mask.overlap(self.mask, (self.mapX + dx, self.mapY)) is not None:
+        if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
             col_mapa = True
 
-        if self.stage.mapa.mask.overlap(self.mask, (self.mapX, self.mapY + dy)) is not None:
+        if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
             col_mapa = True
 
         if not col_mapa:

@@ -165,11 +165,25 @@ class Camara:
         b = cls.bgs_rect
         s = cls.rect
 
-        if any([b.x + dx > 1, b.right + dx < s.w - 2, f.x != s.centerx]):
-            # El tercer caso tiene un problema de centrado si f.x+dx != s.centerx
-            dx = 0
-        if any([b.y + dy > 2, b.bottom + dy < s.h - 2, f.y != s.centery]):
-            dy = 0
+        while abs(dx):
+            if any([b.x + dx > 1, b.right + dx < s.w - 2, f.centerx + dx != s.centerx]):
+                if dx < 0:
+                    dx += 1
+                else:
+                    dx -= 1
+            else:
+                break
+
+        while abs(dy):
+            if any([b.bottom + dy < s.h - 2, b.y + dy > 2, f.centery + dy != s.centery]):
+                # funciona, pero me gustaria encontrar una forma de reducir el valor
+                # sin tener que fijarme si es positivo o negativo.
+                if dy < 0:
+                    dy += 1
+                else:
+                    dy -= 1
+            else:
+                break
 
         cls.jump(dx, dy)
 

@@ -1,0 +1,29 @@
+{
+  "capa_background":{
+    "fondo":"maps/fondos/prueba.png",
+    "colisiones":"maps/colisiones/prueba.png"
+  },
+  "capa_ground":{
+    "props": {
+    },
+    "mobs": {
+        "enemies":{},
+        "npcs":{}
+    }
+  },
+  "capa_top":{
+    "props":{}
+  },
+  "entradas":{
+      "centro":[750,750]
+  },
+  "salidas":{
+  },
+  "refs":{
+  },
+  "ambiente":"exterior",
+  "amanece":[19,0],
+  "atardece":[17,0],
+  "anochece":[18,0],
+  "latitude":30
+}
