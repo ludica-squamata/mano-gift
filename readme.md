@@ -1,16 +1,16 @@
 ﻿# Features por año
 
 ## 2016 (al 27/6)
-- [Added support for Custom QuickCircularMenu](32d4f6304ab28c6933feaa8c34caf18156687f68)
-- [Main menu, Guardar partida, Cargar partida](2b26cfd2462ca137abdecbd91fabf1056b19edbc)
-- [Estructuras 3D](7fd7fb0a020d8c1792a6791b2f24bd4d12f983ee)
-- [Dos Keys para todos los comandos](73aaa104fb25f501e4b08f018e939b237ec87f7e)
-- [Dialogs con Head](8c83afb1d16c616a6c4746445069a5f37ad74a53)
-- [Menu Personaje](a5749a73b5db5040875ad3d579cc6bf40dca484f)
-- [Los Elementos de diálogo pueden lanzar eventos](e3e37a6a422975fe1efda15898c9eaf39a086f6f)
-- [Evento de Gameover](0d7c2cdbce50d403cce83042305b5256f7aecd71)
-- [Added Behaviour Trees](1265b1da2615699163e5a1a0f20201f330cc3ba9)
-- [Los props también pueden ser el foco de la camara](78d41b4406cdfde1ff83cec3e2abe2dfe1cdb32c)
+- [Added support for Custom QuickCircularMenu](32d4f6)
+- [Main menu, Guardar partida, Cargar partida](2b26cf)
+- [Estructuras 3D](7fd7fb)
+- [Dos Keys para todos los comandos](73aaa1)
+- [Dialogs con Head](8c83af)
+- [Menu Personaje](a5749a)
+- [Los Elementos de diálogo pueden lanzar eventos](e3e37a)
+- [Evento de Gameover](0d7c2c)
+- [Added Behaviour Trees](1265b1)
+- [Los props también pueden ser el foco de la camara](78d41b)
 
 ## 2015
 - Mundo Infinito
