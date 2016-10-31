@@ -63,21 +63,22 @@ class Modo:
     def toggle_mode(cls, event):
         nombre = event.data.get('nom', None)
         tipo = event.data.get('type', None)
-        if Ed.MODO == 'Aventura':
-            if nombre == 'menu':
-                Ed.MODO = 'Menu'
-                Ed.HERO.deregister()
-                EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
+        if tipo == 'tap':
+            if Ed.MODO == 'Aventura':
+                if nombre == 'menu':
+                    Ed.MODO = 'Menu'
+                    Ed.HERO.deregister()
+                    EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
 
-            elif nombre == 'contextual' and tipo == 'tap':
-                Ed.MODO = 'Dialogo'
-                Ed.HERO.deregister()
-                Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
-                Ed.DIALOG.show()
+                elif nombre == 'contextual':
+                    Ed.MODO = 'Dialogo'
+                    Ed.HERO.deregister()
+                    Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
+                    Ed.DIALOG.show()
 
-        elif Ed.MODO == 'Dialogo':
-            if nombre == 'contextual':
-                Ed.HERO.register()
+            elif Ed.MODO == 'Dialogo':
+                if nombre == 'contextual' and tipo == 'tap':
+                    Ed.HERO.register()
 
     @classmethod
     def pop_menu(cls, titulo=None):
@@ -99,6 +100,7 @@ class Modo:
             menu.reset()
 
         Ed.MODO = 'Menu'
+        EventDispatcher.trigger('Pause', 'Modos', {'value': True})
         Ed.onPause = True
         Ed.menu_actual = menu
         Ed.menu_actual.register()

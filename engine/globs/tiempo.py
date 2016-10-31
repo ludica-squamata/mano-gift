@@ -11,6 +11,7 @@ class Clock:
     _s = 0
     day_flag = False
     hour_flag = False
+    enabled = False
 
     def __init__(self, h=0, m=0, s=0):
         self._h = h
@@ -18,6 +19,11 @@ class Clock:
         self._s = s
         self.day_flag = False
         self.hour_flag = False
+
+        EventDispatcher.register(self.on_pause, 'Pause')
+
+    def on_pause(self, event):
+        self.enabled = not event.data['value']
 
     def __repr__(self):
         return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
@@ -83,9 +89,10 @@ class Clock:
             return TimeStamp(h, m, s)
 
     def update(self, dm=1):
-        self.day_flag = False
-        self.hour_flag = False
-        self.m += dm
+        if self.enabled:
+            self.day_flag = False
+            self.hour_flag = False
+            self.m += dm
 
 
 class TimeStamp:

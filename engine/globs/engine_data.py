@@ -58,6 +58,7 @@ class EngineData:
         cls.DIALOG = None
         # cls.menu_actual.deregister()  # no estoy seguro de que se pueda usar todas las veces.
         cls.onPause = False
+        EventDispatcher.trigger('Pause', 'Modos', {'value': False})
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
             cls.HERO.register()
