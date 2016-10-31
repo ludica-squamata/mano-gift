@@ -275,6 +275,10 @@ class Tiempo:
         return cls.dia, cls.clock.h, cls.clock.m
 
     @classmethod
+    def save_time(cls, event):
+        EventDispatcher.trigger(event.tipo + 'Data', 'Tiempo', {'tiempo': cls.get_time()})
+
+    @classmethod
     def update(cls, rate=0):
         cls.FPS.tick(rate)
 
@@ -290,3 +294,5 @@ class Tiempo:
     @classmethod
     def crear_noche(cls, tamanio):
         cls.noche = Noche(tamanio)
+
+EventDispatcher.register(Tiempo.save_time, 'Save')

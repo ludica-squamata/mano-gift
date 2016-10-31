@@ -1,3 +1,4 @@
+from engine.globs.eventDispatcher import EventDispatcher
 from pygame.sprite import LayeredUpdates
 from pygame import Rect, draw
 from .constantes import ANCHO, ALTO
@@ -62,6 +63,10 @@ class Camara:
     @classmethod
     def set_focus(cls, spr):
         cls.focus = spr
+
+    @classmethod
+    def save_focus(cls, event):
+        EventDispatcher.trigger(event.tipo + 'Data', 'Camara', {'focus': cls.focus.nombre})
 
     @classmethod
     def is_focus(cls, spr):
@@ -260,3 +265,6 @@ class Renderer:
         ret = cls.camara.draw(fondo)
         ret += cls.overlays.draw(fondo)
         return ret
+
+
+EventDispatcher.register(Camara.save_focus, 'Save')

@@ -22,6 +22,7 @@ class EngineData:
     scene_data = None
     setKey = False
     char_name = ''
+    save_data = {}
 
     @classmethod
     def setear_mapa(cls, nombre, entrada):
@@ -58,7 +59,7 @@ class EngineData:
         cls.DIALOG = None
         # cls.menu_actual.deregister()  # no estoy seguro de que se pueda usar todas las veces.
         cls.onPause = False
-        EventDispatcher.trigger('Pause', 'Modos', {'value': False})
+        EventDispatcher.trigger('Pause', 'EngineData', {'value': False})
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
             cls.HERO.register()
@@ -67,13 +68,6 @@ class EngineData:
     @classmethod
     def salvar(cls, event):
         data = Resources.abrir_json(SAVEFD + '/' + cls.char_name + '.json')
-        data.update({
-            'mapa': cls.MAPA_ACTUAL.nombre,
-            'link': cls.MAPA_ACTUAL.entrada,
-            'tiempo': list(Tiempo.get_time()),
-            'focus': Renderer.camara.focus.nombre
-            })
-
         data.update(event.data)
         Resources.guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
 
@@ -98,7 +92,14 @@ class EngineData:
         cls.MODO = 'Aventura'
         cls.HUD.show()
 
+    @classmethod
+    def compound_save_data(cls, event):
+        cls.save_data.update(event.data)
+        if not EventDispatcher.is_quequed('SaveDataFile'):
+            EventDispatcher.trigger('SaveDataFile', 'EngineData', cls.save_data)
+
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
 EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
-EventDispatcher.register(EngineData.salvar, "Save")
+EventDispatcher.register(EngineData.salvar, "SaveDataFile")
+EventDispatcher.register(EngineData.compound_save_data, "SaveData")

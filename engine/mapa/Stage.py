@@ -46,6 +46,7 @@ class Stage:
 
         EventDispatcher.register(self.anochecer, 'hora')
         EventDispatcher.register(self.del_interactive, 'DelItem', 'MobMuerto')
+        EventDispatcher.register(self.save_map, 'Save')
 
     def crear_cuadrantes(self):
         w = self.rect.w // 2
@@ -132,6 +133,9 @@ class Stage:
             self.del_property(obj.sombra)
         self.del_property(obj)
 
+    def save_map(self, event):
+        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'link': self.entrada})
+
     def actualizar_grilla(self):
         self.grilla.update()
         for spr in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
@@ -186,6 +190,7 @@ class ChunkMap(Sprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
+
     #
     # def ubicar(self, x, y):
     #     """Coloca al sprite en pantalla

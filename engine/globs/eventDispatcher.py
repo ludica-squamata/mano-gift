@@ -77,6 +77,13 @@ class EventDispatcher:
         for item in cls._cola:
             print(item)
 
+    @classmethod
+    def is_quequed(cls, event_name):
+        for event in cls._cola:
+            if event.tipo == event_name:
+                return True
+        return False
+
 
 class GiftEvent:
     """

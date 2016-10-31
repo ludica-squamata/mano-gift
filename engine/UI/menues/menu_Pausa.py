@@ -59,6 +59,7 @@ class MenuPausa(Menu):
 
     def cancelar(self):
         EngineData.acceso_menues.clear()
+        self.deregister()
         EngineData.end_dialog(self.layer)
 
     def new_menu(self):
