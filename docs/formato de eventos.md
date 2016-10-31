@@ -21,7 +21,7 @@ Los eventos que actualmente están en el engine son:
 
 - **NuevoJuego**: se dispara cuando se inicia un juego.
 - **CambiarMapa**: cuando héroe cambia de mapas, este evento le avisa al engine que cambie el mapa.
-- **hora: cada vez que el reloj llegue a una hora, se dispara este evento. Está vinculado al movimiento solar.
+- **hora**: cada vez que el reloj llegue a una hora, se dispara este evento. Está vinculado al movimiento solar.
 - **MovimientoSolar**: cambia las sombras de los sprites.
 - **DialogEvent**: cuando un fragmento de diálogo lance un evento, será de este tipo.
 - **MobHerido**: se dispara cuando un mob resulta herido. Actualiza el HUD si el mob es el héroe.
