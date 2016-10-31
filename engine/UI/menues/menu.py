@@ -28,7 +28,7 @@ class Menu(EventAware, Ventana):
         self.functions = {
             'tap': {
                 'accion': lambda: None,
-                'contextual': lambda: None,
+                'contextual': self.cancelar,
                 'arriba': lambda: None,
                 'abajo': lambda: None,
                 'izquierda': lambda: None,
