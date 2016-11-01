@@ -5,6 +5,8 @@
   },
   "capa_ground":{
     "props": {
+      "casa_cerrada":[[400, 400]],
+      "star":[[500,600]]
     },
     "mobs": {
         "enemies":{},
@@ -20,6 +22,7 @@
   "salidas":{
   },
   "refs":{
+    "arbol":"props/arbol_escalado.png"
   },
   "ambiente":"exterior",
   "amanece":[19,0],

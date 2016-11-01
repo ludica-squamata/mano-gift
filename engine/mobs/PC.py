@@ -22,8 +22,8 @@ class PC(EventAware, Parlante, Mob):
                 'derecha': lambda: self.cambiar_direccion('derecha', True),
             },
             'hold': {
-                'accion': lambda: self.sombra.fade(-10),
-                'contextual': lambda: self.sombra.fade(+10),
+                'accion': lambda: None,
+                'contextual': lambda: None,
                 'arriba': lambda: self.mover('arriba'),
                 'abajo': lambda: self.mover('abajo'),
                 'izquierda': lambda: self.mover('izquierda'),

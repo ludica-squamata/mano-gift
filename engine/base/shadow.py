@@ -13,7 +13,7 @@ class Sombra(AzoeSprite):
         self.spr = spr
         self.tipo = "sombra"
         self.nombre = "sombra de " + self.spr.nombre
-        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z + dz - 1)
+        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z, dz=dz - 1)
         self.mask = mascara
         self.alpha = 150
         self.dif_x = dfx
@@ -66,7 +66,7 @@ class ShadowSprite(AzoeSprite):
 
         super().__init__(*args, **kwargs)
         self.previousimage = self.image
-        EventDispatcher.register(self.update_luces,'MovimientoSolar')
+        EventDispatcher.register(self.update_luces, 'MovimientoSolar')
 
     def add_shadow(self, *args):
         Renderer.camara.remove_obj(self.sombra)
@@ -169,7 +169,7 @@ class ShadowSprite(AzoeSprite):
 
         if arg == 'SE':
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
-            for y in range(h-3):
+            for y in range(h - 3):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
                     if _mask.get_at((x, y)):
@@ -179,7 +179,7 @@ class ShadowSprite(AzoeSprite):
 
         if arg == 'SO':
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
-            for y in range(h-5):
+            for y in range(h - 5):
                 dd = floor(d * (y / h))
                 for x in range(w):
                     if _mask.get_at((x, y)):
@@ -289,14 +289,14 @@ class ShadowSprite(AzoeSprite):
 
             if any(self._sombras):
                 self.add_shadow(*self.crear_sombras())
-    
+
     def update_luces(self, event):
         # self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
         p = event.data['light']
         self._luces[p] = 1
         if self.proyectaSombra:
             self.update_sombra()
-        
+
     def image_has_chaged(self):
         if self.image != self.previousimage and self.sombra is not None:
             self.add_shadow(*self.crear_sombras())

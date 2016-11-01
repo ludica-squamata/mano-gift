@@ -8,7 +8,7 @@ from .items import *
 class Escenografia(ShadowSprite, EventListener):
     accion = None
 
-    def __init__(self, nombre, x, y, data=None, imagen=None):
+    def __init__(self, nombre, x, y, z=0, data=None, imagen=None):
         """
         :param nombre:
         :param imagen:
@@ -27,7 +27,7 @@ class Escenografia(ShadowSprite, EventListener):
         self.data = data
         if imagen is None:
             imagen = data.get('image')
-        super().__init__(imagen=imagen, x=x, y=y)
+        super().__init__(imagen=imagen, x=x, y=y, dz=z)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
@@ -44,9 +44,9 @@ class Escenografia(ShadowSprite, EventListener):
 
 
 class Agarrable(Escenografia):
-    def __init__(self, nombre, x, y, data):
+    def __init__(self, nombre, x, y, z, data):
         data.setdefault('proyecta_sombra', False)
-        super().__init__(nombre, x, y, data)
+        super().__init__(nombre, x, y, z, data)
         self.subtipo = data['subtipo']
         self.accion = 'agarrar'
         ItemGroup[self.nombre] = self
@@ -68,12 +68,12 @@ class Agarrable(Escenografia):
 
 
 class Movible(Escenografia):
-    def __init__(self, nombre, x, y, data):
+    def __init__(self, nombre, x, y, z, data):
         p = data.get('propiedades', ['solido'])
         if 'solido' not in p:
             p.append('solido')
             data['propiedades'] = p
-        super().__init__(nombre, x, y, data)
+        super().__init__(nombre, x, y, z, data)
         self.accion = 'mover'
         ItemGroup[self.nombre] = self
 
@@ -93,8 +93,8 @@ class Movible(Escenografia):
 
 
 class Trepable(Escenografia):
-    def __init__(self, nombre, x, y, data):
-        super().__init__(nombre, x, y, data)
+    def __init__(self, nombre, x, y, z, data):
+        super().__init__(nombre, x, y, z, data)
         self.accion = 'trepar'
 
 
@@ -103,8 +103,8 @@ class Operable(Escenografia):
     estado_actual = 0
     enabled = True
 
-    def __init__(self, nombre, x, y, data):
-        super().__init__(nombre, x, y, data)
+    def __init__(self, nombre, x, y, z, data):
+        super().__init__(nombre, x, y, z, data)
         self.estados = {}
         self.accion = 'operar'
         self.enabled = self.data.get('enabled', True)
@@ -139,8 +139,8 @@ class Operable(Escenografia):
 
 
 class Destruible(Escenografia):
-    def __init__(self, nombre, x, y, data):
-        super().__init__(nombre, x, y, data)
+    def __init__(self, nombre, x, y, z, data):
+        super().__init__(nombre, x, y, z, data)
         self.accion = 'romper'
 
 
@@ -170,7 +170,7 @@ class Estructura3D:
                 if propdata and 'cara' not in propdata:
                     propdata.update({'cara': face})
 
-                prop = new_prop(nombre, dx + x, dy + y, img=imagen, data=propdata)
+                prop = new_prop(nombre, dx + x, dy + y, z=z, img=imagen, data=propdata)
                 props.append(prop)
 
         return props

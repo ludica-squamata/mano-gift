@@ -29,7 +29,7 @@ class AzoeSprite(sprite.Sprite):
                    'ninguna': [0, 0]}
     direccion = 'abajo'
 
-    def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0):
+    def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0):
         if imagen is None and rect is None:
             raise TypeError('_giftSprite debe tener bien una imagen, bien un rect')
 
@@ -54,24 +54,23 @@ class AzoeSprite(sprite.Sprite):
 
         if alpha:
             self.mask = alpha
+        elif self.image is not None:
+            self.mask = mask.from_surface(self.image)
         else:
-            if self.image is not None:
-                self.mask = mask.from_surface(self.image)
-            else:
-                self.mask = mask.Mask(self.rect.size)
-
-        if z:
-            self.z = z
-        elif center:
-            self.z = y + self.rect.h
-        else:
-            self.z = self.rect.bottom
+            self.mask = mask.Mask(self.rect.size)
 
         self.mapRect = Rect(0, 0, *self.rect.size)
         self.mapRect.center = x, y
         self.stageRect = Rect(0, 0, *self.rect.size)
         self.stageRect.center = x, y
-        self.solido = True
+
+        if z:
+            self.z = z
+        elif center:
+            self.z = self.mapRect.y + self.rect.h
+        else:
+            self.z = self.mapRect.bottom
+        self.z += dz
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""

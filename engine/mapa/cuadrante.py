@@ -8,6 +8,7 @@ class Cuadrante:
     def __init__(self, x, y, w, h):
         super().__init__()
         self.idx = x * 2 + y
+        self.nombre = 'Cuadrante #'+str(self.idx)
         self.itemgroup = Group()
         self.mobgroup = Group()
         self.rect = Rect(w * x, h * y, w, h)
@@ -50,3 +51,6 @@ class Cuadrante:
 
     def update(self):
         self.update_mobs()
+
+    def __repr__(self):
+        return self.nombre
