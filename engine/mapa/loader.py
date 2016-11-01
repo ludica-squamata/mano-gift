@@ -8,25 +8,44 @@ from .salida import Salida
 
 
 class Loader:
-    STAGE = None
 
     @classmethod
-    def set_stage(cls, stage):
-        cls.STAGE = stage
+    def load_everything(cls, alldata, x, y):
+        loaded = []
+        for mob in cls.load_hero(x, y) + cls.load_mobs(alldata):
+            loaded.append((mob, GRUPO_MOBS))
+        for prop in cls.load_props(alldata):
+            loaded.append((prop, GRUPO_ITEMS))
+        return loaded
 
     @classmethod
-    def load_everything(cls, entrada):
-        cls.cargar_hero(entrada)
-        cls.cargar_props()
-        cls.cargar_mobs()
-        cls.cargar_salidas()
+    def load_something(cls, alldata, x, y, requested):
+        """
+        :type requested: list
+        :type alldata: dict
+        :type x: int
+        :type y: int
+        """
+        loaded = []
+        if 'PC' in requested:
+            loaded.append((cls.load_hero(x, y), GRUPO_MOBS))
 
-    @classmethod
-    def cargar_props(cls, ):
-        imgs = cls.STAGE.data['refs']
-        """:type imgs: dict"""
-        pos = cls.STAGE.data['capa_ground']['props']
+        if 'NPC' in requested:
+            for mob in cls.load_mobs(alldata):
+                loaded.append((mob, GRUPO_MOBS))
 
+        if 'Prop' in requested:
+            for prop in cls.load_props(alldata):
+                loaded.append((prop, GRUPO_ITEMS))
+
+        return loaded
+
+    @staticmethod
+    def load_props(alldata):
+        imgs = alldata['refs']
+        pos = alldata['props']
+
+        loaded_props = []
         for ref in pos:
             try:
                 data = Rs.abrir_json(Md.items + ref + '.json')
@@ -43,40 +62,50 @@ class Loader:
 
                 if type(prop) is list:
                     for p in prop:
-                        cls.STAGE.add_property(p, GRUPO_ITEMS, is_interactive)
+                        loaded_props.append((p, is_interactive))
                 else:
-                    cls.STAGE.add_property(prop, GRUPO_ITEMS, is_interactive)
+                    loaded_props.append((prop, is_interactive))
 
-    @classmethod
-    def cargar_mobs(cls, capa='capa_ground'):
-        for key in cls.STAGE.data[capa]['mobs']:
-            pos = cls.STAGE.data[capa]['mobs'][key]
+        return loaded_props
+
+    @staticmethod
+    def load_mobs(alldata):
+        loaded_mobs = []
+        for key in alldata['mobs']:
+            pos = alldata['mobs'][key]
             for ref in pos:
                 data = Rs.abrir_json(Md.mobs + ref + '.json')
                 for x, y in pos[ref]:
                     mob = NPC(ref, x, y, data)
-                    cls.STAGE.add_property(mob, GRUPO_MOBS)
+                    loaded_mobs.append((mob, GRUPO_MOBS))
 
-    @classmethod
-    def cargar_hero(cls, entrada):
-        x, y = cls.STAGE.data['entradas'][entrada]
+        return loaded_mobs
+
+    @staticmethod
+    def load_hero(x, y):
         try:
             pc = MobGroup['heroe']
             Ed.HERO = pc
             Ed.HERO.ubicar(x, y)
-            Ed.HERO.mapX = x
-            Ed.HERO.mapY = y
-            Ed.HERO.z = y + Ed.HERO.rect.h
+            Ed.HERO.mapRect.center = x, y
+            Ed.HERO.z = Ed.HERO.mapRect.y + Ed.HERO.rect.h
             
         except (IndexError, KeyError, AttributeError):
             Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
 
-        if Ed.HERO not in cls.STAGE.properties:
-            Loader.STAGE.add_property(Ed.HERO, GRUPO_MOBS)
+        return [Ed.HERO]
 
-    @classmethod
-    def cargar_salidas(cls):
-        salidas = cls.STAGE.data['salidas']
-        for salida in salidas:
-            sld = Salida(salida, salidas[salida])
-            cls.STAGE.add_property(sld, GRUPO_SALIDAS)
+    @staticmethod
+    def cargar_salidas(alldata):
+        salidas = []
+        for datos in alldata['salidas']:
+            nombre = datos['nombre']
+            stage = datos['nombre']
+            rect = datos['rect']
+            chunk = datos['chunk']
+            entrada = datos['entrada']
+            direcciones = datos['direcciones']
+
+            salidas.append(Salida(nombre, stage, rect, chunk, entrada, direcciones))
+
+        return salidas

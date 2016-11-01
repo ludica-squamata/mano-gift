@@ -9,23 +9,23 @@ import sys
 class Salida:
     tipo = 'Salida'
     nombre = ''
-    dest = ''  # string, mapa de destino.
+    chunk = ''  # string, mapa de destino.
     link = ''  # string, nombre de la entrada en dest con la cual conecta
     mask = None
     sprite = None
     solido = False
 
-    def __init__(self, nombre, data):
+    def __init__(self, nombre, stage, rect, chunk, entrada, direcciones):
         self.nombre = self.tipo + '.' + nombre
-        x, y, w, h = data['rect']
-        self.mapRect = Rect(x, y, w, h)
-        self.dest = data['dest']
-        self.link = data['link']  # string, nombre de la entrada en dest con la cual conecta
-        self.direcciones = data.get('direcciones', ['arriba', 'abajo', 'izquierda', 'derecha'])
-        self.mask = Mask((w, h))
+        self.mapRect = Rect(*rect)
+        self.chunk = chunk
+        self.target_stage = stage
+        self.link = entrada  # string, nombre de la entrada en dest con la cual conecta
+        self.direcciones = direcciones
+        self.mask = Mask(self.mapRect.size)
         self.mask.fill()
         if 'pydevd' in sys.modules:
-            self.sprite = SpriteSalida(self.nombre, x, y, w, h)
+            self.sprite = SpriteSalida(self.nombre, self.mapRect)
             Renderer.camara.add_real(self.sprite)
 
     def update(self):
@@ -34,7 +34,7 @@ class Salida:
             dx *= mob.velocidad
             dy *= mob.velocidad
             if mob.colisiona(self, dx, dy) and mob.direccion in self.direcciones:
-                EventDispatcher.trigger('CambiarMapa', 'Salida', {"mob": mob, 'dest': self.dest, 'link': self.link})
+                EventDispatcher.trigger('CambiarMapa', 'Salida', {"mob": mob, 'dest': self.chunk, 'link': self.link})
 
     def __repr__(self):
         return self.nombre

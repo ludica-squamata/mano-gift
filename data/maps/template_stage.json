@@ -6,10 +6,12 @@
       }
     },
     "salidas":[{
-      "chunk":"",
+      "stage":"",
+      "nombre":"",
       "rect":[0,0,0,0],
-      "dest":"",
-      "link":""}
+      "chunk":"",
+      "entrada":"",
+      "direcciones":[]}
     ],
     "ambiente":"",
     "amanece":[0, 0],

@@ -4,7 +4,7 @@
   "componentes":{
     "frente":{
       "casa":[[0,0,0]],
-      "puerta":[[69,133,1]]
+      "puerta":[[14,66,1]]
     },
     "lado":{},
     "reverso":{}

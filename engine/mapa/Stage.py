@@ -1,13 +1,13 @@
-from engine.globs import Tiempo, TimeStamp, ModData as Md, GRUPO_SALIDAS, GRUPO_ITEMS, COLOR_COLISION
+from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.misc import Resources as Rs
+from engine.misc import Resources
 from .LightSource import DayLight  # SpotLight
 from .loader import Loader
 from .grilla import Grilla
 from .cuadrante import Cuadrante
 from pygame.sprite import Sprite, LayeredUpdates
-from pygame import mask, Rect, Surface
+from pygame import mask, Rect
 
 
 class Stage:
@@ -17,7 +17,6 @@ class Stage:
     chunks = None
     mapa = None
     data = {}
-    quest = None
     offset_x = 320  # camara.rect.centerx
     offset_y = 240  # camara.rect.centery
     amanece = None
@@ -26,23 +25,29 @@ class Stage:
 
     def __init__(self, nombre, entrada):
         self.chunks = LayeredUpdates()
+        self.properties = LayeredUpdates()
         self.interactives.clear()
         self.nombre = nombre
-        self.data = Rs.abrir_json(Md.mapas + nombre + '.json')
-        dx, dy = self.data['entradas'][entrada]
-        self.offset_x -= dx
-        self.offset_y -= dy
-        self.chunks.add(ChunkMap(self, self.data, self.nombre, self.offset_x, self.offset_y))
+        self.data = Resources.abrir_json(ModData.mapas + nombre+'.stage.json')
+        dx, dy = self.data['entradas'][entrada]['pos']
+        chunk_name = self.data['entradas'][entrada]['chunk']
+        offx = self.offset_x - dx
+        offy = self.offset_y - dy
+        if chunk_name in self.data.get('chunks', {}):
+            singleton = self.data['chunks'][chunk_name]
+            chunk = ChunkMap(self, chunk_name, offx, offy, data=singleton)
+        else:
+            chunk = ChunkMap(self, chunk_name, offx, offy)
+
+        self.chunks.add(chunk)
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.crear_cuadrantes()
-        self.grilla = Grilla(self.mapa.mask, 32)
-        self.properties = LayeredUpdates()
-        self.salidas = []
-        self.entrada = entrada
         self.cargar_timestamps()
-        Loader.set_stage(self)
-        Loader.load_everything(entrada)
+        self.grilla = Grilla(self.mapa.mask, 32)
+
+        self.entrada = entrada
+        self.salidas = Loader.cargar_salidas(self.data)
 
         EventDispatcher.register(self.anochecer, 'hora')
         EventDispatcher.register(self.del_interactive, 'DelItem', 'MobMuerto')
@@ -87,13 +92,13 @@ class Stage:
                 if quadrant.contains(obj):
                     quadrant.add(obj)
 
-    def add_property(self, obj, _layer, add_interactive=False):
-        if _layer == GRUPO_SALIDAS:
-            self.salidas.append(obj)
-        else:
-            self.properties.add(obj, layer=_layer)
-            if add_interactive:
-                self.interactives.append(obj)
+    def add_property(self, obj, _layer):
+        add_interactive = False
+        if type(obj) is tuple:
+            obj, add_interactive = obj
+        self.properties.add(obj, layer=_layer)
+        if add_interactive:
+            self.interactives.append(obj)
 
     def del_property(self, obj):
         if obj in self.properties:
@@ -155,38 +160,30 @@ class Stage:
 
 
 class ChunkMap(Sprite):
-    tipo = 'mapa'
+    tipo = 'chunk'
     limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
 
-    def __init__(self, stage, data, nombre, off_x, off_y):
+    def __init__(self, stage, nombre, off_x, off_y, cargar_todo=True, data=False):
         super().__init__()
         self.limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
         self.stage = stage
         self.nombre = nombre
 
-        imagen = Rs.cargar_imagen(data['capa_background']['fondo'])
-        colisiones = Rs.cargar_imagen(data['capa_background']['colisiones'])
+        if not data:
+            data = Resources.abrir_json(ModData.mapas + self.nombre + '.' + self.tipo + '.json')
 
-        w, h = imagen.get_size()
-        if w < 800 or h < 800:
-            img = Surface((800, 800))
-            col = img.copy()
-            col.fill(COLOR_COLISION)
-
-            _rect = img.get_rect()
-            topleft = imagen.get_rect(center=_rect.center)
-
-            img.blit(imagen, topleft)
-            col.blit(colisiones, topleft)
-        else:
-            img = imagen
-            col = colisiones
-
-        self.image = img
-        self.mask = mask.from_threshold(col, COLOR_COLISION, (1, 1, 1, 255))
-        self.rect = img.get_rect(topleft=(off_x, off_y))
+        colisiones = Resources.cargar_imagen(data['colisiones'])
+        self.image = Resources.cargar_imagen(data['fondo'])
+        self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
+        self.rect = self.image.get_rect(topleft=(off_x, off_y))
 
         self.cargar_limites(data.get('limites', self.limites))
+
+        if cargar_todo:
+            dx = -off_x+self.stage.offset_x
+            dy = -off_y+self.stage.offset_y
+            for item, grupo in Loader.load_everything(data, dx, dy):
+                self.stage.add_property(item, grupo)
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
@@ -233,31 +230,22 @@ class ChunkMap(Sprite):
 
     def cargar_mapa_adyacente(self, ady):
 
-        nmbr = self.limites[ady]
+        dx, dy = self._get_newmap_pos(ady)
 
-        try:
-            data = Rs.abrir_json(Md.mapas + nmbr + '.json')
+        mapa = ChunkMap(self.stage, self.limites[ady], dx, dy, cargar_todo=False)
 
-            dx, dy = self._get_newmap_pos(ady)
+        self.limites[ady] = mapa
+        self.stage.chunks.add(mapa)
 
-            mapa = ChunkMap(self.stage, data, nmbr, dx, dy)
+        if ady == 'izq' or ady == 'der':
+            self.stage.rect.inflate_ip(mapa.rect.w, 0)
+            if ady == 'izq':
+                for spr in self.stage.properties:
+                    spr.stageRect.x += mapa.rect.w
+        elif ady == 'sup' or ady == 'inf':
+            self.stage.rect.inflate_ip(0, mapa.rect.h)
+            if ady == 'sup':
+                for spr in self.stage.properties:
+                    spr.stageRect.y += mapa.rect.h
 
-            self.limites[ady] = mapa
-            self.stage.chunks.add(mapa)
-
-            if ady == 'izq' or ady == 'der':
-                self.stage.rect.inflate_ip(mapa.rect.w, 0)
-                if ady == 'izq':
-                    for spr in self.stage.properties:
-                        spr.stageRect.x += mapa.rect.w
-            elif ady == 'sup' or ady == 'inf':
-                self.stage.rect.inflate_ip(0, mapa.rect.h)
-                if ady == 'sup':
-                    for spr in self.stage.properties:
-                        spr.stageRect.y += mapa.rect.h
-
-            return mapa
-        except IOError:
-            pass
-
-        return False
+        return mapa

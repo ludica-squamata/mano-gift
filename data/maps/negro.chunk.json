@@ -1,0 +1,14 @@
+{
+  "fondo":"maps/fondos/negro.png",
+  "colisiones":"maps/colisiones/800.png",
+  "props": {},
+  "mobs": {},
+  "limites":{
+    "izq":"blanco",
+    "der":"blanco",
+    "inf":"blanco",
+    "sup":"blanco"
+  },
+  "refs":{}
+}
+

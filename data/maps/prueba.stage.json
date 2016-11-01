@@ -1,0 +1,32 @@
+{
+  "entradas": {
+    "centro": {
+      "chunk":"single",
+      "pos": [750,750]
+    }
+  },
+  "salidas":[
+  ],
+  "ambiente":"exterior",
+  "amanece":[19,0],
+  "atardece":[17,0],
+  "anochece":[18,0],
+  "latitude":30,
+
+  "chunks":{
+    "single":{
+      "fondo":"maps/fondos/prueba.png",
+      "colisiones":"maps/colisiones/prueba.png",
+      "props": {
+        "casa_cerrada":[[400, 400]],
+        "star":[[500,600]]
+      },
+      "mobs": {},
+      "limites":{
+      },
+      "refs":{
+        "arbol":"props/arbol_escalado.png"
+      }
+    }
+  }
+}

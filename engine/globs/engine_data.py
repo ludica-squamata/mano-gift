@@ -33,8 +33,7 @@ class EngineData:
         if nombre not in cls.mapas:
             cls.mapas[nombre] = Stage(nombre, entrada)
         else:
-            Loader.set_stage(cls.mapas[nombre])
-            Loader.cargar_hero(entrada)
+            Loader.load_hero(entrada)
         cls.MAPA_ACTUAL = cls.mapas[nombre]
         cls.MAPA_ACTUAL.register_at_renderer()
         cls.HUD = HUD()
