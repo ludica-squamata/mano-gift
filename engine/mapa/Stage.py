@@ -161,11 +161,11 @@ class Stage:
 
 class ChunkMap(Sprite):
     tipo = 'chunk'
-    limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
+    limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
 
     def __init__(self, stage, nombre, off_x, off_y, cargar_todo=True, data=False):
         super().__init__()
-        self.limites = {'sup': '', 'inf': '', 'izq': '', 'der': ''}
+        self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
         self.stage = stage
         self.nombre = nombre
 
@@ -208,8 +208,9 @@ class ChunkMap(Sprite):
                 self.limites[key.lower()] = mapa[0]
 
     def checkear_adyacencia(self, clave):
-        if type(self.limites.get(clave, None)) is not ChunkMap:
+        if type(self.limites.get(clave, None)) is str:
             return self.cargar_mapa_adyacente(clave)
+        return False
 
     def _get_newmap_pos(self, ady):
         w, h = self.rect.size
