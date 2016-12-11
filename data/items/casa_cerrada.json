@@ -2,12 +2,13 @@
   "tipo":"estructura3D",
   "nombre":"casa_cerrada",
   "componentes":{
-    "frente":{
+    "front":{
       "casa_cerrada":[[0,0,0]],
       "puerta_cerrada":[[14,66,1]]
     },
-    "lado":{},
-    "reverso":{}
+    "left":{},
+    "right":{},
+    "back":{}
   },
   "referencias":{
     "casa_cerrada":"props/casa.png",
@@ -34,6 +35,7 @@
       "eventos":{"button_activated": "door_activate"}
     }
   },
-  "cara":"frente",
+  "cara":"front",
+  "width": 128, "height":164,
   "proyecta_sombra":true
 }

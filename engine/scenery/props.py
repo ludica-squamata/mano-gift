@@ -145,12 +145,22 @@ class Destruible(Escenografia):
 
 
 class Estructura3D:
+    faces = {}
+    face = 'front'
+    _chopped = False
+
     def __init__(self, nombre, x, y, data):
         self.nombre = nombre
-        self.props = self.build_face(data, x, y, data.get('cara', 'frente'))
+        self.faces = {'front': None, 'left': None, 'right': None, 'back': None}
+        self.face = data.get('cara', 'front')
 
-    @staticmethod
-    def build_face(data, dx, dy, face):
+        for face in data['componentes']:
+            if len(data['componentes'][face]):
+                self.faces[face] = self.build_face(data, x, y, face)
+
+        self.props = self.faces[self.face]
+
+    def build_face(self, data, dx, dy, face):
         from engine.scenery import new_prop
         props = []
         for nombre in data['componentes'][face]:
@@ -165,7 +175,8 @@ class Estructura3D:
                     propdata = Resources.abrir_json(ruta)
 
                 elif ruta.endswith('.png'):
-                    imagen = ruta
+                    w, h = data['width'], data['height']
+                    imagen = self.chop_faces(ruta, w=w, h=h)[face]
 
                 if propdata and 'cara' not in propdata:
                     propdata.update({'cara': face})
@@ -174,3 +185,17 @@ class Estructura3D:
                 props.append(prop)
 
         return props
+
+    def chop_faces(self, ruta_img, w, h):
+        if not self._chopped:
+            spritesheet = Resources.split_spritesheet(ruta_img, w=w, h=h)
+            d = {}
+            if len(spritesheet) > 1:
+                for idx, face in [[0, "front"], [1, "left"], [2, "right"], [3, "back"]]:
+                    d[face] = spritesheet[idx]
+            else:
+                d['front'] = spritesheet[0]
+            self._chopped = d
+            return d
+        else:
+            return self._chopped

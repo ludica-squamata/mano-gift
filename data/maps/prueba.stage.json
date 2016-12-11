@@ -18,14 +18,15 @@
       "fondo":"maps/fondos/prueba.png",
       "colisiones":"maps/colisiones/prueba.png",
       "props": {
-        "casa_cerrada":[[400, 400]],
-        "star":[[500,600]]
+        "star":[[500,600]],
+        "casa_lados":[[400, 400]]
       },
       "mobs": {},
       "limites":{
       },
       "refs":{
-        "arbol":"props/arbol_escalado.png"
+        "arbol":"props/arbol_escalado.png",
+        "casa_lados":"items/casa_lados.json"
       }
     }
   }
