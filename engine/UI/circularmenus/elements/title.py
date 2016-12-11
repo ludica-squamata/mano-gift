@@ -18,10 +18,10 @@ class Title(Sprite, Estilo):
         self.image = Surface((w + 6, h + 2))
         self.image.fill(gris, (1, 1, w + 4, h))
         self.image.blit(self.fuente_Ib.render(nombre, 1, negro, gris), (2, 1))
-        self.rect = self.image.get_rect(center=(self.parent.rect.centerx, self.parent.rect.bottom + 15))
+        self.rect = self.image.get_rect()
 
     def center(self, rect):
-        self.rect.center = (rect.centerx, rect.bottom + 15)
+        self.rect.center = (rect.centerx, 210)
 
     def update(self, *args):
         self.center(self.parent.rect)

@@ -10,25 +10,12 @@ class InventoryElement(LetterElement):
 
     def __init__(self, parent, item):
 
-        if type(item) is dict:
-            nombre = item['name']
-            icono = item['icon']
-            cascada = item.get('csc')
-            self.item = None
-        else:
-            nombre = item.nombre
-            icono = item.image
-            cascada = None
-            self.item = item
+        self.item = item
 
-        super().__init__(parent, nombre)
+        super().__init__(parent, self.item.nombre)
 
-        if type(icono) is str:
-            self.img_uns = self._crear_icono_texto(icono, 21, 21)
-            self.img_sel = self._crear_icono_texto(icono, 33, 33)
-        else:
-            self.img_uns = self._crear_icono_image(21, 21)
-            self.img_sel = self._crear_icono_image(33, 33)
+        self.img_uns = self._crear_icono_image(21, 21)
+        self.img_sel = self._crear_icono_image(33, 33)
 
         self.rect_uns = self.img_uns.get_rect()
         self.rect_sel = self.img_sel.get_rect()
@@ -40,15 +27,9 @@ class InventoryElement(LetterElement):
             self.image = self.img_uns
             self.rect = self.rect_uns
 
-        self.title = Title(self, nombre)
+        self.title = Title(self, self.item.nombre)
         if self.item is not None:
             self.description = DescriptiveArea(self, item)
-
-        if cascada is not None:
-            for j in range(len(cascada)):
-                obj = InventoryElement(self.parent, cascada[j])
-                obj.idx = j
-                self.cascada.append(obj)
 
     def _crear_icono_image(self, w, h):
         image, _rect = self._crear_base(w, h)
