@@ -23,6 +23,7 @@ class EngineData:
     setKey = False
     char_name = ''
     save_data = {}
+    current_view = 'north'
 
     @classmethod
     def setear_mapa(cls, nombre, entrada):
@@ -97,8 +98,13 @@ class EngineData:
         if not EventDispatcher.is_quequed('SaveDataFile'):
             EventDispatcher.trigger('SaveDataFile', 'EngineData', cls.save_data)
 
+    @classmethod
+    def rotarte_view(cls, event):
+        cls.current_view = event.data['new_view']
+
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
 EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
 EventDispatcher.register(EngineData.salvar, "SaveDataFile")
 EventDispatcher.register(EngineData.compound_save_data, "SaveData")
+EventDispatcher.register(EngineData.rotarte_view, 'Rotar_Todo')

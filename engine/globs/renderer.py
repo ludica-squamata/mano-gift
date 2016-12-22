@@ -15,6 +15,9 @@ class Camara:
     x, y = 0, 0
     w, h = ANCHO, ALTO
     rect = Rect(x, y, w, h)
+    compass_CW = ['north', 'east', 'south', 'west']
+    compass_CCW = ['north', 'west', 'south', 'east']
+    view_name = 'north'
 
     @classmethod
     def set_background(cls, spr):
@@ -81,6 +84,25 @@ class Camara:
         cls.visible.empty()
         cls.bgs.empty()
         cls.bg = None
+
+    @classmethod
+    def rotate_view(cls, event):
+
+        new_view = event.data['view']
+        cw = cls.compass_CW.index(new_view)
+        ccw = cls.compass_CCW.index(new_view)
+
+        if cw < ccw:
+            angle = -cw
+        else:
+            angle = ccw
+
+        if cls.view_name != new_view:
+            cls.view_name = new_view
+            cls.compass_CW = [cls.compass_CW[cw]] + cls.compass_CW[cw + 1:] + cls.compass_CW[:cw]
+            cls.compass_CCW = [cls.compass_CCW[ccw]] + cls.compass_CCW[ccw + 1:] + cls.compass_CCW[:ccw]
+
+        EventDispatcher.trigger('Rotar_Todo', 'Camara', {'new_view': new_view, 'view': cw, 'angle': angle * 90})
 
     @classmethod
     def detectar_mapas_adyacentes(cls):
@@ -171,7 +193,7 @@ class Camara:
         s = cls.rect
 
         while abs(dx):
-            if any([b.x + dx > 1, b.right + dx < s.w - 2, f.centerx + dx != s.centerx]):
+            if b.x + dx > 1 or b.right + dx < s.w - 2:# or f.centerx + dx != s.centerx:
                 if dx < 0:
                     dx += 1
                 else:
@@ -180,7 +202,7 @@ class Camara:
                 break
 
         while abs(dy):
-            if any([b.bottom + dy < s.h - 2, b.y + dy > 2, f.centery + dy != s.centery]):
+            if b.bottom + dy < s.h - 2 or b.y + dy > 2:# or f.centery + dy != s.centery:
                 # funciona, pero me gustaria encontrar una forma de reducir el valor
                 # sin tener que fijarme si es positivo o negativo.
                 if dy < 0:
@@ -268,3 +290,4 @@ class Renderer:
 
 
 EventDispatcher.register(Camara.save_focus, 'Save')
+EventDispatcher.register(Camara.rotate_view, 'Rotar')

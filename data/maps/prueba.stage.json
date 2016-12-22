@@ -1,8 +1,16 @@
 {
   "entradas": {
-    "centro": {
+    "bottomright": {
       "chunk":"single",
       "pos": [750,750]
+    },
+    "topleft":{
+      "chunk":"single",
+      "pos": [32,32]
+    },
+    "centre":{
+      "chunk":"single",
+      "pos":[400,400]
     }
   },
   "salidas":[
@@ -18,8 +26,8 @@
       "fondo":"maps/fondos/prueba.png",
       "colisiones":"maps/colisiones/prueba.png",
       "props": {
-        "star":[[500,600]],
-        "casa_lados":[[400, 400]]
+
+
       },
       "mobs": {},
       "limites":{

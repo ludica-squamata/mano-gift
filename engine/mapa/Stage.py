@@ -7,7 +7,7 @@ from .loader import Loader
 from .grilla import Grilla
 from .cuadrante import Cuadrante
 from pygame.sprite import Sprite, LayeredUpdates
-from pygame import mask, Rect
+from pygame import mask, Rect, transform
 
 
 class Stage:
@@ -28,7 +28,7 @@ class Stage:
         self.properties = LayeredUpdates()
         self.interactives.clear()
         self.nombre = nombre
-        self.data = Resources.abrir_json(ModData.mapas + nombre+'.stage.json')
+        self.data = Resources.abrir_json(ModData.mapas + nombre + '.stage.json')
         dx, dy = self.data['entradas'][entrada]['pos']
         chunk_name = self.data['entradas'][entrada]['chunk']
         offx = self.offset_x - dx
@@ -52,6 +52,7 @@ class Stage:
         EventDispatcher.register(self.anochecer, 'hora')
         EventDispatcher.register(self.del_interactive, 'DelItem', 'MobMuerto')
         EventDispatcher.register(self.save_map, 'Save')
+        EventDispatcher.register(self.rotate_map, 'Rotar_Todo')
 
     def crear_cuadrantes(self):
         w = self.rect.w // 2
@@ -71,6 +72,9 @@ class Stage:
             ''':type obj: _giftSprite'''
             if obj.stage is not self:
                 obj.stage = self
+                obj.bottom = self.rect.h - obj.top
+                obj.right = self.rect.w - obj.left
+
             obj.sombra = None
             obj._prevLuces = None
 
@@ -141,6 +145,30 @@ class Stage:
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'link': self.entrada})
 
+    def rotate_map(self, event):
+        angle = event.data['angle']
+        view = event.data['new_view']
+        x, y = 0, 0
+
+        for mapa in self.chunks:
+            mapa.rotate(angle)
+
+        for obj in self.properties:
+            if view == 'north':
+                x = obj.left
+                y = obj.top
+            elif view == 'east':
+                x = obj.right
+                y = obj.top
+            elif view == 'south':
+                x = obj.right
+                y = obj.bottom
+            elif view == 'west':
+                x = obj.left
+                y = obj.bottom
+
+        EventDispatcher.trigger('Rotar_mobs', 'Stage', {'x': x, 'y': y})
+
     def actualizar_grilla(self):
         self.grilla.update()
         for spr in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
@@ -180,22 +208,10 @@ class ChunkMap(Sprite):
         self.cargar_limites(data.get('limites', self.limites))
 
         if cargar_todo:
-            dx = -off_x+self.stage.offset_x
-            dy = -off_y+self.stage.offset_y
+            dx = -off_x + self.stage.offset_x
+            dy = -off_y + self.stage.offset_y
             for item, grupo in Loader.load_everything(data, dx, dy):
                 self.stage.add_property(item, grupo)
-
-    def __repr__(self):
-        return "ChunkMap " + self.nombre
-
-    #
-    # def ubicar(self, x, y):
-    #     """Coloca al sprite en pantalla
-    #     :param y: int
-    #     :param x: int
-    #     """
-    #     self.rect.x = x
-    #     self.rect.y = y
 
     def cargar_limites(self, limites):
 
@@ -250,3 +266,10 @@ class ChunkMap(Sprite):
                     spr.stageRect.y += mapa.rect.h
 
         return mapa
+
+    def rotate(self, angle):
+        self.image = transform.rotate(self.image, angle)
+        # falta rotar la posición de los sprites y de la capa de colisiones
+
+    def __repr__(self):
+        return "ChunkMap " + self.nombre

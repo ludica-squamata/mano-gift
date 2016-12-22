@@ -1,14 +1,16 @@
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.base import ShadowSprite, EventListener
 from engine.globs import ItemGroup, ModData
+from engine.globs.renderer import Renderer
 from engine.misc import Resources
-from pygame import mask
+from pygame import mask, Rect
 from .items import *
 
 
 class Escenografia(ShadowSprite, EventListener):
     accion = None
 
-    def __init__(self, nombre, x, y, z=0, data=None, imagen=None):
+    def __init__(self, nombre, x, y, z=0, data=None, imagen=None, rect=None):
         """
         :param nombre:
         :param imagen:
@@ -25,12 +27,14 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = nombre
         self.tipo = 'Prop'
         self.data = data
-        if imagen is None:
+        if imagen is None and data is not None:
             imagen = data.get('image')
-        super().__init__(imagen=imagen, x=x, y=y, dz=z)
+        super().__init__(imagen=imagen, rect=rect, x=x, y=y, dz=z)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
+        self.face = data.get('cara', 'front')
+
         try:
             dialogo = Resources.abrir_json(ModData.dialogos + self.nombre + '.json')
             self.data.update({'dialog': dialogo})
@@ -38,6 +42,9 @@ class Escenografia(ShadowSprite, EventListener):
             pass
 
         self.add_listeners()  # carga de event listeners
+
+    def rotate_view(self, np):
+        pass
 
     def __repr__(self):
         return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
@@ -144,21 +151,26 @@ class Destruible(Escenografia):
         self.accion = 'romper'
 
 
-class Estructura3D:
+class Estructura3D(Escenografia):
     faces = {}
     face = 'front'
     _chopped = False
 
     def __init__(self, nombre, x, y, data):
         self.nombre = nombre
-        self.faces = {'front': None, 'left': None, 'right': None, 'back': None}
+        self.faces = {'front': None, 'right': None, 'back': None, 'left': None}
         self.face = data.get('cara', 'front')
+        self.x, self.y = x, y
+        self.w, self.h = data['width'], data['height']
+        self.rect = Rect(self.x, self.y, self.w, self.h)
 
         for face in data['componentes']:
             if len(data['componentes'][face]):
                 self.faces[face] = self.build_face(data, x, y, face)
 
         self.props = self.faces[self.face]
+        super().__init__(nombre, x, y, data=data, rect=self.rect)
+        EventDispatcher.register(self.rotate_view, 'Rotar_Todo')
 
     def build_face(self, data, dx, dy, face):
         from engine.scenery import new_prop
@@ -166,7 +178,7 @@ class Estructura3D:
         for nombre in data['componentes'][face]:
             ruta = data['referencias'][nombre]
             imagen = None
-            propdata = None
+            propdata = {}
             for x, y, z in data['componentes'][face][nombre]:
                 if type(ruta) is dict:
                     propdata = ruta.copy()
@@ -178,7 +190,7 @@ class Estructura3D:
                     w, h = data['width'], data['height']
                     imagen = self.chop_faces(ruta, w=w, h=h)[face]
 
-                if propdata and 'cara' not in propdata:
+                if 'cara' not in propdata:
                     propdata.update({'cara': face})
 
                 prop = new_prop(nombre, dx + x, dy + y, z=z, img=imagen, data=propdata)
@@ -199,3 +211,18 @@ class Estructura3D:
             return d
         else:
             return self._chopped
+
+    def rotate_view(self, event):
+        np = event.data['view']
+        objects_faces = ['front', 'right', 'back', 'left']
+        idx = objects_faces.index(self.face)
+        temp = [objects_faces[idx]] + objects_faces[idx + 1:] + objects_faces[:idx]
+
+        for prop in self.faces[self.face]:
+            Renderer.camara.remove_obj(prop)
+
+        self.face = temp[np]
+
+        for prop in self.faces[self.face]:
+            Renderer.camara.add_real(prop)
+

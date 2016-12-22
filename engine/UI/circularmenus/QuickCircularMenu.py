@@ -12,10 +12,10 @@ class QuickCircularMenu(RenderedCircularMenu):
         n, c, i, cmd, j = 'name', 'csc', 'icon', 'cmd', 'idx'
         cascadas = {
             "rotar_vista": [
-                {n: 'Norte', i: "N", cmd: lambda: EventDispatcher.trigger('Rotar', 'Menu Rápido', {'vista': 'norte'})},
-                {n: "Este", i: "E", cmd: lambda: EventDispatcher.trigger('Rotar', 'Menu Rápido', {'vista': 'este'})},
-                {n: "Sur", i: "S", cmd: lambda: EventDispatcher.trigger('Rotar', 'Menu Rápido', {'vista': 'sur'})},
-                {n: "Oeste", i: "O", cmd: lambda: EventDispatcher.trigger('Rotar', 'Menu Rápido', {'vista': 'oeste'})},
+                {n: 'Norte', i: "N", cmd: lambda: self.cmd_rotar_vista('north')},
+                {n: "Este", i: "E", cmd: lambda: self.cmd_rotar_vista('east')},
+                {n: "Sur", i: "S", cmd: lambda: self.cmd_rotar_vista('south')},
+                {n: "Oeste", i: "O", cmd: lambda: self.cmd_rotar_vista('west')},
             ]
         }
 
@@ -54,3 +54,9 @@ class QuickCircularMenu(RenderedCircularMenu):
     def stop_everything(self, on_spot):
         super().stop_everything(on_spot)
         Ed.current_qcm_idx = self.last_on_spot.idx
+
+    @staticmethod
+    def cmd_rotar_vista(direccion):
+        # solo una abreviatura
+
+        EventDispatcher.trigger('Rotar', 'Menu Rápido', {'view': direccion})

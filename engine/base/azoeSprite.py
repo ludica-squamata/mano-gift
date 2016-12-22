@@ -64,6 +64,11 @@ class AzoeSprite(sprite.Sprite):
         self.stageRect = Rect(0, 0, *self.rect.size)
         self.stageRect.center = x, y
 
+        self.top = y
+        self.left = x
+        self.bottom = 0
+        self.right = 0
+
         if z:
             self.z = z
         elif center:
@@ -76,6 +81,12 @@ class AzoeSprite(sprite.Sprite):
         """mueve el sprite una cantidad de pixeles"""
         self.mapRect.move_ip(dx, dy)
         self.stageRect.move_ip(dx, dy)
+
+        self.top += dy
+        self.left += dx
+        self.bottom -= dy
+        self.right -= dx
+
         self.z += dy
 
     def ubicar(self, x, y):

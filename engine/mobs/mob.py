@@ -65,6 +65,8 @@ class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido p
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
 
+        EventDispatcher.register(self.rotate_and_pos, 'Rotar_mobs')
+
     def establecer_estado(self, estado):
         self.estado = estado
         if estado == 'idle':
@@ -86,3 +88,9 @@ class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido p
                 # pero necesito más resolución para hacerlos...
             self.dead = True
             EventDispatcher.trigger('MobMuerto', self.tipo, {'obj': self})
+
+    def rotate_and_pos(self, event):
+        x = event.data['x']
+        y = event.data['y']
+
+        self.mapRect.center = x, y
