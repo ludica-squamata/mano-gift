@@ -8,6 +8,7 @@ class Composite(Node):
     type = 'Composite'
     children = None
     current_id = None
+    name = ''
 
     def __init__(self, tree, idx, children):
         # these are NOT containers, they just point to their children
@@ -22,13 +23,13 @@ class Composite(Node):
     def reset(self):
         self.current_id = -1
 
-
-class Sequence(Composite):
-    name = 'Sequence'
-
     def __repr__(self):
         lista = [str(c.idx) for c in self.children]
         return ' '.join([self.type, '#' + str(self.idx), self.name, '(' + ', '.join(lista) + ')'])
+
+
+class Sequence(Composite):
+    name = 'Sequence'
 
     def get_child_status(self, status):
         if status is Success:
@@ -48,10 +49,6 @@ class Sequence(Composite):
 
 class Selector(Composite):
     name = 'Selector'
-
-    def __repr__(self):
-        lista = [str(c.idx) for c in self.children]
-        return ' '.join([self.type, '#' + str(self.idx), self.name, '(' + ', '.join(lista) + ')'])
 
     def get_child_status(self, status):
         if status is Failure:
@@ -82,10 +79,6 @@ class Parallel(Composite):
         self.children_status = [i * 0 for i in children]
         self.success_value = s
         self.failure_value = f
-
-    def __repr__(self):
-        lista = [str(c.idx) for c in self.children]
-        return ' '.join([self.type, '#' + str(self.idx), self.name, '(' + ', '.join(lista) + ')'])
 
     def update(self):
         for child in self.children:

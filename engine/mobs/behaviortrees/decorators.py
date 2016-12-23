@@ -5,11 +5,15 @@ from .status import *
 class Decorator(Node):
     type = 'Decorator'
     child = None
+    name = ''
 
     def __init__(self, tree, idx, child):
         # these nodes can only point to one child
         super().__init__(tree, idx)
         self.child_idx = child
+
+    def __repr__(self):
+        return self.type + ' #' + str(self.idx) + ' ' + self.name
     
     def update(self):
         self.child.update()
@@ -26,9 +30,6 @@ class Repeater(Decorator):
         else:
             self.amount_of_times = None
 
-    def __repr__(self):
-        return self.type + ' #' + str(self.idx) + ' ' + self.name
-        
     def get_child_status(self, status):
         if self.amount_of_times is None:
             self.tree.set_to_check(self.child)
@@ -47,9 +48,6 @@ class Repeater(Decorator):
 class UntilFail(Decorator):
     name = 'UntilFail'
 
-    def __repr__(self):
-        return self.type + ' #' + str(self.idx) + ' ' + self.name
-
     def get_child_status(self, status):
         if status is Failure:
             self.parent.get_child_status(Success)
@@ -61,9 +59,6 @@ class UntilFail(Decorator):
 class Succeeder(Decorator):
     name = 'Succeeder'
 
-    def __repr__(self):
-        return self.type + ' #' + str(self.idx) + ' ' + self.name
-
     def get_child_status(self, status):
         del status  # PyCharm me obliga a hacer algo con el parámetro
         self.parent.get_child_status(Success)
@@ -71,9 +66,6 @@ class Succeeder(Decorator):
 
 class Inverter(Decorator):
     name = 'Inverter'
-
-    def __repr__(self):
-        return self.type + ' #' + str(self.idx) + ' ' + self.name
 
     def get_child_status(self, status):
         if status is Success:
@@ -89,9 +81,20 @@ class Inverter(Decorator):
 class Failer(Decorator):
     name = 'Failer'
 
+    def get_child_status(self, status):
+        del status  # PyCharm me obliga a hacer algo con el parámetro
+        self.parent.get_child_status(Failure)
+
 
 class UntilSuccess(Decorator):
     name = 'UntilSuccess'
+
+    def get_child_status(self, status):
+        if status is Success:
+            self.parent.get_child_status(Success)
+
+        else:
+            self.tree.set_to_check(self.child)
 
 
 class Limiter(Decorator):
