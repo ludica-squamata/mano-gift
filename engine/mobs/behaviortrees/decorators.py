@@ -83,3 +83,24 @@ class Inverter(Decorator):
             status = Success
 
         self.parent.get_child_status(status)
+
+
+# New Decorators based on http://guineashots.com/2014/08/10/an-introduction-to-behavior-trees-part-3
+class Failer(Decorator):
+    name = 'Failer'
+
+
+class UntilSuccess(Decorator):
+    name = 'UntilSuccess'
+
+
+class Limiter(Decorator):
+    # This decorator imposes a maximum number of calls its child can have within the whole execution of the Behavior
+    # Tree, i.e., after a certain number of calls, its child will never be called again.
+    name = 'Limiter'
+
+
+class MaxTime(Decorator):
+    # This decorator limits the maximum time its child can be running. If the child does not complete its execution
+    # before the maximum time, the child task is terminated and a failure is returned.
+    name = 'MaxTime'
