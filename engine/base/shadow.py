@@ -2,7 +2,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 from pygame import mask, PixelArray, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
 from .azoeSprite import AzoeSprite
-from engine.globs.constantes import FEATURE_SOMRBAS_DINAMICAS
+from engine.globs.constantes import FEATURE_SOMBRAS_DINAMICAS
 
 
 class Sombra(AzoeSprite):
@@ -66,7 +66,7 @@ class ShadowSprite(AzoeSprite):
 
         super().__init__(*args, **kwargs)
         self.previousimage = self.image
-        if FEATURE_SOMRBAS_DINAMICAS:
+        if FEATURE_SOMBRAS_DINAMICAS:
             EventDispatcher.register(self.update_luces, 'MovimientoSolar')
 
     def add_shadow(self, *args):
