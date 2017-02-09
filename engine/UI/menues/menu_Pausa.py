@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import CUADRO, EngineData
+from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES
 from engine.libs import render_textrect
 from engine.misc import Config as Cfg
 from pygame.font import SysFont
@@ -15,12 +15,17 @@ class MenuPausa(Menu):
         a, b = 'arriba', 'abajo'
 
         botones = [
-            {m: "Equipo", k: {a: "Cargar", b: "Status"}},
-            {m: "Status", k: {a: "Equipo", b: "Grupo"}},
-            {m: "Grupo", k: {a: "Status", b: "Opciones"}},
-            {m: "Opciones", k: {a: "Grupo", b: "Cargar"}},
+            {m: "Equipo", k: {a: "Cargar", b: "Opciones"}},
+            {m: "Opciones", k: {a: "Equipo", b: "Cargar"}},
             {m: "Cargar", k: {a: "Opciones", b: "Equipo"}},
         ]
+
+        if FEATURE_MENUS_ADICIONALES:
+            botones[0][k][b] = "Status"
+            botones.insert(1, {m: "Status", k: {a: "Equipo", b: "Grupo"}})
+            botones.insert(2, {m: "Grupo", k: {a: "Status", b: "Opciones"}})
+            botones[3][k][a] = "Grupo"
+
         for i in range(len(botones)):
             botones[i]['pos'] = [x, 39 * i + 100],
             botones[i]['comando'] = self.new_menu

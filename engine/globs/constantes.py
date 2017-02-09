@@ -32,3 +32,8 @@ COLOR_IGNORADO = Color(1, 1, 1)
 HOLD = 24
 TAP = 25
 RELEASE = 26
+
+# feature flags deshablitadas para la demo
+FEATURE_SOMRBAS_DINAMICAS = False
+FEATURE_ROTACION_MAPA = False
+FEATURE_MENUS_ADICIONALES = False

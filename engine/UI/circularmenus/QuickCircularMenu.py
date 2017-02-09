@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO
+from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO, FEATURE_ROTACION_MAPA
 from engine.globs.eventDispatcher import EventDispatcher
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import CommandElement, InventoryElement, CascadeElement
@@ -25,8 +25,10 @@ class QuickCircularMenu(RenderedCircularMenu):
                 {j: 1, n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
                 {j: 2, n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
                 {j: 3, n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'},
-                {j: 4, n: 'Rotar Vista', c: cascadas['rotar_vista'], i: "R"}
             ]
+
+        if FEATURE_ROTACION_MAPA:
+            opciones.append({j: 4, n: 'Rotar Vista', c: cascadas['rotar_vista'], i: "R"})
 
         cascadas = {'inicial': []}
         for opt in [opciones[first]] + opciones[first + 1:] + opciones[:first]:
