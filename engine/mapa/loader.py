@@ -74,8 +74,8 @@ class Loader:
         for key in alldata['mobs']:
             pos = alldata['mobs'][key]
             for ref in pos:
-                data = Rs.abrir_json(Md.mobs + ref + '.json')
-                for x, y in pos[ref]:
+                data = Rs.abrir_json(Md.mobs + key + '.json')
+                for x, y in pos:
                     mob = NPC(ref, x, y, data)
                     loaded_mobs.append((mob, GRUPO_MOBS))
 

@@ -15,6 +15,7 @@ class Camara:
     x, y = 0, 0
     w, h = ANCHO, ALTO
     rect = Rect(x, y, w, h)
+    rect_pos = rect.copy()
     compass_CW = ['north', 'east', 'south', 'west']
     compass_CCW = ['north', 'west', 'south', 'east']
     view_name = 'north'
@@ -193,7 +194,7 @@ class Camara:
         s = cls.rect
 
         while abs(dx):
-            if b.x + dx > 1 or b.right + dx < s.w - 2:# or f.centerx + dx != s.centerx:
+            if b.x + dx > 1 or b.right + dx < s.w - 2 or f.centerx + dx != s.centerx:
                 if dx < 0:
                     dx += 1
                 else:
@@ -202,7 +203,7 @@ class Camara:
                 break
 
         while abs(dy):
-            if b.bottom + dy < s.h - 2 or b.y + dy > 2:# or f.centery + dy != s.centery:
+            if b.bottom + dy < s.h - 2 or b.y + dy > 2 or f.centery + dy != s.centery:
                 # funciona, pero me gustaria encontrar una forma de reducir el valor
                 # sin tener que fijarme si es positivo o negativo.
                 if dy < 0:

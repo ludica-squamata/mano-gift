@@ -29,7 +29,9 @@
 
 
       },
-      "mobs": {},
+      "mobs": {
+        "commoner":[[500,500]]
+      },
       "limites":{
       },
       "refs":{
