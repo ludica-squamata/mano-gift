@@ -44,8 +44,8 @@ class InventoryElement(LetterElement):
         return image
 
     def do_action(self):
-        if self.item is not None and hasattr(self.item, 'usar'):
-            value = Ed.HERO.usar_item(self.item)
+        if self.item is not None and self.item.tipo == 'consumible':
+            value = self.item.usar(Ed.HERO)
             self.img_uns = self._crear_icono_image(21, 21)
             self.img_sel = self._crear_icono_image(33, 33)
             self.image = self.img_sel

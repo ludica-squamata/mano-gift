@@ -26,6 +26,7 @@
       "fondo":"maps/fondos/prueba.png",
       "colisiones":"maps/colisiones/prueba.png",
       "props": {
+        "star":[[432,432],[464,464]]
 
 
       },

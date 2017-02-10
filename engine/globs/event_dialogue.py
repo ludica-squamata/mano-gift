@@ -2,6 +2,8 @@ from .eventDispatcher import EventDispatcher
 
 
 class EventAware:
+    registered = False
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.register()
@@ -17,9 +19,11 @@ class EventAware:
 
     def register(self):
         EventDispatcher.register(self.listener, 'key')
+        self.registered = True
 
     def deregister(self):
         EventDispatcher.deregister(self.listener, 'key')
+        self.registered = False
 
     def use_function(self, mode, key):
         pass
