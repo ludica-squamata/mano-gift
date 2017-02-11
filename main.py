@@ -1,9 +1,9 @@
-from pygame import display as pantalla, init as py_init, event, font, joystick
-from engine.globs import Tiempo, EngineData as Ed, ModData, ANCHO, ALTO
+from pygame import display as pantalla, init as py_init, event, font, joystick, image
+from engine.globs import Tiempo, ModData, ANCHO, ALTO
 from engine.misc import Resources as Rs, Config
 from engine.IO.modos import Modo
 import os
-import pygame
+
 
 py_init()
 if joystick.get_count():
@@ -11,7 +11,7 @@ if joystick.get_count():
 tamanio = ANCHO, ALTO
 ModData.init(Rs.abrir_json("engine.ini"))
 pantalla.set_caption(ModData.data['nombre'])
-pantalla.set_icon(pygame.image.load(ModData.graphs + ModData.data['icono']))
+pantalla.set_icon(image.load(ModData.graphs + ModData.data['icono']))
 os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
 fondo = pantalla.set_mode(tamanio)
 
@@ -29,12 +29,7 @@ while True:
     Tiempo.update(60)
     events = event.get()
     Modo.juego(events)
-    if Ed.MODO == 'Aventura':
-        cambios = Modo.aventura(events, fondo)
-    elif Ed.MODO == 'Dialogo':
-        cambios = Modo.dialogo(events, fondo)
-    elif Ed.MODO == 'Menu':
-        cambios = Modo.menu(events, fondo)
+    cambios = Modo.update(events, fondo)
 
     cambios.append(fondo.blit(fuente.render(str(int(Tiempo.FPS.get_fps())), True, rojo), (10, 0)))
     cambios.append(fondo.blit(fuente.render(str(Tiempo.clock.timestamp()), True, rojo), (570, 0)))

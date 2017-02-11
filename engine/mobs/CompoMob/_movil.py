@@ -4,16 +4,32 @@ from ._atribuido import Atribuido
 
 
 class Movil(Atribuido):
-    def cambiar_direccion(self, direccion=None, img=False):
 
-        if direccion in self.direcciones:
-            self.direccion = direccion
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if hasattr(self, 'functions'):
+            self.functions['tap'].update({
+                'arriba': lambda: self.cambiar_direccion('arriba'),
+                'abajo': lambda: self.cambiar_direccion('abajo'),
+                'izquierda': lambda: self.cambiar_direccion('izquierda'),
+                'derecha': lambda: self.cambiar_direccion('derecha')
+            })
+            self.functions['hold'].update({
+                'arriba': lambda: self.mover('arriba'),
+                'abajo': lambda: self.mover('abajo'),
+                'izquierda': lambda: self.mover('izquierda'),
+                'derecha': lambda: self.mover('derecha')
+            })
+            self.functions['release'].update({
+                'arriba': self.detener_movimiento,
+                'abajo': self.detener_movimiento,
+                'izquierda': self.detener_movimiento,
+                'derecha': self.detener_movimiento
+            })
 
-        if img:  # solo vale para el héroe...
-            self.image = self.images['S' + self.direccion]
-            if direccion == self.direccion:
-                # noinspection PyArgumentList
-                self.mover(direccion)
+    def cambiar_direccion(self, direccion=None):
+        self.direccion = direccion
+        self.image = self.images['S' + self.direccion]
 
     # noinspection PyMethodOverriding
     def mover(self):

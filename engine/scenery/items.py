@@ -61,12 +61,12 @@ class Consumible(Item):
 
             setattr(mob, actual, valor)
 
-        else:
+        elif hasattr(mob, stat):
             actual = getattr(mob, stat)
             valor = actual + mod
             setattr(mob, stat, valor)
 
-        return True
+        return mob.inventario.remover(self)
 
 
 class Armadura(Equipable):

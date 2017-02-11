@@ -9,6 +9,7 @@ from .items import *
 
 class Escenografia(ShadowSprite, EventListener):
     accion = None
+    action = None
 
     def __init__(self, nombre, x, y, z=0, data=None, imagen=None, rect=None):
         """
@@ -55,10 +56,15 @@ class Agarrable(Escenografia):
         data.setdefault('proyecta_sombra', False)
         super().__init__(nombre, x, y, z, data)
         self.subtipo = data['subtipo']
-        self.accion = 'agarrar'
         ItemGroup[self.nombre] = self
 
-    def __call__(self):
+    def action(self, entity):
+        if entity.tipo == 'Mob':
+            item = self.return_item()
+            entity.inventario.agregar(item)
+            EventDispatcher.trigger('DelItem', 'Mob', {'obj': self})
+
+    def return_item(self):
         args = self.nombre, self.image, self.data
         if self.subtipo == 'consumible':
             return Consumible(*args)
@@ -113,7 +119,6 @@ class Operable(Escenografia):
     def __init__(self, nombre, x, y, z, data):
         super().__init__(nombre, x, y, z, data)
         self.estados = {}
-        self.accion = 'operar'
         self.enabled = self.data.get('enabled', True)
         ItemGroup[self.nombre] = self
 
@@ -132,6 +137,10 @@ class Operable(Escenografia):
                     self.estados[idx].update({'event': f})
                 else:
                     self.estados[idx].update({attr: estado[attr]})
+
+    def action(self,entity):
+        if entity.tipo == 'Mob' and self.enabled:
+            self.operar()
 
     def operar(self, estado=None):
         if estado is None:

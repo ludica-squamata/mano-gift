@@ -1,6 +1,6 @@
 from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.event_dialogue import EventAware
+from engine.globs.event_aware import EventAware
 from engine.libs.textrect import render_textrect
 from engine.UI.widgets import Ventana, Boton
 from pygame.sprite import LayeredUpdates

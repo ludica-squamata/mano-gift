@@ -1,6 +1,6 @@
 ﻿from engine.UI import DialogInterface
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.event_dialogue import EventAware
+from engine.globs.event_aware import EventAware
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
 
 

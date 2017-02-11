@@ -68,10 +68,8 @@ class RenderedCircularMenu(CircularMenu):
 
     def salir(self):
         if self.cascadaActual == 'inicial':
-            Renderer.clear_overlays_from_layer(self.layer)
-            EngineData.DIALOGO = None
-            EngineData.MODO = 'Aventura'
             self.deregister()
+            EngineData.end_dialog(self.layer)
 
     def update(self):
         # this hook is necesary

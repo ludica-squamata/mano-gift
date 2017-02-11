@@ -32,8 +32,7 @@ class Tag:
         return 'tag ' + self.init
 
 
-def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspace=4, line_spacing=1,
-                       justification=0):
+def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspace=4, line_spacing=1, justification=0):
     actual_lines = []
 
     last_tag = tags['n']
@@ -123,7 +122,8 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
                     tagged = True
             else:
                 actual_word = _word
-                tag = tags['n']
+                if not tagged:
+                    tag = tags['n']
                 max_word_h = tag.h
                 if insertion:
                     wordspace = _defaultspace

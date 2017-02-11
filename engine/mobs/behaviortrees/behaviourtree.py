@@ -137,6 +137,9 @@ class BehaviourTree:
     def get_context(self, key):
         return self.shared_context[key]
 
+    def clear_context(self):
+        self.shared_context.clear()
+
     def reset(self):
         self.status = None
         self.to_check = self.nodes[0]
