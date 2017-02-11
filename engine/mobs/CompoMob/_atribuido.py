@@ -9,13 +9,13 @@ class Atribuido(AzoeSprite):
     iniciativa = 0
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.velocidad = self.data['velocidad']
         self.fuerza = self.data['fuerza']
         self.salud_max = self.data['salud']
         self.carisma = self.data['carisma']
         self.iniciativa = self.data['iniciativa']
         self.salud_act = self.salud_max
-        super().__init__(*args, **kwargs)
 
     def mover(self, dx, dy):
         dx *= self.velocidad

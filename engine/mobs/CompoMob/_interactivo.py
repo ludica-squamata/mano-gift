@@ -7,10 +7,10 @@ class Interactivo(Atribuido):
     idx_quadrant = 0
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._vertical = Rect((0, 0), (32, 16))
         self._horizontal = Rect((0, 0), (16, 32))
         self._interaction_rect = None
-        super().__init__(*args, **kwargs)
 
     def _aling_interaction_rect(self, x, y):
         """Alinea el rect de interacción. Función simplificada."""

@@ -1,7 +1,5 @@
-from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.globs import EngineData
-from .Inventory import Inventory
 from .CompoMob import Parlante
 from engine.UI.propdescription import PropDescription
 from .mob import Mob
@@ -10,22 +8,8 @@ from .mob import Mob
 class PC(EventAware, Parlante, Mob):
 
     def __init__(self, data, x, y):
-        self.inventario = Inventory(10, 10 + self.fuerza)
-        self.functions = {
-            'tap': {
-                'accion': self.accion,
-                'contextual': lambda: None,
-            },
-            'hold': {
-                'accion': lambda: None,
-                'contextual': lambda: None,
-            },
-            'release': {
-                'accion': lambda: None,
-                'contextual': lambda: None,
-            }
-        }
         super().__init__(data, x, y, focus=True)
+        self.functions['tap'].update({'accion': self.accion})
 
     def use_function(self, mode, key):
         if key in self.functions[mode]:

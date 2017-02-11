@@ -55,7 +55,7 @@ class ShadowSprite(AzoeSprite):
     """:type : list"""
 
     def __init__(self, *args, **kwargs):
-
+        super().__init__(*args, **kwargs)
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
         self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -64,7 +64,6 @@ class ShadowSprite(AzoeSprite):
         # NE, E, SE, S, SO, O, NO, N # luces
         # 0 , 1, 2 , 0, 4,  5, 6,  7
 
-        super().__init__(*args, **kwargs)
         self.previousimage = self.image
         if FEATURE_SOMBRAS_DINAMICAS:
             EventDispatcher.register(self.update_luces, 'MovimientoSolar')

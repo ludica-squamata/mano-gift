@@ -25,11 +25,9 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     frame_animacion = 0
 
     def __init__(self, *args, **kwargs):
-        # self.anim_counter = 0 estas variables ya no se usan
-        # self.anim_limit = 20 a no ser que sean parte de shadowSprite
+        super().__init__(*args, **kwargs)
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 12
-        super().__init__(*args, **kwargs)
 
     @staticmethod
     def cargar_anims(ruta_imgs, seq, alpha=False):

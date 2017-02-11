@@ -18,6 +18,12 @@ class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido p
         self.mascaras = {}
         self.data = data
 
+        self.functions = {
+            'tap': {},
+            'hold': {},
+            'release': {}
+        }
+
         dirs = ['S', 'L', 'R']
         imgs = data['imagenes']
         alpha = data['alphas']
@@ -39,12 +45,8 @@ class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido p
 
         self.images = self.idle_walk_img
         self.mascaras = self.idle_walk_alpha
-        self.image = self.images['Sabajo']
-        self.mask = self.mascaras['Sabajo']
-
         self.ID = data['ID']
         self.nombre = data['nombre']
-        self.direccion = 'abajo'
 
         if 'solido' in data['propiedades']:
             self.solido = data['solido']
@@ -60,7 +62,9 @@ class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido p
             self.objetivo = MobGroup[data['objetivo']]
 
         self.establecer_estado('idle')
-        super().__init__(imagen=self.image, alpha=self.mask, x=x, y=y, center=focus)
+        image = self.images['S'+self.direccion]
+        mask = self.mascaras['S'+self.direccion]
+        super().__init__(imagen=image, alpha=mask, x=x, y=y, center=focus)
 
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
