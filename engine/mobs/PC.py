@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.event_dialogue import EventAware
+from engine.globs.event_aware import EventAware
 from engine.globs import EngineData
 from .Inventory import Inventory
 from .CompoMob import Parlante

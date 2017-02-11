@@ -41,3 +41,7 @@ class CascadeElement(LetterElement):
 
             obj.idx = j
             self.cascada.append(obj)
+
+    def do_action(self):
+        if not len(self.cascada):
+            return True

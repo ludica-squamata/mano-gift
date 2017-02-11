@@ -1,6 +1,6 @@
 ﻿from pygame.sprite import Sprite, LayeredUpdates
 from math import sin, cos, radians
-from engine.globs.event_dialogue import EventAware
+from engine.globs.event_aware import EventAware
 
 
 class BaseElement(Sprite):

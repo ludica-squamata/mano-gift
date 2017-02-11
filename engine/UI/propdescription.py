@@ -1,6 +1,6 @@
 from .DialogInterface import DialogInterface
 from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS
-from engine.globs.event_dialogue import EventAware
+from engine.globs.event_aware import EventAware
 
 
 class PropDescription (EventAware):
