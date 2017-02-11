@@ -7,7 +7,7 @@ from engine.globs import EngineData as Ed
 class GetRandomDir(Leaf):
     def process(self):
         cuadros = Ed.MAPA_ACTUAL.grilla
-        self.tree.shared_context.clear()
+        self.tree.clear_context()
 
         self.tree.set_context('mapa', cuadros)
         self.tree.set_context('next', 0)
@@ -57,9 +57,9 @@ class NextPosition(Leaf):
 
 class Move(Leaf):
     def process(self):
-        e = self.tree.entity
-        mapa = self.tree.shared_context['mapa']
-        pd = self.tree.shared_context['punto_proximo']
+        e = self.get_entity()
+        mapa = self.tree.get_context('mapa')
+        pd = self.tree.get_context('punto_proximo')
         pi = mapa[e.mapRect.x//32, e.mapRect.y//32]
 
         if pi != pd:
