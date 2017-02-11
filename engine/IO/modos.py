@@ -9,8 +9,6 @@ from engine.UI import QuickCircularMenu
 
 
 class Modo:
-    # newMenu = False
-    # previo = False
     setKey = False
 
     @classmethod
@@ -26,27 +24,18 @@ class Modo:
         EventDispatcher.process()
 
     @staticmethod
-    def aventura(events, fondo):
+    def update(events, fondo):
+        modo = Ed.MODO
         for event in get_taphold_events(events):
-            EventDispatcher.trigger('key', 'Modo.Aventura', event.__dict__)
+            EventDispatcher.trigger('key', 'Modo.'+modo, event.__dict__)
 
-        Ed.MAPA_ACTUAL.update()
-        return Renderer.update(fondo)
+        if modo == 'Aventura':
+            Ed.MAPA_ACTUAL.update()
+        elif modo == 'Menu':
+            Ed.menu_actual.update()
+        elif modo == 'Dialogo':
+            Ed.DIALOG.update()
 
-    @staticmethod
-    def dialogo(events, fondo):
-        for event in get_taphold_events(events):
-            EventDispatcher.trigger('key', 'Modo.Dialogo', event.__dict__)
-
-        Ed.DIALOG.update()
-        return Renderer.update(fondo)
-
-    @staticmethod
-    def menu(events, fondo):
-        for event in get_taphold_events(events):
-            EventDispatcher.trigger('key', 'Modo.Menu', event.__dict__)
-
-        Ed.menu_actual.update()
         return Renderer.update(fondo)
 
     @classmethod
