@@ -3,6 +3,7 @@ from .eventDispatcher import EventDispatcher
 
 class EventAware:
     registered = False
+    functions = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,5 +27,5 @@ class EventAware:
         self.registered = False
 
     def use_function(self, mode, key):
-        pass
-
+        if key in self.functions[mode]:
+            self.functions[mode][key]()

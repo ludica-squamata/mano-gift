@@ -90,11 +90,6 @@ class Menu(EventAware, Ventana):
         self.deregister()
         EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Previous'})
 
-    def use_function(self, mode, key):
-        if key in self.functions[mode]:
-            # noinspection PyCallingNonCallable
-            self.functions[mode][key]()
-
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()

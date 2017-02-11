@@ -11,10 +11,6 @@ class PC(EventAware, Parlante, Mob):
         super().__init__(data, x, y, focus=True)
         self.functions['tap'].update({'accion': self.accion})
 
-    def use_function(self, mode, key):
-        if key in self.functions[mode]:
-            self.functions[mode][key]()
-
     # noinspection PyMethodOverriding
     def mover(self, direccion):
         if direccion != self.direccion:

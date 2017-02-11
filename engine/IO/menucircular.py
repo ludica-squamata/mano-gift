@@ -126,10 +126,6 @@ class CircularMenu (EventAware):
         }
         super().__init__()
 
-    def use_function(self, mode, key):
-        if key in self.functions[mode]:
-            self.functions[mode][key]()
-
     def change_radius(self, x):
         radius = x * (len(self.cascadas[self.cascadaActual]) + 1)
         self.puntos = [self.get_xy(a, radius, *self.center) for a in range(-90, 270)]
