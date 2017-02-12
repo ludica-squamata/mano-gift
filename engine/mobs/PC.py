@@ -1,7 +1,5 @@
 from engine.globs.event_aware import EventAware
-from engine.globs import EngineData
 from .CompoMob import Parlante
-from engine.UI.propdescription import PropDescription
 from .mob import Mob
 
 
@@ -20,13 +18,11 @@ class PC(EventAware, Parlante, Mob):
 
     def accion(self):
         super().accion()
-        x, y = self.direcciones[self.direccion]
-        sprite = self.quadrant_interaction(x, y)
+        sprite = self.quadrant_interaction()
         if sprite is not None:
             if sprite.tipo == 'Mob':
                 if self.estado == 'cmb':
-                    x, y = x * self.fuerza, y * self.fuerza
-                    self.atacar(sprite, x, y)
+                    self.atacar(sprite)
                 else:
                     self.elegir_tema(sprite)
                     self.deregister()

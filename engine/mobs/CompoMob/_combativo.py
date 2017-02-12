@@ -19,6 +19,8 @@ class Combativo(Animado):
             self.dead = True
             EventDispatcher.trigger('MobMuerto', self.tipo, {'obj': self})
 
-    def atacar(self, sprite, x, y):
+    def atacar(self, sprite):
+        x, y = self.direcciones[self.direccion]
+        x, y = x * self.fuerza, y * self.fuerza
         sprite.reubicar(x, y)
         sprite.recibir_danio(self.fuerza)

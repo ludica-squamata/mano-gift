@@ -45,7 +45,8 @@ class Interactivo(Atribuido):
         if item in MobGroup:
             return item
 
-    def quadrant_interaction(self, x, y):
+    def quadrant_interaction(self):
+        x, y = self.direcciones[self.direccion]
         self._aling_interaction_rect(x, y)
         for quadrant in self.stage.cuadrantes:
             if quadrant.rect.colliderect(self._interaction_rect):
