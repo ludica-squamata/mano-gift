@@ -55,8 +55,6 @@ class DialogInterface(Ventana):
             opt = opciones[i]
             obj = {'idx': i + 1, 'icon': str(opt.indice), 'name': str(opt.leads), 'item': opciones[i]}
             self.menu.add_element(0, obj)
-            # Este overwrite es necesario porque si no do_action() hace otra cosa.
-            self.menu.cubos.get_sprite(i).do_action = lambda: True
 
         self.opciones = len(opciones)
         self.menu.actual = self.menu.cubos.get_sprite(0)

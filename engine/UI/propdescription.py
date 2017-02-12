@@ -24,11 +24,6 @@ class PropDescription (EventAware):
         EngineData.MODO = 'Dialogo'
         EngineData.DIALOG = self
 
-    def use_function(self, mode, key):
-        if mode in self.functions:
-            if key in self.functions[mode]:
-                self.functions[mode][key]()
-
     def listener(self, event):
         try:
             if event.origin == 'Modo.Dialogo':
