@@ -18,12 +18,6 @@ class Mob(Interactivo, Equipado, ShadowSprite, Animado):  # Movil es Atribuido p
         self.mascaras = {}
         self.data = data
 
-        self.functions = {
-            'tap': {},
-            'hold': {},
-            'release': {}
-        }
-
         dirs = ['S', 'L', 'R']
         imgs = data['imagenes']
         alpha = data['alphas']

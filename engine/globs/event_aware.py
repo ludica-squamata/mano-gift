@@ -6,6 +6,11 @@ class EventAware:
     functions = None
 
     def __init__(self, *args, **kwargs):
+        self.functions = {
+            'tap': {},
+            'hold': {},
+            'release': {}
+        }
         super().__init__(*args, **kwargs)
         self.register()
 
