@@ -63,10 +63,6 @@ class Modo:
                     Ed.HERO.deregister()
                     QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
 
-            elif Ed.MODO == 'Dialogo':
-                if nombre == 'contextual' and tipo == 'tap':
-                    Ed.HERO.register()
-
     @classmethod
     def pop_menu(cls, titulo=None):
 
