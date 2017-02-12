@@ -25,36 +25,10 @@ class Menu(EventAware, Ventana):
         if titulo is None:
             titulo = nombre
         self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, ANCHO - 20)
-        self.functions = {
-            'tap': {
-                'accion': lambda: None,
-                'contextual': self.cancelar,
-                'arriba': lambda: None,
-                'abajo': lambda: None,
-                'izquierda': lambda: None,
-                'derecha': lambda: None,
-            },
-            'hold': {
-                'accion': lambda: None,
-                'contextual': lambda: None,
-                'arriba': lambda: None,
-                'abajo': lambda: None,
-                'izquierda': lambda: None,
-                'derecha': lambda: None,
-            },
-            'release': {
-                'accion': lambda: None,
-                'contextual': lambda: None,
-                'arriba': lambda: None,
-                'abajo': lambda: None,
-                'izquierda': lambda: None,
-                'derecha': lambda: None,
-            }
-        }
         self.botones = LayeredUpdates()
         super().__init__(self.canvas, center=True)
-        # self.ubicar(10, 10)
-
+        self.functions['tap'].update({'contextual': self.cancelar})
+        self.functions['release'].update({'contextual': self.cancelar})
         Ed.MENUS[nombre] = self
 
     def crear_titulo(self, titulo, fg_color, bg_color, ancho):

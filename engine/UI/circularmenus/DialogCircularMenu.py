@@ -30,9 +30,7 @@ class DialogCircularMenu(RenderedCircularMenu):
             cascadas['inicial'].append(obj)
 
         super().__init__(cascadas)
-        self.show()
-
-        self.functions['tap'].update({'cancelar': self.back})
+        self.functions['tap'].update({'contextual': self.back})
 
     def cerrar(self):
         for mob in self.locutores:

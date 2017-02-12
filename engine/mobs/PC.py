@@ -29,7 +29,6 @@ class PC(EventAware, Parlante, Mob):
                     self.atacar(sprite, x, y)
                 else:
                     self.elegir_tema(sprite)
-                    EngineData.MODO = 'Dialogo'
                     self.deregister()
 
             elif sprite.tipo == 'Prop':
@@ -37,8 +36,7 @@ class PC(EventAware, Parlante, Mob):
                     sprite.action(self)
 
                 elif self.estado != 'cmb':
-                    EngineData.DIALOG = PropDescription(sprite)
-                    EngineData.MODO = 'Dialogo'
+                    sprite.show_description()
                     self.deregister()
 
     def cambiar_estado(self):
