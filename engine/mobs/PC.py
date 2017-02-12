@@ -41,16 +41,6 @@ class PC(EventAware, Parlante, Mob):
                     EngineData.MODO = 'Dialogo'
                     self.deregister()
 
-    def atacar(self, sprite, x, y):
-        sprite.reubicar(x, y)
-        sprite.recibir_danio(self.fuerza)
-
     def cambiar_estado(self):
-        if self.estado == 'idle':
-            self.establecer_estado('cmb')
-
-        elif self.estado == 'cmb':
-            self.establecer_estado('idle')
-
-        self.animar_caminar()
+        super().cambiar_estado()
         self.register()
