@@ -13,8 +13,8 @@ class Sensitivo(Atribuido):
 
     # mover_vis = None #algoritmo para desplazar la visión junto al mob
 
-    def __init__(self, *args, **kwargs):  # ,data):
-        super().__init__(*args, **kwargs)
+    def __init__(self, data, x, y, **kwargs):  # ,data):
+        super().__init__(data, x, y, **kwargs)
         self.tri_vis = self.generar_cono(32 * 5)  # (data[vision])
         self.cir_vis = self.generar_circulo_sensorioal(32 * 6)  # (data[vision])
         self.audicion = self.generar_circulo_sensorioal(32 * 6)  # cheat

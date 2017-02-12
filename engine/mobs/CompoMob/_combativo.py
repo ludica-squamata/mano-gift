@@ -4,8 +4,8 @@ from engine.globs.eventDispatcher import EventDispatcher
 
 class Combativo(Animado):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def recibir_danio(self, danio):
         self.salud_act -= danio

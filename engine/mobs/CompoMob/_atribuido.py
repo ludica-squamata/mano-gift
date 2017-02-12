@@ -8,8 +8,8 @@ class Atribuido(AzoeSprite):
     salud_act = 0  # salud actual
     iniciativa = 0
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.velocidad = self.data['velocidad']
         self.fuerza = self.data['fuerza']
         self.salud_max = self.data['salud']

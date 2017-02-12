@@ -11,12 +11,12 @@ class Parlante(Movil):
     hablante = True
     hablando = False
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'states' in args[0]:
-            if 'dialog' in args[0]['states'][0]:
-                nombre = args[0]['states'][0]['dialog']
-                args[0]['states'][0]['dialog'] = Rs.abrir_json(Md.dialogos + nombre)
+    def __init__(self, data, x, y, **kwargs):
+        super().__init__(data, x, y, **kwargs)
+        if 'states' in data:
+            if 'dialog' in data['states'][0]:
+                nombre = data['states'][0]['dialog']
+                data['states'][0]['dialog'] = Rs.abrir_json(Md.dialogos + nombre)
 
     def hablar(self, sprite):
         if sprite.hablante:

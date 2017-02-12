@@ -54,8 +54,8 @@ class ShadowSprite(AzoeSprite):
     _prevLuces = None
     """:type : list"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
         self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
 
