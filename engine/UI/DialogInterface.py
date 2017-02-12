@@ -40,7 +40,6 @@ class DialogInterface(Ventana):
         self.rect.move_ip(x, y)
 
     def set_text(self, texto):
-        self.text_rect.y = 3
         width = self.draw_space_rect.width
         if not self.loc_rect.x:
             self.text_rect.x = 6
@@ -105,6 +104,7 @@ class DialogInterface(Ventana):
         self.image.fill(self.bg_cnvs)
         self.rendered_text = None
         self.sel = 0
+        self.text_rect.y = 3  # reset scrolling
 
     def update(self):
         self.ticks += 1
