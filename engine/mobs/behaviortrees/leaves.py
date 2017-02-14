@@ -33,12 +33,3 @@ class CallingLeaf(Node):
     def __init__(self, tree, idx):
         # these leves can call another tree with existing shared context
         super().__init__(tree, idx)
-
-
-# New Leaves based on http://guineashots.com/2014/08/10/an-introduction-to-behavior-trees-part-3
-class Action(Leaf):
-    pass
-
-
-class Condition(Leaf):
-    pass
