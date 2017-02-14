@@ -1,5 +1,5 @@
 from engine.UI.circularmenus import DialogCircularMenu
-from engine.globs import EngineData as Ed, ModData as Md
+from engine.globs import EngineData, ModData as Md
 from engine.misc import Resources as Rs
 from engine.IO.dialogo import Dialogo
 from ._movil import Movil
@@ -11,18 +11,18 @@ class Parlante(Movil):
     hablante = True
     hablando = False
 
-    def __init__(self, *args, **kwargs):
-        if 'states' in args[0]:
-            if 'dialog' in args[0]['states'][0]:
-                nombre = args[0]['states'][0]['dialog']
-                args[0]['states'][0]['dialog'] = Rs.abrir_json(Md.dialogos + nombre)
-        super().__init__(*args, **kwargs)
+    def __init__(self, data, x, y, **kwargs):
+        super().__init__(data, x, y, **kwargs)
+        if 'states' in data:
+            if 'dialog' in data['states'][0]:
+                nombre = data['states'][0]['dialog']
+                data['states'][0]['dialog'] = Rs.abrir_json(Md.dialogos + nombre)
 
     def hablar(self, sprite):
         if sprite.hablante:
             self.interlocutor = sprite
             sprite.interlocutor = self
-            Ed.DIALOG = Dialogo(sprite.dialogo, self, sprite)
+            EngineData.DIALOG = Dialogo(sprite.dialogo, self, sprite)
 
     def elegir_tema(self, sprite):
         if sprite.hablante:
@@ -58,4 +58,4 @@ class Parlante(Movil):
             # éste output es porque el héroe inicia diálogo
             # si fuere el NPC via IA, el output, sería:
             # Ed.DIALOG = Dialogo(sprite.dialogo, *locutores)
-            Ed.DIALOG = DialogCircularMenu(sprite, self)
+            EngineData.DIALOG = DialogCircularMenu(sprite, self)

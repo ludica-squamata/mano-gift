@@ -8,8 +8,8 @@ class Resources:
 
     @staticmethod
     def cargar_imagen(ruta):
-        from engine.globs.mod_data import ModData as Md
-        ar = image.load(Md.graphs + ruta).convert_alpha()
+        from engine.globs.mod_data import ModData
+        ar = image.load(ModData.graphs + ruta).convert_alpha()
         return ar
 
     @staticmethod
@@ -47,7 +47,7 @@ class Resources:
 
     @staticmethod
     def load_module_from_script(name):
-        from engine.globs.mod_data import ModData as Md
-        ruta = Md.scripts + name + '.py'
+        from engine.globs.mod_data import ModData
+        ruta = ModData.scripts + name + '.py'
         module = machinery.SourceFileLoader("module.name", ruta).load_module()
         return module

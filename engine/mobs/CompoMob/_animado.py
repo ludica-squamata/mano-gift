@@ -13,6 +13,9 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     _step = 'S'
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
+    idle_walk_img = {}  # imagenes normales
+    idle_walk_alpha = {}
+
     cmb_atk_img = {}  # combat position images.
     cmb_atk_alpha = {}  # combat position images's alpha.
     cmb_walk_img = {}  # combat walking images.
@@ -24,12 +27,10 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     timer_animacion = 0
     frame_animacion = 0
 
-    def __init__(self, *args, **kwargs):
-        # self.anim_counter = 0 estas variables ya no se usan
-        # self.anim_limit = 20 a no ser que sean parte de shadowSprite
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 12
-        super().__init__(*args, **kwargs)
 
     @staticmethod
     def cargar_anims(ruta_imgs, seq, alpha=False):
@@ -91,6 +92,19 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     def accion(self):
         if self.estado == 'cmb':
             self.atacando = True
+
+    def cambiar_estado(self):
+        if self.estado == 'idle':
+            self.estado = 'cmb'
+            self.images = self.cmb_walk_img
+            self.mascaras = self.cmb_walk_alpha
+
+        elif self.estado == 'cmb':
+            self.estado = 'idle'
+            self.images = self.idle_walk_img
+            self.mascaras = self.idle_walk_alpha
+
+        self.animar_caminar()
 
     def update(self):
         if self.atacando:

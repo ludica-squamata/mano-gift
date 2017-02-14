@@ -8,14 +8,14 @@ class Atribuido(AzoeSprite):
     salud_act = 0  # salud actual
     iniciativa = 0
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.velocidad = self.data['velocidad']
         self.fuerza = self.data['fuerza']
         self.salud_max = self.data['salud']
         self.carisma = self.data['carisma']
         self.iniciativa = self.data['iniciativa']
         self.salud_act = self.salud_max
-        super().__init__(*args, **kwargs)
 
     def mover(self, dx, dy):
         dx *= self.velocidad

@@ -29,7 +29,7 @@
     "txt":"Aquí tengo una <b>estrella</b> que encontré."},
 
     "6":{"type":"branch","leads":12,"loc":"heroe",
-    "txt":"¿Qué puedes decirme de este <b>texto marcado</b>?"},
+    "txt":"¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
 
     "7":{"type":"branch","leads":15,"loc":"heroe","event_data":{"attr":"carisma","value":1},
     "txt":"Esta opción incrementará mi Carisma directamente"},

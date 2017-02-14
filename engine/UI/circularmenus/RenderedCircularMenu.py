@@ -11,6 +11,10 @@ class RenderedCircularMenu(CircularMenu):
         super().__init__(cascadas, cx, cy)
         self.last_on_spot = self.check_on_spot()
 
+        EngineData.MODO = 'Dialogo'
+        EngineData.DIALOG = self
+        self.show()
+
     def listener(self, event):
         try:
             if event.origin == 'Modo.Dialogo':

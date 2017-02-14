@@ -4,30 +4,25 @@ from engine.globs.event_aware import EventAware
 
 
 class PropDescription (EventAware):
+
     def __init__(self, item):
+        super().__init__()
         self.item = item
         self.frontend = DialogInterface(self)
         self.frontend.set_text(item.nombre+': '+self.item.descripcion)
 
-        self.functions = {
-            'tap': {
-                'accion': self.salir,
-                'contextual': self.salir,
-                'arriba': lambda: self.desplazar_texto('arriba'),
-                'abajo': lambda: self.desplazar_texto('abajo'),
-            },
-            'hold': {
-                'arriba': lambda: self.desplazar_texto('arriba'),
-                'abajo': lambda: self.desplazar_texto('abajo'),
-            }
-        }
+        self.functions['tap'].update({
+            'accion': self.salir,
+            'contextual': self.salir,
+            'arriba': lambda: self.desplazar_texto('arriba'),
+            'abajo': lambda: self.desplazar_texto('abajo')})
 
-        super().__init__()
+        self.functions['hold'].update({
+            'arriba': lambda: self.desplazar_texto('arriba'),
+            'abajo': lambda: self.desplazar_texto('abajo')})
 
-    def use_function(self, mode, key):
-        if mode in self.functions:
-            if key in self.functions[mode]:
-                self.functions[mode][key]()
+        EngineData.MODO = 'Dialogo'
+        EngineData.DIALOG = self
 
     def listener(self, event):
         try:

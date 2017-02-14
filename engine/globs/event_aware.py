@@ -3,8 +3,14 @@ from .eventDispatcher import EventDispatcher
 
 class EventAware:
     registered = False
+    functions = None
 
     def __init__(self, *args, **kwargs):
+        self.functions = {
+            'tap': {},
+            'hold': {},
+            'release': {}
+        }
         super().__init__(*args, **kwargs)
         self.register()
 
@@ -26,5 +32,5 @@ class EventAware:
         self.registered = False
 
     def use_function(self, mode, key):
-        pass
-
+        if key in self.functions[mode]:
+            self.functions[mode][key]()

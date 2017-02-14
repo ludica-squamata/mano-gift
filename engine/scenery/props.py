@@ -1,4 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
+from engine.UI.propdescription import PropDescription
 from engine.base import ShadowSprite, EventListener
 from engine.globs import ItemGroup, ModData
 from engine.globs.renderer import Renderer
@@ -49,6 +50,9 @@ class Escenografia(ShadowSprite, EventListener):
 
     def __repr__(self):
         return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
+
+    def show_description(self):
+        PropDescription(self)
 
 
 class Agarrable(Escenografia):
@@ -138,7 +142,7 @@ class Operable(Escenografia):
                 else:
                     self.estados[idx].update({attr: estado[attr]})
 
-    def action(self,entity):
+    def action(self, entity):
         if entity.tipo == 'Mob' and self.enabled:
             self.operar()
 

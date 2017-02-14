@@ -1,6 +1,5 @@
 from engine.globs import EngineData as Ed
 from .LetterElement import LetterElement
-from .title import Title
 from .itemdescription import DescriptiveArea
 
 
@@ -11,27 +10,13 @@ class InventoryElement(LetterElement):
     def __init__(self, parent, item):
 
         self.item = item
+        self.img_uns = self._create_icon_stack(21, 21)
+        self.img_sel = self._create_icon_stack(33, 33)
 
-        super().__init__(parent, self.item.nombre)
+        super().__init__(parent, self.item.nombre, None)
+        self.description = DescriptiveArea(self, item)
 
-        self.img_uns = self._crear_icono_image(21, 21)
-        self.img_sel = self._crear_icono_image(33, 33)
-
-        self.rect_uns = self.img_uns.get_rect()
-        self.rect_sel = self.img_sel.get_rect()
-
-        if self.in_place:
-            self.image = self.img_sel
-            self.rect = self.rect_sel
-        else:
-            self.image = self.img_uns
-            self.rect = self.rect_uns
-
-        self.title = Title(self, self.item.nombre)
-        if self.item is not None:
-            self.description = DescriptiveArea(self, item)
-
-    def _crear_icono_image(self, w, h):
+    def _create_icon_stack(self, w, h):
         image, _rect = self._crear_base(w, h)
         cant = Ed.HERO.inventario.cantidad(self.item)
         render = self.fuente_MP.render(str(cant), 1, self.font_none_color)
@@ -46,8 +31,8 @@ class InventoryElement(LetterElement):
     def do_action(self):
         if self.item is not None and self.item.tipo == 'consumible':
             value = self.item.usar(Ed.HERO)
-            self.img_uns = self._crear_icono_image(21, 21)
-            self.img_sel = self._crear_icono_image(33, 33)
+            self.img_uns = self._create_icon_stack(21, 21)
+            self.img_sel = self._create_icon_stack(33, 33)
             self.image = self.img_sel
             return value
         return True

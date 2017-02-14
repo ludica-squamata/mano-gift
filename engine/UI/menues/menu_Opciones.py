@@ -30,27 +30,20 @@ class MenuOpciones(Menu):
         self.crear_espacios_config()
         self.notice, self.notice_area = self.create_notice()
 
-        self.functions.update({
-            'tap': {
-                'accion': self.press_button,
-                'contextual': self.cancelar,
-                'arriba': lambda: self.select_one('arriba'),
-                'abajo': lambda: self.select_one('abajo'),
-                'izquierda': lambda: self.select_one('izquierda'),
-                'derecha': lambda: self.select_one('derecha')
-            },
-            'hold': {
-                'accion': self.mantener_presion,
-                'arriba': lambda: self.select_one('arriba'),
-                'abajo': lambda: self.select_one('abajo'),
-                'izquierda': lambda: self.select_one('izquierda'),
-                'derecha': lambda: self.select_one('derecha')
-            },
-            'release': {
-                'accion': self.liberar_presion,
-                'contextual': self.cancelar
-            }
-        })
+        self.functions['tap'].update({
+            'accion': self.press_button,
+            'arriba': lambda: self.select_one('arriba'),
+            'abajo': lambda: self.select_one('abajo'),
+            'izquierda': lambda: self.select_one('izquierda'),
+            'derecha': lambda: self.select_one('derecha')})
+        self.functions['hold'].update({
+            'accion': self.mantener_presion,
+            'arriba': lambda: self.select_one('arriba'),
+            'abajo': lambda: self.select_one('abajo'),
+            'izquierda': lambda: self.select_one('izquierda'),
+            'derecha': lambda: self.select_one('derecha')})
+        self.functions['release'].update({
+            'accion': self.liberar_presion})
 
     def create_config_btns(self):
         m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'

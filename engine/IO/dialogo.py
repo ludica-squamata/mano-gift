@@ -211,46 +211,32 @@ class Dialogo (EventAware):
     next = 0
 
     def __init__(self, arbol, *locutores):
+        super().__init__()
         self.dialogo = _ArboldeDialogo(arbol)
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
 
         self.frontend = DialogInterface(self)
+        self.functions['tap'].update({
+            'accion': self.hablar,
+            'contextual': self.cerrar,
+            'arriba': lambda: self.direccionar_texto('arriba'),
+            'abajo': lambda: self.direccionar_texto('abajo'),
+            'izquierda': self.frontend.detener_menu,
+            'derecha': self.frontend.detener_menu,
+        })
+        self.functions['hold'].update({
+            'arriba': lambda: self.direccionar_texto('arriba'),
+            'abajo': lambda: self.direccionar_texto('abajo'),
+            'izquierda': lambda: self.direccionar_texto('izquierda'),
+            'derecha': lambda: self.direccionar_texto('derecha'),
+        })
+        self.functions['release'].update({
+            'izquierda': self.frontend.detener_menu,
+            'derecha': self.frontend.detener_menu,
+        })
 
-        self.func_lin = {
-            'tap': {
-                'accion': self.hablar,
-                'contextual': self.cerrar
-            },
-            'hold': {
-                'arriba': lambda: self.desplazar_texto('arriba'),
-                'abajo': lambda: self.desplazar_texto('abajo'),
-            },
-        }
-
-        self.func_sel = {
-            'tap': {
-                'accion': self.confirmar_seleccion,
-                'contextual': self.cerrar,
-                'arriba': lambda: self.desplazar_texto('arriba'),
-                'abajo': lambda: self.desplazar_texto('abajo'),
-                'izquierda': self.frontend.detener_menu,
-                'derecha': self.frontend.detener_menu,
-            },
-            'hold': {
-                'arriba': lambda: self.desplazar_texto('arriba'),
-                'abajo': lambda: self.desplazar_texto('abajo'),
-                'izquierda': lambda: self.frontend.rotar_menu(-1),
-                'derecha': lambda: self.frontend.rotar_menu(+1),
-            },
-            'release': {
-                'izquierda': self.frontend.detener_menu,
-                'derecha': self.frontend.detener_menu,
-            }
-        }
-
-        super().__init__()
         self.hablar()
 
     @classmethod
@@ -260,20 +246,18 @@ class Dialogo (EventAware):
                 return False
         return True
 
-    def use_function(self, mode, key):
-        if self.SelMode:
-            functions = self.func_sel
-        else:
-            functions = self.func_lin
-
-        if mode in functions:
-            if key in functions[mode]:
-                functions[mode][key]()
-
     def hablar(self):
 
         actual = self.dialogo.update()
-        if type(actual) is BranchArray:
+        if self.SelMode:
+            if self.sel.event_data is not None:
+                self.sel.post_event()
+            self.dialogo.set_chosen(self.next)
+            self.SelMode = False
+            self.frontend.exit_sel_mode()
+            self.hablar()
+
+        elif type(actual) is BranchArray:
             if actual.is_exclusive:
                 choices = actual.array.copy()
                 choice = -1
@@ -317,14 +301,6 @@ class Dialogo (EventAware):
         else:
             self.cerrar()
 
-    def confirmar_seleccion(self):
-        if self.sel.event_data is not None:
-            self.sel.post_event()
-        self.dialogo.set_chosen(self.next)
-        self.SelMode = False
-        self.frontend.exit_sel_mode()
-        self.hablar()
-
     def mostrar_nodo(self, nodo):
         """
         :type nodo: Elemento
@@ -333,13 +309,17 @@ class Dialogo (EventAware):
         loc = self.locutores[nodo.locutor]
         self.frontend.set_loc_img(loc)
         self.frontend.set_text(nodo.texto)
-        # self.frontend.menu.deregister()
 
-    def desplazar_texto(self, direccion):
+    def direccionar_texto(self, direccion):
         if direccion == 'arriba':
             self.frontend.scroll(+1)
         elif direccion == 'abajo':
             self.frontend.scroll(-1)
+        elif self.SelMode:
+            if direccion == 'izquierda':
+                self.frontend.rotar_menu(-1)
+            elif direccion == 'derecha':
+                self.frontend.rotar_menu(+1)
 
     def cerrar(self):
         self.deregister()

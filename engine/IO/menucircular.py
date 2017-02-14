@@ -108,27 +108,20 @@ class CircularMenu (EventAware):
         self.cubos.add(*self.cascadas['inicial']['items'])
         self.change_radius(self.radius)
 
-        self.functions = {
-            'tap': {
-                'accion': self.accept,
-                'contextual': self.back,
-                'izquierda': self.stop,
-                'derecha': self.stop
-            },
-            'hold': {
-                'izquierda': lambda: self.turn(-1),
-                'derecha': lambda: self.turn(+1)
-            },
-            'release': {
-                'izquierda': self.stop,
-                'derecha': self.stop
-            }
-        }
         super().__init__()
+        self.functions['tap'].update({
+            'accion': self.accept,
+            'contextual': self.back,
+            'izquierda': self.stop,
+            'derecha': self.stop})
 
-    def use_function(self, mode, key):
-        if key in self.functions[mode]:
-            self.functions[mode][key]()
+        self.functions['hold'].update({
+            'izquierda': lambda: self.turn(-1),
+            'derecha': lambda: self.turn(+1)})
+
+        self.functions['release'].update({
+            'izquierda': self.stop,
+            'derecha': self.stop})
 
     def change_radius(self, x):
         radius = x * (len(self.cascadas[self.cascadaActual]) + 1)

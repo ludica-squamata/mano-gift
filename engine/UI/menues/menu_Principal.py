@@ -22,21 +22,16 @@ class MenuPrincipal(Menu):
 
         self.establecer_botones(botones, 6)
 
-        self.functions.update({
-            'tap': {
-                'accion': self.press_button,
-                'arriba': lambda: self.select_one('arriba'),
-                'abajo': lambda: self.select_one('abajo')
-            },
-            'hold': {
-                'accion': self.mantener_presion,
-                'arriba': lambda: self.select_one('arriba'),
-                'abajo': lambda: self.select_one('abajo')
-            },
-            'release': {
-                'accion': self.liberar_presion,
-            }
-        })
+        self.functions['tap'].update({
+            'accion': self.press_button,
+            'arriba': lambda: self.select_one('arriba'),
+            'abajo': lambda: self.select_one('abajo')})
+        self.functions['hold'].update({
+            'accion': self.mantener_presion,
+            'arriba': lambda: self.select_one('arriba'),
+            'abajo': lambda: self.select_one('abajo')})
+        self.functions['release'].update({
+            'accion': self.liberar_presion})
 
     def new_menu(self, titulo):
         self.deregister()

@@ -32,22 +32,16 @@ class MenuPausa(Menu):
 
         self.establecer_botones(botones, 6)
         self.update_charname_display()
-        self.functions.update({
-            'tap': {
-                'accion': self.press_button,
-                'contextual': self.cancelar,
-                'arriba': lambda: self.select_one('arriba'),
-                'abajo': lambda: self.select_one('abajo')
-            },
-            'hold': {
-                'accion': self.mantener_presion,
-                'arriba': lambda: self.select_one('arriba'),
-                'abajo': lambda: self.select_one('abajo')
-            },
-            'release': {
-                'accion': self.liberar_presion,
-            }
-        })
+        self.functions['tap'].update({
+            'accion': self.press_button,
+            'arriba': lambda: self.select_one('arriba'),
+            'abajo': lambda: self.select_one('abajo')})
+        self.functions['hold'].update({
+            'accion': self.mantener_presion,
+            'arriba': lambda: self.select_one('arriba'),
+            'abajo': lambda: self.select_one('abajo')})
+        self.functions['release'].update({
+            'accion': self.liberar_presion})
 
     def update_charname_display(self):
         r = self.canvas.blit(EngineData.HERO.diag_face, (6, 100))

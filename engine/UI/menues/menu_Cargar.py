@@ -12,22 +12,18 @@ class MenuCargar(Menu):
 
     def __init__(self):
         super().__init__("Cargar Partida")
-
-        self.functions.update({
-            'tap': {
-                'accion': self.cargar,
-                'contextual': self.cancelar,
-                'arriba': lambda: self.elegir_opcion('arriba'),
-                'abajo': lambda: self.elegir_opcion('abajo'),
-            },
-            'hold': {
-                'arriba': lambda: self.elegir_opcion('arriba'),
-                'abajo': lambda: self.elegir_opcion('abajo'),
-            },
-            'release': {
-                'accion': self.cargar,
-                'contextual': self.cancelar
-            }
+        self.functions['tap'].update({
+            'accion': self.cargar,
+            'contextual': self.cancelar,
+            'arriba': lambda: self.elegir_opcion('arriba'),
+            'abajo': lambda: self.elegir_opcion('abajo')
+        })
+        self.functions['hold'].update({
+            'arriba': lambda: self.elegir_opcion('arriba'),
+            'abajo': lambda: self.elegir_opcion('abajo'),
+        })
+        self.functions['release'].update({
+            'accion': self.cargar,
         })
 
         self.filas = LayeredUpdates()

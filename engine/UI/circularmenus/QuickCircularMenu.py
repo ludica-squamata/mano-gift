@@ -1,7 +1,7 @@
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO, FEATURE_ROTACION_MAPA
 from engine.globs.eventDispatcher import EventDispatcher
 from .RenderedCircularMenu import RenderedCircularMenu
-from .elements import CommandElement, InventoryElement, CascadeElement
+from .elements import CommandElement, CascadeElement
 
 
 class QuickCircularMenu(RenderedCircularMenu):
@@ -37,8 +37,6 @@ class QuickCircularMenu(RenderedCircularMenu):
                     obj = CascadeElement(self, opt)
                 elif 'cmd' in opt:
                     obj = CommandElement(self, opt)
-            elif hasattr(opt, "nombre"):
-                obj = InventoryElement(self, opt)
 
             obj.idx = opt['idx']
             cascadas['inicial'].append(obj)

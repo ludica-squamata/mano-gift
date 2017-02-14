@@ -5,8 +5,8 @@ from ._atribuido import Atribuido
 
 class Movil(Atribuido):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         if hasattr(self, 'functions'):
             self.functions['tap'].update({
                 'arriba': lambda: self.cambiar_direccion('arriba'),

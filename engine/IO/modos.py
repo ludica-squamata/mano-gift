@@ -60,14 +60,8 @@ class Modo:
                     EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
 
                 elif nombre == 'contextual':
-                    Ed.MODO = 'Dialogo'
                     Ed.HERO.deregister()
-                    Ed.DIALOG = QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
-                    Ed.DIALOG.show()
-
-            elif Ed.MODO == 'Dialogo':
-                if nombre == 'contextual' and tipo == 'tap':
-                    Ed.HERO.register()
+                    QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
 
     @classmethod
     def pop_menu(cls, titulo=None):
