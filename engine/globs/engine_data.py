@@ -87,7 +87,8 @@ class EngineData:
     def cargar_juego(cls, mapa, entrada, dia, hora, minutos, focus):
         cls.acceso_menues.clear()
         cls.setear_mapa(mapa, entrada)
-        Tiempo.set_time(dia, hora, minutos)
+        if not Tiempo.clock.is_real():
+            Tiempo.set_time(dia, hora, minutos)
         Renderer.set_focus(MobGroup[focus])
         cls.MODO = 'Aventura'
         cls.HUD.show()

@@ -1,6 +1,7 @@
 from os import getcwd as cwd, path, listdir
 from importlib import machinery
 from engine.misc import Util, Resources
+from engine.globs.tiempo import Tiempo
 
 
 class ModData:
@@ -17,9 +18,13 @@ class ModData:
     QMC = None
 
     @classmethod
-    def init(cls, ini):
+    def init(cls, ini_data):
 
-        if not cls._find_mod_folder(ini):
+        real = ini_data.get('real_clock', False)
+        min_l = ini_data.get('minute_lenght', 60)
+        Tiempo.set_clock(real, min_l)
+
+        if not cls._find_mod_folder(ini_data):
             Util.salir("la ruta no existe")
 
         data = cls._get_file_data('mod.json')

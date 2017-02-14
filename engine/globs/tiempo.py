@@ -57,6 +57,9 @@ class Clock:
     def __repr__(self):
         return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
 
+    def is_real(self):
+        return self.real
+
     @property
     def h(self):
         return self._h
@@ -317,14 +320,19 @@ class Noche(AzoeSprite):
 class Tiempo:
     FPS = time.Clock()
     dia, _frames = 0, 0
-    clock = Clock()
     noche = None
+    clock = None
 
     @classmethod
-    def set_time(cls, dia, hora, mins=0):
+    def set_clock(cls, is_real, min_lenght):
+        cls.clock = Clock(real=is_real, minute_lenght=min_lenght)
+
+    @classmethod
+    def set_time(cls, dia, hora, mins=0, segs=0):
         cls.dia = dia
         cls.clock.h = hora
         cls.clock.m = mins
+        cls.clock.s = segs
 
     @classmethod
     def get_time(cls):

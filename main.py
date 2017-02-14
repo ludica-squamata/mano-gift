@@ -9,7 +9,7 @@ py_init()
 if joystick.get_count():
     joystick.Joystick(0).init()
 tamanio = ANCHO, ALTO
-ModData.init(Rs.abrir_json("engine.ini"))
+ModData.init(Rs.abrir_json("engine.json"))
 pantalla.set_caption(ModData.data['nombre'])
 pantalla.set_icon(image.load(ModData.graphs + ModData.data['icono']))
 os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
