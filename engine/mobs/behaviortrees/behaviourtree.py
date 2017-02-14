@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from types import FunctionType
-from engine.globs import ModData as Md
-from engine.misc import Resources as Rs
+from engine.globs import ModData
+from engine.misc import Resources
 from .composites import *
 from .decorators import *
 from .leaves import Leaf
@@ -16,15 +16,23 @@ class BehaviourTree:
     status = None
     entity = None
 
-    def __init__(self, entity, tree_data, scripts):
+    def __init__(self, entity, tree_data):
         if self.tree_structure is not None:
             self.tree_structure.clear()
         self.nodes = []
         self.shared_context = {}
 
+        loaded_functions = {}
+        head = tree_data.pop('head')
+        for script in head['script']:
+            module = Resources.load_module_from_script(script)
+            for name in head['script'][script]:
+                if hasattr(module, name):
+                    loaded_functions[name] = getattr(module, name)
+
         self.tree_structure = OrderedDict()
         self.entity = entity
-        tree_data = self.analyze_tree(tree_data)
+        tree_data = self.analyze_tree(tree_data['body'])
         for key in [str(i) for i in range(len(tree_data))]:
             node = None
             process = None
@@ -43,7 +51,10 @@ class BehaviourTree:
             elif 'child' in data:  # decorator
                 self.tree_structure[idx].append(int(data['child']))
                 if name == 'Repeater':
-                    node = Repeater(self, idx, data['child'], data.get('context', 0))
+                    times = 0
+                    if head['special']['Repeater']['ID'] == idx:
+                        times = head['special']['Repeater']['times']
+                    node = Repeater(self, idx, data['child'], times=times)
                 elif name == 'UntilFail':
                     node = UntilFail(self, idx, data['child'])
                 elif name == 'Succeeder':
@@ -55,8 +66,8 @@ class BehaviourTree:
                 if name in globals():
                     process = globals()[name]
 
-                elif hasattr(scripts, name):
-                    process = getattr(scripts, name)
+                elif name in loaded_functions:
+                    process = loaded_functions[name]
 
                 arg = data.get('arg', None)
                 if isinstance(process, FunctionType):
@@ -85,7 +96,7 @@ class BehaviourTree:
             if name == 'ExtenderLeaf':
                 an_tree = tree_data[key]['tree']
                 new_tree = self.extend_tree(an_tree, idx)
-                Rs.load_module_from_script(an_tree)
+                Resources.load_module_from_script(an_tree)
                 break
 
         if new_tree:
@@ -95,7 +106,7 @@ class BehaviourTree:
 
     @staticmethod
     def extend_tree(an_tree_data, idx):
-        tree_extension = Rs.abrir_json(Md.mobs + 'behaviours/' + an_tree_data + '.json')
+        tree_extension = Resources.abrir_json(ModData.mobs + 'behaviours/' + an_tree_data + '.json')
         new_tree = {}
         for kex in tree_extension:
             if 'children' in tree_extension[kex]:

@@ -1,7 +1,7 @@
 from engine.mobs.behaviortrees import BehaviourTree
 from . import Sensitivo, Animado
-from engine.globs import EngineData as Ed, ModData as Md
-from engine.misc.resources import Resources as Rs
+from engine.globs import EngineData, ModData
+from engine.misc.resources import Resources
 
 
 class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
@@ -10,15 +10,14 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
     def __init__(self, data, x, y, **kwargs):
         nombre = data['states'][0]['AI']
-        tree_data = Rs.abrir_json(Md.mobs + 'behaviours/' + nombre + '.json')
-        module = Rs.load_module_from_script(nombre)
-        self.AI = BehaviourTree(self, tree_data, module)  # function alias!
+        tree_data = Resources.abrir_json(ModData.mobs + 'behaviours/' + nombre + '.json')
+        self.AI = BehaviourTree(self, tree_data)  # function alias!
 
         self._AI = self.AI  # copia de la AI original
         super().__init__(data, x, y, **kwargs)
 
     def update(self, *args):
-        if not Ed.onPause and not self.dead:
+        if not EngineData.onPause and not self.dead:
             # detectados = self.oir() + self.ver()
             e = self.AI.update()
             if e is not None:
