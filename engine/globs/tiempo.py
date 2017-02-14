@@ -3,22 +3,51 @@ from engine.base import AzoeSprite
 from .constantes import COLOR_IGNORADO
 from engine.globs.eventDispatcher import EventDispatcher
 from .renderer import Renderer
+from datetime import datetime
 
 
 class Clock:
     _h = 0
     _m = 0
     _s = 0
+    real = False
     day_flag = False
     hour_flag = False
+    minute_flag = False
+    second_flag = False
     enabled = False
 
-    def __init__(self, h=0, m=0, s=0):
+    def __init__(self, real=False, h=0, m=0, s=0, minute_lenght=60):
+        """Nuevo Reloj Clock con capacidades superiores. Puede ser real o ficticio.
+        Ahora con nuevas flags para minutos y segundos, además de horas y días.
+
+        real determina si se usa un reloj real (que usa la hora del sistema)
+        o uno ficticio. En caso de usar un reloj ficticio, es posible determinar
+        la hora, minutos y segundos estableciendo valores para h, m y s.
+        minute_lenght determina cuantos ticks (por defecto, 60 ticks = 1 segundo)
+        dura un minuto de un reloj ficticio. Este valor es ignorado si el reloj
+        es real.
+
+        :param real: bool
+        :param h: int
+        :param m: int
+        :param s: int
+        :param minute_lenght: int
+        """
+
+        self.real = real
+
+        if self.real:
+            now = datetime.now().time()
+            h = now.hour
+            m = now.minute
+            s = now.second
+        else:
+            self.ds = minute_lenght
+
         self._h = h
         self._m = m
         self._s = s
-        self.day_flag = False
-        self.hour_flag = False
 
         EventDispatcher.register(self.on_pause, 'Pause')
 
@@ -34,11 +63,17 @@ class Clock:
 
     @h.setter
     def h(self, value):
-        self.hour_flag = True
-        if value > 23:
-            self._h = 0
-            self.day_flag = True
+        if self.real:
+            if value != self._h:
+                self.hour_flag = True
+            if value == 0:
+                self.day_flag = True
         else:
+            self.hour_flag = True
+            if value > 23:
+                self.day_flag = True
+                value = 0
+
             self._h = value
 
     @h.deleter
@@ -51,9 +86,15 @@ class Clock:
 
     @m.setter
     def m(self, value):
-        if value > 59:
-            self.h += 1
-            value = 0
+        if self.real:
+            if value != self._m:
+                self.minute_flag = True
+        else:
+            self.minute_flag = True
+            if value > 59:
+                self.h += 1
+                value = 0
+
         self._m = value
 
     @m.deleter
@@ -66,9 +107,15 @@ class Clock:
 
     @s.setter
     def s(self, value):
-        if value > 59:
-            self._m += 1
-            value = 0
+        if self.real:
+            if value != self._m:
+                self.second_flag = True
+        else:
+            self.second_flag = True
+            if value > 59:
+                self.m += 1
+                value = 0
+
         self._s = value
 
     @s.deleter
@@ -88,11 +135,20 @@ class Clock:
         else:
             return TimeStamp(h, m, s)
 
-    def update(self, dm=1):
+    def update(self):
         if self.enabled:
             self.day_flag = False
             self.hour_flag = False
-            self.m += dm
+            self.minute_flag = False
+            self.second_flag = False
+
+            if self.real:
+                _time = datetime.now().time()
+                self.h = _time.hour
+                self.m = _time.minute
+                self.s = _time.second
+            else:
+                self.s += self.ds
 
 
 class TimeStamp:
@@ -290,9 +346,14 @@ class Tiempo:
                 cls.dia += 1
             if cls.clock.hour_flag:
                 EventDispatcher.trigger('hora', 'Tiempo', {"hora": cls.clock.timestamp()})
+            if cls.clock.minute_flag:
+                pass
+            if cls.clock.second_flag:
+                pass
 
     @classmethod
     def crear_noche(cls, tamanio):
         cls.noche = Noche(tamanio)
+
 
 EventDispatcher.register(Tiempo.save_time, 'Save')
