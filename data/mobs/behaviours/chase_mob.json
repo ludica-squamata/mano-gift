@@ -1,0 +1,20 @@
+{
+  "head":{
+    "script":{
+      "wander":["GetRoute","NextPosition","Move"],
+      "chase":["GetMobPos"]
+      },
+    "special":{
+      "Repeater":{"ID":null,"times":0}
+      }
+  },
+  "body":{
+    "0":{"name":"Sequence","children":[1,2,3]},
+    "1":{"name":"GetMobPos"},
+    "2":{"name":"GetRoute"},
+    "3":{"name":"UntilFail","child":4},
+    "4":{"name":"Sequence","children":[5,6]},
+    "5":{"name":"NextPosition"},
+    "6":{"name":"Move"}
+  }
+}

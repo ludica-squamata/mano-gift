@@ -29,7 +29,9 @@ class GetRoute(Leaf):
         
         pi = mapa[e.mapRect.x//32, e.mapRect.y//32]
         ruta = a_star(pi, pd, mapa)
-        
+        if ruta is None:
+            return Failure
+
         self.tree.set_context('camino', ruta)
         self.tree.set_context('punto_proximo', ruta[prox])
 
