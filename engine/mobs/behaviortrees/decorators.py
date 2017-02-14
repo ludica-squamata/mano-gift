@@ -111,12 +111,11 @@ class Limiter(Decorator):
             raise ValueError('Limiter Decorator must specify a maximun number of calls greater than 0')
 
     def get_child_status(self, status):
+        del status
         if self.total_calls < self.max_calls:
-            status = status
+            self.tree.set_to_check(self.child)
         else:
-            status = Failure
-
-        self.parent.get_child_status(status)
+            self.parent.get_child_status(Failure)
 
     def update(self):
         self.total_calls += 1
