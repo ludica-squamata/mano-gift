@@ -2,7 +2,6 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import ModData as Md
 from importlib import machinery
 import types
-import sys
 
 
 class EventListener:

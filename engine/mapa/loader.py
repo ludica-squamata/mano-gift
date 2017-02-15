@@ -1,4 +1,4 @@
-from engine.globs import GRUPO_ITEMS, GRUPO_MOBS, GRUPO_SALIDAS
+from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.globs import EngineData as Ed, ModData as Md
 from engine.globs import MobGroup
 from engine.misc import Resources as Rs

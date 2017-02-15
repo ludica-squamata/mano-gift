@@ -54,7 +54,7 @@ class ProgressBar(Sprite):
 
     def event_update(self, event):
         mob = event.data['mob']
-        if mob.nombre == 'heroe': # incorrecto.
+        if mob.nombre == 'heroe':  # incorrecto.
             self.set_variable(actual=mob.salud_act)
         self.actualizar()
 
@@ -80,16 +80,16 @@ class HUD:
     def __init__(self):
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
-        dx, dy = _rect.x+3, _rect.y + 50
+        dx, dy = _rect.x + 3, _rect.y + 50
         self.BarraVida = ProgressBar(Ed.HERO.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
         self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(dx, dy - 30)
-        
-        EventDispatcher.register(self.BarraVida.event_update,'MobHerido')
+
+        EventDispatcher.register(self.BarraVida.event_update, 'MobHerido')
         # EventDispatcher.register(self.BarraMana.event_update,'')
         # EventDispatcher.register(self.BarraVida.event_update,'')
-        
+
         self.BarraVida.actualizar()
         self.BarraMana.actualizar()
 

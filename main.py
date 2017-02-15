@@ -18,6 +18,7 @@ fondo = pantalla.set_mode(tamanio)
 fuente = font.SysFont('verdana', 16, bold=True)
 rojo = 255, 0, 0
 if Config.dato('mostrar_intro'):
+    # noinspection PyUnresolvedReferences
     ModData.intro(fondo)
 
 event.set_blocked([1, 4, 5, 6, 17])

@@ -15,6 +15,8 @@ class MenuEquipo(Menu):
     cur_itm = 0
     foco = None
     cambio = False
+    draw_space_rect = None
+    draw_space = None
 
     def __init__(self):
         """Crea e inicaliza las varibales del menú Equipo."""

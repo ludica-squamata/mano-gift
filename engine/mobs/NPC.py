@@ -10,6 +10,7 @@ class NPC(Parlante, Autonomo, Mob):
         self.nombre = nombre
         super().__init__(data, x, y)
 
+    # noinspection PyMethodOverriding
     def mover(self):
         if not self.hablando:
             super().mover()
