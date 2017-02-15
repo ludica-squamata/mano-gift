@@ -2,6 +2,7 @@ from collections import OrderedDict
 from types import FunctionType
 from engine.globs import ModData
 from engine.misc import Resources
+from .status import Success
 from .composites import *
 from .decorators import *
 from .leaves import Leaf
@@ -12,6 +13,7 @@ class BehaviourTree:
     nodes = []
     tree_structure = None
     to_check = None
+    node_set = False
     shared_context = {}
     status = None
     entity = None
@@ -140,7 +142,9 @@ class BehaviourTree:
                     self.nodes[idx].child = node
 
     def set_to_check(self, node):
-        self.to_check = node
+        if self.node_set is False:
+            self.to_check = node
+            self.node_set = True
 
     def set_context(self, key, value):
         self.shared_context[key] = value
@@ -158,6 +162,8 @@ class BehaviourTree:
             node.reset()
 
     def update(self):
-        if self.status is None:
+        if self.status is not Success:
             self.to_check.update()
-        return self.status
+            self.node_set = False
+        else:
+            return self.status

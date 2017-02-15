@@ -1,6 +1,8 @@
 from .node import Node
 from .status import *
 
+__all__ = ['Repeater', 'UntilFail', 'Succeeder', 'Inverter', 'Failer', 'UntilSuccess', 'Limiter']
+
 
 class Decorator(Node):
     type = 'Decorator'
@@ -14,11 +16,11 @@ class Decorator(Node):
 
     def __repr__(self):
         return self.type + ' #' + str(self.idx) + ' ' + self.name
-    
+
     def update(self):
         self.child.update()
 
-        
+
 class Repeater(Decorator):
     name = 'Repeater'
     current_time = -1
@@ -37,31 +39,37 @@ class Repeater(Decorator):
         elif self.current_time <= self.amount_of_times:
             self.tree.set_to_check(self.child)
 
-        else:
+        elif self.parent is not None:
             self.parent.get_child_status(status)
+        else:
+            self.tree.status = status
 
     def update(self):
         self.current_time += 1
         super().update()
 
-        
+
 class UntilFail(Decorator):
     name = 'UntilFail'
 
     def get_child_status(self, status):
-        if status is Failure:
-            self.parent.get_child_status(Success)
-        
+        if self.parent is not None:
+            if status is Failure:
+                self.parent.get_child_status(Success)
+            else:
+                self.tree.set_to_check(self.child)
         else:
-            self.tree.set_to_check(self.child)
+            self.tree.status = Success
 
-        
+
 class Succeeder(Decorator):
     name = 'Succeeder'
 
     def get_child_status(self, status):
-        del status  # PyCharm me obliga a hacer algo con el parámetro
-        self.parent.get_child_status(Success)
+        if self.parent is not None:
+            self.parent.get_child_status(Success)
+        else:
+            self.tree.status = status
 
 
 class Inverter(Decorator):
@@ -70,11 +78,14 @@ class Inverter(Decorator):
     def get_child_status(self, status):
         if status is Success:
             status = Failure
-        
+
         elif status is Failure:
             status = Success
 
-        self.parent.get_child_status(status)
+        if self.parent is not None:
+            self.parent.get_child_status(status)
+        else:
+            self.tree.status = status
 
 
 # New Decorators based on http://guineashots.com/2014/08/15/an-introduction-to-behavior-trees-part-3
@@ -82,19 +93,23 @@ class Failer(Decorator):
     name = 'Failer'
 
     def get_child_status(self, status):
-        del status  # PyCharm me obliga a hacer algo con el parámetro
-        self.parent.get_child_status(Failure)
+        if self.parent is not None:
+            self.parent.get_child_status(Failure)
+        else:
+            self.tree.status = status
 
 
 class UntilSuccess(Decorator):
     name = 'UntilSuccess'
 
     def get_child_status(self, status):
-        if status is Success:
-            self.parent.get_child_status(Success)
-
+        if self.parent is not None:
+            if status is Success:
+                self.parent.get_child_status(Success)
+            else:
+                self.tree.set_to_check(self.child)
         else:
-            self.tree.set_to_check(self.child)
+            self.tree.status = Success
 
 
 class Limiter(Decorator):
@@ -111,11 +126,12 @@ class Limiter(Decorator):
             raise ValueError('Limiter Decorator must specify a maximun number of calls greater than 0')
 
     def get_child_status(self, status):
-        del status
         if self.total_calls < self.max_calls:
             self.tree.set_to_check(self.child)
-        else:
+        elif self.parent is not None:
             self.parent.get_child_status(Failure)
+        else:
+            self.tree.status = status
 
     def update(self):
         self.total_calls += 1

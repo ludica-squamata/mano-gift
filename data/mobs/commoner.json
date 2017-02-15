@@ -18,7 +18,7 @@
   "states":[
     {
       "ID":0,
-      "AI":"chase_mob",
+      "AI":"new_wander",
       "dialog":"prueba.json"
     }
   ],

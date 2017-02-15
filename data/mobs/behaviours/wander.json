@@ -1,9 +1,0 @@
-{
-  "0":{"name":"Sequence","children":[1,2,3]},
-  "1":{"name":"GetRandomDir","context":["punto"]},
-  "2":{"name":"GetRoute","context":[]},
-  "3":{"name":"UntilFail","child":4},
-  "4":{"name":"Sequence","children":[5,6]},
-  "5":{"name":"NextPosition","context":[]},
-  "6":{"name":"Move","context":[]}
-}

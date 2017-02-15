@@ -36,15 +36,16 @@ class Sequence(Composite):
             if not self.current_id + 1 == len(self.children):
                 self.current_id += 1
                 status = Running
+            else:
+                self.reset()
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
 
         if self.parent is not None:
             self.parent.get_child_status(status)
-
-        elif status is Success:
-            self.tree.reset()
+        else:
+            self.tree.status = status
 
 
 class Selector(Composite):
@@ -55,15 +56,16 @@ class Selector(Composite):
             if not self.current_id + 1 == len(self.children):
                 self.current_id += 1
                 status = Running
+            else:
+                self.reset()
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
 
         if self.parent is not None:
             self.parent.get_child_status(status)
-
-        elif status is Success:
-            self.tree.reset()
+        else:
+            self.tree.status = status
 
 
 class Parallel(Composite):

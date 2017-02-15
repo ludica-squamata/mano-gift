@@ -1,5 +1,5 @@
 from random import choice
-from engine.mobs.behaviortrees import Leaf, Success, Failure
+from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
 from engine.mobs.scripts.a_star import a_star, determinar_direccion
 from engine.globs import EngineData as Ed
 
@@ -54,7 +54,7 @@ class NextPosition(Leaf):
             prox = self.tree.get_context('next')
             self.tree.set_context('punto_proximo', camino[prox])
 
-        return Success
+            return Success
 
 
 class Move(Leaf):
@@ -68,8 +68,6 @@ class Move(Leaf):
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             e.cambiar_direccion(direccion)
             e.mover()
+            return Running
 
-        else:
-            # Esto no deberia ser necesario.
-            self.tree.reset()
-            return Success
+        return Success

@@ -2,6 +2,8 @@ from random import choice, randint
 from .composites import *
 from .status import *
 
+__all__ = ['RandomSequence', 'RandomSelector']
+
 
 class RandomComposite(Composite):
     explored_children = []
@@ -26,15 +28,14 @@ class RandomSequence(Sequence):
 
             if not len(self.explored_children) == len(self.children):
                 status = Running
-        
+
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
-        
+
         if self.parent is not None:
             self.parent.get_child_status(status)
-
-        elif status is Success:
-            self.tree.reset_to_check()
+        else:
+            self.tree.status = status
 
 
 class RandomSelector(Selector):
@@ -54,9 +55,8 @@ class RandomSelector(Selector):
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
-        
+
         if self.parent is not None:
             self.parent.get_child_status(status)
-
-        elif status is Success:
-            self.tree.reset_to_check()
+        else:
+            self.tree.status = status

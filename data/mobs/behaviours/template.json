@@ -1,8 +1,17 @@
 {
-    "0": {"name":"Sequence","children":[]},
-    "10":{"name":"Selector","children":[]},
-    "2": {"name":"UntilFail","child":0},
-    "7": {"name":"Inverter", "child":0},
-    "12":{"name":"Succeeder","child":0},
-    "1": {"name":"_getstackfrom", "context":["door","building"]}
+  "head":{
+    "script":{
+      "module":["<Functions>", "<SubClasses>"]
+      },
+    "special":{
+      "Repeater":{"ID":null,"times":0}
+      }
+  },
+  "body":{
+    "0":{"name":"Repeater","child":0},
+    "1":{"name":"Sequence","children":[0,0,0]},
+    "2":{"name":"Selector","children":[0,0,0]},
+    "3":{"name":"UntilFail","child":0},
+    "4":{"name":"<leaf>"}
+  }
 }
