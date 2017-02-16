@@ -13,12 +13,8 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
     idle_walk_img = {}  # imagenes normales
-    idle_walk_alpha = {}
-
     cmb_atk_img = {}  # combat position images.
-    cmb_atk_alpha = {}  # combat position images's alpha.
     cmb_walk_img = {}  # combat walking images.
-    cmb_walk_alpha = {}  # combat walking images's alpha.
 
     atk_counter = 0
     atk_img_index = -1
@@ -66,7 +62,6 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
         frames, alphas = [], []
         for L in ['A', 'B', 'C']:
             frames.append(self.cmb_atk_img[L + self.direccion])
-            alphas.append(self.cmb_atk_alpha[L + self.direccion])
 
         # iniciar la animación
         self.atk_counter += 1
@@ -75,14 +70,12 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
             self.atk_img_index += 1
             if self.atk_img_index < len(frames):
                 self.image = frames[self.atk_img_index]
-                self.mask = alphas[self.atk_img_index]
+
             else:
                 self.atk_img_index = 0
                 self.atacando = False
                 self.images = self.cmb_walk_img
-                self.mascaras = self.cmb_walk_alpha
                 self.image = self.images['S' + self.direccion]
-                self.mask = self.mascaras['S' + self.direccion]
 
     def accion(self):
         if self.estado == 'cmb':
@@ -92,12 +85,10 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
         if self.estado == 'idle':
             self.estado = 'cmb'
             self.images = self.cmb_walk_img
-            self.mascaras = self.cmb_walk_alpha
 
         elif self.estado == 'cmb':
             self.estado = 'idle'
             self.images = self.idle_walk_img
-            self.mascaras = self.idle_walk_alpha
 
         self.animar_caminar()
 

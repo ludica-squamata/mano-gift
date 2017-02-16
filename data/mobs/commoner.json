@@ -10,11 +10,7 @@
     "death":null,
     "diag_face":"mobs/imagenes/npc_face.png"
   },
-  "alphas":{
-    "idle":"mobs/colisiones/human_walk.png",
-    "atk":null,
-    "death":null
-  },
+  "alpha":"mobs/colisiones/human_walk.png",
   "states":[
     {
       "ID":0,

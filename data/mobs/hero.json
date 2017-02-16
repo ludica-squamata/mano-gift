@@ -10,11 +10,7 @@
         "atk":"mobs/imagenes/heroe_cmb_atk.png",
         "diag_face":"mobs/imagenes/pc_face.png"
         },
-    "alphas":{
-        "idle":"mobs/colisiones/human_walk.png",
-        "cmb":"mobs/colisiones/human_walk.png",
-        "atk":"mobs/colisiones/heroe_cmb_atk.png"
-    },
+    "alpha":"mobs/colisiones/human_walk.png",
     "clase":"PC",
     "propiedades":[]
 }

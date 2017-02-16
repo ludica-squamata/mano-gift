@@ -17,25 +17,21 @@ class Mob(Combativo, Equipado, ShadowSprite):
 
         dirs = ['S', 'L', 'R']
         imgs = data['imagenes']
-        alpha = data['alphas']
         for key in imgs:
             if imgs[key] is not None:
                 if key == 'idle':
                     self.idle_walk_img = self.cargar_anims(imgs['idle'], dirs)
-                    self.idle_walk_alpha = self.cargar_anims(alpha['idle'], dirs, True)
+                    self.mascaras = self.cargar_anims(data['alpha'], dirs, True)
                 elif key == 'atk':
                     self.cmb_atk_img = self.cargar_anims(imgs['atk'], ['A', 'B', 'C'])
-                    self.cmb_atk_alpha = self.cargar_anims(alpha['atk'], ['A', 'B', 'C'], True)
                 elif key == 'cmb':
                     self.cmb_walk_img = self.cargar_anims(imgs['cmb'], dirs)
-                    self.cmb_walk_alpha = self.cargar_anims(alpha['cmb'], dirs, True)
                 elif key == 'death':
                     self.death_img = Rs.cargar_imagen(imgs['death'])
                 elif key == "diag_face":
                     self.diag_face = Rs.cargar_imagen(imgs["diag_face"])
 
         self.images = self.idle_walk_img
-        self.mascaras = self.idle_walk_alpha
         self.ID = data['ID']
         self.nombre = data['nombre']
 
