@@ -28,12 +28,13 @@ class PC(EventAware, Parlante, Mob):
                     self.deregister()
 
             elif sprite.tipo == 'Prop':
-                if sprite.action is not None:
-                    sprite.action(self)
+                if self.estado != 'cmb':
+                    if sprite.action is not None:
+                        sprite.action(self)
 
-                elif self.estado != 'cmb':
-                    sprite.show_description()
-                    self.deregister()
+                    else:
+                        sprite.show_description()
+                        self.deregister()
 
     def cambiar_estado(self):
         super().cambiar_estado()
