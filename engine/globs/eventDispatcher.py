@@ -64,13 +64,11 @@ class EventDispatcher:
         :return:None
         """
         _cola = cls._cola
-        l = 0
-        while len(_cola) - l > 0:
+        while len(_cola) > 0:
             evento = _cola.popleft()
             if evento.tipo in cls._oyentes:
                 for listener in cls._oyentes[evento.tipo]:
                     listener(evento)
-            l += 1
     
     @classmethod
     def get_queqed(cls):
