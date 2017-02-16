@@ -1,8 +1,9 @@
 from ._animado import Animado
+from ._interactivo import Interactivo
 from engine.globs.eventDispatcher import EventDispatcher
 
 
-class Combativo(Animado):
+class Combativo(Animado, Interactivo):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -19,8 +20,11 @@ class Combativo(Animado):
             self.dead = True
             EventDispatcher.trigger('MobMuerto', self.tipo, {'obj': self})
 
-    def atacar(self, sprite):
-        x, y = self.direcciones[self.direccion]
-        x, y = x * self.fuerza, y * self.fuerza
-        sprite.reubicar(x, y)
-        sprite.recibir_danio(self.fuerza)
+    def atacar(self):
+        if super().atacar():
+            sprite = self.quadrant_interaction()
+            x, y = self.direcciones[self.direccion]
+
+            x, y = x * self.fuerza, y * self.fuerza
+            sprite.reubicar(x, y)
+            sprite.recibir_danio(self.fuerza)

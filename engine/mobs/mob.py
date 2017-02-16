@@ -5,7 +5,7 @@ from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
 
 
-class Mob(Interactivo, Equipado, ShadowSprite, Combativo):
+class Mob(Combativo, Equipado, ShadowSprite):
     hablante = False
     mana = 1
 

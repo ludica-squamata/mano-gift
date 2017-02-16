@@ -67,7 +67,7 @@ class Move(Leaf):
         if pi != pd:
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             e.cambiar_direccion(direccion)
-            e.mover()
+            #e.mover()
             return Running
 
         return Success

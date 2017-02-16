@@ -60,6 +60,7 @@ class Modo:
                     EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
 
                 elif nombre == 'contextual':
+                    Ed.HERO.detener_movimiento()
                     Ed.HERO.deregister()
                     QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
 

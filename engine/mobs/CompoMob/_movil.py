@@ -4,6 +4,7 @@ from ._atribuido import Atribuido
 
 
 class Movil(Atribuido):
+    moviendose = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -33,8 +34,15 @@ class Movil(Atribuido):
 
     # noinspection PyMethodOverriding
     def mover(self):
+        self.moviendose = True
         dx, dy = super().mover(*self.direcciones[self.direccion])
         self.reubicar(dx, dy)
+
+    def atacar(self):
+        if not self.moviendose:
+            return True
+        else:
+            return False
 
     def detectar_colisiones(self):
         dx, dy = super().mover(*self.direcciones[self.direccion])
@@ -75,4 +83,4 @@ class Movil(Atribuido):
         return any([col_bordes, col_mobs, col_props, col_mapa])
 
     def detener_movimiento(self):
-        pass
+        self.moviendose = False

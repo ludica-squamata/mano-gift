@@ -5,7 +5,6 @@ from pygame import mask
 
 
 class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para las imagenes
-    ticks, mov_ticks = 0, 0
     atacando = False
     death_img = None  # sprite del mob muerto.
     dead = False
@@ -30,7 +29,7 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.timer_animacion = 0
-        self.frame_animacion = 1000 / 12
+        self.frame_animacion = 1000 / 6
 
     @staticmethod
     def cargar_anims(ruta_imgs, seq, alpha=False):
@@ -85,10 +84,6 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
                 self.image = self.images['S' + self.direccion]
                 self.mask = self.mascaras['S' + self.direccion]
 
-    def mover(self):
-        self.animar_caminar()
-        super().mover()
-
     def accion(self):
         if self.estado == 'cmb':
             self.atacando = True
@@ -109,6 +104,8 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     def update(self):
         if self.atacando:
             self.animar_ataque(5)
+        if self.moviendose:
+            self.animar_caminar()
 
     def detener_movimiento(self):
         super().detener_movimiento()

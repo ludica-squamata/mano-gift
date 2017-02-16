@@ -20,21 +20,21 @@ class PC(EventAware, Parlante, Mob):
         super().accion()
         sprite = self.quadrant_interaction()
         if sprite is not None:
-            if sprite.tipo == 'Mob':
-                if self.estado == 'cmb':
-                    self.atacar(sprite)
-                else:
-                    self.elegir_tema(sprite)
-                    self.deregister()
+            if self.estado == 'cmb':
+                if hasattr(sprite, 'recibir_danio'):
+                    self.atacar()
 
             elif sprite.tipo == 'Prop':
-                if self.estado != 'cmb':
-                    if sprite.action is not None:
-                        sprite.action(self)
+                if sprite.action is not None:
+                    sprite.action(self)
 
-                    else:
-                        sprite.show_description()
-                        self.deregister()
+                else:
+                    sprite.show_description()
+                    self.deregister()
+
+            elif sprite.tipo == 'Mob':
+                self.elegir_tema(sprite)
+                self.deregister()
 
     def cambiar_estado(self):
         super().cambiar_estado()
