@@ -11,5 +11,9 @@
     "scripts":"scripts",
     "scenes":"scenes"
   },
-  "use_latitude":true
+  "use_latitude":true,
+  "scripts":{
+    "custom_menus":["CustomMenu"]
+  }
+
 }

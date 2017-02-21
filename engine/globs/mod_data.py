@@ -14,7 +14,8 @@ class ModData:
     mapas = ''
     mobs = ''
     items = ''
-    scripts = ''
+    fd_scripts = ''
+    custommenus = ''
     QMC = None
 
     @classmethod
@@ -27,9 +28,11 @@ class ModData:
         if not cls._find_mod_folder(ini_data):
             Util.salir("la ruta no existe")
 
-        data = cls._get_file_data('mod.json')
-        if data is not None:
+        data = cls._get_file_data(ini_data['data_file'])
+        if data is None:
+            Util.salir('No data in mod folder')
 
+        else:
             cls.data = data
             root = cls.mod_folder
 
@@ -38,27 +41,33 @@ class ModData:
             cls.mapas = root + data['folders']['mapas'] + '/'
             cls.mobs = root + data['folders']['mobs'] + '/'
             cls.items = root + data['folders']['items'] + '/'
-            cls.scripts = root + data['folders']['scripts'] + '/'
+            cls.fd_scripts = root + data['folders']['scripts'] + '/'
 
-            for script in listdir(cls.scripts):
+            for script_name in cls.data['scripts']:
+                ruta = cls.fd_scripts + script_name + '.py'
+                module = machinery.SourceFileLoader("module.name", ruta).load_module()
+                if script_name == 'custom_menus':
+                    for menu_name in cls.data['scripts']['custom_menus']:
+                        print(menu_name)
+                elif script_name == 'intro':
+                    pass
+                elif script_name == 'circular_menu':
+                    pass
+
+            for script in listdir(cls.fd_scripts):
                 # lo convertí en un loop para poder agregar, por ejemplo,
                 # una pantalla de gameover sin tener que buscar ese nombre
-                ruta = cls.scripts + script
+                ruta = cls.fd_scripts + script
 
                 if path.isfile(ruta):
-                    name = script.rstrip('.py')
+                    script_name = script.rstrip('.py')
                     # if sys.version_info.minor == 3:  # python 3.3
                     module = machinery.SourceFileLoader("module.name", ruta).load_module()
                     # elif sys.version_info.minor == 4:  # python 3.4
                     # Deshabilitado porque me tira una exception que no entiendo.
                     # module = machinery.SourceFileLoader("module.name", ruta).exec_module()
 
-                    if hasattr(module, name) and not hasattr(cls, name):
-                        # lo resolví mmás fácil. Si ésta clase no tiene el nombre ya...
-                        setattr(cls, name, (getattr(module, name)))
-                        # añadirlo.
-
-                    elif name == 'circularmenu':
+                    if script_name == 'circularmenu':
                         cls.QMC = []
                         i = -1
                         for d in cls.data.get('circularmenu', []):
@@ -72,8 +81,6 @@ class ModData:
                                     d.update({'cmd': spec})
                                 cls.QMC.append(d)
 
-        else:
-            Util.salir('No data in mod folder')
 
     @classmethod
     def _find_mod_folder(cls, ini):
@@ -97,7 +104,7 @@ class ModData:
 
     @classmethod
     def get_script_method(cls, scriptname, methodname):
-        ruta = cls.scripts + scriptname
+        ruta = cls.fd_scripts + scriptname
         module = machinery.SourceFileLoader("module.name", ruta).load_module()
         if hasattr(module, methodname):
             return getattr(module, methodname)

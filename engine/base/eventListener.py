@@ -15,7 +15,7 @@ class EventListener:
         """
         if self.data.get('script') and self.data.get('eventos'):
             # cargar un archivo por ruta
-            loader = machinery.SourceFileLoader("module.name", Md.scripts + self.data['script'])
+            loader = machinery.SourceFileLoader("module.name", Md.fd_scripts + self.data['script'])
             # if sys.version_info.minor == 3:
             m = loader.load_module()
             # elif sys.version_info.minor == 4:

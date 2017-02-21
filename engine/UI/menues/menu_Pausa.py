@@ -17,7 +17,8 @@ class MenuPausa(Menu):
         botones = [
             {m: "Equipo", k: {a: "Cargar", b: "Opciones"}},
             {m: "Opciones", k: {a: "Equipo", b: "Cargar"}},
-            {m: "Cargar", k: {a: "Opciones", b: "Equipo"}},
+            {m: "Cargar", k: {a: "Opciones", b: "Custom"}},
+            {m: "Custom", k: {a: "Cargar", b: "Equipo"}}
         ]
 
         if FEATURE_MENUS_ADICIONALES:

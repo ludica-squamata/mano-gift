@@ -7,7 +7,7 @@ from engine.libs.textrect import render_textrect
 from engine.misc import Util
 
 
-def intro(fondo):
+def creditos_introduccion():
     color = {
         "rojo": (255, 0, 0),
         "verde": (0, 255, 0),
@@ -84,6 +84,7 @@ def intro(fondo):
 
     # contador para el efecto de parpadeo (placa 4)
     j = 0
+    fondo = pantalla.get_surface()
     while running is True:
         Tiempo.FPS.tick(60)
 

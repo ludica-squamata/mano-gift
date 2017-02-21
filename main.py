@@ -1,9 +1,9 @@
 from pygame import display as pantalla, init as py_init, event, font, joystick, image
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Tiempo, ModData, ANCHO, ALTO
 from engine.misc import Resources as Rs, Config
 from engine.IO.modos import Modo
 import os
-
 
 py_init()
 if joystick.get_count():
@@ -14,18 +14,14 @@ pantalla.set_caption(ModData.data['nombre'])
 pantalla.set_icon(image.load(ModData.graphs + ModData.data['icono']))
 os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
 fondo = pantalla.set_mode(tamanio)
+event.set_blocked([1, 4, 5, 6, 17])  # all mouse- and video-related events
+cambios = []
 
 fuente = font.SysFont('verdana', 16, bold=True)
 rojo = 255, 0, 0
-if Config.dato('mostrar_intro'):
-    # noinspection PyUnresolvedReferences
-    ModData.intro(fondo)
 
-event.set_blocked([1, 4, 5, 6, 17])
-# all mouse- and video-related events
+EventDispatcher.trigger('init_system', 'engine', {'intro': Config.dato('mostrar_intro')})  # init_system
 
-Modo.pop_menu('Principal')
-cambios = []
 while True:
     Tiempo.update(60)
     events = event.get()

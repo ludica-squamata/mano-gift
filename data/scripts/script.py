@@ -2,6 +2,7 @@
 
 from engine.globs import ModState
 from engine.globs.eventDispatcher import EventDispatcher
+from engine.misc import Resources
 
 
 def boton_step(nombre, data):
@@ -43,4 +44,14 @@ def init_game(event):
     EventDispatcher.deregister(init_game, 'NuevoJuego')
     EngineData.cargar_juego(mapa, entrada, dia, hora, minutos, focus)
 
+
+def init_system(event):
+    if event.data['intro']:
+        module = Resources.load_module_from_script('intro')
+
+        # se supone que el modder sabe cómo se llama la función
+        getattr(module, 'creditos_introduccion')()
+    EventDispatcher.trigger('OpenMenu', 'Script', {'value': 'Principal'})
+
+EventDispatcher.register(init_system, 'init_system')
 EventDispatcher.register(init_game, 'NuevoJuego')

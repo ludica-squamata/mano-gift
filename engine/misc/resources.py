@@ -48,6 +48,6 @@ class Resources:
     @staticmethod
     def load_module_from_script(name):
         from engine.globs.mod_data import ModData
-        ruta = ModData.scripts + name + '.py'
+        ruta = ModData.fd_scripts + name + '.py'
         module = machinery.SourceFileLoader("module.name", ruta).load_module()
         return module
