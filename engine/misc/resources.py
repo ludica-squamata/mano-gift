@@ -51,3 +51,8 @@ class Resources:
         ruta = ModData.fd_scripts + name + '.py'
         module = machinery.SourceFileLoader("module.name", ruta).load_module()
         return module
+
+    @staticmethod
+    def raw_load_module(ruta):
+        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        return module

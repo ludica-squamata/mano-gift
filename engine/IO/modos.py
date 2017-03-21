@@ -66,7 +66,6 @@ class Modo:
 
     @classmethod
     def pop_menu(cls, titulo=None):
-
         if titulo == 'Previous':
             del Ed.acceso_menues[-1]
             titulo = Ed.acceso_menues[-1]
@@ -74,8 +73,14 @@ class Modo:
             Ed.acceso_menues.append(titulo)
 
         if titulo not in Ed.MENUS:
+            name = 'Menu' + titulo
             try:
-                menu = eval('Menu' + titulo + '()')
+                if name in Md.custommenus:
+                    menu = Md.custommenus[name]()
+                else:
+                    # from globals()
+                    menu = eval(name + '()')
+
             except Exception as Description:
                 print('No se pudo abrir el menu porque:', Description)
                 menu = Menu(titulo)

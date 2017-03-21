@@ -1,5 +1,4 @@
 from os import getcwd as cwd, path, listdir
-from importlib import machinery
 from engine.misc import Util, Resources
 from engine.globs.tiempo import Tiempo
 
@@ -15,7 +14,7 @@ class ModData:
     mobs = ''
     items = ''
     fd_scripts = ''
-    custommenus = ''
+    custommenus = None
     QMC = None
 
     @classmethod
@@ -43,44 +42,41 @@ class ModData:
             cls.items = root + data['folders']['items'] + '/'
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
 
-            for script_name in cls.data['scripts']:
-                ruta = cls.fd_scripts + script_name + '.py'
-                module = machinery.SourceFileLoader("module.name", ruta).load_module()
-                if script_name == 'custom_menus':
-                    for menu_name in cls.data['scripts']['custom_menus']:
-                        print(menu_name)
-                elif script_name == 'intro':
-                    pass
-                elif script_name == 'circular_menu':
-                    pass
+            loaded = []
+            for keyword in cls.data.get('custom', False):
+                cls.custommenus = {}
+                if keyword == 'menus':
+                    for d in cls.data['custom']['menus']:
+                        loaded.append(d['script'])
+                        ruta = cls.fd_scripts + d['script'] + '.py'
+                        module = Resources.raw_load_module(ruta)
+                        menu = getattr(module, d['name'])
+                        cls.custommenus[d['name']] = menu
+
+                elif keyword == 'circular':
+                    cls.QMC = []
+                    i = -1
+                    for d in cls.data['custom']['circular']:
+                        ruta = cls.fd_scripts + d['script'] + '.py'
+                        module = Resources.raw_load_module(ruta)
+                        loaded.append(d['script'])
+                        if hasattr(module, d['name']):
+                            i += 1
+                            d.update({'idx': i})
+                            spec = getattr(module, d['name'])
+                            if type(spec) is list:
+                                d.update({'csc': spec})
+                            else:
+                                d.update({'cmd': spec})
+                            cls.QMC.append(d)
 
             for script in listdir(cls.fd_scripts):
-                # lo convertí en un loop para poder agregar, por ejemplo,
-                # una pantalla de gameover sin tener que buscar ese nombre
                 ruta = cls.fd_scripts + script
-
                 if path.isfile(ruta):
                     script_name = script.rstrip('.py')
-                    # if sys.version_info.minor == 3:  # python 3.3
-                    module = machinery.SourceFileLoader("module.name", ruta).load_module()
-                    # elif sys.version_info.minor == 4:  # python 3.4
-                    # Deshabilitado porque me tira una exception que no entiendo.
-                    # module = machinery.SourceFileLoader("module.name", ruta).exec_module()
-
-                    if script_name == 'circularmenu':
-                        cls.QMC = []
-                        i = -1
-                        for d in cls.data.get('circularmenu', []):
-                            if hasattr(module, d['name']):
-                                i += 1
-                                d.update({'idx': i})
-                                spec = getattr(module, d['name'])
-                                if type(spec) is list:
-                                    d.update({'csc': spec})
-                                else:
-                                    d.update({'cmd': spec})
-                                cls.QMC.append(d)
-
+                    if script_name not in loaded:
+                        Resources.raw_load_module(ruta)
+                        loaded.append(script_name)
 
     @classmethod
     def _find_mod_folder(cls, ini):
@@ -105,6 +101,6 @@ class ModData:
     @classmethod
     def get_script_method(cls, scriptname, methodname):
         ruta = cls.fd_scripts + scriptname
-        module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        module = Resources.raw_load_module(ruta)
         if hasattr(module, methodname):
             return getattr(module, methodname)

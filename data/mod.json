@@ -12,8 +12,10 @@
     "scenes":"scenes"
   },
   "use_latitude":true,
-  "scripts":{
-    "custom_menus":["CustomMenu"]
-  }
 
+  "custom":{
+    "menus":[
+      {"script":"custom_menus","name":"MenuCustom"}
+    ]
+  }
 }
