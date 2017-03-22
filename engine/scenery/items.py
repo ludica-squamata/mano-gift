@@ -1,33 +1,4 @@
-class Item:
-    stackable = False
-    tipo = ''
-
-    def __init__(self, nombre, imagen, data):
-        self.nombre = nombre
-        self.image = imagen
-        self.ID = data['ID']
-        self.peso = data['peso']
-        self.volumen = data['volumen']
-        self.efecto_des = data['efecto']['des']
-        if 'stackable' in data['propiedades']:
-            self.stackable = True
-
-    def __eq__(self, other):
-        if other.__class__ == self.__class__ and self.ID == other.ID:
-            return True
-        else:
-            return False
-
-    def __ne__(self, other):
-        if other.__class__ != self.__class__:
-            return True
-        elif self.ID != other.ID:
-            return True
-        else:
-            return False
-
-    def __repr__(self):
-        return self.nombre + ' (' + self.tipo + ')'
+from .bases import Item
 
 
 class Equipable(Item):

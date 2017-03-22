@@ -1,7 +1,7 @@
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
-from engine.globs import EngineData as Ed, ModData as Md
+from engine.globs import EngineData, ModData
 from engine.globs import MobGroup
-from engine.misc import Resources as Rs
+from engine.misc import Resources
 from engine.scenery import new_prop
 from engine.mobs import PC, NPC
 from .salida import Salida
@@ -48,7 +48,7 @@ class Loader:
         loaded_props = []
         for ref in pos:
             try:
-                data = Rs.abrir_json(Md.items + ref + '.json')
+                data = Resources.abrir_json(ModData.items + ref + '.json')
             except IOError:
                 data = False
 
@@ -74,7 +74,7 @@ class Loader:
         for key in alldata['mobs']:
             pos = alldata['mobs'][key]
             for ref in pos:
-                data = Rs.abrir_json(Md.mobs + key + '.json')
+                data = Resources.abrir_json(ModData.mobs + key + '.json')
                 for x, y in pos:
                     mob = NPC(ref, x, y, data)
                     loaded_mobs.append((mob, GRUPO_MOBS))
@@ -85,15 +85,15 @@ class Loader:
     def load_hero(x, y):
         try:
             pc = MobGroup['heroe']
-            Ed.HERO = pc
-            Ed.HERO.ubicar(x, y)
-            Ed.HERO.mapRect.center = x, y
-            Ed.HERO.z = Ed.HERO.mapRect.y + Ed.HERO.rect.h
+            EngineData.HERO = pc
+            EngineData.HERO.ubicar(x, y)
+            EngineData.HERO.mapRect.center = x, y
+            EngineData.HERO.z = EngineData.HERO.mapRect.y + EngineData.HERO.rect.h
             
         except (IndexError, KeyError, AttributeError):
-            Ed.HERO = PC(Rs.abrir_json(Md.mobs + 'hero.json'), x, y)
+            EngineData.HERO = PC(Resources.abrir_json(ModData.mobs + 'hero.json'), x, y)
 
-        return [Ed.HERO]
+        return [EngineData.HERO]
 
     @staticmethod
     def cargar_salidas(alldata):

@@ -1,58 +1,12 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.UI.propdescription import PropDescription
-from engine.base import ShadowSprite, EventListener
 from engine.globs import ItemGroup, ModData
 from engine.globs.renderer import Renderer
 from engine.misc import Resources
 from pygame import mask, Rect
+from .bases import Escenografia
 from .items import *
 
-
-class Escenografia(ShadowSprite, EventListener):
-    accion = None
-    action = None
-
-    def __init__(self, nombre, x, y, z=0, data=None, imagen=None, rect=None):
-        """
-        :param nombre:
-        :param imagen:
-        :param x:
-        :param y:
-        :param data:
-        :type nombre:str
-        :type imagen:str
-        :type x:int
-        :type y:int
-        :type data:dict
-        :return:
-        """
-        self.nombre = nombre
-        self.tipo = 'Prop'
-        self.data = data
-        if imagen is None and data is not None:
-            imagen = data.get('image')
-        super().__init__(imagen=imagen, rect=rect, x=x, y=y, dz=z)
-        self.solido = 'solido' in data.get('propiedades', [])
-        self.proyectaSombra = data.get('proyecta_sombra', True)
-        self.descripcion = data.get('descripcion', "Esto es un ejemplo")
-        self.face = data.get('cara', 'front')
-
-        try:
-            dialogo = Resources.abrir_json(ModData.dialogos + self.nombre + '.json')
-            self.data.update({'dialog': dialogo})
-        except IOError:
-            pass
-
-        self.add_listeners()  # carga de event listeners
-
-    def rotate_view(self, np):
-        pass
-
-    def __repr__(self):
-        return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
-
-    def show_description(self):
-        PropDescription(self)
+__all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'Estructura3D', 'Escenografia']
 
 
 class Agarrable(Escenografia):
@@ -238,4 +192,3 @@ class Estructura3D(Escenografia):
 
         for prop in self.faces[self.face]:
             Renderer.camara.add_real(prop)
-
