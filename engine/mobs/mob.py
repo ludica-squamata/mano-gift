@@ -53,7 +53,7 @@ class Mob(Combativo, Equipado, ShadowSprite):
         if self.nombre not in MobGroup:
             MobGroup[self.nombre] = self
 
-        EventDispatcher.register(self.rotate_and_pos, 'Rotar_mobs')
+        EventDispatcher.register(self.rotate_and_pos, 'RotateMobs')
 
     def rotate_and_pos(self, event):
         x = event.data['x']

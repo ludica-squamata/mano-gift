@@ -11,7 +11,7 @@ class MobGroup:
         self._group = {}
         self._indexes = []
 
-        EventDispatcher.register(self.delete_mob, 'MobMuerto')
+        EventDispatcher.register(self.delete_mob, 'MobDeath')
 
     def __setitem__(self, key, value):
         if key not in self._group:
@@ -82,7 +82,7 @@ class ItemGroup:
         self._indexes = []
         self._lenght = 0
 
-        EventDispatcher.register(self.delete_item, 'DelItem')
+        EventDispatcher.register(self.delete_item, 'DeleteItem')
 
     def __setitem__(self, key, value):
         if key not in self._group:

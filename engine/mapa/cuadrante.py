@@ -12,7 +12,7 @@ class Cuadrante:
         self.itemgroup = Group()
         self.mobgroup = Group()
         self.rect = Rect(w * x, h * y, w, h)
-        EventDispatcher.register(self.event_remove, "DelItem")
+        EventDispatcher.register(self.event_remove, "DeleteItem")
 
     def add(self, item):
         if item.tipo == 'Mob':

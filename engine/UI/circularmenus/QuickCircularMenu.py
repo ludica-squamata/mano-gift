@@ -59,4 +59,4 @@ class QuickCircularMenu(RenderedCircularMenu):
     def cmd_rotar_vista(direccion):
         # solo una abreviatura
 
-        EventDispatcher.trigger('Rotar', 'Menu Rápido', {'view': direccion})
+        EventDispatcher.trigger('Rotate', 'Menu Rápido', {'view': direccion})

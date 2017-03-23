@@ -58,8 +58,7 @@ class EngineData:
         Renderer.clear_overlays_from_layer(layer)
         cls.DIALOG = None
         # cls.menu_actual.deregister()  # no estoy seguro de que se pueda usar todas las veces.
-        cls.onPause = False
-        EventDispatcher.trigger('Pause', 'EngineData', {'value': False})
+        EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
             cls.HERO.register()
@@ -75,13 +74,13 @@ class EngineData:
     def new_game(cls, char_name):
         cls.char_name = char_name
         Resources.guardar_json(SAVEFD + '/' + char_name + '.json', {"name": char_name})
-        EventDispatcher.trigger('NuevoJuego', 'engine', {})
+        EventDispatcher.trigger('NewGame', 'engine', {})
 
     @classmethod
     def load_savefile(cls, filename):
         data = Resources.abrir_json(SAVEFD + '/' + filename)
         cls.char_name = data['name']
-        EventDispatcher.trigger('NuevoJuego', 'engine', {'savegame': data})
+        EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
     @classmethod
     def cargar_juego(cls, mapa, entrada, dia, hora, minutos, focus):
@@ -103,9 +102,14 @@ class EngineData:
     def rotarte_view(cls, event):
         cls.current_view = event.data['new_view']
 
+    @classmethod
+    def toggle_pause(cls, event):
+        cls.onPause = event.data['value']
 
-EventDispatcher.register(EngineData.on_cambiarmapa, "CambiarMapa")
+
+EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
 EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
 EventDispatcher.register(EngineData.salvar, "SaveDataFile")
 EventDispatcher.register(EngineData.compound_save_data, "SaveData")
-EventDispatcher.register(EngineData.rotarte_view, 'Rotar_Todo')
+EventDispatcher.register(EngineData.rotarte_view, 'RotateEverything')
+EventDispatcher.register(EngineData.toggle_pause, 'TogglePause')

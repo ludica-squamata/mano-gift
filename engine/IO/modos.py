@@ -3,7 +3,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import Util
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE
+from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1
 from engine.UI.menues import *
 from engine.UI import QuickCircularMenu
 
@@ -20,6 +20,8 @@ class Modo:
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     Util.salir()
+                elif event.key == K_F1:
+                    EventDispatcher.get_registered()
 
         EventDispatcher.process()
 
@@ -27,7 +29,7 @@ class Modo:
     def update(events, fondo):
         modo = Ed.MODO
         for event in get_taphold_events(events):
-            EventDispatcher.trigger('key', 'Modo.'+modo, event.__dict__)
+            EventDispatcher.trigger('Key', 'Modo.'+modo, event.__dict__)
 
         if modo == 'Aventura':
             Ed.MAPA_ACTUAL.update()
@@ -89,8 +91,7 @@ class Modo:
             menu.reset()
 
         Ed.MODO = 'Menu'
-        EventDispatcher.trigger('Pause', 'Modos', {'value': True})
-        Ed.onPause = True
+        EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
         Ed.menu_actual = menu
         Ed.menu_actual.register()
         if Ed.HUD is not None:
@@ -99,4 +100,4 @@ class Modo:
         Renderer.overlays.move_to_front(menu)
 
 EventDispatcher.register(Modo.change_menu, 'OpenMenu')
-EventDispatcher.register(Modo.toggle_mode, 'key')
+EventDispatcher.register(Modo.toggle_mode, 'Key')

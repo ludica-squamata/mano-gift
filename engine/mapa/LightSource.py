@@ -126,7 +126,7 @@ class DayLight:
         self.estatico = True
         self.nombre = 'Sol'
 
-        EventDispatcher.register(self.movimiento_por_rotacion, 'hora')
+        EventDispatcher.register(self.movimiento_por_rotacion, 'HourFlag')
 
     def movimiento_por_rotacion(self, event):
         h = event.data['hora'].h
@@ -137,6 +137,6 @@ class DayLight:
             p = 4
         self.rect.y -= 100
 
-        EventDispatcher.trigger('MovimientoSolar', self.nombre, {"light": p})
+        EventDispatcher.trigger('SolarMovement', self.nombre, {"light": p})
 
 __all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']

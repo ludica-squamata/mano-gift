@@ -24,11 +24,11 @@ class EventAware:
         pass
 
     def register(self):
-        EventDispatcher.register(self.listener, 'key')
+        EventDispatcher.register(self.listener, 'Key')
         self.registered = True
 
     def deregister(self):
-        EventDispatcher.deregister(self.listener, 'key')
+        EventDispatcher.deregister(self.listener, 'Key')
         self.registered = False
 
     def use_function(self, mode, key):

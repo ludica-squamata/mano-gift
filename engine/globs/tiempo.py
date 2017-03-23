@@ -49,7 +49,7 @@ class Clock:
         self._m = m
         self._s = s
 
-        EventDispatcher.register(self.on_pause, 'Pause')
+        EventDispatcher.register(self.on_pause, 'TogglePause')
 
     def on_pause(self, event):
         self.enabled = not event.data['value']
@@ -353,7 +353,7 @@ class Tiempo:
             if cls.clock.day_flag:
                 cls.dia += 1
             if cls.clock.hour_flag:
-                EventDispatcher.trigger('hora', 'Tiempo', {"hora": cls.clock.timestamp()})
+                EventDispatcher.trigger('HourFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
             if cls.clock.minute_flag:
                 pass
             if cls.clock.second_flag:

@@ -31,4 +31,4 @@ def gameover(evento):
     if evento.data['obj'].nombre == 'heroe':
         Renderer.add_overlay(FadingScreen(), 50)
 
-EventDispatcher.register(gameover, "MobMuerto")
+EventDispatcher.register(gameover, "MobDeath")

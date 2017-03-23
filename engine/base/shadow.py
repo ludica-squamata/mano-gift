@@ -66,7 +66,7 @@ class ShadowSprite(AzoeSprite):
 
         self.previousimage = self.image
         if FEATURE_SOMBRAS_DINAMICAS:
-            EventDispatcher.register(self.update_luces, 'MovimientoSolar')
+            EventDispatcher.register(self.update_luces, 'SolarMovement')
 
     def add_shadow(self, *args):
         Renderer.camara.remove_obj(self.sombra)

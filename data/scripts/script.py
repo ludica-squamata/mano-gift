@@ -41,7 +41,7 @@ def init_game(event):
         dia, hora, minutos = 0, 9, 54
         focus = 'heroe'
 
-    EventDispatcher.deregister(init_game, 'NuevoJuego')
+    EventDispatcher.deregister(init_game, 'NewGame')
     EngineData.cargar_juego(mapa, entrada, dia, hora, minutos, focus)
 
 
@@ -53,5 +53,5 @@ def init_system(event):
         getattr(module, 'creditos_introduccion')()
     EventDispatcher.trigger('OpenMenu', 'Script', {'value': 'Principal'})
 
-EventDispatcher.register(init_system, 'init_system')
-EventDispatcher.register(init_game, 'NuevoJuego')
+EventDispatcher.register(init_system, 'InitSystem')
+EventDispatcher.register(init_game, 'NewGame')

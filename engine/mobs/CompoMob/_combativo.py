@@ -10,7 +10,7 @@ class Combativo(Animado, Interactivo):
 
     def recibir_danio(self, danio):
         self.salud_act -= danio
-        EventDispatcher.trigger('MobHerido', self.tipo, {'mob': self})
+        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self})
 
         if self.salud_act <= 0:
             if self.death_img is not None:
@@ -18,7 +18,7 @@ class Combativo(Animado, Interactivo):
                 # esto queda hasta que haga sprites 'muertos' de los npcs
                 # pero necesito más resolución para hacerlos...
             self.dead = True
-            EventDispatcher.trigger('MobMuerto', self.tipo, {'obj': self})
+            EventDispatcher.trigger('MobDeath', self.tipo, {'obj': self})
 
     def atacar(self):
         if super().atacar():

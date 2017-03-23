@@ -72,8 +72,10 @@ class EventDispatcher:
     
     @classmethod
     def get_queqed(cls):
+        print('quequed events:', len(cls._cola))
         for item in cls._cola:
-            print(item)
+            print('+ ', item)
+        print('end queque')
 
     @classmethod
     def is_quequed(cls, event_name):
@@ -81,6 +83,11 @@ class EventDispatcher:
             if event.tipo == event_name:
                 return True
         return False
+
+    @classmethod
+    def get_registered(cls):
+        for name in sorted(cls._oyentes):
+            print(name+',', 'oyentes:', len(cls._oyentes[name]))
 
 
 class GiftEvent:

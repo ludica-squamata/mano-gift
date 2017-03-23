@@ -86,7 +86,7 @@ class HUD:
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(dx, dy - 30)
 
-        EventDispatcher.register(self.BarraVida.event_update, 'MobHerido')
+        EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
         # EventDispatcher.register(self.BarraMana.event_update,'')
         # EventDispatcher.register(self.BarraVida.event_update,'')
 

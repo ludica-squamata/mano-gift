@@ -103,7 +103,7 @@ class Camara:
             cls.compass_CW = [cls.compass_CW[cw]] + cls.compass_CW[cw + 1:] + cls.compass_CW[:cw]
             cls.compass_CCW = [cls.compass_CCW[ccw]] + cls.compass_CCW[ccw + 1:] + cls.compass_CCW[:ccw]
 
-        EventDispatcher.trigger('Rotar_Todo', 'Camara', {'new_view': new_view, 'view': cw, 'angle': angle * 90})
+        EventDispatcher.trigger('RotateEverything', 'Camara', {'new_view': new_view, 'view': cw, 'angle': angle * 90})
 
     @classmethod
     def detectar_mapas_adyacentes(cls):
@@ -291,4 +291,4 @@ class Renderer:
 
 
 EventDispatcher.register(Camara.save_focus, 'Save')
-EventDispatcher.register(Camara.rotate_view, 'Rotar')
+EventDispatcher.register(Camara.rotate_view, 'Rotate')

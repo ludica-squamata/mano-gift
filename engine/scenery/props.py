@@ -20,7 +20,7 @@ class Agarrable(Escenografia):
         if entity.tipo == 'Mob':
             item = self.return_item()
             entity.inventario.agregar(item)
-            EventDispatcher.trigger('DelItem', 'Mob', {'obj': self})
+            EventDispatcher.trigger('DeleteItem', 'Mob', {'obj': self})
 
     def return_item(self):
         args = self.nombre, self.image, self.data
@@ -137,7 +137,7 @@ class Estructura3D(Escenografia):
 
         self.props = self.faces[self.face]
         super().__init__(nombre, x, y, data=data, rect=self.rect)
-        EventDispatcher.register(self.rotate_view, 'Rotar_Todo')
+        EventDispatcher.register(self.rotate_view, 'RotateEverything')
 
     def build_face(self, data, dx, dy, face):
         from engine.scenery import new_prop

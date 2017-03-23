@@ -20,7 +20,7 @@ cambios = []
 fuente = font.SysFont('verdana', 16, bold=True)
 rojo = 255, 0, 0
 
-EventDispatcher.trigger('init_system', 'engine', {'intro': Config.dato('mostrar_intro')})  # init_system
+EventDispatcher.trigger('InitSystem', 'engine', {'intro': Config.dato('mostrar_intro')})  # init_system
 
 while True:
     Tiempo.update(60)

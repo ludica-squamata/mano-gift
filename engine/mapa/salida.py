@@ -34,7 +34,7 @@ class Salida:
             dx *= mob.velocidad
             dy *= mob.velocidad
             if mob.colisiona(self, dx, dy) and mob.direccion in self.direcciones:
-                EventDispatcher.trigger('CambiarMapa', 'Salida', {"mob": mob, 'dest': self.chunk, 'link': self.link})
+                EventDispatcher.trigger('SetMap', 'Salida', {"mob": mob, 'dest': self.chunk, 'link': self.link})
 
     def __repr__(self):
         return self.nombre

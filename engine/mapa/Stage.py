@@ -49,10 +49,10 @@ class Stage:
         self.entrada = entrada
         self.salidas = Loader.cargar_salidas(self.data)
 
-        EventDispatcher.register(self.anochecer, 'hora')
-        EventDispatcher.register(self.del_interactive, 'DelItem', 'MobMuerto')
+        EventDispatcher.register(self.anochecer, 'HourFlag')
+        EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
         EventDispatcher.register(self.save_map, 'Save')
-        EventDispatcher.register(self.rotate_map, 'Rotar_Todo')
+        EventDispatcher.register(self.rotate_map, 'RotateEverything')
 
     def crear_cuadrantes(self):
         w = self.rect.w // 2
@@ -167,7 +167,7 @@ class Stage:
                 x = obj.left
                 y = obj.bottom
 
-        EventDispatcher.trigger('Rotar_mobs', 'Stage', {'x': x, 'y': y})
+        EventDispatcher.trigger('RotateMobs', 'Stage', {'x': x, 'y': y})
 
     def actualizar_grilla(self):
         self.grilla.update()
