@@ -12,6 +12,9 @@ from .menu import Menu
 class MenuOpciones(Menu):
     curr_input = ''
     input_device = 'teclado'
+    espacios = None
+    notice = None
+    notice_area = None
 
     def __init__(self):
         super().__init__('Opciones')

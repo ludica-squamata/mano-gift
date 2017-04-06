@@ -17,6 +17,14 @@ class MenuPersonaje(Menu):
 
     foco = 'teclas'
 
+    area_teclas = None
+    area_rect = None
+    area_input = None
+
+    cursor = None
+    teclas = None
+    lineas = None
+
     def __init__(self):
         super().__init__('Personaje')
         self.teclas = LayeredUpdates()  # teclado en pantalla
@@ -323,8 +331,9 @@ class Character(BaseWidget):
 
 
 class LineaChr(BaseWidget):
-    animado = False
     """Estas son las líneas punteadas del nombre del personaje"""
+    animado = False
+    idx = 0
 
     def __init__(self, idx, x, y):
         img = Surface((15, 2))
@@ -347,9 +356,9 @@ class LineaChr(BaseWidget):
 
 
 class Cursor:
+    """Este es el cursor virtual que se desplaza en el teclado en pantalla"""
     x, y = 0, 0
     current = None
-    """Este es el cursor virtual que se desplaza en el teclado en pantalla"""
 
     def __init__(self, x, y):
         self.x, self.y = x, y

@@ -1,4 +1,4 @@
-from .CompoMob import Equipado, Interactivo, Combativo
+from .CompoMob import Equipado, Combativo
 from engine.globs import Mob_Group
 from engine.misc import Resources as Rs
 from engine.base import ShadowSprite
@@ -7,7 +7,6 @@ from engine.globs.eventDispatcher import EventDispatcher
 
 class Mob(Combativo, Equipado, ShadowSprite):
     hablante = False
-    mana = 1
 
     def __init__(self, data, x, y, focus=False):
         self.tipo = "Mob"

@@ -7,6 +7,7 @@ class Atribuido(AzoeSprite):
     salud_max = 0  # salud máxima
     salud_act = 0  # salud actual
     iniciativa = 0
+    mana = 1
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

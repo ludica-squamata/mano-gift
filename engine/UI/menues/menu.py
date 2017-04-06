@@ -10,7 +10,6 @@ from pygame import Rect
 class Menu(EventAware, Ventana):
     botones = None
     filas = None
-    keyup = {}
     cur_btn = 0
     cur_opt = 0
     current = ''

@@ -36,7 +36,7 @@ class MenuCargar(Menu):
             super().use_function(mode, key)
 
     @staticmethod
-    def load_save_files():
+    def load_saved_files():
         ok = []
         for file in os.listdir(SAVEFD):
             if file.endswith('.json') and file != 'config.json':
@@ -52,7 +52,7 @@ class MenuCargar(Menu):
         self.draw_space_rect = archivos.get_rect(topleft=(11, 65))
 
         h = self.fuente_M.get_height() + 1
-        self.archivos = self.load_save_files()  # lista
+        self.archivos = self.load_saved_files()  # lista
         self.opciones = len(self.archivos)
         for i in range(len(self.archivos)):
             opcion = Fila(self.archivos[i], self.draw_space_rect.w - 10, 0, i * h + i + 2)

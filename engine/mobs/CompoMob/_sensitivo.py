@@ -15,14 +15,14 @@ class Sensitivo(Atribuido):
 
     def __init__(self, data, x, y, **kwargs):  # ,data):
         super().__init__(data, x, y, **kwargs)
-        self.tri_vis = self.generar_cono(32 * 5)  # (data[vision])
-        self.cir_vis = self.generar_circulo_sensorioal(32 * 6)  # (data[vision])
-        self.audicion = self.generar_circulo_sensorioal(32 * 6)  # cheat
+        self.tri_vis = self._generar_cono(32 * 5)  # (data[vision])
+        self.cir_vis = self._generar_circulo_sensorioal(32 * 6)  # (data[vision])
+        self.audicion = self._generar_circulo_sensorioal(32 * 6)  # cheat
         self.vision = 'cono'
-        self.mover_vis = self.mover_tri_vis
+        self._mover_vis = self._mover_triangulo_visual
 
     @staticmethod
-    def generar_cono(largo):
+    def _generar_cono(largo):
         """Crea el triangulo de la visión (fg azul, bg transparente).
 
         Devuelve un surface."""
@@ -40,7 +40,7 @@ class Sensitivo(Atribuido):
         return megasurf
 
     @staticmethod
-    def generar_circulo_sensorioal(radio):
+    def _generar_circulo_sensorioal(radio):
         """crea un circulo sensorioal, que se usa para que el mob
         detecte otros mobs y objetos"""
 
@@ -49,7 +49,7 @@ class Sensitivo(Atribuido):
         surf.set_colorkey((0, 0, 0))
         return surf
 
-    def mover_tri_vis(self, direccion):
+    def _mover_triangulo_visual(self, direccion):
         """Gira el triangulo de la visión.
 
         Devuelve el surface del triangulo rotado, y la posicion en x e y"""
@@ -79,13 +79,13 @@ class Sensitivo(Atribuido):
         self.vx, self.vy = int(x), int(y)
         self.vis_mask = mask.from_surface(surf)
 
-    def mover_cir_vis(self, dummy=None):
+    def _mover_circulo_visual(self, dummy=None):
         if self.vision == 'cono':
-            self.mover_tri_vis(dummy)
+            self._mover_triangulo_visual(dummy)
         elif self.vision == 'circulo':
-            self.mover_circulo_sensorial(self.cir_vis)
+            self._mover_circulo_sensorial(self.cir_vis)
 
-    def mover_circulo_sensorial(self, sentido):
+    def _mover_circulo_sensorial(self, sentido):
         """Si la visión es circular, entonces se usa esta función
         para moverla. El argumento dummy viene a ser la direccion,
         pero como no hay que girar el circulo, es indistinta."""
@@ -107,7 +107,7 @@ class Sensitivo(Atribuido):
         else:
             self.ultima_direccion = self.direccion
 
-        self.mover_vis(direccion)
+        self._mover_vis(direccion)
         mob = None
         for mob in Mob_Group:
             if mob != self:
@@ -124,7 +124,7 @@ class Sensitivo(Atribuido):
 
     def oir(self):
         detected = []
-        self.mover_circulo_sensorial(self.audicion)
+        self._mover_circulo_sensorial(self.audicion)
         for mob in Mob_Group:
             if mob != self:
                 x, y = self.vx - mob.mapX, self.vy - mob.mapY

@@ -3,9 +3,6 @@ from .mob import Mob
 
 
 class NPC(Parlante, Autonomo, Mob):
-    hablando = False
-    hablante = True
-
     def __init__(self, nombre, x, y, data):
         self.nombre = nombre
         super().__init__(data, x, y)

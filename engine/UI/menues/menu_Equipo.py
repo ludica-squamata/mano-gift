@@ -9,8 +9,6 @@ from engine.UI.widgets import Fila, EspacioEquipable
 
 class MenuEquipo(Menu):
     espacios = None
-    filas = None
-    current = ''
     cur_esp = 0
     cur_itm = 0
     foco = None
