@@ -1,5 +1,5 @@
 from engine.mobs.behaviortrees import Leaf, Success, Failure
-from engine.globs import EngineData as Ed, MobGroup
+from engine.globs import EngineData as Ed, Mob_Group
 
 
 class GetMobPos(Leaf):
@@ -10,8 +10,8 @@ class GetMobPos(Leaf):
         self.tree.set_context('mapa', cuadros)
         self.tree.set_context('next', 0)
 
-        if 'heroe' in MobGroup:
-            mob_pos = MobGroup['heroe'].mapRect
+        if 'heroe' in Mob_Group:
+            mob_pos = Mob_Group['heroe'].mapRect
         else:
             return Failure
 

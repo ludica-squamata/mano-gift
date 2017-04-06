@@ -1,9 +1,9 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 
 
 def boost(evento):
-    mob = MobGroup['heroe']
+    mob = Mob_Group['heroe']
     attr = evento.data['attr']
     value = evento.data['value']
 

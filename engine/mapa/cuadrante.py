@@ -1,6 +1,6 @@
 from pygame.sprite import Group
 from pygame import Rect
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 from engine.globs.eventDispatcher import EventDispatcher
 
 
@@ -44,7 +44,7 @@ class Cuadrante:
 
     def update_mobs(self):
         self.mobgroup.empty()
-        for mob in MobGroup:
+        for mob in Mob_Group:
             if self.rect.collidepoint(mob.mapRect.topleft):
                 self.mobgroup.add(mob)
                 mob.idx_quadrant = self.idx

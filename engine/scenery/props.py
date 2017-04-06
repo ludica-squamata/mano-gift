@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import ItemGroup, ModData
+from engine.globs import Item_Group, ModData
 from engine.globs.renderer import Renderer
 from engine.misc import Resources
 from pygame import mask, Rect
@@ -14,7 +14,7 @@ class Agarrable(Escenografia):
         data.setdefault('proyecta_sombra', False)
         super().__init__(nombre, x, y, z, data)
         self.subtipo = data['subtipo']
-        ItemGroup[self.nombre] = self
+        Item_Group[self.nombre] = self
 
     def action(self, entity):
         if entity.tipo == 'Mob':
@@ -46,7 +46,7 @@ class Movible(Escenografia):
             data['propiedades'] = p
         super().__init__(nombre, x, y, z, data)
         self.accion = 'mover'
-        ItemGroup[self.nombre] = self
+        Item_Group[self.nombre] = self
 
     def mover(self, dx, dy):
         col_mapa = False
@@ -78,7 +78,7 @@ class Operable(Escenografia):
         super().__init__(nombre, x, y, z, data)
         self.estados = {}
         self.enabled = self.data.get('enabled', True)
-        ItemGroup[self.nombre] = self
+        Item_Group[self.nombre] = self
 
         for estado in data['operable']:
             idx = estado['ID']

@@ -1,6 +1,6 @@
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.globs import EngineData, ModData
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 from engine.misc import Resources
 from engine.scenery import new_prop
 from engine.mobs import PC, NPC
@@ -84,7 +84,7 @@ class Loader:
     @staticmethod
     def load_hero(x, y):
         try:
-            pc = MobGroup['heroe']
+            pc = Mob_Group['heroe']
             EngineData.HERO = pc
             EngineData.HERO.ubicar(x, y)
             EngineData.HERO.mapRect.center = x, y

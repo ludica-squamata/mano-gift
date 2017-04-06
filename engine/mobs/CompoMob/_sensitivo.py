@@ -1,6 +1,6 @@
 from math import tan, radians
 from pygame import Surface, draw, mask, transform
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 from ._atribuido import Atribuido
 
 
@@ -109,7 +109,7 @@ class Sensitivo(Atribuido):
 
         self.mover_vis(direccion)
         mob = None
-        for mob in MobGroup:
+        for mob in Mob_Group:
             if mob != self:
                 x, y = self.vx - mob.mapX, self.vy - mob.mapY
                 if mob.mask.overlap(self.vis_mask, (x, y)):
@@ -125,7 +125,7 @@ class Sensitivo(Atribuido):
     def oir(self):
         detected = []
         self.mover_circulo_sensorial(self.audicion)
-        for mob in MobGroup:
+        for mob in Mob_Group:
             if mob != self:
                 x, y = self.vx - mob.mapX, self.vy - mob.mapY
                 if mob.mask.overlap(self.vis_mask, (x, y)) and mob.moviendose:

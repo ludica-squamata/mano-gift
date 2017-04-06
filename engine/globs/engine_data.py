@@ -1,6 +1,6 @@
 from .eventDispatcher import EventDispatcher
 from engine.misc import Resources
-from .giftgroups import MobGroup
+from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
 from .constantes import SAVEFD
@@ -88,7 +88,7 @@ class EngineData:
         cls.setear_mapa(mapa, entrada)
         if not Tiempo.clock.is_real():
             Tiempo.set_time(dia, hora, minutos)
-        Renderer.set_focus(MobGroup[focus])
+        Renderer.set_focus(Mob_Group[focus])
         cls.MODO = 'Aventura'
         cls.HUD.show()
 

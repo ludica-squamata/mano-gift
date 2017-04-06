@@ -1,4 +1,4 @@
-from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
@@ -53,7 +53,19 @@ class DialogInterface(Ventana):
 
         for i in range(len(sorted(opciones, key=lambda o: o.indice))):
             opt = opciones[i]
-            obj = {'idx': i + 1, 'icon': str(opt.indice), 'name': str(opt.leads), 'item': opciones[i]}
+            icon = str(opt.indice)
+            name = str(opt.leads)
+            if opt.reqs is not None and 'objects' in opt.reqs:
+                objeto = opt.reqs['objects'][0]
+                # la alternativa a este embrollo es que el branch especifique nombre e icono
+                existing_items = Item_Group + Deleted_Items
+                if objeto in existing_items:
+                    item = existing_items[objeto]
+
+                icon = item.image
+                name = item.nombre
+
+            obj = {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}
             self.menu.add_element(0, obj)
 
         self.opciones = len(opciones)

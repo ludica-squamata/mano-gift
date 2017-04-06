@@ -1,5 +1,5 @@
 from pygame import Mask, Surface, Rect
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.base import AzoeSprite
 from engine.globs.renderer import Renderer
@@ -29,7 +29,7 @@ class Salida:
             Renderer.camara.add_real(self.sprite)
 
     def update(self):
-        for mob in MobGroup:
+        for mob in Mob_Group:
             dx, dy = mob.direcciones[mob.direccion]
             dx *= mob.velocidad
             dy *= mob.velocidad

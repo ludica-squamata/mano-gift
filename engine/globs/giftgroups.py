@@ -104,9 +104,14 @@ class ItemGroup:
                 idx = key - self._indexes.index(name)
                 return self._group[name][idx]
             else:
-                raise IndexError
+                raise IndexError()
+
+        elif type(key) == str:
+            if key in self._group:
+                return self._group[key][0]
+
         else:
-            raise KeyError
+            raise TypeError()
 
     def __delitem__(self, key):
         
@@ -124,7 +129,7 @@ class ItemGroup:
                 self._indexes.remove(key.nombre)
 
         else:
-            raise KeyError
+            raise TypeError()
 
     def __contains__(self, item):
         if type(item) is str:
@@ -139,6 +144,15 @@ class ItemGroup:
     def __len__(self):
         return self._lenght
 
+    def __add__(self, other):
+        new = ItemGroup()
+        for item in self:
+            new[item.nombre] = item
+        for item in other:
+            new[item.nombre] = item
+
+        return new
+
     def delete_item(self, event):
         obj = event.data['obj']
         del self[obj]
@@ -146,7 +160,14 @@ class ItemGroup:
     def contents(self):
         return [self._group[key][0] for key in self._group]
 
-MobGroup = MobGroup()
-ItemGroup = ItemGroup()
 
-__all__ = ["MobGroup", "ItemGroup"]
+class DeletedItems(ItemGroup):
+    def delete_item(self, event):
+        obj = event.data['obj']
+        self[obj.nombre] = obj
+
+Mob_Group = MobGroup()
+Item_Group = ItemGroup()
+Deleted_Items = DeletedItems()
+
+__all__ = ["Mob_Group", "Item_Group", "Deleted_Items"]

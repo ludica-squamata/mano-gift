@@ -1,4 +1,4 @@
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 from ._atribuido import Atribuido
 from pygame import Rect
 
@@ -42,7 +42,7 @@ class Interactivo(Atribuido):
     @staticmethod
     def _interact_with_mobs(item):
         """Selecciona a un mob utilizando el rect de interacción"""
-        if item in MobGroup:
+        if item in Mob_Group:
             return item
 
     def quadrant_interaction(self):

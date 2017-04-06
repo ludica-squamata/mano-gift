@@ -1,5 +1,5 @@
 from .CompoMob import Equipado, Interactivo, Combativo
-from engine.globs import MobGroup
+from engine.globs import Mob_Group
 from engine.misc import Resources as Rs
 from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
@@ -50,8 +50,8 @@ class Mob(Combativo, Equipado, ShadowSprite):
         mask = self.mascaras['S'+self.direccion]
         super().__init__(imagen=image, alpha=mask, x=x, y=y, center=focus)
 
-        if self.nombre not in MobGroup:
-            MobGroup[self.nombre] = self
+        if self.nombre not in Mob_Group:
+            Mob_Group[self.nombre] = self
 
         EventDispatcher.register(self.rotate_and_pos, 'RotateMobs')
 
