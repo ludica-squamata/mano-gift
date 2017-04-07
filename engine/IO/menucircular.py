@@ -82,9 +82,10 @@ class CircularMenu (EventAware):
     stopped = True
     hold = False
     actual = None
-    di = 0
     radius = 8
     cascadas = {}
+    puntos = None
+    center = 0, 0
 
     def __init__(self, cascadas, centerx, centery):
         self.cubos = LayeredUpdates()
@@ -128,9 +129,9 @@ class CircularMenu (EventAware):
         self.puntos = [self.get_xy(a, radius, *self.center) for a in range(-90, 270)]
 
     @staticmethod
-    def get_xy(a, radius, centerx, centery):
-        x = round(centerx + radius * cos(radians(a)))
-        y = round(centery + radius * sin(radians(a)))
+    def get_xy(angle, radius, centerx, centery):
+        x = round(centerx + radius * cos(radians(angle)))
+        y = round(centery + radius * sin(radians(angle)))
         return x, y
 
     def turn(self, delta):  # +1 o -1
@@ -164,7 +165,7 @@ class CircularMenu (EventAware):
                 self._change_cube_list()
 
             elif not self.actual.do_action():
-                self.supress()
+                self.supress_one()
                 self.actual = None
 
                 if not len(self.cascadas[self.cascadaActual]['items']):
@@ -187,7 +188,7 @@ class CircularMenu (EventAware):
         self._change_cube_list()
         self._modify_cube_list()
 
-    def supress(self):
+    def supress_one(self):
         self.cubos.remove(self.actual)
         self.cascadas[self.cascadaActual]['items'].remove(self.actual)
 

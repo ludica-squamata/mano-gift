@@ -5,14 +5,11 @@ from engine.libs.textrect import render_textrect
 
 
 class Boton(BaseWidget):
-    img_uns = None
-    img_sel = None
     img_pre = None
     img_dis = None
 
     comando = None
     pos = 0, 0
-    direcciones = {}
 
     timer = 0
     animar = False

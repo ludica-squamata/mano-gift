@@ -3,7 +3,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import Util
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1
+from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1, display
 from engine.UI.menues import *
 from engine.UI import QuickCircularMenu
 
@@ -26,8 +26,9 @@ class Modo:
         EventDispatcher.process()
 
     @staticmethod
-    def update(events, fondo):
+    def update(events):
         modo = Ed.MODO
+        fondo = display.get_surface()
         for event in get_taphold_events(events):
             EventDispatcher.trigger('Key', 'Modo.'+modo, event.__dict__)
 

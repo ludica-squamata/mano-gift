@@ -5,6 +5,8 @@ from engine.UI.estilo import Estilo
 
 class Title(Sprite, Estilo):
     active = True
+    parent = None
+    nombre = ''
 
     def __init__(self, parent, nombre):
         super().__init__()

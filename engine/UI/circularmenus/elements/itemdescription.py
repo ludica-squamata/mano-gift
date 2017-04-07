@@ -5,6 +5,7 @@ from engine.libs import render_tagged_text
 
 class DescriptiveArea(BaseWidget):
     active = True
+    parent = None
 
     def __init__(self, parent, item):
         w, h = ANCHO, int(ALTO / 5)

@@ -8,6 +8,7 @@ from os import path, listdir
 class DialogCircularMenu(RenderedCircularMenu):
     radius = 15
     layer = CAPA_OVERLAYS_CIRCULAR
+    locutores = None
 
     def __init__(self, *locutores):
         self.locutores = locutores

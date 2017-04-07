@@ -5,6 +5,8 @@ from .title import Title
 
 
 class LetterElement(BaseElement, Estilo):
+    title = None
+
     def __init__(self, parent, nombre, icono):
 
         super().__init__(parent, nombre)

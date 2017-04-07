@@ -15,6 +15,13 @@ class DialogInterface(Ventana):
     w, h = 0, 0
     sel_mode = False
 
+    marco = None
+    draw_space_rect = None
+    erase_area = None
+    arrow_width = 0
+    fuente = None
+    altura_del_texto = None
+
     def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(self.bg_cnvs)

@@ -4,6 +4,7 @@ from .LetterElement import LetterElement
 class CommandElement(LetterElement):
     active = True
     item = None
+    command = None
 
     def __init__(self, parent, item):
 

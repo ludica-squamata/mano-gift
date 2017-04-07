@@ -9,12 +9,12 @@ class Leaf(Node):
     type = 'Leaf'
     process = None
     data = None
+    process_name = ''
 
-    def __init__(self, tree, idx, process_name, arg=None):
+    def __init__(self, tree, idx, process_name):
         # leaves are incapable of having any children
         super().__init__(tree, idx)
         self.process_name = process_name
-        self.arg = arg
 
     def __repr__(self):
         return self.type + ' #' + str(self.idx) + ' (' + self.process_name + ')'

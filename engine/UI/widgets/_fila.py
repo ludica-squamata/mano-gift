@@ -11,6 +11,10 @@ class Fila(BaseWidget):
     tag_init = None
     tag_end = None
     tagged = False
+    ancho = 0
+    justification = 0
+    stack = True
+    cantidad = 0
 
     def __init__(self, item, w, x, y, tag=None, justification=0):
         self.item = item

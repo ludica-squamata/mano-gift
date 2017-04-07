@@ -14,6 +14,8 @@ class ProgressBar(Sprite):
     colorAct = 0, 0, 0
     colorFnd = 0, 0, 0
     active = True
+    x, y, w, h = 0, 0, 0, 0
+    draw_area_rect = None
 
     def __init__(self, maximo, color_actual, color_fondo, x, y, w, h):
         super().__init__()
@@ -65,17 +67,21 @@ class ProgressBar(Sprite):
 
 
 class CharacterName(Sprite, Estilo):
+    active = True
+
     def __init__(self, x, y):
         super().__init__()
         self.image = self.fuente_Mb.render(Ed.char_name, 1, self.font_none_color)
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.active = True
 
 
 class HUD:
     # ya no es clase base. próximamente será una clase que agrupe
     # y registre en el renderer todos los elementos del hud.
     is_shown = False
+    BarraVida = None
+    BarraMana = None
+    screen_name = None
 
     def __init__(self):
         _rect = Renderer.camara.rect

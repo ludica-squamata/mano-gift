@@ -7,15 +7,17 @@ __all__ = ['RandomSequence', 'RandomSelector']
 
 class RandomComposite(Composite):
     explored_children = []
+    type = "RandomComposite"
 
     def __init___(self, tree, idx, children):
         super().__init__(tree, idx, children)
         self.current_id = randint(0, len(children))
+        self.explored_children.clear()
         self.explored_children.append(self.children[self.current_id])
 
 
-class RandomSequence(Sequence):
-    explored_children = []
+class RandomSequence(RandomComposite):
+    name = "RandomSequence"
 
     def get_child_status(self, status):
         if status is Success:
@@ -38,8 +40,8 @@ class RandomSequence(Sequence):
             self.tree.status = status
 
 
-class RandomSelector(Selector):
-    explored_children = []
+class RandomSelector(RandomComposite):
+    name = "RandomSelector"
 
     def get_child_status(self, status):
         if status is Failure:

@@ -27,10 +27,10 @@ class BehaviourTree:
         loaded_functions = {}
         head = tree_data.pop('head')
         for script in head['script']:
-            module = Resources.load_module_from_script(script)
+            modulo = Resources.load_module_from_script(script)
             for name in head['script'][script]:
-                if hasattr(module, name):
-                    loaded_functions[name] = getattr(module, name)
+                if hasattr(modulo, name):
+                    loaded_functions[name] = getattr(modulo, name)
 
         self.tree_structure = OrderedDict()
         self.entity = entity
@@ -71,13 +71,12 @@ class BehaviourTree:
                 elif name in loaded_functions:
                     process = loaded_functions[name]
 
-                arg = data.get('arg', None)
                 if isinstance(process, FunctionType):
-                    node = Leaf(self, idx, name, arg)
+                    node = Leaf(self, idx, name)
                     node.set_process(process)
 
                 elif issubclass(process, Leaf):
-                    node = process(self, idx, name, arg)
+                    node = process(self, idx, name)
 
             self.nodes.append(node)
 
@@ -107,8 +106,8 @@ class BehaviourTree:
         return tree_data
 
     @staticmethod
-    def extend_tree(an_tree_data, idx):
-        tree_extension = Resources.abrir_json(ModData.mobs + 'behaviours/' + an_tree_data + '.json')
+    def extend_tree(new_tree_data, idx):
+        tree_extension = Resources.abrir_json(ModData.mobs + 'behaviours/' + new_tree_data + '.json')
         new_tree = {}
         for kex in tree_extension:
             if 'children' in tree_extension[kex]:

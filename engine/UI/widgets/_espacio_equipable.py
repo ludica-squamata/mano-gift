@@ -3,10 +3,10 @@ from .basewidget import BaseWidget
 
 
 class EspacioEquipable(BaseWidget):
-    isSelected = False
-    item = None
-    direcciones = {}
     tipo = 'espacio'
+    item = None
+    draw_area = None
+    draw_area_rect = None
 
     def __init__(self, nombre, item, direcciones, x, y):
         """Inicializa las variables de un espacio equipable."""

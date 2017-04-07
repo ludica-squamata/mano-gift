@@ -5,6 +5,7 @@ from engine.globs import EngineData
 
 class RenderedCircularMenu(CircularMenu):
     layer = 0
+    last_on_spot = None
 
     def __init__(self, cascadas):
         cx, cy = Renderer.camara.rect.center
@@ -37,8 +38,8 @@ class RenderedCircularMenu(CircularMenu):
         super()._change_cube_list()
         self._update_rendered()
 
-    def supress(self):
-        super().supress()
+    def supress_one(self):
+        super().supress_one()
         self._update_rendered()
 
     def supress_all(self):

@@ -2,6 +2,7 @@ class Node:
     idx = None
     parent = None
     type = ''
+    tree = None
 
     def __init__(self, tree, idx):
         self.idx = idx

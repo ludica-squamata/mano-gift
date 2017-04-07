@@ -4,6 +4,8 @@ from engine.globs.event_aware import EventAware
 
 
 class PropDescription (EventAware):
+    item = None
+    frontend = None
 
     def __init__(self, item):
         super().__init__()

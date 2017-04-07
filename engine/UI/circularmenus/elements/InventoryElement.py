@@ -6,6 +6,7 @@ from .itemdescription import DescriptiveArea
 class InventoryElement(LetterElement):
     active = True
     item = None
+    description = None
 
     def __init__(self, parent, item):
 
