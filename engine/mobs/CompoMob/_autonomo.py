@@ -17,7 +17,7 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         super().__init__(data, x, y, **kwargs)
 
     def update(self, *args):
+        super().update(*args)
         if not EngineData.onPause:
             # detectados = self.oir() + self.ver()
             self.AI.update()
-        super().update(*args)

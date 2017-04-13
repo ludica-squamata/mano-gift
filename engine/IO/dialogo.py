@@ -11,7 +11,8 @@ class Elemento:
     hasLeads = False
     tipo = ''
     indice = None
-    locutor = None
+    locutor = None  # el que habla
+    inter = None     # a quien le habla
     leads = None
     reqs = None
     event_data = None
@@ -24,7 +25,8 @@ class Elemento:
         self.tipo = data['type']
         self.nombre = self.tipo.capitalize() + ' #' + str(self.indice)
         self.texto = data['txt']
-        self.locutor = data['loc']
+        self.locutor = data['from']
+        self.inter = data['to']
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
         self.event_data = data.get('event_data', None)

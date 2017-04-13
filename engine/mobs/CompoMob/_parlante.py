@@ -1,7 +1,8 @@
+from engine.mobs.scripts.a_star import determinar_direccion
 from engine.UI.circularmenus import DialogCircularMenu
-from engine.globs import EngineData, ModData as Md
-from engine.misc import Resources as Rs, ReversibleDict
+from engine.globs import EngineData, ModData
 from engine.IO.dialogo import Dialogo
+from engine.misc import Resources
 from ._movil import Movil
 
 
@@ -16,7 +17,7 @@ class Parlante(Movil):
         if 'states' in data:
             if 'dialog' in data['states'][0]:
                 nombre = data['states'][0]['dialog']
-                data['states'][0]['dialog'] = Rs.abrir_json(Md.dialogos + nombre)
+                data['states'][0]['dialog'] = Resources.abrir_json(ModData.dialogos + nombre)
 
     def hablar(self, sprite):
         if sprite.hablante:
@@ -28,8 +29,6 @@ class Parlante(Movil):
         if sprite.hablante:
             self.interlocutor = sprite
             sprite.interlocutor = self
-            opuestos = ReversibleDict(arriba='abajo', izquierda='derecha')
-            sprite.cambiar_direccion(opuestos[self.direccion])
 
             locutores = [self, sprite]
             for loc in locutores:
@@ -40,3 +39,15 @@ class Parlante(Movil):
             # si fuere el NPC via IA, el output, sería:
             # Ed.DIALOG = Dialogo(sprite.dialogo, *locutores)
             EngineData.DIALOG = DialogCircularMenu(sprite, self)
+
+    def update(self):
+        if not self.hablando:
+            super().update()
+        else:
+            inter = self.interlocutor
+            yo = self.mapRect.center
+            el = inter.mapRect.center
+            direccion = determinar_direccion(yo, el)
+            if self.direccion != direccion:
+                self.cambiar_direccion(direccion)
+

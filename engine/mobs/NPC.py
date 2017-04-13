@@ -11,7 +11,3 @@ class NPC(Parlante, Autonomo, Mob):
     def mover(self):
         if not self.hablando:
             super().mover()
-
-    def update(self):
-        if not self.hablando:
-            super().update()
