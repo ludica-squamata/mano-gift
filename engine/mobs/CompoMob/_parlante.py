@@ -1,6 +1,6 @@
 from engine.UI.circularmenus import DialogCircularMenu
 from engine.globs import EngineData, ModData as Md
-from engine.misc import Resources as Rs
+from engine.misc import Resources as Rs, ReversibleDict
 from engine.IO.dialogo import Dialogo
 from ._movil import Movil
 
@@ -28,32 +28,13 @@ class Parlante(Movil):
         if sprite.hablante:
             self.interlocutor = sprite
             sprite.interlocutor = self
-            x, y = self.direcciones[self.direccion]
+            opuestos = ReversibleDict(arriba='abajo', izquierda='derecha')
+            sprite.cambiar_direccion(opuestos[self.direccion])
 
-            inter_dir = ''
-            self_dir = ''
-            # quisiera definir "opuestos" sin hacer este if elif
-            # algo aprecido a "not True = False"
-            if x:
-                if x > 0:
-                    inter_dir = 'izquierda'
-                    self_dir = 'derecha'
-                else:
-                    inter_dir = 'derecha'
-                    self_dir = 'izquierda'
-            elif y:
-                if y > 0:
-                    inter_dir = 'arriba'
-                    self_dir = 'abajo'
-                else:
-                    inter_dir = 'abajo'
-                    self_dir = 'arriba'
-
-            # y a partir de acá, hacer un for interlocutor...
-            self.cambiar_direccion(self_dir)
-            sprite.cambiar_direccion(inter_dir)
-            self.hablando = True
-            sprite.hablando = True
+            locutores = [self, sprite]
+            for loc in locutores:
+                loc.hablando = True
+                loc.detener_movimiento()
 
             # éste output es porque el héroe inicia diálogo
             # si fuere el NPC via IA, el output, sería:
