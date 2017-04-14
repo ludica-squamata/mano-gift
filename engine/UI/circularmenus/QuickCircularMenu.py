@@ -22,7 +22,7 @@ class QuickCircularMenu(RenderedCircularMenu):
         if opciones is None:
             opciones = [
                 {j: 0, n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
-                {j: 1, n: 'Guardar', i: 'G', cmd: lambda: EventDispatcher.trigger('Save', 'Menu Rápido', {})},
+                {j: 1, n: 'Guardar', i: 'G', cmd: self.save},
                 {j: 2, n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
                 {j: 3, n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'},
             ]
@@ -60,3 +60,7 @@ class QuickCircularMenu(RenderedCircularMenu):
         # solo una abreviatura
 
         EventDispatcher.trigger('Rotate', 'Menu Rápido', {'view': direccion})
+
+    @staticmethod
+    def save():
+        EventDispatcher.trigger('Save', 'Menu Rápido', {})

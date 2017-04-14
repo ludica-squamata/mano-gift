@@ -73,11 +73,11 @@ class Loader:
         loaded_mobs = []
         for key in alldata['mobs']:
             pos = alldata['mobs'][key]
-            for ref in pos:
-                data = Resources.abrir_json(ModData.mobs + key + '.json')
-                for x, y in pos:
-                    mob = NPC(ref, x, y, data)
-                    loaded_mobs.append((mob, GRUPO_MOBS))
+            data = Resources.abrir_json(ModData.mobs + key + '.json')
+            memories = EngineData.save_data['NPC'].get(key)
+            for x, y in pos:
+                mob = NPC(key, x, y, data, memories)
+                loaded_mobs.append((mob, GRUPO_MOBS))
 
         return loaded_mobs
 
