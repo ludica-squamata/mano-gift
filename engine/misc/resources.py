@@ -42,17 +42,17 @@ class Resources:
     @staticmethod
     def guardar_json(archivo, datos):
         ex = open(archivo, 'w')
-        json.dump(datos, ex, sort_keys=True, indent=4, separators=(',', ': '))
+        json.dump(datos, ex, sort_keys=True, indent=2, separators=(',', ':'))
         ex.close()
 
     @staticmethod
     def load_module_from_script(name):
         from engine.globs.mod_data import ModData
         ruta = ModData.fd_scripts + name + '.py'
-        module = machinery.SourceFileLoader("module.name", ruta).load_module()
-        return module
+        _module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        return _module
 
     @staticmethod
     def raw_load_module(ruta):
-        module = machinery.SourceFileLoader("module.name", ruta).load_module()
-        return module
+        _module = machinery.SourceFileLoader("module.name", ruta).load_module()
+        return _module

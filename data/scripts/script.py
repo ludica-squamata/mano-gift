@@ -36,9 +36,9 @@ def init_game(event):
 
     else:  # esta data estaba en la scene
         # datos por default
-        mapa = "casas y arboles"
-        entrada = "puerta"
-        dia, hora, minutos = 0, 9, 54
+        mapa = "prueba"
+        entrada = "bottomright"
+        dia, hora, minutos = 0, 0, 0
         focus = 'heroe'
 
     EventDispatcher.deregister(init_game, 'NewGame')
@@ -47,10 +47,10 @@ def init_game(event):
 
 def init_system(event):
     if event.data['intro']:
-        module = Resources.load_module_from_script('intro')
+        _module = Resources.load_module_from_script('intro')
 
         # se supone que el modder sabe cómo se llama la función
-        getattr(module, 'creditos_introduccion')()
+        getattr(_module, 'creditos_introduccion')()
     EventDispatcher.trigger('OpenMenu', 'Script', {'value': 'Principal'})
 
 EventDispatcher.register(init_system, 'InitSystem')

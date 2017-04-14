@@ -49,8 +49,8 @@ class ModData:
                     for d in cls.data['custom']['menus']:
                         loaded.append(d['script'])
                         ruta = cls.fd_scripts + d['script'] + '.py'
-                        module = Resources.raw_load_module(ruta)
-                        menu = getattr(module, d['name'])
+                        _module = Resources.raw_load_module(ruta)
+                        menu = getattr(_module, d['name'])
                         cls.custommenus[d['name']] = menu
 
                 elif keyword == 'circular':
@@ -58,9 +58,9 @@ class ModData:
                     i = -1
                     for d in cls.data['custom']['circular']:
                         ruta = cls.fd_scripts + d['script'] + '.py'
-                        module = Resources.raw_load_module(ruta)
+                        _module = Resources.raw_load_module(ruta)
                         loaded.append(d['script'])
-                        if hasattr(module, d['name']):
+                        if hasattr(_module, d['name']):
                             i += 1
                             d.update({'idx': i})
                             spec = getattr(module, d['name'])
@@ -101,6 +101,6 @@ class ModData:
     @classmethod
     def get_script_method(cls, scriptname, methodname):
         ruta = cls.fd_scripts + scriptname
-        module = Resources.raw_load_module(ruta)
-        if hasattr(module, methodname):
-            return getattr(module, methodname)
+        _module = Resources.raw_load_module(ruta)
+        if hasattr(_module, methodname):
+            return getattr(_module, methodname)
