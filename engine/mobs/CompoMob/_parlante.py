@@ -11,6 +11,7 @@ class Parlante(Movil):
     conversaciones = []  # registro de los temas conversados
     hablante = True
     hablando = False
+    is_the_speaker = False  # se refiere al mob que INICIA el diálogo
 
     def __init__(self, data, x, y, **kwargs):
         super().__init__(data, x, y, **kwargs)
@@ -23,6 +24,7 @@ class Parlante(Movil):
         if sprite.hablante:
             self.interlocutor = sprite
             sprite.interlocutor = self
+            self.is_the_speaker = True
             EngineData.DIALOG = Dialogo(sprite.dialogo, self, sprite)
 
     def elegir_tema(self, sprite):
@@ -35,10 +37,15 @@ class Parlante(Movil):
                 loc.hablando = True
                 loc.detener_movimiento()
 
-            # éste output es porque el héroe inicia diálogo
-            # si fuere el NPC via IA, el output, sería:
-            # Ed.DIALOG = Dialogo(sprite.dialogo, *locutores)
+            # if  NPC.init_dialog():
+                # Ed.DIALOG = Dialogo(sprite.dialogo, *locutores)
+                # self.is_the_speaker = False
+            # else:
+            self.is_the_speaker = True
             EngineData.DIALOG = DialogCircularMenu(sprite, self)
+
+    def stop_talking(self):
+        self.is_the_speaker = False
 
     def update(self):
         if not self.hablando:
@@ -48,6 +55,6 @@ class Parlante(Movil):
             yo = self.mapRect.center
             el = inter.mapRect.center
             direccion = determinar_direccion(yo, el)
-            if self.direccion != direccion:
+            if self.direccion != direccion and not self.is_the_speaker:
                 self.cambiar_direccion(direccion)
 

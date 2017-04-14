@@ -1,4 +1,5 @@
 # ModState.py
+from .eventDispatcher import EventDispatcher
 
 
 class ModState:
@@ -20,13 +21,16 @@ class ModState:
     # los siguientes métodos podrían cambiar en un futuro,
     # dependiendo de la implementación del guardado
     @classmethod
-    def load(cls, data):
-        cls._innerdict = data
+    def load(cls, event):
+        cls._innerdict.update(event.data.get('flags', {}))
 
     @classmethod
-    def save(cls):
-        return cls._innerdict
+    def save(cls, event):
+        EventDispatcher.trigger(event.tipo + 'Data', 'ModState', {'flags': cls.flags()})
 
     @classmethod
     def flags(cls):
-        return cls._innerdict.items()
+        return cls._innerdict.copy()
+
+EventDispatcher.register(ModState.load, 'NewGame')
+EventDispatcher.register(ModState.save, 'Save')

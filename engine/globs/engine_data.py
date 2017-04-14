@@ -22,7 +22,7 @@ class EngineData:
     scene_data = None
     setKey = False
     char_name = ''
-    save_data = {'NPC': {}}
+    save_data = {}
     current_view = 'north'
 
     @classmethod
@@ -95,11 +95,7 @@ class EngineData:
 
     @classmethod
     def compound_save_data(cls, event):
-        if event.origin in cls.save_data:
-            cls.save_data[event.origin][event.data['nombre']] = {}
-        else:
-            cls.save_data.update(event.data)
-
+        cls.save_data.update(event.data)
         if not EventDispatcher.is_quequed('SaveDataFile'):
             EventDispatcher.trigger('SaveDataFile', 'EngineData', cls.save_data)
 
