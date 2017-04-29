@@ -10,11 +10,9 @@ class RenderedCircularMenu(CircularMenu):
     def __init__(self, cascadas):
         cx, cy = Renderer.camara.rect.center
         super().__init__(cascadas, cx, cy)
-        self.last_on_spot = self.check_on_spot()
-
         EngineData.MODO = 'Dialogo'
         EngineData.DIALOG = self
-        self.show()
+        self._update_rendered()
 
     def listener(self, event):
         try:
@@ -23,13 +21,18 @@ class RenderedCircularMenu(CircularMenu):
         except KeyError:
             pass
 
-    def _update_rendered(self):
-        self.last_on_spot = self.check_on_spot()
+    def _update_rendered(self, on_spot=None):
         Renderer.clear_overlays_from_layer(self.layer)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, self.layer)
 
+        if on_spot is None:
+            self.last_on_spot = self.check_on_spot()
+        else:
+            self.last_on_spot = on_spot
+
         if self.last_on_spot is not None:
+            self.last_on_spot.title.update()
             Renderer.add_overlay(self.last_on_spot.title, self.layer)
             if hasattr(self.last_on_spot, 'description'):
                 Renderer.add_overlay(self.last_on_spot.description, self.layer)
@@ -52,24 +55,14 @@ class RenderedCircularMenu(CircularMenu):
 
     def stop_everything(self, on_spot):
         super().stop_everything(on_spot)
-        self.last_on_spot = on_spot
-        on_spot.title.update()
-        if hasattr(on_spot, 'description'):
-            Renderer.add_overlay(on_spot.description, self.layer)
-        Renderer.add_overlay(on_spot.title, self.layer)
+        self._update_rendered(on_spot)
 
     def turn(self, delta):
+        if self.stopped:
+            Renderer.del_overlay(self.last_on_spot.title)
+            if hasattr(self.last_on_spot, 'description'):
+                Renderer.del_overlay(self.last_on_spot.description)
         super().turn(delta)
-        Renderer.del_overlay(self.last_on_spot.title)
-        if hasattr(self.last_on_spot, 'description'):
-            Renderer.del_overlay(self.last_on_spot.description)
-
-    def show(self):
-        Renderer.add_overlay(self.last_on_spot.title, self.layer)
-        for cubo in self.cubos:
-            Renderer.add_overlay(cubo, self.layer)
-        if hasattr(self.last_on_spot, 'description'):
-            Renderer.add_overlay(self.last_on_spot.description, self.layer)
 
     def salir(self):
         if self.cascadaActual == 'inicial':

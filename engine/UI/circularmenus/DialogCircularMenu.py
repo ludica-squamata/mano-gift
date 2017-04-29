@@ -51,6 +51,6 @@ class DialogCircularMenu(RenderedCircularMenu):
 
     def add_element(self, cascada, element):
         elm = DialogOptionElement(self, element)
-        super().add_element('inicial', elm)
+        super().add_element(cascada, elm)
 
 

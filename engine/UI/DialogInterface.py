@@ -73,7 +73,7 @@ class DialogInterface(Ventana):
                 name = item.nombre
 
             obj = {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}
-            self.menu.add_element(0, obj)
+            self.menu.add_element('inicial', obj)
 
         self.opciones = len(opciones)
         self.menu.actual = self.menu.cubos.get_sprite(0)
