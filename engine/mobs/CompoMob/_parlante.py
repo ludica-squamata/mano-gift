@@ -1,8 +1,7 @@
-from engine.mobs.scripts.a_star import determinar_direccion
 from engine.UI.circularmenus import DialogCircularMenu
 from engine.globs import EngineData, ModData
 from engine.IO.dialogo import Dialogo
-from engine.misc import Resources
+from engine.misc import Resources, ReversibleDict
 from ._movil import Movil
 
 
@@ -51,10 +50,8 @@ class Parlante(Movil):
         if not self.hablando:
             super().update()
         else:
-            inter = self.interlocutor
-            yo = self.mapRect.center
-            el = inter.mapRect.center
-            direccion = determinar_direccion(yo, el)
+            opuesta = ReversibleDict(arriba='abajo', derecha='izquierda')
+            direccion = opuesta[self.interlocutor.direccion]
             if self.direccion != direccion and not self.is_the_speaker:
                 self.cambiar_direccion(direccion)
 

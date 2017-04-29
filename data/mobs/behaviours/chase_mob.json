@@ -1,7 +1,6 @@
 {
   "head":{
     "script":{
-      "wander":["GetRoute","NextPosition","Move"],
       "chase":["GetMobPos"]
       },
     "special":{
@@ -9,12 +8,9 @@
       }
   },
   "body":{
-    "0":{"name":"Sequence","children":[1,2,3]},
-    "1":{"name":"GetMobPos"},
-    "2":{"name":"GetRoute"},
-    "3":{"name":"UntilFail","child":4},
-    "4":{"name":"Sequence","children":[5,6]},
-    "5":{"name":"NextPosition"},
-    "6":{"name":"Move"}
+    "0":{"name":"Repeater","child":1},
+    "1":{"name":"Sequence","children":[2,3,4]},
+    "2":{"name":"GetMobPos"},
+    "3":{"name":"ExtenderLeaf","tree":"go_to"}
   }
 }

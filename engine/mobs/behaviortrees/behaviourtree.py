@@ -18,20 +18,17 @@ class BehaviourTree:
     status = None
     entity = None
 
+    _loaded_functions = None
+
     def __init__(self, entity, tree_data):
         if self.tree_structure is not None:
             self.tree_structure.clear()
         self.nodes = []
         self.shared_context = {}
+        self._loaded_functions = {}
 
-        loaded_functions = {}
         head = tree_data.pop('head')
-        for script in head['script']:
-            modulo = Resources.load_module_from_script(script)
-            for name in head['script'][script]:
-                if hasattr(modulo, name):
-                    loaded_functions[name] = getattr(modulo, name)
-
+        self.load_head(head)
         self.tree_structure = OrderedDict()
         self.entity = entity
         tree_data = self.analyze_tree(tree_data['body'])
@@ -68,8 +65,8 @@ class BehaviourTree:
                 if name in globals():
                     process = globals()[name]
 
-                elif name in loaded_functions:
-                    process = loaded_functions[name]
+                elif name in self._loaded_functions:
+                    process = self._loaded_functions[name]
 
                 if isinstance(process, FunctionType):
                     node = Leaf(self, idx, name)
@@ -87,6 +84,13 @@ class BehaviourTree:
     def __repr__(self):
         return 'BehaviourTree: current node #' + str(self.to_check.idx)
 
+    def load_head(self, head_data):
+        for script in head_data['script']:
+            modulo = Resources.load_module_from_script(script)
+            for name in head_data['script'][script]:
+                if hasattr(modulo, name):
+                    self._loaded_functions[name] = getattr(modulo, name)
+
     def analyze_tree(self, tree_data):
         key = None
         new_tree = None
@@ -95,9 +99,11 @@ class BehaviourTree:
             idx = int(key)
             name = tree_data[key]['name']
             if name == 'ExtenderLeaf':
-                an_tree = tree_data[key]['tree']
-                new_tree = self.extend_tree(an_tree, idx)
-                Resources.load_module_from_script(an_tree)
+                extension = Resources.abrir_json(ModData.mobs + 'behaviours/' + tree_data[key]['tree'] + '.json')
+                head = extension.pop('head')
+                body = extension.pop('body')
+                new_tree = self.extend_tree(body, idx)
+                self.load_head(head)
                 break
 
         if new_tree:
@@ -106,17 +112,16 @@ class BehaviourTree:
         return tree_data
 
     @staticmethod
-    def extend_tree(new_tree_data, idx):
-        tree_extension = Resources.abrir_json(ModData.mobs + 'behaviours/' + new_tree_data + '.json')
+    def extend_tree(new_body, idx):
         new_tree = {}
-        for kex in tree_extension:
-            if 'children' in tree_extension[kex]:
-                for i in range(len(tree_extension[kex]['children'])):
-                    tree_extension[kex]['children'][i] += idx
-            elif 'child' in tree_extension[kex]:
-                tree_extension[kex]['child'] += idx
+        for kex in new_body:
+            if 'children' in new_body[kex]:
+                for i in range(len(new_body[kex]['children'])):
+                    new_body[kex]['children'][i] += idx
+            elif 'child' in new_body[kex]:
+                new_body[kex]['child'] += idx
             idy = str(int(kex) + idx)
-            new_tree[idy] = tree_extension[kex]
+            new_tree[idy] = new_body[kex]
         return new_tree
 
     def set_parents(self):

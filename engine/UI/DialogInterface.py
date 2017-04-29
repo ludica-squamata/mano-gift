@@ -20,7 +20,6 @@ class DialogInterface(Ventana):
     erase_area = None
     arrow_width = 0
     fuente = None
-    altura_del_texto = None
 
     def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))
@@ -37,7 +36,6 @@ class DialogInterface(Ventana):
         self.arrow_width = 16
 
         self.fuente = self.fuente_M
-        self.altura_del_texto = self.fuente.get_height()
         self.ubicar(0, ALTO - int(ALTO / 5))
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
