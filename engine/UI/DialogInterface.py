@@ -2,10 +2,10 @@ from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Delete
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
-from .widgets import Ventana
+from .widgets import BaseWidget
 
 
-class DialogInterface(Ventana):
+class DialogInterface(BaseWidget):
     text_rect = None
     rendered_text = None
     active = True
@@ -21,6 +21,7 @@ class DialogInterface(Ventana):
     arrow_width = 0
     fuente = None
     drawn = False
+    ticks = 0
 
     def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))

@@ -2,4 +2,3 @@ from .basewidget import BaseWidget
 from ._boton import Boton
 from ._espacio_equipable import EspacioEquipable
 from ._fila import Fila
-from .Ventana import Ventana

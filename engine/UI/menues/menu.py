@@ -2,12 +2,12 @@ from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.libs.textrect import render_textrect
-from engine.UI.widgets import Ventana, Boton
+from engine.UI.widgets import Boton, BaseWidget
 from pygame.sprite import LayeredUpdates
 from pygame import Rect
 
 
-class Menu(EventAware, Ventana):
+class Menu(EventAware, BaseWidget):
     botones = None
     filas = None
     cur_btn = 0
@@ -17,6 +17,8 @@ class Menu(EventAware, Ventana):
     newMenu = False
     active = True
     layer = CAPA_OVERLAYS_MENUS
+    opciones = 0
+    sel = 0
 
     def __init__(self, nombre, titulo=None):
         self.nombre = nombre
@@ -107,6 +109,14 @@ class Menu(EventAware, Ventana):
         self.cur_btn = 0
         self.select_one(0)
         self.reset()
+
+    def posicionar_cursor(self, i):
+        self.sel += i
+        if self.sel < 0:
+            self.sel = self.opciones - 1
+
+        elif self.sel > self.opciones - 1:
+            self.sel = 0
 
     def __repr__(self):
         return 'Menu_' + self.nombre + ' (en ' + str(len(self.groups())) + ' grupos)'
