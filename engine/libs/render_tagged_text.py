@@ -1,4 +1,4 @@
-from pygame import Surface, Rect
+from pygame import Surface, Rect, SRCALPHA
 
 
 class Tag:
@@ -24,11 +24,10 @@ class Tag:
         return 'tag ' + self.init
 
 
-def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspace=4, line_spacing=1, justification=0):
+def render_tagged_text(text, tags, w, h=0, bgcolor=None, _defaultspace=4, line_spacing=1, justification=0):
     actual_lines = []
 
     last_tag = tags['n']
-    rendered_words = []
     line_rect = Rect(0, 0, 0, 0)
     line_num = -1
     tagged = False
@@ -134,7 +133,6 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
                 actual_lines.append([[rendered_word, rendered_word_rect]])
 
             line_rect.union_ip(rendered_word_rect)
-            rendered_words.append([rendered_word, rendered_word_rect])
 
     line_num = -1
     totalheight = 0
@@ -142,8 +140,11 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
     for line in actual_lines:
         line_num += 1
         totalwidth = sum([i[1].w for i in line])
-        line_surf = Surface((totalwidth, max_word_h))
-        line_surf.fill(bgcolor)
+        if not bgcolor:
+            line_surf = Surface((totalwidth, max_word_h), SRCALPHA)
+        else:
+            line_surf = Surface((totalwidth, max_word_h))
+            line_surf.fill(bgcolor)
         totalheight += max_word_h + line_spacing
         assert h == 0 or totalheight < h, "Once word-wrapped, the text string was taller than the height passed."
 
@@ -158,8 +159,13 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
         final_h = h
     else:
         final_h = totalheight
-    finalsurf = Surface((w, final_h))
-    finalsurf.fill(bgcolor)
+
+    if not bgcolor:
+        finalsurf = Surface((w, final_h), SRCALPHA)
+    else:
+        finalsurf = Surface((w, final_h))
+        finalsurf.fill(bgcolor)
+
     finalrect = finalsurf.get_rect()
     for l_surf, l_rect in final_lines:
         assert justification in (0, 1, 2), "Invalid justification argument, must be 0-2"

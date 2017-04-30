@@ -20,6 +20,7 @@ class DialogInterface(Ventana):
     erase_area = None
     arrow_width = 0
     fuente = None
+    drawn = False
 
     def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))
@@ -49,8 +50,11 @@ class DialogInterface(Ventana):
             self.text_rect.x = 6
         else:
             width -= self.loc_rect.w+self.arrow_width+1
-        self.rendered_text = render_tagged_text(texto, self.tags, width, bgcolor=self.bg_cnvs)
+        self.rendered_text = render_tagged_text(texto, self.tags, width)
         self.text_rect.size = self.rendered_text.get_size()
+        if self.text_rect.h < self.draw_space_rect.h:
+            self.text_rect.y = 3  # reset scrolling
+        self.drawn = True
 
     def set_sel_mode(self, opciones):
         self.menu.supress_all()
@@ -76,6 +80,7 @@ class DialogInterface(Ventana):
         self.menu.actual = self.menu.cubos.get_sprite(0)
         self.set_text(opciones[0].texto)
         self.sel_mode = True
+        self.drawn = False
 
     def set_menu(self, menu):
         self.menu = menu
@@ -83,6 +88,7 @@ class DialogInterface(Ventana):
 
     def rotar_menu(self, delta):
         self.menu.turn(delta)
+        self.drawn = False
 
     def detener_menu(self):
         self.menu.stop()
@@ -126,7 +132,7 @@ class DialogInterface(Ventana):
         if self.loc_img is not None:
             self.image.blit(self.loc_img, self.loc_rect)
 
-        if self.sel_mode and self.menu.stopped:
+        if self.sel_mode and self.menu.stopped and not self.drawn:
             self.set_text(self.menu.actual.item.texto)
             self.sel = self.menu.actual.item
 
