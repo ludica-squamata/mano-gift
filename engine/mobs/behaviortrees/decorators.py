@@ -120,10 +120,8 @@ class Limiter(Decorator):
 
     def __init__(self, tree, idx, child, max_calls=0):
         super().__init__(tree, idx, child)
-        if max_calls > 0:
-            self.max_calls = max_calls
-        else:
-            raise ValueError('Limiter Decorator must specify a maximun number of calls greater than 0')
+        assert max_calls > 0, 'Limiter Decorator must specify a maximun number of calls greater than 0'
+        self.max_calls = max_calls
 
     def get_child_status(self, status):
         if self.total_calls < self.max_calls:

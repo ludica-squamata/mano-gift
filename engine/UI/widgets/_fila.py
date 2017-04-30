@@ -1,7 +1,7 @@
 from .basewidget import BaseWidget
 from pygame import Surface
 from engine.libs import render_tagged_text
-from engine.globs import EngineData as Ed
+from engine.globs import EngineData
 
 
 class Fila(BaseWidget):
@@ -37,7 +37,7 @@ class Fila(BaseWidget):
             self.tag_init = '<' + _tag + '>'
             self.tag_end = '</' + _tag + '>'
             self.nombre = self.tag_init + self.item.nombre.capitalize() + self.tag_end
-            self.cantidad = self.tag_init + 'x' + str(Ed.HERO.inventario.cantidad(self.item)) + self.tag_end
+            self.cantidad = self.tag_init + 'x' + str(EngineData.HERO.inventario.cantidad(self.item)) + self.tag_end
             self.img_uns = self.construir_fila(self.bg_cnvs)
             self.img_sel = self.construir_fila(self.font_low_color)
             self.tagged = True
@@ -76,9 +76,9 @@ class Fila(BaseWidget):
     def update(self):
         if not hasattr(self.item, 'texto'):
             if self.tagged:
-                self.cantidad = self.tag_init + 'x' + str(Ed.HERO.inventario.cantidad(self.item)) + self.tag_end
+                self.cantidad = self.tag_init + 'x' + str(EngineData.HERO.inventario.cantidad(self.item)) + self.tag_end
             else:
-                self.cantidad = 'x' + str(Ed.HERO.inventario.cantidad(self.item))
+                self.cantidad = 'x' + str(EngineData.HERO.inventario.cantidad(self.item))
 
             self.img_uns = self.construir_fila(self.bg_cnvs)
             self.img_sel = self.construir_fila(self.font_low_color)

@@ -85,15 +85,11 @@ class Inventory:
         self._peso_max = nuevopesomax
 
     def agregar(self, item):
-        if self._volumen_actual + item.volumen <= self._volumen_max:
-            if self._peso_actual + item.peso <= self._peso_max:
-                self._peso_actual += item.peso
-                self._volumen_actual += item.volumen
-                self._contenido.append(item)
-            else:
-                raise InventoryError('No puedes cargar más peso del que llevas.')
-        else:
-            raise InventoryError('El item es demasiado grande')
+        assert self._volumen_actual + item.volumen <= self._volumen_max, 'El item es demasiado grande'
+        assert self._peso_actual + item.peso <= self._peso_max, 'No puedes cargar más peso del que llevas.'
+        self._peso_actual += item.peso
+        self._volumen_actual += item.volumen
+        self._contenido.append(item)
 
     def remover(self, item):
         if item in self._contenido:

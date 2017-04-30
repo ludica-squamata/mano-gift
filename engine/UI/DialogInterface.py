@@ -40,8 +40,7 @@ class DialogInterface(Ventana):
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
     def ubicar(self, x=0, y=0, z=0):
-        if x < 0 or y < 0:
-            raise ValueError('Coordenadas inválidas')
+        assert x > 0 or y > 0, 'Coordenadas inválidas'
         self.rect.move_ip(x, y)
 
     def set_text(self, texto):

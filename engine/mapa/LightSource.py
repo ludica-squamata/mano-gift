@@ -60,8 +60,7 @@ class SpotLight(LightSource):
 
     def _crear(self, radio, color):
         base = self._crear_base(radio * 2)
-        if len(color) < 4:
-            raise ValueError('el color debe ser rgba')
+        assert len(color) == 4, 'el color debe ser RGBA'
         draw.circle(base, color, (radio, radio), radio)
         return base
 
@@ -73,10 +72,8 @@ class GradientSpotLight(LightSource):
 
     def _crear(self, radio, color, step=1):
         base = self._crear_base(radio * 2)
-        if len(color) < 4:
-            raise ValueError('el color debe ser rgba')
-        else:
-            r, g, b, a = color
+        assert len(color) == 4, 'el color debe ser RGBA'
+        r, g, b, a = color
         _a = -step
         _r = radio
         while _r >= 0:
@@ -99,8 +96,7 @@ class SquareLight(LightSource):
     @staticmethod
     def _crear(lado, color):
         base = Surface((lado, lado), SRCALPHA)
-        if len(color) < 4:
-            raise ValueError('el color debe ser rgba')
+        assert len(color) == 4, 'el color debe ser RGBA'
         base.fill(color)
         return base
 

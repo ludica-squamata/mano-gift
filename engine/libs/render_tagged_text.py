@@ -1,14 +1,6 @@
 from pygame import Surface, Rect
 
 
-class TaggedTextException(BaseException):
-    def __init__(self, message=None):
-        self.message = message
-
-    def __str__(self):
-        return self.message
-
-
 class Tag:
     fuente = None
     fg = 0, 0, 0
@@ -26,7 +18,7 @@ class Tag:
         self.close = '</' + nombre + '>'
 
     def render(self, string):
-        return self.fuente.render(string, 1, self.fg)  # ,self.bg)
+        return self.fuente.render(string, 1, self.fg)
 
     def __repr__(self):
         return 'tag ' + self.init
@@ -67,10 +59,7 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
                     _end = _word.find('>', _init)
                     tag_name = _word[_init:_end]
                     tag = tags[tag_name]
-                    # actual_tag = Tag
                     max_word_h = tag.h
-                    # else:
-                    # actual_tag = last_tag
 
                 if _word.startswith(tag.init) and _word.endswith(tag.close):
                     # casos como <tag>palabra</tag>
@@ -133,8 +122,7 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
             rendered_word_rect = rendered_word.get_rect()
             rendered_word_rect.width += wordspace
 
-            if rendered_word_rect.w >= w:
-                raise TaggedTextException("The word " + actual_word + " is longer than the width passed.")
+            assert rendered_word_rect.w <= w, "The word " + actual_word + " is wider than the width passed"
 
             line_w = line_rect.w + rendered_word_rect.w
             if line_w < w:
@@ -150,22 +138,21 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
 
     line_num = -1
     totalheight = 0
-    finallines = []
+    final_lines = []
     for line in actual_lines:
         line_num += 1
         totalwidth = sum([i[1].w for i in line])
         line_surf = Surface((totalwidth, max_word_h))
         line_surf.fill(bgcolor)
         totalheight += max_word_h + line_spacing
-        if totalheight > h != 0:
-            raise TaggedTextException("Once word-wrapped, the text string was taller than the height passed.")
+        assert h == 0 or totalheight < h, "Once word-wrapped, the text string was taller than the height passed."
 
         for word, rect in line:
             line_surf.blit(word, rect)
 
         line_rect = line_surf.get_rect()
         line_rect.y = line_num * (line_rect.h + line_spacing)
-        finallines.append([line_surf, line_rect])
+        final_lines.append([line_surf, line_rect])
 
     if h:
         final_h = h
@@ -174,15 +161,15 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=(255, 255, 255), _defaultspac
     finalsurf = Surface((w, final_h))
     finalsurf.fill(bgcolor)
     finalrect = finalsurf.get_rect()
-    for l_surf, l_rect in finallines:
+    for l_surf, l_rect in final_lines:
+        assert justification in (0, 1, 2), "Invalid justification argument, must be 0-2"
         if justification == 0:  # left
             l_rect.left = finalrect.left
         elif justification == 1:  # center
             l_rect.centerx = finalrect.centerx
         elif justification == 2:  # right
             l_rect.right = finalrect.right
-        else:
-            TaggedTextException("Invalid justification argument")
+
         finalsurf.blit(l_surf, l_rect)
 
     return finalsurf
