@@ -4,7 +4,7 @@ from pygame import Rect, KEYUP, K_ESCAPE
 from pygame import display as pantalla, event, font
 from engine.globs import Tiempo
 from engine.libs.textrect import render_textrect
-from engine.misc import Util
+from engine.misc import salir
 
 
 def creditos_introduccion():
@@ -91,7 +91,7 @@ def creditos_introduccion():
         for _event in event.get():
             if _event.type == KEYUP:
                 if _event.key == K_ESCAPE:
-                    Util.salir()
+                    salir()
                 else:
                     running = False
 

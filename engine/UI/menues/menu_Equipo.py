@@ -1,7 +1,7 @@
 from .menu import Menu
 from pygame import Surface, Rect
 from pygame.sprite import LayeredUpdates
-from engine.misc import Resources as Rs
+from engine.misc.resources import cargar_imagen
 from engine.libs.textrect import render_textrect
 from engine.globs import EngineData as Ed
 from engine.UI.widgets import Fila, EspacioEquipable
@@ -65,7 +65,7 @@ class MenuEquipo(Menu):
 
         # dibujar
         self.espacios.draw(self.canvas)
-        self.hombre = Rs.cargar_imagen('hombre_mimbre.png')
+        self.hombre = cargar_imagen('hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))
         self.crear_espacio_selectivo(188, self.canvas.get_height() - 64)
 

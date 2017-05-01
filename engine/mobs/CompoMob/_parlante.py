@@ -1,7 +1,7 @@
 from engine.UI.circularmenus import DialogCircularMenu
 from engine.globs import EngineData, ModData
 from engine.IO.dialogo import Dialogo
-from engine.misc import Resources, ReversibleDict
+from engine.misc import ReversibleDict, abrir_json
 from ._movil import Movil
 
 
@@ -17,7 +17,7 @@ class Parlante(Movil):
         if 'states' in data:
             if 'dialog' in data['states'][0]:
                 nombre = data['states'][0]['dialog']
-                data['states'][0]['dialog'] = Resources.abrir_json(ModData.dialogos + nombre)
+                data['states'][0]['dialog'] = abrir_json(ModData.dialogos + nombre)
 
     def hablar(self, sprite):
         if sprite.hablante:
@@ -54,4 +54,3 @@ class Parlante(Movil):
             direccion = opuesta[self.interlocutor.direccion]
             if self.direccion != direccion and not self.is_the_speaker:
                 self.cambiar_direccion(direccion)
-

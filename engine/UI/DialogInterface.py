@@ -14,7 +14,7 @@ class DialogInterface(BaseWidget):
     menu = None
     w, h = 0, 0
     sel_mode = False
-
+    opciones = 0
     marco = None
     draw_space_rect = None
     erase_area = None
@@ -22,6 +22,7 @@ class DialogInterface(BaseWidget):
     fuente = None
     drawn = False
     ticks = 0
+    sel = 0
 
     def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))

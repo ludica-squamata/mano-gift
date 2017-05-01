@@ -1,7 +1,7 @@
 ﻿from engine.globs import COLOR_IGNORADO
 from engine.globs.eventDispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA
-from engine.misc import Resources
+from engine.misc import cargar_imagen
 from engine.base import AzoeSprite
 
 
@@ -47,7 +47,7 @@ class LightSource(AzoeSprite):
 
 class ImageLight(LightSource):
     def __init__(self, ruta, x, y):
-        img = Resources.cargar_imagen(ruta)
+        img = cargar_imagen(ruta)
         super().__init__(img, x, y)
 
 

@@ -1,7 +1,7 @@
 from engine.globs import EngineData as Ed, ModData as Md, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.misc import Util
+from engine.misc import salir
 from .taphold import get_taphold_events
 from pygame import KEYDOWN, QUIT, K_ESCAPE, K_F1, display
 from engine.UI.menues import *
@@ -15,11 +15,11 @@ class Modo:
     def juego(cls, events):
         for event in events:
             if event.type == QUIT:
-                Util.salir()
+                salir()
 
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    Util.salir()
+                    salir()
                 elif event.key == K_F1:
                     EventDispatcher.get_registered()
 

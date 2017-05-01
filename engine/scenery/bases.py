@@ -1,6 +1,6 @@
 from engine.UI.propdescription import PropDescription
 from engine.base import ShadowSprite, EventListener
-from engine.misc import Resources
+from engine.misc import abrir_json
 from engine.globs import ModData
 
 
@@ -34,7 +34,7 @@ class Escenografia(ShadowSprite, EventListener):
         self.face = data.get('cara', 'front')
 
         try:
-            dialogo = Resources.abrir_json(ModData.dialogos + self.nombre + '.json')
+            dialogo = abrir_json(ModData.dialogos + self.nombre + '.json')
             self.data.update({'dialog': dialogo})
         except IOError:
             pass

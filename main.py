@@ -1,14 +1,14 @@
 from pygame import display as pantalla, init as py_init, event, font, joystick, image
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Tiempo, ModData, ANCHO, ALTO
-from engine.misc import Resources as Rs, Config
+from engine.misc import abrir_json, Config
 from engine.IO.modos import Modo
 import os
 
 py_init()
 for idx in range(joystick.get_count()):
     joystick.Joystick(idx).init()
-ModData.init(Rs.abrir_json("engine.json"))
+ModData.init(abrir_json("engine.json"))
 pantalla.set_caption(ModData.data['nombre'])
 pantalla.set_icon(image.load(ModData.graphs + ModData.data['icono']))
 os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)

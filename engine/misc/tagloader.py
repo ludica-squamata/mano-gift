@@ -1,6 +1,6 @@
 # tagloader
 from engine.libs.render_tagged_text import Tag
-from engine.misc.resources import Resources as Rs
+from engine.misc.resources import abrir_json
 from pygame import font, Color
 
 font.init()
@@ -24,7 +24,7 @@ font.init()
 
 
 def load_tagarrayfile(filename):
-    tagarray = Rs.abrir_json(filename)
+    tagarray = abrir_json(filename)
     tags = {}
     _font = "verdana"
     _size = 16

@@ -1,7 +1,7 @@
 from engine.mobs.behaviortrees import BehaviourTree
 from . import Sensitivo, Animado
 from engine.globs import EngineData, ModData
-from engine.misc.resources import Resources
+from engine.misc.resources import abrir_json
 
 
 class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
@@ -10,7 +10,7 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
 
     def __init__(self, data, x, y, **kwargs):
         nombre = data['states'][0]['AI']
-        tree_data = Resources.abrir_json(ModData.mobs + 'behaviours/' + nombre + '.json')
+        tree_data = abrir_json(ModData.mobs + 'behaviours/' + nombre + '.json')
         self.AI = BehaviourTree(self, tree_data)  # function alias!
 
         self._AI = self.AI  # copia de la AI original

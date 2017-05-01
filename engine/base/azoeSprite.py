@@ -1,5 +1,5 @@
 from pygame import sprite, mask, Surface, Rect
-from engine.misc import Resources
+from engine.misc import cargar_imagen
 
 
 class AzoeSprite(sprite.Sprite):
@@ -33,7 +33,7 @@ class AzoeSprite(sprite.Sprite):
         super().__init__()
 
         if isinstance(imagen, str):
-            self.image = Resources.cargar_imagen(imagen)
+            self.image = cargar_imagen(imagen)
         elif isinstance(imagen, Surface):
             self.image = imagen
         elif imagen is None:

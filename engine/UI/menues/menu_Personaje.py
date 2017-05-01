@@ -1,4 +1,4 @@
-from engine.misc import Resources
+from engine.misc.resources import cargar_imagen, split_spritesheet
 from engine.libs import render_textrect
 from engine.globs import Tiempo, EngineData
 from pygame import font, Rect, Surface, draw
@@ -32,7 +32,7 @@ class MenuPersonaje(Menu):
         self.lineas = LayeredUpdates()  # linea punteada
 
         # cargar imagenes
-        self.char_face = Resources.cargar_imagen('mobs/imagenes/pc_face.png')
+        self.char_face = cargar_imagen('mobs/imagenes/pc_face.png')
         self.char_images = self.cargar_anims('mobs/imagenes/heroe_idle_walk.png')
         self.char_img = self.char_images['Sabajo']
         self.char_img_rect = Rect(107, 130, 32, 32)
@@ -238,7 +238,7 @@ class MenuPersonaje(Menu):
     @staticmethod
     def cargar_anims(ruta_imgs):
         dicc = {}
-        spritesheet = Resources.split_spritesheet(ruta_imgs)
+        spritesheet = split_spritesheet(ruta_imgs)
         idx = -1
         for L in ['S', 'I', 'D']:
             for D in ['abajo', 'arriba', 'izquierda', 'derecha']:

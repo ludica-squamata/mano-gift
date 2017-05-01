@@ -1,9 +1,9 @@
 from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.misc import Resources
+from engine.misc import abrir_json, cargar_imagen
 from .LightSource import DayLight  # SpotLight
-from .loader import Loader
+from .loader import load_everything, cargar_salidas
 from .grilla import Grilla
 from .cuadrante import Cuadrante
 from pygame.sprite import Sprite, LayeredUpdates
@@ -28,7 +28,7 @@ class Stage:
         self.properties = LayeredUpdates()
         self.interactives.clear()
         self.nombre = nombre
-        self.data = Resources.abrir_json(ModData.mapas + nombre + '.stage.json')
+        self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
         dx, dy = self.data['entradas'][entrada]['pos']
         chunk_name = self.data['entradas'][entrada]['chunk']
         offx = self.offset_x - dx
@@ -47,7 +47,7 @@ class Stage:
         self.grilla = Grilla(self.mapa.mask, 32)
 
         self.entrada = entrada
-        self.salidas = Loader.cargar_salidas(self.data)
+        self.salidas = cargar_salidas(self.data)
 
         EventDispatcher.register(self.anochecer, 'HourFlag')
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
@@ -198,10 +198,10 @@ class ChunkMap(Sprite):
         self.nombre = nombre
 
         if not data:
-            data = Resources.abrir_json(ModData.mapas + self.nombre + '.' + self.tipo + '.json')
+            data = abrir_json(ModData.mapas + self.nombre + '.' + self.tipo + '.json')
 
-        colisiones = Resources.cargar_imagen(data['colisiones'])
-        self.image = Resources.cargar_imagen(data['fondo'])
+        colisiones = cargar_imagen(data['colisiones'])
+        self.image = cargar_imagen(data['fondo'])
         self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
         self.rect = self.image.get_rect(topleft=(off_x, off_y))
 
@@ -210,7 +210,7 @@ class ChunkMap(Sprite):
         if cargar_todo:
             dx = -off_x + self.stage.offset_x
             dy = -off_y + self.stage.offset_y
-            for item, grupo in Loader.load_everything(data, dx, dy):
+            for item, grupo in load_everything(data, dx, dy):
                 self.stage.add_property(item, grupo)
 
     def cargar_limites(self, limites):

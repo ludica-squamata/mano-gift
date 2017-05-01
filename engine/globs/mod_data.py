@@ -1,5 +1,5 @@
 from os import getcwd as cwd, path, listdir
-from engine.misc import Util, Resources
+from engine.misc import salir, abrir_json, raw_load_module
 from engine.globs.tiempo import Tiempo
 
 
@@ -25,11 +25,11 @@ class ModData:
         Tiempo.set_clock(real, min_l)
 
         if not cls._find_mod_folder(ini_data):
-            Util.salir("la ruta no existe")
+            salir("la ruta no existe")
 
         data = cls._get_file_data(ini_data['data_file'])
         if data is None:
-            Util.salir('No data in mod folder')
+            salir('No data in mod folder')
 
         else:
             cls.data = data
@@ -49,7 +49,7 @@ class ModData:
                     for d in cls.data['custom']['menus']:
                         loaded.append(d['script'])
                         ruta = cls.fd_scripts + d['script'] + '.py'
-                        _module = Resources.raw_load_module(ruta)
+                        _module = raw_load_module(ruta)
                         menu = getattr(_module, d['name'])
                         cls.custommenus[d['name']] = menu
 
@@ -58,7 +58,7 @@ class ModData:
                     i = -1
                     for d in cls.data['custom']['circular']:
                         ruta = cls.fd_scripts + d['script'] + '.py'
-                        _module = Resources.raw_load_module(ruta)
+                        _module = raw_load_module(ruta)
                         loaded.append(d['script'])
                         if hasattr(_module, d['name']):
                             i += 1
@@ -75,7 +75,7 @@ class ModData:
                 if path.isfile(ruta):
                     script_name = script.rstrip('.py')
                     if script_name not in loaded:
-                        Resources.raw_load_module(ruta)
+                        raw_load_module(ruta)
                         loaded.append(script_name)
 
     @classmethod
@@ -95,12 +95,12 @@ class ModData:
         if not path.exists(ruta):
             return None
 
-        data = Resources.abrir_json(ruta)
+        data = abrir_json(ruta)
         return data
 
     @classmethod
     def get_script_method(cls, scriptname, methodname):
         ruta = cls.fd_scripts + scriptname
-        _module = Resources.raw_load_module(ruta)
+        _module = raw_load_module(ruta)
         if hasattr(_module, methodname):
             return getattr(_module, methodname)

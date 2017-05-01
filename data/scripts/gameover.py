@@ -1,4 +1,4 @@
-from engine.misc.util import Util
+from engine.misc.util import salir
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from pygame import Surface, font
@@ -24,7 +24,7 @@ class FadingScreen(Sprite):
         if self.a <= 255:
             self.image.set_alpha(self.a)
         elif self.a > 600:
-            Util.salir('gameover')
+            salir('gameover')
 
 
 def gameover(evento):

@@ -1,7 +1,7 @@
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_CIRCULAR, ModData
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import TopicElement, DialogOptionElement
-from engine.misc import Resources as Rs
+from engine.misc.resources import abrir_json
 from os import path, listdir
 
 
@@ -18,7 +18,7 @@ class DialogCircularMenu(RenderedCircularMenu):
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
-                file = Rs.abrir_json(ruta)
+                file = abrir_json(ruta)
                 if file['head']['class'] == 'chosen':
                     idx += 1
                     file.update({'idx': idx})
@@ -52,5 +52,3 @@ class DialogCircularMenu(RenderedCircularMenu):
     def add_element(self, cascada, element):
         elm = DialogOptionElement(self, element)
         super().add_element(cascada, elm)
-
-

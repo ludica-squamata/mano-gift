@@ -1,5 +1,5 @@
 from .eventDispatcher import EventDispatcher
-from engine.misc import Resources
+from engine.misc import abrir_json, guardar_json
 from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
@@ -30,11 +30,12 @@ class EngineData:
         Renderer.clear()
         from engine.UI.hud import HUD
         from engine.mapa import Stage
-        from engine.mapa.loader import Loader
+        from engine.mapa.loader import load_hero
         if nombre not in cls.mapas:
             cls.mapas[nombre] = Stage(nombre, entrada)
         else:
-            Loader.load_hero(entrada)
+            x, y = cls.mapas[nombre].data['entradas'][entrada]['pos']
+            load_hero(x, y)
         cls.MAPA_ACTUAL = cls.mapas[nombre]
         cls.MAPA_ACTUAL.register_at_renderer()
         cls.HUD = HUD()
@@ -66,19 +67,19 @@ class EngineData:
 
     @classmethod
     def salvar(cls, event):
-        data = Resources.abrir_json(SAVEFD + '/' + cls.char_name + '.json')
+        data = abrir_json(SAVEFD + '/' + cls.char_name + '.json')
         data.update(event.data)
-        Resources.guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
+        guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
 
     @classmethod
     def new_game(cls, char_name):
         cls.char_name = char_name
-        Resources.guardar_json(SAVEFD + '/' + char_name + '.json', {"name": char_name})
+        guardar_json(SAVEFD + '/' + char_name + '.json', {"name": char_name})
         EventDispatcher.trigger('NewGame', 'engine', {})
 
     @classmethod
     def load_savefile(cls, filename):
-        data = Resources.abrir_json(SAVEFD + '/' + filename)
+        data = abrir_json(SAVEFD + '/' + filename)
         cls.save_data.update(data)
         cls.char_name = data['name']
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})

@@ -1,4 +1,4 @@
-from .resources import Resources
+from .resources import abrir_json, guardar_json
 import os
 
 
@@ -39,7 +39,7 @@ class Config:
     def cargar(cls):
         if not len(cls.data):
             if os.path.isfile(os.path.join(cls.savedir, 'config.json')):
-                cls.data = Resources.abrir_json(os.path.join(cls.savedir, 'config.json'))
+                cls.data = abrir_json(os.path.join(cls.savedir, 'config.json'))
             else:
                 cls.data = cls.defaults()
                 cls.__changed = True
@@ -95,4 +95,4 @@ class Config:
         if cls.__changed:
             if not os.path.exists(cls.savedir):
                 os.mkdir('save')
-            Resources.guardar_json(os.path.join(cls.savedir, 'config.json'), cls.data)
+            guardar_json(os.path.join(cls.savedir, 'config.json'), cls.data)

@@ -1,6 +1,6 @@
 from .CompoMob import Equipado, Combativo
 from engine.globs import Mob_Group
-from engine.misc import Resources as Rs
+from engine.misc import cargar_imagen
 from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
 
@@ -26,9 +26,9 @@ class Mob(Combativo, Equipado, ShadowSprite):
                 elif key == 'cmb':
                     self.cmb_walk_img = self.cargar_anims(imgs['cmb'], dirs)
                 elif key == 'death':
-                    self.death_img = Rs.cargar_imagen(imgs['death'])
+                    self.death_img = cargar_imagen(imgs['death'])
                 elif key == "diag_face":
-                    self.diag_face = Rs.cargar_imagen(imgs["diag_face"])
+                    self.diag_face = cargar_imagen(imgs["diag_face"])
 
         self.images = self.idle_walk_img
         self.ID = data['ID']

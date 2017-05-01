@@ -1,7 +1,7 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Item_Group, ModData
 from engine.globs.renderer import Renderer
-from engine.misc import Resources
+from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
 from pygame import mask, Rect
 from .bases import Escenografia
 from .items import *
@@ -85,7 +85,7 @@ class Operable(Escenografia):
             self.estados[idx] = {}
             for attr in estado:
                 if attr == 'image':
-                    img = Resources.cargar_imagen(estado[attr])
+                    img = cargar_imagen(estado[attr])
                     mascara = mask.from_surface(img)
                     self.estados[idx].update({'image': img, 'mask': mascara})
                 elif attr == 'next':
@@ -151,7 +151,7 @@ class Estructura3D(Escenografia):
                     propdata = ruta.copy()
 
                 elif ruta.endswith('.json'):
-                    propdata = Resources.abrir_json(ruta)
+                    propdata = abrir_json(ruta)
 
                 elif ruta.endswith('.png'):
                     w, h = data['width'], data['height']
@@ -167,7 +167,7 @@ class Estructura3D(Escenografia):
 
     def chop_faces(self, ruta_img, w, h):
         if not self._chopped:
-            spritesheet = Resources.split_spritesheet(ruta_img, w=w, h=h)
+            spritesheet = split_spritesheet(ruta_img, w=w, h=h)
             d = {}
             if len(spritesheet) > 1:
                 for idx, face in [[0, "front"], [1, "left"], [2, "right"], [3, "back"]]:

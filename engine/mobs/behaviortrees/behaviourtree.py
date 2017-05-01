@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from types import FunctionType
 from engine.globs import ModData
-from engine.misc import Resources
+from engine.misc import abrir_json, load_module_from_script
 from .status import Success
 from .composites import *
 from .decorators import *
@@ -86,7 +86,7 @@ class BehaviourTree:
 
     def load_head(self, head_data):
         for script in head_data['script']:
-            modulo = Resources.load_module_from_script(script)
+            modulo = load_module_from_script(script)
             for name in head_data['script'][script]:
                 if hasattr(modulo, name):
                     self._loaded_functions[name] = getattr(modulo, name)
@@ -99,7 +99,7 @@ class BehaviourTree:
             idx = int(key)
             name = tree_data[key]['name']
             if name == 'ExtenderLeaf':
-                extension = Resources.abrir_json(ModData.mobs + 'behaviours/' + tree_data[key]['tree'] + '.json')
+                extension = abrir_json(ModData.mobs + 'behaviours/' + tree_data[key]['tree'] + '.json')
                 head = extension.pop('head')
                 body = extension.pop('body')
                 new_tree = self.extend_tree(body, idx)
