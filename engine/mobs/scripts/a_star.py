@@ -1,60 +1,40 @@
 # A* module
-from random import choice
+from math import sqrt
 
 
-def a_star(inicio, destino, mapa):
+def a_star(inicio, destino, mapa, heuristica='manhattan'):
     cerrada = []  # The set of nodes already evaluated.
     abierta = [inicio]  # The set of tentative nodes to be evaluated, initially containing the start node
     camino = {}  # The map of navigated nodes.
 
     inicio.g = 0  # Cost from start along best known path.
     # Estimated total cost from start to goal through y.
-    inicio.f = inicio.g + heuristica_estimada(inicio, destino)
+    inicio.f = inicio.g + heuristica_estimada(inicio, destino, heuristica)
 
     while abierta:
-        actual = lowest_f(abierta)  # the node in openset having the lowest f_score[] value
+        abierta.sort(key=lambda nodo: nodo.f)
+        actual = abierta.pop(0)  # the node in openset having the lowest f_score[] value
         if actual == destino:
             return reconstruir_camino(camino, destino)
 
-        abierta.remove(actual)
         cerrada.append(actual)
 
         vecinos = mirar_vecinos(actual, mapa)
         for vecino in vecinos:
-            punt_g_tentativa = actual.g + costo_g(actual, vecino)
+            punt_g_tentativa = actual.g + vecino.g
             if vecino not in cerrada or punt_g_tentativa < vecino.g:
                 camino[vecino] = actual
                 vecino.g = punt_g_tentativa
-                vecino.f = vecino.g + heuristica_estimada(vecino, destino)
+                vecino.f = vecino.g + heuristica_estimada(vecino, destino, heuristica)
                 if vecino not in abierta:
                     abierta.append(vecino)
 
 
-def heuristica_estimada(node, goal):
-    return 10 * (abs(node.x - goal.x) + abs(node.y - goal.y))
-
-
-def costo_g(actual, vecino):
-    if actual.x - vecino.x != 0 and actual.y - vecino.y != 0:  # diagonal
-        return 14
-    else:
-        return 10
-
-
-def lowest_f(abierta):
-    # returns the node in openset having the lowest f_score value
-    f_min = min([nodo.f for nodo in abierta])
-    candidatos = []
-    elegido = None
-    for nodo in abierta:
-        if nodo.f == f_min:
-            candidatos.append(nodo)
-            elegido = nodo
-
-    if len(candidatos) > 1:  # empate
-        return choice(candidatos)
-    else:
-        return elegido
+def heuristica_estimada(node, goal, method):
+    if method == 'manhattan':
+        return abs(node.x - goal.x) + abs(node.y - goal.y)
+    elif method == 'euclidean':
+        return int(sqrt((node.x - goal.x)**2+(node.y - goal.y)**2))
 
 
 def mirar_vecinos(nodo, grilla):
