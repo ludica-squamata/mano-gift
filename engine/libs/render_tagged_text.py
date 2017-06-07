@@ -5,15 +5,22 @@ class Tag:
     fuente = None
     fg = 0, 0, 0
     bg = 255, 255, 255
+    h = 0
     init = ''
     close = ''
 
     def __init__(self, nombre, data):
         self.nombre = nombre
-        self.fuente = data.get('fuente')
-        self.h = self.fuente.get_height()
-        self.fg = data.get('fg')
-        self.bg = data.get('bg')
+        if type(data) is dict:
+            self.fuente = data.get('fuente')
+            self.h = self.fuente.get_height()
+            self.fg = data.get('fg')
+            self.bg = data.get('bg')
+        elif type(data) is Tag:
+            self.fuente = data.fuente
+            self.h = data.h
+            self.fg = data.fg
+            self.bg = data.bg
         self.init = '<' + nombre + '>'
         self.close = '</' + nombre + '>'
 
@@ -57,7 +64,10 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=None, _defaultspace=4, line_s
                     _init = _word.find('<') + 1
                     _end = _word.find('>', _init)
                     tag_name = _word[_init:_end]
-                    tag = tags[tag_name]
+                    if tag_name in tags:
+                        tag = tags[tag_name]
+                    else:
+                        tag = Tag(tag_name, tags['n'])
                     max_word_h = tag.h
 
                 if _word.startswith(tag.init) and _word.endswith(tag.close):
