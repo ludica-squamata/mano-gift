@@ -26,19 +26,17 @@ class EngineData:
     current_view = 'north'
 
     @classmethod
-    def setear_mapa(cls, nombre, entrada):
-        Renderer.clear()
-        from engine.UI.hud import HUD
+    def setear_mapa(cls, nombre, entrada, is_new_game=False):
         from engine.mapa import Stage
         from engine.mapa.loader import load_hero
-        if nombre not in cls.mapas:
+        Renderer.clear()
+        if nombre not in cls.mapas or is_new_game:
             cls.mapas[nombre] = Stage(nombre, entrada)
         else:
             x, y = cls.mapas[nombre].data['entradas'][entrada]['pos']
             load_hero(x, y)
         cls.MAPA_ACTUAL = cls.mapas[nombre]
         cls.MAPA_ACTUAL.register_at_renderer()
-        cls.HUD = HUD()
 
     @classmethod
     def on_cambiarmapa(cls, evento):
@@ -58,7 +56,6 @@ class EngineData:
     def end_dialog(cls, layer):
         Renderer.clear_overlays_from_layer(layer)
         cls.DIALOG = None
-        # cls.menu_actual.deregister()  # no estoy seguro de que se pueda usar todas las veces.
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
@@ -86,12 +83,15 @@ class EngineData:
 
     @classmethod
     def cargar_juego(cls, mapa, entrada, dia, hora, minutos, focus):
+        from engine.UI.hud import HUD
         cls.acceso_menues.clear()
-        cls.setear_mapa(mapa, entrada)
+        cls.setear_mapa(mapa, entrada, is_new_game=True)
         if not Tiempo.clock.is_real():
             Tiempo.set_time(dia, hora, minutos)
         Renderer.set_focus(Mob_Group[focus])
+        cls.HERO = Mob_Group[focus]
         cls.MODO = 'Aventura'
+        cls.HUD = HUD(Mob_Group[focus])
         cls.HUD.show()
 
     @classmethod

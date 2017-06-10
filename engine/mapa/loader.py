@@ -1,5 +1,5 @@
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
-from engine.globs import EngineData, ModData
+from engine.globs import ModData
 from engine.globs import Mob_Group
 from engine.misc import abrir_json
 from engine.scenery import new_prop
@@ -81,15 +81,15 @@ def load_mobs(alldata):
 def load_hero(x, y):
     try:
         pc = Mob_Group['heroe']
-        EngineData.HERO = pc
-        EngineData.HERO.ubicar(x, y)
-        EngineData.HERO.mapRect.center = x, y
-        EngineData.HERO.z = EngineData.HERO.mapRect.y + EngineData.HERO.rect.h
+        # EngineData.HERO = pc
+        pc.ubicar(x, y)
+        pc.mapRect.center = x, y
+        pc.z = pc.mapRect.y + pc.rect.h
 
     except (IndexError, KeyError, AttributeError):
-        EngineData.HERO = PC(abrir_json(ModData.mobs + 'hero.json'), x, y)
+        pc = PC(abrir_json(ModData.mobs + 'hero.json'), x, y)
 
-    return [EngineData.HERO]
+    return [pc]
 
 
 def cargar_salidas(alldata):

@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, CAPA_OVERLAYS_HUD, ANCHO, CUADRO
+from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from pygame import Surface, Rect, draw
@@ -17,13 +17,14 @@ class ProgressBar(Sprite):
     x, y, w, h = 0, 0, 0, 0
     draw_area_rect = None
 
-    def __init__(self, maximo, color_actual, color_fondo, x, y, w, h):
+    def __init__(self, focus, maximo, color_actual, color_fondo, x, y, w, h):
         super().__init__()
 
         self.colorAct = color_actual
         self.colorFnd = color_fondo
         self.maximo = maximo
         self.actual = maximo
+        self.focus = focus
         self.divisiones = 1
 
         self.x, self.y = x, y
@@ -56,9 +57,9 @@ class ProgressBar(Sprite):
 
     def event_update(self, event):
         mob = event.data['mob']
-        if mob.nombre == 'heroe':  # incorrecto.
+        if mob.nombre == self.focus:
             self.set_variable(actual=mob.salud_act)
-        self.actualizar()
+            self.actualizar()
 
     def actualizar(self):
         self.image.blit(self._dibujar_fondo(), self.draw_area_rect)
@@ -69,9 +70,9 @@ class ProgressBar(Sprite):
 class CharacterName(Sprite, Estilo):
     active = True
 
-    def __init__(self, x, y):
+    def __init__(self, focus, x, y):
         super().__init__()
-        self.image = self.fuente_Mb.render(Ed.char_name, 1, self.font_none_color)
+        self.image = self.fuente_Mb.render(focus, 1, self.font_none_color)
         self.rect = self.image.get_rect(topleft=(x, y))
 
 
@@ -83,14 +84,14 @@ class HUD:
     BarraMana = None
     screen_name = None
 
-    def __init__(self):
+    def __init__(self, focus):
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
-        self.BarraVida = ProgressBar(Ed.HERO.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(Ed.HERO.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        self.BarraVida = ProgressBar(focus.nombre, focus.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        self.BarraMana = ProgressBar(focus.nombre, focus.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
-        self.screen_name = CharacterName(dx, dy - 30)
+        self.screen_name = CharacterName(focus.nombre, dx, dy - 30)
 
         EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
         # EventDispatcher.register(self.BarraMana.event_update,'')

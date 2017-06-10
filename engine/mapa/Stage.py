@@ -6,7 +6,8 @@ from .LightSource import DayLight  # SpotLight
 from .loader import load_everything, cargar_salidas
 from .grilla import Grilla
 from .cuadrante import Cuadrante
-from pygame.sprite import Sprite, LayeredUpdates
+from pygame.sprite import Sprite
+from engine.globs.azoegroup import AzoeGroup
 from pygame import mask, Rect, transform
 
 
@@ -24,9 +25,10 @@ class Stage:
     anochece = None
 
     def __init__(self, nombre, entrada):
-        self.chunks = LayeredUpdates()
-        self.properties = LayeredUpdates()
+        self.chunks = AzoeGroup('Stage '+nombre+' chunks')
+        self.properties = AzoeGroup('Stage '+nombre+' properties')
         self.interactives.clear()
+        self.cuadrantes.clear()
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
         dx, dy = self.data['entradas'][entrada]['pos']
@@ -181,8 +183,8 @@ class Stage:
 
     def update(self):
         self.actualizar_grilla()
-        for cuadrante in self.cuadrantes:
-            cuadrante.update()
+        # for cuadrante in self.cuadrantes:
+            # cuadrante.update()
         for salida in self.salidas:
             salida.update()
 

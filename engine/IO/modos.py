@@ -21,7 +21,7 @@ class Modo:
                 if event.key == K_ESCAPE:
                     salir()
                 elif event.key == K_F1:
-                    EventDispatcher.get_registered()
+                    print(Ed.HERO.groups())
 
         EventDispatcher.process()
 

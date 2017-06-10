@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame.sprite import LayeredUpdates
+from engine.globs.azoegroup import AzoeGroup
 from pygame import Rect, draw
 from .constantes import ANCHO, ALTO
 import sys
@@ -9,9 +9,9 @@ class Camara:
     focus = None  # objeto que la camara sigue.
     bg = None  # el fondo
     bgs_rect = None  # el rect colectivo de los fondos
-    bgs = LayeredUpdates()  # el grupo de todos los fondos cargados    
-    visible = LayeredUpdates()  # objetos que se ven (incluye sombras)
-    real = LayeredUpdates()  # objetos reales del mundo (no incluye sombras)
+    bgs = AzoeGroup('bgs')  # el grupo de todos los fondos cargados    
+    visible = AzoeGroup('visible')  # objetos que se ven (incluye sombras)
+    real = AzoeGroup('real')  # objetos reales del mundo (no incluye sombras)
     x, y = 0, 0
     w, h = ANCHO, ALTO
     rect = Rect(x, y, w, h)
@@ -249,7 +249,7 @@ class Camara:
 class Renderer:
     use_focus = False
     camara = Camara()
-    overlays = LayeredUpdates()
+    overlays = AzoeGroup('overlays')
 
     @classmethod
     def set_focus(cls, spr=None):

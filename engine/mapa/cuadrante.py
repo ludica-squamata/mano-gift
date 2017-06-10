@@ -1,6 +1,6 @@
-from pygame.sprite import Group
 from pygame import Rect
 from engine.globs import Mob_Group
+from engine.globs.azoegroup import AzoeGroup
 from engine.globs.eventDispatcher import EventDispatcher
 
 
@@ -9,8 +9,8 @@ class Cuadrante:
         super().__init__()
         self.idx = x * 2 + y
         self.nombre = 'Cuadrante #'+str(self.idx)
-        self.itemgroup = Group()
-        self.mobgroup = Group()
+        self.itemgroup = AzoeGroup(self.nombre+' '+'Items')
+        self.mobgroup = AzoeGroup(self.nombre+' '+'Mobs')
         self.rect = Rect(w * x, h * y, w, h)
         EventDispatcher.register(self.event_remove, "DeleteItem")
 
