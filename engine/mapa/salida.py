@@ -24,17 +24,21 @@ class Salida:
         self.direcciones = direcciones
         self.mask = Mask(self.mapRect.size)
         self.mask.fill()
-        if 'pydevd' in sys.modules:
-            self.sprite = SpriteSalida(self.nombre, self.mapRect)
-            Renderer.camara.add_real(self.sprite)
+        # if 'pydevd' in sys.modules:
+        self.sprite = SpriteSalida(self.nombre, *self.mapRect)
+        Renderer.camara.add_visible(self.sprite)
 
     def update(self):
         for mob in Mob_Group:
             dx, dy = mob.direcciones[mob.direccion]
-            dx *= mob.velocidad
-            dy *= mob.velocidad
-            if mob.colisiona(self, dx, dy) and mob.direccion in self.direcciones:
-                EventDispatcher.trigger('SetMap', 'Salida', {"mob": mob, 'dest': self.chunk, 'link': self.link})
+            dx *= -mob.velocidad
+            dy *= -mob.velocidad
+            if mob.colisiona(self, dx, dy):
+                EventDispatcher.trigger('SetMap', 'Salida', {'mob': mob,
+                                                             'target_stage': self.target_stage,
+                                                             'target_chunk': self.chunk,
+                                                             'target_entrada': self.link,
+                                                             'pos': self.mapRect.center})
 
     def __repr__(self):
         return self.nombre

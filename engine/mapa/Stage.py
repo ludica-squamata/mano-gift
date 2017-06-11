@@ -48,7 +48,7 @@ class Stage:
         self.cargar_timestamps()
         self.grilla = Grilla(self.mapa.mask, 32)
 
-        self.entrada = entrada
+        # self.entrada = entrada
         self.salidas = cargar_salidas(self.data)
 
         EventDispatcher.register(self.anochecer, 'HourFlag')
@@ -80,9 +80,10 @@ class Stage:
             obj.sombra = None
             obj._prevLuces = None
 
-            x = self.rect.x + obj.mapRect.x
-            y = self.rect.y + obj.mapRect.y
-            obj.ubicar(x, y)
+            # self.rect = self.mapa.rect.copy()
+            # x = self.rect.x + obj.mapRect.x
+            # y = self.rect.y + obj.mapRect.y
+            # obj.ubicar(x, y)
 
             if obj not in Renderer.camara.real:
                 Renderer.camara.add_real(obj)

@@ -1,5 +1,5 @@
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
-from engine.globs import ModData
+from engine.globs import ModData, EngineData
 from engine.globs import Mob_Group
 from engine.misc import abrir_json
 from engine.scenery import new_prop
@@ -9,7 +9,7 @@ from .salida import Salida
 
 def load_everything(alldata, x, y):
     loaded = []
-    for mob in load_hero(x, y) + load_mobs(alldata):
+    for mob in [load_hero(x, y)] + load_mobs(alldata):
         loaded.append((mob, GRUPO_MOBS))
     for prop in load_props(alldata):
         loaded.append((prop, GRUPO_ITEMS))
@@ -25,7 +25,7 @@ def load_something(alldata, x, y, requested):
     """
     loaded = []
     if 'PC' in requested:
-        loaded.append((load_hero(x, y), GRUPO_MOBS))
+        loaded.append(([load_hero(x, y)], GRUPO_MOBS))
 
     if 'NPC' in requested:
         for mob in load_mobs(alldata):
@@ -81,7 +81,7 @@ def load_mobs(alldata):
 def load_hero(x, y):
     try:
         pc = Mob_Group['heroe']
-        # EngineData.HERO = pc
+        EngineData.HERO = pc
         pc.ubicar(x, y)
         pc.mapRect.center = x, y
         pc.z = pc.mapRect.y + pc.rect.h
@@ -89,14 +89,14 @@ def load_hero(x, y):
     except (IndexError, KeyError, AttributeError):
         pc = PC(abrir_json(ModData.mobs + 'hero.json'), x, y)
 
-    return [pc]
+    return pc
 
 
 def cargar_salidas(alldata):
     salidas = []
     for datos in alldata['salidas']:
         nombre = datos['nombre']
-        stage = datos['nombre']
+        stage = datos['stage']
         rect = datos['rect']
         chunk = datos['chunk']
         entrada = datos['entrada']

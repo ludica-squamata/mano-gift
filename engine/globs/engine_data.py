@@ -26,22 +26,24 @@ class EngineData:
     current_view = 'north'
 
     @classmethod
-    def setear_mapa(cls, nombre, entrada, is_new_game=False):
+    def setear_mapa(cls, stage, entrada, is_new_game=False):
         from engine.mapa import Stage
-        from engine.mapa.loader import load_hero
         Renderer.clear()
-        if nombre not in cls.mapas or is_new_game:
-            cls.mapas[nombre] = Stage(nombre, entrada)
+        if stage not in cls.mapas or is_new_game:
+            cls.mapas[stage] = Stage(stage, entrada)
         else:
-            x, y = cls.mapas[nombre].data['entradas'][entrada]['pos']
-            load_hero(x, y)
-        cls.MAPA_ACTUAL = cls.mapas[nombre]
+            # acá está el problema me parece.
+            x, y = cls.mapas[stage].data['entradas'][entrada]['pos']
+            cls.HERO.ubicar_en_entrada(x, y)
+
+        cls.MAPA_ACTUAL = cls.mapas[stage]
         cls.MAPA_ACTUAL.register_at_renderer()
 
     @classmethod
     def on_cambiarmapa(cls, evento):
         if evento.data['mob'] is cls.HERO:
-            cls.setear_mapa(evento.data['dest'], evento.data['link'])
+            cls.setear_mapa(evento.data['target_stage'],
+                            evento.data['target_entrada'])
 
     @classmethod
     def on_setkey(cls, event):

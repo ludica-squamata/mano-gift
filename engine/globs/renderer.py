@@ -1,6 +1,6 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.azoegroup import AzoeGroup
-from pygame import Rect, draw
+from pygame import Rect, draw, display
 from .constantes import ANCHO, ALTO
 import sys
 
@@ -183,35 +183,32 @@ class Camara:
 
     @classmethod
     def panear(cls):
-        new_x = cls.focus.rect.x - cls.focus.mapRect.x
-        new_y = cls.focus.rect.y - cls.focus.mapRect.y
-
-        dx = new_x - cls.bg.rect.x
-        dy = new_y - cls.bg.rect.y
+        dx = cls.focus.rect.x - cls.focus.mapRect.x - cls.bg.rect.x
+        dy = cls.focus.rect.y - cls.focus.mapRect.y - cls.bg.rect.y
 
         f = cls.focus.rect
         b = cls.bgs_rect
         s = cls.rect
 
-        while abs(dx):
-            if b.x + dx > 1 or b.right + dx < s.w - 2 or f.centerx + dx != s.centerx:
-                if dx < 0:
-                    dx += 1
-                else:
-                    dx -= 1
-            else:
-                break
-
-        while abs(dy):
-            if b.bottom + dy < s.h - 2 or b.y + dy > 2 or f.centery + dy != s.centery:
-                # funciona, pero me gustaria encontrar una forma de reducir el valor
-                # sin tener que fijarme si es positivo o negativo.
-                if dy < 0:
-                    dy += 1
-                else:
-                    dy -= 1
-            else:
-                break
+        # while abs(dx):
+        #     if b.x + dx > 1 or b.right + dx < s.w - 2 or f.centerx + dx != s.centerx:
+        #         if dx < 0:
+        #             dx += 1
+        #         else:
+        #             dx -= 1
+        #     else:
+        #         break
+        #
+        # while abs(dy):
+        #     if b.bottom + dy < s.h - 2 or b.y + dy > 2 or f.centery + dy != s.centery:
+        #         # funciona, pero me gustaria encontrar una forma de reducir el valor
+        #         # sin tener que fijarme si es positivo o negativo.
+        #         if dy < 0:
+        #             dy += 1
+        #         else:
+        #             dy -= 1
+        #     else:
+        #         break
 
         cls.jump(dx, dy)
 
@@ -243,6 +240,8 @@ class Camara:
         if 'pydevd' in sys.modules:
             draw.line(fondo, (0, 100, 255), (cls.rect.centerx, 0), (cls.rect.centerx, cls.h))
             draw.line(fondo, (0, 100, 255), (0, cls.rect.centery), (cls.w, cls.rect.centery))
+            for spr in cls.real:
+                draw.rect(fondo, (255, 0, 0), spr.rect, 1)
         return ret
 
 

@@ -1,0 +1,16 @@
+{
+  "fondo":"maps/fondos/prueba.png",
+  "colisiones":"maps/colisiones/prueba.png",
+  "props": {
+    "star":[[432,432],[464,464]],
+    "arbol":[[100,100]]
+  },
+  "mobs": {
+  },
+  "limites":{
+  },
+  "refs":{
+    "arbol":"props/arbol_escalado.png",
+    "casa_lados":"items/casa_lados.json"
+  }
+}

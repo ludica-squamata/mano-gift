@@ -14,32 +14,18 @@
     }
   },
   "salidas":[
+    {
+      "stage":"new",
+      "rect":[400,450,32,16],
+      "chunk":"single",
+      "nombre":"Single.salida1",
+      "entrada":"center",
+      "direcciones":[]
+    }
   ],
   "ambiente":"exterior",
   "amanece":[6,0],
   "atardece":[17,0],
   "anochece":[20,0],
-  "latitude":30,
-
-  "chunks":{
-    "single":{
-      "fondo":"maps/fondos/prueba.png",
-      "colisiones":"maps/colisiones/prueba.png",
-      "props": {
-        "star":[[432,432],[464,464]],
-        "arbol":[[100,100]]
-
-
-      },
-      "mobs": {
-        "commoner":[[500,500]]
-      },
-      "limites":{
-      },
-      "refs":{
-        "arbol":"props/arbol_escalado.png",
-        "casa_lados":"items/casa_lados.json"
-      }
-    }
-  }
+  "latitude":30
 }

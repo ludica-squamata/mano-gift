@@ -1,0 +1,23 @@
+{
+  "entradas": {
+    "center":{
+      "chunk":"blacky",
+      "pos":[400,400]
+    }
+  },
+  "salidas":[
+    {
+      "stage":"prueba",
+      "rect":[400,450,32,32],
+      "chunk":"blacky",
+      "nombre":"blacky.salida1",
+      "entrada":"centre",
+      "direcciones":[]
+    }
+  ],
+  "ambiente":"exterior",
+  "amanece":[6,0],
+  "atardece":[17,0],
+  "anochece":[20,0],
+  "latitude":30
+}

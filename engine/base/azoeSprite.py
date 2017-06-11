@@ -105,3 +105,8 @@ class AzoeSprite(sprite.Sprite):
             return self.images[n]
         else:
             return self.image
+
+    def ubicar_en_entrada(self, x, y):
+        self.ubicar(x, y)
+        self.mapRect.center = x, y
+        self.z = self.mapRect.y + self.rect.h
