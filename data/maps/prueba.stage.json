@@ -11,7 +11,16 @@
     "centre":{
       "chunk":"single",
       "pos":[400,400]
+    },
+    "topright":{
+      "chunk":"single",
+      "pos":[750,32]
+    },
+    "bottomleft":{
+      "chunk":"single",
+      "pos":[32,750]
     }
+
   },
   "salidas":[
     {

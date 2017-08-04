@@ -3,7 +3,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import salir
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE, display, K_F1, K_KP2, K_KP4, K_KP6, K_KP8
+from pygame import KEYDOWN, QUIT, K_ESCAPE
 from engine.UI.menues import *
 from engine.UI import QuickCircularMenu
 
@@ -20,27 +20,12 @@ class Modo:
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     salir()
-                elif event.key == K_F1:
-                    Renderer.use_focus = not Renderer.use_focus
-                elif event.key == K_KP2:  # abajo
-                    Renderer.camara.jump(0, 1)
-                    print('y+1')
-                elif event.key == K_KP4:  # izquierda
-                    Renderer.camara.jump(-1, 0)
-                    print('x-1')
-                elif event.key == K_KP6:  # derecha
-                    Renderer.camara.jump(1, 0)
-                    print('x+1')
-                elif event.key == K_KP8:  # arriba
-                    Renderer.camara.jump(0, -1)
-                    print('y-1')
 
         EventDispatcher.process()
 
     @staticmethod
     def update(events):
         modo = Ed.MODO
-        fondo = display.get_surface()
         for event in get_taphold_events(events):
             EventDispatcher.trigger('Key', 'Modo.'+modo, event.__dict__)
 
@@ -51,7 +36,7 @@ class Modo:
         elif modo == 'Dialogo':
             Ed.DIALOG.update()
 
-        return Renderer.update(fondo)
+        return Renderer.update()
 
     @classmethod
     def change_menu(cls, event):

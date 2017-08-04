@@ -270,12 +270,11 @@ class Noche(AzoeSprite):
 
     def __init__(self, size):
         img = Surface(size, SRCALPHA)
-        img.fill((0, 0, 0, 230))  # llenamos con color rgba. como es srcalpha funciona bien
+        img.fill((0, 0, 0, 230))
         self.luces = []
-        super().__init__(img)
+        super().__init__(img, center=True)
 
-        self.ubicar(0, 0)
-        Renderer.camara.add_real(self)
+        Renderer.camara.add_visible(self)
 
     def set_lights(self, *lights):
 
@@ -311,10 +310,6 @@ class Noche(AzoeSprite):
                             # light.update()
         nch = pxarray.make_surface()
         self.image = nch
-
-        # def update(self):
-        #     for luz in self.luces:
-        #         luz.update()
 
 
 class Tiempo:
@@ -360,8 +355,8 @@ class Tiempo:
                 pass
 
     @classmethod
-    def crear_noche(cls, tamanio):
-        cls.noche = Noche(tamanio)
+    def crear_noche(cls, size):
+        cls.noche = Noche(size)
 
 
 EventDispatcher.register(Tiempo.save_time, 'Save')

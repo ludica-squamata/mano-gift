@@ -28,16 +28,20 @@ class EngineData:
     @classmethod
     def setear_mapa(cls, stage, entrada, is_new_game=False):
         from engine.mapa import Stage
+        x, y = 0, 0
         Renderer.clear()
         if stage not in cls.mapas or is_new_game:
             cls.mapas[stage] = Stage(stage, entrada)
         else:
-            # acá está el problema me parece.
             x, y = cls.mapas[stage].data['entradas'][entrada]['pos']
             cls.HERO.ubicar_en_entrada(x, y)
 
         cls.MAPA_ACTUAL = cls.mapas[stage]
         cls.MAPA_ACTUAL.register_at_renderer()
+
+        if x or y:
+            cls.MAPA_ACTUAL.mapa.rect.topleft = 320 - x, 240 - y
+            Renderer.camara.panear()
 
     @classmethod
     def on_cambiarmapa(cls, evento):

@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION
+from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION, ANCHO
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, cargar_imagen
@@ -25,8 +25,8 @@ class Stage:
     anochece = None
 
     def __init__(self, nombre, entrada):
-        self.chunks = AzoeGroup('Stage '+nombre+' chunks')
-        self.properties = AzoeGroup('Stage '+nombre+' properties')
+        self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
+        self.properties = AzoeGroup('Stage ' + nombre + ' properties')
         self.interactives.clear()
         self.cuadrantes.clear()
         self.nombre = nombre
@@ -47,8 +47,6 @@ class Stage:
         self.crear_cuadrantes()
         self.cargar_timestamps()
         self.grilla = Grilla(self.mapa.mask, 32)
-
-        # self.entrada = entrada
         self.salidas = cargar_salidas(self.data)
 
         EventDispatcher.register(self.anochecer, 'HourFlag')
@@ -65,7 +63,7 @@ class Stage:
         Renderer.camara.set_background(self.mapa)
         luz_del_sol = DayLight(1024)
         if Tiempo.noche is None:
-            Tiempo.crear_noche(self.rect.size)  # asumiendo que es uno solo...
+            Tiempo.crear_noche(self.rect.size)
         if self.data['ambiente'] == 'exterior':
             Tiempo.noche.set_lights(luz_del_sol)
         # elif self.data['ambiente'] == 'interior':
@@ -80,10 +78,10 @@ class Stage:
             obj.sombra = None
             obj._prevLuces = None
 
-            # self.rect = self.mapa.rect.copy()
-            # x = self.rect.x + obj.mapRect.x
-            # y = self.rect.y + obj.mapRect.y
-            # obj.ubicar(x, y)
+            self.rect = self.mapa.rect.copy()
+            x = self.rect.x + obj.mapRect.x
+            y = self.rect.y + obj.mapRect.y
+            obj.ubicar(x, y)
 
             if obj not in Renderer.camara.real:
                 Renderer.camara.add_real(obj)
@@ -184,8 +182,8 @@ class Stage:
 
     def update(self):
         self.actualizar_grilla()
-        # for cuadrante in self.cuadrantes:
-            # cuadrante.update()
+        for cuadrante in self.cuadrantes:
+            cuadrante.update()
         for salida in self.salidas:
             salida.update()
 

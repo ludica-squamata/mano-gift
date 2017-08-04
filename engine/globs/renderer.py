@@ -43,7 +43,7 @@ class Camara:
             dx = (cls.rect.w - 2) - cls.bgs_rect.right
 
         if dx or dy:
-            cls.jump(dx, dy)
+            cls.pan(dx, dy)
 
     @classmethod
     def add_real(cls, obj):
@@ -186,37 +186,44 @@ class Camara:
         dx = cls.focus.rect.x - cls.focus.mapRect.x - cls.bg.rect.x
         dy = cls.focus.rect.y - cls.focus.mapRect.y - cls.bg.rect.y
 
-        f = cls.focus.rect
-        b = cls.bgs_rect
-        s = cls.rect
+        while abs(dx):
+            if cls.focus.rect.centerx + dx != cls.rect.centerx:
+                if dx < 0:
+                    dx += 1
+                else:
+                    dx -= 1
+            else:
+                break
 
-        # while abs(dx):
-        #     if b.x + dx > 1 or b.right + dx < s.w - 2 or f.centerx + dx != s.centerx:
-        #         if dx < 0:
-        #             dx += 1
-        #         else:
-        #             dx -= 1
-        #     else:
-        #         break
-        #
-        # while abs(dy):
-        #     if b.bottom + dy < s.h - 2 or b.y + dy > 2 or f.centery + dy != s.centery:
-        #         # funciona, pero me gustaria encontrar una forma de reducir el valor
-        #         # sin tener que fijarme si es positivo o negativo.
-        #         if dy < 0:
-        #             dy += 1
-        #         else:
-        #             dy -= 1
-        #     else:
-        #         break
+        while abs(dy):
+            if cls.focus.rect.centery + dy != cls.rect.centery:
+                # funciona, pero me gustaria encontrar una forma de reducir el valor
+                # sin tener que fijarme si es positivo o negativo.
+                if dy < 0:
+                    dy += 1
+                else:
+                    dy -= 1
+            else:
+                break
 
-        cls.jump(dx, dy)
+        cls.pan(dx, dy)
 
     @classmethod
-    def jump(cls, dx, dy):
+    def pan(cls, dx, dy):
         cls.bgs_rect.move_ip(dx, dy)
         for spr in cls.bgs:
             spr.rect.move_ip(dx, dy)
+
+        for spr in cls.real:
+            x = cls.bg.rect.x + spr.mapRect.x
+            y = cls.bg.rect.y + spr.mapRect.y
+            spr.ubicar(x, y)
+
+    @classmethod
+    def cut(cls, x, y):
+        cls.bgs_rect.topleft = x, y
+        for spr in cls.bgs:
+            spr.rect.topleft = x, y
 
         for spr in cls.real:
             x = cls.bg.rect.x + spr.mapRect.x
@@ -240,7 +247,7 @@ class Camara:
         if 'pydevd' in sys.modules:
             draw.line(fondo, (0, 100, 255), (cls.rect.centerx, 0), (cls.rect.centerx, cls.h))
             draw.line(fondo, (0, 100, 255), (0, cls.rect.centery), (cls.w, cls.rect.centery))
-            for spr in cls.real:
+            for spr in cls.visible:
                 draw.rect(fondo, (255, 0, 0), spr.rect, 1)
         return ret
 
@@ -277,8 +284,9 @@ class Renderer:
         cls.overlays.remove_sprites_of_layer(layer)
 
     @classmethod
-    def update(cls, fondo):
-        fondo.fill((125, 125, 125))
+    def update(cls):
+        fondo = display.get_surface()
+        fondo.fill((0, 0, 0))
         cls.camara.update(cls.use_focus)
 
         for over in cls.overlays:
