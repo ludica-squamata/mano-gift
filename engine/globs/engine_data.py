@@ -92,7 +92,7 @@ class EngineData:
         from engine.UI.hud import HUD
         cls.acceso_menues.clear()
         
-        cls.setear_mapa(data['mapa'], data['link'], is_new_game=True)
+        cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
         focus = data['focus']

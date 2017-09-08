@@ -27,7 +27,7 @@ def init_game(event):
     from engine.globs import EngineData
 
     data = {"mapa": "prueba",
-            "link": "bottomright",
+            "entrada": "bottomright",
             "tiempo": [0, 0, 0],
             "focus": "heroe"}
 
@@ -44,6 +44,7 @@ def init_system(event):
         # se supone que el modder sabe cómo se llama la función
         getattr(_module, 'creditos_introduccion')()
     EventDispatcher.trigger('OpenMenu', 'Script', {'value': 'Principal'})
+
 
 EventDispatcher.register(init_system, 'InitSystem')
 EventDispatcher.register(init_game, 'NewGame')

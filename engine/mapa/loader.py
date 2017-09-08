@@ -1,8 +1,8 @@
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
-from engine.globs import ModData, EngineData
+from engine.scenery import new_prop
 from engine.globs import Mob_Group
 from engine.misc import abrir_json
-from engine.scenery import new_prop
+from engine.globs import ModData
 from engine.mobs import PC, NPC
 from .salida import Salida
 
@@ -79,17 +79,10 @@ def load_mobs(alldata):
 
 
 def load_hero(x, y):
-    try:
-        pc = Mob_Group['heroe']
-        EngineData.HERO = pc
-        pc.ubicar(x, y)
-        pc.mapRect.center = x, y
-        pc.z = pc.mapRect.y + pc.rect.h
-
-    except (IndexError, KeyError, AttributeError):
-        pc = PC(abrir_json(ModData.mobs + 'hero.json'), x, y)
-
-    return pc
+    if 'heroe' in Mob_Group:
+        return Mob_Group['heroe']
+    else:
+        return PC(abrir_json(ModData.mobs + 'hero.json'), x, y)
 
 
 def cargar_salidas(alldata):
