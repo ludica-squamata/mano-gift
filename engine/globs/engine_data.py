@@ -88,12 +88,14 @@ class EngineData:
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
     @classmethod
-    def cargar_juego(cls, mapa, entrada, dia, hora, minutos, focus):
+    def cargar_juego(cls, data):
         from engine.UI.hud import HUD
         cls.acceso_menues.clear()
-        cls.setear_mapa(mapa, entrada, is_new_game=True)
+        
+        cls.setear_mapa(data['mapa'], data['link'], is_new_game=True)
         if not Tiempo.clock.is_real():
-            Tiempo.set_time(dia, hora, minutos)
+            Tiempo.set_time(*data['tiempo'])
+        focus = data['focus']
         Renderer.set_focus(Mob_Group[focus])
         cls.HERO = Mob_Group[focus]
         cls.MODO = 'Aventura'

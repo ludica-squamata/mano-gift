@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION, ANCHO
+from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, cargar_imagen
@@ -48,6 +48,7 @@ class Stage:
         self.cargar_timestamps()
         self.grilla = Grilla(self.mapa.mask, 32)
         self.salidas = cargar_salidas(self.data)
+        self.entrada = entrada  # rollback for #147: save_map()
 
         EventDispatcher.register(self.anochecer, 'HourFlag')
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')

@@ -1,7 +1,7 @@
 from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO
 from engine.globs.eventDispatcher import EventDispatcher
+from pygame import Surface, Rect, draw, SRCALPHA
 from engine.globs.renderer import Renderer
-from pygame import Surface, Rect, draw
 from engine.UI.estilo import Estilo
 from pygame.sprite import Sprite
 
@@ -72,8 +72,38 @@ class CharacterName(Sprite, Estilo):
 
     def __init__(self, focus, x, y):
         super().__init__()
-        self.image = self.fuente_Mb.render(focus, 1, self.font_none_color)
+        self.text = focus
+        self.image = self.generate([255,255,255])
         self.rect = self.image.get_rect(topleft=(x, y))
+
+    def generate(self,fg_color):
+        outline = []
+        width, height = self.fuente_Mb.size(self.text)
+        width += 2*len(self.text)
+        canvas = Surface((width, height), SRCALPHA)
+
+        for character in self.text:
+            fondo = self.fuente_Mb.render(character,1,self.font_none_color)
+            frente = self.fuente_Mb.render(character,1,fg_color)
+            w, h = self.fuente_Mb.size(character)
+            img = Surface((w+2,h+2), SRCALPHA)
+            
+            for i in range(1,8,2):
+                dx,dy = i%3,i//3
+                img.blit(fondo,(dx,dy))
+            img.blit(frente,(1,1))
+            outline.append(img)
+
+        dx, w = 0, 0
+        for img in outline:
+            dx += w
+            canvas.blit(img, (dx,0))
+            w = img.get_width()
+
+        return canvas
+
+    def colorear(self,bg_color):
+        self.image = self.generate(bg_color)
 
 
 class HUD:
@@ -91,7 +121,7 @@ class HUD:
         self.BarraVida = ProgressBar(focus.nombre, focus.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
         self.BarraMana = ProgressBar(focus.nombre, focus.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
-        self.screen_name = CharacterName(focus.nombre, dx, dy - 30)
+        self.screen_name = CharacterName(focus.nombre, dx, dy - 32)
 
         EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
         # EventDispatcher.register(self.BarraMana.event_update,'')

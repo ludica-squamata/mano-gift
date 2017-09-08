@@ -26,23 +26,15 @@ def init_game(event):
     # event tendria data de si el juego es nuevo o es un savegame.
     from engine.globs import EngineData
 
+    data = {"mapa": "prueba",
+            "link": "bottomright",
+            "tiempo": [0, 0, 0],
+            "focus": "heroe"}
+
     if 'savegame' in event.data:
-        data = event.data['savegame']
+        data.update(event.data['savegame'])
 
-        mapa = data['mapa']
-        entrada = data['link']
-        dia, hora, minutos = data.get('tiempo', [0, 9, 54])
-        focus = data.get('focus', 'heroe')
-
-    else:  # esta data estaba en la scene
-        # datos por default
-        mapa = "prueba"
-        entrada = "bottomright"
-        dia, hora, minutos = 0, 0, 0
-        focus = 'heroe'
-
-    # EventDispatcher.deregister(init_game, 'NewGame')
-    EngineData.cargar_juego(mapa, entrada, dia, hora, minutos, focus)
+    EngineData.cargar_juego(data)
 
 
 def init_system(event):
