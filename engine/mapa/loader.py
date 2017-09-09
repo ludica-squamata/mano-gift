@@ -70,8 +70,8 @@ def load_mobs(alldata):
     loaded_mobs = []
     for key in alldata['mobs']:
         pos = alldata['mobs'][key]
-        data = abrir_json(ModData.mobs + key + '.json')
         for x, y in pos:
+            data = abrir_json(ModData.mobs + key + '.json')
             mob = NPC(key, x, y, data)
             loaded_mobs.append((mob, GRUPO_MOBS))
 

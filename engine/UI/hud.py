@@ -73,36 +73,36 @@ class CharacterName(Sprite, Estilo):
     def __init__(self, focus, x, y):
         super().__init__()
         self.text = focus
-        self.image = self.generate([255,255,255])
+        self.image = self.generate([255, 255, 255])
         self.rect = self.image.get_rect(topleft=(x, y))
 
-    def generate(self,fg_color):
+    def generate(self, fg_color):
         outline = []
         width, height = self.fuente_Mb.size(self.text)
-        width += 2*len(self.text)
+        width += 2 * len(self.text)
         canvas = Surface((width, height), SRCALPHA)
 
         for character in self.text:
-            fondo = self.fuente_Mb.render(character,1,self.font_none_color)
-            frente = self.fuente_Mb.render(character,1,fg_color)
+            fondo = self.fuente_Mb.render(character, 1, self.font_none_color)
+            frente = self.fuente_Mb.render(character, 1, fg_color)
             w, h = self.fuente_Mb.size(character)
-            img = Surface((w+2,h+2), SRCALPHA)
-            
-            for i in range(1,8,2):
-                dx,dy = i%3,i//3
-                img.blit(fondo,(dx,dy))
-            img.blit(frente,(1,1))
+            img = Surface((w + 2, h + 2), SRCALPHA)
+
+            for i in range(1, 8, 2):
+                dx, dy = i % 3, i // 3
+                img.blit(fondo, (dx, dy))
+            img.blit(frente, (1, 1))
             outline.append(img)
 
         dx, w = 0, 0
         for img in outline:
             dx += w
-            canvas.blit(img, (dx,0))
+            canvas.blit(img, (dx, 0))
             w = img.get_width()
 
         return canvas
 
-    def colorear(self,bg_color):
+    def colorear(self, bg_color):
         self.image = self.generate(bg_color)
 
 

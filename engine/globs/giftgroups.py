@@ -166,6 +166,7 @@ class DeletedItems(ItemGroup):
         obj = event.data['obj']
         self[obj.nombre] = obj
 
+
 Mob_Group = MobGroup()
 Item_Group = ItemGroup()
 Deleted_Items = DeletedItems()

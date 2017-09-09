@@ -32,5 +32,6 @@ class ModState:
     def flags(cls):
         return cls._innerdict.copy()
 
+
 EventDispatcher.register(ModState.load, 'NewGame')
 EventDispatcher.register(ModState.save, 'Save')

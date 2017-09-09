@@ -97,5 +97,6 @@ class Modo:
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
+
 EventDispatcher.register(Modo.change_menu, 'OpenMenu')
 EventDispatcher.register(Modo.toggle_mode, 'Key')

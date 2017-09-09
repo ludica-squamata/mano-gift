@@ -135,4 +135,5 @@ class DayLight:
 
         EventDispatcher.trigger('SolarMovement', self.nombre, {"light": p})
 
+
 __all__ = ['ImageLight', 'SpotLight', 'GradientSpotLight', 'SquareLight', 'GradientSquareLight', 'DayLight']
