@@ -16,6 +16,7 @@ class Elemento:
     leads = None
     reqs = None
     event_data = None
+    tags = None
     texto = ''
 
     def __init__(self, indice, data):
@@ -33,6 +34,15 @@ class Elemento:
 
         if type(self.leads) is list:
             self.hasLeads = True
+
+        self.tags = []
+        for word in self.texto.split(' '):
+            if '<' in word and '/' not in word:
+                _init = word.find('<') + 1
+                _end = word.find('>', _init)
+                tag_name = word[_init:_end]
+                if tag_name not in self.tags:
+                    self.tags.append(tag_name)
 
         del data
 
@@ -104,7 +114,7 @@ class BranchArray:
         return to_show
 
 
-class _ArboldeDialogo:
+class ArboldeDialogo:
     __slots__ = ['_elementos', '_future']
 
     def __init__(self, datos):
@@ -214,7 +224,7 @@ class Dialogo (EventAware):
 
     def __init__(self, arbol, *locutores):
         super().__init__()
-        self.dialogo = _ArboldeDialogo(arbol)
+        self.dialogo = ArboldeDialogo(arbol)
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
@@ -298,19 +308,37 @@ class Dialogo (EventAware):
                 self.frontend.set_sel_mode(to_show)
 
         elif type(actual) is Elemento:
-            self.mostrar_nodo(actual)
+            loc = self.locutores[actual.locutor]
+            supress = [False, False]
+            if actual.reqs is not None:
+                if "attrs" in actual.reqs:
+                    for attr in actual.reqs['attrs']:
+                        if getattr(loc, attr) < actual.reqs['attrs'][attr]:
+                            supress[0] = True
+                elif "objects" in actual.reqs:
+                    for obj in actual.reqs['objects']:
+                        if obj not in loc.inventario:
+                            supress[1] = True
+
+                self.mostrar_nodo(actual, any(supress))
+            else:
+                self.mostrar_nodo(actual)
 
         else:
             self.cerrar()
 
-    def mostrar_nodo(self, nodo):
+    def mostrar_nodo(self, nodo, omitir_tags=False):
         """
         :type nodo: Elemento
+        :type omitir_tags: bool
         """
         self.frontend.borrar_todo()
         loc = self.locutores[nodo.locutor]
         self.frontend.set_loc_img(loc)
-        self.frontend.set_text(nodo.texto)
+        if not omitir_tags:
+            self.frontend.set_text(nodo.texto)
+        else:
+            self.frontend.set_text(nodo.texto, omitir_tags=nodo.tags)
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':
