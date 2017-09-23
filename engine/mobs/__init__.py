@@ -1,4 +1,3 @@
-from .mob import Mob
-from .NPC import NPC
-from .PC import PC
+from .controllableai import ControllableAI
 from .Inventory import Inventory
+from .mob import Mob

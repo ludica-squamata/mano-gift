@@ -9,7 +9,8 @@ class Atribuido(AzoeSprite):
     iniciativa = 0
     mana = 1
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
+        print('atribuido')
         super().__init__(**kwargs)
         self.velocidad = self.data['velocidad']
         self.fuerza = self.data['fuerza']

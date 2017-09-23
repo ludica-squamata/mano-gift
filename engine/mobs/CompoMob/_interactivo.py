@@ -6,8 +6,9 @@ from pygame import Rect
 class Interactivo(Atribuido):
     idx_quadrant = 0
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        print('interactivo')
+        super().__init__(*args, **kwargs)
         self._vertical = Rect((0, 0), (32, 16))
         self._horizontal = Rect((0, 0), (16, 32))
         self._interaction_rect = None

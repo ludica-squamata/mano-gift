@@ -1,16 +1,16 @@
 {
-    "ID":0,"nombre":"heroe",
-    "salud":20,"fuerza":5,
-    "velocidad":3,
-    "iniciativa":20,
-    "carisma":8,
-    "imagenes":{
-        "idle":"mobs/imagenes/heroe_idle_walk.png",
-        "cmb":"mobs/imagenes/heroe_cmb_walk.png",
-        "atk":"mobs/imagenes/heroe_cmb_atk.png",
-        "diag_face":"mobs/imagenes/pc_face.png"
-        },
-    "alpha":"mobs/colisiones/human_walk.png",
-    "clase":"PC",
-    "propiedades":[]
+  "ID":0,"nombre":"heroe",
+  "salud":20,"fuerza":5,
+  "velocidad":3,
+  "iniciativa":20,
+  "carisma":8,
+  "imagenes":{
+    "idle":"mobs/imagenes/heroe_idle_walk.png",
+    "cmb":"mobs/imagenes/heroe_cmb_walk.png",
+    "atk":"mobs/imagenes/heroe_cmb_atk.png",
+    "diag_face":"mobs/imagenes/pc_face.png"
+  },
+  "alpha":"mobs/colisiones/human_walk.png",
+  "AI":"controllable",
+  "propiedades":[]
 }

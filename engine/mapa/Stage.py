@@ -210,9 +210,9 @@ class ChunkMap(Sprite):
         self.cargar_limites(data.get('limites', self.limites))
 
         if cargar_todo:
-            dx = -off_x + self.stage.offset_x
-            dy = -off_y + self.stage.offset_y
-            for item, grupo in load_everything(data, dx, dy):
+            # dx = -off_x + self.stage.offset_x
+            # dy = -off_y + self.stage.offset_y
+            for item, grupo in load_everything(data):  # , dx, dy):
                 self.stage.add_property(item, grupo)
 
     def cargar_limites(self, limites):

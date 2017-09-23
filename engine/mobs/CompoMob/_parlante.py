@@ -1,7 +1,7 @@
 from engine.UI.circularmenus import DialogCircularMenu
-from engine.globs import EngineData, ModData
+from engine.globs import EngineData  # , ModData
 from engine.IO.dialogo import Dialogo
-from engine.misc import ReversibleDict, abrir_json
+from engine.misc import ReversibleDict  # , abrir_json
 from ._movil import Movil
 
 
@@ -12,12 +12,13 @@ class Parlante(Movil):
     hablando = False
     is_the_speaker = False  # se refiere al mob que INICIA el diálogo
 
-    def __init__(self, data, x, y, **kwargs):
-        super().__init__(data, x, y, **kwargs)
-        if 'states' in data:
-            if 'dialog' in data['states'][0]:
-                nombre = data['states'][0]['dialog']
-                data['states'][0]['dialog'] = abrir_json(ModData.dialogos + nombre)
+    # def __init__(self, data, x, y, **kwargs):
+
+    # super().__init__(data, x, y, **kwargs)
+    # if 'states' in data:
+    #     if 'dialog' in data['states'][0]:
+    #         nombre = data['states'][0]['dialog']
+    #         data['states'][0]['dialog'] = abrir_json(ModData.dialogos + nombre)
 
     def hablar(self, sprite):
         if sprite.hablante:

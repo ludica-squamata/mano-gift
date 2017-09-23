@@ -1,14 +1,14 @@
-from .CompoMob import Equipado, Combativo
+from .CompoMob import Equipado, Combativo, Autonomo, Parlante
 from engine.globs import Mob_Group
 from engine.misc import cargar_imagen
 from engine.base import ShadowSprite
 from engine.globs.eventDispatcher import EventDispatcher
 
 
-class Mob(Combativo, Equipado, ShadowSprite):
+class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
     hablante = False
 
-    def __init__(self, data, x, y, focus=False):
+    def __init__(self, x, y, data, focus=False):
         self.tipo = "Mob"
         self.images = {}
         self.mascaras = {}
@@ -47,7 +47,9 @@ class Mob(Combativo, Equipado, ShadowSprite):
         self.estado = 'idle'
         image = self.images['S'+self.direccion]
         mask = self.mascaras['S'+self.direccion]
-        super().__init__(imagen=image, alpha=mask, x=x, y=y, center=focus)
+        print('mob', self.nombre)
+        # super().__init__(data, imagen=image, alpha=mask, x=x, y=y, center=focus)
+        super().__init__(data, imagen=image, x=x, y=y, alpha=mask, center=focus)
 
         if self.nombre not in Mob_Group:
             Mob_Group[self.nombre] = self

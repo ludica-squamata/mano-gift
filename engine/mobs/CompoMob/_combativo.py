@@ -5,9 +5,6 @@ from engine.globs.eventDispatcher import EventDispatcher
 
 class Combativo(Animado, Interactivo):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def recibir_danio(self, danio):
         self.salud_act -= danio
         EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self})

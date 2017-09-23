@@ -9,8 +9,9 @@ class Equipado(Atribuido):
               'cinto': None, 'guantes': None, 'anillo 1': None, 'anillo 2': None}
     inventario = None
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        print('equipado')
+        super().__init__(*args, **kwargs)
         self.inventario = Inventory(10, 10 + self.fuerza)
 
     def equipar_item(self, item):
