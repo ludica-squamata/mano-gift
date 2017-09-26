@@ -2,6 +2,7 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
+from re import search, compile
 
 
 class Elemento:
@@ -36,13 +37,17 @@ class Elemento:
             self.hasLeads = True
 
         self.tags = []
-        for word in self.texto.split(' '):
-            if '<' in word and '/' not in word:
-                _init = word.find('<') + 1
-                _end = word.find('>', _init)
-                tag_name = word[_init:_end]
-                if tag_name not in self.tags:
-                    self.tags.append(tag_name)
+        self.expressions = []
+        starts = compile('<[a-z]*?>').findall(self.texto)
+        ends = compile('</[a-z]*?>').findall(self.texto)
+        if len(starts) == len(ends):
+            # aunque sería ilógico que no fueran iguales
+            for index in range(len(starts)):
+                init = search(starts[index], self.texto)
+                end = search(ends[index], self.texto)
+
+                self.tags.append(init.group()[1:-1])
+                self.expressions.append(self.texto[init.end():end.start()])
 
         del data
 
