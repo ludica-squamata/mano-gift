@@ -2,7 +2,7 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
-from re import search, compile
+from re import compile
 
 
 class Elemento:
@@ -38,16 +38,14 @@ class Elemento:
 
         self.tags = []
         self.expressions = []
-        starts = compile('<[a-z]*?>').findall(self.texto)
-        ends = compile('</[a-z]*?>').findall(self.texto)
-        if len(starts) == len(ends):
-            # aunque sería ilógico que no fueran iguales
-            for index in range(len(starts)):
-                init = search(starts[index], self.texto)
-                end = search(ends[index], self.texto)
-
-                self.tags.append(init.group()[1:-1])
-                self.expressions.append(self.texto[init.end():end.start()])
+        tags = compile(r'<([a-z]*?)>([^<]*)</\1>').findall(self.texto)
+        if self.texto.count('<') == len(tags) * 2:
+            for tag in tags:
+                self.tags.append(tag[0])
+                self.expressions.append(tag[1])
+        else:
+            # si es que son ilógicos...
+            raise TypeError('Verificar las tags. No se permiten tags anidadas y los grupos deben estar cerrados')
 
         del data
 
