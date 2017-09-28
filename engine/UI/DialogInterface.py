@@ -46,13 +46,13 @@ class DialogInterface(BaseWidget):
         assert x > 0 or y > 0, 'Coordenadas inválidas'
         self.rect.move_ip(x, y)
 
-    def set_text(self, texto):
+    def set_text(self, texto, omitir_tags=None):
         width = self.draw_space_rect.width
         if not self.loc_rect.x:
             self.text_rect.x = 6
         else:
             width -= self.loc_rect.w+self.arrow_width+1
-        self.rendered_text = render_tagged_text(texto, self.tags, width)
+        self.rendered_text = render_tagged_text(texto, self.tags, width, omitted_tags=omitir_tags)
         self.text_rect.size = self.rendered_text.get_size()
         if self.text_rect.h < self.draw_space_rect.h:
             self.text_rect.y = 3  # reset scrolling
@@ -119,7 +119,7 @@ class DialogInterface(BaseWidget):
             if not self.draw_space_rect.contains(self.text_rect):
                 if self.text_rect.top + dy < self.draw_space_rect.top:
                     if self.text_rect.bottom + dy > self.draw_space_rect.bottom:
-                        self.text_rect.y += dy * 3  # TODO: "3" podría ser un setting
+                        self.text_rect.y += dy * 3  # "3" podría ser un setting
             self.ticks = 0
 
     def borrar_todo(self):

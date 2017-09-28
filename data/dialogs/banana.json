@@ -10,7 +10,7 @@
     "keywords":[]
   },
   "body":{
-      "0":{"type":"node","leads":1,"from":"heroe","to":"commoner",
+      "0":{"type":"node","leads":1,"from":"heroe","to":"commoner","reqs":{"objects":["star"]},
       "txt":"¿qué puedes decirme acerca <b>de las bananas</b>?"},
       
       "1":{"type":"node","leads":2,"from":"commoner","to":"hereoe",

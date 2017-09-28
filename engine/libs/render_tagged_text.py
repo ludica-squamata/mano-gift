@@ -31,7 +31,8 @@ class Tag:
         return 'tag ' + self.init
 
 
-def render_tagged_text(text, tags, w, h=0, bgcolor=None, _defaultspace=4, line_spacing=1, justification=0):
+def render_tagged_text(text, tags, w, h=0, omitted_tags=None, bgcolor=None,
+                       _defaultspace=4, line_spacing=1, justification=0):
     actual_lines = []
 
     last_tag = tags['n']
@@ -39,6 +40,8 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=None, _defaultspace=4, line_s
     line_num = -1
     tagged = False
     insertion = False
+    if omitted_tags is None:
+        omitted_tags = []
     for _line in text.splitlines():
         line_num += 1
         line_rect.w = 0
@@ -64,7 +67,7 @@ def render_tagged_text(text, tags, w, h=0, bgcolor=None, _defaultspace=4, line_s
                     _init = _word.find('<') + 1
                     _end = _word.find('>', _init)
                     tag_name = _word[_init:_end]
-                    if tag_name in tags:
+                    if tag_name in tags and tag_name not in omitted_tags:
                         tag = tags[tag_name]
                     else:
                         tag = Tag(tag_name, tags['n'])
