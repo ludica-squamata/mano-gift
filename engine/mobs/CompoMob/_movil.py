@@ -7,27 +7,7 @@ class Movil(Atribuido):
     moviendose = False
 
     def __init__(self, *args, **kwargs):
-        print('movil')
         super().__init__(*args, **kwargs)
-        if hasattr(self, 'functions'):
-            self.functions['tap'].update({
-                'arriba': lambda: self.cambiar_direccion('arriba'),
-                'abajo': lambda: self.cambiar_direccion('abajo'),
-                'izquierda': lambda: self.cambiar_direccion('izquierda'),
-                'derecha': lambda: self.cambiar_direccion('derecha')
-            })
-            self.functions['hold'].update({
-                'arriba': lambda: self.mover('arriba'),
-                'abajo': lambda: self.mover('abajo'),
-                'izquierda': lambda: self.mover('izquierda'),
-                'derecha': lambda: self.mover('derecha')
-            })
-            self.functions['release'].update({
-                'arriba': self.detener_movimiento,
-                'abajo': self.detener_movimiento,
-                'izquierda': self.detener_movimiento,
-                'derecha': self.detener_movimiento
-            })
 
     def cambiar_direccion(self, direccion=None):
         self.direccion = direccion

@@ -12,14 +12,6 @@ class Parlante(Movil):
     hablando = False
     is_the_speaker = False  # se refiere al mob que INICIA el diálogo
 
-    # def __init__(self, data, x, y, **kwargs):
-
-    # super().__init__(data, x, y, **kwargs)
-    # if 'states' in data:
-    #     if 'dialog' in data['states'][0]:
-    #         nombre = data['states'][0]['dialog']
-    #         data['states'][0]['dialog'] = abrir_json(ModData.dialogos + nombre)
-
     def hablar(self, sprite):
         if sprite.hablante:
             self.interlocutor = sprite
@@ -29,6 +21,7 @@ class Parlante(Movil):
 
     def elegir_tema(self, sprite):
         if sprite.hablante:
+            opuesta = ReversibleDict(arriba='abajo', derecha='izquierda')
             self.interlocutor = sprite
             sprite.interlocutor = self
 
@@ -43,15 +36,7 @@ class Parlante(Movil):
             # else:
             self.is_the_speaker = True
             EngineData.DIALOG = DialogCircularMenu(sprite, self)
+            self.interlocutor.cambiar_direccion(opuesta[self.direccion])
 
     def stop_talking(self):
         self.is_the_speaker = False
-
-    def update(self):
-        if not self.hablando:
-            super().update()
-        else:
-            opuesta = ReversibleDict(arriba='abajo', derecha='izquierda')
-            direccion = opuesta[self.interlocutor.direccion]
-            if self.direccion != direccion and not self.is_the_speaker:
-                self.cambiar_direccion(direccion)

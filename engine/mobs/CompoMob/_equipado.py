@@ -10,7 +10,6 @@ class Equipado(Atribuido):
     inventario = None
 
     def __init__(self, *args, **kwargs):
-        print('equipado')
         super().__init__(*args, **kwargs)
         self.inventario = Inventory(10, 10 + self.fuerza)
 

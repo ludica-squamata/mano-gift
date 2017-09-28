@@ -6,7 +6,6 @@ from engine.globs.eventDispatcher import EventDispatcher
 
 
 class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
-    hablante = False
 
     def __init__(self, x, y, data, focus=False):
         self.tipo = "Mob"
@@ -47,8 +46,6 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
         self.estado = 'idle'
         image = self.images['S'+self.direccion]
         mask = self.mascaras['S'+self.direccion]
-        print('mob', self.nombre)
-        # super().__init__(data, imagen=image, alpha=mask, x=x, y=y, center=focus)
         super().__init__(data, imagen=image, x=x, y=y, alpha=mask, center=focus)
 
         if self.nombre not in Mob_Group:

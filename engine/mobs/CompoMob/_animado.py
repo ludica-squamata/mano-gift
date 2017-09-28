@@ -23,7 +23,6 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     frame_animacion = 0
 
     def __init__(self, *args, **kwargs):
-        print('animado')
         super().__init__(*args, **kwargs)
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6

@@ -65,7 +65,7 @@ class EngineData:
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
-            cls.HERO.register()
+            cls.HERO.AI.register()
             cls.HUD.show()
 
     @classmethod
