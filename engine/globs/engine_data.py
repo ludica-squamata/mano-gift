@@ -26,7 +26,7 @@ class EngineData:
     current_view = 'north'
 
     @classmethod
-    def setear_mapa(cls, stage, entrada, is_new_game=False):
+    def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
         from engine.mapa import Stage
         x, y = 0, 0
         Renderer.clear()
@@ -37,7 +37,7 @@ class EngineData:
             cls.HERO.ubicar_en_entrada(x, y)
 
         cls.MAPA_ACTUAL = cls.mapas[stage]
-        cls.MAPA_ACTUAL.register_at_renderer()
+        cls.MAPA_ACTUAL.register_at_renderer(mob)
 
         if x or y:
             cls.MAPA_ACTUAL.mapa.rect.topleft = 320 - x, 240 - y
@@ -45,9 +45,10 @@ class EngineData:
 
     @classmethod
     def on_cambiarmapa(cls, evento):
-        if evento.data['mob'] is cls.HERO:
+        if Renderer.camara.is_focus(evento.data['mob']):
             cls.setear_mapa(evento.data['target_stage'],
-                            evento.data['target_entrada'])
+                            evento.data['target_entrada'],
+                            mob=evento.data['mob'])
 
     @classmethod
     def on_setkey(cls, event):

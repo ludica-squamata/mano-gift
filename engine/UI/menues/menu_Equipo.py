@@ -67,7 +67,9 @@ class MenuEquipo(Menu):
         self.espacios.draw(self.canvas)
         self.hombre = cargar_imagen('hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))
-        self.crear_espacio_selectivo(188, self.canvas.get_height() - 64)
+        w = self.canvas.get_width() - 270
+        h = self.canvas.get_height() - 64
+        self.crear_espacio_selectivo(w, h)
 
         # determinar qué tecla activa qué función.
         self.functions = {

@@ -1,5 +1,5 @@
 {
-  "fondo":"maps/fondos/negro.png",
+  "fondo":"maps/fondos/blanco.png",
   "colisiones":"maps/colisiones/800.png",
   "props": {},
   "mobs": {},

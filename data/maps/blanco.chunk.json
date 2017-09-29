@@ -2,7 +2,7 @@
   "fondo":"maps/fondos/blanco.png",
   "colisiones":"maps/colisiones/800.png",
   "props": {},
-  "mobs": {},
+  "mobs": {"hero":[[400,400]]},
   "limites":{
     "sup":"negro",
     "inf":"negro",

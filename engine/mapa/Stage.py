@@ -60,7 +60,7 @@ class Stage:
         h = self.rect.h // 2
         self.cuadrantes = [Cuadrante(x, y, w, h) for x in range(2) for y in range(2)]
 
-    def register_at_renderer(self):
+    def register_at_renderer(self, mob=None):
         Renderer.camara.set_background(self.mapa)
         luz_del_sol = DayLight(1024)
         if Tiempo.noche is None:
@@ -68,8 +68,12 @@ class Stage:
         if self.data['ambiente'] == 'exterior':
             Tiempo.noche.set_lights(luz_del_sol)
         # elif self.data['ambiente'] == 'interior':
-        #     pass 
-        for obj in self.properties:
+        #     pass
+        to_be_registered = self.properties.sprites()
+        if mob is not None:
+            to_be_registered.append(mob)
+
+        for obj in to_be_registered:
             ''':type obj: _giftSprite'''
             if obj.stage is not self:
                 obj.stage = self

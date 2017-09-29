@@ -8,7 +8,7 @@
   "salidas":[
     {
       "stage":"prueba",
-      "rect":[400,450,32,32],
+      "rect":[400,350,32,32],
       "chunk":"blacky",
       "nombre":"blacky.salida1",
       "entrada":"centre",
