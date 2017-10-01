@@ -13,7 +13,7 @@ class Elemento:
     tipo = ''
     indice = None
     locutor = None  # el que habla
-    inter = None     # a quien le habla
+    inter = None  # a quien le habla
     leads = None
     reqs = None
     event_data = None
@@ -79,13 +79,11 @@ class BranchArray:
     _lenght = 0
     is_exclusive = False
     locutor = None
-    array = []
+    array = None
     flaged = []
 
     def __init__(self, node, elementos):
-        self.array = []
-        for idx in node.leads:
-            self.array.append(elementos[idx])
+        self.array = [elementos[idx] for idx in node.leads]
         if node.tipo == 'exclusive':
             self.is_exclusive = True
 
@@ -220,7 +218,7 @@ class ArboldeDialogo:
             return self._future
 
 
-class Dialogo (EventAware):
+class Dialogo(EventAware):
     SelMode = False
     sel = 0
     next = 0
@@ -255,7 +253,7 @@ class Dialogo (EventAware):
         self.hablar()
 
     @classmethod
-    def pre_init(cls, meta, *locutores):        
+    def pre_init(cls, meta, *locutores):
         for loc in locutores:
             if loc.nombre not in meta['locutors']:
                 return False
@@ -293,6 +291,17 @@ class Dialogo (EventAware):
             else:
                 loc = self.locutores[actual.locutor]
 
+                for item in loc.inventario():
+                    icon = item.image
+                    name = item.nombre
+
+                    data = {'icon': icon, 'name': name}
+                    data.update({'type': 'mostrar', 'from': loc, 'to': loc.interlocutor})
+                    data.update({'txt': 'Mostrar ' + item.nombre})
+                    elemento = Elemento('0', data)
+                    setattr(elemento, 'item', item)
+                    actual.add(elemento)
+
                 for nodo in actual:
                     if nodo.reqs is not None:
                         if "attrs" in nodo.reqs:
@@ -303,6 +312,13 @@ class Dialogo (EventAware):
                             for obj in nodo.reqs['objects']:
                                 if obj not in loc.inventario:
                                     actual.supress(nodo)
+                    elif nodo.leads is None:
+                        for n in actual:
+                            if n.reqs is not None and 'objects' in n.reqs:
+                                if nodo.item.nombre in n.reqs['objects']:
+                                    nodo.leads = n.leads
+                                else:
+                                    nodo.leads = [0]
 
                 to_show = actual.show()
                 self.SelMode = True

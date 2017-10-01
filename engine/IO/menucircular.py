@@ -183,8 +183,9 @@ class CircularMenu (EventAware):
     def add_element(self, cascada, item):
         if cascada in self.cascadas:
             self.cascadas[cascada]['items'].append(item)
-        # else:
-        #     print(self.cascadas)
+        else:
+            raise NotImplementedError('No se pueden agregar nuevas cascadas de momento')
+
         self._change_cube_list()
         self._modify_cube_list()
 
@@ -193,9 +194,8 @@ class CircularMenu (EventAware):
         self.cascadas[self.cascadaActual]['items'].remove(self.actual)
 
     def supress_all(self):
-        for cuadro in self.cubos:
-            self.cascadas[self.cascadaActual]['items'].remove(cuadro)
         self.cubos.empty()
+        self.cascadas[self.cascadaActual]['items'].clear()
 
     def _change_cube_list(self):
         self.cubos.empty()
