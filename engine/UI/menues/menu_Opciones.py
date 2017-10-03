@@ -61,8 +61,8 @@ class MenuOpciones(Menu):
             ]
         else:
             botones = [
-                {m: "Mostrar Intro", c: cmd1, k: {b: "Recordar Menus", a: "Salir", d: "Arriba"}},
-                {m: "Recordar Menus", c: cmd1, k: {d: "Abajo", a: "Mostrar Intro", b: "Arriba"}}
+                {m: "Mostrar Intro", c: cmd1, k: {b: "Recordar Menus", a: "Defaults", d: "Arriba"}},
+                {m: "Recordar Menus", c: cmd1, k: {d: "Abajo", a: "Mostrar Intro", b: "Defaults"}}
             ]
 
         for i in range(len(botones)):

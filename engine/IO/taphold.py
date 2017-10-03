@@ -14,11 +14,12 @@ def filtrar_eventos_teclado(events):
 
     for _event in events:
         if _event.type == KEYDOWN:
-            if _event.key in teclas:
+            if Ed.setKey:
+                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tap'}))
+
+            elif _event.key in teclas:
                 teclas[_event.key]['pressed'] = True
                 pressed_keys.append(_event.key)
-            elif Ed.setKey:
-                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tap'}))
 
         elif _event.type == KEYUP:
             if _event.key in teclas:
