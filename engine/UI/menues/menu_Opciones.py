@@ -195,7 +195,7 @@ class MenuOpciones(Menu):
         boton.ser_presionado()
         tecla.ser_elegido()
 
-        EventDispatcher.trigger('ToggleSetKey', self.nombre, {'value': True})
+        EventDispatcher.trigger('ToggleSetKey', 'MenuOpciones', {'value': True})
 
     def new_key_event(self, event):
         self.cambiar_tecla(event.data['key'])
@@ -210,10 +210,8 @@ class MenuOpciones(Menu):
         # elige segun la posición del cursor.
         boton, tecla = self.elegir_boton_espacio()
 
-        i = -1
         # si la tecla elegida ya está asignada a un comando...
-        for fila in self.espacios:
-            i += 1
+        for i, fila in enumerate(self.espacios):
             if key_name(tcl) == fila.nombre:
                 # i_x son el boton y la tecla que ya existen
                 i_boton, i_tecla = self.elegir_boton_espacio(i)
