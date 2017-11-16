@@ -13,7 +13,7 @@ class Title(Sprite):
         self.nombre = nombre
         self.parent = parent
 
-        fuente = font.Font('engine/libs/Verdana.ttf', 15, bold=True)
+        fuente = font.Font('engine/libs/Verdanab.ttf', 15)
         w, h = fuente.size(self.nombre)
         self.image = Surface((w + 6, h + 2))
         self.image.fill(CANVAS_BG, (1, 1, w + 4, h))

@@ -31,16 +31,6 @@ def load_tagarrayfile(filename):
     _fg = (0, 0, 0)
     _bg = (255, 255, 255)
 
-    # crear tag por default
-    if "n" not in tagarray:
-        data = {
-            'fuente': font.SysFont(_font, _size, bold=_bold, italic=_italic),
-            'fg': Color(*_fg),
-            'bg': Color(*_bg)
-        }
-        tags['n'] = Tag('n', data)
-
-    # buscar default tag por caracteristicas
     for key in tagarray:
         tagdata = tagarray[key]
 
@@ -50,13 +40,7 @@ def load_tagarrayfile(filename):
         italic = tagdata.get('italic', _italic)
         fg = tagdata.get('fg', _fg)
         bg = tagdata.get('bg', _bg)
-
-        if font_name == _font and font_size == _size \
-                and bold == _bold and italic == _italic \
-                and fg == _fg and bg == _bg:
-            name = 'n'
-        else:
-            name = tagdata.get("tag-name", key)
+        name = tagdata.get("tag-name", key)
 
         data = {
             'fuente': font.SysFont(font_name, font_size, bold=bold, italic=italic),

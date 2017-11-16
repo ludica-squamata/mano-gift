@@ -77,7 +77,7 @@ class CharacterName(Sprite):
 
     def generate(self, fg_color):
         outline = []
-        fuente = font.Font('engine/libs/Verdana.ttf', 16, bold=True)
+        fuente = font.Font('engine/libs/Verdanab.ttf', 16)
         width, height = fuente.size(self.text)
         width += 2 * len(self.text)
         canvas = Surface((width, height), SRCALPHA)

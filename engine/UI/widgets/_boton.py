@@ -96,7 +96,7 @@ class Boton(BaseWidget):
         cnvs_dis.blit(fnd_uns, (3, 3))
         cnvs_pre.blit(fnd_pre, (3, 3))
 
-        bold = font.Font('engine/libs/Verdana.ttf', 16, bold=True)
+        bold = font.Font('engine/libs/Verdanab.ttf', 16)
         fuente = font.Font('engine/libs/Verdana.ttf', 16)
 
         btn_sel = render_textrect(texto, bold, rect, TEXT_SEL, CANVAS_BG, 1)

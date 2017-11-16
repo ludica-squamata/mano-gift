@@ -1,7 +1,7 @@
-﻿from engine.UI import DialogInterface
+﻿from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
-from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
+from engine.UI import DialogInterface
 from re import compile
 
 
@@ -228,12 +228,13 @@ class Dialogo(EventAware):
     def __init__(self, arbol, *locutores):
         super().__init__()
         self.tags_condicionales = arbol['head']['conditional_tags']
+
         self.dialogo = ArboldeDialogo(arbol['body'])
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
 
-        self.frontend = DialogInterface(self)
+        self.frontend = DialogInterface(self, arbol['head']['style'])
         self.functions['tap'].update({
             'accion': self.hablar,
             'contextual': self.cerrar,

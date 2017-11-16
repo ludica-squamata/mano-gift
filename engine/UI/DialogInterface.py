@@ -1,4 +1,5 @@
 from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG
+from engine.misc.tagloader import load_tagarrayfile
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
@@ -23,12 +24,13 @@ class DialogInterface(BaseWidget):
     ticks = 0
     sel = 0
 
-    def __init__(self, parent):
+    def __init__(self, parent, custom_tags=None):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(CANVAS_BG)
         self.parent = parent
         super().__init__(image)
-
+        if custom_tags is not None:
+            self.custom_tags = load_tagarrayfile('data/dialogs/'+custom_tags)
         self.marco = self.crear_marco(*self.rect.size)
         self.w, self.h = self.image.get_size()
         self.draw_space_rect = Rect((3, 3), (self.w - 6, self.h - 7))
@@ -49,7 +51,11 @@ class DialogInterface(BaseWidget):
             self.text_rect.x = 6
         else:
             width -= self.loc_rect.w+self.arrow_width+1
-        self.rendered_text = render_tagged_text(texto, width, omitted_tags=omitir_tags)
+
+        self.rendered_text = render_tagged_text(texto, width,
+                                                custom_tags=self.custom_tags,
+                                                omitted_tags=omitir_tags)
+
         self.text_rect.size = self.rendered_text.get_size()
         if self.text_rect.h < self.draw_space_rect.h:
             self.text_rect.y = 3  # reset scrolling

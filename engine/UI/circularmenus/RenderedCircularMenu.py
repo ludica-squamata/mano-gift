@@ -18,8 +18,8 @@ class RenderedCircularMenu(CircularMenu):
         try:
             if event.origin == 'Modo.Dialogo':
                 self.use_function(event.data['type'], event.data['nom'])
-        except KeyError:
-            pass
+        except KeyError as error:
+            print(error)
 
     def _update_rendered(self, on_spot=None):
         Renderer.clear_overlays_from_layer(self.layer)

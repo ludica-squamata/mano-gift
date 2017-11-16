@@ -43,7 +43,7 @@ class LetterElement(BaseElement):
         return image, rect
 
     def _crear_icono_texto(self, icono, w, h):
-        fuente = font.Font('engine/libs/Verdana.ttf', 15, bold=True)
+        fuente = font.Font('engine/libs/Verdanab.ttf', 15)
         image, _rect = self._crear_base(w, h)
         render = fuente.render(icono, 1, TEXT_FG)
         renderect = render.get_rect(center=_rect.center)

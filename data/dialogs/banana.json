@@ -8,7 +8,7 @@
           "carisma":[">",9]
         }}}
     },
-    "style":"",
+    "style":"tagarrays/estilo.json",
     "locutors":["heroe", "commoner"],
     "name":"banana",
     "about":"item.banana",
@@ -17,7 +17,7 @@
   },
   "body":{
       "0":{"type":"node","leads":1,"from":"heroe","to":"commoner",
-      "txt":"¿qué <w>puedes</w> decirme acerca <b>de las bananas</b>?"},
+      "txt":"¿qué <r>puedes</r> decirme acerca <b>de las bananas</b>?"},
       
       "1":{"type":"node","leads":2,"from":"commoner","to":"hereoe",
       "txt":"No mucho, solo que los monos se alimentan de ellas."},
