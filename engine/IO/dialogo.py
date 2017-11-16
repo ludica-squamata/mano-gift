@@ -227,7 +227,8 @@ class Dialogo (EventAware):
 
     def __init__(self, arbol, *locutores):
         super().__init__()
-        self.dialogo = ArboldeDialogo(arbol)
+        self.tags_condicionales = arbol['head']['conditional_tags']
+        self.dialogo = ArboldeDialogo(arbol['body'])
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
@@ -255,7 +256,7 @@ class Dialogo (EventAware):
         self.hablar()
 
     @classmethod
-    def pre_init(cls, meta, *locutores):        
+    def pre_init(cls, meta, *locutores):
         for loc in locutores:
             if loc.nombre not in meta['locutors']:
                 return False
@@ -297,7 +298,9 @@ class Dialogo (EventAware):
                     if nodo.reqs is not None:
                         if "attrs" in nodo.reqs:
                             for attr in nodo.reqs['attrs']:
-                                if getattr(loc, attr) < nodo.reqs['attrs'][attr]:
+                                loc_attr = getattr(loc, attr)
+                                operation, target = nodo.reqs['attrs'][attr]
+                                if not eval(str(loc_attr) + operation + 'target'):
                                     actual.supress(nodo)
                         elif "objects" in nodo.reqs:
                             for obj in nodo.reqs['objects']:
@@ -311,19 +314,25 @@ class Dialogo (EventAware):
                 self.frontend.set_sel_mode(to_show)
 
         elif type(actual) is Elemento:
-            loc = self.locutores[actual.locutor]
-            supress = [False, False]
-            if actual.reqs is not None:
-                if "attrs" in actual.reqs:
-                    for attr in actual.reqs['attrs']:
-                        if getattr(loc, attr) < actual.reqs['attrs'][attr]:
-                            supress[0] = True
-                elif "objects" in actual.reqs:
-                    for obj in actual.reqs['objects']:
-                        if obj not in loc.inventario:
-                            supress[1] = True
+            if actual.indice in self.tags_condicionales:
+                loc = self.locutores[actual.locutor]
+                supress = []
+                for tag_name in self.tags_condicionales[actual.indice]:
+                    condiciones = self.tags_condicionales[actual.indice][tag_name]
+                    if "attrs" in condiciones:
+                        for attr in condiciones['attrs']:
+                            loc_attr = getattr(loc, attr)
+                            operation, target = condiciones['attrs'][attr]
+                            if not eval(str(loc_attr)+operation+'target'):
+                                supress.append(tag_name)
 
-                self.mostrar_nodo(actual, any(supress))
+                    elif "objects" in condiciones:
+                        for obj in condiciones['objects']:
+                            if obj not in loc.inventario:
+                                if tag_name not in supress:
+                                    supress.append(tag_name)
+
+                self.mostrar_nodo(actual, omitir_tags=supress)
             else:
                 self.mostrar_nodo(actual)
 
@@ -341,7 +350,7 @@ class Dialogo (EventAware):
         if not omitir_tags:
             self.frontend.set_text(nodo.texto)
         else:
-            self.frontend.set_text(nodo.texto, omitir_tags=nodo.tags)
+            self.frontend.set_text(nodo.texto, omitir_tags=omitir_tags)
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':

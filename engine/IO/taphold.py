@@ -169,6 +169,9 @@ def get_taphold_events(events, holding=100):
     elif input_device == 'gamepad':
         teclas = filtrar_eventos_gamepad(events)
 
+    event.clear([KEYDOWN, KEYUP])
+    # por si fueran a provocar errores
+
     for tcl in teclas:
         key = teclas[tcl]
         if key['pressed']:

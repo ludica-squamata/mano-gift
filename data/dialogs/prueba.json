@@ -22,7 +22,7 @@
     "3":{"type":"branch","leads":9,"from":"heroe","to":"commoner",
     "txt":"O quizás esta otra."},
 
-    "4":{"type":"branch","leads":10,"from":"heroe","to":"commoner","reqs":{"attrs":{"carisma":9}},
+    "4":{"type":"branch","leads":10,"from":"heroe","to":"commoner","reqs":{"attrs":{"carisma":[">",9]}},
     "txt":"¿Es esta la opción oculta por mi <b>carisma</b>?"},
 
     "5":{"type":"branch","leads":11,"from":"heroe","to":"commoner","reqs":{"objects":["star"]},

@@ -23,7 +23,7 @@ class TopicElement(LetterElement):
         if self.active:
             if Dialogo.pre_init(self.item['head'], *self.parent.locutores):
                 self.parent.supress_all()
-                EngineData.DIALOG = Dialogo(self.item['body'], *self.parent.locutores)
+                EngineData.DIALOG = Dialogo(self.item, *self.parent.locutores)
                 EngineData.DIALOG.frontend.set_menu(self.parent)
                 EngineData.MODO = 'Dialogo'
                 self.active = False
