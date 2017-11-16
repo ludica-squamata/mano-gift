@@ -13,7 +13,7 @@ class Elemento:
     tipo = ''
     indice = None
     locutor = None  # el que habla
-    inter = None     # a quien le habla
+    inter = None  # a quien le habla
     leads = None
     reqs = None
     event_data = None
@@ -220,7 +220,7 @@ class ArboldeDialogo:
             return self._future
 
 
-class Dialogo (EventAware):
+class Dialogo(EventAware):
     SelMode = False
     sel = 0
     next = 0
@@ -262,6 +262,42 @@ class Dialogo (EventAware):
                 return False
         return True
 
+    @staticmethod
+    def supress_element(condiciones, locutor):
+        supress = False
+
+        if "attrs" in condiciones:
+            for attr in condiciones['attrs']:
+                loc_attr = getattr(locutor, attr)
+                operador, target = condiciones['attrs'][attr]
+                if operador == "<":
+                    if not loc_attr < target:
+                        supress = True
+                elif operador == ">":
+                    if not loc_attr > target:
+                        supress = True
+                elif operador == "=":
+                    if not loc_attr == target:
+                        supress = True
+                elif operador == "<=":
+                    if not loc_attr <= target:
+                        supress = True
+                elif operador == ">=":
+                    if not loc_attr >= target:
+                        supress = True
+                elif operador == '!=':
+                    if not loc_attr != target:
+                        supress = True
+                else:
+                    raise ValueError("El operador '"+operador+"' es inválido")
+
+        elif "objects" in condiciones:
+            for obj in condiciones['objects']:
+                if obj not in locutor.inventario:
+                    supress = True
+
+        return supress
+
     def hablar(self):
 
         actual = self.dialogo.update()
@@ -296,16 +332,8 @@ class Dialogo (EventAware):
 
                 for nodo in actual:
                     if nodo.reqs is not None:
-                        if "attrs" in nodo.reqs:
-                            for attr in nodo.reqs['attrs']:
-                                loc_attr = getattr(loc, attr)
-                                operation, target = nodo.reqs['attrs'][attr]
-                                if not eval(str(loc_attr) + operation + 'target'):
-                                    actual.supress(nodo)
-                        elif "objects" in nodo.reqs:
-                            for obj in nodo.reqs['objects']:
-                                if obj not in loc.inventario:
-                                    actual.supress(nodo)
+                        if self.supress_element(nodo.reqs, loc):
+                            actual.supress(nodo)
 
                 to_show = actual.show()
                 self.SelMode = True
@@ -319,18 +347,8 @@ class Dialogo (EventAware):
                 supress = []
                 for tag_name in self.tags_condicionales[actual.indice]:
                     condiciones = self.tags_condicionales[actual.indice][tag_name]
-                    if "attrs" in condiciones:
-                        for attr in condiciones['attrs']:
-                            loc_attr = getattr(loc, attr)
-                            operation, target = condiciones['attrs'][attr]
-                            if not eval(str(loc_attr)+operation+'target'):
-                                supress.append(tag_name)
-
-                    elif "objects" in condiciones:
-                        for obj in condiciones['objects']:
-                            if obj not in loc.inventario:
-                                if tag_name not in supress:
-                                    supress.append(tag_name)
+                    if self.supress_element(condiciones, loc):
+                        supress.append(tag_name)
 
                 self.mostrar_nodo(actual, omitir_tags=supress)
             else:
