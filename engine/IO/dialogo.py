@@ -264,39 +264,30 @@ class Dialogo(EventAware):
 
     @staticmethod
     def supress_element(condiciones, locutor):
-        supress = False
-
         if "attrs" in condiciones:
             for attr in condiciones['attrs']:
                 loc_attr = getattr(locutor, attr)
                 operador, target = condiciones['attrs'][attr]
                 if operador == "<":
-                    if not loc_attr < target:
-                        supress = True
+                    return not loc_attr < target
                 elif operador == ">":
-                    if not loc_attr > target:
-                        supress = True
+                    return not loc_attr > target
                 elif operador == "=":
-                    if not loc_attr == target:
-                        supress = True
+                    return not loc_attr == target
                 elif operador == "<=":
-                    if not loc_attr <= target:
-                        supress = True
+                    return not loc_attr <= target
                 elif operador == ">=":
-                    if not loc_attr >= target:
-                        supress = True
+                    return not loc_attr >= target
                 elif operador == '!=':
-                    if not loc_attr != target:
-                        supress = True
+                    return not loc_attr != target
                 else:
                     raise ValueError("El operador '"+operador+"' es inválido")
 
         elif "objects" in condiciones:
             for obj in condiciones['objects']:
-                if obj not in locutor.inventario:
-                    supress = True
+                return obj not in locutor.inventario
 
-        return supress
+        return False
 
     def hablar(self):
 
