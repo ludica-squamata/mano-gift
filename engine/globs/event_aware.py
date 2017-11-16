@@ -15,13 +15,7 @@ class EventAware:
         self.register()
 
     def listener(self, event):
-        try:
-            self.use_function(event.data['type'], event.data['nom'])
-        except KeyError:
-            self.new_key_event(event)
-
-    def new_key_event(self, event):
-        pass
+        self.use_function(event.data['type'], event.data['nom'])
 
     def register(self):
         EventDispatcher.register(self.listener, 'Key')
