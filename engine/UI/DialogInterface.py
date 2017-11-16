@@ -23,13 +23,14 @@ class DialogInterface(BaseWidget):
     drawn = False
     ticks = 0
     sel = 0
+    custom_tags = ''
 
-    def __init__(self, parent, custom_tags=None):
+    def __init__(self, parent, custom_tags=''):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(CANVAS_BG)
         self.parent = parent
         super().__init__(image)
-        if custom_tags is not None:
+        if custom_tags != '':
             self.custom_tags = load_tagarrayfile('data/dialogs/'+custom_tags)
         self.marco = self.crear_marco(*self.rect.size)
         self.w, self.h = self.image.get_size()
