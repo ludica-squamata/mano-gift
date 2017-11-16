@@ -1,4 +1,4 @@
-from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
@@ -19,14 +19,13 @@ class DialogInterface(BaseWidget):
     draw_space_rect = None
     erase_area = None
     arrow_width = 0
-    fuente = None
     drawn = False
     ticks = 0
     sel = 0
 
     def __init__(self, parent):
         image = Surface((int(ANCHO), int(ALTO / 5)))
-        image.fill(self.bg_cnvs)
+        image.fill(CANVAS_BG)
         self.parent = parent
         super().__init__(image)
 
@@ -37,8 +36,6 @@ class DialogInterface(BaseWidget):
         self.text_rect = Rect(0, 3, 0, 0)
         self.loc_rect = Rect(0, 0, 0, 0)
         self.arrow_width = 16
-
-        self.fuente = self.fuente_M
         self.ubicar(0, ALTO - int(ALTO / 5))
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
@@ -52,7 +49,7 @@ class DialogInterface(BaseWidget):
             self.text_rect.x = 6
         else:
             width -= self.loc_rect.w+self.arrow_width+1
-        self.rendered_text = render_tagged_text(texto, self.tags, width, omitted_tags=omitir_tags)
+        self.rendered_text = render_tagged_text(texto, width, omitted_tags=omitir_tags)
         self.text_rect.size = self.rendered_text.get_size()
         if self.text_rect.h < self.draw_space_rect.h:
             self.text_rect.y = 3  # reset scrolling
@@ -123,14 +120,14 @@ class DialogInterface(BaseWidget):
             self.ticks = 0
 
     def borrar_todo(self):
-        self.image.fill(self.bg_cnvs)
+        self.image.fill(CANVAS_BG)
         self.rendered_text = None
         self.sel = 0
         self.text_rect.y = 3  # reset scrolling
 
     def update(self):
         self.ticks += 1
-        self.image.fill(self.bg_cnvs, self.erase_area)
+        self.image.fill(CANVAS_BG, self.erase_area)
         if self.loc_img is not None:
             self.image.blit(self.loc_img, self.loc_rect)
 
@@ -140,12 +137,11 @@ class DialogInterface(BaseWidget):
 
         self.image.blit(self.rendered_text, self.text_rect)
         if not self.draw_space_rect.contains(self.text_rect):
-            color = self.bg_bisel_fg
             x, y = self.text_rect.right + 1, 0
             w, h = self.arrow_width, self.draw_space_rect.h + 3
 
             # pintar el area de la flecha, si es que hay más contenido que ver.
-            self.image.fill(color, (x, y, w, h))
+            self.image.fill(SCROLL_BG, (x, y, w, h))
 
         # dibujar el marco biselado.
         self.image.blit(self.marco, (0, 0))

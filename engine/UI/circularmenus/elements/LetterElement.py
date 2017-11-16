@@ -1,10 +1,10 @@
 from engine.IO.menucircular import BaseElement
-from pygame import Surface, SRCALPHA
-from engine.UI.estilo import Estilo
+from pygame import Surface, SRCALPHA, font
+from engine.globs.colores import TEXT_FG, CANVAS_BG
 from .title import Title
 
 
-class LetterElement(BaseElement, Estilo):
+class LetterElement(BaseElement):
     title = None
 
     def __init__(self, parent, nombre, icono):
@@ -31,10 +31,11 @@ class LetterElement(BaseElement, Estilo):
 
         self.title = Title(self, nombre)
 
-    def _crear_base(self, w, h):
+    @staticmethod
+    def _crear_base(w, h):
         image = Surface((w, h), SRCALPHA)
-        image.fill(self.font_none_color)
-        gris = self.bg_cnvs
+        image.fill(TEXT_FG)
+        gris = CANVAS_BG
         gris.a = 200
         image.fill(gris, (1, 1, w - 2, h - 2))
 
@@ -42,8 +43,9 @@ class LetterElement(BaseElement, Estilo):
         return image, rect
 
     def _crear_icono_texto(self, icono, w, h):
+        fuente = font.Font('engine/libs/Verdana.ttf', 15, bold=True)
         image, _rect = self._crear_base(w, h)
-        render = self.fuente_Ib.render(icono, 1, self.font_none_color)
+        render = fuente.render(icono, 1, TEXT_FG)
         renderect = render.get_rect(center=_rect.center)
         image.blit(render, renderect)
         return image

@@ -1,5 +1,5 @@
 from engine.UI.widgets import BaseWidget
-from engine.globs import ANCHO, ALTO
+from engine.globs import ANCHO, ALTO, CANVAS_BG
 from engine.libs import render_tagged_text
 
 
@@ -16,5 +16,5 @@ class DescriptiveArea(BaseWidget):
         super().__init__(megacanvas)
 
         self.ubicar(0, ALTO - h)
-        render = render_tagged_text(item.efecto_des, self.tags, w - 16, h - 14, self.bg_cnvs)
+        render = render_tagged_text(item.efecto_des, w - 16, h - 14, CANVAS_BG)
         self.image.blit(render, (10, 8))

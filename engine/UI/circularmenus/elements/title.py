@@ -1,9 +1,9 @@
+from engine.globs.colores import TEXT_FG, CANVAS_BG
 from pygame.sprite import Sprite
-from pygame import Surface
-from engine.UI.estilo import Estilo
+from pygame import Surface, font
 
 
-class Title(Sprite, Estilo):
+class Title(Sprite):
     active = True
     parent = None
     nombre = ''
@@ -13,13 +13,11 @@ class Title(Sprite, Estilo):
         self.nombre = nombre
         self.parent = parent
 
-        w, h = self.fuente_Ib.size(self.nombre)
-        negro = self.font_none_color
-        gris = self.bg_cnvs
-
+        fuente = font.Font('engine/libs/Verdana.ttf', 15, bold=True)
+        w, h = fuente.size(self.nombre)
         self.image = Surface((w + 6, h + 2))
-        self.image.fill(gris, (1, 1, w + 4, h))
-        self.image.blit(self.fuente_Ib.render(nombre, 1, negro, gris), (2, 1))
+        self.image.fill(CANVAS_BG, (1, 1, w + 4, h))
+        self.image.blit(fuente.render(nombre, 1, TEXT_FG, CANVAS_BG), (2, 1))
         self.rect = self.image.get_rect()
 
     def center(self, rect):

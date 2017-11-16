@@ -1,7 +1,7 @@
 from .basewidget import BaseWidget
 from pygame import Surface
 from engine.libs import render_tagged_text
-from engine.globs import EngineData
+from engine.globs import EngineData, CANVAS_BG, TEXT_DIS
 
 
 class Fila(BaseWidget):
@@ -38,8 +38,8 @@ class Fila(BaseWidget):
             self.tag_end = '</' + _tag + '>'
             self.nombre = self.tag_init + self.item.nombre.capitalize() + self.tag_end
             self.cantidad = self.tag_init + 'x' + str(EngineData.HERO.inventario.cantidad(self.item)) + self.tag_end
-            self.img_uns = self.construir_fila(self.bg_cnvs)
-            self.img_sel = self.construir_fila(self.font_low_color)
+            self.img_uns = self.construir_fila(CANVAS_BG)
+            self.img_sel = self.construir_fila(TEXT_DIS)
             self.tagged = True
 
         super().__init__(self.img_uns)
@@ -51,11 +51,11 @@ class Fila(BaseWidget):
     def construir_fila(self, bg):
         w = int(self.ancho // 2)
 
-        img_nmbr = render_tagged_text(self.nombre, self.tags, w, bgcolor=bg, justification=1)
-        img_cant = render_tagged_text(self.cantidad, self.tags, w, bgcolor=bg, justification=1)
+        img_nmbr = render_tagged_text(self.nombre, w, bgcolor=bg, justification=1)
+        img_cant = render_tagged_text(self.cantidad, w, bgcolor=bg, justification=1)
 
         image = Surface((self.ancho, img_nmbr.get_height()))
-        image.fill(self.bg_cnvs)
+        image.fill(CANVAS_BG)
         image.blit(img_nmbr, (3, 0))
         image.blit(img_cant, (w + 1, 0))
 
@@ -64,8 +64,8 @@ class Fila(BaseWidget):
     def set_text(self, texto, w, a):
         """Cambia y asigna el texto de la opción"""
 
-        self.img_uns = render_tagged_text(texto, self.tags, w, bgcolor=self.bg_cnvs, justification=a)
-        self.img_sel = render_tagged_text(texto, self.tags, w, bgcolor=self.font_low_color, justification=a)
+        self.img_uns = render_tagged_text(texto, w, bgcolor=CANVAS_BG, justification=a)
+        self.img_sel = render_tagged_text(texto, w, bgcolor=TEXT_DIS, justification=a)
 
         self.image = self.img_uns
         self.nombre = texto
@@ -80,5 +80,5 @@ class Fila(BaseWidget):
             else:
                 self.cantidad = 'x' + str(EngineData.HERO.inventario.cantidad(self.item))
 
-            self.img_uns = self.construir_fila(self.bg_cnvs)
-            self.img_sel = self.construir_fila(self.font_low_color)
+            self.img_uns = self.construir_fila(CANVAS_BG)
+            self.img_sel = self.construir_fila(TEXT_DIS)

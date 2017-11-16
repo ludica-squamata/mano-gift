@@ -1,6 +1,6 @@
 from pygame import time, Surface, PixelArray, SRCALPHA
 from engine.base import AzoeSprite
-from .constantes import COLOR_IGNORADO
+from .colores import COLOR_IGNORADO
 from engine.globs.eventDispatcher import EventDispatcher
 from .renderer import Renderer
 from datetime import datetime

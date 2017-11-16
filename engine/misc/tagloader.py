@@ -3,8 +3,6 @@ from engine.libs.render_tagged_text import Tag
 from engine.misc.resources import abrir_json
 from pygame import font, Color
 
-font.init()
-
 '''
     tagarrayfile.json = {
         tag-identifier:string:{

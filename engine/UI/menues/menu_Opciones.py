@@ -1,11 +1,11 @@
-from pygame.sprite import LayeredUpdates, Sprite
-from pygame.key import name as key_name
-from pygame import Rect, font, joystick, Surface
-from engine.UI.widgets import Fila
-from engine.globs.constantes import TECLAS
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.misc.config import Config as Cfg
+from engine.globs import TECLAS, TEXT_DIS, CANVAS_BG
+from pygame.sprite import LayeredUpdates, Sprite
+from pygame import Rect, font, joystick, Surface
 from engine.libs.textrect import render_textrect
+from engine.misc.config import Config as Cfg
+from pygame.key import name as key_name
+from engine.UI.widgets import Fila
 from .menu import Menu
 
 
@@ -260,7 +260,7 @@ class MenuOpciones(Menu):
                     espacio.reset_text(txt)
                     Cfg.asignar(nom, data[nom])
 
-        self.canvas.fill(self.bg_cnvs, self.notice_area)
+        self.canvas.fill(CANVAS_BG, self.notice_area)
 
     def create_notice(self):
         """Crea el aviso de que la configuración cambiará al salir del menú"""
@@ -269,7 +269,7 @@ class MenuOpciones(Menu):
         w, h = fuente.size(texto)
         x, y = self.canvas.get_width() - w - 15, self.canvas.get_height() - h - 15
         rect = Rect(x, y, w, h + 1)
-        render = render_textrect(texto, fuente, rect, self.font_low_color, self.bg_cnvs)
+        render = render_textrect(texto, fuente, rect, TEXT_DIS, CANVAS_BG)
 
         return render, rect
 
@@ -282,7 +282,7 @@ class MenuOpciones(Menu):
         Cfg.asignar('metodo_de_entrada', self.input_device)
         Cfg.guardar()
 
-        self.canvas.fill(self.bg_cnvs, self.notice_area)
+        self.canvas.fill(CANVAS_BG, self.notice_area)
         super().cancelar()
 
     def update(self):

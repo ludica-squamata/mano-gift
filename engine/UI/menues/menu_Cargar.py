@@ -1,4 +1,4 @@
-from engine.globs import EngineData, ANCHO, ALTO, SAVEFD
+from engine.globs import EngineData, ANCHO, ALTO, SAVEFD, CANVAS_BG
 from pygame.sprite import LayeredUpdates
 from engine.UI.widgets import Fila
 from .menu import Menu
@@ -48,14 +48,13 @@ class MenuCargar(Menu):
         archivos = self.create_titled_canvas(ancho, alto, 'Elija un archivo')
         rect = self.canvas.blit(archivos, (7, 40))
         self.draw_space = archivos.subsurface(((0, 0), (rect.w - 8, rect.h - 30)))
-        self.draw_space.fill(self.bg_cnvs)
+        self.draw_space.fill(CANVAS_BG)
         self.draw_space_rect = archivos.get_rect(topleft=(11, 65))
 
-        h = self.fuente_M.get_height() + 1
         self.archivos = self.load_saved_files()  # lista
         self.opciones = len(self.archivos)
-        for i in range(len(self.archivos)):
-            opcion = Fila(self.archivos[i], self.draw_space_rect.w - 10, 0, i * h + i + 2)
+        for i, archivo in enumerate(self.archivos):
+            opcion = Fila(archivo, self.draw_space_rect.w - 10, 0, i * 21 + i + 2)
             self.filas.add(opcion)
 
     def elegir_opcion(self, direccion):

@@ -1,8 +1,7 @@
-from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO
+from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import Surface, Rect, draw, SRCALPHA
+from pygame import Surface, Rect, draw, SRCALPHA, font
 from engine.globs.renderer import Renderer
-from engine.UI.estilo import Estilo
 from pygame.sprite import Sprite
 
 
@@ -67,7 +66,7 @@ class ProgressBar(Sprite):
         self._subdividir()
 
 
-class CharacterName(Sprite, Estilo):
+class CharacterName(Sprite):
     active = True
 
     def __init__(self, focus, x, y):
@@ -78,14 +77,15 @@ class CharacterName(Sprite, Estilo):
 
     def generate(self, fg_color):
         outline = []
-        width, height = self.fuente_Mb.size(self.text)
+        fuente = font.Font('engine/libs/Verdana.ttf', 16, bold=True)
+        width, height = fuente.size(self.text)
         width += 2 * len(self.text)
         canvas = Surface((width, height), SRCALPHA)
 
         for character in self.text:
-            fondo = self.fuente_Mb.render(character, 1, self.font_none_color)
-            frente = self.fuente_Mb.render(character, 1, fg_color)
-            w, h = self.fuente_Mb.size(character)
+            fondo = fuente.render(character, 1, TEXT_FG)
+            frente = fuente.render(character, 1, fg_color)
+            w, h = fuente.size(character)
             img = Surface((w + 2, h + 2), SRCALPHA)
 
             for i in range(1, 8, 2):

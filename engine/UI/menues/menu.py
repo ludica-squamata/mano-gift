@@ -1,10 +1,10 @@
-from engine.globs import EngineData as Ed, ANCHO, ALTO, CAPA_OVERLAYS_MENUS
+from engine.globs import EngineData, ANCHO, ALTO, CAPA_OVERLAYS_MENUS, TEXT_SEL, CANVAS_BG
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.libs.textrect import render_textrect
 from engine.UI.widgets import Boton, BaseWidget
 from pygame.sprite import LayeredUpdates
-from pygame import Rect
+from pygame import Rect, font
 
 
 class Menu(EventAware, BaseWidget):
@@ -25,16 +25,18 @@ class Menu(EventAware, BaseWidget):
         self.canvas = self.create_raised_canvas(ANCHO - 20, ALTO - 20)
         if titulo is None:
             titulo = nombre
-        self.crear_titulo(titulo, self.font_high_color, self.bg_cnvs, ANCHO - 20)
+        self.crear_titulo(titulo, ANCHO - 20)
         self.botones = LayeredUpdates()
         super().__init__(self.canvas, center=True)
         self.functions['tap'].update({'contextual': self.cancelar})
         self.functions['release'].update({'contextual': self.cancelar})
-        Ed.MENUS[nombre] = self
+        EngineData.MENUS[nombre] = self
 
-    def crear_titulo(self, titulo, fg_color, bg_color, ancho):
+    def crear_titulo(self, titulo, ancho):
+        fuente = font.Font('engine/libs/Verdana.ttf', 16)
+        fuente.set_underline(True)
         ttl_rect = Rect((3, 3), (ancho - 7, 30))
-        ttl_txt = render_textrect(titulo, self.fuente_Mu, ttl_rect, fg_color, bg_color, 1)
+        ttl_txt = render_textrect(titulo, fuente, ttl_rect, TEXT_SEL, CANVAS_BG, 1)
         self.canvas.blit(ttl_txt, ttl_rect.topleft)
 
     @staticmethod

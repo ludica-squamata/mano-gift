@@ -1,10 +1,10 @@
+from engine.globs import Tiempo, EngineData, CANVAS_BG, TEXT_FG, TEXT_SEL, BISEL_BG
 from engine.misc.resources import cargar_imagen, split_spritesheet
-from engine.libs import render_textrect
-from engine.globs import Tiempo, EngineData
-from pygame import font, Rect, Surface, draw
 from pygame.sprite import LayeredUpdates, Sprite
-from .menu import Menu
 from engine.UI.widgets import BaseWidget, Boton
+from pygame import font, Rect, Surface, draw
+from engine.libs import render_textrect
+from .menu import Menu
 
 
 class MenuPersonaje(Menu):
@@ -43,7 +43,7 @@ class MenuPersonaje(Menu):
         self.crear_teclas(6, 6)  # genera el teclado en pantalla
 
         # el espacio se añade por separado porque ' ' es el delimitador en self.crear_teclas
-        self.teclas.add(Character(' ', self.bg_cnvs, 10 + 12 * 32 + 6, 212 + 6 * 32 + 6))
+        self.teclas.add(Character(' ', CANVAS_BG, 10 + 12 * 32 + 6, 212 + 6 * 32 + 6))
 
         # Cursor del teclado en pantalla
         self.cursor = Cursor(*self.teclas.get_sprite(0).rect.center)
@@ -111,7 +111,7 @@ class MenuPersonaje(Menu):
         s = "Escriba a continuación el nombre del personaje. Puede usar los caracteres provistos abajo"
         fuente = font.SysFont('Verdana', 14, italic=True)
         rect = Rect(10, 32, 600, 64)
-        render = render_textrect(s, fuente, rect, self.font_none_color, self.bg_cnvs)
+        render = render_textrect(s, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
     def use_function(self, mode, key):
@@ -150,9 +150,9 @@ class MenuPersonaje(Menu):
                 i += 1
                 # este bloque determina el color del fondo de la tecla, para un efecto cuadriculado
                 if dy % 2 != 0 and i % 2 != 0 or dy % 2 == 0 and i % 2 == 0:
-                    bg = self.bg_cnvs
+                    bg = CANVAS_BG
                 else:
-                    bg = self.bg_bisel_bg
+                    bg = BISEL_BG
 
                 if t[i] != ' ':
                     char = Character(t[i], bg, mx + x + dx * 32, my + y + dy * 32)
@@ -171,7 +171,7 @@ class MenuPersonaje(Menu):
 
             spr = Sprite()  # no hace falta una clase nueva para esto.
             fuente = font.SysFont('Verdana', 20)
-            spr.image = fuente.render(key, 1, (0, 0, 0), self.bg_cnvs)
+            spr.image = fuente.render(key, 1, (0, 0, 0), CANVAS_BG)
             spr.rect = spr.image.get_rect()
             spr.rect.bottom = espacio.top - 2
             spr.rect.centerx = espacio.centerx
@@ -197,7 +197,7 @@ class MenuPersonaje(Menu):
         """Borra el caracter del espacio actualmente seleccionado"""
 
         if self.ltr_idx >= 0:
-            self.canvas.fill(self.bg_cnvs, self.area_nombre)
+            self.canvas.fill(CANVAS_BG, self.area_nombre)
 
             spr = self.area_input.get_sprite(self.ltr_idx)
             self.area_input.remove(spr)
@@ -277,7 +277,7 @@ class MenuPersonaje(Menu):
         self.draw()
 
     def draw(self):
-        self.canvas.fill(self.bg_cnvs, self.char_img_rect)
+        self.canvas.fill(CANVAS_BG, self.char_img_rect)
         self.canvas.blit(self.char_img, self.char_img_rect.topleft)
         self.teclas.draw(self.canvas)
         self.lineas.draw(self.canvas)
@@ -291,7 +291,7 @@ class Character(BaseWidget):
     def __init__(self, char, bg, x, y):
 
         self.img_uns = self._crear_img(char, bg)
-        self.img_sel = self.dibujar_seleccion(self.img_uns, self.font_high_color)
+        self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
 
         super().__init__(self.img_uns)
         self.nombre = char

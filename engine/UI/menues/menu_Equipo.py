@@ -1,10 +1,11 @@
+from engine.UI.widgets import Fila, EspacioEquipable
 from .menu import Menu
-from pygame import Surface, Rect
+from pygame import Surface, Rect, font
 from pygame.sprite import LayeredUpdates
 from engine.misc.resources import cargar_imagen
 from engine.libs.textrect import render_textrect
-from engine.globs import EngineData as Ed
-from engine.UI.widgets import Fila, EspacioEquipable
+from engine.globs import EngineData, CANVAS_BG, TEXT_FG
+
 
 
 class MenuEquipo(Menu):
@@ -22,7 +23,6 @@ class MenuEquipo(Menu):
         super().__init__('Equipo')
         self.espacios = LayeredUpdates()  # grupo de espacios equipables.
         self.filas = LayeredUpdates()  # grupo de items del espacio de selección.
-        self.altura_del_texto = self.fuente_MP.get_height() + 1  # se utiliza para trazar lineas
         self.foco = 'espacios'  # setea el foco por default
         # Crear los espacios equipables.
         # "e_pos" es la posicion del espacio. "t_pos" es la posicion de su titulo.
@@ -51,7 +51,7 @@ class MenuEquipo(Menu):
         ]
 
         for e in esp:
-            item = Ed.HERO.equipo[e['nom']]
+            item = EngineData.HERO.equipo[e['nom']]
             cuadro = EspacioEquipable(e['nom'], item, e['direcciones'], *e['e_pos'])
             titulo = self.titular(e['nom'])
             self.canvas.blit(titulo, e['t_pos'])
@@ -111,7 +111,8 @@ class MenuEquipo(Menu):
             }
         }
 
-    def titular(self, titulo):
+    @staticmethod
+    def titular(titulo):
         """Agrega un titulo descriptivo a cada espacio equipable.
 
         Si el nombre tiene dos partes de texto (por ejemplo 'mano buena'),
@@ -120,7 +121,8 @@ class MenuEquipo(Menu):
 
         :param titulo: string"""
 
-        w, h = self.fuente_MP.size(titulo)
+        fuente = font.Font('engine/libs/Verdana.ttf', 12)
+        w, h = fuente.size(titulo)
         just = 0
         if ' ' in titulo:
             titulo = titulo.split(' ')
@@ -132,7 +134,7 @@ class MenuEquipo(Menu):
                 titulo = ' '.join(titulo)
 
         rect = Rect(-1, -1, w + 5, h + 1)
-        render = render_textrect(titulo.title(), self.fuente_MP, rect, self.font_none_color, self.bg_cnvs, just)
+        render = render_textrect(titulo.title(), fuente, rect, TEXT_FG, CANVAS_BG, just)
 
         return render
 
@@ -142,7 +144,7 @@ class MenuEquipo(Menu):
         """
 
         self.deselect_all(self.espacios)
-        self.draw_space.fill(self.bg_cnvs)
+        self.draw_space.fill(CANVAS_BG)
         self.current = self.espacios.get_sprite(self.cur_esp)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
@@ -185,17 +187,17 @@ class MenuEquipo(Menu):
         rect = self.canvas.blit(marco, (266, 39))
         self.draw_space_rect = Rect((rect.x + 4, rect.y + 26), (rect.w - 9, rect.h - 31))
         self.draw_space = Surface(self.draw_space_rect.size)
-        self.draw_space.fill(self.bg_cnvs)
+        self.draw_space.fill(CANVAS_BG)
 
     def llenar_espacio_selectivo(self):
         """Llena el espacio selectivo con los items que se correspondan con el espacio
         actualmente seleccionado. Esta función se llama cuando se cambia el espacio."""
 
-        h = self.altura_del_texto
+        h = 13
 
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
-        items = Ed.HERO.inventario('equipable', espacio.nombre)
+        items = EngineData.HERO.inventario('equipable', espacio.nombre)
         for i in range(len(items)):
             fila = Fila(items[i], 188, 0, i * h + i, tag='n')
             self.filas.add(fila)
@@ -222,8 +224,8 @@ class MenuEquipo(Menu):
         item = self.current.item
         if espacio.nombre == item.espacio:
             espacio.ocupar(item)
-            Ed.HERO.equipar_item(item)
-            self.draw_space.fill(self.bg_cnvs)
+            EngineData.HERO.equipar_item(item)
+            self.draw_space.fill(CANVAS_BG)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
             self.current = espacio
@@ -233,7 +235,7 @@ class MenuEquipo(Menu):
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
         espacio.desocupar()
-        Ed.HERO.desequipar_item(item)
+        EngineData.HERO.desequipar_item(item)
         self.espacios.draw(self.canvas)
         self.cambio = True
 

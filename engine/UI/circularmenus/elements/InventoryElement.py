@@ -1,6 +1,7 @@
-from engine.globs import EngineData as Ed
+from engine.globs import EngineData, TEXT_FG
 from .LetterElement import LetterElement
 from .itemdescription import DescriptiveArea
+from pygame import font
 
 
 class InventoryElement(LetterElement):
@@ -20,8 +21,9 @@ class InventoryElement(LetterElement):
     def _create_icon_stack(self, w, h, count):
         image, _rect = self._crear_base(w, h)
         if count:
-            cant = Ed.HERO.inventario.cantidad(self.item)
-            render = self.fuente_MP.render(str(cant), 1, self.font_none_color)
+            fuente = font.Font('engine/libs/Verdana.ttf', 12)
+            cant = EngineData.HERO.inventario.cantidad(self.item)
+            render = fuente.render(str(cant), 1, TEXT_FG)
             renderect = render.get_rect(bottom=_rect.bottom+1, right=_rect.right-1)
             image.blit(render, renderect)
 
@@ -32,7 +34,7 @@ class InventoryElement(LetterElement):
 
     def do_action(self):
         if self.item is not None and self.item.tipo == 'consumible':
-            value = self.item.usar(Ed.HERO)
+            value = self.item.usar(EngineData.HERO)
             self.img_sel = self._create_icon_stack(33, 33, True)
             self.image = self.img_sel
             return value

@@ -1,6 +1,6 @@
 from pygame import Surface, Rect, draw
 from .basewidget import BaseWidget
-
+from engine.globs import CANVAS_BG, TEXT_SEL
 
 class EspacioEquipable(BaseWidget):
     tipo = 'espacio'
@@ -11,9 +11,9 @@ class EspacioEquipable(BaseWidget):
     def __init__(self, nombre, item, direcciones, x, y):
         """Inicializa las variables de un espacio equipable."""
 
-        self.img_uns = self.crear_base(self.bg_cnvs)
+        self.img_uns = self.crear_base(CANVAS_BG)
         super().__init__(self.img_uns)
-        self.img_sel = self.dibujar_seleccion(self.img_uns, self.font_high_color)
+        self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
 
         self.draw_area = Surface((28, 28))
         self.draw_area.fill((153, 153, 153))

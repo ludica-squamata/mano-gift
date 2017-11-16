@@ -1,4 +1,4 @@
-from pygame import Surface, Rect, SRCALPHA
+from pygame import Surface, Rect, SRCALPHA, font
 
 
 class Tag:
@@ -31,7 +31,24 @@ class Tag:
         return 'tag ' + self.init
 
 
-def render_tagged_text(text, tags, w, h=0, omitted_tags=None, bgcolor=None,
+font.init()
+tags = {
+    'b': Tag('b', {
+        'fuente': font.Font('engine/libs/Verdana.ttf', 16, bold=True),
+        'fg': (0, 0, 0)}),
+
+    'n': Tag('n', {
+        'fuente': font.Font('engine/libs/Verdana.ttf', 16),
+        'fg': (0, 0, 0)}),
+
+    'w': Tag('w', {
+        'fuente': font.Font('engine/libs/Verdana.ttf', 16),
+        'fg': (255, 255, 255)}),
+
+}
+
+
+def render_tagged_text(text, w, h=0, omitted_tags=None, bgcolor=None,
                        _defaultspace=4, line_spacing=1, justification=0):
     actual_lines = []
 
