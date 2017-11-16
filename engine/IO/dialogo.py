@@ -285,7 +285,7 @@ class Dialogo(EventAware):
                 else:
                     raise ValueError("El operador '"+operador+"' es inválido")
 
-        elif "objects" in condiciones:
+        if "objects" in condiciones:
             for obj in condiciones['objects']:
                 supress = obj not in locutor.inventario
 
