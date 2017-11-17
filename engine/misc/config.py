@@ -12,25 +12,14 @@ class Config:
         "recordar_menus": True,
         "metodo_de_entrada": 'teclado',
 
-        "teclas": {
+        "comandos": {
             "arriba": 273,
             "abajo": 274,
             "derecha": 275,
             "izquierda": 276,
-
             "accion": 120,
             "menu": 13,
             "contextual": 122,
-        },
-
-        "botones": {
-            "abajo": 13,
-            "accion": 3,
-            "arriba": 12,
-            "contextual": 1,
-            "derecha": 10,
-            "izquierda": 11,
-            "menu": 8
         }
     }
     savedir = os.path.join(os.getcwd(), "save")

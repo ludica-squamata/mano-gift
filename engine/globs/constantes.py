@@ -5,7 +5,7 @@ from engine.misc import Config
 CUADRO = 32
 ANCHO = 640
 ALTO = 480
-TECLAS = Teclas(Config.dato('teclas'))
+TECLAS = Teclas(Config.dato('comandos'))
 SAVEFD = Config.savedir
 
 GRUPO_ITEMS = 0

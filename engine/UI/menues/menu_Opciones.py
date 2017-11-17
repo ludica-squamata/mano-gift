@@ -10,7 +10,6 @@ from .menu import Menu
 
 
 class MenuOpciones(Menu):
-    curr_input = ''
     input_device = 'teclado'
     espacios = None
     notice = None
@@ -19,11 +18,6 @@ class MenuOpciones(Menu):
     def __init__(self):
         super().__init__('Opciones')
         self.data = Cfg.cargar()
-
-        if self.data['metodo_de_entrada'] == 'teclado':
-            self.curr_input = 'teclas'
-        elif self.data['metodo_de_entrada'] == 'gamepad':
-            self.curr_input = 'botones'
 
         self.botones = LayeredUpdates()
         self.espacios = LayeredUpdates()
@@ -130,9 +124,9 @@ class MenuOpciones(Menu):
                 txt = self.data[nom].title()
                 esp = Fila(txt, 88, x, y + 9, justification=1)
 
-            elif nom in self.data[self.curr_input]:
+            elif nom in self.data['comandos']:
                 x, y = boton.rect.topleft
-                texto = self.data[self.curr_input][nom]
+                texto = self.data['comandos'][nom]
                 nom = key_name(texto)
                 esp = Fila(nom, 75, x - 75 - 3, y + 9, justification=1)
 
@@ -173,11 +167,9 @@ class MenuOpciones(Menu):
 
         if self.input_device == 'teclado':
             self.input_device = 'gamepad'
-            self.curr_input = 'botones'
 
         elif self.input_device == 'gamepad':
             self.input_device = 'teclado'
-            self.curr_input = 'teclas'
 
         # este bloque cambia todos los espacios por los nombres de las teclas del nuevo input.
         # key names para las teclas del teclado, números para los botones del gamepad.
@@ -185,12 +177,12 @@ class MenuOpciones(Menu):
         for idx in range(len(self.botones)):
             boton, espacio = self.elegir_boton_espacio(idx)
             nom = boton.nombre.lower()
-            if nom in self.data[self.curr_input]:
-                txt = self.data[self.curr_input][nom]
-                if self.curr_input == 'teclas':
+            if nom in self.data['comandos']:
+                txt = self.data['comandos'][nom]
+                if self.input_device == 'teclado':
                     espacio.reset_text(key_name(txt))
-                else:
-                    espacio.reset_text(str(txt))
+                elif self.input_device == 'gamepad':
+                    espacio.reset_text("None")
 
         self.mostrar_aviso()
 
@@ -228,13 +220,13 @@ class MenuOpciones(Menu):
         if i_tecla is not None:
             # acá, si tcl ya está asignada a otro comando, se intercambian las teclas entre esos comandos.
             i_tecla.reset_text(tecla.nombre)
-            idx = Cfg.dato(self.curr_input + '/' + i_boton.nombre.lower())
-            Cfg.asignar(self.curr_input + '/' + i_boton.nombre.lower(), idx)
+            idx = Cfg.dato('comandos/' + i_boton.nombre.lower())
+            Cfg.asignar('comandos/' + i_boton.nombre.lower(), idx)
 
         if tecla.nombre != key_name(tcl):
             # acá comprobamos que la tecla elegida sea de hecho distinta a la que ya está
             tecla.reset_text(key_name(tcl))
-            Cfg.asignar(self.curr_input + '/' + boton.nombre.lower(), tcl)
+            Cfg.asignar('comandos/' + boton.nombre.lower(), tcl)
 
             # porque si no lo es, no hay que mostrar el aviso de los cambios.
             self.mostrar_aviso()
@@ -244,10 +236,10 @@ class MenuOpciones(Menu):
         for idx in range(len(self.botones)):
             boton, espacio = self.elegir_boton_espacio(idx)
             nom = boton.nombre.lower()
-            if nom in data['teclas']:
-                txt = data['teclas'][nom]
+            if nom in data['comandos']:
+                txt = data['comandos'][nom]
                 espacio.reset_text(key_name(txt))
-                Cfg.asignar('teclas/'+nom, txt)
+                Cfg.asignar('comandos/'+nom, txt)
             else:
                 nom = nom.replace(' ', '_')
                 if nom in data:
@@ -278,7 +270,7 @@ class MenuOpciones(Menu):
         self.canvas.blit(self.notice, self.notice_area)
 
     def cancelar(self):
-        TECLAS.asignar(Cfg.dato(self.curr_input))
+        TECLAS.asignar(Cfg.dato('comandos'))
         Cfg.asignar('metodo_de_entrada', self.input_device)
         Cfg.guardar()
 
