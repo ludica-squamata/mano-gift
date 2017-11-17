@@ -312,18 +312,21 @@ class Dialogo(EventAware):
                         # nos quedamos con el que no tenga requisitos, por las dudas
                         default = choices.pop(i)
 
+                filtered = []
+                # es mejor así porque del modo anterior no se eliminan todos los nodos con rquisitos incumplidos.
+                # podría hacerse con list comprehension, pero queda demasiado larga la linea.
                 for choice in choices:
                     reqs = choice.reqs
                     sujeto = self.locutores[reqs['loc']]
                     # vamos eliminando todos los que tengan requisitos incumplidos
-                    if self.supress_element(reqs, sujeto):
-                        choices.remove(choice)
+                    if not self.supress_element(reqs, sujeto):
+                        filtered.append(choice)
 
-                if len(choices):
+                if len(filtered):
                     # si queda alguno con requisitos, elegir el primero.
                     # en realidad debería haber algun tipo de precedencia, pero así esta bien
                     # porque solo queda 1 elemento con requisitos.
-                    choice = choices[0]
+                    choice = filtered[0]
                 else:
                     # si nos quedamos sin elementos con requisitos, caemos al default.
                     choice = default
