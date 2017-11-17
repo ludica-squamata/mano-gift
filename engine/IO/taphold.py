@@ -33,6 +33,7 @@ def filtrar_eventos_teclado(events):
                 else:
                     key['release'] = True
 
+    # este bloque previene el salteo del KEYUP en un momento de lag.
     _keys = get_pressed()
     for _key in pressed_keys:
         if not _keys[_key]:

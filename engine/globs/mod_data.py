@@ -14,7 +14,7 @@ class ModData:
     mobs = ''
     items = ''
     fd_scripts = ''
-    custommenus = None
+    custommenus = {}
     QMC = None
 
     @classmethod
@@ -43,7 +43,7 @@ class ModData:
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
 
             loaded = []
-            for keyword in cls.data.get('custom', False):
+            for keyword in cls.data.get('custom', ''):
                 cls.custommenus = {}
                 if keyword == 'menus':
                     for d in cls.data['custom']['menus']:
