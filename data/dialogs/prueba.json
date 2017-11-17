@@ -47,9 +47,9 @@
     "txt":"Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."},
 
     "12":{"type":"exclusive","leads":[13,14],"from":"commoner","to":"heroe",
-    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de di?logo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."},
+    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."},
 
-    "13":{"type":"node","leads":16,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"carisma":9}},
+    "13":{"type":"node","leads":16,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"carisma":[">",9]}},
     "txt":"Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."},
 
     "14":{"type":"node","leads":16,"from":"commoner","to":"heroe",

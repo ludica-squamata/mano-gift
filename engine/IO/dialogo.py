@@ -288,7 +288,7 @@ class Dialogo(EventAware):
 
         if "objects" in condiciones:
             for obj in condiciones['objects']:
-                supress = obj not in locutor.inventario
+                supress = supress or obj not in locutor.inventario
 
         return supress
 
@@ -306,18 +306,28 @@ class Dialogo(EventAware):
         elif type(actual) is BranchArray:
             if actual.is_exclusive:
                 choices = actual.array.copy()
-                choice = -1
-                for i in range(len(choices)):
-                    if choices[i].reqs is not None:  # tiene precedencia
-                        choice = i
+                default = None
+                for i, choice in enumerate(choices):
+                    if choice.reqs is None:
+                        # nos quedamos con el que no tenga requisitos, por las dudas
+                        default = choices.pop(i)
 
-                reqs = choices[choice].reqs
-                sujeto = self.locutores[reqs['loc']]
-                for attr in reqs['attrs']:
-                    if getattr(sujeto, attr) < reqs['attrs'][attr]:
-                        del choices[choice]
+                for choice in choices:
+                    reqs = choice.reqs
+                    sujeto = self.locutores[reqs['loc']]
+                    # vamos eliminando todos los que tengan requisitos incumplidos
+                    if self.supress_element(reqs, sujeto):
+                        choices.remove(choice)
 
-                choice = choices[0]
+                if len(choices):
+                    # si queda alguno con requisitos, elegir el primero.
+                    # en realidad debería haber algun tipo de precedencia, pero así esta bien
+                    # porque solo queda 1 elemento con requisitos.
+                    choice = choices[0]
+                else:
+                    # si nos quedamos sin elementos con requisitos, caemos al default.
+                    choice = default
+
                 self.dialogo.set_chosen(choice)
                 self.hablar()
 
