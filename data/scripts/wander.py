@@ -1,7 +1,16 @@
-from random import choice
+from random import choice, randint
 from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
 from engine.mobs.scripts.a_star import a_star, determinar_direccion
 from engine.globs import EngineData as Ed
+
+
+class Wait(Leaf):
+    def process(self):
+        e = self.get_entity()
+        if randint(0, 101) == 5:
+            return Success
+        else:
+            e.detener_movimiento()
 
 
 class GetRandomDir(Leaf):

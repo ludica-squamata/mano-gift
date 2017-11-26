@@ -1,7 +1,7 @@
 {
   "head":{
     "script":{
-      "wander":["GetRandomDir"]
+      "wander":["GetRandomDir","GetRoute","NextPosition","Move","Wait"]
       },
     "special":{
       "Repeater":{"ID":null,"times":0}
@@ -9,8 +9,13 @@
   },
   "body":{
     "0":{"name":"Repeater","child":1},
-    "1":{"name":"Sequence","children":[2,3,4]},
-    "2":{"name":"GetRandomDir"},
-    "3":{"name":"ExtenderLeaf","tree":"go_to"}
+    "1":{"name":"Sequence","children":[2,3,4,5]},
+    "2":{"name":"Wait"},
+    "3":{"name":"GetRandomDir"},
+    "4":{"name":"GetRoute"},
+    "5":{"name":"UntilFail","child":6},
+    "6":{"name":"Sequence","children":[7,8]},
+    "7":{"name":"NextPosition"},
+    "8":{"name":"Move"}
   }
 }
