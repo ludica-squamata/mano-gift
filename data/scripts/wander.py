@@ -2,6 +2,18 @@ from random import choice, randint
 from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
 from engine.mobs.scripts.a_star import a_star, determinar_direccion
 from engine.globs import EngineData as Ed
+from engine.misc import ReversibleDict
+
+
+class IsTalking(Leaf):
+    def process(self):
+        e = self.get_entity()
+        if e.hablando:
+            opuesta = ReversibleDict(arriba='abajo', derecha='izquierda')
+            e.cambiar_direccion(opuesta[e.interlocutor.direccion])
+            return Failure
+        else:
+            return Success
 
 
 class Wait(Leaf):
@@ -79,5 +91,5 @@ class Move(Leaf):
                 e.cambiar_direccion(direccion)
             e.mover()
             return Running
-
-        return Success
+        else:
+            return Success

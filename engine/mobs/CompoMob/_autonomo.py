@@ -29,5 +29,4 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         super().update(*args)
         if not EngineData.onPause:
             # detectados = self.oir() + self.ver()
-            if not self.hablando:
-                self.AI.update()
+            self.AI.update()
