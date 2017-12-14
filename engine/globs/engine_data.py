@@ -86,6 +86,7 @@ class EngineData:
         data = abrir_json(SAVEFD + '/' + filename)
         cls.save_data.update(data)
         cls.char_name = data['name']
+        Mob_Group.clear()
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
     @classmethod

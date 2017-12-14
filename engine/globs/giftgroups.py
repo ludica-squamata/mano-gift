@@ -70,6 +70,10 @@ class MobGroup:
     def contents(self):
         return [self._group[key] for key in self._group]
 
+    def clear(self):
+        self._group.clear()
+        self._indexes.clear()
+
 
 class ItemGroup:
 

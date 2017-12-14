@@ -74,10 +74,7 @@ class Camara:
 
     @classmethod
     def is_focus(cls, spr):
-        if cls.focus is not None and hasattr(spr, 'nombre'):
-            if cls.focus.nombre == spr.nombre:
-                return True
-        return False
+        return cls.focus == spr
 
     @classmethod
     def clear(cls):

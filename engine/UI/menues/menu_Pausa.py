@@ -11,20 +11,20 @@ class MenuPausa(Menu):
     def __init__(self):
         super().__init__("Pausa")
         x = self.canvas.get_width() - (CUADRO * 6) - 14  # 460-192-14 = 254
-        m, k = 'nombre', 'direcciones'
+        n, d = 'nombre', 'direcciones'
         a, b = 'arriba', 'abajo'
 
         botones = [
-            {m: "Equipo", k: {a: "Cargar", b: "Opciones"}},
-            {m: "Opciones", k: {a: "Equipo", b: "Cargar"}},
-            {m: "Cargar", k: {a: "Opciones", b: "Custom"}},
+            {n: "Equipo", d: {a: "Cargar", b: "Opciones"}},
+            {n: "Opciones", d: {a: "Equipo", b: "Cargar"}},
+            {n: "Cargar", d: {a: "Opciones", b: "Equipo"}},
         ]
 
         if FEATURE_MENUS_ADICIONALES:
-            botones[0][k][b] = "Status"
-            botones.insert(1, {m: "Status", k: {a: "Equipo", b: "Grupo"}})
-            botones.insert(2, {m: "Grupo", k: {a: "Status", b: "Opciones"}})
-            botones[3][k][a] = "Grupo"
+            botones[0][d][b] = "Status"
+            botones.insert(1, {n: "Status", d: {a: "Equipo", b: "Grupo"}})
+            botones.insert(2, {n: "Grupo", d: {a: "Status", b: "Opciones"}})
+            botones[3][d][a] = "Grupo"
 
         for i in range(len(botones)):
             botones[i]['pos'] = [x, 39 * i + 100],
@@ -47,10 +47,10 @@ class MenuPausa(Menu):
         r = self.canvas.blit(EngineData.HERO.diag_face, (6, 100))
         fuente = SysFont('Verdana', 22)
         w = self.canvas.get_width() - r.right - CUADRO * 6 - 20
-        h = fuente.size(EngineData.char_name)[1]
+        h = fuente.size(EngineData.HERO.nombre)[1]
         rect = Rect(r.right + 2, 0, w, h + 1)
         rect.centery = r.centery-10
-        render = render_textrect(EngineData.char_name, fuente, rect, TEXT_FG, CANVAS_BG)
+        render = render_textrect(EngineData.HERO.nombre, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
         self.canvas.blit(EngineData.HUD.BarraVida.image, (r.right + 2, r.centery + 4))
