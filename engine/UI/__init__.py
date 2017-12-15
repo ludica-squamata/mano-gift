@@ -4,9 +4,8 @@ from .hud import ProgressBar, HUD
 from .menues import *
 
 __all__ = [
-    'Menu',
-    'MenuPausa',
-    'MenuEquipo',
-    'MenuOpciones',
-    'MenuCargar'
+    "QuickCircularMenu",
+    "DialogInterface",
+    "ProgressBar",
+    "HUD"
     ]

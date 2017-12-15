@@ -13,7 +13,6 @@ class AzoeSprite(sprite.Sprite):
     stage = None  # stage donde existe el mob
 
     mapRect = None  # mapX y mapY
-    stageRect = None  # stageX y stageY
 
     IMAGEN_D = 'abajo'
     IMAGEN_U = 'arriba'
@@ -58,13 +57,6 @@ class AzoeSprite(sprite.Sprite):
 
         self.mapRect = Rect(0, 0, *self.rect.size)
         self.mapRect.center = x, y
-        self.stageRect = Rect(0, 0, *self.rect.size)
-        self.stageRect.center = x, y
-
-        self.top = y
-        self.left = x
-        self.bottom = 0
-        self.right = 0
 
         if z:
             self.z = z
@@ -77,20 +69,12 @@ class AzoeSprite(sprite.Sprite):
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
         self.mapRect.move_ip(dx, dy)
-        self.stageRect.move_ip(dx, dy)
-
-        self.top += dy
-        self.left += dx
-        self.bottom -= dy
-        self.right -= dx
-
         self.z += dy
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
-        self.stageRect.center = x, y
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
@@ -107,6 +91,5 @@ class AzoeSprite(sprite.Sprite):
             return self.image
 
     def ubicar_en_entrada(self, x, y):
-        # self.ubicar(x, y)
         self.mapRect.center = x, y
         self.z = self.mapRect.y + self.rect.h

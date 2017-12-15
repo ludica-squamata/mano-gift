@@ -27,23 +27,23 @@ class Camara:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
 
-        dx, dy = 0, 0
-        # Posicionar el fondo si de otro modo
-        # quedara la camara fuera de los bordes.
-        if cls.bgs_rect.y > 2:
-            dy = -cls.bgs_rect.y + 2
-
-        elif cls.bgs_rect.bottom < cls.rect.h - 2:
-            dy = (cls.rect.h - 2) - cls.bgs_rect.bottom
-
-        if cls.bgs_rect.x > 1:
-            dx = -cls.bgs_rect.x - 2
-
-        elif cls.bgs_rect.right < cls.rect.w - 2:
-            dx = (cls.rect.w - 2) - cls.bgs_rect.right
-
-        if dx or dy:
-            cls.pan(dx, dy)
+        # dx, dy = 0, 0
+        # # Posicionar el fondo si de otro modo
+        # # quedara la camara fuera de los bordes.
+        # if cls.bgs_rect.y > 2:
+        #     dy = -cls.bgs_rect.y + 2
+        #
+        # elif cls.bgs_rect.bottom < cls.rect.h - 2:
+        #     dy = (cls.rect.h - 2) - cls.bgs_rect.bottom
+        #
+        # if cls.bgs_rect.x > 1:
+        #     dx = -cls.bgs_rect.x - 2
+        #
+        # elif cls.bgs_rect.right < cls.rect.w - 2:
+        #     dx = (cls.rect.w - 2) - cls.bgs_rect.right
+        #
+        # if dx or dy:
+        #     cls.pan(dx, dy)
 
     @classmethod
     def add_real(cls, obj):
@@ -104,7 +104,7 @@ class Camara:
 
     @classmethod
     def detectar_mapas_adyacentes(cls):
-        r = cls.rect.inflate(2, 2)
+        r = cls.rect.inflate(5, 5)
         map_at = cls.bgs.get_sprites_at
         adyacent_map_key = ''
         reference = []
@@ -183,23 +183,29 @@ class Camara:
         dx = cls.focus.rect.x - cls.focus.mapRect.x - cls.bg.rect.x
         dy = cls.focus.rect.y - cls.focus.mapRect.y - cls.bg.rect.y
 
-        while abs(dx):
+        abs_x, abs_y = abs(dx), abs(dy)
+        sign_x, sign_y = 0, 0
+        # Extraer el signo + o -
+        if dx:
+            sign_x = dx / abs_x  # +1 ó -1
+        if dy:
+            sign_y = dy / abs_y  # +1 ó -1
+
+        while abs_x:
+            # acá restauramos el valor para hacer la comparación
+            dx = abs_x * sign_x
             if cls.focus.rect.centerx + dx != cls.rect.centerx:
-                if dx < 0:
-                    dx += 1
-                else:
-                    dx -= 1
+                # y acá achicamos el valor por si es muy alto
+                # no importa que sea negativo o positivo, porque eso
+                # lo preserva el sign.
+                abs_x -= 1
             else:
                 break
 
-        while abs(dy):
+        while abs_y:
+            dy = abs_y * sign_y
             if cls.focus.rect.centery + dy != cls.rect.centery:
-                # funciona, pero me gustaria encontrar una forma de reducir el valor
-                # sin tener que fijarme si es positivo o negativo.
-                if dy < 0:
-                    dy += 1
-                else:
-                    dy -= 1
+                abs_y -= 1
             else:
                 break
 

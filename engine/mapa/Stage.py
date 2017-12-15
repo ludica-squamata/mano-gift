@@ -77,8 +77,8 @@ class Stage:
             ''':type obj: _giftSprite'''
             if obj.stage is not self:
                 obj.stage = self
-                obj.bottom = self.rect.h - obj.top
-                obj.right = self.rect.w - obj.left
+                # obj.bottom = self.rect.h - obj.top
+                # obj.right = self.rect.w - obj.left
 
             obj.sombra = None
             obj._prevLuces = None
@@ -182,6 +182,15 @@ class Stage:
                 x, y = spr.mapRect.x // 32, spr.mapRect.y // 32
                 self.grilla.set_transitable((x, y), False)
 
+    def posicion_entrada(self, entrada):
+        return self.data['entradas'][entrada]['pos']
+
+    def ubicar_en_entrada(self, entrada):
+        dx, dy = self.data['entradas'][entrada]['pos']
+        x = self.offset_x - dx
+        y = self.offset_y - dy
+        self.mapa.ubicar(x, y)
+
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
@@ -202,6 +211,7 @@ class ChunkMap(Sprite):
         self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
         self.stage = stage
         self.nombre = nombre
+        # print(off_x,off_y)
 
         if not data:
             data = abrir_json(ModData.mapas + self.nombre + '.' + self.tipo + '.json')
@@ -219,6 +229,10 @@ class ChunkMap(Sprite):
             for item, grupo in load_everything(data):  # , dx, dy):
                 self.stage.add_property(item, grupo)
 
+    def ubicar(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
+
     def cargar_limites(self, limites):
 
         for key in limites:
@@ -230,9 +244,13 @@ class ChunkMap(Sprite):
                 self.limites[key.lower()] = mapa[0]
 
     def checkear_adyacencia(self, clave):
-        if type(self.limites.get(clave, None)) is str:
+        adyacente = self.limites.get(clave, False)
+        if type(adyacente) is str:
             return self.cargar_mapa_adyacente(clave)
-        return False
+        elif type(adyacente) is ChunkMap:
+            return self.cargar_mapa_adyacente(clave)
+        else:
+            return False
 
     def _get_newmap_pos(self, ady):
         w, h = self.rect.size
@@ -255,21 +273,19 @@ class ChunkMap(Sprite):
 
         dx, dy = self._get_newmap_pos(ady)
 
-        mapa = ChunkMap(self.stage, self.limites[ady], dx, dy, cargar_todo=False)
-
-        self.limites[ady] = mapa
-        self.stage.chunks.add(mapa)
+        if type(self.limites[ady]) is str:
+            mapa = ChunkMap(self.stage, self.limites[ady], dx, dy, cargar_todo=False)
+            self.limites[ady] = mapa
+            self.stage.chunks.add(mapa)
+        else:
+            mapa = self.limites[ady]
+            mapa.ubicar(dx, dy)
 
         if ady == 'izq' or ady == 'der':
             self.stage.rect.inflate_ip(mapa.rect.w, 0)
-            if ady == 'izq':
-                for spr in self.stage.properties:
-                    spr.stageRect.x += mapa.rect.w
+
         elif ady == 'sup' or ady == 'inf':
             self.stage.rect.inflate_ip(0, mapa.rect.h)
-            if ady == 'sup':
-                for spr in self.stage.properties:
-                    spr.stageRect.y += mapa.rect.h
 
         return mapa
 
