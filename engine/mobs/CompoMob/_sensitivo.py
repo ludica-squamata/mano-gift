@@ -1,6 +1,6 @@
+# noinspection PyUnresolvedReferences
 from math import tan, radians
 from pygame import Surface, draw, mask, transform
-from engine.globs import Mob_Group
 from ._atribuido import Atribuido
 
 
@@ -10,8 +10,7 @@ class Sensitivo(Atribuido):
     vx, vy = 0, 0  # posicion de la visión, puesta acá por si el mob no se mueve
     ultima_direccion = ''
     vis_mask = None
-
-    # mover_vis = None #algoritmo para desplazar la visión junto al mob
+    perceived = None  # una lista con los interactives que el mob ve u oye
 
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
@@ -20,6 +19,7 @@ class Sensitivo(Atribuido):
         self.audicion = self._generar_circulo_sensorioal(32 * 6)  # cheat
         self.vision = 'cono'
         self._mover_vis = self._mover_triangulo_visual
+        self.percieved = []
 
     @staticmethod
     def _generar_cono(largo):
@@ -100,7 +100,7 @@ class Sensitivo(Atribuido):
 
     def ver(self):
         """Realiza detecciones con la visión del mob"""
-        detected = []
+
         direccion = self.direccion
         if direccion == 'ninguna':
             direccion = self.ultima_direccion
@@ -108,32 +108,21 @@ class Sensitivo(Atribuido):
             self.ultima_direccion = self.direccion
 
         self._mover_vis(direccion)
-        mob = None
-        for mob in Mob_Group:
-            if mob != self:
-                x, y = self.vx - mob.mapX, self.vy - mob.mapY
-                if mob.mask.overlap(self.vis_mask, (x, y)):
-                    detected.append(mob)
-
-        for obj in self.stage.interactives:
-            x, y = self.vx - obj.mapX, self.vy - obj.mapY
-            if mob.mask.overlap(self.vis_mask, (x, y)):
-                detected.append(obj)
-
-        return detected
+        self.perceive_interactives()
 
     def oir(self):
-        detected = []
         self._mover_circulo_sensorial(self.audicion)
-        for mob in Mob_Group:
-            if mob != self:
-                x, y = self.vx - mob.mapX, self.vy - mob.mapY
-                if mob.mask.overlap(self.vis_mask, (x, y)) and mob.moviendose:
-                    detected.append(mob)
+        self.perceive_interactives()
 
-                    # for obj in self.stage.interactives:
-                    # x,y = self.vx-obj.mapX, self.vy-obj.mapY
-                    # if mob.mask.overlap(self.vis_mask,(x,y)):
-                    # detected.append(obj)
+    def perceive_interactives(self):
+        for obj in self.stage.interactives:
+            if obj != self:
+                x, y = self.vx - obj.mapRect.x, self.vy - obj.mapRect.y
+                if obj.mask.overlap(self.vis_mask, (x, y)):
+                    self.perceived.append(obj)
 
-        return detected
+    def update(self, *args):
+        super().update(*args)
+        self.perceived.clear()
+        self.ver()
+        # self.oir() glitchy: puede oir a lo que no hace ningún ruido!

@@ -8,7 +8,6 @@ from . import Sensitivo, Animado
 class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     AI = None  # determina cómo se va a mover el mob
     _AI = None  # copia de la AI original
-    hablando = False
 
     def __init__(self, data, **kwargs):
         ai_name = data['AI']
@@ -28,5 +27,4 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     def update(self, *args):
         super().update(*args)
         if not EngineData.onPause:
-            # detectados = self.oir() + self.ver()
             self.AI.update()
