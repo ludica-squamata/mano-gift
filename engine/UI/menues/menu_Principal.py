@@ -12,14 +12,11 @@ class MenuPrincipal(Menu):
         m, k, c = 'nombre', 'direcciones', 'comando'
         a, b = 'arriba', 'abajo'
 
-        # acá no puedo hacer lo mismo porque la lambda me tira cualquier cosa.
-        botones = [
-            {m: "Nuevo", k: {a: "Opciones", b: "Cargar"}, c: lambda: self.new_menu('Personaje')},
-            {m: "Cargar", k: {a: "Nuevo", b: "Opciones"}, c: lambda: self.new_menu('Cargar')},
-            {m: "Opciones", k: {a: "Cargar", b: "Nuevo"}, c: lambda: self.new_menu('Opciones')},
-        ]
-        for i in range(len(botones)):
-            botones[i]['pos'] = [x, 50 * i + 120],
+        nombres = ['Nuevo', 'Cargar', 'Opciones']
+        botones = []
+        for j, nombre in enumerate(nombres):
+            botones.append({m: nombre, k: {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]},
+                            c: self.new_menu, 'pos': [x, 50 * j + 120]})
 
         self.establecer_botones(botones, 6)
 
@@ -34,8 +31,12 @@ class MenuPrincipal(Menu):
         self.functions['release'].update({
             'accion': self.liberar_presion})
 
-    def new_menu(self, titulo):
+    def new_menu(self):
         self.deregister()
+        titulo = self.current.nombre
+        if titulo == 'Nuevo':
+            titulo = 'Personaje'
+
         EventDispatcher.trigger('OpenMenu', self.nombre, {'value': titulo})
 
     def cancelar(self):
