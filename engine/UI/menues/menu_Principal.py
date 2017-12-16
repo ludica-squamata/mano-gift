@@ -12,6 +12,7 @@ class MenuPrincipal(Menu):
         m, k, c = 'nombre', 'direcciones', 'comando'
         a, b = 'arriba', 'abajo'
 
+        # acá no puedo hacer lo mismo porque la lambda me tira cualquier cosa.
         botones = [
             {m: "Nuevo", k: {a: "Opciones", b: "Cargar"}, c: lambda: self.new_menu('Personaje')},
             {m: "Cargar", k: {a: "Nuevo", b: "Opciones"}, c: lambda: self.new_menu('Cargar')},

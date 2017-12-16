@@ -78,6 +78,8 @@ class MenuOpciones(Menu):
             special = "Metodo de Entrada"
         else:
             special = "Recordar Menus"
+
+        # decime qué haces acá
         botones = [
             {m: "Arriba", k: {b: "Abajo", a: special, i: "Mostrar Intro"}},
             {m: "Abajo", k: {b: "Derecha", a: "Arriba", i: "Recordar Menus"}},

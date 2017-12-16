@@ -19,7 +19,7 @@ class Sensitivo(Atribuido):
         self.audicion = self._generar_circulo_sensorioal(32 * 6)  # cheat
         self.vision = 'cono'
         self._mover_vis = self._mover_triangulo_visual
-        self.percieved = []
+        self.perceived = []
 
     @staticmethod
     def _generar_cono(largo):

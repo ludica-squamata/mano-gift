@@ -14,11 +14,10 @@ class MenuPausa(Menu):
         n, d = 'nombre', 'direcciones'
         a, b = 'arriba', 'abajo'
 
-        botones = [
-            {n: "Equipo", d: {a: "Cargar", b: "Opciones"}},
-            {n: "Opciones", d: {a: "Equipo", b: "Cargar"}},
-            {n: "Cargar", d: {a: "Opciones", b: "Equipo"}},
-        ]
+        nombres = ['Equipo', 'Opciones', 'Cargar']
+        botones = []
+        for j, nombre in enumerate(nombres):
+            botones.append({n: nombre, d: {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]}})
 
         if FEATURE_MENUS_ADICIONALES:
             botones[0][d][b] = "Status"
