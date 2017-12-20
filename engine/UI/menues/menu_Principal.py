@@ -34,9 +34,6 @@ class MenuPrincipal(Menu):
     def new_menu(self):
         self.deregister()
         titulo = self.current.nombre
-        if titulo == 'Nuevo':
-            titulo = 'Personaje'
-
         EventDispatcher.trigger('OpenMenu', self.nombre, {'value': titulo})
 
     def cancelar(self):

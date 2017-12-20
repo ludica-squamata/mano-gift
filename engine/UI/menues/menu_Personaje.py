@@ -7,7 +7,7 @@ from engine.libs import render_textrect
 from .menu import Menu
 
 
-class MenuPersonaje(Menu):
+class MenuNuevo(Menu):
     _step = 'D'
     timer_animacion = 0
 
