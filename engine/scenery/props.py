@@ -155,7 +155,8 @@ class Estructura3D(Escenografia):
 
                 elif ruta.endswith('.png'):
                     w, h = data['width'], data['height']
-                    imagen = self.chop_faces(ruta, w=w, h=h)[face]
+                    faces = self.chop_faces(ruta, w=w, h=h, required_face=face)
+                    imagen = faces[face]
 
                 if 'cara' not in propdata:
                     propdata.update({'cara': face})
@@ -165,16 +166,17 @@ class Estructura3D(Escenografia):
 
         return props
 
-    def chop_faces(self, ruta_img, w, h):
+    def chop_faces(self, ruta_img, w, h, required_face='front'):
         if not self._chopped:
             spritesheet = split_spritesheet(ruta_img, w=w, h=h)
             d = {}
             if len(spritesheet) > 1:
-                for idx, face in [[0, "front"], [1, "left"], [2, "right"], [3, "back"]]:
+                for idx, face in enumerate(['front', 'left', 'right', 'back']):
                     d[face] = spritesheet[idx]
             else:
-                d['front'] = spritesheet[0]
-            self._chopped = d
+                # print('aca',required_face)
+                d[required_face] = spritesheet[0]
+            # self._chopped = d
             return d
         else:
             return self._chopped

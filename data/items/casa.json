@@ -2,12 +2,13 @@
   "tipo":"estructura3D",
   "nombre":"Casa",
   "componentes":{
-    "frente":{
+    "front":{
       "casa":[[0,0,0]],
       "puerta":[[14,66,1]]
     },
-    "lado":{},
-    "reverso":{}
+    "left":{},
+    "right":{},
+    "back":{}
   },
   "referencias":{
     "casa":"props/casa.png",
@@ -30,6 +31,7 @@
             }]
     }
   },
-  "cara":"frente",
+  "cara":"front",
+  "width": 128, "height":164,
   "proyecta_sombra":true
 }

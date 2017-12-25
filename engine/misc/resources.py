@@ -19,9 +19,14 @@ def split_spritesheet(ruta, w=32, h=32):
     alto = spritesheet.get_height()
     tamanio = w, h
     sprites = []
-    for y in range(int(alto / h)):
-        for x in range(int(ancho / w)):
-            sprites.append(ss(Rect(((int(ancho / (ancho / w)) * x, int(alto / (alto / h)) * y), tamanio))))
+    dh = int(alto/h)
+    dw = int(ancho/w)
+    if dh == 0 or dw == 0:
+        sprites.append(spritesheet)
+    else:
+        for y in range(dh):
+            for x in range(dw):
+                sprites.append(ss(Rect(((int(ancho / (ancho / w)) * x, int(alto / (alto / h)) * y), tamanio))))
     return sprites
 
 

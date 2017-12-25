@@ -2,17 +2,23 @@
   "tipo": "estructura3D",
   "nombre":"palotes",
   "componentes":{
-    "frente":{
+    "front":{
       "horizontal":[[0,0,0]]
     },
-    "lado":{
+    "left":{
       "vertical":[[0,0,0]]
     },
-    "reverso":{}
+    "right":{
+      "vertical":[[0,0,0]]
+    },
+    "back":{
+      "horizontal":[[0,0,0]]
+    }
   },
   "referencias":{
     "vertical":"props/palotes_horizontales.png",
     "horizontal":"props/palotes_verticales.png"
   },
+  "width":32,"height":32,
   "proyecta_sombra":true
 }
