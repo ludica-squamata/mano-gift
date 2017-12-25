@@ -244,10 +244,8 @@ class ChunkMap(Sprite):
                 self.limites[key.lower()] = mapa[0]
 
     def checkear_adyacencia(self, clave):
-        adyacente = self.limites.get(clave, False)
-        if type(adyacente) is str:
-            return self.cargar_mapa_adyacente(clave)
-        elif type(adyacente) is ChunkMap:
+        type_adyacente = type(self.limites.get(clave, False))
+        if type_adyacente is str or type_adyacente is ChunkMap:
             return self.cargar_mapa_adyacente(clave)
         else:
             return False
