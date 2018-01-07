@@ -1,5 +1,5 @@
-from pygame import quit
 from .config import Config
+from pygame import quit
 from sys import exit
 
 
@@ -14,3 +14,10 @@ def salir(output='normal'):
     print('Saliendo...\nStatus: ' + output)
     Config.guardar()
     exit()
+
+
+def salir_handler(event):
+    data = ''
+    if event.data:
+        data = event.data['status']
+    salir(output=data)

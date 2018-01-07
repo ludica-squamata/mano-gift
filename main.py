@@ -24,7 +24,6 @@ EventDispatcher.trigger('InitSystem', 'engine', {'intro': Config.dato('mostrar_i
 while True:
     Tiempo.update(60)
     events = event.get()
-    Modo.juego(events)
     cambios = Modo.update(events)
 
     cambios.append(fondo.blit(fuente.render(str(int(Tiempo.FPS.get_fps())), True, rojo), (10, 0)))

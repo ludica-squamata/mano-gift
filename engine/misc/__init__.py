@@ -1,5 +1,5 @@
 from .config import Config
 from .resources import *
-from .util import salir
+from .util import salir, salir_handler
 from .tagloader import load_tagarrayfile
 from .reversibledict import ReversibleDict

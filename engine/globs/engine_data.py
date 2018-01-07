@@ -1,5 +1,5 @@
 from .eventDispatcher import EventDispatcher
-from engine.misc import abrir_json, guardar_json
+from engine.misc import abrir_json, guardar_json, salir_handler
 from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
@@ -122,3 +122,4 @@ EventDispatcher.register(EngineData.salvar, "SaveDataFile")
 EventDispatcher.register(EngineData.compound_save_data, "SaveData")
 EventDispatcher.register(EngineData.rotarte_view, 'RotateEverything')
 EventDispatcher.register(EngineData.toggle_pause, 'TogglePause')
+EventDispatcher.register(salir_handler, 'QUIT')

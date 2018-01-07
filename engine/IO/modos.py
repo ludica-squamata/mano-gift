@@ -1,9 +1,7 @@
 from engine.globs import EngineData as Ed, ModData as Md, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.misc import salir
 from .taphold import get_taphold_events
-from pygame import KEYDOWN, QUIT, K_ESCAPE
 from engine.UI.menues import *
 from engine.UI import QuickCircularMenu
 
@@ -11,20 +9,9 @@ from engine.UI import QuickCircularMenu
 class Modo:
     setKey = False
 
-    @classmethod
-    def juego(cls, events):
-        for event in events:
-            if event.type == QUIT:
-                salir()
-
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    salir()
-
-        EventDispatcher.process()
-
     @staticmethod
     def update(events):
+        EventDispatcher.process()
         modo = Ed.MODO
         for event in get_taphold_events(events):
             EventDispatcher.trigger('Key', 'Modo.'+modo, event.__dict__)
