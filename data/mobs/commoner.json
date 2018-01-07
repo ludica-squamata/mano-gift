@@ -8,7 +8,7 @@
     "idle":"mobs/imagenes/commoner12.png",
     "atk":null,
     "death":null,
-    "diag_face":"mobs/imagenes/npc_face.png"
+    "diag_face":"mobs/imagenes/npc_face2.png"
   },
   "alpha":"mobs/colisiones/human_walk.png",
   "AI":"new_wander",

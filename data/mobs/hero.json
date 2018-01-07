@@ -8,7 +8,7 @@
     "idle":"mobs/imagenes/heroe_idle_walk.png",
     "cmb":"mobs/imagenes/heroe_cmb_walk.png",
     "atk":"mobs/imagenes/heroe_cmb_atk.png",
-    "diag_face":"mobs/imagenes/pc_face.png"
+    "diag_face":"mobs/imagenes/pc_face2.png"
   },
   "alpha":"mobs/colisiones/human_walk.png",
   "AI":"controllable",
