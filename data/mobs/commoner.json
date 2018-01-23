@@ -1,9 +1,14 @@
 {
   "ID":1,"nombre":"commoner",
-  "salud":2,"fuerza":2,
-  "velocidad":1,
-  "iniciativa":10,
-  "carisma":5,
+  "caracteristicas":{
+    "ataque":2,
+    "defensa":0,
+    "ataque_especial":0,
+    "defensa_especial":0,
+    "velocidad":1,
+    "social":5,
+    "salud":2
+  },
   "imagenes":{
     "idle":"mobs/imagenes/commoner12.png",
     "atk":null,
@@ -11,6 +16,5 @@
     "diag_face":"mobs/imagenes/npc_face2.png"
   },
   "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"new_wander",
-  "propiedades":["pasiva"]
+  "AI":"new_wander"
 }

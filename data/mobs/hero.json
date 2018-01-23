@@ -1,9 +1,14 @@
 {
   "ID":0,"nombre":"heroe",
-  "salud":20,"fuerza":5,
-  "velocidad":3,
-  "iniciativa":20,
-  "carisma":8,
+  "caracteristicas":{
+    "ataque":5,
+    "ataque_especial":1,
+    "defensa":1,
+    "defensa_especial":1,
+    "velocidad":3,
+    "social":8,
+    "salud":20
+  },
   "imagenes":{
     "idle":"mobs/imagenes/heroe_idle_walk.png",
     "cmb":"mobs/imagenes/heroe_cmb_walk.png",
@@ -11,6 +16,5 @@
     "diag_face":"mobs/imagenes/pc_face2.png"
   },
   "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"controllable",
-  "propiedades":[]
+  "AI":"controllable"
 }

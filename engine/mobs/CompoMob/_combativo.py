@@ -22,6 +22,6 @@ class Combativo(Animado, Interactivo):
             sprite = self.quadrant_interaction()
             x, y = self.direcciones[self.direccion]
 
-            x, y = x * self.fuerza, y * self.fuerza
+            x, y = x * self.ataque, y * self.ataque
             sprite.reubicar(x, y)
-            sprite.recibir_danio(self.fuerza)
+            sprite.recibir_danio(self.ataque)

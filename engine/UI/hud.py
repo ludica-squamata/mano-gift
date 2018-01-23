@@ -119,7 +119,7 @@ class HUD:
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
         self.BarraVida = ProgressBar(focus.nombre, focus.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(focus.nombre, focus.mana, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        self.BarraMana = ProgressBar(focus.nombre, focus.ataque_especial, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(focus.nombre, dx, dy - 32)
 

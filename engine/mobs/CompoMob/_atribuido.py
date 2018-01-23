@@ -2,21 +2,25 @@ from engine.base.azoeSprite import AzoeSprite
 
 
 class Atribuido(AzoeSprite):
-    fuerza = 0  # capacidad del mob para empujar cosas.
+    ataque = 0
+    defensa = 0
+    ataque_especial = 1
+    defensa_especial = 0
+    social = 0
     velocidad = 0  # en pixeles por frame
-    salud_max = 0  # salud máxima
-    salud_act = 0  # salud actual
-    iniciativa = 0
-    mana = 1
+    salud = 0  # salud máxima
 
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.velocidad = self.data['velocidad']
-        self.fuerza = self.data['fuerza']
-        self.salud_max = self.data['salud']
-        self.carisma = self.data['carisma']
-        self.iniciativa = self.data['iniciativa']
-        self.salud_act = self.salud_max
+        data = self.data['caracteristicas']
+        self.ataque = data['ataque']
+        self.defensa = data['defensa']
+        self.ataque_especial = data['ataque_especial']
+        self.defensa_especial = data['defensa_especial']
+        self.social = data['social']
+        self.velocidad = data['velocidad']
+        self.salud = data['salud']
+        self.salud_act = self.salud
 
     def mover(self, dx, dy):
         dx *= self.velocidad

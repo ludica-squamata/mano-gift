@@ -1,17 +1,19 @@
 {
-    "ID":3,"nombre":"red",
-    "salud":4,"fuerza":4,
+  "ID":3,"nombre":"red",
+  "caracteristicas":{
+    "ataque":4,
+    "defensa":0,
+    "ataque_especial":0,
+    "defensa_especial":0,
     "velocidad":1,
-    "imagenes":{
-        "idle":"mobs/imagenes/red.png",
-        "atk":"mobs/imagenes/red_atk.png",
-        "death":"mobs/imagenes/red_death.png"
-        },
-    "alphas":{
-        "idle":"mobs/colisiones/monster_walk.png",
-        "atk":"mobs/colisiones/monster_walk.png",
-        "death":null
+    "social":0,
+    "salud":4
+  },
+  "imagenes":{
+    "idle":"mobs/imagenes/red.png",
+    "atk":"mobs/imagenes/red_atk.png",
+    "death":"mobs/imagenes/red_death.png"
     },
-    "clase":"NPC",
-    "propiedades":["solido","hostil"]
+  "alpha":"mobs/colisiones/monster_walk.png",
+  "AI":null
 }
