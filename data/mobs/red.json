@@ -1,19 +1,21 @@
 {
   "ID":3,"nombre":"red",
-  "caracteristicas":{
+  "atributos":{
     "ataque":4,
     "defensa":0,
     "ataque_especial":0,
     "defensa_especial":0,
     "velocidad":1,
     "social":0,
-    "salud":4
+    "salud":4,
+    "mana":0
   },
   "imagenes":{
     "idle":"mobs/imagenes/red.png",
     "atk":"mobs/imagenes/red_atk.png",
-    "death":"mobs/imagenes/red_death.png"
-    },
+    "death":"mobs/imagenes/red_death.png",
+    "diag_face":null
+  },
   "alpha":"mobs/colisiones/monster_walk.png",
   "AI":null
 }

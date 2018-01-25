@@ -1,13 +1,14 @@
 {
   "ID":1,"nombre":"commoner",
-  "caracteristicas":{
+  "atributos":{
     "ataque":2,
     "defensa":0,
     "ataque_especial":0,
     "defensa_especial":0,
     "velocidad":1,
     "social":5,
-    "salud":2
+    "salud":2,
+    "mana":0
   },
   "imagenes":{
     "idle":"mobs/imagenes/commoner12.png",

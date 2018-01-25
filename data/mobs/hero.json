@@ -1,13 +1,14 @@
 {
   "ID":0,"nombre":"heroe",
-  "caracteristicas":{
+  "atributos":{
     "ataque":5,
     "ataque_especial":1,
     "defensa":1,
     "defensa_especial":1,
     "velocidad":3,
     "social":8,
-    "salud":20
+    "salud":10,
+    "mana":1
   },
   "imagenes":{
     "idle":"mobs/imagenes/heroe_idle_walk.png",

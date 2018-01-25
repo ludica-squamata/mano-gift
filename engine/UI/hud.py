@@ -57,7 +57,7 @@ class ProgressBar(Sprite):
     def event_update(self, event):
         mob = event.data['mob']
         if mob.nombre == self.focus:
-            self.set_variable(actual=mob.salud_act)
+            self.set_variable(actual=event.data["value"])
             self.actualizar()
 
     def actualizar(self):
@@ -107,8 +107,6 @@ class CharacterName(Sprite):
 
 
 class HUD:
-    # ya no es clase base. próximamente será una clase que agrupe
-    # y registre en el renderer todos los elementos del hud.
     is_shown = False
     BarraVida = None
     BarraMana = None
@@ -119,13 +117,12 @@ class HUD:
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
         self.BarraVida = ProgressBar(focus.nombre, focus.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(focus.nombre, focus.ataque_especial, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        self.BarraMana = ProgressBar(focus.nombre, focus.mana_act, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(focus.nombre, dx, dy - 32)
 
         EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
-        # EventDispatcher.register(self.BarraMana.event_update,'')
-        # EventDispatcher.register(self.BarraVida.event_update,'')
+        # EventDispatcher.register(self.BarraMana.event_update, 'GastoMana')
 
         self.BarraVida.actualizar()
         self.BarraMana.actualizar()

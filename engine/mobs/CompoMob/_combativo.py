@@ -7,7 +7,7 @@ class Combativo(Animado, Interactivo):
 
     def recibir_danio(self, danio):
         self.salud_act -= danio
-        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self})
+        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self, "value": self.salud_act})
 
         if self.salud_act <= 0:
             if self.death_img is not None:
