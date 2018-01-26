@@ -13,6 +13,12 @@ class Atribuido(AzoeSprite):
     def __getattr__(self, item):
         if item in self.atributos:
             return self.atributos[item]
+        else:
+            return 0
+
+    def __setattr__(self, key, value):
+        if key in self.atributos:
+            self.atributos[key] = value
 
     def mover(self, dx, dy):
         dx *= self.velocidad
