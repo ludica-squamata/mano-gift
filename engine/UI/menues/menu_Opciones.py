@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import TECLAS, TEXT_DIS, CANVAS_BG
+from engine.globs import TECLAS, TEXT_DIS, CANVAS_BG, TEXT_SEL
 from pygame.sprite import LayeredUpdates, Sprite
 from pygame import Rect, font, joystick, Surface
 from engine.libs.textrect import render_textrect
@@ -21,11 +21,11 @@ class MenuOpciones(Menu):
 
         self.botones = LayeredUpdates()
         self.espacios = LayeredUpdates()
-        self.establecer_botones(self.create_config_btns(), 6)
-        self.establecer_botones(self.crear_restore_btn(), 6)
-        self.establecer_botones(self.create_key_btns(), 4)
+        self.establecer_botones(self.create_buttons(), 6)
         self.crear_espacios_config()
         self.notice, self.notice_area = self.create_notice()
+        exp, rect = self.create_explanation()
+        self.canvas.blit(exp, rect)
 
         self.functions['tap'].update({
             'accion': self.press_button,
@@ -33,12 +33,14 @@ class MenuOpciones(Menu):
             'abajo': lambda: self.select_one('abajo'),
             'izquierda': lambda: self.select_one('izquierda'),
             'derecha': lambda: self.select_one('derecha')})
+
         self.functions['hold'].update({
             'accion': self.mantener_presion,
             'arriba': lambda: self.select_one('arriba'),
             'abajo': lambda: self.select_one('abajo'),
             'izquierda': lambda: self.select_one('izquierda'),
             'derecha': lambda: self.select_one('derecha')})
+
         self.functions['release'].update({
             'accion': self.liberar_presion})
 
@@ -48,67 +50,34 @@ class MenuOpciones(Menu):
         else:
             super().listener(event)
 
-    def create_config_btns(self):
-        m, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
-        a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
-        cmd1 = self.cambiar_booleano
-        cmd2 = self.set_input_device
+    def create_buttons(self):
+        n, d, p, c = 'nombre', 'direcciones', 'pos', 'comando'
+        a, b = 'arriba', 'abajo'
+        factor_y = 2
+        
+        nombres = "Mostrar Intro,Recordar Menus,Arriba,Abajo,Derecha,Izquierda,Menu,Accion,Contextual,Defaults".split(",")
+        botones = []
+        for j, nombre in enumerate(nombres):
+            if j == 0 or j == 1:
+                cmd = self.cambiar_booleano
+            elif j == 9:
+                cmd = self.restore_defaults
+            else:
+                cmd = self.set_tecla
+            botones.append({n: nombre, c: cmd, d: {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]}})
+
         if joystick.get_count():
-            botones = [
-                {m: "Mostrar Intro", c: cmd1, k: {d: "Arriba", b: "Recordar Menus", a: "Defaults"}},
-                {m: "Recordar Menus", c: cmd1, k: {b: "Metodo de Entrada", a: "Mostrar Intro", d: "Abajo"}},
-                {m: "Metodo de Entrada", c: cmd2, k: {b: "Arriba", a: "Recordar Menus", d: "Derecha"}}
-            ]
-        else:
-            botones = [
-                {m: "Mostrar Intro", c: cmd1, k: {b: "Recordar Menus", a: "Defaults", d: "Arriba"}},
-                {m: "Recordar Menus", c: cmd1, k: {d: "Abajo", a: "Mostrar Intro", b: "Defaults"}}
-            ]
+            factor_y = 1
+            botones[1][d][b] = "Metodo de Entrada"
+            botones[2][d][a] = "Metodo de Entrada"
+            botones.insert(2,{n: "Metodo de Entrada", c: self.set_input_device, d: {b: "Arriba", a: "Recordar Menus"}})
 
         for i in range(len(botones)):
-            botones[i][p] = [6, 38 * i + 64]
+            botones[i][p] = [6, 38 * i + (32*factor_y)]
 
         return botones
-
-    def create_key_btns(self):
-        # abreviaturas para hacer más legible el código
-        m, k = 'nombre', 'direcciones'
-        a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
-        if joystick.get_count():
-            special = "Metodo de Entrada"
-        else:
-            special = "Recordar Menus"
-
-        # decime qué haces acá
-        botones = [
-            {m: "Arriba", k: {b: "Abajo", a: special, i: "Mostrar Intro"}},
-            {m: "Abajo", k: {b: "Derecha", a: "Arriba", i: "Recordar Menus"}},
-            {m: "Derecha", k: {b: "Izquierda", a: "Abajo", i: special}},
-            {m: "Izquierda", k: {b: "Menu", a: "Derecha"}},
-            {m: "Menu", k: {b: "Accion", a: "Izquierda"}},
-            {m: "Accion", k: {b: "Contextual", a: "Menu"}},
-            {m: "Contextual", k: {b: "Defaults", a: "Accion", i: "Defaults"}}]
-
-        for i in range(len(botones)):
-            botones[i]['pos'] = [326 + 75 + 3, 38 * i + 64]
-            botones[i]['comando'] = self.set_tecla
-
-        return botones
-
-    def crear_restore_btn(self):
-        n, k, p, c = 'nombre', 'direcciones', 'pos', 'comando'
-        a, b, d = 'arriba', 'abajo', 'derecha'
-        dirs = {b: "Mostrar Intro", d: "Contextual"}
-        if joystick.get_count():
-            dirs.update({a: "Metodo de Entrada"})
-        else:
-            dirs.update({a: "Recordar Menus"})
-        y = self.canvas.get_height() - 32 - 15
-        btn = {n: 'Defaults', c: self.restore_defaults, p: [6, y], k: dirs}
-        return [btn]
 
     def crear_espacios_config(self):
-        esp = None
         for boton in self.botones:
             nom = boton.nombre.lower()
             x, y = boton.rect.topright
@@ -118,21 +87,20 @@ class MenuOpciones(Menu):
                     opt = 'Sí'
                 else:
                     opt = 'No'
-                esp = Fila(opt, 88, x, y + 9, justification=1)
+                esp = Fila(opt, 88, x+3, y + 9, justification=1)
                 self.espacios.add(esp)
 
             elif nom == 'metodo de entrada':
                 nom = nom.replace(' ', '_')
                 txt = self.data[nom].title()
-                esp = Fila(txt, 88, x, y + 9, justification=1)
+                esp = Fila(txt, 88, x+3, y + 9, justification=1)
 
             elif nom in self.data['comandos']:
-                x, y = boton.rect.topleft
                 texto = self.data['comandos'][nom]
                 nom = key_name(texto)
-                esp = Fila(nom, 75, x - 75 - 3, y + 9, justification=1)
+                esp = Fila(nom, 88, x+3, y + 9, justification=1)
 
-            elif nom == 'defaults':
+            else:
                 spr = Sprite()
                 spr.nombre = 'dummy space'
                 spr.image = Surface((0, 0))
@@ -261,7 +229,7 @@ class MenuOpciones(Menu):
         texto = 'Los cambios tendrán efecto al salir de este menú'
         fuente = font.SysFont('verdana', 14)
         w, h = fuente.size(texto)
-        x, y = self.canvas.get_width() - w - 15, self.canvas.get_height() - h - 15
+        x, y = self.canvas.get_width() - w - 15, self.canvas.get_height() - h - 27
         rect = Rect(x, y, w, h + 1)
         render = render_textrect(texto, fuente, rect, TEXT_DIS, CANVAS_BG)
 
@@ -270,6 +238,16 @@ class MenuOpciones(Menu):
     def mostrar_aviso(self):
         """Muestra el aviso del cambio en la configuración"""
         self.canvas.blit(self.notice, self.notice_area)
+
+    def create_explanation(self):
+        texto = 'Usa las teclas de movimiento (Arriba, Abajo, Izquierda y Derecha) para que tu personaje se desplace por el mapa.\n\nLa tecla Menú abre el menú Pausa.\n\nLa tecla de Acción te permite interactuar con el ambiente, hablar con otros personajes y también atacar.\n\nUsa la tecla Contextual para cambiar entre las opciones de Acción y muchas cosas más!'
+        fuente = font.SysFont('verdana', 15)
+        w = 300
+        h = 270
+        x, y = 300, 128
+        rect = Rect(x, y, w, h)
+        render = render_textrect(texto, fuente, rect, TEXT_SEL, CANVAS_BG, justification=1)
+        return render, rect
 
     def cancelar(self):
         TECLAS.asignar(Cfg.dato('comandos'))
