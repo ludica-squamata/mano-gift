@@ -68,9 +68,8 @@ class MenuOpciones(Menu):
 
         if joystick.get_count():
             factor_y = 1
-            botones[1][d][b] = "Metodo de Entrada"
-            botones[2][d][a] = "Metodo de Entrada"
-            botones.insert(2,{n: "Metodo de Entrada", c: self.set_input_device, d: {b: "Arriba", a: "Recordar Menus"}})
+            botones[1][d][b] = botones[2][d][a] = "Metodo de Entrada"
+            botones.insert(2, {n: "Metodo de Entrada", c: self.set_input_device, d: {b: "Arriba", a: "Recordar Menus"}})
 
         for i in range(len(botones)):
             botones[i][p] = [6, 38 * i + (32*factor_y)]
@@ -105,7 +104,6 @@ class MenuOpciones(Menu):
                 spr.nombre = 'dummy space'
                 spr.image = Surface((0, 0))
                 spr.rect = spr.image.get_rect()
-
                 esp = spr
 
             self.espacios.add(esp)
@@ -166,8 +164,9 @@ class MenuOpciones(Menu):
         EventDispatcher.trigger('ToggleSetKey', 'MenuOpciones', {'value': True})
 
     def new_key_event(self, event):
-        self.cambiar_tecla(event.data['key'])
-        EventDispatcher.trigger('ToggleSetKey', 'Modo.Menu', {'value': False})
+        if self.input_device == event.data['device']:
+            self.cambiar_tecla(event.data['key'])
+            EventDispatcher.trigger('ToggleSetKey', 'Modo.Menu', {'value': False})
 
     def cambiar_tecla(self, tcl):
         """Cambia la tecla elgida por el nuevo input
@@ -239,8 +238,12 @@ class MenuOpciones(Menu):
         """Muestra el aviso del cambio en la configuración"""
         self.canvas.blit(self.notice, self.notice_area)
 
-    def create_explanation(self):
-        texto = 'Usa las teclas de movimiento (Arriba, Abajo, Izquierda y Derecha) para que tu personaje se desplace por el mapa.\n\nLa tecla Menú abre el menú Pausa.\n\nLa tecla de Acción te permite interactuar con el ambiente, hablar con otros personajes y también atacar.\n\nUsa la tecla Contextual para cambiar entre las opciones de Acción y muchas cosas más!'
+    @staticmethod
+    def create_explanation():
+        texto = 'Usa las teclas de movimiento (Arriba, Abajo, Izquierda y Derecha) para que tu personaje se desplace ' \
+                'por el mapa.\n\nLa tecla Menú abre el menú Pausa.\n\nLa tecla de Acción te permite interactuar con ' \
+                'el ambiente, hablar con otros personajes y también atacar.\n\nUsa la tecla Contextual para cambiar ' \
+                'entre las opciones de Acción y muchas cosas más! '
         fuente = font.SysFont('verdana', 15)
         w = 300
         h = 270

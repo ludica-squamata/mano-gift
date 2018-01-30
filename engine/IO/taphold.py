@@ -14,20 +14,14 @@ def filtrar_eventos_teclado(events):
     global pressed_keys
 
     for _event in events:
-        if _event.type == QUIT:
-            EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
-
-        elif _event.type == KEYDOWN:
-            if _event.key == K_ESCAPE:
-                EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
-
+        if _event.type == KEYDOWN:
             if _event.key in teclas and not Ed.setKey:
                 teclas[_event.key]['pressed'] = True
                 pressed_keys.append(_event.key)
 
         elif _event.type == KEYUP:
             if Ed.setKey:
-                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tap'}))
+                event.post(event.Event(TAP, {'device': 'teclado', 'key': _event.key, 'type': 'tap'}))
 
             elif _event.key in teclas:
                 key = teclas[_event.key]
@@ -68,12 +62,16 @@ def filtrar_eventos_gamepad(events):
                 teclas[b]['pressed'] = True
 
         elif _event.type == JOYBUTTONUP:
+
             if _event.button not in (10, 11):
                 b = _event.button
             else:
                 b = _event.button - 2
 
-            if b in teclas:
+            if Ed.setKey:
+                event.post(event.Event(TAP, {'device': 'gamepad', 'key': b, 'type': 'tap'}))
+
+            elif b in teclas:
                 teclas[b]['pressed'] = False
                 if not teclas[b]['hold']:
                     teclas[b]['tap'] = True
@@ -82,90 +80,51 @@ def filtrar_eventos_gamepad(events):
 
         elif _event.type == JOYHATMOTION:
             x, y = _event.value
+            b = 0
             if x > 0:
-                teclas[10]['pressed'] = True
+                b = 10
             elif x < 0:
-                teclas[11]['pressed'] = True
-            else:  # button up
-                if teclas[10]['pressed']:
-                    teclas[10]['pressed'] = False
-                    if teclas[10]['hold']:
-                        teclas[10]['release'] = True
-                    else:
-                        teclas[10]['tap'] = True
-
-                if teclas[11]['pressed']:
-                    teclas[11]['pressed'] = False
-                    if teclas[11]['hold']:
-                        teclas[11]['release'] = True
-                    else:
-                        teclas[11]['tap'] = True
-
-            if y > 0:
-                teclas[12]['pressed'] = True
+                b = 11
+            elif y > 0:
+                b = 12
             elif y < 0:
-                teclas[13]['pressed'] = True
+                b = 13
+            
+            if b:
+                teclas[b]['pressed'] = True
             else:  # button up
-                if teclas[12]['pressed']:
-                    teclas[12]['pressed'] = False
-                    if teclas[12]['hold']:
-                        teclas[12]['release'] = True
+                if teclas[b]['pressed']:
+                    teclas[b]['pressed'] = False
+                    if teclas[b]['hold']:
+                        teclas[b]['release'] = True
                     else:
-                        teclas[12]['tap'] = True
-
-                if teclas[13]['pressed']:
-                    teclas[13]['pressed'] = False
-                    if teclas[13]['hold']:
-                        teclas[13]['release'] = True
-                    else:
-                        teclas[13]['tap'] = True
+                        teclas[b]['tap'] = True
 
         elif _event.type == JOYAXISMOTION:
             value = round(_event.value, 2)
             axis = _event.axis
 
-            if axis == 0:  # x
+            b = 0
+            if axis == 0:
                 if value > 0:
-                    teclas[10]['pressed'] = True
+                    b = 10
                 elif value < 0:
-                    teclas[11]['pressed'] = True
-                else:
-                    if teclas[10]['pressed']:
-                        teclas[10]['pressed'] = False
-                        if teclas[10]['hold']:
-                            teclas[10]['release'] = True
-                        else:
-                            teclas[10]['tap'] = True
+                    b = 11
+            elif axis == 1:
+                if value > 0:
+                    b = 12
+                elif value < 0:
+                    b = 13
 
-                    if teclas[11]['pressed']:
-                        teclas[11]['pressed'] = False
-                        if teclas[11]['hold']:
-                            teclas[11]['release'] = True
-                        else:
-                            teclas[11]['tap'] = True
-            elif axis == 1:  # y
-                if value < 0:
-                    teclas[12]['pressed'] = True
-                elif value > 0:
-                    teclas[13]['pressed'] = True
-                else:
-                    if teclas[12]['pressed']:
-                        teclas[12]['pressed'] = False
-                        if teclas[12]['hold']:
-                            teclas[12]['release'] = True
-                        else:
-                            teclas[12]['tap'] = True
-
-                    if teclas[13]['pressed']:
-                        teclas[13]['pressed'] = False
-                        if teclas[13]['hold']:
-                            teclas[13]['release'] = True
-                        else:
-                            teclas[13]['tap'] = True
-            elif axis == 2:
-                pass
-            elif axis == 3:
-                pass
+            if b:
+                teclas[b]['pressed'] = True
+            else:
+                if teclas[b]['pressed']:
+                    teclas[b]['pressed'] = False
+                    if teclas[b]['hold']:
+                        teclas[b]['release'] = True
+                    else:
+                        teclas[b]['tap'] = True
     return teclas
 
 
@@ -176,6 +135,14 @@ def get_taphold_events(events, holding=100):
         teclas = filtrar_eventos_teclado(events)
     elif input_device == 'gamepad':
         teclas = filtrar_eventos_gamepad(events)
+
+    for _event in events:
+        if _event.type == QUIT:
+            EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
+
+        elif _event.type == KEYDOWN:
+            if _event.key == K_ESCAPE:
+                EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
 
     event.clear([KEYDOWN, KEYUP])
     # por si fueran a provocar errores
