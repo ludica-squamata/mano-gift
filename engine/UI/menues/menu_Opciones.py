@@ -77,27 +77,32 @@ class MenuOpciones(Menu):
         return botones
 
     def crear_espacios_config(self):
+        margen_derecho = 3
+        margen_inferior = 9
+        ancho = 88
         for boton in self.botones:
             nom = boton.nombre.lower()
             x, y = boton.rect.topright
+            x += margen_derecho
+            y += margen_inferior
             if nom == "mostrar intro" or nom == "recordar menus":
                 nom = nom.replace(' ', '_')
                 if self.data[nom]:
                     opt = 'Sí'
                 else:
                     opt = 'No'
-                esp = Fila(opt, 88, x+3, y + 9, justification=1)
+                esp = Fila(opt, ancho, x, y, justification=1)
                 self.espacios.add(esp)
 
             elif nom == 'metodo de entrada':
                 nom = nom.replace(' ', '_')
                 txt = self.data[nom].title()
-                esp = Fila(txt, 88, x+3, y + 9, justification=1)
+                esp = Fila(txt, ancho, x, y, justification=1)
 
             elif nom in self.data['comandos']:
                 texto = self.data['comandos'][nom]
                 nom = key_name(texto)
-                esp = Fila(nom, 88, x+3, y + 9, justification=1)
+                esp = Fila(nom, ancho, x, y, justification=1)
 
             else:
                 spr = Sprite()
