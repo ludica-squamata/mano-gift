@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS
+from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS, TECLADO, GAMEPAD
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Config
 from pygame import event
@@ -21,7 +21,7 @@ def filtrar_eventos_teclado(events):
 
         elif _event.type == KEYUP:
             if Ed.setKey:
-                event.post(event.Event(TAP, {'device': 'teclado', 'key': _event.key, 'type': 'tap'}))
+                event.post(event.Event(TAP, {'device': TECLADO, 'key': _event.key, 'type': 'tap'}))
 
             elif _event.key in teclas:
                 key = teclas[_event.key]
@@ -51,8 +51,18 @@ def filtrar_eventos_teclado(events):
 
 def filtrar_eventos_gamepad(events):
     teclas = TECLAS.devolver()
+    # acá pongo "constantes" para las flechas
+    FLECHA_DERECHA = 10
+    FLECHA_IZQUIERDA = 11
+    FLECHA_ABAJO = 12
+    FLECHA_ARRIBA = 13
+    # aunque no es del todo correcto porque el usuario puede querer cambiar
+    # el uso de las teclas (invertirlas por ejemplo), y estas constantes
+    # previenen eso.
+
     for _event in events:
         if _event.type == JOYBUTTONDOWN:
+            # si recuerdo bien, 10 y 11 son los botones de start y select
             if _event.button not in (10, 11):
                 b = _event.button
             else:
@@ -62,14 +72,13 @@ def filtrar_eventos_gamepad(events):
                 teclas[b]['pressed'] = True
 
         elif _event.type == JOYBUTTONUP:
-
             if _event.button not in (10, 11):
                 b = _event.button
             else:
                 b = _event.button - 2
 
             if Ed.setKey:
-                event.post(event.Event(TAP, {'device': 'gamepad', 'key': b, 'type': 'tap'}))
+                event.post(event.Event(TAP, {'device': GAMEPAD, 'key': b, 'type': 'tap'}))
 
             elif b in teclas:
                 teclas[b]['pressed'] = False
@@ -79,16 +88,17 @@ def filtrar_eventos_gamepad(events):
                     teclas[b]['release'] = True
 
         elif _event.type == JOYHATMOTION:
+            # las flechas del gamepad
             x, y = _event.value
             b = 0
             if x > 0:
-                b = 10
+                b = FLECHA_DERECHA
             elif x < 0:
-                b = 11
+                b = FLECHA_IZQUIERDA
             elif y > 0:
-                b = 12
+                b = FLECHA_ABAJO
             elif y < 0:
-                b = 13
+                b = FLECHA_ARRIBA
             
             if b:
                 teclas[b]['pressed'] = True
@@ -101,21 +111,30 @@ def filtrar_eventos_gamepad(events):
                         teclas[b]['tap'] = True
 
         elif _event.type == JOYAXISMOTION:
+            # los axis son los controles analógicos, las "palancas"
+            # que están en los gamepads de PlayStation 2, por ejemplo.
             value = round(_event.value, 2)
             axis = _event.axis
 
             b = 0
-            if axis == 0:
-                if value > 0:
-                    b = 10
-                elif value < 0:
-                    b = 11
-            elif axis == 1:
-                if value > 0:
-                    b = 12
-                elif value < 0:
-                    b = 13
+            # en este engine no hacemos distincion entre las palancas y
+            # las flechas (ver arriba). Por eso tienen los mismos números.
 
+            if axis == 0: #  axis 0 es la palanca de la derecha, a izquierda y derecha
+                if value > 0:
+                    b = FLECHA_DERECHA
+                elif value < 0:
+                    b = FLECHA_IZQUIERDA
+
+            elif axis == 1:#  axis 1 es la palanca de la derecha, arriba y abajo
+                if value > 0:
+                    b = 12 FLECHA_ABAJO
+                elif value < 0:
+                    b = FLECHA_ARRIBA
+
+            # hay también otros dos axis 2 y 3, que representan los ejes x e y
+            # de la palanca analógica de la izquierda. En este engine no tienen
+            # uso.
             if b:
                 teclas[b]['pressed'] = True
             else:
@@ -131,9 +150,9 @@ def filtrar_eventos_gamepad(events):
 def get_taphold_events(events, holding=100):
     input_device = Config.dato('metodo_de_entrada')
     teclas = None
-    if input_device == 'teclado':
+    if input_device == TECLADO:
         teclas = filtrar_eventos_teclado(events)
-    elif input_device == 'gamepad':
+    elif input_device == GAMEPAD:
         teclas = filtrar_eventos_gamepad(events)
 
     for _event in events:
