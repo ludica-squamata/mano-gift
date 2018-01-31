@@ -92,7 +92,6 @@ class MenuOpciones(Menu):
                 else:
                     opt = 'No'
                 esp = Fila(opt, ancho, x, y, justification=1)
-                self.espacios.add(esp)
 
             elif nom == 'metodo de entrada':
                 nom = nom.replace(' ', '_')
