@@ -58,7 +58,20 @@
     "15":{"type":"node","leads":16,"from":"commoner","to":"heroe",
     "txt":"Es cierto! Tu <b>carisma</b> ha aumentado!"},
 
-    "16":{"type":"leaf","from":"commoner","to":"heroe",
-    "txt":"Bien, este es el final de mi diálogo. Este leaf es solo para cerrar el diálogo y que no crashee durante el desarrollo."}
+    "16":{"type":"node","leads":[17,18,19],"from":"commoner","to":"heroe",
+    "txt":"Acá habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"},
+
+    "17":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
+    "txt":"Opcion 1"},
+
+    "18":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
+    "txt":"Opcion 2"},
+
+    "19":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
+    "txt":"Opcion 3"},
+
+    "20":{"type":"leaf","from":"commoner","to":"heroe",
+    "txt":"Final del dialogo"}
+
   }
 }
