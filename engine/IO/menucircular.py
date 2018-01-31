@@ -1,4 +1,5 @@
 ﻿from pygame.sprite import Sprite, LayeredUpdates
+# noinspection PyUnresolvedReferences
 from math import sin, cos, radians
 from engine.globs.event_aware import EventAware
 
