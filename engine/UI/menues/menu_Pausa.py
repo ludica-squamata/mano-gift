@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG
+from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG, Tiempo
 from engine.libs import render_textrect
 from engine.misc import Config as Cfg
 from pygame.font import SysFont
@@ -10,6 +10,9 @@ from .menu import Menu
 class MenuPausa(Menu):
     def __init__(self):
         super().__init__("Pausa")
+        self.timer_animacion = 0
+        self.frame_animacion = 1000 / 6
+
         x = self.canvas.get_width() - (CUADRO * 6) - 14  # 460-192-14 = 254
         n, d = 'nombre', 'direcciones'
         a, b = 'arriba', 'abajo'
@@ -43,7 +46,7 @@ class MenuPausa(Menu):
             'accion': self.liberar_presion})
 
     def update_charname_display(self):
-        r = self.canvas.blit(EngineData.HERO.diag_face, (6, 100))
+        r = self.canvas.blit(EngineData.HERO.diag_face[0], (6, 100))
         fuente = SysFont('Verdana', 22)
         w = self.canvas.get_width() - r.right - CUADRO * 6 - 20
         h = fuente.size(EngineData.HERO.nombre)[1]

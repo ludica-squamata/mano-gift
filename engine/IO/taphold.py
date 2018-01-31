@@ -1,8 +1,9 @@
 from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Config
 from pygame import event
 from pygame.key import get_pressed
-from pygame import KEYDOWN, KEYUP
+from pygame import KEYDOWN, KEYUP, K_ESCAPE, QUIT
 from pygame import JOYBUTTONDOWN, JOYBUTTONUP, JOYHATMOTION, JOYAXISMOTION
 
 pressed_keys = []
@@ -13,7 +14,13 @@ def filtrar_eventos_teclado(events):
     global pressed_keys
 
     for _event in events:
-        if _event.type == KEYDOWN:
+        if _event.type == QUIT:
+            EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
+
+        elif _event.type == KEYDOWN:
+            if _event.key == K_ESCAPE:
+                EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
+
             if _event.key in teclas and not Ed.setKey:
                 teclas[_event.key]['pressed'] = True
                 pressed_keys.append(_event.key)

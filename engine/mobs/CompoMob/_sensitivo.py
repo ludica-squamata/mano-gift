@@ -5,24 +5,25 @@ from ._atribuido import Atribuido
 
 
 class Sensitivo(Atribuido):
-    vision = None  # triangulo o circulo de la visión.
-    audicion = None
-    vx, vy = 0, 0  # posicion de la visión, puesta acá por si el mob no se mueve
+    vision = None  # triangulo de la visión.
+    visual_mask = None
+    vx, vy = 0, 0  # posicion de la visión
     ultima_direccion = ''
-    vis_mask = None
+
+    audicion = None  # circulo de la audición.
+    aural_mask = None
+    ax, ay = 0, 0  # posición de la audición
+
     perceived = None  # una lista con los interactives que el mob ve u oye
 
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
-        self.tri_vis = self._generar_cono(32 * 5)  # (data[vision])
-        self.cir_vis = self._generar_circulo_sensorioal(32 * 6)  # (data[vision])
-        self.audicion = self._generar_circulo_sensorioal(32 * 6)  # cheat
-        self.vision = 'cono'
-        self._mover_vis = self._mover_triangulo_visual
+        self.vision = self._generar_cono_visual(32 * 5)  # (data[vision])
+        self.audicion = self._generar_circulo_auditivo(32 * 6)  # cheat
         self.perceived = []
 
     @staticmethod
-    def _generar_cono(largo):
+    def _generar_cono_visual(largo):
         """Crea el triangulo de la visión (fg azul, bg transparente).
 
         Devuelve un surface."""
@@ -40,8 +41,8 @@ class Sensitivo(Atribuido):
         return megasurf
 
     @staticmethod
-    def _generar_circulo_sensorioal(radio):
-        """crea un circulo sensorioal, que se usa para que el mob
+    def _generar_circulo_auditivo(radio):
+        """crea un circulo auditivo, que se usa para que el mob
         detecte otros mobs y objetos"""
 
         surf = Surface((radio * 2, radio * 2))
@@ -54,7 +55,7 @@ class Sensitivo(Atribuido):
 
         Devuelve el surface del triangulo rotado, y la posicion en x e y"""
         tx, ty, tw, th = self.mapRect
-        img = self.tri_vis
+        img = self.vision
         if direccion == 'abajo':
             surf = transform.flip(img, False, True)
             w, h = surf.get_size()
@@ -77,26 +78,16 @@ class Sensitivo(Atribuido):
             x = tx + (tw / 2) - w / 2
 
         self.vx, self.vy = int(x), int(y)
-        self.vis_mask = mask.from_surface(surf)
+        self.visual_mask = mask.from_surface(surf)
 
-    def _mover_circulo_visual(self, dummy=None):
-        if self.vision == 'cono':
-            self._mover_triangulo_visual(dummy)
-        elif self.vision == 'circulo':
-            self._mover_circulo_sensorial(self.cir_vis)
-
-    def _mover_circulo_sensorial(self, sentido):
-        """Si la visión es circular, entonces se usa esta función
-        para moverla. El argumento dummy viene a ser la direccion,
-        pero como no hay que girar el circulo, es indistinta."""
-
+    def _mover_circulo_auditivo(self):
         tx, ty, tw, th = self.mapRect
-        w, h = sentido.get_size()
+        w, h = self.audicion.get_size()
         x = int(tx + (tw / 2) - (w / 2))
         y = int(ty + (th / 2) - (h / 2))
 
-        self.vx, self.vy = x, y
-        self.vis_mask = mask.from_surface(sentido)
+        self.ax, self.ay = x, y
+        self.aural_mask = mask.from_surface(self.audicion)
 
     def ver(self):
         """Realiza detecciones con la visión del mob"""
@@ -107,22 +98,27 @@ class Sensitivo(Atribuido):
         else:
             self.ultima_direccion = self.direccion
 
-        self._mover_vis(direccion)
-        self.perceive_interactives()
+        self._mover_triangulo_visual(direccion)
+        lista = self.stage.interactives
+        idx = lista.index(self)
+        for obj in lista[0:idx]+lista[idx+1:]:
+            x, y = self.vx - obj.mapRect.x, self.vy - obj.mapRect.y
+            if obj.mask.overlap(self.visual_mask, (x, y)):
+                self.perceived.append(obj)
 
     def oir(self):
-        self._mover_circulo_sensorial(self.audicion)
-        self.perceive_interactives()
-
-    def perceive_interactives(self):
-        for obj in self.stage.interactives:
-            if obj != self:
-                x, y = self.vx - obj.mapRect.x, self.vy - obj.mapRect.y
-                if obj.mask.overlap(self.vis_mask, (x, y)):
-                    self.perceived.append(obj)
+        self._mover_circulo_auditivo()
+        lista = self.stage.interactives
+        idx = lista.index(self)
+        for obj in lista[0:idx]+lista[idx+1:]:
+            x, y = self.ax - obj.mapRect.x, self.ay - obj.mapRect.y
+            if obj.mask.overlap(self.aural_mask, (x, y)) and any([
+                getattr(obj, 'moviendose',False),  # getattr() es necesario
+                getattr(obj, 'hablando', False)]):  # porque Prop no tiene
+                self.perceived.append(obj)  # ni 'moviendose' ni 'hablando'
 
     def update(self, *args):
         super().update(*args)
         self.perceived.clear()
         self.ver()
-        # self.oir() glitchy: puede oir a lo que no hace ningún ruido!
+        self.oir()

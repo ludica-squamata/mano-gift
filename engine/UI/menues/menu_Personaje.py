@@ -1,9 +1,10 @@
 from engine.globs import Tiempo, EngineData, CANVAS_BG, TEXT_FG, TEXT_SEL, BISEL_BG
-from engine.misc.resources import cargar_imagen, split_spritesheet
+from engine.misc.resources import split_spritesheet
 from pygame.sprite import LayeredUpdates, Sprite
 from engine.UI.widgets import BaseWidget, Boton
 from pygame import font, Rect, Surface, draw
 from engine.libs import render_textrect
+from itertools import cycle
 from .menu import Menu
 
 
@@ -32,7 +33,8 @@ class MenuNuevo(Menu):
         self.lineas = LayeredUpdates()  # linea punteada
 
         # cargar imagenes
-        self.char_face = cargar_imagen('mobs/imagenes/pc_face.png')
+        self.faces = cycle(split_spritesheet('mobs/imagenes/pc_face2.png', w=89, h=89))
+        self.char_face = next(self.faces)
         self.char_images = self.cargar_anims('mobs/imagenes/heroe_idle_walk.png')
         self.char_img = self.char_images['Sabajo']
         self.char_img_rect = Rect(107, 130, 32, 32)
@@ -278,6 +280,7 @@ class MenuNuevo(Menu):
 
     def draw(self):
         self.canvas.fill(CANVAS_BG, self.char_img_rect)
+        self.canvas.blit(self.char_face, (10, 100))
         self.canvas.blit(self.char_img, self.char_img_rect.topleft)
         self.teclas.draw(self.canvas)
         self.lineas.draw(self.canvas)

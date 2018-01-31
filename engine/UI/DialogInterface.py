@@ -1,9 +1,10 @@
-from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG, Tiempo
 from engine.misc.tagloader import load_tagarrayfile
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
 from .widgets import BaseWidget
+from itertools import cycle
 
 
 class DialogInterface(BaseWidget):
@@ -25,13 +26,18 @@ class DialogInterface(BaseWidget):
     sel = 0
     custom_tags = ''
 
+    timer_animacion = 0
+    frame_animacion = 0
+
+    cycler = None  # itertools.cycle
+
     def __init__(self, parent, custom_tags=''):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(CANVAS_BG)
         self.parent = parent
         super().__init__(image)
         if custom_tags != '':
-            self.custom_tags = load_tagarrayfile('data/dialogs/'+custom_tags)
+            self.custom_tags = load_tagarrayfile('data/dialogs/' + custom_tags)
         self.marco = self.crear_marco(*self.rect.size)
         self.w, self.h = self.image.get_size()
         self.draw_space_rect = Rect((3, 3), (self.w - 6, self.h - 7))
@@ -40,6 +46,10 @@ class DialogInterface(BaseWidget):
         self.loc_rect = Rect(0, 0, 0, 0)
         self.arrow_width = 16
         self.ubicar(0, ALTO - int(ALTO / 5))
+
+        self.timer_animacion = 0
+        self.frame_animacion = 1000 / 6
+
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
 
     def ubicar(self, x=0, y=0, z=0):
@@ -51,7 +61,7 @@ class DialogInterface(BaseWidget):
         if not self.loc_rect.x:
             self.text_rect.x = 6
         else:
-            width -= self.loc_rect.w+self.arrow_width+1
+            width -= self.loc_rect.w + self.arrow_width + 1
 
         self.rendered_text = render_tagged_text(texto, width,
                                                 custom_tags=self.custom_tags,
@@ -107,7 +117,8 @@ class DialogInterface(BaseWidget):
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
         la posición del texto a izquierda o derecha según la "cara" del hablante"""
-        self.loc_img = locutor.diag_face
+        self.cycler = cycle(locutor.diag_face)
+        self.loc_img = next(self.cycler)
         self.loc_rect = self.loc_img.get_rect(y=3)
         if locutor.direccion == 'derecha' or locutor.direccion == 'abajo':
             self.loc_rect.x = 3
@@ -136,6 +147,11 @@ class DialogInterface(BaseWidget):
         self.ticks += 1
         self.image.fill(CANVAS_BG, self.erase_area)
         if self.loc_img is not None:
+            self.timer_animacion += Tiempo.FPS.get_time()
+            if self.timer_animacion >= self.frame_animacion:
+                self.timer_animacion = 0
+                self.loc_img = next(self.cycler)
+
             self.image.blit(self.loc_img, self.loc_rect)
 
         if self.sel_mode and self.menu.stopped and not self.drawn:
