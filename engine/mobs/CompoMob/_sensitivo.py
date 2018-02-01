@@ -83,7 +83,7 @@ class Sight(Sense):
             self.ultima_direccion = self.parent.direccion
 
         self.move(direccion)
-        lista = self.parent.stage.interactives
+        lista = self.parent.stage.properties.sprites()
         idx = lista.index(self.parent)
         for obj in lista[0:idx]+lista[idx+1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
@@ -117,7 +117,7 @@ class Hearing(Sense):
 
     def __call__(self):
         self.move()
-        lista = self.parent.stage.interactives
+        lista = self.parent.stage.properties.sprites()
         idx = lista.index(self.parent)
         for obj in lista[0:idx]+lista[idx+1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y

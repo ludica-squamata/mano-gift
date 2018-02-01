@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION
+from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION, GRUPO_MOBS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, cargar_imagen
@@ -65,6 +65,7 @@ class Stage:
         to_be_registered = self.properties.sprites()
         if mob is not None:
             to_be_registered.append(mob)
+            self.add_property(mob, GRUPO_MOBS)
 
         for obj in to_be_registered:
             ''':type obj: _giftSprite'''
