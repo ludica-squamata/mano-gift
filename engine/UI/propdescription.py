@@ -24,7 +24,6 @@ class PropDescription (EventAware):
             'abajo': lambda: self.desplazar_texto('abajo')})
 
         EngineData.MODO = 'Dialogo'
-        EngineData.DIALOG = self
 
     def listener(self, event):
         try:

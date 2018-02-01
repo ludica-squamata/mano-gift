@@ -11,7 +11,6 @@ class RenderedCircularMenu(CircularMenu):
         cx, cy = Renderer.camara.rect.center
         super().__init__(cascadas, cx, cy)
         EngineData.MODO = 'Dialogo'
-        EngineData.DIALOG = self
         self._update_rendered()
 
     def listener(self, event):
@@ -68,7 +67,3 @@ class RenderedCircularMenu(CircularMenu):
         if self.cascadaActual == 'inicial':
             self.deregister()
             EngineData.end_dialog(self.layer)
-
-    def update(self):
-        # this hook is necesary
-        pass

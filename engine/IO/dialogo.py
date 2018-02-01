@@ -400,7 +400,7 @@ class Dialogo(EventAware):
         del self.dialogo
         ModState.set('dialog.'+self.name,1)
 
-    def update(self):
-        self.sel = self.frontend.sel
+    def update(self, sel):
+        self.sel = sel
         if hasattr(self.sel, 'leads'):
             self.next = self.sel.leads

@@ -158,6 +158,9 @@ class DialogInterface(BaseWidget):
             self.set_text(self.menu.actual.item.texto)
             self.sel = self.menu.actual.item
 
+            #actualizar el dialogo
+            self.parent.update(self.sel)
+
         self.image.blit(self.rendered_text, self.text_rect)
         if not self.draw_space_rect.contains(self.text_rect):
             x, y = self.text_rect.right + 1, 0

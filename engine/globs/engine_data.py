@@ -8,13 +8,9 @@ from .constantes import SAVEFD
 
 class EngineData:
     mapas = {}
-    MAPA_ACTUAL = None
-    """:type : engine.mapa.Stage.Stage"""
     HERO = None
-    DIALOG = None
     HUD = None
     current_qcm_idx = 0
-    menu_actual = ''
     acceso_menues = []
     MENUS = {}
     MODO = ''
@@ -59,7 +55,6 @@ class EngineData:
     @classmethod
     def end_dialog(cls, layer):
         Renderer.clear_overlays_from_layer(layer)
-        cls.DIALOG = None
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
         if cls.HUD is not None:
             cls.MODO = 'Aventura'
