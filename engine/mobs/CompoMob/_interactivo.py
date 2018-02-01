@@ -45,15 +45,14 @@ class Interactivo(Atribuido):
         if item in Mob_Group:
             return item
 
-    def quadrant_interaction(self):
+    def sprite_interaction(self):
         x, y = self.direcciones[self.direccion]
         self._aling_interaction_rect(x, y)
-        for quadrant in self.stage.cuadrantes:
-            if quadrant.rect.colliderect(self._interaction_rect):
-                for item in quadrant:
-                    if item is not self:
-                        if self._interaction_rect.colliderect(item.mapRect):
-                            if item.tipo == 'Mob':
-                                return self._interact_with_mobs(item)
-                            else:
-                                return self._interact_with_props(item)
+        lista = self.stage.properties.sprites()
+        idx = lista.index(self)
+        for item in lista[0:idx]+lista[idx+1:]:
+            if self._interaction_rect.colliderect(item.mapRect):
+                if item.tipo == 'Mob':
+                    return self._interact_with_mobs(item)
+                else:
+                    return self._interact_with_props(item)
