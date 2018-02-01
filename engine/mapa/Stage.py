@@ -5,7 +5,6 @@ from engine.misc import abrir_json, cargar_imagen
 from .LightSource import DayLight  # SpotLight
 from .loader import load_everything, cargar_salidas
 from .grilla import Grilla
-from .cuadrante import Cuadrante
 from pygame.sprite import Sprite
 from engine.globs.azoegroup import AzoeGroup
 from pygame import mask, Rect, transform
@@ -44,7 +43,6 @@ class Stage:
         self.chunks.add(chunk)
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
-        self.crear_cuadrantes()
         self.cargar_timestamps()
         self.grilla = Grilla(self.mapa.mask, 32)
         self.salidas = cargar_salidas(self.data)
@@ -54,11 +52,6 @@ class Stage:
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
         EventDispatcher.register(self.save_map, 'Save')
         EventDispatcher.register(self.rotate_map, 'RotateEverything')
-
-    def crear_cuadrantes(self):
-        w = self.rect.w // 2
-        h = self.rect.h // 2
-        self.cuadrantes = [Cuadrante(x, y, w, h) for x in range(2) for y in range(2)]
 
     def register_at_renderer(self, mob=None):
         Renderer.camara.set_background(self.mapa)
@@ -96,11 +89,6 @@ class Stage:
         for salida in self.salidas:
             if salida.sprite is not None:
                 Renderer.camara.add_real(salida.sprite)
-
-        for obj in self.properties:
-            for quadrant in self.cuadrantes:
-                if quadrant.contains(obj):
-                    quadrant.add(obj)
 
     def add_property(self, obj, _layer):
         add_interactive = False
@@ -196,8 +184,6 @@ class Stage:
 
     def update(self):
         self.actualizar_grilla()
-        for cuadrante in self.cuadrantes:
-            cuadrante.update()
         for salida in self.salidas:
             salida.update()
 

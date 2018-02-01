@@ -1,4 +1,4 @@
-﻿from engine.globs import EngineData as Ed, CAPA_OVERLAYS_DIALOGOS
+﻿from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS, ModState
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.UI import DialogInterface
@@ -228,6 +228,7 @@ class Dialogo(EventAware):
     def __init__(self, arbol, *locutores):
         super().__init__()
         self.tags_condicionales = arbol['head']['conditional_tags']
+        self.name = arbol['head']['name']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
         self.locutores = {}
@@ -393,10 +394,11 @@ class Dialogo(EventAware):
         for loc in self.locutores:
             mob = self.locutores[loc]
             mob.hablando = False
-        Ed.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
         if self.SelMode:
             self.frontend.exit_sel_mode()
         del self.dialogo
+        ModState.set('dialog.'+self.name,1)
 
     def update(self):
         self.sel = self.frontend.sel

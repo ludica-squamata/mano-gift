@@ -88,7 +88,7 @@ class Sight(Sense):
         for obj in lista[0:idx]+lista[idx+1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
             if obj.mask.overlap(self.mask, (x, y)):
-                self.parent.perceived.append(obj)
+                self.parent.perceived['seen'].append(obj)
 
 
 class Hearing(Sense):
@@ -124,20 +124,21 @@ class Hearing(Sense):
             if obj.mask.overlap(self.mask, (x, y)) and any([
                 getattr(obj, 'moviendose',False),  # getattr() es necesario
                 getattr(obj, 'hablando', False)]):  # porque Prop no tiene
-                self.parent.perceived.append(obj)  # ni 'moviendose' ni 'hablando'
+                self.parent.perceived['heard'].append(obj)  # ni 'moviendose' ni 'hablando'
 
 
 class Sensitivo(Atribuido):
-    perceived = None  # una lista con los interactives que el mob ve u oye
+    perceived = None  # un diccionario con los interactives que el mob ve u oye
 
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
         self.vision = Sight(self, 32 * 5)  # (data[vision])
         self.audicion = Hearing(self, 32 * 6)  # cheat
-        self.perceived = []
+        self.perceived = {"heard":[], "seen":[]}
 
     def update(self, *args):
         super().update(*args)
-        self.perceived.clear()
+        self.perceived['seen'].clear()
+        self.perceived['heard'].clear()
         self.vision()
         self.audicion()
