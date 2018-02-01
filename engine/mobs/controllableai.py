@@ -45,7 +45,7 @@ class ControllableAI(EventAware):
     def update(self):
         if self.accion:
             self.entity.accion()
-            sprite = self.entity.quadrant_interaction()
+            sprite = self.entity.sprite_interaction()
             if sprite is not None:
                 if self.entity.estado == 'cmb':
                     if hasattr(sprite, 'recibir_danio'):
