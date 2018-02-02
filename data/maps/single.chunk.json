@@ -3,7 +3,8 @@
   "colisiones":"maps/colisiones/prueba.png",
   "props": {
     "star":[[432,432],[464,464]],
-    "arbol":[[100,100]]
+    "arbol":[[100,100]],
+    "crate":[[200,200]]
   },
   "mobs": {"commoner":[[500,500]],"hero":[[400,400]]
   },
@@ -11,6 +12,6 @@
   },
   "refs":{
     "arbol":"props/arbol_escalado.png",
-    "casa_lados":"items/casa_lados.json"
+    "crate":"items/crate.json"
   }
 }

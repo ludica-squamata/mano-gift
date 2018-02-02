@@ -19,7 +19,7 @@ class Combativo(Animado, Interactivo):
 
     def atacar(self):
         if super().atacar():
-            sprite = self.quadrant_interaction()
+            sprite = self.sprite_interaction()
             x, y = self.direcciones[self.direccion]
 
             x, y = x * self.ataque, y * self.ataque

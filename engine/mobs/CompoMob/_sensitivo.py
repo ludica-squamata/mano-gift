@@ -5,8 +5,10 @@ from pygame import Surface, draw, mask as mask_module, transform
 from pygame.sprite import Sprite
 from ._atribuido import Atribuido
 
+
 class Sense(Sprite):
     mask = None
+
     # la mascara se crea al rotarse, por eso no está en el init.
 
     def __init__(self, parent, name, image):
@@ -83,9 +85,9 @@ class Sight(Sense):
             self.ultima_direccion = self.parent.direccion
 
         self.move(direccion)
-        lista = self.parent.stage.interactives
+        lista = self.parent.stage.properties.sprites()
         idx = lista.index(self.parent)
-        for obj in lista[0:idx]+lista[idx+1:]:
+        for obj in lista[0:idx] + lista[idx + 1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
             if obj.mask.overlap(self.mask, (x, y)):
                 self.parent.perceived['seen'].append(obj)
@@ -95,7 +97,7 @@ class Hearing(Sense):
     def __init__(self, parent, radius):
         image = self._create(radius)
         super().__init__(parent, 'audicion', image)
-    
+
     @staticmethod
     def _create(radio):
         """crea un circulo auditivo, que se usa para que el mob
@@ -117,13 +119,13 @@ class Hearing(Sense):
 
     def __call__(self):
         self.move()
-        lista = self.parent.stage.interactives
+        lista = self.parent.stage.properties.sprites()
         idx = lista.index(self.parent)
-        for obj in lista[0:idx]+lista[idx+1:]:
+        for obj in lista[0:idx] + lista[idx + 1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
             if obj.mask.overlap(self.mask, (x, y)) and any([
-                getattr(obj, 'moviendose',False),  # getattr() es necesario
-                getattr(obj, 'hablando', False)]):  # porque Prop no tiene
+                    getattr(obj, 'moviendose', False),  # getattr() es necesario
+                    getattr(obj, 'hablando', False)]):  # porque Prop no tiene
                 self.parent.perceived['heard'].append(obj)  # ni 'moviendose' ni 'hablando'
 
 
@@ -134,7 +136,7 @@ class Sensitivo(Atribuido):
         super().__init__(data, **kwargs)
         self.vision = Sight(self, 32 * 5)  # (data[vision])
         self.audicion = Hearing(self, 32 * 6)  # cheat
-        self.perceived = {"heard":[], "seen":[]}
+        self.perceived = {"heard": [], "seen": []}
 
     def update(self, *args):
         super().update(*args)

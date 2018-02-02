@@ -11,15 +11,7 @@ class RenderedCircularMenu(CircularMenu):
         cx, cy = Renderer.camara.rect.center
         super().__init__(cascadas, cx, cy)
         EngineData.MODO = 'Dialogo'
-        EngineData.DIALOG = self
         self._update_rendered()
-
-    def listener(self, event):
-        try:
-            if event.origin == 'Modo.Dialogo':
-                self.use_function(event.data['type'], event.data['nom'])
-        except KeyError as error:
-            print(error)
 
     def _update_rendered(self, on_spot=None):
         Renderer.clear_overlays_from_layer(self.layer)
@@ -68,7 +60,3 @@ class RenderedCircularMenu(CircularMenu):
         if self.cascadaActual == 'inicial':
             self.deregister()
             EngineData.end_dialog(self.layer)
-
-    def update(self):
-        # this hook is necesary
-        pass

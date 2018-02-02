@@ -27,24 +27,6 @@ class Camara:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
 
-        # dx, dy = 0, 0
-        # # Posicionar el fondo si de otro modo
-        # # quedara la camara fuera de los bordes.
-        # if cls.bgs_rect.y > 2:
-        #     dy = -cls.bgs_rect.y + 2
-        #
-        # elif cls.bgs_rect.bottom < cls.rect.h - 2:
-        #     dy = (cls.rect.h - 2) - cls.bgs_rect.bottom
-        #
-        # if cls.bgs_rect.x > 1:
-        #     dx = -cls.bgs_rect.x - 2
-        #
-        # elif cls.bgs_rect.right < cls.rect.w - 2:
-        #     dx = (cls.rect.w - 2) - cls.bgs_rect.right
-        #
-        # if dx or dy:
-        #     cls.pan(dx, dy)
-
     @classmethod
     def add_real(cls, obj):
         cls.real.add(obj)

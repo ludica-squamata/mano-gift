@@ -42,10 +42,9 @@ class Teclas:
         }
 
         for key in _teclas:
-            observar[_teclas[key]] = {'key': _teclas[key], 'nom': key,
-                                      'pressed': False, 'tap': False,
-                                      'holding': 0, 'hold': False,
-                                      'release': False, 'held': 0}
+            observar[_teclas[key]] = {'key': _teclas[key], 'nom': key, 'type': '',
+                                      'pressed': False, 'tap': False, 'holding': 0,
+                                      'hold': False, 'release': False, 'held': 0}
 
         return observar
 

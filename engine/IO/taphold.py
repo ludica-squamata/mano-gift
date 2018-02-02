@@ -27,7 +27,7 @@ def filtrar_eventos_teclado(events):
 
         elif _event.type == KEYUP:
             if Ed.setKey:
-                event.post(event.Event(TAP, {'key': _event.key, 'type': 'tap'}))
+                EventDispatcher.trigger('SetNewKey', 'System', {'key': _event.key})
 
             elif _event.key in teclas:
                 key = teclas[_event.key]

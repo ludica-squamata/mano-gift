@@ -7,7 +7,6 @@ from engine.libs.textrect import render_textrect
 from engine.globs import EngineData, CANVAS_BG, TEXT_FG
 
 
-
 class MenuEquipo(Menu):
     espacios = None
     cur_esp = 0
