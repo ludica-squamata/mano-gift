@@ -109,6 +109,9 @@ class DialogInterface(BaseWidget):
     def detener_menu(self):
         self.menu.stop()
 
+    def has_stopped(self):
+        return self.menu.stopped
+
     def exit_sel_mode(self):
         self.sel_mode = False
         Renderer.clear_overlays_from_layer(self.menu.layer)
@@ -157,6 +160,9 @@ class DialogInterface(BaseWidget):
         if self.sel_mode and self.menu.stopped and not self.drawn:
             self.set_text(self.menu.actual.item.texto)
             self.sel = self.menu.actual.item
+
+            # actualizar el dialogo
+            self.parent.update(self.sel)
 
         self.image.blit(self.rendered_text, self.text_rect)
         if not self.draw_space_rect.contains(self.text_rect):

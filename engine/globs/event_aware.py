@@ -15,7 +15,7 @@ class EventAware:
         self.register()
 
     def listener(self, event):
-        self.use_function(event.data['type'], event.data['nom'])
+        self.use_function(event.data.get('type', ''), event.data.get('nom', ''))
 
     def register(self):
         EventDispatcher.register(self.listener, 'Key')
@@ -26,5 +26,6 @@ class EventAware:
         self.registered = False
 
     def use_function(self, mode, key):
-        if key in self.functions[mode]:
-            self.functions[mode][key]()
+        if mode in self.functions:
+            if key in self.functions[mode]:
+                self.functions[mode][key]()

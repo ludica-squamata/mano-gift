@@ -116,6 +116,14 @@ class BranchArray:
         self.flaged.clear()
         return to_show
 
+    def __repr__(self):
+        ex = 'Exclusive '
+        if not self.is_exclusive:
+            ex.lower()
+            ex = 'Non '+ex
+
+        return ex+'BranchArray ('+', '.join(['#'+str(i.indice) for i in self.array])+')'
+
 
 class ArboldeDialogo:
     __slots__ = ['_elementos', '_future']
@@ -296,7 +304,7 @@ class Dialogo(EventAware):
     def hablar(self):
 
         actual = self.dialogo.update()
-        if self.SelMode:
+        if self.SelMode and self.frontend.has_stopped():
             if self.sel.event_data is not None:
                 self.sel.post_event()
             self.dialogo.set_chosen(self.next)
@@ -335,7 +343,7 @@ class Dialogo(EventAware):
                 self.dialogo.set_chosen(choice)
                 self.hablar()
 
-            else:
+            elif self.SelMode is False:
                 loc = self.locutores[actual.locutor]
 
                 for nodo in actual:
@@ -398,9 +406,9 @@ class Dialogo(EventAware):
         if self.SelMode:
             self.frontend.exit_sel_mode()
         del self.dialogo
-        ModState.set('dialog.'+self.name,1)
+        ModState.set('dialog.'+self.name, 1)
 
-    def update(self):
-        self.sel = self.frontend.sel
+    def update(self, sel):
+        self.sel = sel
         if hasattr(self.sel, 'leads'):
             self.next = self.sel.leads

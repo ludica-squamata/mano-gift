@@ -138,6 +138,7 @@ class ShadowSprite(AzoeSprite):
 
     @staticmethod
     def _crear_sombra(surface, arg=None, _mask=None):
+        # noinspection PyUnresolvedReferences
         from math import floor
 
         h = surface.get_height()
