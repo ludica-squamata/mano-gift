@@ -109,6 +109,9 @@ class DialogInterface(BaseWidget):
     def detener_menu(self):
         self.menu.stop()
 
+    def has_stopped(self):
+        return self.menu.stopped
+
     def exit_sel_mode(self):
         self.sel_mode = False
         Renderer.clear_overlays_from_layer(self.menu.layer)

@@ -13,13 +13,6 @@ class RenderedCircularMenu(CircularMenu):
         EngineData.MODO = 'Dialogo'
         self._update_rendered()
 
-    def listener(self, event):
-        try:
-            if event.origin == 'Modo.Dialogo':
-                self.use_function(event.data['type'], event.data['nom'])
-        except KeyError as error:
-            print(error)
-
     def _update_rendered(self, on_spot=None):
         Renderer.clear_overlays_from_layer(self.layer)
         for cuadro in self.cubos:
