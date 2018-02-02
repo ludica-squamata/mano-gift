@@ -398,7 +398,7 @@ class Dialogo(EventAware):
         if self.SelMode:
             self.frontend.exit_sel_mode()
         del self.dialogo
-        ModState.set('dialog.'+self.name,1)
+        ModState.set('dialog.'+self.name, 1)
 
     def update(self, sel):
         self.sel = sel

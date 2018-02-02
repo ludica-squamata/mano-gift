@@ -63,7 +63,7 @@ class ModData:
                         if hasattr(_module, d['name']):
                             i += 1
                             d.update({'idx': i})
-                            spec = getattr(module, d['name'])
+                            spec = getattr(_module, d['name'])
                             if type(spec) is list:
                                 d.update({'csc': spec})
                             else:

@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION, GRUPO_MOBS
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, GRUPO_MOBS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, cargar_imagen
