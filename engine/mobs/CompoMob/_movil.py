@@ -27,7 +27,6 @@ class Movil(Atribuido):
 
     def detectar_colisiones(self):
         dx, dy = super().mover(*self.direcciones[self.direccion])
-        col_bordes = False  # colision contra los bordes de la pantalla
         col_mobs = False  # colision contra otros mobs
         col_props = False  # colision contra los props
         col_mapa = False  # colision contra las cajas de colision del propio mapa
@@ -53,15 +52,13 @@ class Movil(Atribuido):
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
-        # new_posX = self.stageX+dx
-        # new_posY = self.stageY+dy
-        # w = self.stage.rect.w-self.rect.w
-        # h = self.stage.rect.h-self.rect.h
-        #
-        # if 0 > new_posX or new_posX > w or 0 > new_posY or new_posY > h:
-        #     col_bordes = True
+        # acá detectamos colisión con el mapa de salidas. Oddly, el heroe es el único que usa este método.
+        # otros mobs usan A* para guiarse.
+        if self.stage.mask_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
+            r, g, b, a = self.stage.img_salidas.get_at((self.mapRect.x + dx, self.mapRect.y))
+            self.stage.salidas[b*255+g].trigger(self)
 
-        return any([col_bordes, col_mobs, col_props, col_mapa])
+        return any([col_mobs, col_props, col_mapa])
 
     def detener_movimiento(self):
         self.moviendose = False

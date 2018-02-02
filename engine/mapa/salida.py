@@ -26,24 +26,22 @@ class Salida:
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, *self.mapRect)
 
-    def update(self):
-        for mob in Mob_Group:
-            dx, dy = mob.direcciones[mob.direccion]
-            dx *= mob.velocidad
-            dy *= mob.velocidad
-            if mob.colisiona(self, dx, dy):
-                EventDispatcher.trigger('SetMap',
-                                        'Salida', {'mob': mob,
-                                                   'target_stage': self.target_stage,
-                                                   'target_chunk': self.chunk,
-                                                   'target_entrada': self.link})
+    def trigger(self, mob):
+        # este método, que antes era update(), toma los datos de la salida
+        # y dispara el evento. Ya no se fija qué mob la pisa.
+        data = {'mob': mob,
+                'target_stage': self.target_stage,
+                'target_chunk': self.chunk,
+                'target_entrada': self.link}
+
+        EventDispatcher.trigger('SetMap','Salida',data)
 
     def __repr__(self):
         return self.nombre
 
 
 class SpriteSalida(AzoeSprite):
-    """Intented only to debugging"""
+    """Intented only for debugging"""
 
     def __init__(self, nombre, x, y, w, h):
         img = Surface((w, h))
