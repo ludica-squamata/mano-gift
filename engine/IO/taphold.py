@@ -21,7 +21,7 @@ def filtrar_eventos_teclado(events):
 
         elif _event.type == KEYUP:
             if Ed.setKey:
-                event.post(event.Event(TAP, {'device': TECLADO, 'key': _event.key, 'type': 'tap'}))
+                EventDispatcher.trigger('SetNewKey', 'System', {'key': _event.key})
 
             elif _event.key in teclas:
                 key = teclas[_event.key]
@@ -78,7 +78,7 @@ def filtrar_eventos_gamepad(events):
                 b = _event.button - 2
 
             if Ed.setKey:
-                event.post(event.Event(TAP, {'device': GAMEPAD, 'key': b, 'type': 'tap'}))
+                EventDispatcher.trigger('SetNewKey', 'System', {'key': b})
 
             elif b in teclas:
                 teclas[b]['pressed'] = False
@@ -99,7 +99,7 @@ def filtrar_eventos_gamepad(events):
                 b = FLECHA_ABAJO
             elif y < 0:
                 b = FLECHA_ARRIBA
-            
+
             if b:
                 teclas[b]['pressed'] = True
             else:  # button up
@@ -120,15 +120,15 @@ def filtrar_eventos_gamepad(events):
             # en este engine no hacemos distincion entre las palancas y
             # las flechas (ver arriba). Por eso tienen los mismos números.
 
-            if axis == 0: #  axis 0 es la palanca de la derecha, a izquierda y derecha
+            if axis == 0:  # axis 0 es la palanca de la derecha, a izquierda y derecha
                 if value > 0:
                     b = FLECHA_DERECHA
                 elif value < 0:
                     b = FLECHA_IZQUIERDA
 
-            elif axis == 1:#  axis 1 es la palanca de la derecha, arriba y abajo
+            elif axis == 1:  # axis 1 es la palanca de la derecha, arriba y abajo
                 if value > 0:
-                    b = 12 FLECHA_ABAJO
+                    b = FLECHA_ABAJO
                 elif value < 0:
                     b = FLECHA_ARRIBA
 
