@@ -24,14 +24,6 @@ class PropDescription (EventAware):
             'abajo': lambda: self.desplazar_texto('abajo')})
 
         EngineData.MODO = 'Dialogo'
-        EngineData.DIALOG = self
-
-    def listener(self, event):
-        try:
-            if event.origin == 'Modo.Dialogo':
-                self.use_function(event.data['type'], event.data['nom'])
-        except KeyError:
-            pass
 
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':

@@ -1,4 +1,5 @@
 # A* module
+# noinspection PyUnresolvedReferences
 from math import sqrt
 
 

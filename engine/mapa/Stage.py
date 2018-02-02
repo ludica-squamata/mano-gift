@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, GRUPO_ITEMS, COLOR_COLISION
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, GRUPO_MOBS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, cargar_imagen
@@ -65,6 +65,7 @@ class Stage:
         to_be_registered = self.properties.sprites()
         if mob is not None:
             to_be_registered.append(mob)
+            self.add_property(mob, GRUPO_MOBS)
 
         for obj in to_be_registered:
             ''':type obj: _giftSprite'''
@@ -163,13 +164,6 @@ class Stage:
 
         EventDispatcher.trigger('RotateMobs', 'Stage', {'x': x, 'y': y})
 
-    def actualizar_grilla(self):
-        self.grilla.update()
-        for spr in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
-            if hasattr(spr, 'accion') and spr.accion == 'mover':
-                x, y = spr.mapRect.x // 32, spr.mapRect.y // 32
-                self.grilla.set_transitable((x, y), False)
-
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
 
@@ -181,11 +175,6 @@ class Stage:
 
     def __repr__(self):
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
-
-    def update(self):
-        self.actualizar_grilla()
-        for salida in self.salidas:
-            salida.update()
 
 
 class ChunkMap(Sprite):
@@ -279,3 +268,8 @@ class ChunkMap(Sprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
+
+    def update(self):
+        super().update()
+        for salida in self.stage.salidas:
+            salida.update()

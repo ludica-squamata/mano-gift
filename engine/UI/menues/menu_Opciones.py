@@ -44,11 +44,7 @@ class MenuOpciones(Menu):
         self.functions['release'].update({
             'accion': self.liberar_presion})
 
-    def listener(self, event):
-        if 'nom' not in event.data:
-            self.new_key_event(event)
-        else:
-            super().listener(event)
+        EventDispatcher.register(self.new_key_event, 'SetNewKey')
 
     def create_buttons(self):
         n, d, p, c = 'nombre', 'direcciones', 'pos', 'comando'

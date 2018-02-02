@@ -12,16 +12,8 @@ class Modo:
     @staticmethod
     def update(events):
         EventDispatcher.process()
-        modo = Ed.MODO
         for event in get_taphold_events(events):
-            EventDispatcher.trigger('Key', 'Modo.'+modo, event.__dict__)
-
-        if modo == 'Aventura':
-            Ed.MAPA_ACTUAL.update()
-        elif modo == 'Menu':
-            Ed.menu_actual.update()
-        elif modo == 'Dialogo':
-            Ed.DIALOG.update()
+            EventDispatcher.trigger('Key', 'Modo.'+Ed.MODO, event.__dict__)
 
         return Renderer.update()
 
@@ -39,15 +31,15 @@ class Modo:
     def toggle_mode(cls, event):
         nombre = event.data.get('nom', None)
         tipo = event.data.get('type', None)
-        if tipo == 'tap':
-            if Ed.MODO == 'Aventura':
-                if nombre == 'menu':
-                    Ed.MODO = 'Menu'
-                    EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
+        origin = event.origin
 
-                elif nombre == 'contextual':
-                    Ed.HERO.detener_movimiento()
-                    QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
+        if tipo == 'tap' and origin == 'Modo.Aventura':
+            if nombre == 'menu':
+                EventDispatcher.trigger('OpenMenu', origin, {'value': 'Pausa'})
+
+            elif nombre == 'contextual':
+                Ed.HERO.detener_movimiento()
+                QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
 
     @classmethod
     def pop_menu(cls, titulo=None):
@@ -75,8 +67,7 @@ class Modo:
 
         Ed.MODO = 'Menu'
         EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
-        Ed.menu_actual = menu
-        Ed.menu_actual.register()
+        menu.register()
         if Ed.HUD is not None:
             Ed.HUD.hide()
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
