@@ -1,5 +1,5 @@
 from .eventDispatcher import EventDispatcher
-from engine.misc import abrir_json, guardar_json, salir_handler
+from engine.misc import abrir_json, guardar_json, salir_handler, salir
 from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
@@ -30,8 +30,9 @@ class EngineData:
         else:
             cls.mapas[stage].ubicar_en_entrada(entrada)
 
-        cls.MAPA_ACTUAL = cls.mapas[stage]
-        cls.MAPA_ACTUAL.register_at_renderer(mob)
+        cls.mapas[stage].register_at_renderer(mob)
+
+        return cls.mapas[stage]
 
     @classmethod
     def on_cambiarmapa(cls, evento):
@@ -39,8 +40,8 @@ class EngineData:
             cls.setear_mapa(evento.data['target_stage'],
                             evento.data['target_entrada'],
                             mob=evento.data['mob'])
-
-            x, y = cls.MAPA_ACTUAL.posicion_entrada(evento.data['target_entrada'])
+            stage = evento.data['target_stage']
+            x, y = cls.mapas[stage].posicion_entrada(evento.data['target_entrada'])
             cls.HERO.ubicar_en_entrada(x, y)
 
     @classmethod
@@ -85,16 +86,29 @@ class EngineData:
     def cargar_juego(cls, data):
         from engine.UI.hud import HUD
         cls.acceso_menues.clear()
-        
-        cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
+
+        mapa = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
-        focus = data['focus']
-        Renderer.set_focus(Mob_Group[focus])
-        cls.HERO = Mob_Group[focus]
+
+        focus = Mob_Group[data['focus']]
+        Renderer.set_focus(focus)
+
+        cls.check_focus_position(focus, mapa, data['entrada'])
+
+        cls.HERO = focus
         cls.MODO = 'Aventura'
-        cls.HUD = HUD(Mob_Group[focus])
+        cls.HUD = HUD(focus)
         cls.HUD.show()
+
+    @classmethod
+    def check_focus_position(cls, focus, mapa, entrada):
+        fx, fy = focus.mapRect.center
+        ex, ey = mapa.data['entradas'][entrada]['pos']
+        if fx != ex or fy != ey:
+            texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco ' \
+                    'en el chunk ({},{}) sea la  misma que la posición de la entrada \n({},{}).'.format(fx, fy, ex, ey)
+            salir(texto)
 
     @classmethod
     def compound_save_data(cls, event):

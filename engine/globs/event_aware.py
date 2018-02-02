@@ -15,7 +15,10 @@ class EventAware:
         self.register()
 
     def listener(self, event):
-        self.use_function(event.data['type'], event.data['nom'])
+        try:
+            self.use_function(event.data['type'], event.data['nom'])
+        except KeyError:
+            print('evitado un crash por un momento de lag')
 
     def register(self):
         EventDispatcher.register(self.listener, 'Key')
