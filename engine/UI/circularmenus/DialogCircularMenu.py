@@ -19,7 +19,7 @@ class DialogCircularMenu(RenderedCircularMenu):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
                 file = abrir_json(ruta)
-                if file['head']['class'] == 'chosen':
+                if TopicElement.pre_init(file['head'], locutores):
                     idx += 1
                     file.update({'idx': idx})
                     opciones.append(file)
@@ -32,6 +32,15 @@ class DialogCircularMenu(RenderedCircularMenu):
 
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.back})
+
+    @classmethod
+    def is_possible(cls, *locutores) -> bool:
+        for script in listdir(ModData.dialogos):
+            ruta = ModData.dialogos + script
+            if path.isfile(ruta):
+                file = abrir_json(ruta)
+                if TopicElement.pre_init(file['head'], locutores):
+                    return True
 
     def cerrar(self):
         for mob in self.locutores:

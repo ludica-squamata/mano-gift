@@ -1,5 +1,5 @@
 from .LetterElement import LetterElement
-from engine.IO.dialogo import Dialogo
+from engine.IO.dialogo import Dialogo, Discurso
 from engine.globs import EngineData
 from engine.misc.resources import cargar_imagen
 
@@ -21,7 +21,7 @@ class TopicElement(LetterElement):
 
     def do_action(self):
         if self.active:
-            if Dialogo.pre_init(self.item['head'], *self.parent.locutores):
+            if self.pre_init(self.item['head'], self.parent.locutores):
                 self.parent.supress_all()
                 dialogo = Dialogo(self.item, *self.parent.locutores)
                 dialogo.frontend.set_menu(self.parent)
@@ -31,6 +31,10 @@ class TopicElement(LetterElement):
             else:
                 self.parent.cerrar()
         return True
+
+    @classmethod
+    def pre_init(cls, head, locutores):
+        return Discurso.pre_init(head, *locutores)
 
 
 class DialogOptionElement(LetterElement):

@@ -57,10 +57,9 @@ class EngineData:
     def end_dialog(cls, layer):
         Renderer.clear_overlays_from_layer(layer)
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
-        if cls.HUD is not None:
-            cls.MODO = 'Aventura'
+        cls.MODO = 'Aventura'
+        if cls.HERO is not None:
             cls.HERO.AI.register()
-            cls.HUD.show()
 
     @classmethod
     def salvar(cls, event):
@@ -99,7 +98,6 @@ class EngineData:
         cls.HERO = focus
         cls.MODO = 'Aventura'
         cls.HUD = HUD(focus)
-        cls.HUD.show()
 
     @classmethod
     def check_focus_position(cls, focus, mapa, entrada):

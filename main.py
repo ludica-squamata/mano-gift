@@ -2,7 +2,7 @@ from pygame import display as pantalla, init as py_init, event, font, joystick, 
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Tiempo, ModData, ANCHO, ALTO
 from engine.misc import abrir_json, Config
-from engine.IO.modos import Modo
+from engine.IO.modos import update
 import os
 
 py_init()
@@ -24,7 +24,7 @@ EventDispatcher.trigger('InitSystem', 'engine', {'intro': Config.dato('mostrar_i
 while True:
     Tiempo.update(60)
     events = event.get()
-    cambios = Modo.update(events)
+    cambios = update(events)
 
     cambios.append(fondo.blit(fuente.render(str(int(Tiempo.FPS.get_fps())), True, rojo), (10, 0)))
     cambios.append(fondo.blit(fuente.render(str(Tiempo.clock.timestamp()), True, rojo), (570, 0)))
