@@ -34,6 +34,3 @@ class PropDescription (EventAware):
     def salir(self):
         self.deregister()
         EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
-
-    def update(self):
-        pass

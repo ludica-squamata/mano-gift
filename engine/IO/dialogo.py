@@ -100,6 +100,14 @@ class BranchArray:
     def __len__(self):
         return self._lenght
 
+    def __repr__(self):
+        ex = 'Exclusive '
+        if not self.is_exclusive:
+            ex.lower()
+            ex = 'Non ' + ex
+
+        return ex + 'BranchArray (' + ', '.join(['#' + str(i.indice) for i in self.array]) + ')'
+
     def add(self, x):
         self.array.append(x)
         self._lenght += 1
@@ -115,14 +123,6 @@ class BranchArray:
                 to_show.append(self.array[i])
         self.flaged.clear()
         return to_show
-
-    def __repr__(self):
-        ex = 'Exclusive '
-        if not self.is_exclusive:
-            ex.lower()
-            ex = 'Non '+ex
-
-        return ex+'BranchArray ('+', '.join(['#'+str(i.indice) for i in self.array])+')'
 
 
 class ArboldeDialogo:
@@ -228,7 +228,35 @@ class ArboldeDialogo:
             return self._future
 
 
-class Dialogo(EventAware):
+class Discurso(EventAware):
+    def __init__(self):
+        super().__init__()
+
+    @classmethod
+    def pre_init(cls, meta, *locutores):
+        allow = True
+        for loc in locutores:
+            if loc.nombre not in meta['locutors']:
+                allow = not allow
+                break
+
+        if ModState.get('dialog.' + meta['name']):
+            allow = False
+
+        if meta['class'] != 'chosen':
+            allow = False
+
+        return allow
+
+    def direccionar_texto(self, direccion):
+        raise NotImplementedError
+
+    def cerrar(self):
+        self.deregister()
+        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+
+
+class Dialogo(Discurso):
     SelMode = False
     sel = 0
     next = 0
@@ -265,12 +293,21 @@ class Dialogo(EventAware):
 
         self.hablar()
 
-    @classmethod
-    def pre_init(cls, meta, *locutores):
-        for loc in locutores:
-            if loc.nombre not in meta['locutors']:
-                return False
-        return True
+    # @classmethod
+    # def pre_init(cls, meta, *locutores):
+    #     allow = True
+    #     for loc in locutores:
+    #         if loc.nombre not in meta['locutors']:
+    #             allow = not allow
+    #             break
+    #
+    #     if ModState.get('dialog.' + meta['name']):
+    #         allow = False
+    #
+    #     if meta['class'] != 'chosen':
+    #         allow = False
+    #
+    #     return allow
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -302,7 +339,6 @@ class Dialogo(EventAware):
         return supress
 
     def hablar(self):
-
         actual = self.dialogo.update()
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event_data is not None:
@@ -397,18 +433,53 @@ class Dialogo(EventAware):
             elif direccion == 'derecha':
                 self.frontend.rotar_menu(+1)
 
-    def cerrar(self):
-        self.deregister()
+    def cerrar(self, write_flag=True):
         for loc in self.locutores:
             mob = self.locutores[loc]
             mob.hablando = False
-        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
         if self.SelMode:
             self.frontend.exit_sel_mode()
-        del self.dialogo
+        self.dialogo = None
+
         ModState.set('dialog.'+self.name, 1)
+
+        super().cerrar()
 
     def update(self, sel):
         self.sel = sel
         if hasattr(self.sel, 'leads'):
             self.next = self.sel.leads
+
+
+class Monologo(Discurso):
+    def __init__(self, locutor, *otros_participantes):
+        super().__init__()
+        self.locutor = locutor
+        self.participantes = [locutor] + list(otros_participantes)
+        self.frontend = DialogInterface(self)
+
+        self.functions['tap'].update({
+            'accion': self.cerrar,
+            'contextual': self.cerrar,
+            'arriba': lambda: self.direccionar_texto('arriba'),
+            'abajo': lambda: self.direccionar_texto('abajo')})
+
+        self.functions['hold'].update({
+            'arriba': lambda: self.direccionar_texto('arriba'),
+            'abajo': lambda: self.direccionar_texto('abajo')})
+
+        self.frontend.set_loc_img(self.locutor)
+        self.frontend.set_text('No tengo nada más que hablar contigo')  # hardcoded for test
+
+    def direccionar_texto(self, direccion):
+        if direccion == 'arriba':
+            self.frontend.scroll(+1)
+        elif direccion == 'abajo':
+            self.frontend.scroll(-1)
+
+    def cerrar(self):
+        for mob in self.participantes:
+            mob.hablando = False
+        super().cerrar()
+
+

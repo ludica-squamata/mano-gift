@@ -60,6 +60,6 @@ class ControllableAI(EventAware):
                         self.deregister()
 
                 elif sprite.tipo == 'Mob':
-                    self.entity.elegir_tema(sprite)
+                    self.entity.dialogar(sprite)
                     self.deregister()
         self.accion = False

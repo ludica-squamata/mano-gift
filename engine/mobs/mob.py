@@ -58,3 +58,6 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
         y = event.data['y']
 
         self.mapRect.center = x, y
+
+    def __repr__(self):
+        return "Mob "+self.nombre
