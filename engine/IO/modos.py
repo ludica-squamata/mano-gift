@@ -7,8 +7,6 @@ from engine.UI import QuickCircularMenu
 
 
 class Modo:
-    setKey = False
-
     @staticmethod
     def update(events):
         EventDispatcher.process()
@@ -68,8 +66,6 @@ class Modo:
         Ed.MODO = 'Menu'
         EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
         menu.register()
-        if Ed.HUD is not None:
-            Ed.HUD.hide()
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
