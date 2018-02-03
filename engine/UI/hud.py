@@ -122,10 +122,18 @@ class HUD:
         self.screen_name = CharacterName(focus.nombre, dx, dy - 32)
 
         EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
-        # EventDispatcher.register(self.BarraMana.event_update, 'GastoMana')
+        EventDispatcher.register(self.toggle, "TogglePause")
 
         self.BarraVida.actualizar()
         self.BarraMana.actualizar()
+
+        self.show()
+
+    def toggle(self, event):
+        if event.data['value']:
+            self.hide()
+        else:
+            self.show()
 
     def show(self):
         if not self.is_shown:

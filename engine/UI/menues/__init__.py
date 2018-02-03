@@ -6,12 +6,15 @@ from .menu_Personaje import MenuNuevo
 from .menu_Principal import MenuPrincipal
 from .menu import Menu
 
+default_menus = {'MenuPausa': MenuPausa,
+                 'MenuEquipo': MenuEquipo,
+                 'MenuCargar': MenuCargar,
+                 'MenuNuevo': MenuNuevo,
+                 'MenuPrincipal': MenuPrincipal,
+                 'MenuOpciones': MenuOpciones
+                 }
+
 __all__ = [
     'Menu',
-    'MenuPausa',
-    'MenuEquipo',
-    'MenuOpciones',
-    'MenuCargar',
-    'MenuNuevo',
-    'MenuPrincipal'
-    ]
+    "default_menus"
+]

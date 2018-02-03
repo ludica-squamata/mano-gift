@@ -22,7 +22,8 @@ class ModState:
     # dependiendo de la implementación del guardado
     @classmethod
     def load(cls, event):
-        cls._innerdict.update(event.data.get('flags', {}))
+        flags = event.data['savegame'].get('flags', {})
+        cls._innerdict.update(flags)
 
     @classmethod
     def save(cls, event):
