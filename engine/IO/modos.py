@@ -2,7 +2,7 @@ from engine.globs import EngineData as Ed, ModData as Md, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from .taphold import get_taphold_events
-from engine.UI.menues import *
+from engine.UI.menues import default_menus
 from engine.UI import QuickCircularMenu
 
 
@@ -38,23 +38,19 @@ def pop_menu(event):
 
     if titulo not in Ed.MENUS:
         name = 'Menu' + titulo
-        try:
-            if name in Md.custommenus:
-                menu = Md.custommenus[name]()
-            else:
-                # from globals()
-                menu = eval(name + '()')
-
-        except Exception as Description:
-            print('No se pudo abrir el menu porque:', Description)
-            menu = Menu(titulo)
+        if name in Md.custommenus:
+            menu = Md.custommenus[name]()
+        elif name in default_menus:
+            menu = default_menus[name]()
+        else:
+            raise NotImplementedError('El menu "{}" no existe'.format(titulo))
     else:
         menu = Ed.MENUS[titulo]
         menu.reset()
 
+    menu.register()
     Ed.MODO = 'Menu'
     EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
-    menu.register()
     Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
     Renderer.overlays.move_to_front(menu)
 
