@@ -16,16 +16,6 @@ class Modo:
         return Renderer.update()
 
     @classmethod
-    def change_menu(cls, event):
-        """
-        :param event:
-        :type event:AzoeEvent
-        :return:
-        """
-
-        cls.pop_menu(titulo=event.data['value'])
-
-    @classmethod
     def toggle_mode(cls, event):
         nombre = event.data.get('nom', None)
         tipo = event.data.get('type', None)
@@ -40,7 +30,8 @@ class Modo:
                 QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
 
     @classmethod
-    def pop_menu(cls, titulo=None):
+    def pop_menu(cls, event):
+        titulo = event.data['value']
         if titulo == 'Previous':
             del Ed.acceso_menues[-1]
             titulo = Ed.acceso_menues[-1]
@@ -70,5 +61,5 @@ class Modo:
         Renderer.overlays.move_to_front(menu)
 
 
-EventDispatcher.register(Modo.change_menu, 'OpenMenu')
+EventDispatcher.register(Modo.pop_menu, 'OpenMenu')
 EventDispatcher.register(Modo.toggle_mode, 'Key')
