@@ -107,8 +107,6 @@ class CharacterName(Sprite):
 
 
 class HUD:
-    # ya no es clase base. próximamente será una clase que agrupe
-    # y registre en el renderer todos los elementos del hud.
     is_shown = False
     BarraVida = None
     BarraMana = None
@@ -124,11 +122,18 @@ class HUD:
         self.screen_name = CharacterName(focus.nombre, dx, dy - 32)
 
         EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
-        # EventDispatcher.register(self.BarraMana.event_update,'')
-        # EventDispatcher.register(self.BarraVida.event_update,'')
+        EventDispatcher.register(self.toggle, "TogglePause")
 
         self.BarraVida.actualizar()
         self.BarraMana.actualizar()
+
+        self.show()
+
+    def toggle(self, event):
+        if event.data['value']:
+            self.hide()
+        else:
+            self.show()
 
     def show(self):
         if not self.is_shown:
