@@ -6,9 +6,6 @@ from ._atribuido import Atribuido
 class Movil(Atribuido):
     moviendose = False
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def cambiar_direccion(self, direccion=None):
         self.direccion = direccion
         self.image = self.images['S' + self.direccion]
@@ -19,7 +16,9 @@ class Movil(Atribuido):
         dx, dy = super().mover(*self.direcciones[self.direccion])
         self.reubicar(dx, dy)
 
-    def atacar(self):
+    def atacar(self, sprite):
+        # 'sprite' es agregado para mantener la firma
+        # cuestiones de PyCharm.
         if not self.moviendose:
             return True
         else:

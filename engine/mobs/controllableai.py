@@ -45,21 +45,24 @@ class ControllableAI(EventAware):
     def update(self):
         if self.accion:
             self.entity.accion()
-            sprite = self.entity.sprite_interaction()
-            if sprite is not None:
-                if self.entity.estado == 'cmb':
-                    if hasattr(sprite, 'recibir_danio'):
-                        self.entity.atacar()
+            sprites = self.entity.perceived['touched']+self.entity.perceived['felt']
+            for sprite in sprites:
+                if sprite is not None:
+                    if self.entity.estado == 'cmb':
+                        if hasattr(sprite, 'recibir_danio'):
+                            self.entity.atacar(sprite)
 
-                elif sprite.tipo == 'Prop':
-                    if sprite.action is not None:
-                        sprite.action(self.entity)
+                    elif sprite.tipo == 'Prop':
+                        if sprite.accionable and sprite.action is not None:
+                            # should Movible Props have an action?
+                            sprite.action(self.entity)
+                            break
 
-                    else:
-                        sprite.show_description()
+                        else:
+                            sprite.show_description()
+                            self.deregister()
+
+                    elif sprite.tipo == 'Mob':
+                        self.entity.dialogar(sprite)
                         self.deregister()
-
-                elif sprite.tipo == 'Mob':
-                    self.entity.dialogar(sprite)
-                    self.deregister()
         self.accion = False

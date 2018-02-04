@@ -129,18 +129,49 @@ class Hearing(Sense):
                 self.parent.perceived['heard'].append(obj)  # ni 'moviendose' ni 'hablando'
 
 
+class Touch(Sense):
+    def __init__(self, parent, ):
+        img = self._create(parent.mask.get_size())
+        super().__init__(parent, 'Tacto', img)
+        self.mask = parent.mask
+        self.rect = self.parent.mapRect
+
+    @staticmethod
+    def _create(size):  # dummy method
+        img = Surface(size)
+        img.fill((255, 0, 255))
+        return img
+
+    def __call__(self, *args, **kwargs):
+        dx, dy = self.parent.direcciones[self.parent.direccion]
+        dx *= self.parent.velocidad
+        dy *= self.parent.velocidad
+
+        lista = self.parent.stage.properties.sprites()
+        idx = lista.index(self.parent)
+        for obj in lista[0:idx] + lista[idx + 1:]:
+            x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
+            if obj.mask.overlap(self.mask, (x + dx, y + dy)):
+                if obj.accionable:
+                    self.parent.perceived['touched'].append(obj)
+                else:
+                    self.parent.perceived['felt'].append(obj)
+
+
 class Sensitivo(Atribuido):
-    perceived = None  # un diccionario con los interactives que el mob ve u oye
+    perceived = None  # un diccionario con los interactives que el mob ve, oye, o toca
 
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
-        self.vision = Sight(self, 32 * 5)  # (data[vision])
-        self.audicion = Hearing(self, 32 * 6)  # cheat
-        self.perceived = {"heard": [], "seen": []}
+        self.vista = Sight(self, 32 * 5)  # (data[vision])
+        self.oido = Hearing(self, 32 * 6)  # cheat
+        self.tacto = Touch(self)
+        self.perceived = {"heard": [], "seen": [], "touched": [], "felt": []}
 
     def update(self, *args):
         super().update(*args)
-        self.perceived['seen'].clear()
-        self.perceived['heard'].clear()
-        self.vision()
-        self.audicion()
+        for sense in self.perceived:
+            self.perceived[sense].clear()
+        self.vista()
+        self.oido()
+        self.tacto()

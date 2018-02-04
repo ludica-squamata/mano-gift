@@ -4,7 +4,8 @@
   "props": {
     "star":[[432,432],[464,464]],
     "arbol":[[100,100]],
-    "crate":[[200,200]]
+    "crate":[[200,200]],
+    "casa_cerrada":[[600,600]]
   },
   "mobs": {"commoner":[[500,500]],"hero":[[400,400]]
   },
@@ -12,6 +13,7 @@
   },
   "refs":{
     "arbol":"props/arbol_escalado.png",
-    "crate":"items/crate.json"
+    "crate":"items/crate.json",
+    "casa_cerrada":"items/casa_cerrada.json"
   }
 }

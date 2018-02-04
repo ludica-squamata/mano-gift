@@ -47,13 +47,14 @@ def load_props(alldata):
         for x, y in pos[ref]:
             if data:
                 prop = new_prop(ref, x, y, data=data)
-                is_interactive = hasattr(prop, 'accion')
+                is_interactive = hasattr(prop, 'accionable') and prop.accionable
             else:
                 prop = new_prop(ref, x, y, img=imgs[ref])
                 is_interactive = False
 
             if type(prop) is list:
                 for p in prop:
+                    is_interactive = p.accionable
                     loaded_props.append((p, is_interactive))
             else:
                 loaded_props.append((prop, is_interactive))
