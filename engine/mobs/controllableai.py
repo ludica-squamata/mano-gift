@@ -52,6 +52,11 @@ class ControllableAI(EventAware):
                         if hasattr(sprite, 'recibir_danio'):
                             self.entity.atacar(sprite)
 
+                    elif sprite.tipo == 'Mob':
+                        self.entity.dialogar(sprite)
+                        self.deregister()
+                        break
+
                     elif sprite.tipo == 'Prop':
                         if sprite.accionable and sprite.action is not None:
                             # should Movible Props have an action?
@@ -62,7 +67,4 @@ class ControllableAI(EventAware):
                             sprite.show_description()
                             self.deregister()
 
-                    elif sprite.tipo == 'Mob':
-                        self.entity.dialogar(sprite)
-                        self.deregister()
         self.accion = False

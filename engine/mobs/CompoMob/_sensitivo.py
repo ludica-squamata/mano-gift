@@ -1,3 +1,4 @@
+from engine.globs import GRUPO_MOBS
 # noinspection PyUnresolvedReferences
 from math import tan, radians
 from pygame import Surface, draw, mask as mask_module, transform
@@ -11,15 +12,16 @@ class Sense(Sprite):
 
     # la mascara se crea al rotarse, por eso no está en el init.
 
-    def __init__(self, parent, name, image):
+    def __init__(self, parent, name, image=None):
         super().__init__()
         self.parent = parent
         # parent es el mob al cual este sentido pertenece
         self.nombre = name
         # muchas otras clases pieden "self.nombre" pero no piden "self.name".
         # Esto es para evitar conflictos.
-        self.image = image
-        self.rect = self.image.get_rect()
+        if image is not None:
+            self.image = image
+            self.rect = self.image.get_rect()
 
 
 class Sight(Sense):
@@ -119,39 +121,25 @@ class Hearing(Sense):
 
     def __call__(self):
         self.move()
-        lista = self.parent.stage.properties.sprites()
+        lista = self.parent.stage.properties.get_sprites_from_layer(GRUPO_MOBS)
         idx = lista.index(self.parent)
         for obj in lista[0:idx] + lista[idx + 1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
-            if obj.mask.overlap(self.mask, (x, y)) and any([
-                    getattr(obj, 'moviendose', False),  # getattr() es necesario
-                    getattr(obj, 'hablando', False)]):  # porque Prop no tiene
-                self.parent.perceived['heard'].append(obj)  # ni 'moviendose' ni 'hablando'
+            if obj.mask.overlap(self.mask, (x, y)) and any([obj.moviendose, obj.hablando]):
+                self.parent.perceived['heard'].append(obj)
 
 
 class Touch(Sense):
-    def __init__(self, parent, ):
-        img = self._create(parent.mask.get_size())
-        super().__init__(parent, 'Tacto', img)
-        self.mask = parent.mask
-        self.rect = self.parent.mapRect
+    def __init__(self, parent):
+        super().__init__(parent, 'Tacto')
+        self.rect = self.parent.rect
 
-    @staticmethod
-    def _create(size):  # dummy method
-        img = Surface(size)
-        img.fill((255, 0, 255))
-        return img
-
-    def __call__(self, *args, **kwargs):
-        dx, dy = self.parent.direcciones[self.parent.direccion]
-        dx *= self.parent.velocidad
-        dy *= self.parent.velocidad
-
+    def __call__(self):
         lista = self.parent.stage.properties.sprites()
+        lista.reverse()
         idx = lista.index(self.parent)
         for obj in lista[0:idx] + lista[idx + 1:]:
-            x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
-            if obj.mask.overlap(self.mask, (x + dx, y + dy)):
+            if self.rect.colliderect(obj.rect):
                 if obj.accionable:
                     self.parent.perceived['touched'].append(obj)
                 else:
