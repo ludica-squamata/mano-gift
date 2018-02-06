@@ -2,9 +2,9 @@ from engine.globs import EngineData, ANCHO, ALTO, CAPA_OVERLAYS_MENUS, TEXT_SEL,
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.libs.textrect import render_textrect
-from engine.UI.widgets import Boton, BaseWidget
+from engine.UI.widgets import Boton, BaseWidget, Fila
 from pygame.sprite import LayeredUpdates
-from pygame import Rect, font
+from pygame import Rect, font, Surface
 
 
 class Menu(EventAware, BaseWidget):
@@ -19,13 +19,16 @@ class Menu(EventAware, BaseWidget):
     layer = CAPA_OVERLAYS_MENUS
     opciones = 0
     sel = 0
+    draw_space_rect = None
+    draw_space = None
 
     def __init__(self, nombre, titulo=None):
         self.nombre = nombre
-        self.canvas = self.create_raised_canvas(ANCHO - 20, ALTO - 20)
+        self.w, self.h = ANCHO - 20, ALTO - 20
+        self.canvas = self.create_raised_canvas(self.w, self.h)
         if titulo is None:
             titulo = nombre
-        self.crear_titulo(titulo, ANCHO - 20)
+        self.crear_titulo(titulo, self.w)
         self.botones = LayeredUpdates()
         super().__init__(self.canvas, center=True)
         self.functions['tap'].update({'contextual': self.cancelar})
@@ -38,6 +41,27 @@ class Menu(EventAware, BaseWidget):
         ttl_rect = Rect((3, 3), (ancho - 7, 30))
         ttl_txt = render_textrect(titulo, fuente, ttl_rect, TEXT_SEL, CANVAS_BG, 1)
         self.canvas.blit(ttl_txt, ttl_rect.topleft)
+
+    def create_draw_space(self, nombre, ancho, alto, x, y):
+        """Crea el marco donde aparecerán las listas de items que se correspondan
+        con el espacio actualmente seleccionado
+        :param nombre: string
+        :param alto: integer
+        :param ancho: integer
+        :param x: integer
+        :param y: integer
+        """
+        marco = self.create_titled_canvas(ancho-20, alto, nombre)
+        self.canvas.blit(marco, (x, y))
+        self.draw_space_rect = Rect(x+3, y+26, ancho-30, alto-15)
+        self.draw_space = Surface(self.draw_space_rect.size)
+        self.draw_space.fill(CANVAS_BG)
+
+    def fill_draw_space(self, items, w, h):
+        for i, item in enumerate(items):
+            fila = Fila(item, w, 0, i * h + i, h=h, tag='n')
+            self.filas.add(fila)
+        self.opciones = len(self.filas)
 
     @staticmethod
     def deselect_all(lista):
@@ -70,7 +94,7 @@ class Menu(EventAware, BaseWidget):
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()
-    
+
     def mantener_presion(self):
         self.current.mantener_presion()
 
