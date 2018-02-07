@@ -5,7 +5,7 @@ from engine.globs import ModData
 
 
 class Escenografia(ShadowSprite, EventListener):
-    accion = None
+    accionable = False
     action = None
 
     def __init__(self, nombre, x, y, z=0, data=None, imagen=None, rect=None):

@@ -1,7 +1,10 @@
 {
   "fondo":"maps/fondos/blanco.png",
   "colisiones":"maps/colisiones/800.png",
-  "props": {},
+  "props": {
+    "arbol":[[200,200]],
+    "crate":[[300,300]]
+  },
   "mobs": {"hero":[[400,400]]},
   "limites":{
     "sup":"negro",
@@ -9,5 +12,8 @@
     "izq":"negro",
     "der":"negro"
   },
-  "refs":{}
+  "refs":{
+    "arbol":"props/arbol_escalado.png",
+    "crate":"items/crate.json"
+  }
 }

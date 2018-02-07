@@ -18,7 +18,7 @@
       "image":"props/puerta_c.png",
       "propiedades":["solido"],
       "proyecta_sombra":false,
-      "enabled":false,
+      "enabled":true,
       "operable":[
         {"ID":0,
          "image":"props/puerta_c.png",
@@ -30,9 +30,7 @@
          "solido":false,
          "next":0
         }
-      ],
-      "script": "script.py",
-      "eventos":{"button_activated": "door_activate"}
+      ]
     }
   },
   "cara":"front",
