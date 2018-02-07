@@ -45,8 +45,16 @@ class Stage:
         self.rect = self.mapa.rect.copy()
         self.cargar_timestamps()
         self.grilla = Grilla(self.mapa.mask, 32)
-        self.salidas = cargar_salidas(self.data)
-        self.entrada = entrada  # rollback for #147: save_map()
+        
+        sld, masc, img = cargar_salidas(self.data, chunk.rect.size)
+        self.salidas = sld # la lista de salidas, igual que siempre.
+        self.mask_salidas = masc # máscara de colisiones de salidas.
+        self.img_salidas = img # imagen de colores codificados
+        # estas tres propiedades, dado que se relacionan con las salidas,
+        # pertenecen a Stage, pero como se usa el tamaño del Chunk, la
+        # distinción es ambigua.
+
+        self.entrada = entrada
 
         EventDispatcher.register(self.anochecer, 'HourFlag')
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
@@ -268,8 +276,3 @@ class ChunkMap(Sprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
-
-    def update(self):
-        super().update()
-        for salida in self.stage.salidas:
-            salida.update()
