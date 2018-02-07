@@ -1,6 +1,5 @@
-from engine.globs import EngineData, ANCHO, ALTO, SAVEFD, CANVAS_BG
+from engine.globs import EngineData, ANCHO, ALTO, SAVEFD
 from pygame.sprite import LayeredUpdates
-from engine.UI.widgets import Fila
 from .menu import Menu
 import os
 
@@ -27,7 +26,8 @@ class MenuCargar(Menu):
         })
 
         self.filas = LayeredUpdates()
-        self.create_draw_space(ANCHO - 37, ALTO / 2.4)
+        self.create_draw_space('Elija un archivo', ANCHO - 16, ALTO / 2.4, 11, 65)
+        self.llenar_espacio_selectivo()
         if len(self.filas):
             self.elegir_opcion(0)
 
@@ -35,27 +35,9 @@ class MenuCargar(Menu):
         if len(self.filas):
             super().use_function(mode, key)
 
-    @staticmethod
-    def load_saved_files():
-        ok = []
-        for file in os.listdir(SAVEFD):
-            if file.endswith('.json') and file != 'config.json':
-                ok.append(file.split('.')[0])
-
-        return ok
-
-    def create_draw_space(self, ancho, alto):
-        archivos = self.create_titled_canvas(ancho, alto, 'Elija un archivo')
-        rect = self.canvas.blit(archivos, (7, 40))
-        self.draw_space = archivos.subsurface(((0, 0), (rect.w - 8, rect.h - 30)))
-        self.draw_space.fill(CANVAS_BG)
-        self.draw_space_rect = archivos.get_rect(topleft=(11, 65))
-
-        self.archivos = self.load_saved_files()  # lista
-        self.opciones = len(self.archivos)
-        for i, archivo in enumerate(self.archivos):
-            opcion = Fila(archivo, self.draw_space_rect.w - 10, 0, i * 21 + i + 2)
-            self.filas.add(opcion)
+    def llenar_espacio_selectivo(self):
+        self.archivos = [f.split('.')[0] for f in os.listdir(SAVEFD) if f.endswith('.json') and f != 'config.json']
+        self.fill_draw_space(self.archivos, self.draw_space_rect.w, 21)
 
     def elegir_opcion(self, direccion):
         i = 0

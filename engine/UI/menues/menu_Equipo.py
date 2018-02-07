@@ -1,6 +1,6 @@
-from engine.UI.widgets import Fila, EspacioEquipable
+from engine.UI.widgets import EspacioEquipable
 from .menu import Menu
-from pygame import Surface, Rect, font
+from pygame import Rect, font
 from pygame.sprite import LayeredUpdates
 from engine.misc.resources import cargar_imagen
 from engine.libs.textrect import render_textrect
@@ -66,9 +66,9 @@ class MenuEquipo(Menu):
         self.espacios.draw(self.canvas)
         self.hombre = cargar_imagen('hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))
-        w = self.canvas.get_width() - 270
-        h = self.canvas.get_height() - 64
-        self.crear_espacio_selectivo(w, h)
+        w = self.canvas.get_width() - 256
+        h = self.canvas.get_height() - 62
+        self.create_draw_space('Inventario', w, h, 270, 40)
 
         # determinar qué tecla activa qué función.
         self.functions = {
@@ -176,32 +176,16 @@ class MenuEquipo(Menu):
             self.mover_cursor(self.filas.get_sprite(self.sel))
             self.current.ser_elegido()
 
-    def crear_espacio_selectivo(self, ancho, alto):
-        """Crea el marco donde aparecerán las listas de items que se correspondan
-        con el espacio actualmente seleccionado
-        :param alto: integer
-        :param ancho: integer """
-
-        marco = self.create_titled_canvas(ancho, alto, 'Inventario')
-        rect = self.canvas.blit(marco, (266, 39))
-        self.draw_space_rect = Rect((rect.x + 4, rect.y + 26), (rect.w - 9, rect.h - 31))
-        self.draw_space = Surface(self.draw_space_rect.size)
-        self.draw_space.fill(CANVAS_BG)
-
     def llenar_espacio_selectivo(self):
         """Llena el espacio selectivo con los items que se correspondan con el espacio
         actualmente seleccionado. Esta función se llama cuando se cambia el espacio."""
 
-        h = 13
+        h, w = 32, self.draw_space_rect.w
 
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
         items = EngineData.HERO.inventario('equipable', espacio.nombre)
-        for i in range(len(items)):
-            fila = Fila(items[i], 188, 0, i * h + i, tag='n')
-            self.filas.add(fila)
-
-        self.opciones = len(self.filas)
+        self.fill_draw_space(items, w, h)
 
     def cambiar_foco(self):
         """Cambia el foco (las funciones que se utilizarán segun el imput)
@@ -209,6 +193,7 @@ class MenuEquipo(Menu):
 
         if self.current.item is None:
             if self.opciones > 0:
+                # self.current.ser_confirmado()
                 self.foco = 'items'
                 self.opciones = len(self.filas)
                 self.elegir_fila()
@@ -243,7 +228,8 @@ class MenuEquipo(Menu):
             self.deregister()
             return super().cancelar()
         else:
-            self.current.isSelected = False
+            for fila in self.filas:
+                fila.ser_deselegido()
             self.foco = 'espacios'
 
     def use_function(self, mode, key):
@@ -261,4 +247,5 @@ class MenuEquipo(Menu):
             self.cambio = False
         self.filas.update()
         self.filas.draw(self.draw_space)
+        self.espacios.draw(self.canvas)
         self.canvas.blit(self.draw_space, self.draw_space_rect)

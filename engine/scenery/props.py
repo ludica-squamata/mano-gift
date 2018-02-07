@@ -2,7 +2,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Item_Group, ModData
 from engine.globs.renderer import Renderer
 from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
-from pygame import mask, Rect
+from pygame import Rect
 from .bases import Escenografia
 from .items import *
 
@@ -10,6 +10,8 @@ __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'Estruc
 
 
 class Agarrable(Escenografia):
+    accionable = True
+
     def __init__(self, nombre, x, y, z, data):
         data.setdefault('proyecta_sombra', False)
         super().__init__(nombre, x, y, z, data)
@@ -39,13 +41,14 @@ class Agarrable(Escenografia):
 
 
 class Movible(Escenografia):
+    accionable = True
+
     def __init__(self, nombre, x, y, z, data):
         p = data.get('propiedades', ['solido'])
         if 'solido' not in p:
             p.append('solido')
             data['propiedades'] = p
         super().__init__(nombre, x, y, z, data)
-        self.accion = 'mover'
         Item_Group[self.nombre] = self
 
     def mover(self, dx, dy):
@@ -69,6 +72,8 @@ class Movible(Escenografia):
 
 
 class Trepable(Escenografia):
+    accionable = True
+
     def __init__(self, nombre, x, y, z, data):
         super().__init__(nombre, x, y, z, data)
         self.accion = 'trepar'
@@ -78,6 +83,7 @@ class Operable(Escenografia):
     estados = {}
     estado_actual = 0
     enabled = True
+    accionable = True
 
     def __init__(self, nombre, x, y, z, data):
         super().__init__(nombre, x, y, z, data)
@@ -91,8 +97,8 @@ class Operable(Escenografia):
             for attr in estado:
                 if attr == 'image':
                     img = cargar_imagen(estado[attr])
-                    mascara = mask.from_surface(img)
-                    self.estados[idx].update({'image': img, 'mask': mascara})
+                    # mascara = mask.from_surface(img)
+                    self.estados[idx].update({'image': img})
                 elif attr == 'next':
                     self.estados[idx].update({'next': estado[attr]})
                 elif attr == 'event':

@@ -1,9 +1,9 @@
 from ._animado import Animado
-from ._interactivo import Interactivo
+from ._sensitivo import Sensitivo
 from engine.globs.eventDispatcher import EventDispatcher
 
 
-class Combativo(Animado, Interactivo):
+class Combativo(Sensitivo, Animado):
 
     def recibir_danio(self, danio):
         self.salud_act -= danio
@@ -17,9 +17,8 @@ class Combativo(Animado, Interactivo):
             self.dead = True
             EventDispatcher.trigger('MobDeath', self.tipo, {'obj': self})
 
-    def atacar(self):
-        if super().atacar():
-            sprite = self.sprite_interaction()
+    def atacar(self, sprite):
+        if super().atacar(sprite):
             x, y = self.direcciones[self.direccion]
 
             x, y = x * self.fuerza, y * self.fuerza

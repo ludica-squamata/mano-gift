@@ -1,3 +1,4 @@
+from pygame import mask as mask_module, Surface, SRCALPHA
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.scenery import new_prop
 from engine.misc import abrir_json
@@ -47,13 +48,14 @@ def load_props(alldata):
         for x, y in pos[ref]:
             if data:
                 prop = new_prop(ref, x, y, data=data)
-                is_interactive = hasattr(prop, 'accion')
+                is_interactive = hasattr(prop, 'accionable') and prop.accionable
             else:
                 prop = new_prop(ref, x, y, img=imgs[ref])
                 is_interactive = False
 
             if type(prop) is list:
                 for p in prop:
+                    is_interactive = p.accionable
                     loaded_props.append((p, is_interactive))
             else:
                 loaded_props.append((prop, is_interactive))
@@ -73,16 +75,27 @@ def load_mobs(alldata):
     return loaded_mobs
 
 
-def cargar_salidas(alldata):
+def cargar_salidas(alldata,size):
     salidas = []
-    for datos in alldata['salidas']:
+    img = Surface(size, SRCALPHA)
+    # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
+    for i, datos in enumerate(alldata['salidas']):
         nombre = datos['nombre']
         stage = datos['stage']
         rect = datos['rect']
         chunk = datos['chunk']
         entrada = datos['entrada']
         direcciones = datos['direcciones']
-
+        
         salidas.append(Salida(nombre, stage, rect, chunk, entrada, direcciones))
+        r, g, b, a = 255, i%255, i//255, 255
+        # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
+        # después se usará b*255+g para devolver el index.
+        img.fill((r, g, b, a), rect)
+    
+    # la mascara se usa para la detección de colisiones.
+    # las partes no pintadas tienen un alpha = 0, por lo que la mascara en esos lugares
+    # permanece unset.
+    mask = mask_module.from_surface(img)
 
-    return salidas
+    return salidas, mask, img
