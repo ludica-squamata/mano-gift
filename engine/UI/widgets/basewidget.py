@@ -8,6 +8,7 @@ class BaseWidget(AzoeSprite):
     isSelected = False
     img_sel = None
     img_uns = None
+    w, h = 0, 0
 
     def ser_elegido(self):
         """Cambia la imagen a la versión resaltada"""

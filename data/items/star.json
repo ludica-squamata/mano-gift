@@ -1,11 +1,11 @@
 {
-    "ID":0,"tipo":"agarrable",
-    "subtipo": "consumible",
-    "peso":2, "volumen":0,
-    "image": "props/star.png",
-    "propiedades":[],
-    "efecto":{
-        "des":"Aumenta tu carisma en 2.",
-        "stat":"carisma",
-        "mod":2}
+  "ID":0,"tipo":"agarrable",
+  "subtipo": "consumible",
+  "peso":2, "volumen":0,
+  "image": "props/star.png",
+  "propiedades":[],
+  "efecto":{
+    "des":"Aumenta tu carisma en 2.",
+    "stat":"carisma",
+    "mod":2}
 }

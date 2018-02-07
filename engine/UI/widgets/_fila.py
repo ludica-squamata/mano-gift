@@ -11,31 +11,24 @@ class Fila(BaseWidget):
     tag_init = None
     tag_end = None
     tagged = False
-    ancho = 0
     justification = 0
     stack = True
     cantidad = 0
 
-    def __init__(self, item, w, x, y, tag=None, justification=0):
+    def __init__(self, item, w, x, y, h=0, tag=None, justification=0):
         self.item = item
-        self.ancho = w
+        self.w = w
+        self.h = h
         self.justification = justification
-        if type(item) == str:
+        if type(item) is str:
             self.set_text(item, w, justification)
         elif hasattr(self.item, 'texto'):
             self.set_text(item.texto, w, justification)
         else:
-            if tag is not None:
-                _tag = tag
-            else:
-                if item.tipo == 'equipable':
-                    _tag = 'w'
-                else:
-                    _tag = 'n'
-
             self.stack = self.item.stackable
-            self.tag_init = '<' + _tag + '>'
-            self.tag_end = '</' + _tag + '>'
+            self.tag_init = '<' + tag + '>'
+            self.tag_end = '</' + tag + '>'
+            self.icon = self.item.image
             self.nombre = self.tag_init + self.item.nombre.capitalize() + self.tag_end
             self.cantidad = self.tag_init + 'x' + str(EngineData.HERO.inventario.cantidad(self.item)) + self.tag_end
             self.img_uns = self.construir_fila(CANVAS_BG)
@@ -49,15 +42,19 @@ class Fila(BaseWidget):
         return self.nombre
 
     def construir_fila(self, bg):
-        w = int(self.ancho // 2)
+        w = int(self.w // 2)
+        h = self.h
+        rect = self.item.image.get_rect()
+        rect.center = 16, 16
 
-        img_nmbr = render_tagged_text(self.nombre, w, bgcolor=bg, justification=1)
+        img_nmbr = render_tagged_text(self.nombre, w, bgcolor=bg, justification=0)
         img_cant = render_tagged_text(self.cantidad, w, bgcolor=bg, justification=1)
 
-        image = Surface((self.ancho, img_nmbr.get_height()))
-        image.fill(CANVAS_BG)
-        image.blit(img_nmbr, (3, 0))
-        image.blit(img_cant, (w + 1, 0))
+        image = Surface((self.w, h))
+        image.fill(bg)
+        image.blit(self.item.image, rect)
+        image.blit(img_nmbr, (32, 6))
+        image.blit(img_cant, (w + 1, 6))
 
         return image
 
@@ -71,7 +68,7 @@ class Fila(BaseWidget):
         self.nombre = texto
     
     def reset_text(self, texto):
-        self.set_text(texto, self.ancho, self.justification)
+        self.set_text(texto, self.w, self.justification)
 
     def update(self):
         if not hasattr(self.item, 'texto'):
