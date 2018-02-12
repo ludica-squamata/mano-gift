@@ -24,4 +24,11 @@ def new_prop(nombre, x, y, z=0, data=None, img=None):
     else:
         prop = Escenografia(nombre, x, y, z=z, data=data, imagen=img)
 
-    return prop
+    if type(prop) is list:
+        try:
+            flat = [item for sublist in prop for item in sublist]
+            return flat
+        except TypeError:
+            return prop
+    else:
+        return prop
