@@ -33,6 +33,8 @@ def filtrar_eventos_teclado(events):
                     key['tap'] = True
                 else:
                     key['release'] = True
+            else:
+                EventDispatcher.trigger('WrongKey', 'System', {'key': _event.key})
 
     # este bloque previene el salteo del KEYUP en un momento de lag.
     _keys = get_pressed()

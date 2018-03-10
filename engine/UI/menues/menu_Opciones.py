@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import TECLAS, TEXT_DIS, CANVAS_BG, TEXT_SEL
+from engine.globs import TECLAS, TEXT_DIS, CANVAS_BG
 from pygame.sprite import LayeredUpdates, Sprite
 from pygame import Rect, font, joystick, Surface
 from engine.libs.textrect import render_textrect
@@ -24,8 +24,6 @@ class MenuOpciones(Menu):
         self.establecer_botones(self.create_buttons(), 6)
         self.crear_espacios_config()
         self.notice, self.notice_area = self.create_notice()
-        exp, rect = self.create_explanation()
-        self.canvas.blit(exp, rect)
 
         self.functions['tap'].update({
             'accion': self.press_button,
@@ -51,16 +49,16 @@ class MenuOpciones(Menu):
         a, b = 'arriba', 'abajo'
         factor_y = 2
         
-        nombres = "Mostrar Intro,Recordar Menus,Arriba,Abajo,Derecha,Izquierda,Menu,Accion,Contextual,Defaults".split(",")
+        nom = "Mostrar Intro,Recordar Menus,Arriba,Abajo,Derecha,Izquierda,Menu,Accion,Contextual,Defaults".split(",")
         botones = []
-        for j, nombre in enumerate(nombres):
+        for j, nombre in enumerate(nom):
             if j == 0 or j == 1:
                 cmd = self.cambiar_booleano
             elif j == 9:
                 cmd = self.restore_defaults
             else:
                 cmd = self.set_tecla
-            botones.append({n: nombre, c: cmd, d: {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]}})
+            botones.append({n: nombre, c: cmd, d: {a: nom[j-1], b: nom[j-(len(nom)-1)]}})
 
         if joystick.get_count():
             factor_y = 1
@@ -237,20 +235,6 @@ class MenuOpciones(Menu):
     def mostrar_aviso(self):
         """Muestra el aviso del cambio en la configuración"""
         self.canvas.blit(self.notice, self.notice_area)
-
-    @staticmethod
-    def create_explanation():
-        texto = 'Usa las teclas de movimiento (Arriba, Abajo, Izquierda y Derecha) para que tu personaje se desplace ' \
-                'por el mapa.\n\nLa tecla Menú abre el menú Pausa.\n\nLa tecla de Acción te permite interactuar con ' \
-                'el ambiente, hablar con otros personajes y también atacar.\n\nUsa la tecla Contextual para cambiar ' \
-                'entre las opciones de Acción y muchas cosas más! '
-        fuente = font.SysFont('verdana', 15)
-        w = 300
-        h = 270
-        x, y = 300, 128
-        rect = Rect(x, y, w, h)
-        render = render_textrect(texto, fuente, rect, TEXT_SEL, CANVAS_BG, justification=1)
-        return render, rect
 
     def cancelar(self):
         TECLAS.asignar(Cfg.dato('comandos'))
