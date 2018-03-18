@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, CAPA_OVERLAYS_INVENTARIO, FEATURE_ROTACION_MAPA
+from engine.globs import EngineData, CAPA_OVERLAYS_INVENTARIO, FEATURE_ROTACION_MAPA, ModData
 from engine.globs.eventDispatcher import EventDispatcher
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import CommandElement, CascadeElement
@@ -8,7 +8,10 @@ class QuickCircularMenu(RenderedCircularMenu):
     radius = 18
     layer = CAPA_OVERLAYS_INVENTARIO
 
-    def __init__(self, first, opciones=None):
+    def __init__(self):
+        first = EngineData.current_qcm_idx
+        opciones = ModData.QMC
+
         n, c, i, cmd, j = 'name', 'csc', 'icon', 'cmd', 'idx'
         cascadas = {
             "rotar_vista": [
@@ -21,10 +24,10 @@ class QuickCircularMenu(RenderedCircularMenu):
 
         if opciones is None:
             opciones = [
-                {j: 0, n: 'Estado', cmd: Ed.HERO.cambiar_estado, i: 'S'},
+                {j: 0, n: 'Estado', cmd: EngineData.HERO.cambiar_estado, i: 'S'},
                 {j: 1, n: 'Guardar', i: 'G', cmd: self.save},
-                {j: 2, n: 'Consumibles', c: Ed.HERO.inventario('consumible'), i: 'C'},
-                {j: 3, n: 'Equipables', c: Ed.HERO.inventario('equipable'), i: 'E'},
+                {j: 2, n: 'Consumibles', c: EngineData.HERO.inventario('consumible'), i: 'C'},
+                {j: 3, n: 'Equipables', c: EngineData.HERO.inventario('equipable'), i: 'E'},
             ]
 
         if FEATURE_ROTACION_MAPA:
@@ -53,7 +56,7 @@ class QuickCircularMenu(RenderedCircularMenu):
 
     def stop_everything(self, on_spot):
         super().stop_everything(on_spot)
-        Ed.current_qcm_idx = self.last_on_spot.idx
+        EngineData.current_qcm_idx = self.last_on_spot.idx
 
     @staticmethod
     def cmd_rotar_vista(direccion):
