@@ -122,6 +122,53 @@ class EngineData:
     def toggle_pause(cls, event):
         cls.onPause = event.data['value']
 
+    @classmethod
+    def toggle_mode(cls, event):
+        from engine.UI import QuickCircularMenu
+        nombre = event.data.get('nom', None)
+        tipo = event.data.get('type', None)
+        origin = event.origin
+
+        if tipo == 'tap' and origin == 'Modo.Aventura':
+            if nombre == 'menu':
+                EventDispatcher.trigger('OpenMenu', origin, {'value': 'Pausa'})
+
+            elif nombre == 'contextual':
+                cls.HERO.detener_movimiento()
+                QuickCircularMenu()
+
+    @classmethod
+    def pop_menu(cls, event):
+        from .mod_data import ModData
+        from engine.UI.menues import default_menus
+        from .constantes import CAPA_OVERLAYS_MENUS
+
+        titulo = event.data['value']
+        if titulo == 'Previous':
+            del cls.acceso_menues[-1]
+            titulo = cls.acceso_menues[-1]
+        else:
+            cls.acceso_menues.append(titulo)
+
+        if titulo not in EngineData.MENUS:
+            name = 'Menu' + titulo
+            if name in ModData.custommenus:
+                menu = ModData.custommenus[name]()
+            elif name in default_menus:
+                menu = default_menus[name]()
+            else:
+                raise NotImplementedError('El menu "{}" no existe'.format(titulo))
+        else:
+            menu = cls.MENUS[titulo]
+            menu.reset()
+
+        menu.register()
+        cls.MODO = 'Menu'
+        if not cls.onPause:
+            EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
+        Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
+        Renderer.overlays.move_to_front(menu)
+
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
 EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
@@ -129,4 +176,6 @@ EventDispatcher.register(EngineData.salvar, "SaveDataFile")
 EventDispatcher.register(EngineData.compound_save_data, "SaveData")
 EventDispatcher.register(EngineData.rotarte_view, 'RotateEverything')
 EventDispatcher.register(EngineData.toggle_pause, 'TogglePause')
+EventDispatcher.register(EngineData.toggle_mode, 'Key')
+EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
 EventDispatcher.register(salir_handler, 'QUIT')

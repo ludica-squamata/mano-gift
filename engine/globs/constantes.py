@@ -23,14 +23,9 @@ CAPA_OVERLAYS_DIALOGOS = 2  # ocupan un framento de la pantalla
 CAPA_OVERLAYS_MENUS = 3  # ocupan toda o gran parte de la pantalla
 CAPA_OVERLAYS_CIRCULAR = 4
 
-#devices, constantes para IO.taphold
+# devices, constantes para IO.taphold
 TECLADO = 'teclado'
 GAMEPAD = 'gamepad'
-
-# constantes de eventos de teclado
-HOLD = 24
-TAP = 25
-RELEASE = 26
 
 # feature flags deshablitadas para la demo
 FEATURE_SOMBRAS_DINAMICAS = False

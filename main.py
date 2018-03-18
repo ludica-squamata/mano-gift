@@ -1,8 +1,9 @@
 from pygame import display as pantalla, init as py_init, event, font, joystick, image
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Tiempo, ModData, ANCHO, ALTO
+from engine.IO.taphold import get_taphold_events
 from engine.misc import abrir_json, Config
-from engine.IO.modos import update
+from engine.globs.renderer import Renderer
 import os
 
 py_init()
@@ -23,8 +24,9 @@ EventDispatcher.trigger('InitSystem', 'engine', {'intro': Config.dato('mostrar_i
 
 while True:
     Tiempo.update(60)
-    events = event.get()
-    cambios = update(events)
+    EventDispatcher.process()
+    get_taphold_events(event.get())
+    cambios = Renderer.update()
 
     cambios.append(fondo.blit(fuente.render(str(int(Tiempo.FPS.get_fps())), True, rojo), (10, 0)))
     cambios.append(fondo.blit(fuente.render(str(Tiempo.clock.timestamp()), True, rojo), (570, 0)))
