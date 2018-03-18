@@ -5,7 +5,7 @@
       "0":{"b":{
         "objects":["star"],
         "attrs":{
-          "carisma":[">",9]
+          "social":[">",9]
         }}}
     },
     "style":"tagarrays/estilo.json",

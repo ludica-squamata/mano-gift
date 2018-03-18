@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, ModData as Md, CAPA_OVERLAYS_MENUS
+from engine.globs import EngineData, ModData as Md, CAPA_OVERLAYS_MENUS
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from .taphold import get_taphold_events
@@ -9,7 +9,7 @@ from engine.UI import QuickCircularMenu
 def update(events):
     EventDispatcher.process()
     for event in get_taphold_events(events):
-        EventDispatcher.trigger('Key', 'Modo.'+Ed.MODO, event.__dict__)
+        EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, event.__dict__)
 
     return Renderer.update()
 
@@ -24,19 +24,19 @@ def toggle_mode(event):
             EventDispatcher.trigger('OpenMenu', origin, {'value': 'Pausa'})
 
         elif nombre == 'contextual':
-            Ed.HERO.detener_movimiento()
-            QuickCircularMenu(Ed.current_qcm_idx, Md.QMC)
+            EngineData.HERO.detener_movimiento()
+            QuickCircularMenu(EngineData.current_qcm_idx, Md.QMC)
 
 
 def pop_menu(event):
     titulo = event.data['value']
     if titulo == 'Previous':
-        del Ed.acceso_menues[-1]
-        titulo = Ed.acceso_menues[-1]
+        del EngineData.acceso_menues[-1]
+        titulo = EngineData.acceso_menues[-1]
     else:
-        Ed.acceso_menues.append(titulo)
+        EngineData.acceso_menues.append(titulo)
 
-    if titulo not in Ed.MENUS:
+    if titulo not in EngineData.MENUS:
         name = 'Menu' + titulo
         if name in Md.custommenus:
             menu = Md.custommenus[name]()
@@ -45,12 +45,13 @@ def pop_menu(event):
         else:
             raise NotImplementedError('El menu "{}" no existe'.format(titulo))
     else:
-        menu = Ed.MENUS[titulo]
+        menu = EngineData.MENUS[titulo]
         menu.reset()
 
     menu.register()
-    Ed.MODO = 'Menu'
-    EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
+    EngineData.MODO = 'Menu'
+    if not EngineData.onPause:
+        EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
     Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
     Renderer.overlays.move_to_front(menu)
 

@@ -1,17 +1,22 @@
 {
-    "ID":4,"nombre":"blue",
-    "salud":3,"fuerza":3,
+  "ID":4,"nombre":"blue",
+  "atributos":{
+    "accion_fisica":3,
+    "accion_especial":0,
+    "defensa_fisica":0,
+    "defensa_especial":0,
+    "accion_social":0,
+    "defensa_social":0,
     "velocidad":1,
-    "imagenes":{
-        "idle":"mobs/imagenes/blue.png",
-        "atk":"mobs/imagenes/blue_atk.png",
-        "death":"mobs/imagenes/blue_death.png"
-        },
-    "alphas":{
-        "idle":"mobs/colisiones/monster_walk.png",
-        "atk":"mobs/colisiones/monster_walk.png",
-        "death":null
-    },
-    "clase":"NPC",
-    "propiedades":["solido","hostil"]
+    "salud":3,
+    "mana":0
+  },
+  "imagenes":{
+    "idle":"mobs/imagenes/blue.png",
+    "atk":"mobs/imagenes/blue_atk.png",
+    "death":"mobs/imagenes/blue_death.png",
+    "diag_face":null
+  },
+  "alphas":"mobs/colisiones/monster_walk.png",
+  "AI":null
 }

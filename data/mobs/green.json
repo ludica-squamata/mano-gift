@@ -1,17 +1,22 @@
 {
-    "ID":2,"nombre":"green",
-    "salud":1,"fuerza":1,
+  "ID":2,"nombre":"green",
+  "atributos":{
+    "accion_fisica":1,
+    "accion_especial":0,
+    "defensa_fisica":0,
+    "defensa_especial":0,
+    "accion_social":0,
+    "defensa_social":0,
     "velocidad":1,
-    "imagenes":{
-        "idle":"mobs/imagenes/green.png",
-        "atk":"mobs/imagenes/green_atk.png",
-        "death":"mobs/imagenes/green_death.png"
-        },
-    "alphas":{
-        "idle":"mobs/colisiones/monster_walk.png",
-        "atk":"mobs/colisiones/monster_walk.png",
-        "death":null
-    },
-    "clase":"NPC",
-    "propiedades":["hostil"]
+    "salud":1,
+    "mana":0
+  },
+  "imagenes":{
+    "idle":"mobs/imagenes/green.png",
+    "atk":"mobs/imagenes/green_atk.png",
+    "death":"mobs/imagenes/green_death.png",
+    "diag_face":null
+  },
+  "alphas":"mobs/colisiones/monster_walk.png",
+  "AI":null
 }

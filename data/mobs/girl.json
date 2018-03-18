@@ -1,9 +1,16 @@
 {
   "ID":6,"nombre":"girl",
-  "salud":2,"fuerza":2,
-  "velocidad":1,
-  "iniciativa":10,
-  "carisma":5,
+  "atributos":{
+    "accion_fisica":2,
+    "accion_especial":0,
+    "defensa_fisica":0,
+    "defensa_especial":0,
+    "accion_social":5,
+    "defensa_social":5,
+    "velocidad":1,
+    "salud":2,
+    "mana":0
+  },
   "imagenes":{
     "idle":"mobs/imagenes/green_girl.png",
     "atk":null,
@@ -11,6 +18,5 @@
     "diag_face":"mobs/imagenes/npc_face.png"
   },
   "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"new_wander",
-  "propiedades":["pasiva"]
+  "AI":"new_wander"
 }

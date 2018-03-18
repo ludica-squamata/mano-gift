@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS
+from engine.globs import EngineData as Ed, TAP, HOLD, RELEASE, TECLAS, TECLADO, GAMEPAD
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Config
 from pygame import event
@@ -14,13 +14,7 @@ def filtrar_eventos_teclado(events):
     global pressed_keys
 
     for _event in events:
-        if _event.type == QUIT:
-            EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
-
-        elif _event.type == KEYDOWN:
-            if _event.key == K_ESCAPE:
-                EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
-
+        if _event.type == KEYDOWN:
             if _event.key in teclas and not Ed.setKey:
                 teclas[_event.key]['pressed'] = True
                 pressed_keys.append(_event.key)
@@ -39,6 +33,8 @@ def filtrar_eventos_teclado(events):
                     key['tap'] = True
                 else:
                     key['release'] = True
+            else:
+                EventDispatcher.trigger('WrongKey', 'System', {'key': _event.key})
 
     # este bloque previene el salteo del KEYUP en un momento de lag.
     _keys = get_pressed()
@@ -57,8 +53,18 @@ def filtrar_eventos_teclado(events):
 
 def filtrar_eventos_gamepad(events):
     teclas = TECLAS.devolver()
+    # acá pongo "constantes" para las flechas
+    FLECHA_DERECHA = 10
+    FLECHA_IZQUIERDA = 11
+    FLECHA_ABAJO = 12
+    FLECHA_ARRIBA = 13
+    # aunque no es del todo correcto porque el usuario puede querer cambiar
+    # el uso de las teclas (invertirlas por ejemplo), y estas constantes
+    # previenen eso.
+
     for _event in events:
         if _event.type == JOYBUTTONDOWN:
+            # si recuerdo bien, 10 y 11 son los botones de start y select
             if _event.button not in (10, 11):
                 b = _event.button
             else:
@@ -73,7 +79,10 @@ def filtrar_eventos_gamepad(events):
             else:
                 b = _event.button - 2
 
-            if b in teclas:
+            if Ed.setKey:
+                EventDispatcher.trigger('SetNewKey', 'System', {'key': b})
+
+            elif b in teclas:
                 teclas[b]['pressed'] = False
                 if not teclas[b]['hold']:
                     teclas[b]['tap'] = True
@@ -81,101 +90,80 @@ def filtrar_eventos_gamepad(events):
                     teclas[b]['release'] = True
 
         elif _event.type == JOYHATMOTION:
+            # las flechas del gamepad
             x, y = _event.value
+            b = 0
             if x > 0:
-                teclas[10]['pressed'] = True
+                b = FLECHA_DERECHA
             elif x < 0:
-                teclas[11]['pressed'] = True
-            else:  # button up
-                if teclas[10]['pressed']:
-                    teclas[10]['pressed'] = False
-                    if teclas[10]['hold']:
-                        teclas[10]['release'] = True
-                    else:
-                        teclas[10]['tap'] = True
-
-                if teclas[11]['pressed']:
-                    teclas[11]['pressed'] = False
-                    if teclas[11]['hold']:
-                        teclas[11]['release'] = True
-                    else:
-                        teclas[11]['tap'] = True
-
-            if y > 0:
-                teclas[12]['pressed'] = True
+                b = FLECHA_IZQUIERDA
+            elif y > 0:
+                b = FLECHA_ABAJO
             elif y < 0:
-                teclas[13]['pressed'] = True
-            else:  # button up
-                if teclas[12]['pressed']:
-                    teclas[12]['pressed'] = False
-                    if teclas[12]['hold']:
-                        teclas[12]['release'] = True
-                    else:
-                        teclas[12]['tap'] = True
+                b = FLECHA_ARRIBA
 
-                if teclas[13]['pressed']:
-                    teclas[13]['pressed'] = False
-                    if teclas[13]['hold']:
-                        teclas[13]['release'] = True
+            if b:
+                teclas[b]['pressed'] = True
+            else:  # button up
+                if teclas[b]['pressed']:
+                    teclas[b]['pressed'] = False
+                    if teclas[b]['hold']:
+                        teclas[b]['release'] = True
                     else:
-                        teclas[13]['tap'] = True
+                        teclas[b]['tap'] = True
 
         elif _event.type == JOYAXISMOTION:
+            # los axis son los controles analógicos, las "palancas"
+            # que están en los gamepads de PlayStation 2, por ejemplo.
             value = round(_event.value, 2)
             axis = _event.axis
 
-            if axis == 0:  # x
+            b = 0
+            # en este engine no hacemos distincion entre las palancas y
+            # las flechas (ver arriba). Por eso tienen los mismos números.
+
+            if axis == 0:  # axis 0 es la palanca de la derecha, a izquierda y derecha
                 if value > 0:
-                    teclas[10]['pressed'] = True
+                    b = FLECHA_DERECHA
                 elif value < 0:
-                    teclas[11]['pressed'] = True
-                else:
-                    if teclas[10]['pressed']:
-                        teclas[10]['pressed'] = False
-                        if teclas[10]['hold']:
-                            teclas[10]['release'] = True
-                        else:
-                            teclas[10]['tap'] = True
+                    b = FLECHA_IZQUIERDA
 
-                    if teclas[11]['pressed']:
-                        teclas[11]['pressed'] = False
-                        if teclas[11]['hold']:
-                            teclas[11]['release'] = True
-                        else:
-                            teclas[11]['tap'] = True
-            elif axis == 1:  # y
-                if value < 0:
-                    teclas[12]['pressed'] = True
-                elif value > 0:
-                    teclas[13]['pressed'] = True
-                else:
-                    if teclas[12]['pressed']:
-                        teclas[12]['pressed'] = False
-                        if teclas[12]['hold']:
-                            teclas[12]['release'] = True
-                        else:
-                            teclas[12]['tap'] = True
+            elif axis == 1:  # axis 1 es la palanca de la derecha, arriba y abajo
+                if value > 0:
+                    b = FLECHA_ABAJO
+                elif value < 0:
+                    b = FLECHA_ARRIBA
 
-                    if teclas[13]['pressed']:
-                        teclas[13]['pressed'] = False
-                        if teclas[13]['hold']:
-                            teclas[13]['release'] = True
-                        else:
-                            teclas[13]['tap'] = True
-            elif axis == 2:
-                pass
-            elif axis == 3:
-                pass
+            # hay también otros dos axis 2 y 3, que representan los ejes x e y
+            # de la palanca analógica de la izquierda. En este engine no tienen
+            # uso.
+            if b:
+                teclas[b]['pressed'] = True
+            else:
+                if teclas[b]['pressed']:
+                    teclas[b]['pressed'] = False
+                    if teclas[b]['hold']:
+                        teclas[b]['release'] = True
+                    else:
+                        teclas[b]['tap'] = True
     return teclas
 
 
 def get_taphold_events(events, holding=100):
     input_device = Config.dato('metodo_de_entrada')
     teclas = None
-    if input_device == 'teclado':
+    if input_device == TECLADO:
         teclas = filtrar_eventos_teclado(events)
-    elif input_device == 'gamepad':
+    elif input_device == GAMEPAD:
         teclas = filtrar_eventos_gamepad(events)
+
+    for _event in events:
+        if _event.type == QUIT:
+            EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
+
+        elif _event.type == KEYDOWN:
+            if _event.key == K_ESCAPE:
+                EventDispatcher.trigger('QUIT', 'System', {'status': 'normal'})
 
     event.clear([KEYDOWN, KEYUP])
     # por si fueran a provocar errores

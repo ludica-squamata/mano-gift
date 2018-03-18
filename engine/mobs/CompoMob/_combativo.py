@@ -7,7 +7,7 @@ class Combativo(Sensitivo, Animado):
 
     def recibir_danio(self, danio):
         self.salud_act -= danio
-        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self})
+        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self, "value": self.salud_act})
 
         if self.salud_act <= 0:
             if self.death_img is not None:
@@ -21,6 +21,6 @@ class Combativo(Sensitivo, Animado):
         if super().atacar(sprite):
             x, y = self.direcciones[self.direccion]
 
-            x, y = x * self.fuerza, y * self.fuerza
+            x, y = x * self.accion_fisica, y * self.accion_fisica
             sprite.reubicar(x, y)
-            sprite.recibir_danio(self.fuerza)
+            sprite.recibir_danio(self.accion_fisica)

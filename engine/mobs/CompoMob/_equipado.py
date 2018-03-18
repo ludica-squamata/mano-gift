@@ -11,7 +11,7 @@ class Equipado(Atribuido):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.inventario = Inventory(10, 10 + self.fuerza)
+        self.inventario = Inventory(10, 10 + self.accion_fisica)
 
     def equipar_item(self, item):
         self.equipo[item.espacio] = item
