@@ -1,12 +1,13 @@
 {
   "ID":0,"nombre":"heroe",
   "atributos":{
-    "ataque":5,
-    "ataque_especial":1,
-    "defensa":1,
+    "accion_fisica":5,
+    "accion_especial":1,
+    "defensa_fisica":1,
     "defensa_especial":1,
+    "accion_social":8,
+    "defensa_social":8,
     "velocidad":3,
-    "social":8,
     "salud":10,
     "mana":1
   },

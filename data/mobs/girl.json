@@ -1,12 +1,13 @@
 {
   "ID":6,"nombre":"girl",
   "atributos":{
-    "ataque":2,
-    "defensa":0,
-    "ataque_especial":0,
+    "accion_fisica":2,
+    "accion_especial":0,
+    "defensa_fisica":0,
     "defensa_especial":0,
+    "accion_social":5,
+    "defensa_social":5,
     "velocidad":1,
-    "social":5,
     "salud":2,
     "mana":0
   },

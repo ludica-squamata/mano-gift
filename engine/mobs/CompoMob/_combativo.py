@@ -21,6 +21,6 @@ class Combativo(Sensitivo, Animado):
         if super().atacar(sprite):
             x, y = self.direcciones[self.direccion]
 
-            x, y = x * self.ataque, y * self.ataque
+            x, y = x * self.accion_fisica, y * self.accion_fisica
             sprite.reubicar(x, y)
-            sprite.recibir_danio(self.ataque)
+            sprite.recibir_danio(self.accion_fisica)

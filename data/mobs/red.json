@@ -1,12 +1,13 @@
 {
   "ID":3,"nombre":"red",
   "atributos":{
-    "ataque":4,
-    "defensa":0,
-    "ataque_especial":0,
+    "accion_fisica":4,
+    "accion_especial":0,
+    "defensa_fisica":0,
     "defensa_especial":0,
+    "accion_social":0,
+    "defensa_social":0,
     "velocidad":1,
-    "social":0,
     "salud":4,
     "mana":0
   },

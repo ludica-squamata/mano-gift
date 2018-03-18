@@ -1,12 +1,13 @@
 {
   "ID":2,"nombre":"green",
   "atributos":{
-    "ataque":1,
-    "defensa":0,
-    "ataque_especial":0,
+    "accion_fisica":1,
+    "accion_especial":0,
+    "defensa_fisica":0,
     "defensa_especial":0,
+    "accion_social":0,
+    "defensa_social":0,
     "velocidad":1,
-    "social":0,
     "salud":1,
     "mana":0
   },
