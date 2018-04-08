@@ -21,7 +21,7 @@ def filtrar_eventos_teclado(events):
 
         elif _event.type == KEYUP:
             if EngineData.setKey:
-                EventDispatcher.trigger('SetNewKey', 'System', {'key': _event.key})
+                EventDispatcher.trigger('SetNewKey', 'System', {'device': 'teclado', 'key': _event.key})
 
             elif _event.key in teclas:
                 key = teclas[_event.key]
@@ -80,7 +80,7 @@ def filtrar_eventos_gamepad(events):
                 b = _event.button - 2
 
             if EngineData.setKey:
-                EventDispatcher.trigger('SetNewKey', 'System', {'key': b})
+                EventDispatcher.trigger('SetNewKey', 'System', {'device': 'gamepad', 'key': b})
 
             elif b in teclas:
                 teclas[b]['pressed'] = False
@@ -184,16 +184,16 @@ def get_taphold_events(events, holding=100):
             key['tap'] = False
 
         if key['hold']:
-            data = {'nom': key['nom'], 'key': key['key'], 'type': 'hold', 'value': key['holding']}
+            data = {'nom': key['nom'], 'type': 'hold', 'value': key['holding']}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
 
         elif key['tap']:
-            data = {'nom': key['nom'], 'key': key['key'], 'type': 'tap'}
+            data = {'nom': key['nom'], 'type': 'tap'}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
             key['tap'] = False
 
         elif key['release']:
-            data = {'nom': key['nom'], 'key': key['key'], 'type': 'release', 'value': key['held']}
+            data = {'nom': key['nom'], 'type': 'release', 'value': key['held']}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
             key['release'] = False
             key['held'] = 0

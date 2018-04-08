@@ -8,7 +8,7 @@ class ControllableAI(EventAware):
         self.entity = entity
         super().__init__()
         self.functions['tap'].update({
-            'contextual': self.deregister,
+            'contextual': self.contextual_event_key,
             'menu': self.deregister,
             'accion': self.set_action,
             'arriba': lambda: self.entity.cambiar_direccion('arriba'),
@@ -41,6 +41,10 @@ class ControllableAI(EventAware):
     def cambiar_estado(self):
         self.entity.cambiar_estado()
         self.register()
+
+    def contextual_event_key(self):
+        self.entity.detener_movimiento()
+        self.deregister()
 
     def update(self):
         if self.accion:

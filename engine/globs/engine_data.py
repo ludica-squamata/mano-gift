@@ -1,4 +1,4 @@
-from .eventDispatcher import EventDispatcher
+from .eventDispatcher import EventDispatcher, AzoeEvent
 from engine.misc import abrir_json, guardar_json, salir_handler, salir
 from .giftgroups import Mob_Group
 from .renderer import Renderer
@@ -122,20 +122,9 @@ class EngineData:
     def toggle_pause(cls, event):
         cls.onPause = event.data['value']
 
-    @classmethod
-    def toggle_mode(cls, event):
-        from engine.UI import QuickCircularMenu
-        nombre = event.data.get('nom', None)
-        tipo = event.data.get('type', None)
-        origin = event.origin
-
-        if tipo == 'tap' and origin == 'Modo.Aventura':
-            if nombre == 'menu':
-                EventDispatcher.trigger('OpenMenu', origin, {'value': 'Pausa'})
-
-            elif nombre == 'contextual':
-                cls.HERO.detener_movimiento()
-                QuickCircularMenu()
+    @staticmethod
+    def toggle_mode():
+        EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
 
     @classmethod
     def pop_menu(cls, event):
@@ -176,6 +165,9 @@ EventDispatcher.register(EngineData.salvar, "SaveDataFile")
 EventDispatcher.register(EngineData.compound_save_data, "SaveData")
 EventDispatcher.register(EngineData.rotarte_view, 'RotateEverything')
 EventDispatcher.register(EngineData.toggle_pause, 'TogglePause')
-EventDispatcher.register(EngineData.toggle_mode, 'Key')
+EventDispatcher.register(EngineData.toggle_mode, AzoeEvent('Key',
+                                                           'Modo.Aventura',
+                                                           {'nom': 'menu',
+                                                            'type': 'tap'}))
 EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
 EventDispatcher.register(salir_handler, 'QUIT')
