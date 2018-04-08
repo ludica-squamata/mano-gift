@@ -11,55 +11,55 @@
   },
   "body":{
     "0":{"type":"node","leads":1,"from":"commoner","to":"heroe",
-    "txt":"Saludos, héroe. Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
+    "txt":"Saludos, hÃ©roe. Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro lÃ­neas, y asÃ­ ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aÃºn, a ver ahora."},
 
     "1":{"type":"node","leads":[2,3,4,5,6,7],"from":"commoner","to":"heroe",
-    "txt":"A continuación deberías ver 6 opciones si cumples todos los requisitos."},
+    "txt":"A continuaciÃ³n deberÃ­as ver 6 opciones si cumples todos los requisitos."},
 
     "2":{"type":"branch","leads":8,"from":"heroe","to":"commoner",
-    "txt":"Hmm, supongo que sería esta opción."},
+    "txt":"Hmm, supongo que serÃ­a esta opciÃ³n."},
 
     "3":{"type":"branch","leads":9,"from":"heroe","to":"commoner",
-    "txt":"O quizás esta otra."},
+    "txt":"O quizÃ¡s esta otra."},
 
     "4":{"type":"branch","leads":10,"from":"heroe","to":"commoner","reqs":{"attrs":{"accion_social":[">",9]}},
-    "txt":"¿Es esta la opción oculta por mi <b>carisma</b>?"},
+    "txt":"Â¿Es esta la opciÃ³n oculta por mi <b>carisma</b>?"},
 
     "5":{"type":"branch","leads":11,"from":"heroe","to":"commoner","reqs":{"objects":["star"]},
-    "txt":"Aquí tengo una <b>estrella</b> que encontré."},
+    "txt":"AquÃ­ tengo una <b>estrella</b> que encontrÃ©."},
 
     "6":{"type":"branch","leads":12,"from":"heroe","to":"commoner",
-    "txt":"¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
+    "txt":"Â¿QuÃ© puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro lÃ­neas, y asÃ­ ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aÃºn, a ver ahora."},
 
     "7":{"type":"branch","leads":15,"from":"heroe","to":"commoner","event_data":{"attr":"accion_social","value":3},
-    "txt":"Esta opción incrementará mi Carisma directamente"},
+    "txt":"Esta opciÃ³n incrementarÃ¡ mi Carisma directamente"},
 
     "8":{"type":"leaf","from":"commoner","to":"heroe",
-    "txt":"No, esta no es la opción."},
+    "txt":"No, esta no es la opciÃ³n."},
 
     "9":{"type":"leaf","from":"commoner","to":"heroe",
     "txt":"Mm, me temo que te has equivocado."},
 
     "10":{"type":"leaf","from":"commoner","to":"heroe",
-    "txt":"¡Correcto! esta es la opción oculta!"},
+    "txt":"Â¡Correcto! esta es la opciÃ³n oculta!"},
 
     "11":{"type":"leaf","from":"commoner","to":"heroe",
-    "txt":"Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."},
+    "txt":"Oh, tienes la estrella. Ãšsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diÃ¡logo."},
 
     "12":{"type":"exclusive","leads":[13,14],"from":"commoner","to":"heroe",
-    "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."},
+    "txt":"Bien, has seleccionado el texto marcado. A continuaciÃ³n deberÃ­as ver otro fragmento de diÃ¡logo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrÃ­as que ver un fragmento distinto."},
 
     "13":{"type":"node","leads":16,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"accion_social":[">",9]}},
-    "txt":"Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."},
+    "txt":"Este es el primer bloque de texto, que solo deberÃ­as poder ver si <b>tu carisma</b> es mayor 9."},
 
     "14":{"type":"node","leads":16,"from":"commoner","to":"heroe",
-    "txt":"Este es el segundo bloque de texto, que solo deberías poder ver si tu carisma es <b>menor</b> que 9."},
+    "txt":"Este es el segundo bloque de texto, que solo deberÃ­as poder ver si tu carisma es <b>menor</b> que 9."},
 
     "15":{"type":"node","leads":16,"from":"commoner","to":"heroe",
     "txt":"Es cierto! Tu <b>carisma</b> ha aumentado!"},
 
     "16":{"type":"node","leads":[17,18,19],"from":"commoner","to":"heroe",
-    "txt":"Acá habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"},
+    "txt":"AcÃ¡ habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"},
 
     "17":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
     "txt":"Opcion 1"},
