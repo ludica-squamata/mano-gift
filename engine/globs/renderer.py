@@ -1,8 +1,9 @@
 from engine.globs.eventDispatcher import EventDispatcher
+from pygame import Rect, draw, display, image
 from engine.globs.azoegroup import AzoeGroup
-from pygame import Rect, draw, display
 from .constantes import ANCHO, ALTO
 import sys
+import os
 
 
 class Camara:
@@ -243,6 +244,13 @@ class Renderer:
     overlays = AzoeGroup('overlays')
 
     @classmethod
+    def init(cls, nombre, favicon):
+        os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
+        display.set_caption(nombre)
+        display.set_icon(image.load(favicon))
+        display.set_mode((ANCHO, ALTO))
+
+    @classmethod
     def set_focus(cls, spr=None):
         if spr is not None:
             cls.camara.set_focus(spr)
@@ -279,7 +287,8 @@ class Renderer:
                 over.update()
         ret = cls.camara.draw(fondo)
         ret += cls.overlays.draw(fondo)
-        return ret
+
+        display.update(ret)
 
 
 EventDispatcher.register(Camara.save_focus, 'Save')

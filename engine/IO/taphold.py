@@ -1,12 +1,18 @@
 from engine.globs import EngineData, TECLAS, TECLADO, GAMEPAD
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Config
-from pygame import event
+from pygame import event, joystick
 from pygame.key import get_pressed
 from pygame import KEYDOWN, KEYUP, K_ESCAPE, QUIT
 from pygame import JOYBUTTONDOWN, JOYBUTTONUP, JOYHATMOTION, JOYAXISMOTION
 
 pressed_keys = []
+
+
+def init():
+    event.set_blocked([1, 4, 5, 6, 17])  # all mouse- and video-related events
+    for idx in range(joystick.get_count()):
+        joystick.Joystick(idx).init()
 
 
 def filtrar_eventos_teclado(events):
@@ -149,9 +155,11 @@ def filtrar_eventos_gamepad(events):
     return teclas
 
 
-def get_taphold_events(events, holding=100):
+def get_events(holding=100):
     input_device = Config.dato('metodo_de_entrada')
     teclas = None
+
+    events = event.get()
     if input_device == TECLADO:
         teclas = filtrar_eventos_teclado(events)
     elif input_device == GAMEPAD:
