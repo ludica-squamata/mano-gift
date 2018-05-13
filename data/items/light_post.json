@@ -1,0 +1,7 @@
+{
+  "ID":3,"tipo":"inerte",
+  "peso":10, "volumen":4,
+  "image":"props/poste_luz.png",
+  "proyecta_luz":[5,5]
+
+}

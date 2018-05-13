@@ -287,7 +287,7 @@ class Noche(AzoeSprite):
         for light in lights:
             if light.nombre == 'Sol':
                 # chapuza para velocidad
-                self.image.fill(light.color, light.rect)
+                self.image.fill((0, 0, 0, 0))
             else:
                 image = light.image
                 lx = light.rect.x
@@ -350,9 +350,9 @@ class Tiempo:
             if cls.clock.hour_flag:
                 EventDispatcher.trigger('HourFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
             if cls.clock.minute_flag:
-                pass
+                EventDispatcher.trigger('MinuteFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
             if cls.clock.second_flag:
-                pass
+                EventDispatcher.trigger('SecondFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
 
     @classmethod
     def crear_noche(cls, size):

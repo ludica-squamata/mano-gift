@@ -16,6 +16,7 @@ MENU_TEXT = Color(0, 0, 0)
 
 COLOR_COLISION = Color(255, 0, 255)
 COLOR_IGNORADO = Color(1, 1, 1)
+COLOR_SOMBRA = Color(0, 0, 0, 150)
 
 SCROLL_BG = Color(205, 205, 205)
 SCROLL_ARROW = Color(70, 70, 70)
