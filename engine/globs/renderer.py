@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import Rect, draw, display, image
+from pygame import Rect, draw, display, image, mouse
 from engine.globs.azoegroup import AzoeGroup
 from .constantes import ANCHO, ALTO
 import sys
@@ -249,6 +249,7 @@ class Renderer:
         display.set_caption(nombre)
         display.set_icon(image.load(favicon))
         display.set_mode((ANCHO, ALTO))
+        mouse.set_visible(False)
 
     @classmethod
     def set_focus(cls, spr=None):
