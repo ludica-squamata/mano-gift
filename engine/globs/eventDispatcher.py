@@ -13,7 +13,7 @@ class EventDispatcher:
         """
         Este método es llamado por los objetos que desean recibir un evento particular
         :param listener:es la referencia a una funcion. la misma debe aceptar como parametro un
-                        objeto de tipo giftEvent.
+                        objeto de tipo AzoeEvent.
         :param events:lista de string con los eventos que desean registrarse.
         :type events:tuple
         :return:None
@@ -31,7 +31,7 @@ class EventDispatcher:
         la funcion pasada debe ser la misma que se usó para registrarse
         :param listener:la funcion que desea borrarse
         :param events:lista de string con los eventos que desean borrarse
-        :type listener:(GiftEvent)->None
+        :type listener:(AzoeEvent)->None
         :type events:tuple
         :return:None
         """
@@ -48,11 +48,11 @@ class EventDispatcher:
         Este método crea un evento en la cola para ser distribuido, con los datos que
         van a ser distribuidos.
         :param event_data:
-        :type event_data:list/GiftEvent
+        :type event_data:list/AzoeEvent
         :return:None
         """
         
-        event = GiftEvent(*event_data)
+        event = AzoeEvent(*event_data)
         cls._cola.append(event)
 
     @classmethod
@@ -66,6 +66,9 @@ class EventDispatcher:
         _cola = cls._cola
         while len(_cola) > 0:
             evento = _cola.popleft()
+            if evento in cls._oyentes:
+                for listener in cls._oyentes[evento]:
+                    listener()
             if evento.tipo in cls._oyentes:
                 for listener in cls._oyentes[evento.tipo]:
                     listener(evento)
@@ -90,7 +93,7 @@ class EventDispatcher:
             print(name+',', 'oyentes:', len(cls._oyentes[name]))
 
 
-class GiftEvent:
+class AzoeEvent:
     """
     representacion de un evento ejecutado por un objeto de juego
     """
@@ -113,13 +116,19 @@ class GiftEvent:
         self.data = data
 
     def __repr__(self):
-        return 'giftEvent-' + self.tipo + '(origin: ' + self.origin + ', data: ' + str(self.data) + ')'
+        return 'AzoeEvent-' + self.tipo + '(origin: ' + self.origin + ', data: ' + str(self.data) + ')'
+
+    def __eq__(self, other):
+        return self.__repr__() == other.__repr__()
+
+    def __hash__(self):
+        return hash(self.__repr__())
 
 
 if __name__ == '__main__':
-    myEvent1 = GiftEvent('prueba', 'yo', {})
-    myEvent2 = GiftEvent('BossMuerto', 'yo', {})
-    myEvent3 = GiftEvent('BotonPresionado', 'yo', {})
+    myEvent1 = AzoeEvent('prueba', 'yo', {})
+    myEvent2 = AzoeEvent('BossMuerto', 'yo', {})
+    myEvent3 = AzoeEvent('BotonPresionado', 'yo', {})
     EventDispatcher.register(lambda event: print(event, 'respuesta A'), 'prueba')
     EventDispatcher.register(lambda event: print(event, 'respuesta B'), 'prueba', 'BossMuerto')
     EventDispatcher.register(lambda event: print(event, 'respuesta C'), 'BotonPresionado')

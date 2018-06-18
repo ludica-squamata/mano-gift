@@ -1,12 +1,18 @@
 from engine.globs import EngineData, TECLAS, TECLADO, GAMEPAD
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Config
-from pygame import event
+from pygame import event, joystick
 from pygame.key import get_pressed
 from pygame import KEYDOWN, KEYUP, K_ESCAPE, QUIT
 from pygame import JOYBUTTONDOWN, JOYBUTTONUP, JOYHATMOTION, JOYAXISMOTION
 
 pressed_keys = []
+
+
+def init():
+    event.set_blocked([1, 4, 5, 6, 17])  # all mouse- and video-related events
+    for idx in range(joystick.get_count()):
+        joystick.Joystick(idx).init()
 
 
 def filtrar_eventos_teclado(events):
@@ -21,7 +27,7 @@ def filtrar_eventos_teclado(events):
 
         elif _event.type == KEYUP:
             if EngineData.setKey:
-                EventDispatcher.trigger('SetNewKey', 'System', {'key': _event.key})
+                EventDispatcher.trigger('SetNewKey', 'System', {'device': 'teclado', 'key': _event.key})
 
             elif _event.key in teclas:
                 key = teclas[_event.key]
@@ -80,7 +86,7 @@ def filtrar_eventos_gamepad(events):
                 b = _event.button - 2
 
             if EngineData.setKey:
-                EventDispatcher.trigger('SetNewKey', 'System', {'key': b})
+                EventDispatcher.trigger('SetNewKey', 'System', {'device': 'gamepad', 'key': b})
 
             elif b in teclas:
                 teclas[b]['pressed'] = False
@@ -149,9 +155,11 @@ def filtrar_eventos_gamepad(events):
     return teclas
 
 
-def get_taphold_events(events, holding=100):
+def get_events(holding=100):
     input_device = Config.dato('metodo_de_entrada')
     teclas = None
+
+    events = event.get()
     if input_device == TECLADO:
         teclas = filtrar_eventos_teclado(events)
     elif input_device == GAMEPAD:
@@ -184,16 +192,16 @@ def get_taphold_events(events, holding=100):
             key['tap'] = False
 
         if key['hold']:
-            data = {'nom': key['nom'], 'key': key['key'], 'type': 'hold', 'value': key['holding']}
+            data = {'nom': key['nom'], 'type': 'hold', 'value': key['holding']}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
 
         elif key['tap']:
-            data = {'nom': key['nom'], 'key': key['key'], 'type': 'tap'}
+            data = {'nom': key['nom'], 'type': 'tap'}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
             key['tap'] = False
 
         elif key['release']:
-            data = {'nom': key['nom'], 'key': key['key'], 'type': 'release', 'value': key['held']}
+            data = {'nom': key['nom'], 'type': 'release', 'value': key['held']}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
             key['release'] = False
             key['held'] = 0

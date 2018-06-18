@@ -5,7 +5,7 @@
       "0":{"b":{
         "objects":["star"],
         "attrs":{
-          "social":[">",9]
+          "accion_social":[">",9]
         }}}
     },
     "style":"tagarrays/estilo.json",
@@ -17,21 +17,21 @@
   },
   "body":{
       "0":{"type":"node","leads":1,"from":"heroe","to":"commoner",
-      "txt":"¿qué <r>puedes</r> decirme acerca <b>de las bananas</b>?"},
+      "txt":"Â¿quÃ© <r>puedes</r> decirme acerca <b>de las bananas</b>?"},
       
       "1":{"type":"node","leads":2,"from":"commoner","to":"hereoe",
       "txt":"No mucho, solo que los monos se alimentan de ellas."},
 
       "2":{"type":"node","leads":3,"from":"heroe","to":"commoner",
-      "txt":"Nosotros los humanos también podemos"},
+      "txt":"Nosotros los humanos tambiÃ©n podemos"},
 
       "3":{"type":"node","leads":4,"from":"commoner","to":"hereoe",
-      "txt":"Sí, pero es el alimento preferido de los monos"},
+      "txt":"SÃ­, pero es el alimento preferido de los monos"},
 
       "4":{"type":"node","leads":5,"from":"heroe","to":"commoner",
-      "txt":"¿Hay <b>monos</b> por aquí?"},
+      "txt":"Â¿Hay <b>monos</b> por aquÃ­?"},
 
       "5":{"type":"leaf","from":"commoner","to":"hereoe",
-      "txt":"No que yo sepa. Deberías <b>buscar más al</b> norte."}
+      "txt":"No que yo sepa. DeberÃ­as <b>buscar mÃ¡s al</b> norte."}
     }
 }

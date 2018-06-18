@@ -75,7 +75,7 @@ def load_mobs(alldata):
     return loaded_mobs
 
 
-def cargar_salidas(alldata,size):
+def cargar_salidas(alldata, size):
     salidas = []
     img = Surface(size, SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
@@ -86,13 +86,13 @@ def cargar_salidas(alldata,size):
         chunk = datos['chunk']
         entrada = datos['entrada']
         direcciones = datos['direcciones']
-        
+
         salidas.append(Salida(nombre, stage, rect, chunk, entrada, direcciones))
-        r, g, b, a = 255, i%255, i//255, 255
+        r, g, b, a = 255, i % 255, i // 255, 255
         # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
         # después se usará b*255+g para devolver el index.
         img.fill((r, g, b, a), rect)
-    
+
     # la mascara se usa para la detección de colisiones.
     # las partes no pintadas tienen un alpha = 0, por lo que la mascara en esos lugares
     # permanece unset.

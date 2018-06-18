@@ -1,5 +1,6 @@
 from engine.UI.propdescription import PropDescription
 from engine.base import ShadowSprite, EventListener
+from engine.mapa.LightSource import LightSource
 from engine.misc import abrir_json
 from engine.globs import ModData
 
@@ -30,6 +31,8 @@ class Escenografia(ShadowSprite, EventListener):
         super().__init__(imagen=imagen, rect=rect, x=x, y=y, dz=z)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = data.get('proyecta_sombra', True)
+        if data.get('proyecta_luz', False):
+            self.luz = LightSource(self, *data['proyecta_luz'])
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         self.face = data.get('cara', 'front')
 

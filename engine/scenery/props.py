@@ -1,9 +1,9 @@
+from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import Item_Group, ModData
 from engine.globs.renderer import Renderer
-from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
-from pygame import Rect
 from .bases import Escenografia
+from pygame import Rect
 from .items import *
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'Estructura3D', 'Escenografia']
@@ -148,6 +148,7 @@ class Estructura3D(Escenografia):
 
         self.props = self.faces[self.face]
         super().__init__(nombre, x, y, data=data, rect=self.rect)
+        self.proyectaSombra = False
         EventDispatcher.register(self.rotate_view, 'RotateEverything')
 
     def build_face(self, data, dx, dy, face):

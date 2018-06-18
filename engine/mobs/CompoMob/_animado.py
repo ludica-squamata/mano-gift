@@ -9,7 +9,7 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     death_img = None  # sprite del mob muerto.
     dead = False
 
-    _step = 'S'
+    step = 'S'
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
     idle_walk_img = {}  # imagenes normales
@@ -49,12 +49,12 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
-                if self._step == 'R':
-                    self._step = 'L'
+                if self.step == 'R':
+                    self.step = 'L'
                 else:
-                    self._step = 'R'
+                    self.step = 'R'
 
-        key = self._step + self.direccion
+        key = self.step + self.direccion
         self.image = self.imagen_n(key)
 
     def animar_ataque(self, limite):
@@ -92,7 +92,8 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
 
         self.animar_caminar()
 
-    def update(self):
+    def update(self, *args):
+        super().update(*args)
         if self.atacando:
             self.animar_ataque(5)
         if self.moviendose:
@@ -100,5 +101,6 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
 
     def detener_movimiento(self):
         super().detener_movimiento()
+        self.step = 'S'
         key = 'S' + self.direccion
         self.image = self.imagen_n(key)

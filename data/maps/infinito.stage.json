@@ -8,8 +8,8 @@
   "salidas":[
   ],
   "ambiente":"exterior",
-  "amanece":[19,0],
-  "atardece":[17,0],
-  "anochece":[18,0],
+  "amanece":[6,0],
+  "atardece":[7,0],
+  "anochece":[8,0],
   "latitude":30
 }

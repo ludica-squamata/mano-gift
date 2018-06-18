@@ -45,25 +45,25 @@ class Stage:
         self.rect = self.mapa.rect.copy()
         self.cargar_timestamps()
         self.grilla = Grilla(self.mapa.mask, 32)
-        
+
         sld, masc, img = cargar_salidas(self.data, chunk.rect.size)
-        self.salidas = sld # la lista de salidas, igual que siempre.
-        self.mask_salidas = masc # máscara de colisiones de salidas.
-        self.img_salidas = img # imagen de colores codificados
+        self.salidas = sld  # la lista de salidas, igual que siempre.
+        self.mask_salidas = masc  # máscara de colisiones de salidas.
+        self.img_salidas = img  # imagen de colores codificados
         # estas tres propiedades, dado que se relacionan con las salidas,
         # pertenecen a Stage, pero como se usa el tamaño del Chunk, la
         # distinción es ambigua.
 
         self.entrada = entrada
 
-        EventDispatcher.register(self.anochecer, 'HourFlag')
+        # EventDispatcher.register(self.anochecer, 'HourFlag')
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
         EventDispatcher.register(self.save_map, 'Save')
         EventDispatcher.register(self.rotate_map, 'RotateEverything')
 
     def register_at_renderer(self, mob=None):
         Renderer.camara.set_background(self.mapa)
-        luz_del_sol = DayLight(1024)
+        luz_del_sol = DayLight(self.amanece, self.atardece, self.anochece)
         if Tiempo.noche is None:
             Tiempo.crear_noche(self.rect.size)
         if self.data['ambiente'] == 'exterior':
@@ -119,25 +119,6 @@ class Stage:
             self.amanece = TimeStamp(*self.data["amanece"])
             self.atardece = TimeStamp(*self.data["atardece"])
             self.anochece = TimeStamp(*self.data["anochece"])
-
-    def anochecer(self, event):
-        """
-        :param event:
-        :type event:AzoeEvent
-        :return:
-        """
-        hora = event.data['hora']
-        if hora == self.amanece:
-            print('amanecer')
-        elif hora == self.atardece:
-            print('atardecer')
-        elif hora == self.anochece:
-            print('anochecer')
-
-        if self.data['ambiente'] == 'exterior':
-            pass
-        elif self.data['ambiente'] == 'interior':
-            pass
 
     def del_interactive(self, event):
         obj = event.data['obj']

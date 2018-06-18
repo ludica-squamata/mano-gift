@@ -1,8 +1,11 @@
+from pygame import mask, PixelArray, Surface, SRCALPHA, transform, Rect
+from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import mask, PixelArray, Surface, SRCALPHA
 from engine.globs.renderer import Renderer
+from engine.misc import ReversibleDict
 from .azoeSprite import AzoeSprite
-from engine.globs.constantes import FEATURE_SOMBRAS_DINAMICAS
+# noinspection PyUnresolvedReferences
+from math import floor
 
 
 class Sombra(AzoeSprite):
@@ -44,6 +47,7 @@ class Sombra(AzoeSprite):
 
 
 class ShadowSprite(AzoeSprite):
+    step = 'S'
     _sombras = None
     """:type : list"""
     sombra = None
@@ -77,11 +81,13 @@ class ShadowSprite(AzoeSprite):
     def crear_sombras(self):
 
         h = self.rect.h
-        # w = self.rect.w
+        w = self.rect.w
         h_2 = h // 2
         z = 0
+        dr = 0  # un pequeño ajuste en el eje +x ("delta derecha")
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
+        t_rect = t_surface.get_rect()
         centerx = t_surface.get_width() // 4
         """:type t_surface: SurfaceType"""
 
@@ -90,63 +96,104 @@ class ShadowSprite(AzoeSprite):
         mascara.clear()
 
         if self._sombras[0]:  # Luz: 4
-            print('Luz 4: NE')
+            # print('Luz 4: NE')
             img = self._crear_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
         if self._sombras[6]:  # Luz: 3
-            print('Luz 3: NO')
+            # print('Luz 3: NO')
             img = self._crear_sombra(surface, "NO")
             t_surface.blit(img, (0, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
         if self._sombras[4]:  # Luz: 1
-            print('Luz 1: SO')
+            # print('Luz 1: SO')
             img = self._crear_sombra(surface, "SO")
             t_surface.blit(img, (3, h_2 - 6))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             z = h
         if self._sombras[2]:  # Luz: 6
-            print('Luz 6: SE')
+            # print('Luz 6: SE')
             img = self._crear_sombra(surface, "SE")
             t_surface.blit(img, (centerx, h_2 - 4))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             z = h
         if self._sombras[1]:  # Luz: 5
-            print('Luz 5: E')
-            # img = self._crear_sombra(surface, "E")
-            # t_surface.blit(img, (h_2, 0))
+            top = h_2 + 5
+            dirs = ReversibleDict(abajo='izquierda', arriba='derecha')
+            if self.images is not None:
+                surface = transform.rotate(self.images[self.step + dirs[self.direccion]], +90)
+                if self.direccion == 'abajo':
+                    top = h_2 - 5
+                elif self.direccion == 'arriba':
+                    top = h_2 - 6
+                elif self.direccion == 'derecha':
+                    top = h_2 - 3
+                elif self.direccion == 'izquierda':
+                    top = h_2 - 4
+            else:
+                dr = 15
+                surface = transform.rotate(surface, +90)
+
+            img = self._crear_sombra(surface, "E")
+            r = img.get_rect(right=t_rect.centerx + dr, top=top)
+            t_surface.blit(img, r)
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
+            z = h  # incorrecto, pues la sombra se genera por encima del objeto que la proyecta. Los valores que la
+            # ponen por debajo del objeto son todos iguales o menores a 0, pero ponerla en ese valor hace que cuando
+            # el heroe le camine por encima, la sombra no lo cubre.
         if self._sombras[5]:  # Luz: 2
-            print('Luz 2: O')
-            # img = self._crear_sombra(surface, "O")
-            # t_surface.blit(img, (h_2, 0))
+            top = h_2 + 5
+            dirs = ReversibleDict(abajo='derecha', arriba='izquierda')
+            if self.images is not None:
+                surface = transform.rotate(self.images[self.step + dirs[self.direccion]], -90)
+                if self.direccion == 'abajo':
+                    top = h_2 - 5
+                elif self.direccion == 'arriba':
+                    top = h_2 - 6
+                elif self.direccion == 'derecha':
+                    top = h_2 - 3
+                elif self.direccion == 'izquierda':
+                    top = h_2 - 4
+            else:
+                dr = 3
+                surface = transform.rotate(surface, -90)
+
+            img = self._crear_sombra(surface, "O")
+            r = img.get_rect(left=t_rect.centerx + dr, top=top)
+            t_surface.blit(img, r)
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
+            z = h  # incorrecto, pues la sombra se genera por encima del objeto que la proyecta. Los valores que la
+            # ponen por debajo del objeto son todos iguales o menores a 0, pero ponerla en ese valor hace que cuando
+            # el heroe le camine por encima, la sombra no lo cubre.
         if self._sombras[7]:  # Luz: 3
             print('Luz 3: N')
             # img = self._crear_sombra(surface, "N")
             # t_surface.blit(img, (h_2, 0))
         if self._sombras[3]:  # Luz: 0
-            print('Luz 0: S')
-            # img = self._crear_sombra(surface, "S")
-            # t_surface.blit(img, (h_2, 0))
-
-        # draw.rect(t_surface, (255, 0, 0), Rect(1, 1, t_surface.get_width() - 2, t_surface.get_height() - 2), 1)
+            img = self._crear_sombra(surface, "S")
+            r = img.get_rect(centerx=w // 2 + 1, y=h - 3)
+            t_surface = Surface((w, h * 2), SRCALPHA)
+            t_surface.blit(img, r)
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
+            h_2 = 0
+            z = h
 
         return h_2, t_surface, mascara, z
 
     @staticmethod
     def _crear_sombra(surface, arg=None, _mask=None):
-        # noinspection PyUnresolvedReferences
-        from math import floor
-
         h = surface.get_height()
         w = surface.get_width()
         if _mask is None:
             _mask = mask.from_surface(surface)
 
-        shadow_color = 0, 0, 0, 150
         pxarray = None
         d = h // 2
         nw = w + d
@@ -158,7 +205,7 @@ class ShadowSprite(AzoeSprite):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
                     if _mask.get_at((x, y)):
-                        pxarray[x + dd, y] = shadow_color
+                        pxarray[x + dd, y] = COLOR_SOMBRA
 
         if arg == 'NO':
             pxarray = PixelArray(Surface((nw, h), 0, surface))
@@ -166,7 +213,7 @@ class ShadowSprite(AzoeSprite):
                 dd = floor(d * (y / h))
                 for x in range(w):
                     if _mask.get_at((x, y)):
-                        pxarray[x + dd, y] = shadow_color
+                        pxarray[x + dd, y] = COLOR_SOMBRA
 
         if arg == 'SE':
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
@@ -176,7 +223,7 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         ax = x + dd - 1
                         ay = (nh - y) - 1
-                        pxarray[ax, ay] = shadow_color
+                        pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'SO':
             pxarray = PixelArray(Surface((nw, nh), 0, surface))
@@ -186,19 +233,37 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         ax = x + dd - 1
                         ay = (nh - y) - 1
-                        pxarray[ax, ay] = shadow_color
+                        pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'S':
-            pass
+            pxarray = PixelArray(Surface((w, h), 0, surface))
+            for x in range(w):
+                for y in range(h):
+                    if _mask.get_at((x, y)):
+                        n = -(x * h + y + 2)
+                        ax, ay = n // h, n % h
+                        pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'N':
             pass
 
         if arg == 'E':
-            pass
+            pxarray = PixelArray(Surface((w, h), 0, surface))
+            for x in range(w):
+                for y in range(h):
+                    if _mask.get_at((x, y)):
+                        n = (x * w + y)
+                        ax, ay = n // w, n % w
+                        pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'O':
-            pass
+            pxarray = PixelArray(Surface((w, h), 0, surface))
+            for x in range(w):
+                for y in range(h):
+                    if _mask.get_at((x, y)):
+                        n = (x * h + y)
+                        ax, ay = n // h, n % h
+                        pxarray[ax, ay] = COLOR_SOMBRA
 
         return pxarray.make_surface().convert_alpha()
 
@@ -207,7 +272,6 @@ class ShadowSprite(AzoeSprite):
         w, h = surface.get_size()
         pxarray = PixelArray(Surface((w, h), 0, surface))
         _mask = mask.from_surface(surface)
-        shadow_color = 0, 0, 0, 150
 
         if stop == 0:
             stop = w
@@ -218,48 +282,57 @@ class ShadowSprite(AzoeSprite):
         for y in range(h):
             for x in range(start, stop):
                 if _mask.get_at((x, y)):
-                    pxarray[x, y] = shadow_color
+                    pxarray[x, y] = COLOR_SOMBRA
 
         return pxarray.make_surface().convert_alpha()
 
-    def recibir_luz(self, source):
+    def recibir_luz(self, source, t=100):
         """
         :param source:
         :type source:AzoeSprite
         :return:
         """
-        # tolerancia = 10
+        if t % 2 == 0:
+            t += 1
+        size = t, t
+        x, y = source.rect.topleft
+        a = t // 2
+        b = a + t
+        topleft = Rect((-b+x, -b+y), size)
+        topright = Rect((a + 1, -b), size)
+        topmid = Rect((-a, -b), size)
+        bottomleft = Rect((-b, a + 1), size)
+        bottomright = Rect((a + 1, a + 1), size)
+        bottommid = Rect((-a, a + 1), size)
+        midleft = Rect((-b, -a), size)
+        midright = Rect((a + 1, -a), size)
         if self.proyectaSombra:
-            # calcular direccion de origen
-            dx = self.rect.centerX - source.rect.centerX
-            dy = self.rect.centerY - source.rect.centerY
-
             # marcar direccion como iluminada
-            if dx > 0:
-                if dy > 0:
-                    self._luces[0] = True  # noreste
-                elif dy < 0:
-                    self._luces[2] = True  # sureste
-                else:
-                    self._luces[1] = True  # este
-            elif dx < 0:
-                if dy > 0:
-                    self._luces[6] = True  # noroeste
-                elif dy < 0:
-                    self._luces[4] = True  # suroeste
-                else:
-                    self._luces[5] = True  # oeste
-            else:
-                if dy > 0:
-                    self._luces[7] = True  # norte
-                else:
-                    self._luces[3] = True  # sur
+
+            self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+            if topleft.contains(self.mapRect):
+                self._luces[0] = True
+            if topright.contains(self.mapRect):
+                self._luces[0] = True
+            if topmid.contains(self.mapRect):
+                self._luces[0] = True
+            if bottomleft.contains(self.mapRect):
+                self._luces[0] = True
+            if bottomright.contains(self.mapRect):
+                self._luces[0] = True
+            if bottommid.contains(self.mapRect):
+                self._luces[0] = True
+            if midleft.contains(self.mapRect):
+                self._luces[0] = True
+            if midright.contains(self.mapRect):
+                self._luces[0] = True
+
+        self.update_sombra()
 
     def update_sombra(self):
         """
         generar sombra en direccion contraria a los slots iluminados
-        si cambio la lista,
-        actualizar imagen de sombra y centrar
+        si cambio la lista, actualizar imagen de sombra y centrar
 
         para el calculo de sombras ha de usarse la imagen que veria la fuente de luz.
         ej: si el personaje estuviera en posicion D, la sombra O se hace en base a la imagen R
@@ -271,22 +344,11 @@ class ShadowSprite(AzoeSprite):
         """
         if self._prevLuces is None or self._luces != self._prevLuces:
             self._prevLuces = self._luces[:]
-            # las luces de lados contrarios se anulan
             for i in range(0, 7):
                 if (self._luces[(i + 4) % 7] - self._luces[i]) == 1:  # bool
                     self._sombras[i] = 1
                 else:
                     self._sombras[i] = 0
-
-            # loop unrolling para evitar el costo de %, aunque solo es necesario cada vez que cambian las luces
-            # self._sombras[0] = self._luces[4] - self._luces[0]
-            # self._sombras[1] = self._luces[5] - self._luces[1]
-            # self._sombras[2] = self._luces[6] - self._luces[2]
-            # self._sombras[3] = self._luces[7] - self._luces[3]
-            # self._sombras[4] = self._luces[0] - self._luces[4]
-            # self._sombras[5] = self._luces[1] - self._luces[5]
-            # self._sombras[6] = self._luces[2] - self._luces[6]
-            # self._sombras[7] = self._luces[3] - self._luces[7]
 
             if any(self._sombras):
                 self.add_shadow(*self.crear_sombras())
@@ -295,6 +357,7 @@ class ShadowSprite(AzoeSprite):
         # self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
         p = event.data['light']
         self._luces[p] = 1
+        self._luces[(p + 4) % 7] = 0  # las luces de lados contrarios se anulan
         if self.proyectaSombra:
             self.update_sombra()
 
@@ -304,13 +367,16 @@ class ShadowSprite(AzoeSprite):
             self.previousimage = self.image
 
     def update(self, *args):
-        # if self.proyectaSombra:
-        #     self.image_has_chaged()
-        # if self.sombra is not None:
-        #     self.sombra.z = self.z-1
+        if self.proyectaSombra:
+            self.image_has_chaged()
         super().update(*args)
 
     def ubicar(self, dx, dy):
         super().ubicar(dx, dy)
         if self.sombra is not None:
             self.sombra.ubicar(dx, dy)
+
+    def reubicar(self, dx, dy):
+        super().reubicar(dx, dy)
+        if self.sombra is not None:
+            self.sombra.reubicar(dx, dy)

@@ -30,23 +30,30 @@ def split_spritesheet(ruta, w=32, h=32):
     return sprites
 
 
-def abrir_json(archivo):
+def abrir_json(ruta, encoding='utf-8'):
     """
-    :param archivo:
-    :type archivo:str
+    :param ruta:
+    :type ruta:str
+    :param encoding:
+    :type encoding: string
     :return:
     :rtype: dict
     """
-    ex = open(archivo, 'r')
-    data = json.load(ex)
-    ex.close()
-    return data
+    with open(ruta, 'r', encoding=encoding) as file:
+        return json.load(file)
 
 
-def guardar_json(archivo, datos):
-    ex = open(archivo, 'w')
-    json.dump(datos, ex, sort_keys=True, indent=2, separators=(',', ':'))
-    ex.close()
+def guardar_json(ruta, datos, encoding='utf-8'):
+    """
+    :param datos:
+    :type datos: dict
+    :param ruta:
+    :type ruta:str
+    :param encoding:
+    :type encoding: string
+    """
+    with open(ruta, 'w', encoding=encoding) as file:
+        json.dump(datos, file, sort_keys=True, indent=2, separators=(',', ':'))
 
 
 def load_module_from_script(name):
