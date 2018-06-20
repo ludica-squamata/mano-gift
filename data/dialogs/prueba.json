@@ -7,7 +7,11 @@
     "name":"prueba",
     "about":"tags",
     "icon":null,
-    "keywords":[]
+    "keywords":[],
+    "events":{
+      "Boost":{"attr":"accion_social","value":3},
+      "Flag":{"value":false}
+    }
   },
   "body":{
     "0":{"type":"node","leads":1,"from":"commoner","to":"heroe",
@@ -31,7 +35,7 @@
     "6":{"type":"branch","leads":12,"from":"heroe","to":"commoner",
     "txt":"¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
 
-    "7":{"type":"branch","leads":15,"from":"heroe","to":"commoner","event_data":{"attr":"accion_social","value":3},
+    "7":{"type":"branch","leads":15,"from":"heroe","to":"commoner","event":"Boost",
     "txt":"Esta opción incrementará mi Carisma directamente"},
 
     "8":{"type":"leaf","from":"commoner","to":"heroe",
@@ -43,7 +47,7 @@
     "10":{"type":"leaf","from":"commoner","to":"heroe",
     "txt":"¡Correcto! esta es la opción oculta!"},
 
-    "11":{"type":"leaf","from":"commoner","to":"heroe",
+    "11":{"type":"leaf","from":"commoner","to":"heroe","event":"Flag",
     "txt":"Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."},
 
     "12":{"type":"exclusive","leads":[13,14],"from":"commoner","to":"heroe",

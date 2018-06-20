@@ -12,4 +12,4 @@ def boost(evento):
         exec('mob.' + attr + '+=' + str(value))
 
 
-EventDispatcher.register(boost, "DialogEvent")
+EventDispatcher.register(boost, "Boost")

@@ -35,6 +35,7 @@ class QuickCircularMenu(RenderedCircularMenu):
 
         cascadas = {'inicial': []}
         for opt in [opciones[first]] + opciones[first + 1:] + opciones[:first]:
+            obj = None
             if type(opt) is dict:
                 if 'csc' in opt:
                     obj = CascadeElement(self, opt)

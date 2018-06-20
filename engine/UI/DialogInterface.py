@@ -82,6 +82,7 @@ class DialogInterface(BaseWidget):
             if opt.reqs is not None and 'objects' in opt.reqs:
                 objeto = opt.reqs['objects'][0]
                 # la alternativa a este embrollo es que el branch especifique nombre e icono
+                item = None
                 existing_items = Item_Group + Deleted_Items
                 if objeto in existing_items:
                     item = existing_items[objeto]

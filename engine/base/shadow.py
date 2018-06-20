@@ -291,6 +291,8 @@ class ShadowSprite(AzoeSprite):
         :param source:
         :type source:AzoeSprite
         :return:
+        :param t:
+        :type: int
         """
         if t % 2 == 0:
             t += 1

@@ -13,7 +13,7 @@ class Elemento:
     inter = None  # a quien le habla
     leads = None
     reqs = None
-    event_data = None
+    event = None
     tags = None
     texto = ''
 
@@ -28,7 +28,7 @@ class Elemento:
         self.inter = data['to']
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
-        self.event_data = data.get('event_data', None)
+        self.event = data.get('event', None)
 
         if type(self.leads) is list:
             self.hasLeads = True
@@ -46,8 +46,11 @@ class Elemento:
 
         del data
 
+    def create_event(self, name, data):
+        self.event = name, self, data
+
     def post_event(self):
-        EventDispatcher.trigger('DialogEvent', self, self.event_data)
+        EventDispatcher.trigger(*self.event)
 
     def __repr__(self):
         return self.nombre
@@ -150,6 +153,12 @@ class ArboldeDialogo:
 
             _elem.append(Elemento(idx, data))
         return _elem
+
+    def process_events(self, events):
+        for elemento in self._elementos:
+            if elemento.event is not None:
+                name = elemento.event
+                elemento.create_event(name, events[name])
 
     def __len__(self):
         return len(self._elementos)

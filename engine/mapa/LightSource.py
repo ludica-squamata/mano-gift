@@ -42,12 +42,11 @@ class DayLight:
         self.atardece = atardecer
         self.anochece = anochercer
 
-        EventDispatcher.register(self.movimiento_por_rotacion, 'HourFlag')
+        # EventDispatcher.register(self.movimiento_por_rotacion, 'HourFlag')
 
     def movimiento_por_rotacion(self, event):
         h = event.data['hora']
         light = 0
-        # print(h)
         if h == self.amanece:
             # print('amanece')
             light = 4
@@ -58,7 +57,7 @@ class DayLight:
             # print('anochece')
             light = 0
 
-        # EventDispatcher.trigger('SolarMovement', self.nombre, {"light": light})
+        EventDispatcher.trigger('SolarMovement', self.nombre, {"light": light})
 
 
 __all__ = ['LightSource', 'DayLight']

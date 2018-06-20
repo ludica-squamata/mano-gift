@@ -57,6 +57,10 @@ def render_tagged_text(text, w, h=0, custom_tags=None, omitted_tags=None, bgcolo
     line_num = -1
     tagged = False
     insertion = False
+    tag = None
+    _init, _end = 0, 0
+    max_word_h = 0
+
     if omitted_tags is None:
         omitted_tags = []
     if custom_tags is None:
