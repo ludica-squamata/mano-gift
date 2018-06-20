@@ -55,6 +55,9 @@ class Elemento:
     def __int__(self):
         return int(self.indice)
 
+    def __str__(self):
+        return self.nombre
+
     def __eq__(self, other):
         if type(self) != type(other):
             return False
