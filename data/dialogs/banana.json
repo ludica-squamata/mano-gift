@@ -13,7 +13,8 @@
     "name":"banana",
     "about":"item.banana",
     "icon":"props/banana.png",
-    "keywords":[]
+    "keywords":[],
+    "events":{}
   },
   "body":{
       "0":{"type":"node","leads":1,"from":"heroe","to":"commoner",
