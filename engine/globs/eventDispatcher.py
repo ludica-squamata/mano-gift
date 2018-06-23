@@ -116,7 +116,7 @@ class AzoeEvent:
         self.data = data
 
     def __repr__(self):
-        return 'AzoeEvent-' + self.tipo + '(origin: ' + self.origin + ', data: ' + str(self.data) + ')'
+        return 'AzoeEvent-' + str(self.tipo) + '(origin: ' + str(self.origin) + ', data: ' + str(self.data) + ')'
 
     def __eq__(self, other):
         return self.__repr__() == other.__repr__()

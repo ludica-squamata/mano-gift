@@ -82,6 +82,7 @@ class DialogInterface(BaseWidget):
             if opt.reqs is not None and 'objects' in opt.reqs:
                 objeto = opt.reqs['objects'][0]
                 # la alternativa a este embrollo es que el branch especifique nombre e icono
+                item = None
                 existing_items = Item_Group + Deleted_Items
                 if objeto in existing_items:
                     item = existing_items[objeto]
@@ -114,7 +115,7 @@ class DialogInterface(BaseWidget):
 
     def exit_sel_mode(self):
         self.sel_mode = False
-        Renderer.clear_overlays_from_layer(self.menu.layer)
+        Renderer.clear(layer=self.menu.layer)
         self.menu.cubos.empty()
 
     def set_loc_img(self, locutor):

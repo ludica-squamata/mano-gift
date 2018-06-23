@@ -1,3 +1,4 @@
+from engine.globs.eventDispatcher import EventDispatcher, AzoeEvent
 from engine.globs.event_aware import EventAware
 
 
@@ -29,6 +30,9 @@ class ControllableAI(EventAware):
             'derecha': self.entity.detener_movimiento
         })
 
+        EventDispatcher.register(self.register, AzoeEvent('TogglePause', 'EngineData', {'value': False}))
+        EventDispatcher.register(self.deregister, AzoeEvent('TogglePause', 'EngineData', {'value': True}))
+
     def mover(self, direccion):
         if direccion != self.entity.direccion:
             self.entity.cambiar_direccion(direccion)
@@ -40,7 +44,6 @@ class ControllableAI(EventAware):
 
     def cambiar_estado(self):
         self.entity.cambiar_estado()
-        self.register()
 
     def contextual_event_key(self):
         self.entity.detener_movimiento()

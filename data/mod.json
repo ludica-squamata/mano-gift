@@ -6,10 +6,8 @@
     "dialogos":"dialogs",
     "mapas":"maps",
     "mobs":"mobs",
-    "quest":"quests",
     "items":"items",
-    "scripts":"scripts",
-    "scenes":"scenes"
+    "scripts":"scripts"
   },
   "use_latitude":true
 }

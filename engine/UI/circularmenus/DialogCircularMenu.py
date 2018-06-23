@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, CAPA_OVERLAYS_CIRCULAR, ModData
+from engine.globs import EngineData, ModData
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import TopicElement, DialogOptionElement
 from engine.misc.resources import abrir_json
@@ -7,13 +7,12 @@ from os import path, listdir
 
 class DialogCircularMenu(RenderedCircularMenu):
     radius = 15
-    layer = CAPA_OVERLAYS_CIRCULAR
     locutores = None
 
     def __init__(self, *locutores):
         self.locutores = locutores
 
-        opciones = []
+        cascadas = {'inicial': []}
         idx = -1
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
@@ -22,13 +21,8 @@ class DialogCircularMenu(RenderedCircularMenu):
                 if TopicElement.pre_init(file['head'], locutores):
                     idx += 1
                     file.update({'idx': idx})
-                    opciones.append(file)
-
-        cascadas = {'inicial': []}
-        for opt in opciones:
-            obj = TopicElement(self, opt)
-            obj.idx = opt['idx']
-            cascadas['inicial'].append(obj)
+                    obj = TopicElement(self, file)
+                    cascadas['inicial'].append(obj)
 
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.back})
@@ -45,7 +39,7 @@ class DialogCircularMenu(RenderedCircularMenu):
     def cerrar(self):
         for mob in self.locutores:
             mob.hablando = False
-        Ed.MODO = 'Aventura'
+        EngineData.MODO = 'Aventura'
         self.salir()
 
     def salir(self):

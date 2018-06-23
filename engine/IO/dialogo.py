@@ -1,5 +1,6 @@
 ﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
-from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS, ModState
+from engine.globs import CAPA_OVERLAYS_DIALOGOS, ModState
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.UI import DialogInterface
 
@@ -29,20 +30,24 @@ class Discurso(EventAware):
 
     def cerrar(self):
         self.deregister()
-        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+        EventDispatcher.trigger('EndDialog', self, {'layer': CAPA_OVERLAYS_DIALOGOS})
 
 
 class Dialogo(Discurso):
     SelMode = False
     sel = 0
     next = 0
+    write_flag = True  # flags the conversation so it wouldn't be repeated
 
     def __init__(self, arbol, *locutores):
         super().__init__()
+        EventDispatcher.register(self.set_flag, 'Flag')
         self.tags_condicionales = arbol['head']['conditional_tags']
         self.name = arbol['head']['name']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
+        self.dialogo.process_events(arbol['head']['events'])
+
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
@@ -90,7 +95,7 @@ class Dialogo(Discurso):
                 elif operador == '!=':
                     supress = not loc_attr != target
                 else:
-                    raise ValueError("El operador '"+operador+"' es inválido")
+                    raise ValueError("El operador '" + operador + "' es inválido")
 
         if "objects" in condiciones:
             for obj in condiciones['objects']:
@@ -101,7 +106,7 @@ class Dialogo(Discurso):
     def hablar(self):
         actual = self.dialogo.update()
         if self.SelMode and self.frontend.has_stopped():
-            if self.sel.event_data is not None:
+            if self.sel.event is not None:
                 self.sel.post_event()
             self.dialogo.set_chosen(self.next)
             self.SelMode = False
@@ -154,6 +159,8 @@ class Dialogo(Discurso):
                 self.frontend.set_sel_mode(to_show)
 
         elif type(actual) is Elemento:
+            if actual.event is not None:
+                actual.post_event()
             if actual.indice in self.tags_condicionales:
                 loc = self.locutores[actual.locutor]
                 supress = []
@@ -201,9 +208,13 @@ class Dialogo(Discurso):
             self.frontend.exit_sel_mode()
         self.dialogo = None
 
-        ModState.set('dialog.'+self.name, 1)
+        if self.write_flag:
+            ModState.set('dialog.' + self.name, 1)
 
         super().cerrar()
+
+    def set_flag(self, event):
+        self.write_flag = event.data['value']
 
     def update(self, sel):
         self.sel = sel
@@ -241,5 +252,3 @@ class Monologo(Discurso):
         for mob in self.participantes:
             mob.hablando = False
         super().cerrar()
-
-

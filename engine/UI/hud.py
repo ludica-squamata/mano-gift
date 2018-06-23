@@ -144,4 +144,4 @@ class HUD:
 
     def hide(self):
         self.is_shown = False
-        Renderer.clear_overlays_from_layer(CAPA_OVERLAYS_HUD)
+        Renderer.clear(layer=CAPA_OVERLAYS_HUD)

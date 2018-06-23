@@ -1,9 +1,9 @@
+from engine.misc import abrir_json, guardar_json, salir_handler, salir, Config
+from .constantes import CAPA_OVERLAYS_MENUS
 from .eventDispatcher import EventDispatcher, AzoeEvent
-from engine.misc import abrir_json, guardar_json, salir_handler, salir
 from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
-from .constantes import SAVEFD
 
 
 class EngineData:
@@ -24,7 +24,6 @@ class EngineData:
     @classmethod
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
         from engine.mapa import Stage
-        Renderer.clear()
         if stage not in cls.mapas or is_new_game:
             cls.mapas[stage] = Stage(stage, entrada)
         else:
@@ -54,28 +53,25 @@ class EngineData:
         cls.setKey = event.data['value']
 
     @classmethod
-    def end_dialog(cls, layer):
-        Renderer.clear_overlays_from_layer(layer)
+    def end_dialog(cls, event):
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
-        cls.MODO = 'Aventura'
-        if cls.HERO is not None:
-            cls.HERO.AI.register()
+        cls.MODO = event.data.get('Modo', 'Aventura')
 
     @classmethod
     def salvar(cls, event):
-        data = abrir_json(SAVEFD + '/' + cls.char_name + '.json')
+        data = abrir_json(Config.savedir + '/' + cls.char_name + '.json')
         data.update(event.data)
-        guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
+        guardar_json(Config.savedir + '/' + cls.char_name + '.json', data)
 
     @classmethod
     def new_game(cls, char_name):
         cls.char_name = char_name
-        guardar_json(SAVEFD + '/' + char_name + '.json', {"name": char_name})
+        guardar_json(Config.savedir + '/' + char_name + '.json', {"name": char_name})
         EventDispatcher.trigger('NewGame', 'engine', {})
 
     @classmethod
     def load_savefile(cls, filename):
-        data = abrir_json(SAVEFD + '/' + filename)
+        data = abrir_json(Config.savedir + '/' + filename)
         cls.save_data.update(data)
         cls.char_name = data['name']
         Mob_Group.clear()
@@ -130,7 +126,6 @@ class EngineData:
     def pop_menu(cls, event):
         from .mod_data import ModData
         from engine.UI.menues import default_menus
-        from .constantes import CAPA_OVERLAYS_MENUS
 
         titulo = event.data['value']
         if titulo == 'Previous':
@@ -170,4 +165,5 @@ EventDispatcher.register(EngineData.toggle_mode, AzoeEvent('Key',
                                                            {'nom': 'menu',
                                                             'type': 'tap'}))
 EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
+EventDispatcher.register(EngineData.end_dialog, 'EndDialog')
 EventDispatcher.register(salir_handler, 'QUIT')

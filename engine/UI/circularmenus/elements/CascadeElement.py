@@ -16,6 +16,7 @@ class CascadeElement(LetterElement):
 
         for j in range(len(cascada)):
             item = cascada[j]
+            obj = None
             if type(item) is dict:
                 if 'csc' in item:
                     obj = CascadeElement(self.parent, cascada[j])

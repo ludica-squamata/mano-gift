@@ -1,4 +1,5 @@
 from engine.globs import Tiempo, EngineData, CANVAS_BG, TEXT_FG, TEXT_SEL, BISEL_BG
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc.resources import split_spritesheet
 from pygame.sprite import LayeredUpdates, Sprite
 from engine.UI.widgets import BaseWidget, Boton
@@ -209,7 +210,7 @@ class MenuNuevo(Menu):
 
     def aceptar(self):
         EngineData.new_game(''.join([spr.key for spr in self.area_input]))
-        EngineData.end_dialog(self.layer)
+        EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def movercursor(self, dx, dy):
         """Desplaza el cursor por el teclado en pantalla y controla los limites."""

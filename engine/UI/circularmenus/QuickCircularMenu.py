@@ -1,4 +1,4 @@
-from engine.globs import EngineData, CAPA_OVERLAYS_INVENTARIO, FEATURE_ROTACION_MAPA, ModData
+from engine.globs import EngineData, FEATURE_ROTACION_MAPA, ModData
 from engine.globs.eventDispatcher import EventDispatcher, AzoeEvent
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import CommandElement, CascadeElement
@@ -6,7 +6,6 @@ from .elements import CommandElement, CascadeElement
 
 class QuickCircularMenu(RenderedCircularMenu):
     radius = 18
-    layer = CAPA_OVERLAYS_INVENTARIO
 
     def __init__(self):
         first = EngineData.current_qcm_idx
@@ -35,6 +34,7 @@ class QuickCircularMenu(RenderedCircularMenu):
 
         cascadas = {'inicial': []}
         for opt in [opciones[first]] + opciones[first + 1:] + opciones[:first]:
+            obj = None
             if type(opt) is dict:
                 if 'csc' in opt:
                     obj = CascadeElement(self, opt)

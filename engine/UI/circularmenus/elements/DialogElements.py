@@ -11,6 +11,7 @@ class TopicElement(LetterElement):
     def __init__(self, parent, item):
         data = item['head']
         nombre = data['name']
+        self.idx = item['idx']
         if data['icon']:
             icono = cargar_imagen(data['icon'])
         else:
@@ -32,8 +33,8 @@ class TopicElement(LetterElement):
                 self.parent.cerrar()
         return True
 
-    @classmethod
-    def pre_init(cls, head, locutores):
+    @staticmethod
+    def pre_init(head, locutores):
         return Discurso.pre_init(head, *locutores)
 
 

@@ -1,6 +1,6 @@
-from pygame import Mask, Surface, Rect
-from engine.globs import Mob_Group
 from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.modState import ModState
+from pygame import Mask, Surface, Rect
 from engine.base import AzoeSprite
 import sys
 
@@ -16,6 +16,7 @@ class Salida:
 
     def __init__(self, nombre, stage, rect, chunk, entrada, direcciones):
         self.nombre = self.tipo + '.' + nombre
+        self.flag_name = nombre+'.triggered'
         self.mapRect = Rect(*rect)
         self.chunk = chunk
         self.target_stage = stage
@@ -23,6 +24,8 @@ class Salida:
         self.direcciones = direcciones
         self.mask = Mask(self.mapRect.size)
         self.mask.fill()
+        ModState.set(self.flag_name, False)
+        print(self.flag_name)
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, *self.mapRect)
 
@@ -34,7 +37,8 @@ class Salida:
                 'target_chunk': self.chunk,
                 'target_entrada': self.link}
 
-        EventDispatcher.trigger('SetMap','Salida',data)
+        EventDispatcher.trigger('SetMap', 'Salida', data)
+        ModState.set(self.flag_name, True)
 
     def __repr__(self):
         return self.nombre

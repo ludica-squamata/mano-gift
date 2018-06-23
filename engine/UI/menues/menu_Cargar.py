@@ -1,5 +1,7 @@
-from engine.globs import EngineData, ANCHO, ALTO, SAVEFD
+from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs import EngineData, ANCHO, ALTO
 from pygame.sprite import LayeredUpdates
+from engine.misc import Config
 from .menu import Menu
 import os
 
@@ -36,7 +38,8 @@ class MenuCargar(Menu):
             super().use_function(mode, key)
 
     def llenar_espacio_selectivo(self):
-        self.archivos = [f.split('.')[0] for f in os.listdir(SAVEFD) if f.endswith('.json') and f != 'config.json']
+        list_dir = os.listdir(Config.savedir)
+        self.archivos = [f.split('.')[0] for f in list_dir if f.endswith('.json') and f != 'config.json']
         self.fill_draw_space(self.archivos, self.draw_space_rect.w, 21)
 
     def elegir_opcion(self, direccion):
@@ -53,7 +56,7 @@ class MenuCargar(Menu):
     def cargar(self):
         EngineData.load_savefile(self.archivos[self.sel] + '.json')
         self.deregister()
-        EngineData.end_dialog(self.layer)
+        EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def update(self):
         self.filas.draw(self.draw_space)
