@@ -260,9 +260,15 @@ class Renderer:
             cls.use_focus = False
 
     @classmethod
-    def clear(cls):
-        cls.camara.clear()
-        cls.overlays.empty()
+    def clear(cls, event=None, layer=None):
+        if event is not None and 'layer' in event.data:
+            layer = event.data['layer']
+            cls.overlays.remove_sprites_of_layer(layer)
+        elif layer:
+            cls.overlays.remove_sprites_of_layer(layer)
+        else:
+            cls.camara.clear()
+            cls.overlays.empty()
 
     @classmethod
     def add_overlay(cls, obj, _layer):
@@ -272,10 +278,6 @@ class Renderer:
     def del_overlay(cls, obj):
         if obj in cls.overlays:
             cls.overlays.remove(obj)
-
-    @classmethod
-    def clear_overlays_from_layer(cls, layer):
-        cls.overlays.remove_sprites_of_layer(layer)
 
     @classmethod
     def update(cls):
@@ -294,3 +296,4 @@ class Renderer:
 
 EventDispatcher.register(Camara.save_focus, 'Save')
 EventDispatcher.register(Camara.rotate_view, 'Rotate')
+EventDispatcher.register(Renderer.clear, 'EndDialog', 'NewGame')

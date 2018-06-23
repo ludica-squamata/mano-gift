@@ -1,3 +1,4 @@
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import EngineData, ANCHO, ALTO
 from pygame.sprite import LayeredUpdates
 from engine.misc import Config
@@ -55,7 +56,7 @@ class MenuCargar(Menu):
     def cargar(self):
         EngineData.load_savefile(self.archivos[self.sel] + '.json')
         self.deregister()
-        EngineData.end_dialog(self.layer)
+        EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def update(self):
         self.filas.draw(self.draw_space)

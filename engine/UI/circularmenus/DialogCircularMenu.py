@@ -1,4 +1,4 @@
-from engine.globs import EngineData as Ed, CAPA_OVERLAYS_CIRCULAR, ModData
+from engine.globs import EngineData, ModData
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import TopicElement, DialogOptionElement
 from engine.misc.resources import abrir_json
@@ -7,7 +7,6 @@ from os import path, listdir
 
 class DialogCircularMenu(RenderedCircularMenu):
     radius = 15
-    layer = CAPA_OVERLAYS_CIRCULAR
     locutores = None
 
     def __init__(self, *locutores):
@@ -40,7 +39,7 @@ class DialogCircularMenu(RenderedCircularMenu):
     def cerrar(self):
         for mob in self.locutores:
             mob.hablando = False
-        Ed.MODO = 'Aventura'
+        EngineData.MODO = 'Aventura'
         self.salir()
 
     def salir(self):

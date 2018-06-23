@@ -115,7 +115,7 @@ class DialogInterface(BaseWidget):
 
     def exit_sel_mode(self):
         self.sel_mode = False
-        Renderer.clear_overlays_from_layer(self.menu.layer)
+        Renderer.clear(layer=self.menu.layer)
         self.menu.cubos.empty()
 
     def set_loc_img(self, locutor):

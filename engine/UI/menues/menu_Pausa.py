@@ -20,7 +20,7 @@ class MenuPausa(Menu):
         nombres = ['Equipo', 'Opciones', 'Cargar']
         botones = []
         for j, nombre in enumerate(nombres):
-            botones.append({n: nombre, d: {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]}})
+            botones.append({n: nombre, d: {a: nombres[j - 1], b: nombres[j - (len(nombres) - 1)]}})
 
         if FEATURE_MENUS_ADICIONALES:
             botones[0][d][b] = "Status"
@@ -51,7 +51,7 @@ class MenuPausa(Menu):
         w = self.canvas.get_width() - r.right - CUADRO * 6 - 20
         h = fuente.size(EngineData.HERO.nombre)[1]
         rect = Rect(r.right + 2, 0, w, h + 1)
-        rect.centery = r.centery-10
+        rect.centery = r.centery - 10
         render = render_textrect(EngineData.HERO.nombre, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
@@ -61,7 +61,7 @@ class MenuPausa(Menu):
     def cancelar(self):
         EngineData.acceso_menues.clear()
         self.deregister()
-        EngineData.end_dialog(self.layer)
+        EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def new_menu(self):
         self.deregister()

@@ -1,4 +1,5 @@
 from engine.misc import abrir_json, guardar_json, salir_handler, salir, Config
+from .constantes import CAPA_OVERLAYS_MENUS
 from .eventDispatcher import EventDispatcher, AzoeEvent
 from .giftgroups import Mob_Group
 from .renderer import Renderer
@@ -23,7 +24,6 @@ class EngineData:
     @classmethod
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
         from engine.mapa import Stage
-        Renderer.clear()
         if stage not in cls.mapas or is_new_game:
             cls.mapas[stage] = Stage(stage, entrada)
         else:
@@ -53,12 +53,9 @@ class EngineData:
         cls.setKey = event.data['value']
 
     @classmethod
-    def end_dialog(cls, layer):
-        Renderer.clear_overlays_from_layer(layer)
+    def end_dialog(cls, event):
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
-        cls.MODO = 'Aventura'
-        if cls.HERO is not None:
-            cls.HERO.AI.register()
+        cls.MODO = event.data.get('Modo', 'Aventura')
 
     @classmethod
     def salvar(cls, event):
@@ -129,7 +126,6 @@ class EngineData:
     def pop_menu(cls, event):
         from .mod_data import ModData
         from engine.UI.menues import default_menus
-        from .constantes import CAPA_OVERLAYS_MENUS
 
         titulo = event.data['value']
         if titulo == 'Previous':
@@ -169,4 +165,5 @@ EventDispatcher.register(EngineData.toggle_mode, AzoeEvent('Key',
                                                            {'nom': 'menu',
                                                             'type': 'tap'}))
 EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
+EventDispatcher.register(EngineData.end_dialog, 'EndDialog')
 EventDispatcher.register(salir_handler, 'QUIT')

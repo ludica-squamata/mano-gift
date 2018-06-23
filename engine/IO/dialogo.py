@@ -1,5 +1,5 @@
 ﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
-from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS, ModState
+from engine.globs import CAPA_OVERLAYS_DIALOGOS, ModState
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.UI import DialogInterface
@@ -30,7 +30,7 @@ class Discurso(EventAware):
 
     def cerrar(self):
         self.deregister()
-        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+        EventDispatcher.trigger('EndDialog', self, {'layer': CAPA_OVERLAYS_DIALOGOS})
 
 
 class Dialogo(Discurso):
@@ -95,7 +95,7 @@ class Dialogo(Discurso):
                 elif operador == '!=':
                     supress = not loc_attr != target
                 else:
-                    raise ValueError("El operador '"+operador+"' es inválido")
+                    raise ValueError("El operador '" + operador + "' es inválido")
 
         if "objects" in condiciones:
             for obj in condiciones['objects']:
@@ -209,7 +209,7 @@ class Dialogo(Discurso):
         self.dialogo = None
 
         if self.write_flag:
-            ModState.set('dialog.'+self.name, 1)
+            ModState.set('dialog.' + self.name, 1)
 
         super().cerrar()
 

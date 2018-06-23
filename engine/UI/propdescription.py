@@ -1,6 +1,7 @@
 from .DialogInterface import DialogInterface
 from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.event_aware import EventAware
+from engine.globs.eventDispatcher import EventDispatcher
 
 
 class PropDescription (EventAware):
@@ -33,4 +34,4 @@ class PropDescription (EventAware):
 
     def salir(self):
         self.deregister()
-        EngineData.end_dialog(CAPA_OVERLAYS_DIALOGOS)
+        EventDispatcher.trigger('EndDialog', self, {'layer': CAPA_OVERLAYS_DIALOGOS})

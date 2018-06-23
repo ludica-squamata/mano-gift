@@ -1,10 +1,12 @@
+from engine.globs.constantes import CAPA_OVERLAYS_CIRCULAR
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.IO.menucircular import CircularMenu
 from engine.globs.renderer import Renderer
 from engine.globs import EngineData
 
 
 class RenderedCircularMenu(CircularMenu):
-    layer = 0
+    layer = CAPA_OVERLAYS_CIRCULAR
     last_on_spot = None
 
     def __init__(self, cascadas):
@@ -14,7 +16,7 @@ class RenderedCircularMenu(CircularMenu):
         self._update_rendered()
 
     def _update_rendered(self, on_spot=None):
-        Renderer.clear_overlays_from_layer(self.layer)
+        Renderer.clear(layer=self.layer)
         for cuadro in self.cubos:
             Renderer.add_overlay(cuadro, self.layer)
 
@@ -59,4 +61,4 @@ class RenderedCircularMenu(CircularMenu):
     def salir(self):
         if self.cascadaActual == 'inicial':
             self.deregister()
-            EngineData.end_dialog(self.layer)
+            EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
