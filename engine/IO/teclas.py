@@ -23,5 +23,9 @@ class Teclas:
             data['menu']: {'nom': 'menu'}
         }
 
+        for key in cls.key_dict:
+            cls.key_dict[key].update({'pressed': False, 'tap': False, 'holding': 0,
+                                      'hold': False, 'release': False, 'held': 0})
+
 
 Teclas.asignar()
