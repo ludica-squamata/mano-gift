@@ -1,9 +1,8 @@
+from engine.misc import abrir_json, guardar_json, salir_handler, salir, Config
 from .eventDispatcher import EventDispatcher, AzoeEvent
-from engine.misc import abrir_json, guardar_json, salir_handler, salir
 from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
-from .constantes import SAVEFD
 
 
 class EngineData:
@@ -63,19 +62,19 @@ class EngineData:
 
     @classmethod
     def salvar(cls, event):
-        data = abrir_json(SAVEFD + '/' + cls.char_name + '.json')
+        data = abrir_json(Config.savedir + '/' + cls.char_name + '.json')
         data.update(event.data)
-        guardar_json(SAVEFD + '/' + cls.char_name + '.json', data)
+        guardar_json(Config.savedir + '/' + cls.char_name + '.json', data)
 
     @classmethod
     def new_game(cls, char_name):
         cls.char_name = char_name
-        guardar_json(SAVEFD + '/' + char_name + '.json', {"name": char_name})
+        guardar_json(Config.savedir + '/' + char_name + '.json', {"name": char_name})
         EventDispatcher.trigger('NewGame', 'engine', {})
 
     @classmethod
     def load_savefile(cls, filename):
-        data = abrir_json(SAVEFD + '/' + filename)
+        data = abrir_json(Config.savedir + '/' + filename)
         cls.save_data.update(data)
         cls.char_name = data['name']
         Mob_Group.clear()

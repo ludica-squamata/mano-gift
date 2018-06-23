@@ -1,10 +1,11 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import TECLAS, TEXT_DIS, CANVAS_BG
+from engine.globs import TEXT_DIS, CANVAS_BG
 from pygame.sprite import LayeredUpdates, Sprite
 from pygame import Rect, font, joystick, Surface
 from engine.libs.textrect import render_textrect
 from engine.misc.config import Config as Cfg
 from pygame.key import name as key_name
+from engine.IO.teclas import Teclas
 from engine.UI.widgets import Fila
 from .menu import Menu
 
@@ -237,7 +238,7 @@ class MenuOpciones(Menu):
         self.canvas.blit(self.notice, self.notice_area)
 
     def cancelar(self):
-        TECLAS.asignar(Cfg.dato('comandos'))
+        Teclas.asignar(data=Cfg.dato('comandos'))
         Cfg.asignar('metodo_de_entrada', self.input_device)
         Cfg.guardar()
 

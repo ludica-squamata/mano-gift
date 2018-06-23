@@ -7,7 +7,7 @@
     "mapas":"maps",
     "mobs":"mobs",
     "items":"items",
-    "scripts":"scripts",
+    "scripts":"scripts"
   },
   "use_latitude":true
 }

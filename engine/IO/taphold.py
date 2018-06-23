@@ -1,10 +1,11 @@
-from engine.globs import EngineData, TECLAS, TECLADO, GAMEPAD
+from engine.globs import EngineData, TECLADO, GAMEPAD
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import Config
 from pygame import event, joystick
 from pygame.key import get_pressed
 from pygame import KEYDOWN, KEYUP, K_ESCAPE, QUIT
 from pygame import JOYBUTTONDOWN, JOYBUTTONUP, JOYHATMOTION, JOYAXISMOTION
+from .teclas import Teclas
 
 pressed_keys = []
 
@@ -16,7 +17,7 @@ def init():
 
 
 def filtrar_eventos_teclado(events):
-    teclas = TECLAS.devolver()
+    teclas = Teclas.key_dict
     global pressed_keys
 
     for _event in events:
@@ -58,7 +59,7 @@ def filtrar_eventos_teclado(events):
 
 
 def filtrar_eventos_gamepad(events):
-    teclas = TECLAS.devolver()
+    teclas = Teclas.key_dict.copy()
     # acá pongo "constantes" para las flechas
     flecha_derecha = 10
     flecha_izquierda = 11
@@ -178,29 +179,29 @@ def get_events(holding=100):
 
     for tcl in teclas:
         key = teclas[tcl]
-        if key['pressed']:
+        if key.get('pressed', False):
             key['holding'] += 10
             key['held'] += 10
         else:
             key['hold'] = False
             key['holding'] = 0
-            if not key['release']:
+            if not key.get('release', False):
                 key['held'] = 0
 
         if key['holding'] > holding:
             key['hold'] = True
             key['tap'] = False
 
-        if key['hold']:
+        if key.get('hold', False):
             data = {'nom': key['nom'], 'type': 'hold', 'value': key['holding']}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
 
-        elif key['tap']:
+        elif key.get('tap', False):
             data = {'nom': key['nom'], 'type': 'tap'}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
             key['tap'] = False
 
-        elif key['release']:
+        elif key.get('release', False):
             data = {'nom': key['nom'], 'type': 'release', 'value': key['held']}
             EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
             key['release'] = False

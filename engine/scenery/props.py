@@ -44,10 +44,6 @@ class Movible(Escenografia):
     accionable = True
 
     def __init__(self, nombre, x, y, z, data):
-        p = data.get('propiedades', ['solido'])
-        if 'solido' not in p:
-            p.append('solido')
-            data['propiedades'] = p
         super().__init__(nombre, x, y, z, data)
         Item_Group[self.nombre] = self
 

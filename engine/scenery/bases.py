@@ -1,8 +1,6 @@
 from engine.UI.propdescription import PropDescription
 from engine.base import ShadowSprite, EventListener
 from engine.mapa.LightSource import LightSource
-from engine.misc import abrir_json
-from engine.globs import ModData
 
 
 class Escenografia(ShadowSprite, EventListener):
@@ -30,17 +28,11 @@ class Escenografia(ShadowSprite, EventListener):
             imagen = data.get('image')
         super().__init__(imagen=imagen, rect=rect, x=x, y=y, dz=z)
         self.solido = 'solido' in data.get('propiedades', [])
-        self.proyectaSombra = data.get('proyecta_sombra', True)
+        self.proyectaSombra = 'proyecta_sombra' in data
         if data.get('proyecta_luz', False):
             self.luz = LightSource(self, *data['proyecta_luz'])
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         self.face = data.get('cara', 'front')
-
-        try:
-            dialogo = abrir_json(ModData.dialogos + self.nombre + '.json')
-            self.data.update({'dialog': dialogo})
-        except IOError:
-            pass
 
         self.add_listeners()  # carga de event listeners
 
@@ -65,8 +57,7 @@ class Item:
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data['efecto']['des']
-        if 'stackable' in data['propiedades']:
-            self.stackable = True
+        self.stackable = 'stackable' in data['propiedades']
 
     def __eq__(self, other):
         if other.__class__ == self.__class__ and self.ID == other.ID:

@@ -13,7 +13,7 @@ class DialogCircularMenu(RenderedCircularMenu):
     def __init__(self, *locutores):
         self.locutores = locutores
 
-        opciones = []
+        cascadas = {'inicial': []}
         idx = -1
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
@@ -22,13 +22,8 @@ class DialogCircularMenu(RenderedCircularMenu):
                 if TopicElement.pre_init(file['head'], locutores):
                     idx += 1
                     file.update({'idx': idx})
-                    opciones.append(file)
-
-        cascadas = {'inicial': []}
-        for opt in opciones:
-            obj = TopicElement(self, opt)
-            obj.idx = opt['idx']
-            cascadas['inicial'].append(obj)
+                    obj = TopicElement(self, file)
+                    cascadas['inicial'].append(obj)
 
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.back})

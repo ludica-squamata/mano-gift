@@ -243,8 +243,8 @@ class Renderer:
     camara = Camara()
     overlays = AzoeGroup('overlays')
 
-    @classmethod
-    def init(cls, nombre, favicon):
+    @staticmethod
+    def init(nombre, favicon):
         os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
         display.set_caption(nombre)
         display.set_icon(image.load(favicon))
