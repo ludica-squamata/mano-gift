@@ -1,6 +1,6 @@
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import EngineData, ANCHO, ALTO
-from pygame.sprite import LayeredUpdates
+from engine.globs.azoegroup import AzoeGroup
 from engine.misc import Config
 from .menu import Menu
 import os
@@ -27,15 +27,11 @@ class MenuCargar(Menu):
             'accion': self.cargar,
         })
 
-        self.filas = LayeredUpdates()
+        self.filas = AzoeGroup('Filas')
         self.create_draw_space('Elija un archivo', ANCHO - 16, ALTO / 2.4, 11, 65)
         self.llenar_espacio_selectivo()
         if len(self.filas):
             self.elegir_opcion(0)
-
-    def use_function(self, mode, key):
-        if len(self.filas):
-            super().use_function(mode, key)
 
     def llenar_espacio_selectivo(self):
         list_dir = os.listdir(Config.savedir)
@@ -50,13 +46,15 @@ class MenuCargar(Menu):
             i = +1
         self.deselect_all(self.filas)
         self.posicionar_cursor(i)
-        elegido = self.filas.get_sprite(self.sel)
-        elegido.ser_elegido()
+        if self.opciones > 0:
+            elegido = self.filas.get_sprite(self.sel)
+            elegido.ser_elegido()
 
     def cargar(self):
-        EngineData.load_savefile(self.archivos[self.sel] + '.json')
-        self.deregister()
-        EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
+        if self.opciones > 0:
+            EngineData.load_savefile(self.archivos[self.sel] + '.json')
+            self.deregister()
+            EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def update(self):
         self.filas.draw(self.draw_space)

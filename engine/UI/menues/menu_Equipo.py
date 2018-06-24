@@ -1,10 +1,10 @@
-from engine.UI.widgets import EspacioEquipable
-from .menu import Menu
-from pygame import Rect, font
-from pygame.sprite import LayeredUpdates
-from engine.misc.resources import cargar_imagen
-from engine.libs.textrect import render_textrect
 from engine.globs import EngineData, CANVAS_BG, TEXT_FG
+from engine.libs.textrect import render_textrect
+from engine.misc.resources import cargar_imagen
+from engine.UI.widgets import EspacioEquipable
+from engine.globs.azoegroup import AzoeGroup
+from pygame import Rect, font
+from .menu import Menu
 
 
 class MenuEquipo(Menu):
@@ -20,8 +20,8 @@ class MenuEquipo(Menu):
         """Crea e inicaliza las varibales del menú Equipo."""
 
         super().__init__('Equipo')
-        self.espacios = LayeredUpdates()  # grupo de espacios equipables.
-        self.filas = LayeredUpdates()  # grupo de items del espacio de selección.
+        self.espacios = AzoeGroup('Espacios')  # grupo de espacios equipables.
+        self.filas = AzoeGroup('Filas')  # grupo de items del espacio de selección.
         self.foco = 'espacios'  # setea el foco por default
         # Crear los espacios equipables.
         # "e_pos" es la posicion del espacio. "t_pos" es la posicion de su titulo.
@@ -193,7 +193,6 @@ class MenuEquipo(Menu):
 
         if self.current.item is None:
             if self.opciones > 0:
-                # self.current.ser_confirmado()
                 self.foco = 'items'
                 self.opciones = len(self.filas)
                 self.elegir_fila()
@@ -238,7 +237,6 @@ class MenuEquipo(Menu):
         :param key: string
         """
         if key in self.functions[self.foco][mode]:
-            # noinspection PyCallingNonCallable
             self.functions[self.foco][mode][key]()
 
     def update(self):

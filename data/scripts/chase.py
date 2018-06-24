@@ -1,10 +1,11 @@
 from engine.mobs.behaviortrees import Leaf, Success, Failure
-from engine.globs import EngineData as Ed, Mob_Group
+from engine.globs import Mob_Group
 
 
 class GetMobPos(Leaf):
     def process(self):
-        cuadros = Ed.MAPA_ACTUAL.grilla
+        e = self.get_entity()
+        cuadros = e.stage.grilla
         self.tree.clear_context()
 
         self.tree.set_context('mapa', cuadros)

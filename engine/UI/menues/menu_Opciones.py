@@ -1,9 +1,9 @@
+from engine.globs.azoegroup import AzoeGroup, AzoeBaseSprite
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import TEXT_DIS, CANVAS_BG
-from pygame.sprite import LayeredUpdates, Sprite
 from pygame import Rect, font, joystick, Surface
 from engine.libs.textrect import render_textrect
 from engine.misc.config import Config as Cfg
+from engine.globs import TEXT_DIS, CANVAS_BG
 from pygame.key import name as key_name
 from engine.IO.teclas import Teclas
 from engine.UI.widgets import Fila
@@ -20,8 +20,8 @@ class MenuOpciones(Menu):
         super().__init__('Opciones')
         self.data = Cfg.cargar()
 
-        self.botones = LayeredUpdates()
-        self.espacios = LayeredUpdates()
+        self.botones = AzoeGroup('Botones')
+        self.espacios = AzoeGroup('Espacios')
         self.establecer_botones(self.create_buttons(), 6)
         self.crear_espacios_config()
         self.notice, self.notice_area = self.create_notice()
@@ -99,11 +99,10 @@ class MenuOpciones(Menu):
                 esp = Fila(nom, ancho, x, y, justification=1)
 
             else:
-                spr = Sprite()
-                spr.nombre = 'dummy space'
-                spr.image = Surface((0, 0))
-                spr.rect = spr.image.get_rect()
-                esp = spr
+                nombre = 'dummy space'
+                image = Surface((0, 0))
+                rect = image.get_rect()
+                esp = AzoeBaseSprite(self, nombre, image, rect)
 
             self.espacios.add(esp)
 

@@ -1,13 +1,12 @@
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, GRUPO_MOBS
+from engine.globs.azoegroup import AzoeGroup, AzoeBaseSprite
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.renderer import Renderer
-from engine.misc import abrir_json, cargar_imagen
-from .LightSource import DayLight  # SpotLight
 from .loader import load_everything, cargar_salidas
-from .grilla import Grilla
-from pygame.sprite import Sprite
-from engine.globs.azoegroup import AzoeGroup
+from engine.misc import abrir_json, cargar_imagen
+from engine.globs.renderer import Renderer
 from pygame import mask, Rect, transform
+from .LightSource import DayLight
+from .grilla import Grilla
 
 
 class Stage:
@@ -166,32 +165,30 @@ class Stage:
         return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
 
 
-class ChunkMap(Sprite):
+class ChunkMap(AzoeBaseSprite):
     tipo = 'chunk'
     limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
 
     def __init__(self, stage, nombre, off_x, off_y, cargar_todo=True, data=False):
-        super().__init__()
         self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
-        self.stage = stage
-        self.nombre = nombre
-        # print(off_x,off_y)
 
         if not data:
-            data = abrir_json(ModData.mapas + self.nombre + '.' + self.tipo + '.json')
+            data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
 
         colisiones = cargar_imagen(data['colisiones'])
-        self.image = cargar_imagen(data['fondo'])
         self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
-        self.rect = self.image.get_rect(topleft=(off_x, off_y))
 
+        image = cargar_imagen(data['fondo'])
+        rect = image.get_rect(topleft=(off_x, off_y))
+
+        super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))
 
         if cargar_todo:
             # dx = -off_x + self.stage.offset_x
             # dy = -off_y + self.stage.offset_y
             for item, grupo in load_everything(data):  # , dx, dy):
-                self.stage.add_property(item, grupo)
+                self.parent.add_property(item, grupo)
 
     def ubicar(self, x, y):
         self.rect.x = x
@@ -201,7 +198,7 @@ class ChunkMap(Sprite):
 
         for key in limites:
             rect = Rect(self._get_newmap_pos(key), self.rect.size)
-            mapa = self.stage.chunks.get_sprites_at(rect.center)
+            mapa = self.parent.chunks.get_sprites_at(rect.center)
             if not mapa:
                 self.limites[key.lower()] = limites[key]
             else:
@@ -236,18 +233,18 @@ class ChunkMap(Sprite):
         dx, dy = self._get_newmap_pos(ady)
 
         if type(self.limites[ady]) is str:
-            mapa = ChunkMap(self.stage, self.limites[ady], dx, dy, cargar_todo=False)
+            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, cargar_todo=False)
             self.limites[ady] = mapa
-            self.stage.chunks.add(mapa)
+            self.parent.chunks.add(mapa)
         else:
             mapa = self.limites[ady]
             mapa.ubicar(dx, dy)
 
         if ady == 'izq' or ady == 'der':
-            self.stage.rect.inflate_ip(mapa.rect.w, 0)
+            self.parent.rect.inflate_ip(mapa.rect.w, 0)
 
         elif ady == 'sup' or ady == 'inf':
-            self.stage.rect.inflate_ip(0, mapa.rect.h)
+            self.parent.rect.inflate_ip(0, mapa.rect.h)
 
         return mapa
 
