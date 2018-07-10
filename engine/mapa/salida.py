@@ -25,7 +25,6 @@ class Salida:
         self.mask = Mask(self.mapRect.size)
         self.mask.fill()
         ModState.set(self.flag_name, False)
-        print(self.flag_name)
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, *self.mapRect)
 

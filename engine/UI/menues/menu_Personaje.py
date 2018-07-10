@@ -1,7 +1,7 @@
 from engine.globs import Tiempo, EngineData, CANVAS_BG, TEXT_FG, TEXT_SEL, BISEL_BG
+from engine.globs.azoegroup import AzoeGroup, AzoeBaseSprite
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc.resources import split_spritesheet
-from pygame.sprite import LayeredUpdates, Sprite
 from engine.UI.widgets import BaseWidget, Boton
 from pygame import font, Rect, Surface, draw
 from engine.libs import render_textrect
@@ -29,12 +29,12 @@ class MenuNuevo(Menu):
 
     def __init__(self):
         super().__init__('Personaje')
-        self.teclas = LayeredUpdates()  # teclado en pantalla
-        self.area_input = LayeredUpdates()  # letras del nombre
-        self.lineas = LayeredUpdates()  # linea punteada
+        self.teclas = AzoeGroup('Teclas')  # teclado en pantalla
+        self.area_input = AzoeGroup('Letras')  # letras del nombre
+        self.lineas = AzoeGroup('Linea Punteada')  # linea punteada
 
         # cargar imagenes
-        self.faces = cycle(split_spritesheet('mobs/imagenes/pc_face2.png', w=89, h=89))
+        self.faces = cycle(split_spritesheet('mobs/imagenes/pc_face.png', w=89, h=89))
         self.char_face = next(self.faces)
         self.char_images = self.cargar_anims('mobs/imagenes/heroe_idle_walk.png')
         self.char_img = self.char_images['Sabajo']
@@ -172,12 +172,12 @@ class MenuNuevo(Menu):
             key = self.cursor.current.nombre  # string
             espacio = self.lineas.get_sprite(self.lin_idx).rect
 
-            spr = Sprite()  # no hace falta una clase nueva para esto.
             fuente = font.SysFont('Verdana', 20)
-            spr.image = fuente.render(key, 1, (0, 0, 0), CANVAS_BG)
-            spr.rect = spr.image.get_rect()
-            spr.rect.bottom = espacio.top - 2
-            spr.rect.centerx = espacio.centerx
+            image = fuente.render(key, 1, (0, 0, 0), CANVAS_BG)
+            rect = image.get_rect()
+            rect.bottom = espacio.top - 2
+            rect.centerx = espacio.centerx
+            spr = AzoeBaseSprite(self, key, image, rect)
             spr.key = key
 
             self.area_input.add(spr)

@@ -1,27 +1,19 @@
-from engine.globs import GRUPO_MOBS
-# noinspection PyUnresolvedReferences
-from math import tan, radians
 from pygame import Surface, draw, mask as mask_module, transform
-# mask entra como mask_module para no generar conflictos.
-from pygame.sprite import Sprite
+from engine.globs.azoegroup import AzoeBaseSprite
+from engine.globs import GRUPO_MOBS
 from ._atribuido import Atribuido
+from math import tan, radians
 
 
-class Sense(Sprite):
+class Sense(AzoeBaseSprite):
     mask = None
-
     # la mascara se crea al rotarse, por eso no está en el init.
 
     def __init__(self, parent, name, image=None):
-        super().__init__()
-        self.parent = parent
-        # parent es el mob al cual este sentido pertenece
-        self.nombre = name
-        # muchas otras clases pieden "self.nombre" pero no piden "self.name".
-        # Esto es para evitar conflictos.
+        rect = None
         if image is not None:
-            self.image = image
-            self.rect = self.image.get_rect()
+            rect = image.get_rect()
+        super().__init__(parent, name, image, rect)
 
 
 class Sight(Sense):

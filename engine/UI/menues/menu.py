@@ -1,9 +1,9 @@
 from engine.globs import EngineData, ANCHO, ALTO, CAPA_OVERLAYS_MENUS, TEXT_SEL, CANVAS_BG
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.event_aware import EventAware
-from engine.libs.textrect import render_textrect
 from engine.UI.widgets import Boton, BaseWidget, Fila
-from pygame.sprite import LayeredUpdates
+from engine.libs.textrect import render_textrect
+from engine.globs.event_aware import EventAware
+from engine.globs.azoegroup import AzoeGroup
 from pygame import Rect, font, Surface
 
 
@@ -29,7 +29,7 @@ class Menu(EventAware, BaseWidget):
         if titulo is None:
             titulo = nombre
         self.crear_titulo(titulo, self.w)
-        self.botones = LayeredUpdates()
+        self.botones = AzoeGroup('Botones')
         super().__init__(self.canvas, center=True)
         self.functions['tap'].update({'contextual': self.cancelar})
         self.functions['release'].update({'contextual': self.cancelar})

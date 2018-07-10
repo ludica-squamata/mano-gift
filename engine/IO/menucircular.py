@@ -1,9 +1,9 @@
-﻿from pygame.sprite import Sprite, LayeredUpdates
-from math import sin, cos, radians
+﻿from engine.globs.azoegroup import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_aware import EventAware
+from math import sin, cos, radians
 
 
-class BaseElement(Sprite):
+class BaseElement(AzoeBaseSprite):
     selected = False
     in_place = False
     delta = 0
@@ -20,9 +20,7 @@ class BaseElement(Sprite):
 
     def __init__(self, parent, nombre):
         self.cascada = []
-        super().__init__()
-        self.parent = parent
-        self.nombre = nombre
+        super().__init__(parent, nombre)
         self.check_placement()
 
     def __repr__(self):
@@ -88,7 +86,7 @@ class CircularMenu (EventAware):
     center = 0, 0
 
     def __init__(self, cascadas, centerx, centery):
-        self.cubos = LayeredUpdates()
+        self.cubos = AzoeGroup('Cubos')
         self.cascadas = {}
         self.center = centerx, centery
         self.puntos = None
