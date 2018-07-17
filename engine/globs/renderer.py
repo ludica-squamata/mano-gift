@@ -296,4 +296,4 @@ class Renderer:
 
 EventDispatcher.register(Camara.save_focus, 'Save')
 EventDispatcher.register(Camara.rotate_view, 'Rotate')
-EventDispatcher.register(Renderer.clear, 'EndDialog', 'NewGame')
+EventDispatcher.register(Renderer.clear, 'EndDialog', 'NewGame', 'SetMap')
