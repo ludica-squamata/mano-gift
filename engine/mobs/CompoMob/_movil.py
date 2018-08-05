@@ -1,3 +1,4 @@
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.scenery.props import Movible
 from ._atribuido import Atribuido
@@ -15,6 +16,7 @@ class Movil(Atribuido):
         self.moviendose = True
         dx, dy = super().mover(*self.direcciones[self.direccion])
         self.reubicar(dx, dy)
+        EventDispatcher.trigger('SoundEvent', self, {'type': 'movement', 'volume': 1})
 
     def atacar(self, sprite):
         # 'sprite' es agregado para mantener la firma

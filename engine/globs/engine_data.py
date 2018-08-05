@@ -41,7 +41,7 @@ class EngineData:
                             mob=evento.data['mob'])
             stage = evento.data['target_stage']
             x, y = cls.mapas[stage].posicion_entrada(evento.data['target_entrada'])
-            cls.HERO.ubicar_en_entrada(x, y)
+            Renderer.camara.focus.ubicar_en_entrada(x, y)
 
     @classmethod
     def on_setkey(cls, event):

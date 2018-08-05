@@ -25,6 +25,14 @@ class Discurso(EventAware):
 
         return allow
 
+    @staticmethod
+    def emit_sound_event(locutor):
+        """"Este método es un shortcut para el post del SoundEvent.
+        Pertence a Discurso, y no a Dialogo, porque el héroe también
+        escucha el Monólogo del npc."""
+
+        EventDispatcher.trigger('SoundEvent', locutor, {'type': 'dialog', 'volume': 1})
+
     def direccionar_texto(self, direccion):
         raise NotImplementedError
 
@@ -111,6 +119,7 @@ class Dialogo(Discurso):
             self.dialogo.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
+            self.emit_sound_event(self.locutores[actual.locutor])
             self.hablar()
 
         elif type(actual) is BranchArray:
@@ -143,6 +152,7 @@ class Dialogo(Discurso):
 
                 self.dialogo.set_chosen(choice)
                 self.hablar()
+                self.emit_sound_event(self.locutores[actual.locutor])
 
             elif self.SelMode is False:
                 loc = self.locutores[actual.locutor]
@@ -172,6 +182,8 @@ class Dialogo(Discurso):
                 self.mostrar_nodo(actual, omitir_tags=supress)
             else:
                 self.mostrar_nodo(actual)
+
+            self.emit_sound_event(self.locutores[actual.locutor])
 
         else:
             self.cerrar()
@@ -241,6 +253,7 @@ class Monologo(Discurso):
 
         self.frontend.set_loc_img(self.locutor)
         self.frontend.set_text('No tengo nada más que hablar contigo')  # hardcoded for test
+        self.emit_sound_event(self.locutor)
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':

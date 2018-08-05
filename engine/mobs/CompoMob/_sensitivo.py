@@ -1,27 +1,19 @@
 from pygame import Surface, draw, mask as mask_module, transform
+from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.azoegroup import AzoeBaseSprite
-from engine.globs import GRUPO_MOBS
 from ._atribuido import Atribuido
 from math import tan, radians
 
 
-class Sense(AzoeBaseSprite):
+class Sight(AzoeBaseSprite):
+    ultima_direccion = ''
     mask = None
     # la mascara se crea al rotarse, por eso no está en el init.
 
-    def __init__(self, parent, name, image=None):
-        rect = None
-        if image is not None:
-            rect = image.get_rect()
-        super().__init__(parent, name, image, rect)
-
-
-class Sight(Sense):
-    ultima_direccion = ''
-
     def __init__(self, parent, lenght):
         image = self._create(lenght)
-        super().__init__(parent, 'vision', image)
+        rect = image.get_rect()
+        super().__init__(parent, 'vision', image, rect)
 
     @staticmethod
     def _create(largo):
@@ -87,44 +79,20 @@ class Sight(Sense):
                 self.parent.perceived['seen'].append(obj)
 
 
-class Hearing(Sense):
-    def __init__(self, parent, radius):
-        image = self._create(radius)
-        super().__init__(parent, 'audicion', image)
-
-    @staticmethod
-    def _create(radio):
-        """crea un circulo auditivo, que se usa para que el mob
-        detecte otros mobs y objetos"""
-
-        surf = Surface((radio * 2, radio * 2))
-        draw.circle(surf, (0, 0, 255), [radio, radio], radio, 0)
-        surf.set_colorkey((0, 0, 0))
-        return surf
-
-    def move(self):
-        tx, ty, tw, th = self.parent.mapRect
-        w, h = self.image.get_size()
-        x = int(tx + (tw / 2) - (w / 2))
-        y = int(ty + (th / 2) - (h / 2))
-
-        self.rect.topleft = int(x), int(y)
-        self.mask = mask_module.from_surface(self.image)
-
-    def __call__(self):
-        self.move()
-        lista = self.parent.stage.properties.get_sprites_from_layer(GRUPO_MOBS)
-        idx = lista.index(self.parent)
-        for obj in lista[0:idx] + lista[idx + 1:]:
-            x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
-            if obj.mask.overlap(self.mask, (x, y)) and any([obj.moviendose, obj.hablando]):
-                self.parent.perceived['heard'].append(obj)
-
-
-class Touch(Sense):
+class Hearing(AzoeBaseSprite):
     def __init__(self, parent):
-        super().__init__(parent, 'Tacto')
-        self.rect = self.parent.rect
+        super().__init__(parent, 'audicion')
+        EventDispatcher.register(self.listener, 'SoundEvent')
+
+    def listener(self, event):
+        # acá se podría negar la recepción del sonido por la distancia
+        # pero por el momento con que se escuche el sonido basta.
+        self.parent.perceived['heard'].append(event)
+
+
+class Touch(AzoeBaseSprite):
+    def __init__(self, parent):
+        super().__init__(parent, 'Tacto', rect=parent.rect)
 
     def __call__(self):
         lista = self.parent.stage.properties.sprites()
@@ -144,7 +112,7 @@ class Sensitivo(Atribuido):
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
         self.vista = Sight(self, 32 * 5)  # (data[vision])
-        self.oido = Hearing(self, 32 * 6)  # cheat
+        self.oido = Hearing(self)
         self.tacto = Touch(self)
         self.perceived = {"heard": [], "seen": [], "touched": [], "felt": []}
 
@@ -153,5 +121,5 @@ class Sensitivo(Atribuido):
         for sense in self.perceived:
             self.perceived[sense].clear()
         self.vista()
-        self.oido()
+        # self.oido()
         self.tacto()
