@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import Rect, draw, display, image, mouse
+from pygame import Rect, draw, display, image, mouse, font
 from engine.globs.azoegroup import AzoeGroup
 from .constantes import ANCHO, ALTO
 import sys
@@ -242,6 +242,8 @@ class Renderer:
     use_focus = False
     camara = Camara()
     overlays = AzoeGroup('overlays')
+    debug_text = None
+    debug_pos = 0, 0
 
     @staticmethod
     def init(nombre, favicon):
@@ -280,6 +282,14 @@ class Renderer:
             cls.overlays.remove(obj)
 
     @classmethod
+    def get_debug_text(cls, event):
+        cls.debug_text = event.data['text']
+        if 'pos' in event.data:
+            cls.debug_pos = event.data['pos']
+        else:
+            cls.debug_pos = 0, 0
+
+    @classmethod
     def update(cls):
         fondo = display.get_surface()
         fondo.fill((0, 0, 0))
@@ -290,10 +300,16 @@ class Renderer:
                 over.update()
         ret = cls.camara.draw(fondo)
         ret += cls.overlays.draw(fondo)
+        if cls.debug_text is not None:
+            fuente = font.SysFont('Verdana', 16)
+            color = (255, 0, 0)
+            render = fuente.render(cls.debug_text, 1, color)
+            ret.append(Rect(display.get_surface().blit(render, cls.debug_pos)))
 
         display.update(ret)
 
 
+EventDispatcher.register(Renderer.get_debug_text, 'DEBUG')
 EventDispatcher.register(Camara.save_focus, 'Save')
 EventDispatcher.register(Camara.rotate_view, 'Rotate')
 EventDispatcher.register(Renderer.clear, 'EndDialog', 'NewGame', 'SetMap')
