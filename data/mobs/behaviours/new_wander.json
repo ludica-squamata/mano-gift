@@ -1,7 +1,7 @@
 {
   "head":{
     "script":{
-      "wander":["IsTalking","GetRandomDir","GetRoute","NextPosition","Move","Wait"]
+      "behaviours/wander":["IsTalking","GetRandomDir","GetRoute","NextPosition","Move","Wait"]
       },
     "special":{
       "Repeater":{"ID":null,"times":0}
