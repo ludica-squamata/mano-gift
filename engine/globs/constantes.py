@@ -15,6 +15,7 @@ CAPA_OVERLAYS_HUD = 1
 CAPA_OVERLAYS_DIALOGOS = 2  # ocupan un framento de la pantalla
 CAPA_OVERLAYS_MENUS = 3  # ocupan toda o gran parte de la pantalla
 CAPA_OVERLAYS_CIRCULAR = 4
+CAPA_OVERLAYS_DEBUG = 5
 
 # devices, constantes para IO.taphold
 TECLADO = 'teclado'

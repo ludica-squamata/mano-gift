@@ -1,7 +1,7 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import Rect, draw, display, image, mouse, font
+from pygame import Rect, draw, display, image, mouse, font, sprite, Surface
 from engine.globs.azoegroup import AzoeGroup
-from .constantes import ANCHO, ALTO
+from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
 import sys
 import os
 
@@ -283,11 +283,18 @@ class Renderer:
 
     @classmethod
     def get_debug_text(cls, event):
-        cls.debug_text = event.data['text']
-        if 'pos' in event.data:
-            cls.debug_pos = event.data['pos']
-        else:
-            cls.debug_pos = 0, 0
+        if 'debug' in sys.argv:
+            cls.clear(layer=CAPA_OVERLAYS_DEBUG)
+            spr = sprite.Sprite()
+            fuente = font.SysFont('Verdana', 16)
+            w = ANCHO - event.data['pos'][0]
+            h = fuente.get_height()
+            spr.image = Surface((w, h))
+            spr.image.blit(fuente.render(event.data['text'], 1, (255, 0, 0)), (0, 0))
+            spr.rect = spr.image.get_rect(topleft=event.data['pos'])
+
+            spr.active = True
+            cls.add_overlay(spr, CAPA_OVERLAYS_DEBUG)
 
     @classmethod
     def update(cls):
@@ -300,11 +307,6 @@ class Renderer:
                 over.update()
         ret = cls.camara.draw(fondo)
         ret += cls.overlays.draw(fondo)
-        if cls.debug_text is not None:
-            fuente = font.SysFont('Verdana', 16)
-            color = (255, 0, 0)
-            render = fuente.render(cls.debug_text, 1, color)
-            ret.append(Rect(display.get_surface().blit(render, cls.debug_pos)))
 
         display.update(ret)
 
