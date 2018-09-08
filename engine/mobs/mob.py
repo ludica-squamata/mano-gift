@@ -7,6 +7,7 @@ from engine.globs.eventDispatcher import EventDispatcher
 
 class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
     accionable = False
+    mapa_actual = None
 
     def __init__(self, x, y, data, focus=False):
         self.tipo = "Mob"

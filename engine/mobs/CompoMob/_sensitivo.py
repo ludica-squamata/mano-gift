@@ -71,7 +71,9 @@ class Sight(AzoeBaseSprite):
             self.ultima_direccion = self.parent.direccion
 
         self.move(direccion)
-        lista = self.parent.stage.properties.sprites()
+        mapa = self.parent.mapa_actual
+        lista = mapa.properties.sprites() if mapa is not None and len(mapa) > 0 else [self.parent]
+
         idx = lista.index(self.parent)
         for obj in lista[0:idx] + lista[idx + 1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
@@ -95,7 +97,11 @@ class Touch(AzoeBaseSprite):
         super().__init__(parent, 'Tacto', rect=parent.rect)
 
     def __call__(self):
-        lista = self.parent.stage.properties.sprites()
+        mapa = self.parent.mapa_actual
+        lista = mapa.properties.sprites()
+        if self.parent not in lista:
+            lista.append(self.parent)
+
         lista.reverse()
         idx = lista.index(self.parent)
         for obj in lista[0:idx] + lista[idx + 1:]:
@@ -120,6 +126,6 @@ class Sensitivo(Atribuido):
         super().update(*args)
         for sense in self.perceived:
             self.perceived[sense].clear()
-        self.vista()
+        # self.vista()
         # self.oido()
-        self.tacto()
+        # self.tacto()

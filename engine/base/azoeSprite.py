@@ -26,6 +26,7 @@ class AzoeSprite(sprite.Sprite):
     direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0],
                    'ninguna': [0, 0]}
     direccion = 'abajo'
+    parent = None
 
     def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
@@ -65,6 +66,9 @@ class AzoeSprite(sprite.Sprite):
         else:
             self.z = self.mapRect.bottom
         self.z += dz
+
+    def set_parent_map(self, parent):
+        self.stage = parent
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""

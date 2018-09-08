@@ -29,7 +29,9 @@ class EngineData:
         else:
             cls.mapas[stage].ubicar_en_entrada(entrada)
 
-        cls.mapas[stage].register_at_renderer(mob)
+        if mob is not None:
+            cls.mapas[stage].mapa.add_property(mob, 2)
+            mob.set_parent_map(cls.mapas[stage].mapa)
 
         return cls.mapas[stage]
 

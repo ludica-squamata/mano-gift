@@ -1,7 +1,7 @@
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, GRUPO_MOBS
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION
 from engine.globs.azoegroup import AzoeGroup, AzoeBaseSprite
 from engine.globs.eventDispatcher import EventDispatcher
-from .loader import load_everything, cargar_salidas
+from .loader import load_something, cargar_salidas
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from pygame import mask, Rect, transform
@@ -11,7 +11,6 @@ from .grilla import Grilla
 
 class Stage:
     properties = None
-    interactives = []
     cuadrantes = []
     chunks = None
     mapa = None
@@ -24,8 +23,6 @@ class Stage:
 
     def __init__(self, nombre, entrada):
         self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
-        self.properties = AzoeGroup('Stage ' + nombre + ' properties')
-        self.interactives.clear()
         self.cuadrantes.clear()
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
@@ -35,9 +32,9 @@ class Stage:
         offy = self.offset_y - dy
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, data=singleton)
+            chunk = ChunkMap(self, chunk_name, offx, offy, data=singleton, requested=['Mobs', 'Props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy)
+            chunk = ChunkMap(self, chunk_name, offx, offy, requested=['Mobs', 'Props'])
 
         self.chunks.add(chunk)
         self.mapa = self.chunks.sprites()[0]
@@ -56,12 +53,11 @@ class Stage:
         self.entrada = entrada
 
         # EventDispatcher.register(self.anochecer, 'HourFlag')
-        EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
         EventDispatcher.register(self.save_map, 'Save')
         EventDispatcher.register(self.rotate_map, 'RotateEverything')
 
-    def register_at_renderer(self, mob=None):
-        Renderer.camara.set_background(self.mapa)
+    def register_at_renderer(self):
+        # esta función es obsoleta
         luz_del_sol = DayLight(self.amanece, self.atardece, self.anochece)
         if Tiempo.noche is None:
             Tiempo.crear_noche(self.rect.size)
@@ -69,61 +65,18 @@ class Stage:
             Tiempo.noche.set_lights(luz_del_sol)
         # elif self.data['ambiente'] == 'interior':
         #     pass
-        to_be_registered = self.properties.sprites()
-        if mob is not None:
-            to_be_registered.append(mob)
-            self.add_property(mob, GRUPO_MOBS)
-
-        for obj in to_be_registered:
-            ''':type obj: _giftSprite'''
-            if obj.stage is not self:
-                obj.stage = self
-                # obj.bottom = self.rect.h - obj.top
-                # obj.right = self.rect.w - obj.left
-
-            obj.sombra = None
-            obj._prevLuces = None
-
-            self.rect = self.mapa.rect.copy()
-            x = self.rect.x + obj.mapRect.x
-            y = self.rect.y + obj.mapRect.y
-            obj.ubicar(x, y)
-
-            if obj not in Renderer.camara.real:
-                Renderer.camara.add_real(obj)
 
         # luz_del_sol.add_objs([obj for obj in self.properties if obj.proyectaSombra])
 
-        for salida in self.salidas:
-            if salida.sprite is not None:
-                Renderer.camara.add_real(salida.sprite)
-
-    def add_property(self, obj, _layer):
-        add_interactive = False
-        if type(obj) is tuple:
-            obj, add_interactive = obj
-        self.properties.add(obj, layer=_layer)
-        if add_interactive:
-            self.interactives.append(obj)
-
-    def del_property(self, obj):
-        if obj in self.properties:
-            self.properties.remove(obj)
-        if obj in self.interactives:
-            self.interactives.remove(obj)
-        Renderer.camara.remove_obj(obj)
+        # for salida in self.salidas:
+        #     if salida.sprite is not None:
+        #         Renderer.camara.add_real(salida.sprite)
 
     def cargar_timestamps(self):
         if self.data['ambiente'] == 'exterior':
             self.amanece = TimeStamp(*self.data["amanece"])
             self.atardece = TimeStamp(*self.data["atardece"])
             self.anochece = TimeStamp(*self.data["anochece"])
-
-    def del_interactive(self, event):
-        obj = event.data['obj']
-        if hasattr(obj, 'sombra') and obj.sombra is not None:
-            self.del_property(obj.sombra)
-        self.del_property(obj)
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'link': self.entrada})
@@ -162,14 +115,18 @@ class Stage:
         self.mapa.ubicar(x, y)
 
     def __repr__(self):
-        return "Stage " + self.nombre + ' (' + str(len(self.properties.sprites())) + ' sprites)'
+        return "Stage " + self.nombre
 
 
 class ChunkMap(AzoeBaseSprite):
     tipo = 'chunk'
     limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
+    properties = None
+    interactives = []
 
-    def __init__(self, stage, nombre, off_x, off_y, cargar_todo=True, data=False):
+    def __init__(self, stage, nombre, off_x, off_y, data=False, requested=None):
+        self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
+        self.interactives.clear()
         self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
 
         if not data:
@@ -184,15 +141,37 @@ class ChunkMap(AzoeBaseSprite):
         super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))
 
-        if cargar_todo:
-            # dx = -off_x + self.stage.offset_x
-            # dy = -off_y + self.stage.offset_y
-            for item, grupo in load_everything(data):  # , dx, dy):
-                self.parent.add_property(item, grupo)
+        for item, grupo in load_something(data, requested):
+            obj = self.add_property(item, grupo)
+            obj.set_parent_map(self)
+
+        EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
     def ubicar(self, x, y):
         self.rect.x = x
         self.rect.y = y
+
+    def add_property(self, obj, _layer):
+        add_interactive = False
+        if type(obj) is tuple:
+            obj, add_interactive = obj
+        self.properties.add(obj, layer=_layer)
+        if add_interactive:
+            self.interactives.append(obj)
+        return obj
+
+    def del_property(self, obj):
+        if obj in self.properties:
+            self.properties.remove(obj)
+        if obj in self.interactives:
+            self.interactives.remove(obj)
+        Renderer.camara.remove_obj(obj)
+
+    def del_interactive(self, event):
+        obj = event.data['obj']
+        if hasattr(obj, 'sombra') and obj.sombra is not None:
+            self.del_property(obj.sombra)
+        self.del_property(obj)
 
     def cargar_limites(self, limites):
 
@@ -233,7 +212,7 @@ class ChunkMap(AzoeBaseSprite):
         dx, dy = self._get_newmap_pos(ady)
 
         if type(self.limites[ady]) is str:
-            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, cargar_todo=False)
+            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, requested=['Props'])
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:

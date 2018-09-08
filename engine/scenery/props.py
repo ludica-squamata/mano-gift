@@ -51,23 +51,23 @@ class Movible(Escenografia):
         pass
 
     def mover(self, dx, dy):
-        col_mapa = False
-        if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
-            col_mapa = True
-
-        if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
-            col_mapa = True
-
-        if not col_mapa:
+        # col_mapa = False
+        # if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
+        #     col_mapa = True
+        #
+        # if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
+        #     col_mapa = True
+        #
+        # if not col_mapa:
             self.reubicar(dx, dy)
             return True
 
-        return False
+        # return False
 
     def update(self):
         super().update()
         x, y = self.mapRect.x // 32, self.mapRect.y // 32
-        self.stage.grilla.set_transitable((x, y), False)
+        self.stage.parent.grilla.set_transitable((x, y), False)
 
 
 class Trepable(Escenografia):
