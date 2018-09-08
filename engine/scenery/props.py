@@ -41,11 +41,14 @@ class Agarrable(Escenografia):
 
 
 class Movible(Escenografia):
-    accionable = True
+    accionable = False
 
     def __init__(self, nombre, x, y, z, data):
         super().__init__(nombre, x, y, z, data)
         Item_Group[self.nombre] = self
+
+    def action(self, *args, **kwargs):
+        pass
 
     def mover(self, dx, dy):
         col_mapa = False

@@ -40,6 +40,12 @@ class Consumible(Item):
         return mob.inventario.remover(self)
 
 
+class Colocable(Item):
+    def __init__(self, nombre, imagen, data):
+        super().__init__(nombre, imagen, data)
+        self.subtipo = 'colocable'
+
+
 class Armadura(Equipable):
     def __init__(self, nombre, imagen, data):
         super().__init__(nombre, imagen, data)

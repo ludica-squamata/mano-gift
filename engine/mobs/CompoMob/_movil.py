@@ -21,10 +21,7 @@ class Movil(Atribuido):
     def atacar(self, sprite):
         # 'sprite' es agregado para mantener la firma
         # cuestiones de PyCharm.
-        if not self.moviendose:
-            return True
-        else:
-            return False
+        return not self.moviendose
 
     def detectar_colisiones(self):
         dx, dy = super().mover(*self.direcciones[self.direccion])

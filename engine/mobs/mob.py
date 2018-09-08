@@ -33,18 +33,6 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
         self.images = self.idle_walk_img
         self.ID = data['ID']
         self.nombre = data['nombre']
-
-        if 'propiedades' in data:
-            if 'solido' in data['propiedades']:
-                self.solido = data['solido']
-
-            if 'hostil' in data['propiedades']:
-                self.actitud = 'hostil'
-            elif 'pasiva' in data['propiedades']:
-                self.actitud = 'pasiva'
-            else:
-                self.actitud = ''
-
         self.estado = 'idle'
         image = self.images['S'+self.direccion]
         mask = self.mascaras['S'+self.direccion]
