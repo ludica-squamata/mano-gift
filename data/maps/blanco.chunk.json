@@ -2,7 +2,6 @@
   "fondo":"maps/fondos/blanco.png",
   "colisiones":"maps/colisiones/800.png",
   "props": {
-    "arbol":[[200,200]],
     "crate":[[300,300]]
   },
   "mobs": {"hero":[[400,400]]},

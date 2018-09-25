@@ -51,18 +51,19 @@ class Movible(Escenografia):
         pass
 
     def mover(self, dx, dy):
-        # col_mapa = False
-        # if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
-        #     col_mapa = True
-        #
-        # if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
-        #     col_mapa = True
-        #
-        # if not col_mapa:
+        col_mapa = False
+        # detectar colision contra otros props fijos, como la casa
+        if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
+            col_mapa = True
+
+        if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
+            col_mapa = True
+
+        if not col_mapa:
             self.reubicar(dx, dy)
             return True
 
-        # return False
+        return False
 
     def update(self):
         super().update()

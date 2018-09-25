@@ -160,7 +160,9 @@ class Camara:
                 if adyacent_map_key == 'sup':
                     cls.bgs_rect.y = new_map.rect.y
 
-        cls.focus.mapa_actual = map_at_center[0] if len(map_at_center) else new_map
+        a_map = map_at_center[0] if len(map_at_center) else new_map
+        if cls.focus.mapa_actual != a_map:
+            cls.focus.translocate(a_map, *cls.rect.center)
 
     @classmethod
     def update_sprites_layer(cls):
