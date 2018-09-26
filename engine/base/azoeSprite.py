@@ -22,10 +22,12 @@ class AzoeSprite(sprite.Sprite):
     IMAGEN_DR = 'abde'
     IMAGEN_UL = 'ariz'
     IMAGEN_UR = 'arde'
-   
+
     direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0],
                    'ninguna': [0, 0]}
     direccion = 'abajo'
+    parent = None
+    mapa_actual = None
 
     def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
@@ -66,10 +68,24 @@ class AzoeSprite(sprite.Sprite):
             self.z = self.mapRect.bottom
         self.z += dz
 
+        self.mapa_actual_rect = Rect(self.mapRect)
+
+    def set_parent_map(self, parent):
+        self.stage = parent
+
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
         self.mapRect.move_ip(dx, dy)
+        self.mapa_actual_rect.move_ip(dx, dy)
         self.z += dy
+
+    def translocate(self, new_map, dx, dy):
+        self.mapa_actual = new_map
+        x, y = self.mapa_actual.rect.topleft
+        print(self.mapa_actual_rect, 'a')
+        self.mapa_actual_rect.center = -x + dx, -y + dy
+        print(self.mapa_actual_rect, 'b')
+        self.z = -y + dy + self.rect.h
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
@@ -78,8 +94,8 @@ class AzoeSprite(sprite.Sprite):
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
-            x = self.mapRect.x - (other.mapRect.x - off_x)
-            y = self.mapRect.y - (other.mapRect.y - off_y)
+            x = self.mapa_actual_rect.x + off_x - other.mapRect.x
+            y = self.mapa_actual_rect.y + off_y - other.mapRect.y
             if other.mask.overlap(self.mask, (x, y)):
                 return True
         return False

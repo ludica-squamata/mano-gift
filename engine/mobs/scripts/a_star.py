@@ -1,6 +1,6 @@
 # A* module
-# noinspection PyUnresolvedReferences
 from math import sqrt
+from pygame import mask
 
 
 def a_star(inicio, destino, mapa, heuristica='manhattan'):
@@ -20,7 +20,7 @@ def a_star(inicio, destino, mapa, heuristica='manhattan'):
 
         cerrada.append(actual)
 
-        vecinos = mirar_vecinos(actual, mapa)
+        vecinos = mirar_vecinos(actual, 100, mapa)
         for vecino in vecinos:
             punt_g_tentativa = actual.g + vecino.g
             if vecino not in cerrada or punt_g_tentativa < vecino.g:
@@ -35,18 +35,19 @@ def heuristica_estimada(node, goal, method):
     if method == 'manhattan':
         return abs(node.x - goal.x) + abs(node.y - goal.y)
     elif method == 'euclidean':
-        return int(sqrt((node.x - goal.x)**2+(node.y - goal.y)**2))
+        return int(sqrt((node.x - goal.x) ** 2 + (node.y - goal.y) ** 2))
 
 
-def mirar_vecinos(nodo, grilla):
+def mirar_vecinos(nodo, size, mascara):
     cuadros = []
-    direcciones = ((0, -1), (1, -1), (1, 0), (1, 1), (-1, 1), (-1, 0), (-1, -1), (0, 1))
+    test = mask.Mask((size, size))
+    test.fill()
+    direcciones = ((0, -1), (1, 0), (0, 1), (-1, 0))
     for dx, dy in direcciones:
-        x, y = nodo.x + dx, nodo.y + dy
-        if (x, y) in grilla:
-            n = grilla[x, y]
-            if n:
-                cuadros.append(n)
+        x, y = nodo.x + (dx * size), nodo.y + (dy * size)
+        vecino = Nodo(x, y, size)
+        if not mascara.overlap(test, (x, y)):
+            cuadros.append(vecino)
 
     return cuadros
 
@@ -80,3 +81,25 @@ def determinar_direccion(curr_p, next_p):
             direccion = 'arriba'
 
     return direccion
+
+
+class Nodo:
+    x = 0
+    y = 0
+    f = 0
+    g = 0
+    transitable = True
+
+    def __init__(self, x, y, size):
+        self.s = size
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return 'Nodo(' + str(self.x) + ',' + str(self.y) + ')'
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        return self.x * self.s + self.y

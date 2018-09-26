@@ -8,7 +8,7 @@
     "casa_cerrada":[[600,600]],
     "armor":[[254,256]]
   },
-  "mobs": {"commoner":[[500,500]],"hero":[[400,400]]
+  "mobs": {"hero":[[400,400]],"commoner":[[500,500]]
   },
   "limites":{
   },

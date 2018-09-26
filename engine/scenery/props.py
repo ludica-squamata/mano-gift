@@ -41,18 +41,22 @@ class Agarrable(Escenografia):
 
 
 class Movible(Escenografia):
-    accionable = True
+    accionable = False
 
     def __init__(self, nombre, x, y, z, data):
         super().__init__(nombre, x, y, z, data)
         Item_Group[self.nombre] = self
 
+    def action(self, *args, **kwargs):
+        pass
+
     def mover(self, dx, dy):
         col_mapa = False
-        if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
+        # detectar colision contra otros props fijos, como la casa
+        if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
             col_mapa = True
 
-        if self.stage.mapa.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
+        if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
             col_mapa = True
 
         if not col_mapa:
@@ -60,11 +64,6 @@ class Movible(Escenografia):
             return True
 
         return False
-
-    def update(self):
-        super().update()
-        x, y = self.mapRect.x // 32, self.mapRect.y // 32
-        self.stage.grilla.set_transitable((x, y), False)
 
 
 class Trepable(Escenografia):

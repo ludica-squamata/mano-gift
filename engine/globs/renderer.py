@@ -1,14 +1,13 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from pygame import Rect, draw, display, image, mouse
+from pygame import Rect, draw, display, image, mouse, font, sprite, Surface
 from engine.globs.azoegroup import AzoeGroup
-from .constantes import ANCHO, ALTO
+from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
 import sys
 import os
 
 
 class Camara:
     focus = None  # objeto que la camara sigue.
-    bg = None  # el fondo
     bgs_rect = None  # el rect colectivo de los fondos
     bgs = AzoeGroup('bgs')  # el grupo de todos los fondos cargados    
     visible = AzoeGroup('visible')  # objetos que se ven (incluye sombras)
@@ -23,8 +22,7 @@ class Camara:
 
     @classmethod
     def set_background(cls, spr):
-        if cls.bg is None:
-            cls.bg = spr
+        if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
 
@@ -64,7 +62,7 @@ class Camara:
         cls.real.empty()
         cls.visible.empty()
         cls.bgs.empty()
-        cls.bg = None
+        cls.bgs_rect = None
 
     @classmethod
     def rotate_view(cls, event):
@@ -143,18 +141,28 @@ class Camara:
             reference = map_at_center
 
         if adyacent_map_key != '' and len(reference):
-            mapa = reference[0]
-            new_map = mapa.checkear_adyacencia(adyacent_map_key)
-            if new_map:
-                cls.set_background(new_map)
-                if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
-                    cls.bgs_rect.w += new_map.rect.w
-                    if adyacent_map_key == 'izq':
-                        cls.bgs_rect.x = new_map.rect.x
-                elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
-                    cls.bgs_rect.h += new_map.rect.h
-                    if adyacent_map_key == 'sup':
-                        cls.bgs_rect.y = new_map.rect.y
+            new_map = reference[0].checkear_adyacencia(adyacent_map_key)
+        else:
+            new_map = cls.focus.stage
+
+        if new_map and new_map not in map_at_center:
+            cls.set_background(new_map)
+            for obj in new_map.properties.sprites():
+                if obj not in cls.real:
+                    cls.add_real(obj)
+
+            if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
+                cls.bgs_rect.w += new_map.rect.w
+                if adyacent_map_key == 'izq':
+                    cls.bgs_rect.x = new_map.rect.x
+            elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
+                cls.bgs_rect.h += new_map.rect.h
+                if adyacent_map_key == 'sup':
+                    cls.bgs_rect.y = new_map.rect.y
+
+        a_map = map_at_center[0] if len(map_at_center) else new_map
+        if cls.focus.mapa_actual != a_map:
+            cls.focus.translocate(a_map, *cls.rect.center)
 
     @classmethod
     def update_sprites_layer(cls):
@@ -163,8 +171,8 @@ class Camara:
 
     @classmethod
     def panear(cls):
-        dx = cls.focus.rect.x - cls.focus.mapRect.x - cls.bg.rect.x
-        dy = cls.focus.rect.y - cls.focus.mapRect.y - cls.bg.rect.y
+        dx = cls.focus.rect.x - cls.focus.mapRect.x - cls.focus.stage.rect.x
+        dy = cls.focus.rect.y - cls.focus.mapRect.y - cls.focus.stage.rect.y
 
         abs_x, abs_y = abs(dx), abs(dy)
         sign_x, sign_y = 0, 0
@@ -201,8 +209,8 @@ class Camara:
             spr.rect.move_ip(dx, dy)
 
         for spr in cls.real:
-            x = cls.bg.rect.x + spr.mapRect.x
-            y = cls.bg.rect.y + spr.mapRect.y
+            x = spr.stage.rect.x + spr.mapRect.x
+            y = spr.stage.rect.y + spr.mapRect.y
             spr.ubicar(x, y)
 
     @classmethod
@@ -212,8 +220,8 @@ class Camara:
             spr.rect.topleft = x, y
 
         for spr in cls.real:
-            x = cls.bg.rect.x + spr.mapRect.x
-            y = cls.bg.rect.y + spr.mapRect.y
+            x = spr.stage.rect.x + spr.mapRect.x
+            y = spr.stage.rect.x + spr.mapRect.y
             spr.ubicar(x, y)
 
     @classmethod
@@ -242,6 +250,8 @@ class Renderer:
     use_focus = False
     camara = Camara()
     overlays = AzoeGroup('overlays')
+    debug_text = None
+    debug_pos = 0, 0
 
     @staticmethod
     def init(nombre, favicon):
@@ -280,6 +290,21 @@ class Renderer:
             cls.overlays.remove(obj)
 
     @classmethod
+    def get_debug_text(cls, event):
+        if 'debug' in sys.argv:
+            cls.clear(layer=CAPA_OVERLAYS_DEBUG)
+            spr = sprite.Sprite()
+            fuente = font.SysFont('Verdana', 16)
+            w = ANCHO - event.data['pos'][0]
+            h = fuente.get_height()
+            spr.image = Surface((w, h))
+            spr.image.blit(fuente.render(event.data['text'], 1, (255, 0, 0)), (0, 0))
+            spr.rect = spr.image.get_rect(topleft=event.data['pos'])
+
+            spr.active = True
+            cls.add_overlay(spr, CAPA_OVERLAYS_DEBUG)
+
+    @classmethod
     def update(cls):
         fondo = display.get_surface()
         fondo.fill((0, 0, 0))
@@ -294,6 +319,7 @@ class Renderer:
         display.update(ret)
 
 
+EventDispatcher.register(Renderer.get_debug_text, 'DEBUG')
 EventDispatcher.register(Camara.save_focus, 'Save')
 EventDispatcher.register(Camara.rotate_view, 'Rotate')
 EventDispatcher.register(Renderer.clear, 'EndDialog', 'NewGame', 'SetMap')

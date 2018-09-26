@@ -22,16 +22,16 @@ def load_something(alldata, requested):
     :type alldata: dict
     """
     loaded = []
+    if requested is not None:
+        if 'Mobs' in requested:
+            for mob in load_mobs(alldata):
+                loaded.append((mob, GRUPO_MOBS))
 
-    if 'Mob' in requested:
-        for mob in load_mobs(alldata):
-            loaded.append((mob, GRUPO_MOBS))
+        if 'Props' in requested:
+            for prop in load_props(alldata):
+                loaded.append((prop, GRUPO_ITEMS))
 
-    if 'Prop' in requested:
-        for prop in load_props(alldata):
-            loaded.append((prop, GRUPO_ITEMS))
-
-    return loaded
+        return loaded
 
 
 def load_props(alldata):

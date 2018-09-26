@@ -42,9 +42,6 @@ class ControllableAI(EventAware):
     def set_action(self):
         self.accion = True
 
-    def cambiar_estado(self):
-        self.entity.cambiar_estado()
-
     def contextual_event_key(self):
         self.entity.detener_movimiento()
         self.deregister()
