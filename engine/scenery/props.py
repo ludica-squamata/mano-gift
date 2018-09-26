@@ -65,11 +65,6 @@ class Movible(Escenografia):
 
         return False
 
-    def update(self):
-        super().update()
-        x, y = self.mapRect.x // 32, self.mapRect.y // 32
-        self.stage.parent.grilla.set_transitable((x, y), False)
-
 
 class Trepable(Escenografia):
     accionable = True

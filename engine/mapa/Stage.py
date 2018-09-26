@@ -6,7 +6,6 @@ from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from pygame import mask, Rect, transform
 from .LightSource import DayLight
-from .grilla import Grilla
 
 
 class Stage:
@@ -40,7 +39,6 @@ class Stage:
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
         self.cargar_timestamps()
-        self.grilla = Grilla(self.mapa.mask, 32)
 
         sld, masc, img = cargar_salidas(self.data, chunk.rect.size)
         self.salidas = sld  # la lista de salidas, igual que siempre.

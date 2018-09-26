@@ -1,8 +1,8 @@
 from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
-from engine.mobs.scripts.a_star import a_star, determinar_direccion
+from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.misc import ReversibleDict
-from random import choice, randint
+from random import randint
 
 
 class IsTalking(Leaf):
@@ -32,16 +32,18 @@ class Wait(Leaf):
 class GetRandomDir(Leaf):
     def process(self):
         e = self.get_entity()
-        cuadros = e.stage.grilla
+        cuadros = e.stage.mask
         self.tree.clear_context()
 
         self.tree.set_context('mapa', cuadros)
         self.tree.set_context('next', 0)
 
-        punto = False
-        while not punto:
-            punto = choice(cuadros)
-        self.tree.set_context('punto_final', punto)
+        # punto = False
+        # while not punto:
+        #     punto = choice(cuadros)
+
+        nodo = Nodo(100, 100, 100)
+        self.tree.set_context('punto_final', nodo)
         EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Has set a point', 'pos': (400, 0)})
         return Success
 
@@ -53,7 +55,8 @@ class GetRoute(Leaf):
         prox = self.tree.get_context('next')
         pd = self.tree.get_context('punto_final')
 
-        pi = mapa[e.mapRect.x // 32, e.mapRect.y // 32]
+        # pi = mapa[e.mapRect.x // 32, e.mapRect.y // 32]
+        pi = Nodo(*e.mapRect.center, 100)
         ruta = a_star(pi, pd, mapa)
         if ruta is None:
             return Failure
@@ -67,10 +70,10 @@ class GetRoute(Leaf):
 class NextPosition(Leaf):
     def process(self):
         e = self.get_entity()
-        mapa = self.tree.get_context('mapa')
+        # mapa = self.tree.get_context('mapa')
         camino = self.tree.get_context('camino')
         prox = self.tree.get_context('next')
-        curr_p = mapa[e.mapRect.x // 32, e.mapRect.y // 32]
+        curr_p = Nodo(*e.mapRect.center, 100)
 
         if curr_p == self.tree.get_context('punto_final'):
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Has reached final point', 'pos': (400, 0)})
@@ -87,9 +90,9 @@ class NextPosition(Leaf):
 class Move(Leaf):
     def process(self):
         e = self.get_entity()
-        mapa = self.tree.get_context('mapa')
+        # mapa = self.tree.get_context('mapa')
         pd = self.tree.get_context('punto_proximo')
-        pi = mapa[e.mapRect.x // 32, e.mapRect.y // 32]
+        pi = Nodo(*e.mapRect.center, 100)
 
         if pi != pd:
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
