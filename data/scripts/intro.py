@@ -66,8 +66,8 @@ def creditos_introduccion():
         fuente = font.SysFont(f[0], f[1], bold=_b, italic=_i)
 
         w, h = fuente.size(pan['texto'])
-        l = len(pan['texto'].splitlines())
-        rect = Rect(0, 0, w, h * l + 1 * l)
+        lenght = len(pan['texto'].splitlines())
+        rect = Rect(0, 0, w, h * lenght + 1 * lenght)
         rect.center = pan['center']
 
         render = render_textrect(pan["texto"], fuente, rect, color[pan["color"]], color[pan['fondo']], 1)

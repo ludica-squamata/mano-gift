@@ -62,8 +62,6 @@ class AzoeSprite(sprite.Sprite):
 
         if z:
             self.z = z
-        elif center:
-            self.z = self.mapRect.y + self.rect.h
         else:
             self.z = self.mapRect.bottom
         self.z += dz
@@ -72,6 +70,7 @@ class AzoeSprite(sprite.Sprite):
 
     def set_parent_map(self, parent):
         self.stage = parent
+        self.mapa_actual = parent
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""
@@ -82,10 +81,8 @@ class AzoeSprite(sprite.Sprite):
     def translocate(self, new_map, dx, dy):
         self.mapa_actual = new_map
         x, y = self.mapa_actual.rect.topleft
-        print(self.mapa_actual_rect, 'a')
         self.mapa_actual_rect.center = -x + dx, -y + dy
-        print(self.mapa_actual_rect, 'b')
-        self.z = -y + dy + self.rect.h
+        self.z = self.mapa_actual_rect.y + self.rect.h
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""

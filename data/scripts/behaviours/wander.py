@@ -55,7 +55,6 @@ class GetRoute(Leaf):
         prox = self.tree.get_context('next')
         pd = self.tree.get_context('punto_final')
 
-        # pi = mapa[e.mapRect.x // 32, e.mapRect.y // 32]
         pi = Nodo(*e.mapRect.center, 100)
         ruta = a_star(pi, pd, mapa)
         if ruta is None:
@@ -70,7 +69,6 @@ class GetRoute(Leaf):
 class NextPosition(Leaf):
     def process(self):
         e = self.get_entity()
-        # mapa = self.tree.get_context('mapa')
         camino = self.tree.get_context('camino')
         prox = self.tree.get_context('next')
         curr_p = Nodo(*e.mapRect.center, 100)
@@ -90,7 +88,6 @@ class NextPosition(Leaf):
 class Move(Leaf):
     def process(self):
         e = self.get_entity()
-        # mapa = self.tree.get_context('mapa')
         pd = self.tree.get_context('punto_proximo')
         pi = Nodo(*e.mapRect.center, 100)
 
