@@ -6,6 +6,8 @@ from engine.globs.azoegroup import AzoeGroup
 from pygame import Rect, font
 from .menu import Menu
 
+_boton_equipo = 'Equipo'
+
 
 class MenuEquipo(Menu):
     espacios = None

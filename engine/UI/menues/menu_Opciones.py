@@ -9,6 +9,8 @@ from engine.IO.teclas import Teclas
 from engine.UI.widgets import Fila
 from .menu import Menu
 
+_boton_opciones = 'Opciones'
+
 
 class MenuOpciones(Menu):
     input_device = 'teclado'
