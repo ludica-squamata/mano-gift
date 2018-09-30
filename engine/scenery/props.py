@@ -12,9 +12,9 @@ __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'Estruc
 class Agarrable(Escenografia):
     accionable = True
 
-    def __init__(self, nombre, x, y, z, data):
+    def __init__(self, x, y, z, data):
         data.setdefault('proyecta_sombra', False)
-        super().__init__(nombre, x, y, z, data)
+        super().__init__(x, y, z=z, data=data)
         self.subtipo = data['subtipo']
         Item_Group[self.nombre] = self
 
@@ -43,8 +43,8 @@ class Agarrable(Escenografia):
 class Movible(Escenografia):
     accionable = False
 
-    def __init__(self, nombre, x, y, z, data):
-        super().__init__(nombre, x, y, z, data)
+    def __init__(self, x, y, z, data):
+        super().__init__(x, y, z=z, data=data)
         Item_Group[self.nombre] = self
 
     def action(self, *args, **kwargs):
@@ -69,8 +69,8 @@ class Movible(Escenografia):
 class Trepable(Escenografia):
     accionable = True
 
-    def __init__(self, nombre, x, y, z, data):
-        super().__init__(nombre, x, y, z, data)
+    def __init__(self, x, y, z, data):
+        super().__init__(x, y, z, data)
         self.accion = 'trepar'
 
 
@@ -80,8 +80,8 @@ class Operable(Escenografia):
     enabled = True
     accionable = True
 
-    def __init__(self, nombre, x, y, z, data):
-        super().__init__(nombre, x, y, z, data)
+    def __init__(self, x, y, z, data):
+        super().__init__(x, y, z=z, data=data)
         self.estados = {}
         self.enabled = self.data.get('enabled', True)
         Item_Group[self.nombre] = self
@@ -119,8 +119,8 @@ class Operable(Escenografia):
 
 
 class Destruible(Escenografia):
-    def __init__(self, nombre, x, y, z, data):
-        super().__init__(nombre, x, y, z, data)
+    def __init__(self, x, y, z, data):
+        super().__init__(x, y, z=z, data=data)
         self.accion = 'romper'
 
 
@@ -129,8 +129,7 @@ class Estructura3D(Escenografia):
     face = 'front'
     _chopped = False
 
-    def __init__(self, nombre, x, y, data):
-        self.nombre = nombre
+    def __init__(self, x, y, data):
         self.faces = {'front': None, 'right': None, 'back': None, 'left': None}
         self.face = data.get('cara', 'front')
         self.x, self.y = x, y
@@ -142,7 +141,7 @@ class Estructura3D(Escenografia):
                 self.faces[face] = self.build_face(data, x, y, face)
 
         self.props = self.faces[self.face]
-        super().__init__(nombre, x, y, data=data, rect=self.rect)
+        super().__init__(x, y, data=data, rect=self.rect)
         self.proyectaSombra = False
         EventDispatcher.register(self.rotate_view, 'RotateEverything')
 
@@ -167,7 +166,7 @@ class Estructura3D(Escenografia):
                 if 'cara' not in propdata:
                     propdata.update({'cara': face})
 
-                prop = new_prop(nombre, dx + x, dy + y, z=z, img=imagen, data=propdata)
+                prop = new_prop(dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
                 props.append(prop)
 
         return props
