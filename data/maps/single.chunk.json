@@ -14,8 +14,8 @@
   },
   "refs":{
     "arbol":"props/arbol_escalado.png",
-    "crate":"items/crate.json",
-    "casa_cerrada":"items/casa_cerrada.json",
-    "armor":"items/armor.json"
+    "crate":"crate.json",
+    "casa_cerrada":"casa_cerrada.json",
+    "armor":"armor.json"
   }
 }

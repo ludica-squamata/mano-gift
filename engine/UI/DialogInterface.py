@@ -73,8 +73,10 @@ class DialogInterface(BaseWidget):
         self.drawn = True
 
     def set_sel_mode(self, opciones):
+        from engine.UI.circularmenus.elements.DialogElements import DialogOptionElement
         self.menu.supress_all()
 
+        cascada = []
         for i in range(len(sorted(opciones, key=lambda o: o.indice))):
             opt = opciones[i]
             icon = str(opt.indice)
@@ -90,11 +92,13 @@ class DialogInterface(BaseWidget):
                 icon = item.image
                 name = item.nombre
 
-            obj = {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}
-            self.menu.add_element('inicial', obj)
+            cascada.append(DialogOptionElement(self, {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}))
+
+        self.menu.add_cascades({'inicial': cascada})
 
         self.opciones = len(opciones)
-        self.menu.actual = self.menu.cubos.get_sprite(0)
+        self.menu.switch_cascades()
+        self.menu.actual = self.menu.check_on_spot()
         self.set_text(opciones[0].texto)
         self.sel_mode = True
         self.drawn = False
@@ -116,7 +120,7 @@ class DialogInterface(BaseWidget):
     def exit_sel_mode(self):
         self.sel_mode = False
         Renderer.clear(layer=self.menu.layer)
-        self.menu.cubos.empty()
+        self.menu.cuadros.empty()
 
     def set_loc_img(self, locutor):
         """carga y dibuja la imagen de quien está hablando. También setea
