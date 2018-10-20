@@ -1,4 +1,4 @@
-from engine.globs import EngineData, ModData
+from engine.globs import ModData, Mob_Group
 from engine.globs.eventDispatcher import EventDispatcher, AzoeEvent
 from .RenderedCircularMenu import RenderedCircularMenu
 from .elements import LetterElement, CommandElement, InventoryElement
@@ -9,19 +9,19 @@ class QuickCircularMenu(RenderedCircularMenu):
     first = 0
 
     def __init__(self):
-
+        self.entity = Mob_Group.get_controlled_mob()
         cascadas = ModData.QMC
 
         if cascadas is None:
             cascadas = {
                 'inicial': [
-                    CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': EngineData.HERO.cambiar_estado}),
+                    CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': self.entity.cambiar_estado}),
                     CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
                     LetterElement(self, 'Consumibles', 'C'),
                     LetterElement(self, 'Equipables', 'E')
                 ],
-                'Consumibles': [InventoryElement(self, item) for item in EngineData.HERO.inventario('consumible')],
-                'Equipables': [InventoryElement(self, item) for item in EngineData.HERO.inventario('equipable')]
+                'Consumibles': [InventoryElement(self, item) for item in self.entity.inventario('consumible')],
+                'Equipables': [InventoryElement(self, item) for item in self.entity.inventario('equipable')]
             }
 
         c = cascadas['inicial']

@@ -1,4 +1,4 @@
-from engine.globs import EngineData, CANVAS_BG, TEXT_FG
+from engine.globs import CANVAS_BG, TEXT_FG, Mob_Group
 from engine.libs.textrect import render_textrect
 from engine.misc.resources import cargar_imagen
 from engine.UI.widgets import EspacioEquipable
@@ -22,6 +22,7 @@ class MenuEquipo(Menu):
         """Crea e inicaliza las varibales del menú Equipo."""
 
         super().__init__('Equipo')
+        self.entity = Mob_Group.get_controlled_mob()
         self.espacios = AzoeGroup('Espacios')  # grupo de espacios equipables.
         self.filas = AzoeGroup('Filas')  # grupo de items del espacio de selección.
         self.foco = 'espacios'  # setea el foco por default
@@ -52,7 +53,7 @@ class MenuEquipo(Menu):
         ]
 
         for e in esp:
-            item = EngineData.HERO.equipo[e['nom']]
+            item = self.entity.equipo[e['nom']]
             cuadro = EspacioEquipable(e['nom'], item, e['direcciones'], *e['e_pos'])
             titulo = self.titular(e['nom'])
             self.canvas.blit(titulo, e['t_pos'])
@@ -186,7 +187,7 @@ class MenuEquipo(Menu):
 
         self.filas.empty()
         espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
-        items = EngineData.HERO.inventario('equipable', espacio.nombre)
+        items = self.entity.inventario('equipable', espacio.nombre)
         self.fill_draw_space(items, w, h)
 
     def cambiar_foco(self):
@@ -209,7 +210,7 @@ class MenuEquipo(Menu):
         item = self.current.item
         if espacio.nombre == item.espacio:
             espacio.ocupar(item)
-            EngineData.HERO.equipar_item(item)
+            self.entity.equipar_item(item)
             self.draw_space.fill(CANVAS_BG)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
@@ -220,7 +221,7 @@ class MenuEquipo(Menu):
         espacio = self.espacios.get_sprite(self.cur_esp)
         item = self.current.item
         espacio.desocupar()
-        EngineData.HERO.desequipar_item(item)
+        self.entity.desequipar_item(item)
         self.espacios.draw(self.canvas)
         self.cambio = True
 

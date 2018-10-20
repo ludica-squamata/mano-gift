@@ -74,6 +74,13 @@ class MobGroup:
         self._group.clear()
         self._indexes.clear()
 
+    def get_controlled_mob(self):
+        # creo que esto se podría hacer con un oneliner
+        for mob_name in self._group:
+            mob = self._group[mob_name]
+            if mob.AI_type == 'Controllable':
+                return mob
+
 
 class ItemGroup:
 

@@ -1,7 +1,7 @@
+from engine.globs import CANVAS_BG, TEXT_DIS, Mob_Group
+from engine.libs import render_tagged_text
 from .basewidget import BaseWidget
 from pygame import Surface
-from engine.libs import render_tagged_text
-from engine.globs import EngineData, CANVAS_BG, TEXT_DIS
 
 
 class Fila(BaseWidget):
@@ -16,6 +16,7 @@ class Fila(BaseWidget):
     cantidad = 0
 
     def __init__(self, item, w, x, y, h=0, tag=None, justification=0):
+        self.entity = Mob_Group.get_controlled_mob()
         self.item = item
         self.w = w
         self.h = h
@@ -30,7 +31,7 @@ class Fila(BaseWidget):
             self.tag_end = '</' + tag + '>'
             self.icon = self.item.image
             self.nombre = self.tag_init + self.item.nombre.capitalize() + self.tag_end
-            self.cantidad = self.tag_init + 'x' + str(EngineData.HERO.inventario.cantidad(self.item)) + self.tag_end
+            self.cantidad = self.tag_init + 'x' + str(self.entity.inventario.cantidad(self.item)) + self.tag_end
             self.img_uns = self.construir_fila(CANVAS_BG)
             self.img_sel = self.construir_fila(TEXT_DIS)
             self.tagged = True
@@ -73,9 +74,9 @@ class Fila(BaseWidget):
     def update(self):
         if not hasattr(self.item, 'texto'):
             if self.tagged:
-                self.cantidad = self.tag_init + 'x' + str(EngineData.HERO.inventario.cantidad(self.item)) + self.tag_end
+                self.cantidad = self.tag_init + 'x' + str(self.entity.inventario.cantidad(self.item)) + self.tag_end
             else:
-                self.cantidad = 'x' + str(EngineData.HERO.inventario.cantidad(self.item))
+                self.cantidad = 'x' + str(self.entity.inventario.cantidad(self.item))
 
             self.img_uns = self.construir_fila(CANVAS_BG)
             self.img_sel = self.construir_fila(TEXT_DIS)

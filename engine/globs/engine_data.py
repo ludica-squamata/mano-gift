@@ -8,7 +8,6 @@ from .tiempo import Tiempo
 
 class EngineData:
     mapas = {}
-    HERO = None
     HUD = None
     current_qcm_idx = 0
     acceso_menues = []
@@ -93,7 +92,6 @@ class EngineData:
 
         cls.check_focus_position(focus, mapa, data['entrada'])
 
-        cls.HERO = focus
         cls.MODO = 'Aventura'
         cls.HUD = HUD(focus)
 
