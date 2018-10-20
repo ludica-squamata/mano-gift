@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG
+from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG, Mob_Group
 from engine.libs import render_textrect
 from engine.misc import Config as Cfg
 from pygame.font import SysFont
@@ -10,6 +10,7 @@ from .menu import Menu
 class MenuPausa(Menu):
     def __init__(self):
         super().__init__("Pausa")
+        self.entity = Mob_Group.get_controlled_mob()
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6
 
@@ -46,13 +47,13 @@ class MenuPausa(Menu):
             'accion': self.liberar_presion})
 
     def update_charname_display(self):
-        r = self.canvas.blit(EngineData.HERO.diag_face[0], (6, 100))
+        r = self.canvas.blit(self.entity.diag_face[0], (6, 100))
         fuente = SysFont('Verdana', 22)
         w = self.canvas.get_width() - r.right - CUADRO * 6 - 20
-        h = fuente.size(EngineData.HERO.nombre)[1]
+        h = fuente.size(self.entity.nombre)[1]
         rect = Rect(r.right + 2, 0, w, h + 1)
         rect.centery = r.centery - 10
-        render = render_textrect(EngineData.HERO.nombre, fuente, rect, TEXT_FG, CANVAS_BG)
+        render = render_textrect(self.entity.nombre, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
         self.canvas.blit(EngineData.HUD.BarraVida.image, (r.right + 2, r.centery + 4))
