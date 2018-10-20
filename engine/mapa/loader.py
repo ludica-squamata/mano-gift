@@ -40,17 +40,22 @@ def load_props(alldata):
 
     loaded_props = []
     for ref in pos:
-        try:
+        if ref in alldata['refs']:
+            if alldata['refs'][ref].endswith('.json'):
+                data = abrir_json(ModData.items + alldata['refs'][ref])
+            else:
+                # points to a .png file instead.
+                data = False
+        else:
+            # use ref as filename
             data = abrir_json(ModData.items + ref + '.json')
-        except IOError:
-            data = False
 
         for x, y in pos[ref]:
             if data:
-                prop = new_prop(ref, x, y, data=data)
+                prop = new_prop(x, y, data=data)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable
             else:
-                prop = new_prop(ref, x, y, img=imgs[ref])
+                prop = new_prop(x, y, img=imgs[ref])
                 is_interactive = False
 
             if type(prop) is list:

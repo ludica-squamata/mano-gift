@@ -8,6 +8,7 @@ class InventoryElement(LetterElement):
     active = True
     item = None
     description = None
+    idx = 0
 
     def __init__(self, parent, item):
 
@@ -32,10 +33,11 @@ class InventoryElement(LetterElement):
 
         return image
 
-    def do_action(self):
+    def command(self):
         if self.item is not None and self.item.tipo == 'consumible':
             value = self.item.usar(EngineData.HERO)
             self.img_sel = self._create_icon_stack(33, 33, True)
             self.image = self.img_sel
-            return value
-        return True
+            if value == 0:
+                self.parent.del_item_from_cascade(self.nombre, 'Consumibles')
+                self.parent.backward()

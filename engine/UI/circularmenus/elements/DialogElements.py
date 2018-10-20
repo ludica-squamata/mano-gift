@@ -47,8 +47,6 @@ class DialogOptionElement(LetterElement):
         nombre = item['name']
         icono = item['icon']
         self.item = item['item']
+        self.idx = item['idx']
 
         super().__init__(parent, nombre, icono)
-
-    def do_action(self):
-        return True

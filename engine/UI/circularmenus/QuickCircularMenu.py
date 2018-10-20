@@ -1,49 +1,33 @@
-from engine.globs import EngineData, FEATURE_ROTACION_MAPA, ModData
+from engine.globs import EngineData, ModData
 from engine.globs.eventDispatcher import EventDispatcher, AzoeEvent
 from .RenderedCircularMenu import RenderedCircularMenu
-from .elements import CommandElement, CascadeElement
+from .elements import LetterElement, CommandElement, InventoryElement
 
 
 class QuickCircularMenu(RenderedCircularMenu):
     radius = 18
+    first = 0
 
     def __init__(self):
-        first = EngineData.current_qcm_idx
-        opciones = ModData.QMC
 
-        n, c, i, cmd, j = 'name', 'csc', 'icon', 'cmd', 'idx'
-        cascadas = {
-            "rotar_vista": [
-                {n: 'Norte', i: "N", cmd: lambda: self.cmd_rotar_vista('north')},
-                {n: "Este", i: "E", cmd: lambda: self.cmd_rotar_vista('east')},
-                {n: "Sur", i: "S", cmd: lambda: self.cmd_rotar_vista('south')},
-                {n: "Oeste", i: "O", cmd: lambda: self.cmd_rotar_vista('west')},
-            ]
-        }
+        cascadas = ModData.QMC
 
-        if opciones is None:
-            opciones = [
-                {j: 0, n: 'Estado', cmd: EngineData.HERO.cambiar_estado, i: 'S'},
-                {j: 1, n: 'Guardar', i: 'G', cmd: self.save},
-                {j: 2, n: 'Consumibles', c: EngineData.HERO.inventario('consumible'), i: 'C'},
-                {j: 3, n: 'Equipables', c: EngineData.HERO.inventario('equipable'), i: 'E'},
-            ]
+        if cascadas is None:
+            cascadas = {
+                'inicial': [
+                    CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': EngineData.HERO.cambiar_estado}),
+                    CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
+                    LetterElement(self, 'Consumibles', 'C'),
+                    LetterElement(self, 'Equipables', 'E')
+                ],
+                'Consumibles': [InventoryElement(self, item) for item in EngineData.HERO.inventario('consumible')],
+                'Equipables': [InventoryElement(self, item) for item in EngineData.HERO.inventario('equipable')]
+            }
 
-        if FEATURE_ROTACION_MAPA:
-            opciones.append({j: 4, n: 'Rotar Vista', c: cascadas['rotar_vista'], i: "R"})
-
-        cascadas = {'inicial': []}
-        for opt in [opciones[first]] + opciones[first + 1:] + opciones[:first]:
-            obj = None
-            if type(opt) is dict:
-                if 'csc' in opt:
-                    obj = CascadeElement(self, opt)
-                elif 'cmd' in opt:
-                    obj = CommandElement(self, opt)
-
-            obj.idx = opt['idx']
-            cascadas['inicial'].append(obj)
-            cascadas[obj.nombre] = obj.cascada
+        c = cascadas['inicial']
+        for idx, opt in enumerate([c[self.first]] + c[self.first + 1:] + c[:self.first]):
+            # Esto no está funcionando. Por alguna razón no recuerda cuál es el primer item.
+            opt.idx = idx
 
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.back})
@@ -52,11 +36,15 @@ class QuickCircularMenu(RenderedCircularMenu):
         if self.cascadaActual == 'inicial':
             self.salir()
         else:
-            super().back()
+            super().backward()
 
     def stop_everything(self, on_spot):
         super().stop_everything(on_spot)
-        EngineData.current_qcm_idx = self.last_on_spot.idx
+        self.set_first(self.last_on_spot.idx)
+
+    @classmethod
+    def set_first(cls, f: int):
+        cls.first = f
 
     @staticmethod
     def cmd_rotar_vista(direccion):

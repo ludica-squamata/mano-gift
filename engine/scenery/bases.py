@@ -6,27 +6,27 @@ from engine.mapa.LightSource import LightSource
 class Escenografia(ShadowSprite, EventListener):
     accionable = False
     action = None
+    tipo = 'Prop'
 
-    def __init__(self, nombre, x, y, z=0, data=None, imagen=None, rect=None):
+    def __init__(self, x, y, z=0, nombre=None, data=None, imagen=None, rect=None):
         """
-        :param nombre:
         :param imagen:
         :param x:
         :param y:
         :param data:
-        :type nombre:str
+
         :type imagen:str
         :type x:int
         :type y:int
         :type data:dict
         :return:
         """
-        self.nombre = nombre
-        self.tipo = 'Prop'
-        self.data = data
+
         if imagen is None and data is not None:
             imagen = data.get('image')
         super().__init__(imagen=imagen, rect=rect, x=x, y=y, dz=z)
+        self.data = data
+        self.nombre = data.get('nombre', nombre)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'proyecta_sombra' in data
         if data.get('proyecta_luz', False):

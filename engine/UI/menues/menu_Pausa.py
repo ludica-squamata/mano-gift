@@ -29,7 +29,7 @@ class MenuPausa(Menu):
             botones[3][d][a] = "Grupo"
 
         for i in range(len(botones)):
-            botones[i]['pos'] = [x, 39 * i + 100],
+            botones[i]['pos'] = [x, 39 * i + 100]
             botones[i]['comando'] = self.new_menu
 
         self.establecer_botones(botones, 6)

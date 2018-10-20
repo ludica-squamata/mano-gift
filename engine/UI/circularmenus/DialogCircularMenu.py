@@ -1,16 +1,17 @@
-from engine.globs import EngineData, ModData
 from .RenderedCircularMenu import RenderedCircularMenu
-from .elements import TopicElement, DialogOptionElement
+from engine.globs import EngineData, ModData
 from engine.misc.resources import abrir_json
+from .elements import TopicElement
 from os import path, listdir
 
 
 class DialogCircularMenu(RenderedCircularMenu):
-    radius = 15
     locutores = None
 
     def __init__(self, *locutores):
         self.locutores = locutores
+        self.change_radius = False
+        self.radius = 60
 
         cascadas = {'inicial': []}
         idx = -1
@@ -50,8 +51,4 @@ class DialogCircularMenu(RenderedCircularMenu):
         if self.cascadaActual == 'inicial':
             self.cerrar()
         else:
-            super().back()
-
-    def add_element(self, cascada, element):
-        elm = DialogOptionElement(self, element)
-        super().add_element(cascada, elm)
+            super().backward()
