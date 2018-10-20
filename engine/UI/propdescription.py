@@ -10,9 +10,13 @@ class PropDescription (EventAware):
 
     def __init__(self, item):
         super().__init__()
+
         self.item = item
-        self.frontend = DialogInterface(self)
-        self.frontend.set_text(item.nombre+': '+self.item.descripcion)
+        if item.nombre is None or item.descripcion is None:
+            self.salir()
+        else:
+            self.frontend = DialogInterface(self)
+            self.frontend.set_text(item.nombre+': '+self.item.descripcion)
 
         self.functions['tap'].update({
             'accion': self.salir,

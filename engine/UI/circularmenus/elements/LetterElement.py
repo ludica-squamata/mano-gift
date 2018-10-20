@@ -6,6 +6,7 @@ from .title import Title
 
 class LetterElement(BaseElement):
     title = None
+    active = True
 
     def __init__(self, parent, nombre, icono):
 
@@ -22,7 +23,7 @@ class LetterElement(BaseElement):
         self.rect_uns = self.img_uns.get_rect()
         self.rect_sel = self.img_sel.get_rect()
 
-        if self.in_place:
+        if self.check_placement():
             self.image = self.img_sel
             self.rect = self.rect_sel
         else:

@@ -15,6 +15,7 @@ class ProgressBar(Sprite):
     active = True
     x, y, w, h = 0, 0, 0, 0
     draw_area_rect = None
+    nombre = 'ProgressBar'
 
     def __init__(self, focus, maximo, color_actual, color_fondo, x, y, w, h):
         super().__init__()
@@ -68,6 +69,7 @@ class ProgressBar(Sprite):
 
 class CharacterName(Sprite):
     active = True
+    nombre = 'name'
 
     def __init__(self, focus, x, y):
         super().__init__()

@@ -3,65 +3,61 @@ from engine.globs.event_aware import EventAware
 from math import sin, cos, radians
 
 
-class BaseElement(AzoeBaseSprite):
+class BaseElement(EventAware, AzoeBaseSprite):
     selected = False
-    in_place = False
     delta = 0
-    puntos = None
-    stop = False
-    cascada = []
+    stop = True
+    parent = None
+    command = None
     angle = 0
-    image = None
-    rect = None
+
     img_uns = None
     img_sel = None
     rect_sel = None
     rect_uns = None
 
     def __init__(self, parent, nombre):
-        self.cascada = []
         super().__init__(parent, nombre)
-        self.check_placement()
+        self.functions['tap'].update({
+            'accion': self.do_action
+        })
+        self.deregister()
 
     def __repr__(self):
-        return self.nombre
+        return 'Elemento ' + self.nombre
 
-    def change_angle(self, angle, centerx, centery):
-        self.angle = angle
-        self.rect.center = centerx, centery
+    def check_placement(self) -> bool:
+        return self.angle == 0
 
-    def check_placement(self):
-        if self.angle == 0:
-            self.in_place = True
-        else:
-            self.in_place = False
-
-        return self.in_place
-
-    def circular(self, delta):
+    def circular(self, delta: int) -> None:
         self.angle += delta
         if self.angle > 359:
             self.angle = 0
-        elif self.angle < 0:
+        if self.angle < 0:
             self.angle += 360
 
     def select(self):
+        self.register()
         self.image = self.img_sel
         self.rect = self.rect_sel
         self.selected = True
 
     def deselect(self):
+        self.deregister()
         self.image = self.img_uns
         self.rect = self.rect_uns
         self.selected = False
 
     def do_action(self):
-        pass
+        if self.command is None:
+            self.parent.foward()
+        elif self.check_placement():
+            self.command()
 
     def update(self):
         self.circular(self.delta)
-        self.rect_sel.center = self.parent.puntos[self.angle]
-        self.rect_uns.center = self.parent.puntos[self.angle]
+        self.rect_sel.center = self.parent.set_xy(self.angle)
+        self.rect_uns.center = self.parent.set_xy(self.angle)
 
         if self.check_placement():
             self.parent.actual = self
@@ -73,44 +69,32 @@ class BaseElement(AzoeBaseSprite):
             self.deselect()
 
 
-class CircularMenu (EventAware):
-    cubos = None  # cascada actualmente visible
-    cascadaActual = 'inicial'
-    cascadaAnterior = ''
+class CircularMenu(EventAware):
+    cuadros = None
+    cascadaActual = None
     stopped = True
-    hold = False
     actual = None
-    radius = 8
-    cascadas = {}
-    puntos = None
+    base_radius = 16
+    cascadas = None
+    acceso_cascadas = None
     center = 0, 0
+    change_radius = True
 
-    def __init__(self, cascadas, centerx, centery):
-        self.cubos = AzoeGroup('Cubos')
+    def __init__(self, cascadas: dict, centerx: int, centery: int):
+        self.cuadros = AzoeGroup('Cuadros')
         self.cascadas = {}
         self.center = centerx, centery
-        self.puntos = None
+        self.cascadaActual = 'inicial'
+        self.acceso_cascadas = [self.cascadaActual]
 
-        for key in cascadas:
-            grupo = cascadas[key]
-            if len(grupo) > 0:
-                radius = self.radius * (len(grupo) + 1)
-                puntos = [self.get_xy(a, radius, centerx, centery) for a in range(-90, 270)]
-                separacion = 360 // len(grupo)
-                angle = -separacion
-                for item in grupo:
-                    angle += separacion
-                    item.change_angle(angle, *puntos[angle])
-                    # item.puntos = puntos
-                self.cascadas[key] = {'items': cascadas[key], 'radius': radius, 'puntos': puntos}
-
-        self.cubos.add(*self.cascadas['inicial']['items'])
-        self.change_radius(self.radius)
+        self.add_cascades(cascadas)
+        if self.change_radius:
+            self.radius = self.base_radius * (len(self.cascadas['inicial']) + 1)
+        self.cuadros.add(*self.cascadas['inicial'])
 
         super().__init__()
         self.functions['tap'].update({
-            'accion': self.accept,
-            'contextual': self.back,
+            'contextual': self.backward,
             'izquierda': self.stop,
             'derecha': self.stop})
 
@@ -122,92 +106,104 @@ class CircularMenu (EventAware):
             'izquierda': self.stop,
             'derecha': self.stop})
 
-    def change_radius(self, x):
-        radius = x * (len(self.cascadas[self.cascadaActual]) + 1)
-        self.puntos = [self.get_xy(a, radius, *self.center) for a in range(-90, 270)]
-
-    @staticmethod
-    def get_xy(angle, radius, centerx, centery):
-        x = round(centerx + radius * cos(radians(angle)))
-        y = round(centery + radius * sin(radians(angle)))
+    def set_xy(self, angle: int):
+        x = round(self.center[0] + self.radius * cos(radians(angle - 90)))
+        y = round(self.center[1] + self.radius * sin(radians(angle - 90)))
         return x, y
 
-    def turn(self, delta):  # +1 o -1
-        for cubo in self.cubos:
-            cubo.stop = False
-            cubo.delta = delta * 3
-            # cubo.puntos = self.cascadas[self.cascadaActual]['puntos']
+    def turn(self, delta: int):
+        for cuadro in self.cuadros:
+            cuadro.stop = False
+            cuadro.delta = delta * 3
         self.stopped = False
 
     def stop(self):
-        for cubo in self.cubos:
+        for cubo in self.cuadros:
             cubo.stop = True
 
     def stop_everything(self, on_spot):
-        cubos = self.cubos.sprites()
-        angle = 360 // len(cubos)  # base
+        cuadros = self.cuadros.sprites()
+        angle = 360 // len(cuadros)  # base
 
-        i = -1
-        for cubo in sorted(cubos, key=lambda c: c.angle):
-            i += 1
-            if cubo is not on_spot:
-                cubo.angle = angle * i
-            cubo.delta = 0
+        for i, cuadro in enumerate(sorted(cuadros, key=lambda c: c.angle)):
+            if cuadro is not on_spot:
+                cuadro.angle = angle * i
+            cuadro.delta = 0
         self.stopped = True
 
-    def accept(self):
-        if self.stopped:
-            if self.actual.nombre in self.cascadas:
-                self.cascadaAnterior = self.cascadaActual
-                self.cascadaActual = self.actual.nombre
-                self._change_cube_list()
+    def foward(self):
+        if self.actual.nombre in self.cascadas and len(self.cascadas[self.actual.nombre]):
+            self.cascadaActual = self.actual.nombre
+            self.acceso_cascadas.append(self.cascadaActual)
+            self.switch_cascades()
 
-            elif not self.actual.do_action():
-                self.supress_one()
-                self.actual = None
-
-                if not len(self.cascadas[self.cascadaActual]['items']):
-                    del self.cascadas[self.cascadaActual]
-                    self.back()
-                else:
-                    self._modify_cube_list()
-
-    def back(self):
-        if self.stopped and self.cascadaAnterior != '':
-            self.cascadaActual = self.cascadaAnterior
-            self.cascadaAnterior = ''
-            self._change_cube_list()
-
-    def add_element(self, cascada, item):
-        if cascada in self.cascadas:
-            self.cascadas[cascada]['items'].append(item)
-        else:
-            raise NotImplementedError('No se pueden agregar nuevas cascadas de momento')
-
-        self._change_cube_list()
-        self._modify_cube_list()
-
-    def supress_one(self):
-        self.cubos.remove(self.actual)
-        self.cascadas[self.cascadaActual]['items'].remove(self.actual)
+    def backward(self):
+        if len(self.acceso_cascadas) > 1:
+            del self.acceso_cascadas[-1]
+            self.cascadaActual = self.acceso_cascadas[-1]
+            self.switch_cascades()
 
     def supress_all(self):
-        self.cubos.empty()
-        self.cascadas[self.cascadaActual]['items'].clear()
+        self.cuadros.empty()
+        self.cascadas[self.cascadaActual].clear()
 
-    def _change_cube_list(self):
-        self.cubos.empty()
-        self.cubos.add(*self.cascadas[self.cascadaActual]['items'])
-
-    def _modify_cube_list(self):
-        self.change_radius(self.radius)
-        separacion = 360 // len(self.cubos)
-        angulo = -separacion  # 0°
-        for cuadro in self.cubos:
-            angulo += separacion
-            cuadro.change_angle(angulo, *self.puntos[angulo])
+    def switch_cascades(self):
+        for cuadro in self.cuadros:
+            cuadro.deregister()
+        self.cuadros.empty()
+        self.cuadros.add(*self.cascadas[self.cascadaActual])
 
     def check_on_spot(self):
-        for cuadro in self.cubos:
-            if cuadro.in_place:
-                return cuadro
+        if len(self.cuadros.sprites()):
+            return min(self.cuadros.sprites(), key=lambda cuadro: cuadro.angle)
+
+    def add_cascades(self, cascades: dict):
+        for key in cascades:
+            group = cascades[key]
+            if key not in self.cascadas:
+                self.cascadas[key] = []
+            else:
+                # por alguna razón no funciona con list comprehension
+                for item in self.cascadas[key]:
+                    if item in group:
+                        group.remove(item)
+                if not len(group):
+                    return
+                group += self.cascadas[key]
+                self.cascadas[key].clear()
+
+            if len(group):
+                separation = 360 // len(group)
+                angle = 0
+                for e in sorted(group, key=lambda c: c.idx):
+                    e.angle = angle
+                    e.parent = self
+                    self.cascadas[key].append(e)
+                    angle += separation
+
+    def del_cascade(self, cascade: str):
+        if cascade in self.cascadas:
+            del self.cascadas[cascade]
+
+    def del_tree_recursively(self, csc: str):
+        for cascade in reversed(self.acceso_cascadas[self.acceso_cascadas.index(csc):]):
+            self.backward()
+            self.del_cascade(cascade)
+            self.del_item_from_cascade(cascade, self.acceso_cascadas[-1])  # me preocupa ese [-1]
+        self.stop_everything(self.actual)
+
+    def add_item_to_cascade(self, item, cascade: str):
+        new = {cascade: [item]}
+        self.add_cascades(new)
+        self.radius = self.base_radius * (len(self.cascadas[cascade]) + 1)
+        self.switch_cascades()
+
+    def del_item_from_cascade(self, item_name: str, cascade: str):
+        for item in self.cascadas[cascade]:
+            if item_name == item.nombre:
+                self.cascadas[cascade].remove(item)
+                self.switch_cascades()
+                break
+
+    def __repr__(self):
+        return 'Menu Circular'

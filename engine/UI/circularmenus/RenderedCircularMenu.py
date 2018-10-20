@@ -17,7 +17,7 @@ class RenderedCircularMenu(CircularMenu):
 
     def _update_rendered(self, on_spot=None):
         Renderer.clear(layer=self.layer)
-        for cuadro in self.cubos:
+        for cuadro in self.cuadros:
             Renderer.add_overlay(cuadro, self.layer)
 
         if on_spot is None:
@@ -31,20 +31,12 @@ class RenderedCircularMenu(CircularMenu):
             if hasattr(self.last_on_spot, 'description'):
                 Renderer.add_overlay(self.last_on_spot.description, self.layer)
 
-    def _change_cube_list(self):
-        super()._change_cube_list()
-        self._update_rendered()
-
-    def supress_one(self):
-        super().supress_one()
+    def switch_cascades(self):
+        super().switch_cascades()
         self._update_rendered()
 
     def supress_all(self):
         super().supress_all()
-        self._update_rendered()
-
-    def _modify_cube_list(self):
-        super()._modify_cube_list()
         self._update_rendered()
 
     def stop_everything(self, on_spot):
@@ -60,5 +52,7 @@ class RenderedCircularMenu(CircularMenu):
 
     def salir(self):
         if self.cascadaActual == 'inicial':
+            for cuadro in self.cuadros:
+                cuadro.deregister()
             self.deregister()
             EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})

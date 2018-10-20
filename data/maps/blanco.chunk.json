@@ -13,6 +13,6 @@
   },
   "refs":{
     "arbol":"props/arbol_escalado.png",
-    "crate":"items/crate.json"
+    "crate":"crate.json"
   }
 }
