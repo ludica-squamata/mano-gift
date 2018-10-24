@@ -73,7 +73,7 @@ class DialogInterface(BaseWidget):
         self.drawn = True
 
     def set_sel_mode(self, opciones):
-        from engine.UI.circularmenus.elements.DialogElements import DialogOptionElement
+        from engine.UI.circularmenus.elements.dialog_elems import DialogOptionElement
         self.menu.supress_all()
 
         cascada = []
