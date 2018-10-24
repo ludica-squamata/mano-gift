@@ -72,3 +72,6 @@ class ControllableAI(EventAware):
                             self.deregister()
 
         self.accion = False
+
+    def __repr__(self):
+        return 'Controllable AI ({})'.format(self.entity.nombre)

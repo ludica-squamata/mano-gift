@@ -74,8 +74,10 @@ class Sight(AzoeBaseSprite):
         mapa = self.parent.mapa_actual
         lista = mapa.properties.sprites() if (mapa is not None) and (len(mapa.properties.sprites()) > 0) else [
             self.parent]
-
-        idx = lista.index(self.parent)
+        if self.parent in lista:
+            idx = lista.index(self.parent)
+        else:
+            idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
             if obj.mask.overlap(self.mask, (x, y)):
@@ -103,7 +105,10 @@ class Touch(AzoeBaseSprite):
             self.parent]
 
         lista.reverse()
-        idx = lista.index(self.parent)
+        if self.parent in lista:
+            idx = lista.index(self.parent)
+        else:
+            idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
             if self.rect.colliderect(obj.rect):
                 if obj.accionable:
@@ -127,5 +132,4 @@ class Sensitivo(Atribuido):
         for sense in self.perceived:
             self.perceived[sense].clear()
         self.vista()
-        # self.oido()
         self.tacto()

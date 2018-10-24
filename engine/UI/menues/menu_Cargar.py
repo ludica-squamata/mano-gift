@@ -5,6 +5,8 @@ from engine.misc import Config
 from .menu import Menu
 import os
 
+_boton_cargar = 'Cargar'
+
 
 class MenuCargar(Menu):
     archivos = []
