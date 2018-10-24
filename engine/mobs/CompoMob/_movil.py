@@ -1,4 +1,4 @@
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.scenery.props import Movible
 from ._atribuido import Atribuido

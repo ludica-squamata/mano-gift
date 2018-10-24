@@ -1,9 +1,9 @@
-from .menu_Pausa import MenuPausa
-from .menu_Equipo import MenuEquipo, _boton_equipo
-from .menu_Opciones import MenuOpciones, _boton_opciones
-from .menu_Cargar import MenuCargar, _boton_cargar
-from .menu_Personaje import MenuNuevo
-from .menu_Principal import MenuPrincipal
+from .pausa import MenuPausa
+from .equipo import MenuEquipo, _boton_equipo
+from .opciones import MenuOpciones, _boton_opciones
+from .cargar import MenuCargar, _boton_cargar
+from .personaje import MenuNuevo
+from .principal import MenuPrincipal
 from .menu import Menu
 
 MenuPausa.nombres = [_boton_equipo, _boton_opciones, _boton_cargar]

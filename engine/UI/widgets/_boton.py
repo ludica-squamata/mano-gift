@@ -1,4 +1,4 @@
-from .basewidget import BaseWidget
+from .base_widget import BaseWidget
 from engine.globs import CUADRO, TEXT_FG, BOX_SEL_BACK, TEXT_SEL, BISEL_BG, CANVAS_BG
 from pygame import Rect, Surface, draw, font
 from engine.libs.textrect import render_textrect

@@ -1,5 +1,5 @@
 from pygame import Surface, Rect, draw
-from .basewidget import BaseWidget
+from .base_widget import BaseWidget
 from engine.globs import CANVAS_BG, TEXT_SEL
 
 

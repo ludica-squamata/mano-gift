@@ -1,6 +1,6 @@
 from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
 from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import ReversibleDict
 from random import randint
 

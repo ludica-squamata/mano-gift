@@ -1,5 +1,5 @@
 from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA, font
 from engine.globs.renderer import Renderer
 from pygame.sprite import Sprite

@@ -1,4 +1,4 @@
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from re import compile
 
 

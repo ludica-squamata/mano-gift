@@ -1,3 +1,3 @@
-from .azoeSprite import AzoeSprite
+from .azoe_sprite import AzoeSprite
 from .shadow import ShadowSprite
-from .eventListener import EventListener
+from .event_listener import EventListener

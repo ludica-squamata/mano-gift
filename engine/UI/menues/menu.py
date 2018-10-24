@@ -1,9 +1,9 @@
 from engine.globs import EngineData, ANCHO, ALTO, CAPA_OVERLAYS_MENUS, TEXT_SEL, CANVAS_BG
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.widgets import Boton, BaseWidget, Fila
 from engine.libs.textrect import render_textrect
 from engine.globs.event_aware import EventAware
-from engine.globs.azoegroup import AzoeGroup
+from engine.globs.azoe_group import AzoeGroup
 from pygame import Rect, font, Surface
 
 

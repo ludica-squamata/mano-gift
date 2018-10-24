@@ -2,7 +2,7 @@ from .CompoMob import Equipado, Combativo, Autonomo, Parlante
 from engine.globs import Mob_Group
 from engine.misc import cargar_imagen, split_spritesheet
 from engine.base import ShadowSprite
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 
 
 class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):

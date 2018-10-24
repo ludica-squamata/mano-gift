@@ -1,5 +1,5 @@
 from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import Item_Group, ModData
 from engine.globs.renderer import Renderer
 from .bases import Escenografia
@@ -161,8 +161,7 @@ class Estructura3D(Escenografia):
 
                 elif ruta.endswith('.png'):
                     w, h = data['width'], data['height']
-                    faces = self.chop_faces(ruta, w=w, h=h, required_face=face)
-                    imagen = faces[face]
+                    imagen = self.chop_faces(ruta, w=w, h=h)[face]
 
                 if 'cara' not in propdata:
                     propdata.update({'cara': face})
@@ -172,17 +171,16 @@ class Estructura3D(Escenografia):
 
         return props
 
-    def chop_faces(self, ruta_img, w, h, required_face='front'):
+    def chop_faces(self, ruta_img, w, h):
         if not self._chopped:
             spritesheet = split_spritesheet(ruta_img, w=w, h=h)
             d = {}
             if len(spritesheet) > 1:
-                for idx, face in enumerate(['front', 'left', 'right', 'back']):
+                for idx, face in [[0, "front"], [1, "left"], [2, "right"], [3, "back"]]:
                     d[face] = spritesheet[idx]
             else:
-                # print('aca',required_face)
-                d[required_face] = spritesheet[0]
-            # self._chopped = d
+                d['front'] = spritesheet[0]
+            self._chopped = d
             return d
         else:
             return self._chopped

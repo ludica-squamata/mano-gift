@@ -1,7 +1,7 @@
 # script.py
 
 from engine.globs import GameState
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc.resources import load_module_from_script
 
 
@@ -26,8 +26,8 @@ def init_game(event):
     # event tendria data de si el juego es nuevo o es un savegame.
     from engine.globs import EngineData
 
-    data = {"mapa": "casas_y_arboles",
-            "entrada": "centro",
+    data = {"mapa": "prueba",
+            "entrada": "bottomright",
             "tiempo": [0, 0, 0],
             "focus": "heroe"}
 
