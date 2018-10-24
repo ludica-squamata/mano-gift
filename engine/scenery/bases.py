@@ -1,4 +1,4 @@
-from engine.UI.propdescription import PropDescription
+from engine.UI.prop_description import PropDescription
 from engine.base import ShadowSprite, EventListener
 from engine.mapa.light_source import LightSource
 

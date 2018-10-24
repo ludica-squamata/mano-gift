@@ -1,5 +1,5 @@
 from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG, Tiempo
-from engine.misc.tagloader import load_tagarrayfile
+from engine.misc.tag_loader import load_tagarrayfile
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
