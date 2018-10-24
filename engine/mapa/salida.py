@@ -1,5 +1,5 @@
 from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.modState import ModState
+from engine.globs.gameState import GameState
 from pygame import Mask, Surface, Rect
 from engine.base import AzoeSprite
 import sys
@@ -24,7 +24,7 @@ class Salida:
         self.direcciones = direcciones
         self.mask = Mask(self.mapRect.size)
         self.mask.fill()
-        ModState.set(self.flag_name, False)
+        GameState.set(self.flag_name, False)
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, *self.mapRect)
 
@@ -37,7 +37,7 @@ class Salida:
                 'target_entrada': self.link}
 
         EventDispatcher.trigger('SetMap', 'Salida', data)
-        ModState.set(self.flag_name, True)
+        GameState.set(self.flag_name, True)
 
     def __repr__(self):
         return self.nombre
