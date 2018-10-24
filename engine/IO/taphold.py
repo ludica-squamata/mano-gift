@@ -1,5 +1,5 @@
 from engine.globs import EngineData, TECLADO, GAMEPAD
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import Config
 from pygame import event, joystick
 from pygame.key import get_pressed

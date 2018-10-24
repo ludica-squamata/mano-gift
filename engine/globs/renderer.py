@@ -1,6 +1,6 @@
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Rect, draw, display, image, mouse, font, sprite, Surface
-from engine.globs.azoegroup import AzoeGroup
+from engine.globs.azoe_group import AzoeGroup
 from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
 import sys
 import os

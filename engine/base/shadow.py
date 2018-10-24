@@ -1,10 +1,9 @@
 from pygame import mask, PixelArray, Surface, SRCALPHA, transform, Rect
 from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import ReversibleDict
-from .azoeSprite import AzoeSprite
-# noinspection PyUnresolvedReferences
+from .azoe_sprite import AzoeSprite
 from math import floor
 
 

@@ -1,7 +1,7 @@
 # script.py
 
 from engine.globs import GameState
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc.resources import load_module_from_script
 
 

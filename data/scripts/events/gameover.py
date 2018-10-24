@@ -1,7 +1,7 @@
 from engine.misc.util import salir
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
-from engine.globs.azoegroup import AzoeBaseSprite
+from engine.globs.azoe_group import AzoeBaseSprite
 from pygame import Surface, font
 
 

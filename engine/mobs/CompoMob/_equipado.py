@@ -1,4 +1,4 @@
-from engine.mobs.Inventory import Inventory
+from engine.mobs.inventory import Inventory
 from ._atribuido import Atribuido
 
 

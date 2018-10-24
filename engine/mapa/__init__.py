@@ -1,3 +1,3 @@
 from .salida import Salida
-from .Stage import Stage
-from .LightSource import *
+from .stage import Stage
+from .light_source import *

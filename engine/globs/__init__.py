@@ -4,5 +4,5 @@ from .giftgroups import *
 from .tiempo import Tiempo, Noche, TimeStamp
 from .engine_data import EngineData
 from .mod_data import ModData
-from .gameState import GameState
+from .game_state import GameState
 from .colores import *

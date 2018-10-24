@@ -1,6 +1,6 @@
 ﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.UI import DialogInterface
 

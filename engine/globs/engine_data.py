@@ -1,6 +1,6 @@
 from engine.misc import abrir_json, guardar_json, salir_handler, salir, Config
 from .constantes import CAPA_OVERLAYS_MENUS
-from .eventDispatcher import EventDispatcher, AzoeEvent
+from .event_dispatcher import EventDispatcher, AzoeEvent
 from .giftgroups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo

@@ -1,5 +1,5 @@
 from engine.globs.colores import TEXT_FG, CANVAS_BG
-from engine.globs.azoegroup import AzoeBaseSprite
+from engine.globs.azoe_group import AzoeBaseSprite
 from pygame import Surface, font
 
 

@@ -1,5 +1,5 @@
 # ModState.py
-from .eventDispatcher import EventDispatcher
+from .event_dispatcher import EventDispatcher
 
 
 class GameState:

@@ -1,4 +1,4 @@
-from engine.IO.menucircular import BaseElement
+from engine.IO.menu_circular import BaseElement
 from pygame import Surface, SRCALPHA, font
 from engine.globs.colores import TEXT_FG, CANVAS_BG
 from .title import Title

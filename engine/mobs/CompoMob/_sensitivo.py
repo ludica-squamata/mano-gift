@@ -1,6 +1,6 @@
 from pygame import Surface, draw, mask as mask_module, transform
-from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.azoegroup import AzoeBaseSprite
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs.azoe_group import AzoeBaseSprite
 from ._atribuido import Atribuido
 from math import tan, radians
 

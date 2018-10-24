@@ -1,4 +1,4 @@
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, Config
 from engine.globs import Tiempo, ModData

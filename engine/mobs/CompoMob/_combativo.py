@@ -1,6 +1,6 @@
 from ._animado import Animado
 from ._sensitivo import Sensitivo
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 
 
 class Combativo(Sensitivo, Animado):

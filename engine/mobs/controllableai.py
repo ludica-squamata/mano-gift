@@ -1,4 +1,4 @@
-from engine.globs.eventDispatcher import EventDispatcher, AzoeEvent
+from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
 from engine.globs.event_aware import EventAware
 
 

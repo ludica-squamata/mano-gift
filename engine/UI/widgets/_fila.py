@@ -1,6 +1,6 @@
 from engine.globs import CANVAS_BG, TEXT_DIS, Mob_Group
 from engine.libs import render_tagged_text
-from .basewidget import BaseWidget
+from .base_widget import BaseWidget
 from pygame import Surface
 
 

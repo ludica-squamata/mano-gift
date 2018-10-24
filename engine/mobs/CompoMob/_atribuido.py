@@ -1,4 +1,4 @@
-from engine.base.azoeSprite import AzoeSprite
+from engine.base.azoe_sprite import AzoeSprite
 
 
 class Atribuido(AzoeSprite):

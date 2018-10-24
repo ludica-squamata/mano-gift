@@ -1,5 +1,5 @@
 from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
-from engine.globs.eventDispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import Item_Group, ModData
 from engine.globs.renderer import Renderer
 from .bases import Escenografia

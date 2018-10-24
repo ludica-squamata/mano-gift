@@ -1,5 +1,5 @@
-from engine.globs.eventDispatcher import EventDispatcher
-from engine.globs.gameState import GameState
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs.game_state import GameState
 from pygame import Mask, Surface, Rect
 from engine.base import AzoeSprite
 import sys
