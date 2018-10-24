@@ -15,11 +15,11 @@ class Atribuido(AzoeSprite):
 
         self.velocidad = self.data['atributos']['velocidad']
 
-        self.salud_act = self.data['atributos']['salud']
-        self.mana_act = self.data['atributos']['mana']
+        self.salud_max = self.data['atributos']['salud']
+        self.mana_max = self.data['atributos']['mana']
 
-        self.salud = self.salud_act
-        self.mana = self.mana_act
+        self.salud = self.salud_max  # salud_act
+        self.mana = self.mana_max  # mana_act
 
     def mover(self, dx, dy):
         dx *= self.velocidad

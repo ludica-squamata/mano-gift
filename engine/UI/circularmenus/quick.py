@@ -38,7 +38,7 @@ class QuickCircularMenu(RenderedCircularMenu):
         else:
             super().backward()
 
-    def stop_everything(self, on_spot):
+    def stop_everything(self, on_spot=None):
         super().stop_everything(on_spot)
         self.set_first(self.last_on_spot.idx)
 

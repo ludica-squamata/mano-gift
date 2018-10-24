@@ -16,8 +16,9 @@ class ProgressBar(Sprite):
     x, y, w, h = 0, 0, 0, 0
     draw_area_rect = None
     nombre = 'ProgressBar'
+    tracked_stat = ''
 
-    def __init__(self, focus, maximo, color_actual, color_fondo, x, y, w, h):
+    def __init__(self, focus, maximo, stat, color_actual, color_fondo, x, y, w, h):
         super().__init__()
 
         self.colorAct = color_actual
@@ -25,6 +26,7 @@ class ProgressBar(Sprite):
         self.maximo = maximo
         self.actual = maximo
         self.focus = focus
+        self.tracked_stat = stat
         self.divisiones = 1
 
         self.x, self.y = x, y
@@ -57,7 +59,8 @@ class ProgressBar(Sprite):
 
     def event_update(self, event):
         mob = event.data['mob']
-        if mob.nombre == self.focus.nombre:
+        stat = event.data['stat']
+        if mob.nombre == self.focus.nombre and stat == self.tracked_stat:
             self.set_variable(actual=event.data["value"])
             self.actualizar()
 
@@ -118,12 +121,12 @@ class HUD:
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
-        self.BarraVida = ProgressBar(focus, focus.salud_act, (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(focus, focus.mana_act, (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        self.BarraVida = ProgressBar(focus, focus.salud_max, 'salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        self.BarraMana = ProgressBar(focus, focus.mana_act, 'mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(focus, dx, dy - 32)
 
-        EventDispatcher.register(self.BarraVida.event_update, 'MobWounded')
+        EventDispatcher.register(self.BarraVida.event_update, 'MobWounded', 'UsedItem')
         EventDispatcher.register(self.toggle, "TogglePause")
 
         self.BarraVida.actualizar()

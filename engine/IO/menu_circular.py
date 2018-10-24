@@ -121,7 +121,7 @@ class CircularMenu(EventAware):
         for cubo in self.cuadros:
             cubo.stop = True
 
-    def stop_everything(self, on_spot):
+    def stop_everything(self, on_spot=None,):
         cuadros = self.cuadros.sprites()
         angle = 360 // len(cuadros)  # base
 
@@ -141,6 +141,7 @@ class CircularMenu(EventAware):
         if len(self.acceso_cascadas) > 1:
             del self.acceso_cascadas[-1]
             self.cascadaActual = self.acceso_cascadas[-1]
+            self.actual = self.cascadas[self.cascadaActual][0]
             self.switch_cascades()
 
     def supress_all(self):
@@ -152,6 +153,8 @@ class CircularMenu(EventAware):
             cuadro.deregister()
         self.cuadros.empty()
         self.cuadros.add(*self.cascadas[self.cascadaActual])
+        if len(self.cascadas[self.cascadaActual]):
+            self.stop_everything()
 
     def check_on_spot(self):
         if len(self.cuadros.sprites()):
@@ -204,6 +207,8 @@ class CircularMenu(EventAware):
                 self.cascadas[cascade].remove(item)
                 self.switch_cascades()
                 break
+        if not len(self.cascadas[cascade]):
+            self.backward()
 
     def __repr__(self):
         return 'Menu Circular'

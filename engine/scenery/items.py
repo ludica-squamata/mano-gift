@@ -1,3 +1,4 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from .bases import Item
 
 
@@ -17,11 +18,11 @@ class Consumible(Item):
     def usar(self, mob):
         stat = self.data.get('efecto', {}).get('stat', '')
         mod = self.data.get('efecto', {}).get('mod', '')
+        valor = 0
 
         if stat == 'salud':
-            actual = stat + '_act'
             maximo = stat + '_max'
-            valactual = getattr(mob, actual)
+            valactual = getattr(mob, stat)
             valmaximo = getattr(mob, maximo)
 
             valor = int((mod * valmaximo) / 100)
@@ -30,13 +31,14 @@ class Consumible(Item):
             else:
                 valor += valactual
 
-            setattr(mob, actual, valor)
+            setattr(mob, stat, valor)
 
         elif hasattr(mob, stat):
             actual = getattr(mob, stat)
             valor = actual + mod
             setattr(mob, stat, valor)
 
+        EventDispatcher.trigger('UsedItem', self.nombre, {'mob': mob, 'stat': stat, 'value': valor})
         return mob.inventario.remover(self)
 
 

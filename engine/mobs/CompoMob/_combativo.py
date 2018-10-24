@@ -6,10 +6,10 @@ from engine.globs.event_dispatcher import EventDispatcher
 class Combativo(Sensitivo, Animado):
 
     def recibir_danio(self, danio):
-        self.salud_act -= danio
-        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self, "value": self.salud_act})
+        self.salud_max -= danio
+        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self, "value": self.salud_max})
 
-        if self.salud_act <= 0:
+        if self.salud_max <= 0:
             if self.death_img is not None:
                 self.image = self.death_img
                 # esto queda hasta que haga sprites 'muertos' de los npcs

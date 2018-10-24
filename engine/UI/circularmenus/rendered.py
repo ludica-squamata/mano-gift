@@ -39,7 +39,7 @@ class RenderedCircularMenu(CircularMenu):
         super().supress_all()
         self._update_rendered()
 
-    def stop_everything(self, on_spot):
+    def stop_everything(self, on_spot=None):
         super().stop_everything(on_spot)
         self._update_rendered(on_spot)
 

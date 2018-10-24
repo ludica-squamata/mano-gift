@@ -40,4 +40,3 @@ class InventoryElement(LetterElement):
             self.image = self.img_sel
             if value == 0:
                 self.parent.del_item_from_cascade(self.nombre, 'Consumibles')
-                self.parent.backward()
