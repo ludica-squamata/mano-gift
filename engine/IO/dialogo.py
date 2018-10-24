@@ -1,5 +1,5 @@
 ﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
-from engine.globs import CAPA_OVERLAYS_DIALOGOS, ModState
+from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
 from engine.globs.eventDispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.UI import DialogInterface
@@ -17,7 +17,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if ModState.get('dialog.' + meta['name']):
+        if GameState.get('dialog.' + meta['name']):
             allow = False
 
         if meta['class'] != 'chosen':
@@ -221,7 +221,7 @@ class Dialogo(Discurso):
         self.dialogo = None
 
         if self.write_flag:
-            ModState.set('dialog.' + self.name, 1)
+            GameState.set('dialog.' + self.name, 1)
 
         super().cerrar()
 

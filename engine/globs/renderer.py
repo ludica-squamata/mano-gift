@@ -278,7 +278,6 @@ class Renderer:
             cls.overlays.remove_sprites_of_layer(layer)
         else:
             cls.camara.clear()
-            cls.overlays.empty()
 
     @classmethod
     def add_overlay(cls, obj, _layer):
