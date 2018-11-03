@@ -16,7 +16,6 @@ class EngineData:
     onPause = False
     scene_data = None
     setKey = False
-    char_name = ''
     save_data = {}
     current_view = 'north'
 
@@ -60,27 +59,27 @@ class EngineData:
 
     @classmethod
     def salvar(cls, event):
-        data = abrir_json(Config.savedir + '/' + cls.char_name + '.json')
+        name = event.data['name']
+        data = abrir_json(Config.savedir + '/' + name + '.json')
         data.update(event.data)
-        guardar_json(Config.savedir + '/' + cls.char_name + '.json', data)
+        guardar_json(Config.savedir + '/' + name + '.json', data)
 
     @classmethod
     def new_game(cls, char_name):
-        cls.char_name = char_name
         guardar_json(Config.savedir + '/' + char_name + '.json', {"name": char_name})
-        EventDispatcher.trigger('NewGame', 'engine', {})
+        EventDispatcher.trigger('NewGame', 'engine', {'savegame': {"name": char_name}})
 
     @classmethod
     def load_savefile(cls, filename):
         data = abrir_json(Config.savedir + '/' + filename)
         cls.save_data.update(data)
-        cls.char_name = data['name']
         Mob_Group.clear()
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
     @classmethod
-    def cargar_juego(cls, data):
+    def cargar_juego(cls, event):
         from engine.UI.hud import HUD
+        data = event.data
         cls.acceso_menues.clear()
 
         mapa = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
@@ -91,9 +90,10 @@ class EngineData:
         Renderer.set_focus(focus)
 
         cls.check_focus_position(focus, mapa, data['entrada'])
+        focus.character_name = data['name']
 
         cls.MODO = 'Aventura'
-        cls.HUD = HUD(focus)
+        cls.HUD = HUD()
 
     @classmethod
     def check_focus_position(cls, focus, mapa, entrada):
@@ -167,3 +167,4 @@ EventDispatcher.register(EngineData.toggle_mode, AzoeEvent('Key',
 EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
 EventDispatcher.register(EngineData.end_dialog, 'EndDialog')
 EventDispatcher.register(salir_handler, 'QUIT')
+EventDispatcher.register(EngineData.cargar_juego, 'LoadGame')

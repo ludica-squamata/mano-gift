@@ -1,4 +1,4 @@
-from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG
+from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG, Mob_Group
 from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA, font
 from engine.globs.renderer import Renderer
@@ -76,7 +76,7 @@ class CharacterName(Sprite):
 
     def __init__(self, focus, x, y):
         super().__init__()
-        self.text = focus.nombre
+        self.text = focus.character_name
         self.image = self.generate([255, 255, 255])
         self.rect = self.image.get_rect(topleft=(x, y))
 
@@ -117,7 +117,8 @@ class HUD:
     BarraMana = None
     screen_name = None
 
-    def __init__(self, focus):
+    def __init__(self):
+        focus = Mob_Group.get_controlled_mob()
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50

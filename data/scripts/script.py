@@ -23,9 +23,6 @@ def door_activate(puerta, event):
 
 
 def init_game(event):
-    # event tendria data de si el juego es nuevo o es un savegame.
-    from engine.globs import EngineData
-
     data = {"mapa": "casas_y_arboles",
             "entrada": "centro",
             "tiempo": [0, 0, 0],
@@ -34,7 +31,7 @@ def init_game(event):
     if 'savegame' in event.data:
         data.update(event.data['savegame'])
 
-    EngineData.cargar_juego(data)
+    EventDispatcher.trigger('LoadGame', 'Script', data)
 
 
 def init_system(event):

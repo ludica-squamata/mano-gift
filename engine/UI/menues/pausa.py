@@ -53,7 +53,7 @@ class MenuPausa(Menu):
         h = fuente.size(self.entity.nombre)[1]
         rect = Rect(r.right + 2, 0, w, h + 1)
         rect.centery = r.centery - 10
-        render = render_textrect(self.entity.nombre, fuente, rect, TEXT_FG, CANVAS_BG)
+        render = render_textrect(self.entity.character_name, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
         self.canvas.blit(EngineData.HUD.BarraVida.image, (r.right + 2, r.centery + 4))
