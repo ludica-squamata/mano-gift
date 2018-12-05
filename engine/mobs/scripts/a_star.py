@@ -20,7 +20,7 @@ def a_star(inicio, destino, mapa, heuristica='manhattan'):
 
         cerrada.append(actual)
 
-        vecinos = mirar_vecinos(actual, 100, mapa)
+        vecinos = mirar_vecinos(actual, 32, mapa)
         for vecino in vecinos:
             punt_g_tentativa = actual.g + vecino.g
             if vecino not in cerrada or punt_g_tentativa < vecino.g:
@@ -29,6 +29,8 @@ def a_star(inicio, destino, mapa, heuristica='manhattan'):
                 vecino.f = vecino.g + heuristica_estimada(vecino, destino, heuristica)
                 if vecino not in abierta:
                     abierta.append(vecino)
+
+    return reconstruir_camino(camino, actual)
 
 
 def heuristica_estimada(node, goal, method):
@@ -96,10 +98,10 @@ class Nodo:
         self.y = y
 
     def __repr__(self):
-        return 'Nodo(' + str(self.x) + ',' + str(self.y) + ')'
+        return '(' + str(self.x) + ',' + str(self.y) + ')'
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
+        return self.x == other.x and self.y == other.y and self.s == other.s
 
     def __hash__(self):
-        return self.x * self.s + self.y
+        return hash((self.x, self.y, self.s))

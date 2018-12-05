@@ -59,7 +59,7 @@ class ProgressBar(Sprite):
 
     def event_update(self, event):
         mob = event.data['mob']
-        stat = event.data['stat']
+        stat = event.data.get('stat', None)
         if mob.nombre == self.focus.nombre and stat == self.tracked_stat:
             self.set_variable(actual=event.data["value"])
             self.actualizar()

@@ -21,7 +21,7 @@ class Composite(Node):
         child.update()
 
     def reset(self):
-        self.current_id = -1
+        self.current_id = 0
 
     def __repr__(self):
         lista = [str(c.idx) for c in self.children]
@@ -41,6 +41,8 @@ class Sequence(Composite):
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
+        else:
+            self.reset()
 
         if self.parent is not None:
             self.parent.get_child_status(status)
