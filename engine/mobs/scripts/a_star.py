@@ -3,14 +3,14 @@ from math import sqrt
 from pygame import mask
 
 
-def a_star(inicio, destino, mapa, heuristica='manhattan'):
+def a_star(inicio, destino, mapa, heuristica='euclidean'):
     cerrada = []  # The set of nodes already evaluated.
     abierta = [inicio]  # The set of tentative nodes to be evaluated, initially containing the start node
     camino = {}  # The map of navigated nodes.
 
-    inicio.g = 0  # Cost from start along best known path.
+    # inicio.g = 0  # Cost from start along best known path.
     # Estimated total cost from start to goal through y.
-    inicio.f = inicio.g + heuristica_estimada(inicio, destino, heuristica)
+    inicio.f = heuristica_estimada(inicio, destino, heuristica)
 
     while abierta:
         abierta.sort(key=lambda nodo: nodo.f)
@@ -24,13 +24,11 @@ def a_star(inicio, destino, mapa, heuristica='manhattan'):
         for vecino in vecinos:
             punt_g_tentativa = actual.g + vecino.g
             if vecino not in cerrada or punt_g_tentativa < vecino.g:
-                camino[vecino] = actual
                 vecino.g = punt_g_tentativa
                 vecino.f = vecino.g + heuristica_estimada(vecino, destino, heuristica)
+                camino[vecino] = actual
                 if vecino not in abierta:
                     abierta.append(vecino)
-
-    return reconstruir_camino(camino, actual)
 
 
 def heuristica_estimada(node, goal, method):
@@ -98,10 +96,10 @@ class Nodo:
         self.y = y
 
     def __repr__(self):
-        return '(' + str(self.x) + ',' + str(self.y) + ')'
+        return '(' + str(self.x) + ',' + str(self.y) + ') f: '+str(self.f)
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y and self.s == other.s
+        return self.x == other.x and self.y == other.y
 
     def __hash__(self):
         return hash((self.x, self.y, self.s))

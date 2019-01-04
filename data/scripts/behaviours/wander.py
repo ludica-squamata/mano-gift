@@ -2,7 +2,7 @@ from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
 from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import ReversibleDict
-from random import choice, randint
+from random import randrange, randint
 
 
 class IsTalking(Leaf):
@@ -39,8 +39,8 @@ class GetRandomDir(Leaf):
         self.tree.set_context('mapa', cuadros)
         self.tree.set_context('next', 0)
 
-        x = 560
-        y = 680
+        x = randrange(32, w, 32)
+        y = randrange(32, h, 32)
 
         nodo = Nodo(x, y, 32)
         self.tree.set_context('punto_final', nodo)
@@ -58,9 +58,7 @@ class GetRoute(Leaf):
         pi = Nodo(*e.mapRect.center, 32)
         ruta = a_star(pi, pd, mapa)
         if ruta is None:
-            print('Astar has failed', pi, pd)
             return Failure
-        print(ruta)
 
         self.tree.set_context('camino', ruta)
         self.tree.set_context('punto_proximo', ruta[prox])
