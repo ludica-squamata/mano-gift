@@ -3,7 +3,7 @@
     "class":"chosen",
     "conditional_tags":{
       "0":{"b":{
-        "objects":["star"],
+        "objects":["Estrella"],
         "attrs":{
           "accion_social":[">",9]
         }}}
