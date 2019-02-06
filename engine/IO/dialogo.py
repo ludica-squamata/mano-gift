@@ -111,7 +111,7 @@ class Dialogo(Discurso):
 
         if "flags" in condiciones:
             for flag in condiciones['flags']:
-                supress = supress or not GameState.get('dialog.' + flag)
+                supress = supress or not GameState.get(flag)
 
         return supress
 
