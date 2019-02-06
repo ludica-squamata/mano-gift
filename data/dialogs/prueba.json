@@ -50,31 +50,34 @@
     "11":{"type":"leaf","from":"commoner","to":"heroe","event":"Flag",
     "txt":"Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."},
 
-    "12":{"type":"exclusive","leads":[13,14],"from":"commoner","to":"heroe",
+    "12":{"type":"exclusive","leads":[13,14,15],"from":"commoner","to":"heroe",
     "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."},
 
-    "13":{"type":"node","leads":16,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"accion_social":[">",9]}},
+    "13":{"type":"node","leads":17,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"accion_social":[">",9]}},"pre":2,
     "txt":"Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."},
 
-    "14":{"type":"node","leads":16,"from":"commoner","to":"heroe",
+    "14":{"type":"node","leads":17,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"accion_social":[">",9]}},"pre":1,
+    "txt":"Este es el segundo bloque de texto, que no deberías poder ver nunca."},
+
+    "15":{"type":"node","leads":17,"from":"commoner","to":"heroe",
     "txt":"Este es el segundo bloque de texto, que solo deberías poder ver si tu carisma es <b>menor</b> que 9."},
 
-    "15":{"type":"node","leads":16,"from":"commoner","to":"heroe",
+    "16":{"type":"node","leads":17,"from":"commoner","to":"heroe",
     "txt":"Es cierto! Tu <b>carisma</b> ha aumentado!"},
 
-    "16":{"type":"node","leads":[17,18,19],"from":"commoner","to":"heroe",
+    "17":{"type":"node","leads":[18,19,20],"from":"commoner","to":"heroe",
     "txt":"Acá habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"},
 
-    "17":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
+    "18":{"type":"branch","leads":21,"from":"heroe","to":"commoner",
     "txt":"Opcion 1"},
 
-    "18":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
+    "19":{"type":"branch","leads":21,"from":"heroe","to":"commoner",
     "txt":"Opcion 2"},
 
-    "19":{"type":"branch","leads":20,"from":"heroe","to":"commoner",
+    "20":{"type":"branch","leads":21,"from":"heroe","to":"commoner",
     "txt":"Opcion 3"},
 
-    "20":{"type":"leaf","from":"commoner","to":"heroe",
+    "21":{"type":"leaf","from":"commoner","to":"heroe",
     "txt":"Final del dialogo"}
 
   }

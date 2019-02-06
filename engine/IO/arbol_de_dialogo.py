@@ -29,6 +29,7 @@ class Elemento:
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
         self.event = data.get('event', None)
+        self.pre = data.get('pre', 0)
 
         if type(self.leads) is list:
             self.hasLeads = True

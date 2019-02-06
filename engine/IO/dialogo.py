@@ -146,9 +146,8 @@ class Dialogo(Discurso):
                         filtered.append(choice)
 
                 if len(filtered):
-                    # si queda alguno con requisitos, elegir el primero.
-                    # en realidad debería haber algun tipo de precedencia, pero así esta bien
-                    # porque solo queda 1 elemento con requisitos.
+                    # si queda alguno con requisitos, elegir el de mayor precedencia.
+                    filtered.sort(key=lambda ch: ch.pre, reverse=True)
                     choice = filtered[0]
                 else:
                     # si nos quedamos sin elementos con requisitos, caemos al default.
@@ -186,7 +185,12 @@ class Dialogo(Discurso):
                 self.mostrar_nodo(actual, omitir_tags=supress)
 
             elif actual.reqs is not None:
-                loc = self.locutores[actual.locutor]
+                if "loc" in actual.reqs:
+                    # si el requisito especifica un locutor, hay que tenerlo en cuenta.
+                    loc = self.locutores[actual.reqs['loc']]
+                else:
+                    loc = self.locutores[actual.locutor]
+
                 if self.supress_element(actual.reqs, loc):
                     self.hablar()
                 else:
