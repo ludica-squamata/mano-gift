@@ -109,6 +109,10 @@ class Dialogo(Discurso):
             for obj in condiciones['objects']:
                 supress = supress or obj not in locutor.inventario
 
+        if "flags" in condiciones:
+            for flag in condiciones['flags']:
+                supress = supress or not GameState.get('dialog.' + flag)
+
         return supress
 
     def hablar(self):
@@ -180,6 +184,14 @@ class Dialogo(Discurso):
                         supress.append(tag_name)
 
                 self.mostrar_nodo(actual, omitir_tags=supress)
+
+            elif actual.reqs is not None:
+                loc = self.locutores[actual.locutor]
+                if self.supress_element(actual.reqs, loc):
+                    self.hablar()
+                else:
+                    self.mostrar_nodo(actual)
+
             else:
                 self.mostrar_nodo(actual)
 

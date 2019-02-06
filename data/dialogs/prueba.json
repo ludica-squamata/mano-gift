@@ -29,7 +29,7 @@
     "4":{"type":"branch","leads":10,"from":"heroe","to":"commoner","reqs":{"attrs":{"accion_social":[">",9]}},
     "txt":"¿Es esta la opción oculta por mi <b>carisma</b>?"},
 
-    "5":{"type":"branch","leads":11,"from":"heroe","to":"commoner","reqs":{"objects":["star"]},
+    "5":{"type":"branch","leads":11,"from":"heroe","to":"commoner","reqs":{"objects":["Estrella"]},
     "txt":"Aquí tengo una <b>estrella</b> que encontré."},
 
     "6":{"type":"branch","leads":12,"from":"heroe","to":"commoner",
