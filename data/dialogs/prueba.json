@@ -68,16 +68,13 @@
     "17":{"type":"node","leads":[18,19,20],"from":"commoner","to":"heroe",
     "txt":"Acá habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"},
 
-    "18":{"type":"branch","leads":21,"from":"heroe","to":"commoner",
+    "18":{"type":"leaf","from":"heroe","to":"commoner",
     "txt":"Opcion 1"},
 
-    "19":{"type":"branch","leads":21,"from":"heroe","to":"commoner",
+    "19":{"type":"leaf","from":"heroe","to":"commoner",
     "txt":"Opcion 2"},
 
-    "20":{"type":"branch","leads":21,"from":"heroe","to":"commoner",
-    "txt":"Opcion 3"},
-
-    "21":{"type":"leaf","from":"commoner","to":"heroe",
+    "20":{"type":"leaf","from":"commoner","to":"heroe",
     "txt":"Final del dialogo"}
 
   }

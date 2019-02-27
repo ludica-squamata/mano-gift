@@ -211,7 +211,11 @@ class ArboldeDialogo:
         return nodo.leads
 
     def set_chosen(self, choice):
-        self.set_actual(int(choice))
+        if choice is None:
+            # choice is a leaf
+            self._future = False
+        else:
+            self.set_actual(int(choice))
 
     def update(self):
         """Devuelve el nodo actual, salvo que sea un leaf o branch,

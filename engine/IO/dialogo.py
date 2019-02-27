@@ -246,8 +246,7 @@ class Dialogo(Discurso):
 
     def update(self, sel):
         self.sel = sel
-        if hasattr(self.sel, 'leads'):
-            self.next = self.sel.leads
+        self.next = self.sel.leads
 
 
 class Monologo(Discurso):
