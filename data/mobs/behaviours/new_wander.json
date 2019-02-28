@@ -18,7 +18,7 @@
 
     "6":{"name":"Sequence","children":[7,8,9]},
     "7":{"name":"NextPosition"},
-    "8":{"name":"Move"},
-    "9":{"name":"IsTalking"}
+    "8":{"name":"IsTalking"},
+    "9":{"name":"Move"}
   }
 }

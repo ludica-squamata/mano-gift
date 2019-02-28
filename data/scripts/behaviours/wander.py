@@ -91,7 +91,7 @@ class Move(Leaf):
         pd = self.tree.get_context('punto_proximo')
         pi = Nodo(*e.mapRect.center, 32)
 
-        if pi != pd and not e.hablando:
+        if pi != pd:
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             if direccion != e.direccion:
                 e.cambiar_direccion(direccion)
