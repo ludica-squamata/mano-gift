@@ -19,8 +19,11 @@
     "bottomleft":{
       "chunk":"single",
       "pos":[32,750]
+    },
+    "star":{
+      "chunk":"single",
+      "pos":[432,432]
     }
-
   },
   "salidas":[
     {

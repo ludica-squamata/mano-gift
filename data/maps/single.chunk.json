@@ -2,7 +2,7 @@
   "fondo":"maps/fondos/prueba.png",
   "colisiones":"maps/colisiones/prueba.png",
   "props": {
-    "star":[[432,432],[464,464]],
+    "star":["star",[464,464]],
     "arbol":[[100,100]],
     "crate":[[200,200]],
     "casa_cerrada":[[600,600]],

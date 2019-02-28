@@ -50,7 +50,12 @@ def load_props(alldata):
             # use ref as filename
             data = abrir_json(ModData.items + ref + '.json')
 
-        for x, y in pos[ref]:
+        for item in pos[ref]:
+            if type(item) is str:
+                x, y = alldata['entradas'][item]['pos']
+            else:
+                x, y = item
+
             if data:
                 prop = new_prop(x, y, data=data)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable
