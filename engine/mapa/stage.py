@@ -29,11 +29,12 @@ class Stage:
         chunk_name = self.data['entradas'][entrada]['chunk']
         offx = self.offset_x - dx
         offy = self.offset_y - dy
+        entradas = self.data['entradas']
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, data=singleton, requested=['Mobs', 'Props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, data=singleton, requested=['Mobs', 'Props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, requested=['Mobs', 'Props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, requested=['Mobs', 'Props'])
 
         self.chunks.add(chunk)
         self.mapa = self.chunks.sprites()[0]
@@ -122,7 +123,7 @@ class ChunkMap(AzoeBaseSprite):
     properties = None
     interactives = []
 
-    def __init__(self, stage, nombre, off_x, off_y, data=False, requested=None):
+    def __init__(self, stage, nombre, off_x, off_y, entradas, data=False, requested=None):
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
         self.interactives.clear()
         self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
@@ -130,6 +131,7 @@ class ChunkMap(AzoeBaseSprite):
         if not data:
             data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
 
+        data.update({'entradas': entradas})
         colisiones = cargar_imagen(data['colisiones'])
         self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
 

@@ -72,7 +72,11 @@ def load_mobs(alldata):
     loaded_mobs = []
     for name in alldata['mobs']:
         pos = alldata['mobs'][name]
-        for x, y in pos:
+        for item in pos:
+            if type(item) is str:
+                x, y = alldata['entradas'][item]['pos']
+            else:
+                x, y = item
             data = abrir_json(ModData.mobs + name + '.json')
             mob = Mob(x, y, data)
             loaded_mobs.append((mob, GRUPO_MOBS))
