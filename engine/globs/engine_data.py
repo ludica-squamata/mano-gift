@@ -35,6 +35,9 @@ class EngineData:
 
     @classmethod
     def on_cambiarmapa(cls, evento):
+        mapa_actual = Renderer.camara.focus.stage
+        mob = evento.data['mob']
+        mapa_actual.del_property(mob)
         if Renderer.camara.is_focus(evento.data['mob']):
             cls.setear_mapa(evento.data['target_stage'],
                             evento.data['target_entrada'],
@@ -43,10 +46,6 @@ class EngineData:
             x, y = cls.mapas[stage].posicion_entrada(evento.data['target_entrada'])
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
-            mapa_actual = Renderer.camara.focus.stage
-            mob = evento.data['mob']
-
-            mapa_actual.del_property(mob)
             mob.set_parent_map(None)
 
     @classmethod
