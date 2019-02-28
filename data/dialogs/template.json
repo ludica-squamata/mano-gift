@@ -1,0 +1,20 @@
+{
+  "head":{
+    "class":"",
+    "conditional_tags":{},
+    "style":"",
+    "locutors":[],
+    "name":"",
+    "about":"",
+    "icon":"",
+    "keywords":[],
+    "events":{}
+  },
+  "body":{
+      "0":{"type":"node","leads":1,"from":"","to":"",
+      "txt":""},
+
+      "1":{"type":"leaf","from":"","to":"",
+      "txt":""}
+    }
+}

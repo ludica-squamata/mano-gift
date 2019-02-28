@@ -30,6 +30,14 @@
       "nombre":"Single.salida1",
       "entrada":"center",
       "direcciones":[]
+    },
+    {
+      "stage":"new",
+      "rect":[608,608,32,16],
+      "chunk":"single",
+      "nombre":"Single.house",
+      "entrada":"center",
+      "direcciones":[]
     }
   ],
   "ambiente":"exterior",
