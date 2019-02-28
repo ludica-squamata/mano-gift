@@ -53,7 +53,7 @@ class Movil(Atribuido):
         # acá detectamos colisión con el mapa de salidas. Oddly, el heroe es el único que usa este método.
         # otros mobs usan A* para guiarse.
         if self.stage.parent.mask_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
-            r, g, b, a = self.stage.parent.img_salidas.get_at((self.mapRect.x + dx, self.mapRect.y))
+            r, g, b, a = self.stage.parent.img_salidas.get_at((self.mapRect.x + dx, self.mapRect.y + dy))
             self.stage.parent.salidas[b*255+g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])

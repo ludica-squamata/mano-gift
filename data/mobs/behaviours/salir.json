@@ -1,7 +1,7 @@
 {
   "head":{
     "script":{
-      "behaviours/house": ["GetHousePos"],
+      "behaviours/house": ["GetHousePos","ReachExit"],
       "behaviours/wander":["GetRoute","NextPosition","Move"]
       },
     "special":{}
@@ -12,8 +12,9 @@
     "1":{"name":"GetHousePos"},
     "2":{"name":"GetRoute"},
     "3":{"name":"UntilFail","child":4},
-    "4":{"name":"Sequence","children":[5,6]},
-    "5":{"name":"NextPosition"},
-    "6":{"name":"Move"}
+    "4":{"name":"Sequence","children":[5,6,7]},
+    "5":{"name":"ReachExit"},
+    "6":{"name":"NextPosition"},
+    "7":{"name":"Move"}
   }
 }
