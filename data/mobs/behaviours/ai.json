@@ -2,7 +2,7 @@
   "head":{
     "script":{
       "behaviours/wander":["GetMap","IsTalking","GetRandomDir","GetRoute","NextPosition","Move","Wait"],
-      "behaviours/ai":["HasSetLocation"]
+      "behaviours/ai":["HasSetLocation","ReachExit"]
       },
     "special":{
       "Repeater":{"ID":null,"times":0}
@@ -22,10 +22,11 @@
     "9":{"name":"Sequence","children":[10,11]},
     "10":{"name":"GetRoute"},
     "11":{"name":"UntilFail","child": 12},
-    "12":{"name":"Sequence","children":[13,14,16]},
+    "12":{"name":"Sequence","children":[13,14,16,17]},
     "13":{"name":"NextPosition"},
     "14":{"name":"Inverter","child":15},
     "15":{"name":"IsTalking"},
-    "16":{"name":"Move"}
+    "16":{"name":"ReachExit"},
+    "17":{"name":"Move"}
   }
 }

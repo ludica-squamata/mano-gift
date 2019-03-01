@@ -147,6 +147,18 @@ class ChunkMap(AzoeBaseSprite):
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
+    @property
+    def mascara_salidas(self):
+        return self.parent.mask_salidas
+
+    @property
+    def imagen_salidas(self):
+        return self.parent.img_salidas
+
+    @property
+    def salidas(self):
+        return self.parent.salidas
+
     def ubicar(self, x, y):
         self.rect.x = x
         self.rect.y = y
@@ -174,7 +186,6 @@ class ChunkMap(AzoeBaseSprite):
         self.del_property(obj)
 
     def cargar_limites(self, limites):
-
         for key in limites:
             rect = Rect(self._get_newmap_pos(key), self.rect.size)
             mapa = self.parent.chunks.get_sprites_at(rect.center)
@@ -208,7 +219,6 @@ class ChunkMap(AzoeBaseSprite):
         return dx, dy
 
     def cargar_mapa_adyacente(self, ady):
-
         dx, dy = self._get_newmap_pos(ady)
 
         if type(self.limites[ady]) is str:

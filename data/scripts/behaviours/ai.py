@@ -25,3 +25,15 @@ def exit_event(event):
 
 
 EventDispatcher.register(exit_event, "Exit")
+
+
+class ReachExit(Leaf):
+    def process(self):
+        e = self.get_entity()
+        rect = e.mapRect
+        mapa = e.stage
+        if mapa.mascara_salidas.overlap(e.mask, rect.topleft) is not None:
+            r, g, b, a = mapa.imagen_salidas.get_at(rect.topleft)
+            mapa.salidas[b*255+g].trigger(e)
+
+        return Success
