@@ -12,32 +12,32 @@ class IsTalking(Leaf):
             opuesta = ReversibleDict(arriba='abajo', derecha='izquierda')
             e.cambiar_direccion(opuesta[e.interlocutor.direccion])
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Is talking', 'pos': (400, 0)})
-            return Failure
+            # must keep the present continous
+            return Running
         else:
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Is not talking', 'pos': (400, 0)})
-            return Success
+            # Is NOT talking, therefore, Failure.
+            return Failure
 
 
 class Wait(Leaf):
     def process(self):
         e = self.get_entity()
-        if randint(0, 101) == 5:
+        if randint(0, 101) <= 5:
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Is not waiting', 'pos': (400, 0)})
-            return Success
+            # Is NOT waiting, therefore, Failure
+            return Failure
         else:
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Is waiting', 'pos': (400, 0)})
             e.detener_movimiento()
+            # must keep the present continous
+            return Running
 
 
 class GetRandomDir(Leaf):
     def process(self):
         e = self.get_entity()
-        cuadros = e.stage.mask
-        w, h = cuadros.get_size()
-        self.tree.clear_context()
-
-        self.tree.set_context('mapa', cuadros)
-        self.tree.set_context('next', 0)
+        w, h = e.stage.mask.get_size()
 
         x = randrange(32, w, 32)
         y = randrange(32, h, 32)
@@ -75,7 +75,8 @@ class NextPosition(Leaf):
 
         if curr_p == self.tree.get_context('punto_final'):
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Has reached final point', 'pos': (400, 0)})
-            return Success
+            # there is no "next" point
+            return Failure
 
         elif curr_p == camino[prox]:
             self.tree.set_context('next', prox + 1)
@@ -101,3 +102,14 @@ class Move(Leaf):
         else:
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Has moved to point', 'pos': (400, 0)})
             return Success
+
+
+class GetMap(Leaf):
+    def process(self):
+        e = self.get_entity()
+        cuadros = e.stage.mask
+        self.tree.clear_context()
+
+        self.tree.set_context('mapa', cuadros)
+        self.tree.set_context('next', 0)
+        return Success

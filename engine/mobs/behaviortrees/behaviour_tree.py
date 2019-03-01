@@ -60,6 +60,10 @@ class BehaviourTree:
                     node = Succeeder(self, idx, data['child'])
                 elif name == 'Inverter':
                     node = Inverter(self, idx, data['child'])
+                elif name == 'Failer':
+                    node = Failer(self, idx, data['child'])
+                elif name == 'UntilSuccess':
+                    node = UntilSuccess(self, idx, data['child'])
 
             else:  # leaf
                 if name in globals():

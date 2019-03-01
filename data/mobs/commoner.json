@@ -18,5 +18,5 @@
     "diag_face":"mobs/imagenes/npc_face.png"
   },
   "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"wander"
+  "AI":"ai"
 }
