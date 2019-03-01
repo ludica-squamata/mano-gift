@@ -221,7 +221,7 @@ class Camara:
 
         for spr in cls.real:
             x = spr.stage.rect.x + spr.mapRect.x
-            y = spr.stage.rect.x + spr.mapRect.y
+            y = spr.stage.rect.y + spr.mapRect.y
             spr.ubicar(x, y)
 
     @classmethod

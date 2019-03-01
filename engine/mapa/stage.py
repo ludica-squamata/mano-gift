@@ -222,7 +222,8 @@ class ChunkMap(AzoeBaseSprite):
         dx, dy = self._get_newmap_pos(ady)
 
         if type(self.limites[ady]) is str:
-            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, requested=['Props'])
+            entradas = self.parent.data['entradas']
+            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['Props'])
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:

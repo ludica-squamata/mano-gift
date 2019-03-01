@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
+from engine.globs import GRUPO_MOVIBLES, GRUPO_MOBS, Item_Group
 from engine.scenery.props import Movible
 from ._atribuido import Atribuido
 
@@ -36,7 +36,7 @@ class Movil(Atribuido):
             if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
                 col_mapa = True
 
-            for spr in self.mapa_actual.properties.get_sprites_from_layer(GRUPO_ITEMS):
+            for spr in Item_Group.get_from_layer(GRUPO_MOVIBLES):
                 if self.colisiona(spr, dx, dy):
                     if spr.solido:
                         if isinstance(spr, Movible):

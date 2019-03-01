@@ -91,8 +91,8 @@ class AzoeSprite(sprite.Sprite):
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
-            x = self.mapa_actual_rect.x + off_x - other.mapRect.x
-            y = self.mapa_actual_rect.y + off_y - other.mapRect.y
+            x = self.rect.x + off_x - other.rect.x
+            y = self.rect.y + off_y - other.rect.y
             if other.mask.overlap(self.mask, (x, y)):
                 return True
         return False

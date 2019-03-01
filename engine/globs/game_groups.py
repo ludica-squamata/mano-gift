@@ -91,6 +91,7 @@ class ItemGroup:
     def __init__(self):
         self._group = {}
         self._indexes = []
+        self._layers = {}
         self._lenght = 0
 
         EventDispatcher.register(self.delete_item, 'DeleteItem')
@@ -163,6 +164,22 @@ class ItemGroup:
             new[item.nombre] = item
 
         return new
+
+    def add(self, key, value, layer=0):
+        if layer in self._layers:
+            self._layers[layer].append(value)
+        else:
+            self._layers[layer] = [value]
+        self.__setitem__(key, value)
+
+    def get_from_layer(self, layer):
+        if layer in self._layers:
+            return self._layers[layer]
+        else:
+            return []
+
+    def clear_layer(self, layer):
+        self._layers[layer].clear()
 
     def delete_item(self, event):
         obj = event.data['obj']

@@ -1,12 +1,14 @@
 from engine.UI.prop_description import PropDescription
 from engine.base import ShadowSprite, EventListener
 from engine.mapa.light_source import LightSource
+from engine.globs import GRUPO_ITEMS
 
 
 class Escenografia(ShadowSprite, EventListener):
     accionable = False
     action = None
     tipo = 'Prop'
+    grupo = GRUPO_ITEMS
 
     def __init__(self, x, y, z=0, nombre=None, data=None, imagen=None, rect=None):
         """

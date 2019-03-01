@@ -1,5 +1,5 @@
 from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
-from engine.globs import Item_Group, ModData
+from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES
 from engine.globs.renderer import Renderer
 from .bases import Escenografia
 from pygame import Rect
@@ -15,7 +15,8 @@ class Agarrable(Escenografia):
         data.setdefault('proyecta_sombra', False)
         super().__init__(x, y, z=z, data=data)
         self.subtipo = data['subtipo']
-        Item_Group[self.nombre] = self
+        self.grupo = GRUPO_AGARRABLES
+        Item_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
         if entity.tipo == 'Mob':
@@ -44,7 +45,8 @@ class Movible(Escenografia):
 
     def __init__(self, x, y, z, data):
         super().__init__(x, y, z=z, data=data)
-        Item_Group[self.nombre] = self
+        self.grupo = GRUPO_MOVIBLES
+        Item_Group.add(self.nombre, self, self.grupo)
 
     def action(self, *args, **kwargs):
         pass
@@ -83,7 +85,8 @@ class Operable(Escenografia):
         super().__init__(x, y, z=z, data=data)
         self.estados = {}
         self.enabled = self.data.get('enabled', True)
-        Item_Group[self.nombre] = self
+        self.grupo = GRUPO_OPERABLES
+        Item_Group.add(self.nombre, self, self.grupo)
 
         for estado in data['operable']:
             idx = estado['ID']
