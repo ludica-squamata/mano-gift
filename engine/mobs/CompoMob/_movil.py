@@ -1,10 +1,10 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import GRUPO_MOVIBLES, GRUPO_MOBS, Item_Group
 from engine.scenery.props import Movible
-from ._atribuido import Atribuido
+from ._caracterizado import Caracterizado
 
 
-class Movil(Atribuido):
+class Movil(Caracterizado):
     moviendose = False
 
     def cambiar_direccion(self, direccion=None):

@@ -1,8 +1,8 @@
 from engine.mobs.inventory import Inventory
-from ._atribuido import Atribuido
+from ._caracterizado import Caracterizado
 
 
-class Equipado(Atribuido):
+class Equipado(Caracterizado):
     equipo = {'yelmo': None, 'aro 1': None, 'aro 2': None, 'cuello': None, 'peto': None,
               'guardabrazos': None, 'brazales': None, 'faldar': None, 'quijotes': None,
               'grebas': None, 'mano buena': None, 'mano mala': None, 'botas': None, 'capa': None,
@@ -11,7 +11,7 @@ class Equipado(Atribuido):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.inventario = Inventory(10, 10 + self.accion_fisica)
+        self.inventario = Inventory(10, 10 + self['ModCarga'])
 
     def equipar_item(self, item):
         self.equipo[item.espacio] = item

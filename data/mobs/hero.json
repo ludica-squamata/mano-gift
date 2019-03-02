@@ -1,15 +1,12 @@
 {
   "ID":0,"nombre":"heroe",
   "atributos":{
-    "accion_fisica":5,
-    "accion_especial":1,
-    "defensa_fisica":1,
-    "defensa_especial":1,
-    "accion_social":8,
-    "defensa_social":8,
-    "velocidad":3,
-    "salud":10,
-    "mana":1
+    "Fuerza":5,
+    "Resistencia":10,
+    "Carisma":8,
+    "Agilidad":3,
+    "Inteligencia":1,
+    "Percepción":5
   },
   "imagenes":{
     "idle":"mobs/imagenes/heroe_idle_walk.png",

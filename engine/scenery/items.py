@@ -20,10 +20,10 @@ class Consumible(Item):
         mod = self.data.get('efecto', {}).get('mod', '')
         valor = 0
 
-        if stat == 'salud':
-            maximo = stat + '_max'
-            valactual = getattr(mob, stat)
-            valmaximo = getattr(mob, maximo)
+        if stat == 'Salud':
+            maximo = stat + 'Max'
+            valactual = mob[stat]
+            valmaximo = mob[maximo]
 
             valor = int((mod * valmaximo) / 100)
             if valor + valactual > valmaximo:
@@ -31,12 +31,12 @@ class Consumible(Item):
             else:
                 valor += valactual
 
-            setattr(mob, stat, valor)
+            mob[stat] = valor
 
-        elif hasattr(mob, stat):
-            actual = getattr(mob, stat)
+        elif stat in mob:
+            actual = mob[stat]
             valor = actual + mod
-            setattr(mob, stat, valor)
+            mob[stat] = valor
 
         EventDispatcher.trigger('UsedItem', self.nombre, {'mob': mob, 'stat': stat, 'value': valor})
         return mob.inventario.remover(self)

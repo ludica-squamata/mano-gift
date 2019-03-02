@@ -9,7 +9,7 @@
     "icon":null,
     "keywords":[],
     "events":{
-      "Boost":{"attr":"accion_social","value":3},
+      "Boost":{"attr":"Carisma","value":3},
       "Flag":{"value":false}
     }
   },
@@ -26,7 +26,7 @@
     "3":{"type":"branch","leads":9,"from":"heroe","to":"commoner",
     "txt":"O quizás esta otra."},
 
-    "4":{"type":"branch","leads":10,"from":"heroe","to":"commoner","reqs":{"attrs":{"accion_social":[">",9]}},
+    "4":{"type":"branch","leads":10,"from":"heroe","to":"commoner","reqs":{"attrs":{"Carisma":[">",9]}},
     "txt":"¿Es esta la opción oculta por mi <b>carisma</b>?"},
 
     "5":{"type":"branch","leads":11,"from":"heroe","to":"commoner","reqs":{"objects":["Estrella"]},
@@ -35,7 +35,7 @@
     "6":{"type":"branch","leads":12,"from":"heroe","to":"commoner",
     "txt":"¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."},
 
-    "7":{"type":"branch","leads":15,"from":"heroe","to":"commoner","event":"Boost",
+    "7":{"type":"branch","leads":16,"from":"heroe","to":"commoner","event":"Boost",
     "txt":"Esta opción incrementará mi Carisma directamente"},
 
     "8":{"type":"leaf","from":"commoner","to":"heroe",
@@ -53,10 +53,10 @@
     "12":{"type":"exclusive","leads":[13,14,15],"from":"commoner","to":"heroe",
     "txt":"Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."},
 
-    "13":{"type":"node","leads":17,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"accion_social":[">",9]}},"pre":2,
+    "13":{"type":"node","leads":17,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"Carisma":[">",9]}},"pre":2,
     "txt":"Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."},
 
-    "14":{"type":"node","leads":17,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"accion_social":[">",9]}},"pre":1,
+    "14":{"type":"node","leads":17,"from":"commoner","to":"heroe","reqs":{"loc":"heroe","attrs":{"Carisma":[">",9]}},"pre":1,
     "txt":"Este es el segundo bloque de texto, que no deberías poder ver nunca."},
 
     "15":{"type":"node","leads":17,"from":"commoner","to":"heroe",

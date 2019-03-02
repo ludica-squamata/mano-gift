@@ -1,15 +1,12 @@
 {
   "ID":2,"nombre":"green",
   "atributos":{
-    "accion_fisica":1,
-    "accion_especial":0,
-    "defensa_fisica":0,
-    "defensa_especial":0,
-    "accion_social":0,
-    "defensa_social":0,
-    "velocidad":1,
-    "salud":1,
-    "mana":0
+    "Fuerza":1,
+    "Carisma":0,
+    "Agilidad":1,
+    "Resistencia":1,
+    "Inteligencia":0,
+    "Percepción":1
   },
   "imagenes":{
     "idle":"mobs/imagenes/green.png",

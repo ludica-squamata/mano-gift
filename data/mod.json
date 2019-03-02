@@ -9,5 +9,13 @@
     "items":"items",
     "scripts":"scripts"
   },
-  "use_latitude":true
+  "use_latitude":true,
+  "caracteristicas":{
+    "Fuerza": ["ModCarga","DañoCC","Retroceso"],
+    "Agilidad":["Velocidad"],
+    "Resistencia": ["Salud","SaludMax"],
+    "Inteligencia":["Mana","ManaMax"],
+    "Carisma": [],
+    "Percepción":["Vista"]
+  }
 }

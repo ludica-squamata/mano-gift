@@ -1,6 +1,6 @@
 from ._sensitivo import Sensitivo
 from ._animado import Animado
-from ._atribuido import Atribuido
+from ._caracterizado import Caracterizado
 from ._equipado import Equipado
 from ._movil import Movil
 from ._autonomo import Autonomo

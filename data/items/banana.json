@@ -7,6 +7,6 @@
   "propiedades":["stackable"],
   "efecto":{
     "des":"Restaura tu salud al máximo.",
-    "stat":"salud",
+    "stat":"Salud",
     "mod":100}
 }

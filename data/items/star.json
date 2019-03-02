@@ -7,6 +7,6 @@
   "propiedades":[],
   "efecto":{
     "des":"Aumenta tu carisma en 2.",
-    "stat":"accion_social",
+    "stat":"Carisma",
     "mod":2}
 }

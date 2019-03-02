@@ -1,15 +1,12 @@
 {
   "ID":6,"nombre":"girl",
   "atributos":{
-    "accion_fisica":2,
-    "accion_especial":0,
-    "defensa_fisica":0,
-    "defensa_especial":0,
-    "accion_social":5,
-    "defensa_social":5,
-    "velocidad":1,
-    "salud":2,
-    "mana":0
+    "Fuerza":2,
+    "Carisma":5,
+    "Agilidad":1,
+    "Resistencia":2,
+    "Inteligencia":0,
+    "Percepción":5
   },
   "imagenes":{
     "idle":"mobs/imagenes/green_girl.png",

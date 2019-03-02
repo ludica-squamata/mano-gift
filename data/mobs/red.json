@@ -1,15 +1,12 @@
 {
   "ID":3,"nombre":"red",
   "atributos":{
-    "accion_fisica":4,
-    "accion_especial":0,
-    "defensa_fisica":0,
-    "defensa_especial":0,
-    "accion_social":0,
-    "defensa_social":0,
-    "velocidad":1,
-    "salud":4,
-    "mana":0
+    "Fuerza":4,
+    "Carisma":0,
+    "Agilidad":1,
+    "Resistencia":4,
+    "Inteligencia":0,
+    "Percepción":1
   },
   "imagenes":{
     "idle":"mobs/imagenes/red.png",

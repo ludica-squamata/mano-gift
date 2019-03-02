@@ -1,7 +1,7 @@
 from pygame import Surface, draw, mask as mask_module, transform
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeBaseSprite
-from ._atribuido import Atribuido
+from ._caracterizado import Caracterizado
 from math import tan, radians
 
 
@@ -117,12 +117,12 @@ class Touch(AzoeBaseSprite):
                     self.parent.perceived['felt'].append(obj)
 
 
-class Sensitivo(Atribuido):
+class Sensitivo(Caracterizado):
     perceived = None  # un diccionario con los interactives que el mob ve, oye, o toca
 
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
-        self.vista = Sight(self, 32 * 5)  # (data[vision])
+        self.vista = Sight(self, 32 * self['Vista'])
         self.oido = Hearing(self)
         self.tacto = Touch(self)
         self.perceived = {"heard": [], "seen": [], "touched": [], "felt": []}

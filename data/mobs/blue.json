@@ -1,15 +1,12 @@
 {
   "ID":4,"nombre":"blue",
   "atributos":{
-    "accion_fisica":3,
-    "accion_especial":0,
-    "defensa_fisica":0,
-    "defensa_especial":0,
-    "accion_social":0,
-    "defensa_social":0,
-    "velocidad":1,
-    "salud":3,
-    "mana":0
+    "Fuerza":3,
+    "Carisma":0,
+    "Agilidad":1,
+    "Resistencia":3,
+    "Inteligencia":0,
+    "Percepción":1
   },
   "imagenes":{
     "idle":"mobs/imagenes/blue.png",

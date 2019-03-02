@@ -1,15 +1,12 @@
 {
   "ID":5,"nombre":"yellow",
   "atributos":{
-    "accion_fisica":2,
-    "accion_especial":0,
-    "defensa_fisica":0,
-    "defensa_especial":0,
-    "accion_social":0,
-    "defensa_social":0,
-    "velocidad":1,
-    "salud":2,
-    "mana":0
+    "Fuerza":2,
+    "Carisma":0,
+    "Agilidad":1,
+    "Resistencia":2,
+    "Inteligencia":0,
+    "Percepción":1
   },
   "imagenes":{
     "idle":"mobs/imagenes/yellow.png",

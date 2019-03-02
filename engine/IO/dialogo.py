@@ -88,7 +88,7 @@ class Dialogo(Discurso):
 
         if "attrs" in condiciones:
             for attr in condiciones['attrs']:
-                loc_attr = getattr(locutor, attr)
+                loc_attr = locutor[attr]
                 operador, target = condiciones['attrs'][attr]
                 if operador == "<":
                     supress = not loc_attr < target

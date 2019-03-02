@@ -122,8 +122,8 @@ class HUD:
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
-        self.BarraVida = ProgressBar(focus, focus.salud_max, 'salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(focus, focus.mana_max, 'mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        self.BarraVida = ProgressBar(focus, focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        self.BarraMana = ProgressBar(focus, focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(focus, dx, dy - 32)
 
