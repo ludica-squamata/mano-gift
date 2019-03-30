@@ -1,117 +1,73 @@
-from engine.globs import Tiempo, EngineData, CANVAS_BG, TEXT_FG, TEXT_SEL, BISEL_BG
-from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
+from engine.globs import EngineData, CANVAS_BG, TEXT_FG
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc.resources import split_spritesheet
-from engine.UI.widgets import BaseWidget, Boton
-from pygame import font, Rect, Surface, draw
+from engine.UI.widgets import Boton
+from pygame import font, Rect
 from engine.libs import render_textrect
-from itertools import cycle
 from .menu import Menu
+
+from .char_c_name import NameScreen
+from .char_c_model import ModelScreen
+from .char_c_attrs import AttrsScreen
 
 
 class MenuNuevo(Menu):
-    _step = 'D'
-    timer_animacion = 0
-
-    char_images = None
-    char_face = None
-    char_img = None
-
-    foco = 'teclas'
-
-    area_teclas = None
-    area_rect = None
-    area_input = None
-
-    cursor = None
-    teclas = None
-    lineas = None
+    foco = 'nombre'
+    curr_scr_idx = 0
 
     def __init__(self):
         super().__init__('Personaje')
-        self.teclas = AzoeGroup('Teclas')  # teclado en pantalla
-        self.area_input = AzoeGroup('Letras')  # letras del nombre
-        self.lineas = AzoeGroup('Linea Punteada')  # linea punteada
+        w, h = self.canvas.get_size()
+        self.screens = [NameScreen(self), ModelScreen(self), AttrsScreen(self)]
+        self.screens[2].toggle_hidden()
+        self.current_screen = self.screens[self.curr_scr_idx]
 
-        # cargar imagenes
-        self.faces = cycle(split_spritesheet('mobs/imagenes/pc_face.png', w=89, h=89))
-        self.char_face = next(self.faces)
-        self.char_images = self.cargar_anims('mobs/imagenes/heroe_idle_walk.png')
-        self.char_img = self.char_images['Sabajo']
-        self.char_img_rect = Rect(107, 130, 32, 32)
-
-        # generar teclado y cursor
-        self.area_teclas = self.create_sunken_canvas(448 + 12, 224 + 12)  # marco y parte del fondo del teclado
-        self.area_rect = self.area_teclas.get_rect(center=(self.rect.centerx - 80, self.rect.centery + 90))
-        self.crear_teclas(6, 6)  # genera el teclado en pantalla
-
-        # el espacio se añade por separado porque ' ' es el delimitador en self.crear_teclas
-        self.teclas.add(Character(' ', CANVAS_BG, 10 + 12 * 32 + 6, 212 + 6 * 32 + 6))
-
-        # Cursor del teclado en pantalla
-        self.cursor = Cursor(*self.teclas.get_sprite(0).rect.center)
-
-        # area del nombre del personaje
-        self.area_nombre = Rect(143, 140, 400, 25)
-
-        # lineas punteadas
-        for i in range(20):
-            lin = LineaChr(i, 145 + (i * 20), 140 + 27)
-            self.lineas.add(lin)
-        self.lineas.get_sprite(0).isSelected = True
-
-        self.ltr_idx = -1  # idx de self.area_input
-        self.lin_idx = 0  # idx de self.lineas
-
-        # generar boton 'Aceptar'
-        aceptar = Boton('Aceptar', 3, self.aceptar, (self.area_rect.right + 20, self.area_rect.bottom - 35))
-        self.botones.add(aceptar)  # self.botones es herencia de Menu
+        # generar botones
+        n, c, d, a, b = 'nombre', 'cmd', 'direcciones', 'arriba', 'abajo'
+        botones = [
+            {n: 'Nombre', c: lambda: None, d: {a: 'Aceptar', b: 'Atributos'}},
+            {n: 'Atributos', c: lambda: None, d: {a: 'Nombre', b: 'Modelo'}},
+            {n: 'Modelo', c: lambda: None, d: {a: 'Atributos', b: 'Aceptar'}},
+            {n: 'Aceptar', c: self.aceptar, d: {a: 'Modelo', b: 'Nombre'}},
+        ]
+        for i, btn in enumerate(reversed(botones)):
+            boton = Boton(btn[n], 3, btn[c], (w - 105, h - 43 - (40 * i)))
+            for direccion in ['arriba', 'abajo', 'izquierda', 'derecha']:
+                if direccion in btn['direcciones']:
+                    boton.direcciones[direccion] = btn['direcciones'][direccion]
+            self.botones.add(boton)
+        self.cur_btn = 3
+        self.select_one(3)
 
         # dibujos estáticos
-        self.canvas.blit(self.char_face, (10, 100))
-        self.canvas.blit(self.area_teclas, self.area_rect)
-        self.print_instructions()
+        self.print_instructions('nombre')
 
         # determinar qué tecla activa qué función.
-        self.functions.update({  # obsérvese que es dict.update()
-            'teclas': {
-                'tap': {
-                    'accion': self.input_character,
-                    'contextual': self.cancelar,
-                    'arriba': lambda: self.movercursor(0, -1),
-                    'abajo': lambda: self.movercursor(0, 1),
-                    'izquierda': lambda: self.movercursor(-1, 0),
-                    'derecha': lambda: self.movercursor(1, 0)
-                },
-                'hold': {
-                    'accion': self.input_character,
-                    'arriba': lambda: self.movercursor(0, -1),
-                    'abajo': lambda: self.movercursor(0, 1),
-                    'izquierda': lambda: self.movercursor(-1, 0),
-                    'derecha': lambda: self.movercursor(1, 0)
-                },
-                'release': {
-                    'contextual': self.cancelar
-                }
-            },
-            'botones': {
-                'tap': {
-                    'accion': self.press_button,
-                    'izquierda': lambda: self.cambiar_foco('teclas'),
-                    'arriba': lambda: self.cambiar_foco('teclas'),
-                },
-                'hold': {
-                    'accion': self.mantener_presion,
-                    'izquierda': lambda: self.cambiar_foco('teclas'),
-                    'arriba': lambda: self.cambiar_foco('teclas'),
-                },
-                'release': {
-                    'accion': self.liberar_presion
-                }
-            }})
+        self.functions = {  # obsérvese que es dict.update()
+            'tap': {
+                'accion': self.press_button,
+                'arriba': lambda: self.select_one('arriba'),
+                'abajo': lambda: self.select_one('abajo'),
 
-    def print_instructions(self):
-        s = "Escriba a continuación el nombre del personaje. Puede usar los caracteres provistos abajo"
+            },
+            'hold': {
+                'accion': self.mantener_presion,
+                'arriba': lambda: self.select_one('arriba'),
+                'abajo': lambda: self.select_one('abajo'),
+            },
+            'release': {
+                'accion': self.liberar_presion
+            }
+        }
+
+    def print_instructions(self, foco):
+        if foco == 'nombre':
+            s = "Escriba a continuación el nombre del personaje. Puede usar los caracteres provistos abajo"
+        elif foco == 'modelo':
+            s = ''
+        elif foco == 'atributos':
+            s = ''
+        else:
+            s = ''
         fuente = font.SysFont('Verdana', 14, italic=True)
         rect = Rect(10, 32, 600, 64)
         render = render_textrect(s, fuente, rect, TEXT_FG, CANVAS_BG)
@@ -122,261 +78,44 @@ class MenuNuevo(Menu):
         :param mode: string,
         :param key: string
         """
-        if mode in self.functions[self.foco]:
-            if key in self.functions[self.foco][mode]:
-                self.functions[self.foco][mode][key]()
+        if self.foco != 'menu':
+            self.current_screen.use_funcion(mode, key)
+        else:
+            super().use_function(mode, key)
 
     def cambiar_foco(self, foco):
         """Cambia el foco de selección de un grupo a otro."""
+        # for screen in self.screens:
+        #     screen.toggle_hidden()
 
-        if foco == 'botones':
-            for t in self.teclas:
-                t.ser_deselegido()
-
-            self.foco = 'botones'
-            self.current = self.botones.get_sprite(0)
+        if foco == 'menu':
+            self.foco = 'menu'
+            self.current = self.botones.get_sprite(3)
             self.current.ser_elegido()
 
-        elif foco == 'teclas':
+        elif foco == 'nombre':
             self.movercursor(-1, 0)
             self.deselect_all(self.botones)
-            self.foco = 'teclas'
-
-    def crear_teclas(self, x, y):
-        """Genera el teclado en pantalla, con excepción del espacio, que se genera por separado"""
-
-        t = "ABCDEFGHI  123JKLMNÑOPQ  456RSTUVWXYZ  789           *0#abcdefghi     jklmnñopq  :+-rstuvwxyz  , ."
-        i = -1
-        mx, my = self.area_rect.topleft
-        for dy in range(7):
-            for dx in range(14):
-                i += 1
-                # este bloque determina el color del fondo de la tecla, para un efecto cuadriculado
-                if dy % 2 != 0 and i % 2 != 0 or dy % 2 == 0 and i % 2 == 0:
-                    bg = CANVAS_BG
-                else:
-                    bg = BISEL_BG
-
-                if t[i] != ' ':
-                    char = Character(t[i], bg, mx + x + dx * 32, my + y + dy * 32)
-                    self.teclas.add(char)
-                else:
-                    # esta parte pinta el resto del fondo, que no tiene teclas activas
-                    rect = Rect(x + dx * 32, y + dy * 32, 32, 32)
-                    self.area_teclas.fill(bg, rect)
-
-    def input_character(self):
-        """Ingresa el caracter seleccionado a la lista de letras del nombre"""
-
-        if self.lin_idx < len(self.lineas):
-            key = self.cursor.current.nombre  # string
-            espacio = self.lineas.get_sprite(self.lin_idx).rect
-
-            fuente = font.SysFont('Verdana', 20)
-            image = fuente.render(key, 1, (0, 0, 0), CANVAS_BG)
-            rect = image.get_rect()
-            rect.bottom = espacio.top - 2
-            rect.centerx = espacio.centerx
-            spr = AzoeBaseSprite(self, key, image, rect)
-            spr.key = key
-
-            self.area_input.add(spr)
-            self.ltr_idx += 1
-
-            self.select_line(+1)
-
-        if self.lin_idx == len(self.lineas):
-            self.cambiar_foco('botones')
+            self.foco = 'nombre'
 
     def cancelar(self):
-        if self.foco == 'teclas':
+        if self.foco == 'nombre':
             if not len(self.area_input):
                 super().cancelar()
             self.erase_character()
         else:
-            self.cambiar_foco('teclas')
-
-    def erase_character(self):
-        """Borra el caracter del espacio actualmente seleccionado"""
-
-        if self.ltr_idx >= 0:
-            self.canvas.fill(CANVAS_BG, self.area_nombre)
-
-            spr = self.area_input.get_sprite(self.ltr_idx)
-            self.area_input.remove(spr)
-            self.ltr_idx -= 1
-
-            self.select_line(-1)
+            self.cambiar_foco('nombre')
 
     def aceptar(self):
         EngineData.new_game(''.join([spr.key for spr in self.area_input]))
         EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
-    def movercursor(self, dx, dy):
-        """Desplaza el cursor por el teclado en pantalla y controla los limites."""
-        self.cursor.mover(dx * 32, dy * 32)
-
-        # esta sección controla que el cursor no se quede parado en la nada
-        collides = False
-        for t in self.teclas:
-            if t.rect.collidepoint(self.cursor.pos):
-                collides = True
-                break
-
-        if not collides:
-            if self.area_rect.collidepoint(self.cursor.pos):
-                self.movercursor(dx, dy)  # repetir el movimiento
-            elif self.cursor.x > self.area_rect.right and len(self.area_input):
-                self.cambiar_foco('botones')  # el cursor busca el boton "aceptar"
-            else:
-                self.movercursor(-dx, -dy)  # deshacer el movimiento
-
-    def select_line(self, delta):
-        for linea in self.lineas:
-            linea.isSelected = False
-        self.lin_idx += delta
-        if 0 <= self.lin_idx < len(self.lineas):
-            self.lineas.get_sprite(self.lin_idx).isSelected = True
-
-    @staticmethod
-    def cargar_anims(ruta_imgs):
-        dicc = {}
-        spritesheet = split_spritesheet(ruta_imgs)
-        idx = -1
-        for L in ['S', 'I', 'D']:
-            for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
-                key = L + D
-                idx += 1
-                dicc[key] = spritesheet[idx]
-
-        return dicc
-
-    def animar_sprite(self):
-        """Cambia la imagen del sprite para mostrarlo animado"""
-
-        self.timer_animacion += Tiempo.FPS.get_time()
-        if self.timer_animacion >= 250:
-            self.timer_animacion = 0
-            if self._step == 'D':
-                self._step = 'I'
-            else:
-                self._step = 'D'
-
-            key = self._step + 'abajo'
-            self.char_img = self.char_images[key]
-
     def update(self):
-        self.animar_sprite()
-        self.lineas.update()
-        self.botones.update()
+        for screen in self.screens:
+            screen.update()
 
-        if self.foco == 'teclas':
-            for t in self.teclas:
-                if t.rect.collidepoint(self.cursor.pos):
-                    t.ser_elegido()
-                    self.cursor.set_current(t)
-                elif t.isSelected:
-                    t.ser_deselegido()
+        self.botones.update()
         self.draw()
 
     def draw(self):
-        self.canvas.fill(CANVAS_BG, self.char_img_rect)
-        self.canvas.blit(self.char_face, (10, 100))
-        self.canvas.blit(self.char_img, self.char_img_rect.topleft)
-        self.teclas.draw(self.canvas)
-        self.lineas.draw(self.canvas)
         self.botones.draw(self.canvas)
-        self.area_input.draw(self.canvas)
-
-
-class Character(BaseWidget):
-    """Caracter individual del teclado en pantalla"""
-
-    def __init__(self, char, bg, x, y):
-
-        self.img_uns = self._crear_img(char, bg)
-        self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
-
-        super().__init__(self.img_uns)
-        self.nombre = char
-        self.rect.topleft = x, y
-
-    @staticmethod
-    def _crear_img(char, bg):
-        fuente = font.SysFont('Verdana', 20)
-        img = Surface((32, 32))
-        img.fill(bg)
-        render = fuente.render(char, 1, (0, 0, 0), bg)
-        rect = render.get_rect(center=img.get_rect().center)
-        img.blit(render, rect)
-        return img
-
-    @staticmethod
-    def dibujar_seleccion(img, color):
-        sel = img.copy()
-        w, h = sel.get_size()
-        for i in range(round(38 / 3)):
-            # linea punteada horizontal superior
-            draw.line(sel, color, (i * 7, 0), ((i * 7) + 5, 0), 2)
-
-            # linea punteada horizontal inferior
-            draw.line(sel, color, (i * 7, h - 2), ((i * 7) + 5, h - 2), 2)
-
-        for i in range(round(38 / 3)):
-            # linea punteada vertical derecha
-            draw.line(sel, color, (w - 2, i * 7), (w - 2, (i * 7) + 5), 2)
-
-            # linea punteada vertical izquierda
-            draw.line(sel, color, (0, i * 7), (0, (i * 7) + 5), 2)
-        return sel
-
-    def __repr__(self):
-        return self.nombre
-
-
-class LineaChr(BaseWidget):
-    """Estas son las líneas punteadas del nombre del personaje"""
-    animado = False
-    idx = 0
-
-    def __init__(self, idx, x, y):
-        img = Surface((15, 2))
-        img.fill((255, 255, 255))
-        super().__init__(img)
-        self.rect.topleft = x, y
-        self.idx = idx
-
-    def animar(self):
-        self.image.fill((255, 0, 0))
-
-    def desanimar(self):
-        self.image.fill((255, 255, 255))
-
-    def update(self):
-        if self.isSelected:
-            self.animar()
-        else:
-            self.desanimar()
-
-
-class Cursor:
-    """Este es el cursor virtual que se desplaza en el teclado en pantalla"""
-    x, y = 0, 0
-    current = None
-
-    def __init__(self, x, y):
-        self.x, self.y = x, y
-        self.pos = x, y
-
-    def mover(self, dx, dy):
-        self.x += dx
-        self.y += dy
-        if self.x < 0:
-            self.x = 0
-        if self.y < 0:
-            self.y = 0
-
-        self.pos = self.x, self.y
-
-    def set_current(self, tecla):
-        self.current = tecla
