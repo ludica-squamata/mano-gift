@@ -29,6 +29,8 @@ class AzoeSprite(sprite.Sprite):
     parent = None
     mapa_actual = None
 
+    is_damageable = False
+
     def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
         super().__init__()

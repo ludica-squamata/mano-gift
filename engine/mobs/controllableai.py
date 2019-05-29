@@ -53,8 +53,7 @@ class ControllableAI(EventAware):
             for sprite in sprites:
                 if sprite is not None:
                     if self.entity.estado == 'cmb':
-                        if hasattr(sprite, 'recibir_danio'):
-                            self.entity.atacar(sprite)
+                        self.entity.atacar(sprite)
 
                     elif sprite.tipo == 'Mob':
                         self.entity.dialogar(sprite)

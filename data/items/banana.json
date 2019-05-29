@@ -8,5 +8,7 @@
   "efecto":{
     "des":"Restaura tu salud al máximo.",
     "stat":"Salud",
-    "mod":100}
+    "mod":100,
+    "method": "percentage"
+  }
 }

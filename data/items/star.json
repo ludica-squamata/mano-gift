@@ -8,5 +8,7 @@
   "efecto":{
     "des":"Aumenta tu carisma en 2.",
     "stat":"Carisma",
-    "mod":2}
+    "mod":2,
+    "method": "incremental"
+  }
 }
