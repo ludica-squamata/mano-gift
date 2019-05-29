@@ -23,5 +23,5 @@ class Combativo(Sensitivo, Animado):
             x, y = self.direcciones[self.direccion]
 
             x, y = x * self['Retroceso'], y * self['Retroceso']
-            sprite.reubicar(x, y*5)
+            sprite.reubicar(x, y)
             sprite.hurt(self['DañoCC'])
