@@ -18,13 +18,12 @@ class Consumible(Item):
     def usar(self, mob):
         stat = self.data.get('efecto', {}).get('stat', '')
         mod = self.data.get('efecto', {}).get('mod', '')
+        method = self.data.get('efecto', {}).get('method', '')
         valor = 0
 
-        if stat == 'Salud':
-            maximo = stat + 'Max'
+        if method == 'percentage':
+            valmaximo = mob[stat+'Max']
             valactual = mob[stat]
-            valmaximo = mob[maximo]
-
             valor = int((mod * valmaximo) / 100)
             if valor + valactual > valmaximo:
                 valor = valmaximo
@@ -33,7 +32,7 @@ class Consumible(Item):
 
             mob[stat] = valor
 
-        elif stat in mob:
+        if method == 'incremental':
             actual = mob[stat]
             valor = actual + mod
             mob[stat] = valor

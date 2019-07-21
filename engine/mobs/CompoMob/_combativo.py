@@ -4,9 +4,10 @@ from engine.globs.event_dispatcher import EventDispatcher
 
 
 class Combativo(Sensitivo, Animado):
+    is_damageable = True
 
-    def recibir_danio(self, danio):
-        self['Salud'] -= danio
+    def hurt(self, damage):
+        self['Salud'] -= damage
         EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self, "value": self['Salud'], "stat": "Salud"})
 
         if self['Salud'] <= 0:
@@ -18,9 +19,9 @@ class Combativo(Sensitivo, Animado):
             EventDispatcher.trigger('MobDeath', self.tipo, {'obj': self})
 
     def atacar(self, sprite):
-        if super().atacar(sprite):
+        if super().atacar(sprite) and sprite.is_damageable:
             x, y = self.direcciones[self.direccion]
 
             x, y = x * self['Retroceso'], y * self['Retroceso']
             sprite.reubicar(x, y)
-            sprite.recibir_danio(self['DañoCC'])
+            sprite.hurt(self['DañoCC'])

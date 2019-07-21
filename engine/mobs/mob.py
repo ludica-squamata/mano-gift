@@ -8,6 +8,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
     accionable = False
     character_name = ''
+    has_hud = False  # by default, non-controlled mobs don't have a HUD.
 
     def __init__(self, x, y, data, focus=False):
         self.tipo = "Mob"

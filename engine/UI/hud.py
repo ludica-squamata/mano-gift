@@ -1,4 +1,4 @@
-from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG, Mob_Group
+from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG, Mob_Group, FEATURE_SHOW_MINIBARS
 from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA, font
 from engine.globs.renderer import Renderer
@@ -7,6 +7,7 @@ from pygame.sprite import Sprite
 
 class ProgressBar(Sprite):
     """Clase base para las barras, de vida, de maná, etc"""
+    focus = None
     maximo = 0
     actual = 0
     divisiones = 0
@@ -17,15 +18,15 @@ class ProgressBar(Sprite):
     draw_area_rect = None
     nombre = 'ProgressBar'
     tracked_stat = ''
+    do_subdivision = True
 
-    def __init__(self, focus, maximo, stat, color_actual, color_fondo, x, y, w, h):
+    def __init__(self, maximo, stat, color_actual, color_fondo, x, y, w, h):
         super().__init__()
 
         self.colorAct = color_actual
         self.colorFnd = color_fondo
         self.maximo = maximo
         self.actual = maximo
-        self.focus = focus
         self.tracked_stat = stat
         self.divisiones = 1
 
@@ -37,7 +38,7 @@ class ProgressBar(Sprite):
 
     def _actual(self):
         x, y, w, h = self.draw_area_rect
-        return Rect((x, y), (self.actual / self.maximo * self.w - 3, h))
+        return Rect((x, y), ((self.actual / self.maximo) * self.draw_area_rect.w, h))
 
     def _dibujar_fondo(self):
         img = Surface(self.draw_area_rect.size)
@@ -64,10 +65,14 @@ class ProgressBar(Sprite):
             self.set_variable(actual=event.data["value"])
             self.actualizar()
 
+    def set_focus(self, focus):
+        self.focus = focus
+
     def actualizar(self):
         self.image.blit(self._dibujar_fondo(), self.draw_area_rect)
         self.image.fill(self.colorAct, self._actual())
-        self._subdividir()
+        if self.do_subdivision:
+            self._subdividir()
 
 
 class CharacterName(Sprite):
@@ -111,6 +116,49 @@ class CharacterName(Sprite):
         self.image = self.generate(bg_color)
 
 
+class MiniBar(ProgressBar):
+    do_subdivision = False
+    run_timer = False
+
+    def __init__(self):
+        super().__init__(0, 'Salud', (0, 255, 0), (0, 150, 0), 0, 0, 32, 5)
+        self.timer = 0
+
+    def event_update(self, event):
+        mob = event.data['mob']
+        stat = event.data.get('stat', None)
+        if not mob.has_hud and stat == self.tracked_stat:
+            self.show(event)
+
+    def show(self, event):
+        self.set_focus(event.data['mob'])
+        self.maximo = self.focus['SaludMax']
+        self.actual = self.focus['Salud']
+
+        self.rect = self.image.get_rect()
+        self.actualizar()
+
+        if self.actual > 0:
+            Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+            self.run_timer = True
+
+    def hide(self):
+        Renderer.del_overlay(self)
+        self.run_timer = False
+        self.timer = 0
+
+    def reubicar(self):
+        self.rect.centerx = self.focus.rect.centerx
+        self.rect.centery = self.focus.rect.y - 5
+
+    def update(self):
+        self.reubicar()
+        if self.run_timer:
+            self.timer += 1
+            if self.timer > 30:
+                self.hide()
+
+
 class HUD:
     is_shown = False
     BarraVida = None
@@ -119,16 +167,24 @@ class HUD:
 
     def __init__(self):
         focus = Mob_Group.get_controlled_mob()
+        focus.has_hud = True
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
-        self.BarraVida = ProgressBar(focus, focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(focus, focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        self.BarraVida = ProgressBar(focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        self.BarraMana = ProgressBar(focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
         self.BarraVida.set_variable(divisiones=4)
         self.screen_name = CharacterName(focus, dx, dy - 32)
 
         EventDispatcher.register(self.BarraVida.event_update, 'MobWounded', 'UsedItem')
         EventDispatcher.register(self.toggle, "TogglePause")
+
+        self.BarraVida.set_focus(focus)
+        self.BarraMana.set_focus(focus)
+
+        if FEATURE_SHOW_MINIBARS:
+            self.minibars = MiniBar()
+            EventDispatcher.register(self.minibars.event_update, 'MobWounded', 'UsedItem')
 
         self.BarraVida.actualizar()
         self.BarraMana.actualizar()

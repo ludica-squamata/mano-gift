@@ -24,3 +24,6 @@ GAMEPAD = 'gamepad'
 FEATURE_SOMBRAS_DINAMICAS = False
 FEATURE_ROTACION_MAPA = False
 FEATURE_MENUS_ADICIONALES = False
+
+# features opcionales para transformar al engine
+FEATURE_SHOW_MINIBARS = True  # PyRTS
