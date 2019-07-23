@@ -20,7 +20,7 @@ class Discurso(EventAware):
         if GameState.get('dialog.' + meta['name']):
             allow = False
 
-        if meta['class'] != 'chosen':
+        if meta['class'] != 'scripted':
             allow = False
 
         return allow

@@ -1,8 +1,8 @@
 from .rendered import RenderedCircularMenu
 from engine.globs import EngineData, ModData
 from engine.misc.resources import abrir_json
-from .elements import TopicElement
 from os import path, listdir
+from engine.IO.dialogo import Dialogo, Discurso
 
 
 class DialogCircularMenu(RenderedCircularMenu):
@@ -14,19 +14,26 @@ class DialogCircularMenu(RenderedCircularMenu):
         self.radius = 60
 
         cascadas = {'inicial': []}
-        idx = -1
+        dialogo = None
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
                 file = abrir_json(ruta)
-                if TopicElement.pre_init(file['head'], locutores):
-                    idx += 1
-                    file.update({'idx': idx})
-                    obj = TopicElement(self, file)
-                    cascadas['inicial'].append(obj)
+                if Discurso.pre_init(file['head'], *locutores):
+                    # hay que ver que pre_init() verifique bien los dialogos, porque ahora son todos scripteados.
+                    dialogo = Dialogo(file, *locutores)
+                    dialogo.frontend.set_menu(self)
+                    EngineData.MODO = 'Dialogo'
+                else:
+                    # aca habría que cerrar el menu, porque es inválido, o capaz abrir el dialogo por default.
+                    # aunque en realidad, este else esta mal porque los dialogos inválidos se descartan en el loop
+                    pass
 
         super().__init__(cascadas)
-        self.functions['tap'].update({'contextual': self.back})
+        self.functions['tap'].update(
+            {'contextual': self.back,
+             "izquierda": dialogo.frontend.usar_habilidades,
+             "derecha": dialogo.frontend.mostrar_objetos})
 
     @classmethod
     def is_possible(cls, *locutores) -> bool:
@@ -34,7 +41,7 @@ class DialogCircularMenu(RenderedCircularMenu):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
                 file = abrir_json(ruta)
-                if TopicElement.pre_init(file['head'], locutores):
+                if Discurso.pre_init(file['head'], *locutores):
                     return True
 
     def cerrar(self):

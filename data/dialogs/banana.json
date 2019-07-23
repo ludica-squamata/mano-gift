@@ -1,6 +1,6 @@
 {
   "head":{
-    "class":"chosen",
+    "class":"invalid",
     "conditional_tags":{
       "0":{"b":{
         "objects":["Estrella"],

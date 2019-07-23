@@ -151,6 +151,16 @@ class DialogInterface(BaseWidget):
         self.sel = 0
         self.text_rect.y = 3  # reset scrolling
 
+    @staticmethod
+    def abrir_panel(mensaje):
+        print(mensaje)
+
+    def mostrar_objetos(self):
+        self.abrir_panel('mostrar objetos')
+
+    def usar_habilidades(self):
+        self.abrir_panel('usar habilidades')
+
     def update(self):
         self.ticks += 1
         self.image.fill(CANVAS_BG, self.erase_area)
