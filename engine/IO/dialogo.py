@@ -54,7 +54,11 @@ class Dialogo(Discurso):
         self.name = arbol['head']['name']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
-        self.dialogo.process_events(arbol['head']['events'])
+        self.objects = ArboldeDialogo(arbol['on_object'])
+        self.theme = ArboldeDialogo(arbol['on_theme'])
+        self.arbol = self.dialogo
+
+        self.arbol.process_events(arbol['head']['events'])
 
         self.locutores = {}
         for loc in locutores:
@@ -88,11 +92,32 @@ class Dialogo(Discurso):
         self.hablar()
 
     def hablar_en_panel(self):
-        if self.panels[self.panel_idx] == self.frontend:
+        panel = self.panels[self.panel_idx]
+        if panel == self.frontend:
             # este metodo es para que no se disapare hablar() si se está eligiendo un objeto que mostrar
             # es como un deregister() selectivo solo para esa key.
             # podría tener un nombre más apropiado, pero no se me ocurre otro.
             self.hablar()
+
+        elif panel == self.objects_panel:
+            self.arbol = self.objects
+            for nodo in self.arbol:
+                objeto = nodo.keys['objects'][0] if nodo.keys is not None else False
+                if objeto == panel.menu.actual.nombre:
+                    self.arbol.set_chosen(nodo)
+                    break
+                else:
+                    # esto funciona, pero tiene varios problemas:
+                    # 1) es fuerza bruta. tendría que haber una forma más elegante de hacerlo.
+                    # 2) si no encuentra coincidencia cae al nodo 0, lo cual puede no ser correcto.
+                    # 3) tendría que haber una forma de 'encontrar las raices' para no comparar con el arbol entero.
+                    # 4) hubo que agregar un nodo extra "default" al que caer si no se seleccionaba el nodo correcto.
+                    pass
+
+            self.hablar()
+
+        elif panel == self.themes_panel:
+            self.arbol = self.theme
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -128,11 +153,11 @@ class Dialogo(Discurso):
         return supress
 
     def hablar(self):
-        actual = self.dialogo.update()
+        actual = self.arbol.update()
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event is not None:
                 self.sel.post_event()
-            self.dialogo.set_chosen(self.next)
+            self.arbol.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
             self.emit_sound_event(self.locutores[actual.locutor])
@@ -165,7 +190,7 @@ class Dialogo(Discurso):
                     # si nos quedamos sin elementos con requisitos, caemos al default.
                     choice = default
 
-                self.dialogo.set_chosen(choice)
+                self.arbol.set_chosen(choice)
                 self.hablar()
                 self.emit_sound_event(self.locutores[actual.locutor])
 
@@ -246,7 +271,7 @@ class Dialogo(Discurso):
             mob.hablando = False
         if self.SelMode:
             self.frontend.exit_sel_mode()
-        self.dialogo = None
+        self.arbol = None
 
         if self.write_flag:
             GameState.set('dialog.' + self.name, 1)

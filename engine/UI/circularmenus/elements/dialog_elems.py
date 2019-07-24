@@ -20,8 +20,9 @@ class DialogObjectElement(LetterElement):
     item = None
     idx = 0
 
-    def __init__(self, parent, item):
+    def __init__(self, parent, idx, item):
         self.item = item
+        self.idx = idx
         self.img_uns = self._create(21, 21)
         self.img_sel = self._create(33, 33)
 
@@ -35,4 +36,4 @@ class DialogObjectElement(LetterElement):
         return image
 
     def do_action(self):
-        print('nada')
+        pass

@@ -12,6 +12,6 @@ class ObjectsCircularMenu(RenderedCircularMenu):
         self.entity = Mob_Group.get_controlled_mob()
 
         cascadas = {
-            'inicial': [DialogObjectElement(self, item) for item in self.entity.inventario]}
+            'inicial': [DialogObjectElement(self, i, item) for i, item in enumerate(self.entity.inventario)]}
 
         super().__init__(cascadas)
