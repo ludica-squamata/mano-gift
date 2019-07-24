@@ -10,6 +10,15 @@
     "keywords":[],
     "events":{
       "Flag":{"value":false}
+    },
+    "panels": {
+      "objects": {
+        "Estrella": 2,
+        "default": 3
+      },
+      "themes":{
+        "dragón": 6
+      }
     }
   },
 
@@ -21,35 +30,26 @@
     "1":{
       "type":"leaf", "from":"heroe", "to":"commoner", "event":"Flag",
       "txt":"muchas gracias."
-    }
-  },
-  "on_object":{
-
-    "0":{
-      "type":"node", "leads":2, "from":"heroe", "to":"commoner",
-      "txt": "aqui le traigo esto"
-    },
-    "1":{
-      "type":"node", "leads":3, "from":"heroe", "to":"commoner","keys":{"objects":["Estrella"]},
-      "txt":"Soy capitán de la guardia, vengo a investigar el asunto"
     },
     "2":{
-      "type":"leaf", "from":"commoner", "to":"heroe",
-      "txt":"muy bonito, pero no puedo dejarlo pasar"
+      "type":"node", "leads":4, "from":"heroe", "to":"commoner",
+      "txt":"Soy capitán de la guardia, vengo a investigar el asunto"
     },
     "3":{
       "type":"leaf", "from":"commoner", "to":"heroe",
+      "txt":"muy bonito, pero no puedo dejarlo pasar"
+    },
+    "4":{
+      "type":"leaf", "from":"commoner", "to":"heroe",
       "txt":"adelante mi capitán"
-    }
-  },
-  "on_theme":{
-      "0":{
-        "type":"node", "leads":1, "from":"heroe", "to":"commoner","reqs":{"tema":["dragón"]},
-        "txt":"en el pueblo me contaron que lo que ronda en la montaña es un dragon"
-      },
-      "1":{
-        "type":"leaf", "from":"commoner", "to":"heroe",
-        "txt":"un dragon! Yo no me voy a quedar a que me coma! Ahhh!"
+    },
+    "5":{
+      "type":"node", "leads":6, "from":"heroe", "to":"commoner","reqs":{"tema":["dragón"]},
+      "txt":"en el pueblo me contaron que lo que ronda en la montaña es un dragon"
+    },
+    "6":{
+      "type":"leaf", "from":"commoner", "to":"heroe",
+      "txt":"un dragon! Yo no me voy a quedar a que me coma! Ahhh!"
     }
   }
 }

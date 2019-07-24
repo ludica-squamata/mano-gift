@@ -50,15 +50,15 @@ class Dialogo(Discurso):
     def __init__(self, arbol, *locutores):
         super().__init__()
         EventDispatcher.register(self.set_flag, 'Flag')
-        self.tags_condicionales = arbol['head']['conditional_tags']
-        self.name = arbol['head']['name']
+        head = arbol['head']
+        self.tags_condicionales = head['conditional_tags']
+        self.name = head['name']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
-        self.objects = ArboldeDialogo(arbol['on_object'])
-        self.theme = ArboldeDialogo(arbol['on_theme'])
-        self.arbol = self.dialogo
+        self.objects = head.get('panels', {}).get('objects', {})
+        self.theme = head.get('panels', {}).get('themes', {})
 
-        self.arbol.process_events(arbol['head']['events'])
+        self.dialogo.process_events(head['events'])
 
         self.locutores = {}
         for loc in locutores:
@@ -66,7 +66,7 @@ class Dialogo(Discurso):
 
         self.objects_panel = DialogObjectsPanel(self)
         self.themes_panel = DialogThemesPanel(self)
-        self.frontend = DialogInterface(self, arbol['head']['style'])
+        self.frontend = DialogInterface(self, head['style'])
         self.panels = [self.frontend, self.objects_panel, self.themes_panel]
         self.panel_idx = 0
 
@@ -100,24 +100,28 @@ class Dialogo(Discurso):
             self.hablar()
 
         elif panel == self.objects_panel:
-            self.arbol = self.objects
-            for nodo in self.arbol:
-                objeto = nodo.keys['objects'][0] if nodo.keys is not None else False
-                if objeto == panel.menu.actual.nombre:
-                    self.arbol.set_chosen(nodo)
-                    break
-                else:
-                    # esto funciona, pero tiene varios problemas:
-                    # 1) es fuerza bruta. tendría que haber una forma más elegante de hacerlo.
-                    # 2) si no encuentra coincidencia cae al nodo 0, lo cual puede no ser correcto.
-                    # 3) tendría que haber una forma de 'encontrar las raices' para no comparar con el arbol entero.
-                    # 4) hubo que agregar un nodo extra "default" al que caer si no se seleccionaba el nodo correcto.
-                    pass
+            if panel.menu.actual.nombre in self.objects:
+                # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
+                # de manera que realmente se verifique que se está mostrando ESE item en particular.
 
+                idx = self.objects[panel.menu.actual.nombre]
+                # si el elemento seleccionado coincide con el nombre indicado en head,
+                # entonces el dialogo salta a ese numero de índice.
+            else:
+                # de otro modo se cae al nodo indicado por default.
+                idx = self.objects['default']
+
+            self.dialogo.set_chosen(idx)
+            # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
+            # porque nuestra acción fue mostrar el ítem.
+            self.switch_panel(panel=self.frontend)
+
+            # avanzamos el diálogo hasta el punto designado.
             self.hablar()
 
         elif panel == self.themes_panel:
-            self.arbol = self.theme
+            # WIP
+            self.dialogo = self.theme
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -153,11 +157,11 @@ class Dialogo(Discurso):
         return supress
 
     def hablar(self):
-        actual = self.arbol.update()
+        actual = self.dialogo.update()
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event is not None:
                 self.sel.post_event()
-            self.arbol.set_chosen(self.next)
+            self.dialogo.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
             self.emit_sound_event(self.locutores[actual.locutor])
@@ -190,7 +194,7 @@ class Dialogo(Discurso):
                     # si nos quedamos sin elementos con requisitos, caemos al default.
                     choice = default
 
-                self.arbol.set_chosen(choice)
+                self.dialogo.set_chosen(choice)
                 self.hablar()
                 self.emit_sound_event(self.locutores[actual.locutor])
 
@@ -271,17 +275,22 @@ class Dialogo(Discurso):
             mob.hablando = False
         if self.SelMode:
             self.frontend.exit_sel_mode()
-        self.arbol = None
+        self.dialogo = None
 
         if self.write_flag:
             GameState.set('dialog.' + self.name, 1)
 
         super().cerrar()
 
-    def switch_panel(self, i):
-        self.panel_idx += i
-        if self.panel_idx < -len(self.panels)+1 or self.panel_idx > len(self.panels)-1:
-            self.panel_idx = 0
+    def switch_panel(self, i=0, panel=None):
+        if i != 0 and panel is None:
+            self.panel_idx += i
+            if self.panel_idx < -len(self.panels) + 1 or self.panel_idx > len(self.panels) - 1:
+                self.panel_idx = 0
+
+        elif panel is not None:
+            self.panel_idx = self.panels.index(panel)
+
         for panel in self.panels:
             panel.hide()
         self.panels[self.panel_idx].show()
