@@ -16,7 +16,6 @@ class Elemento:
     event = None
     tags = None
     texto = ''
-    keys = None
 
     def __init__(self, indice, data):
         self.leads = None
@@ -31,7 +30,6 @@ class Elemento:
         self.reqs = data.get('reqs', None)
         self.event = data.get('event', None)
         self.pre = data.get('pre', 0)
-        self.keys = data.get('keys', None)
 
         if type(self.leads) is list:
             self.hasLeads = True

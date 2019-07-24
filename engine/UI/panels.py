@@ -1,4 +1,4 @@
-from engine.globs import ANCHO, ALTO, CANVAS_BG, CAPA_OVERLAYS_DIALOGOS
+from engine.globs import ANCHO, ALTO, CANVAS_BG, TEXT_FG, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.renderer import Renderer
 from .widgets import BaseWidget
 from pygame import Surface, font
@@ -26,8 +26,9 @@ class BasePanel(BaseWidget):
         Renderer.del_overlay(self)
 
     def update(self, *args):
+        self.image.fill(CANVAS_BG)
         self.image.blit(self.marco, (0, 0))
-        self.image.blit(self.f.render(self.nombre, 1, (0, 0, 0), CANVAS_BG), (4, 3))
+        self.image.blit(self.f.render(self.nombre, 1, TEXT_FG, CANVAS_BG), (4, 3))
 
 
 class DialogObjectsPanel(BasePanel):
@@ -37,7 +38,7 @@ class DialogObjectsPanel(BasePanel):
         super().__init__(parent, 'Objects')
 
     def set_menu(self):
-        from engine.UI.circularmenus.objects import ObjectsCircularMenu
+        from engine.UI.circularmenus.panels import ObjectsCircularMenu
         self.menu = ObjectsCircularMenu(self)
 
     def show(self):
@@ -56,10 +57,35 @@ class DialogObjectsPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mostar {}>'.format(self.menu.actual.item.nombre), 1, (0, 0, 0), CANVAS_BG)
+            render = self.f.render('<mostrar {}>'.format(self.menu.actual.item.nombre), 1, TEXT_FG, CANVAS_BG)
             self.image.blit(render, (3, 23))
 
 
 class DialogThemesPanel(BasePanel):
+    menu = None
+
     def __init__(self, parent):
         super().__init__(parent, 'Themes')
+
+    def set_menu(self):
+        from engine.UI.circularmenus.panels import ThemesCircularMenu
+        self.menu = ThemesCircularMenu(self)
+
+    def show(self):
+        super().show()
+        if self.menu is None:
+            self.set_menu()
+        else:
+            self.menu.switch_cascades()
+
+    def hide(self):
+        super().hide()
+        if self.menu is not None:
+            Renderer.clear(layer=self.menu.layer)
+            self.menu.cuadros.empty()
+
+    def update(self):
+        super().update()
+        if self.menu.actual is not None:
+            render = self.f.render('<mencionar {}>'.format(self.menu.actual.item), 1, TEXT_FG, CANVAS_BG)
+            self.image.blit(render, (3, 23))

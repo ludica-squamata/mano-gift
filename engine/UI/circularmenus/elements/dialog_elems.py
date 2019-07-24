@@ -37,3 +37,18 @@ class DialogObjectElement(LetterElement):
 
     def do_action(self):
         pass
+
+
+class DialogThemeElement(LetterElement):
+    active = True
+    item = None
+    idx = 0
+
+    def __init__(self, parent, idx, item):
+        self.item = item
+        self.idx = idx
+
+        super().__init__(parent, self.item, self.item[0])
+
+    def do_action(self):
+        pass

@@ -17,7 +17,8 @@
         "default": 3
       },
       "themes":{
-        "dragón": 6
+        "Dragón": 5,
+        "default": 3
       }
     }
   },
@@ -25,7 +26,7 @@
   "body":{
     "0":{
       "type":"node", "leads":1, "from":"commoner", "to":"heroe",
-      "txt":"No puedo dejar pasar a nadie, me ordenaron bloquear el acceso a la montaña."
+      "txt":"No puedo dejar pasar a nadie, me ordenaron bloquear el acceso a la montaña por el <b>dragón</b>."
     },
     "1":{
       "type":"leaf", "from":"heroe", "to":"commoner", "event":"Flag",
@@ -44,7 +45,7 @@
       "txt":"adelante mi capitán"
     },
     "5":{
-      "type":"node", "leads":6, "from":"heroe", "to":"commoner","reqs":{"tema":["dragón"]},
+      "type":"node", "leads":6, "from":"heroe", "to":"commoner",
       "txt":"en el pueblo me contaron que lo que ronda en la montaña es un dragon"
     },
     "6":{
