@@ -13,8 +13,6 @@ class DialogCircularMenu(RenderedCircularMenu):
         self.change_radius = False
         self.radius = 60
 
-        cascadas = {'inicial': []}
-        dialogo = None
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
@@ -29,11 +27,8 @@ class DialogCircularMenu(RenderedCircularMenu):
                     # aunque en realidad, este else esta mal porque los dialogos inválidos se descartan en el loop
                     pass
 
-        super().__init__(cascadas)
-        self.functions['tap'].update(
-            {'contextual': self.back,
-             "izquierda": dialogo.frontend.usar_habilidades,
-             "derecha": dialogo.frontend.mostrar_objetos})
+        super().__init__({'inicial': []})
+        self.deregister()
 
     @classmethod
     def is_possible(cls, *locutores) -> bool:

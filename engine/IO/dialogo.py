@@ -2,7 +2,7 @@
 from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
-from engine.UI import DialogInterface
+from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
 
 
 class Discurso(EventAware):
@@ -60,14 +60,19 @@ class Dialogo(Discurso):
         for loc in locutores:
             self.locutores[loc.nombre] = loc
 
+        self.objects_panel = DialogObjectsPanel(self)
+        self.themes_panel = DialogThemesPanel(self)
         self.frontend = DialogInterface(self, arbol['head']['style'])
+        self.panels = [self.frontend, self.objects_panel, self.themes_panel]
+        self.panel_idx = 0
+
         self.functions['tap'].update({
-            'accion': self.hablar,
+            'accion': self.hablar_en_panel,
             'contextual': self.cerrar,
             'arriba': lambda: self.direccionar_texto('arriba'),
             'abajo': lambda: self.direccionar_texto('abajo'),
-            'izquierda': self.frontend.detener_menu,
-            'derecha': self.frontend.detener_menu,
+            'izquierda': lambda: self.switch_panel(-1),
+            'derecha': lambda: self.switch_panel(+1),
         })
         self.functions['hold'].update({
             'arriba': lambda: self.direccionar_texto('arriba'),
@@ -81,6 +86,13 @@ class Dialogo(Discurso):
         })
 
         self.hablar()
+
+    def hablar_en_panel(self):
+        if self.panels[self.panel_idx] == self.frontend:
+            # este metodo es para que no se disapare hablar() si se está eligiendo un objeto que mostrar
+            # es como un deregister() selectivo solo para esa key.
+            # podría tener un nombre más apropiado, pero no se me ocurre otro.
+            self.hablar()
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -240,6 +252,14 @@ class Dialogo(Discurso):
             GameState.set('dialog.' + self.name, 1)
 
         super().cerrar()
+
+    def switch_panel(self, i):
+        self.panel_idx += i
+        if self.panel_idx < -len(self.panels)+1 or self.panel_idx > len(self.panels)-1:
+            self.panel_idx = 0
+        for panel in self.panels:
+            panel.hide()
+        self.panels[self.panel_idx].show()
 
     def set_flag(self, event):
         self.write_flag = event.data['value']

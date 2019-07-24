@@ -151,15 +151,14 @@ class DialogInterface(BaseWidget):
         self.sel = 0
         self.text_rect.y = 3  # reset scrolling
 
-    @staticmethod
-    def abrir_panel(mensaje):
-        print(mensaje)
+    def show(self):
+        self.active = True
+        Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
+        self.menu.switch_cascades()
 
-    def mostrar_objetos(self):
-        self.abrir_panel('mostrar objetos')
-
-    def usar_habilidades(self):
-        self.abrir_panel('usar habilidades')
+    def hide(self):
+        self.active = False
+        Renderer.del_overlay(self)
 
     def update(self):
         self.ticks += 1
