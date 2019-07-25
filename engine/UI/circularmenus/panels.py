@@ -10,12 +10,17 @@ class ObjectsCircularMenu(RenderedCircularMenu):
     def __init__(self, parent):
         self.parent = parent
         self.entity = Mob_Group.get_controlled_mob()
+        self.nombre = self.parent.nombre+'Objects'
 
         cascadas = {
             'inicial': [DialogObjectElement(self, i, item) for i, item in enumerate(self.entity.inventario)]}
 
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.salir})
+
+    def turn(self, delta):
+        if len(self.cuadros):
+            super().turn(delta)
 
 
 class ThemesCircularMenu(RenderedCircularMenu):
@@ -25,6 +30,8 @@ class ThemesCircularMenu(RenderedCircularMenu):
     def __init__(self, parent):
         self.parent = parent
         self.entity = Mob_Group.get_controlled_mob()
+        self.nombre = self.parent.nombre+'Themes'
+
         temas = GameState.variables()
         lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
 
@@ -34,3 +41,6 @@ class ThemesCircularMenu(RenderedCircularMenu):
 
         super().__init__(cascadas)
 
+    def turn(self, delta):
+        if len(self.cuadros):
+            super().turn(delta)

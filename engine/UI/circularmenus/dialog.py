@@ -12,6 +12,7 @@ class DialogCircularMenu(RenderedCircularMenu):
         self.locutores = locutores
         self.change_radius = False
         self.radius = 60
+        self.nombre = 'Dialog'
 
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script

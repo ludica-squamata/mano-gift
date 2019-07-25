@@ -11,6 +11,7 @@ class QuickCircularMenu(RenderedCircularMenu):
     def __init__(self):
         self.entity = Mob_Group.get_controlled_mob()
         cascadas = ModData.QMC
+        self.nombre = 'Quick'
 
         if cascadas is None:
             cascadas = {
