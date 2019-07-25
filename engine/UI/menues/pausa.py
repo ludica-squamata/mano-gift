@@ -3,11 +3,14 @@ from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG,
 from engine.libs import render_textrect
 from engine.misc import Config as Cfg
 from pygame.font import SysFont
+from engine.UI.hud import HUD
 from pygame import Rect
 from .menu import Menu
 
 
 class MenuPausa(Menu):
+    nombres = None
+
     def __init__(self):
         super().__init__("Pausa")
         self.entity = Mob_Group.get_controlled_mob()
@@ -56,8 +59,8 @@ class MenuPausa(Menu):
         render = render_textrect(self.entity.character_name, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
-        self.canvas.blit(EngineData.HUD.BarraVida.image, (r.right + 2, r.centery + 4))
-        self.canvas.blit(EngineData.HUD.BarraMana.image, (r.right + 2, r.centery + 16))
+        self.canvas.blit(HUD.BarraVida.image, (r.right + 2, r.centery + 4))
+        self.canvas.blit(HUD.BarraMana.image, (r.right + 2, r.centery + 16))
 
     def cancelar(self):
         EngineData.acceso_menues.clear()

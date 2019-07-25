@@ -2,7 +2,6 @@ from engine.globs.constantes import CAPA_OVERLAYS_CIRCULAR
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.IO.menu_circular import CircularMenu
 from engine.globs.renderer import Renderer
-from engine.globs import EngineData
 
 
 class RenderedCircularMenu(CircularMenu):
@@ -12,7 +11,6 @@ class RenderedCircularMenu(CircularMenu):
     def __init__(self, cascadas):
         cx, cy = Renderer.camara.rect.center
         super().__init__(cascadas, cx, cy)
-        EngineData.MODO = 'Dialogo'
         self._update_rendered()
 
     def _update_rendered(self, on_spot=None):

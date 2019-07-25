@@ -1,5 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
 from engine.globs.event_aware import EventAware
+from engine.UI.circularmenus.quick import QuickCircularMenu
 
 
 class ControllableAI(EventAware):
@@ -44,6 +45,7 @@ class ControllableAI(EventAware):
 
     def contextual_event_key(self):
         self.entity.detener_movimiento()
+        QuickCircularMenu()
         self.deregister()
 
     def update(self):

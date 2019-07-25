@@ -165,45 +165,53 @@ class HUD:
     BarraMana = None
     screen_name = None
 
-    def __init__(self):
+    @classmethod
+    def init(cls):
         focus = Mob_Group.get_controlled_mob()
         focus.has_hud = True
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
-        self.BarraVida = ProgressBar(focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        self.BarraMana = ProgressBar(focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
-        self.BarraVida.set_variable(divisiones=4)
-        self.screen_name = CharacterName(focus, dx, dy - 32)
+        cls.BarraVida = ProgressBar(focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
+        cls.BarraMana = ProgressBar(focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
+        cls.BarraVida.set_variable(divisiones=4)
+        cls.screen_name = CharacterName(focus, dx, dy - 32)
 
-        EventDispatcher.register(self.BarraVida.event_update, 'MobWounded', 'UsedItem')
-        EventDispatcher.register(self.toggle, "TogglePause")
+        EventDispatcher.register(cls.BarraVida.event_update, 'MobWounded', 'UsedItem')
+        EventDispatcher.register(cls.toggle, "TogglePause")
+        EventDispatcher.deregister(cls.init, 'LoadGame')
 
-        self.BarraVida.set_focus(focus)
-        self.BarraMana.set_focus(focus)
+        cls.BarraVida.set_focus(focus)
+        cls.BarraMana.set_focus(focus)
 
         if FEATURE_SHOW_MINIBARS:
-            self.minibars = MiniBar()
-            EventDispatcher.register(self.minibars.event_update, 'MobWounded', 'UsedItem')
+            cls.minibars = MiniBar()
+            EventDispatcher.register(cls.minibars.event_update, 'MobWounded', 'UsedItem')
 
-        self.BarraVida.actualizar()
-        self.BarraMana.actualizar()
+        cls.BarraVida.actualizar()
+        cls.BarraMana.actualizar()
 
-        self.show()
+        cls.show()
 
-    def toggle(self, event):
+    @classmethod
+    def toggle(cls, event):
         if event.data['value']:
-            self.hide()
+            cls.hide()
         else:
-            self.show()
+            cls.show()
 
-    def show(self):
-        if not self.is_shown:
-            Renderer.add_overlay(self.BarraVida, CAPA_OVERLAYS_HUD)
-            Renderer.add_overlay(self.BarraMana, CAPA_OVERLAYS_HUD)
-            Renderer.add_overlay(self.screen_name, CAPA_OVERLAYS_HUD)
-            self.is_shown = True
+    @classmethod
+    def show(cls):
+        if not cls.is_shown:
+            Renderer.add_overlay(cls.BarraVida, CAPA_OVERLAYS_HUD)
+            Renderer.add_overlay(cls.BarraMana, CAPA_OVERLAYS_HUD)
+            Renderer.add_overlay(cls.screen_name, CAPA_OVERLAYS_HUD)
+            cls.is_shown = True
 
-    def hide(self):
-        self.is_shown = False
+    @classmethod
+    def hide(cls):
+        cls.is_shown = False
         Renderer.clear(layer=CAPA_OVERLAYS_HUD)
+
+
+EventDispatcher.register(lambda e: HUD.init(), 'LoadGame')
