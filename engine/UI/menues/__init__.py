@@ -6,8 +6,6 @@ from .personaje import MenuNuevo
 from .principal import MenuPrincipal
 from .menu import Menu
 
-MenuPausa.nombres = [_boton_equipo, _boton_opciones, _boton_cargar]
-
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
                  'MenuCargar': MenuCargar,
@@ -16,7 +14,28 @@ default_menus = {'MenuPausa': MenuPausa,
                  'MenuOpciones': MenuOpciones
                  }
 
+# estructuras para los menues raiz Principal y Pausa.
+# No son lo más "automático" que se puede hacer,
+# pero son lo más aproximado y menos explicito que se me ocurre.
+
+# Botones del Menú Pausa
+pause_menus = [
+    'MenuEquipo',
+    'MenuOpciones',
+    'MenuCargar'
+]
+
+# Botones del Menú Principal
+inital_menus = [
+    'MenuNuevo',
+    'MenuCargar',
+    'MenuOpciones'
+]
+
+
 __all__ = [
     'Menu',
-    "default_menus"
+    "default_menus",
+    'pause_menus',
+    'inital_menus'
 ]

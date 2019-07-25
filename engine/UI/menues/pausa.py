@@ -1,5 +1,5 @@
+from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG, Mob_Group, ModData
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG, Mob_Group
 from engine.libs import render_textrect
 from engine.misc import Config as Cfg
 from pygame.font import SysFont
@@ -18,25 +18,32 @@ class MenuPausa(Menu):
         self.frame_animacion = 1000 / 6
 
         x = self.canvas.get_width() - (CUADRO * 6) - 14  # 460-192-14 = 254
-        n, d = 'nombre', 'direcciones'
-        a, b = 'arriba', 'abajo'
 
-        nmbrs = self.nombres
-        botones = []
-        for j, nombre in enumerate(nmbrs):
-            botones.append({n: nombre, d: {a: nmbrs[j - 1], b: nmbrs[j - (len(nmbrs) - 1)]}})
+        names = []
+        from . import pause_menus
+        for menu_name in pause_menus+(list(ModData.custommenus.keys())):
+            # los menúes por default, más los menúes custom declarados en mod.json
+            button_name = menu_name[4:]
+            if button_name not in names:
+                names.append(button_name)
+
+        a, b = 'arriba', 'abajo'
+        # expandí un poco las keys para hacer el array más legible
+        buttons = []
+        for j, nombre in enumerate(names):
+            buttons.append({'nombre': nombre, 'direcciones': {a: names[j - 1], b: names[j - (len(names) - 1)]}})
 
         if FEATURE_MENUS_ADICIONALES:
-            botones[0][d][b] = "Status"
-            botones.insert(1, {n: "Status", d: {a: "Equipo", b: "Grupo"}})
-            botones.insert(2, {n: "Grupo", d: {a: "Status", b: "Opciones"}})
-            botones[3][d][a] = "Grupo"
+            buttons[0]['direcciones'][b] = "Status"
+            buttons.insert(1, {'nombre': "Status", 'direcciones': {a: "Equipo", b: "Grupo"}})
+            buttons.insert(2, {'nombre': "Grupo", 'direcciones': {a: "Status", b: "Opciones"}})
+            buttons[3]['direcciones'][a] = "Grupo"
 
-        for i in range(len(botones)):
-            botones[i]['pos'] = [x, 39 * i + 100]
-            botones[i]['comando'] = self.new_menu
+        for i in range(len(buttons)):
+            buttons[i]['pos'] = [x, 39 * i + 100]
+            buttons[i]['comando'] = self.new_menu
 
-        self.establecer_botones(botones, 6)
+        self.establecer_botones(buttons, 6)
         self.update_charname_display()
         self.functions['tap'].update({
             'accion': self.press_button,
