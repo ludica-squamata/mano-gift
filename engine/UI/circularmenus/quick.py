@@ -1,5 +1,5 @@
 from engine.globs import ModData, Mob_Group, GameState
-from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
+from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import LetterElement, CommandElement, InventoryElement, DialogTopicElement
 
@@ -63,8 +63,3 @@ class QuickCircularMenu(RenderedCircularMenu):
     @staticmethod
     def save():
         EventDispatcher.trigger('Save', 'Menu Rápido', {})
-
-
-EventDispatcher.register(QuickCircularMenu, AzoeEvent('Key', 'Modo.Aventura',
-                                                      {'nom': 'contextual',
-                                                       'type': 'tap'}))

@@ -1,5 +1,5 @@
 from .rendered import RenderedCircularMenu
-from engine.globs import EngineData, ModData
+from engine.globs import ModData
 from engine.misc.resources import abrir_json
 from os import path, listdir
 from engine.IO.dialogo import Dialogo, Discurso
@@ -22,7 +22,6 @@ class DialogCircularMenu(RenderedCircularMenu):
                     # hay que ver que pre_init() verifique bien los dialogos, porque ahora son todos scripteados.
                     dialogo = Dialogo(file, *locutores)
                     dialogo.frontend.set_menu(self)
-                    EngineData.MODO = 'Dialogo'
                 else:
                     # aca habría que cerrar el menu, porque es inválido, o capaz abrir el dialogo por default.
                     # aunque en realidad, este else esta mal porque los dialogos inválidos se descartan en el loop
@@ -43,7 +42,6 @@ class DialogCircularMenu(RenderedCircularMenu):
     def cerrar(self):
         for mob in self.locutores:
             mob.hablando = False
-        EngineData.MODO = 'Aventura'
         self.salir()
 
     def salir(self):
