@@ -1,4 +1,5 @@
 from .letter import LetterElement
+from .descriptive_area import DescriptiveArea
 
 
 class DialogOptionElement(LetterElement):
@@ -52,3 +53,11 @@ class DialogThemeElement(LetterElement):
 
     def do_action(self):
         pass
+
+
+class DialogTopicElement(DialogThemeElement):
+
+    def __init__(self, parent, idx, item):
+        super().__init__(parent, idx, item)
+        # Esta descripción es un placeholder. Debería haber algún lugar donde se ubicara la info sobre el topic.
+        self.description = DescriptiveArea(self, 'Sabes sobre {}'.format(self.item.title()))

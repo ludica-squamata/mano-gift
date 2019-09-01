@@ -1,7 +1,7 @@
-from engine.globs import ModData, Mob_Group
+from engine.globs import ModData, Mob_Group, GameState
 from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
 from .rendered import RenderedCircularMenu
-from .elements import LetterElement, CommandElement, InventoryElement
+from .elements import LetterElement, CommandElement, InventoryElement, DialogTopicElement
 
 
 class QuickCircularMenu(RenderedCircularMenu):
@@ -19,11 +19,18 @@ class QuickCircularMenu(RenderedCircularMenu):
                     CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': self.entity.cambiar_estado}),
                     CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
                     LetterElement(self, 'Consumibles', 'C'),
-                    LetterElement(self, 'Equipables', 'E')
+                    LetterElement(self, 'Equipables', 'E'),
+                    LetterElement(self, 'Temas', 'T')
                 ],
                 'Consumibles': [InventoryElement(self, item) for item in self.entity.inventario('consumible')],
-                'Equipables': [InventoryElement(self, item) for item in self.entity.inventario('equipable')]
+                'Equipables': [InventoryElement(self, item) for item in self.entity.inventario('equipable')],
             }
+
+        temas = GameState.variables()
+        lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
+        cascadas.update({
+            "Temas": [DialogTopicElement(self, i, t) for i, t in enumerate(lista)]
+        })
 
         c = cascadas['inicial']
         for idx, opt in enumerate([c[self.first]] + c[self.first + 1:] + c[:self.first]):
