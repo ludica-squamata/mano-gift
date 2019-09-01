@@ -44,3 +44,11 @@ class ThemesCircularMenu(RenderedCircularMenu):
     def turn(self, delta):
         if len(self.cuadros):
             super().turn(delta)
+
+    def update_cascades(self):
+        temas = GameState.variables()
+        lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
+        cascadas = {
+            'inicial': [DialogThemeElement(self, i, item) for i, item in enumerate(lista)]
+        }
+        self.add_cascades(cascadas)

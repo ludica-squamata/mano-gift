@@ -76,6 +76,7 @@ class DialogThemesPanel(BasePanel):
         if self.menu is None:
             self.set_menu()
         else:
+            self.menu.update_cascades()
             self.menu.switch_cascades()
 
     def hide(self):
