@@ -2,7 +2,7 @@
 from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
-from engine.UI import DialogInterface
+from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
 
 
 class Discurso(EventAware):
@@ -20,7 +20,7 @@ class Discurso(EventAware):
         if GameState.get('dialog.' + meta['name']):
             allow = False
 
-        if meta['class'] != 'chosen':
+        if meta['class'] != 'scripted':
             allow = False
 
         return allow
@@ -50,24 +50,33 @@ class Dialogo(Discurso):
     def __init__(self, arbol, *locutores):
         super().__init__()
         EventDispatcher.register(self.set_flag, 'Flag')
-        self.tags_condicionales = arbol['head']['conditional_tags']
-        self.name = arbol['head']['name']
+        head = arbol['head']
+        self.tags_condicionales = head['conditional_tags']
+        self.name = head['name']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
-        self.dialogo.process_events(arbol['head']['events'])
+        self.objects = head.get('panels', {}).get('objects', {})
+        self.themes = head.get('panels', {}).get('themes', {})
+
+        self.dialogo.process_events(head['events'])
 
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
 
-        self.frontend = DialogInterface(self, arbol['head']['style'])
+        self.objects_panel = DialogObjectsPanel(self)
+        self.themes_panel = DialogThemesPanel(self)
+        self.frontend = DialogInterface(self, head['style'])
+        self.panels = [self.frontend, self.objects_panel, self.themes_panel]
+        self.panel_idx = 0
+
         self.functions['tap'].update({
-            'accion': self.hablar,
+            'accion': self.hablar_en_panel,
             'contextual': self.cerrar,
             'arriba': lambda: self.direccionar_texto('arriba'),
             'abajo': lambda: self.direccionar_texto('abajo'),
-            'izquierda': self.frontend.detener_menu,
-            'derecha': self.frontend.detener_menu,
+            'izquierda': lambda: self.switch_panel(-1),
+            'derecha': lambda: self.switch_panel(+1),
         })
         self.functions['hold'].update({
             'arriba': lambda: self.direccionar_texto('arriba'),
@@ -80,6 +89,37 @@ class Dialogo(Discurso):
             'derecha': self.frontend.detener_menu,
         })
 
+        self.hablar()
+
+    def hablar_en_panel(self):
+        panel = self.panels[self.panel_idx]
+        if panel is not self.frontend:
+            # No hace falta crear un elif entero para discriminar entre los grupos.
+            # Es cuestión de relacionar un grupo con su panel correspondiente.
+            if panel is self.objects_panel:
+                action = self.objects
+                # "action" es un nombre provisorio, no sé realmente que nombre ponerle.
+            else:
+                action = self.themes
+
+            if panel.menu.actual.nombre in action:
+                # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
+                # de manera que realmente se verifique que se está mostrando ESE item en particular.
+
+                idx = action[panel.menu.actual.nombre]
+                # si el elemento seleccionado coincide con el nombre indicado en head,
+                # entonces el dialogo salta a ese numero de índice.
+            else:
+                # de otro modo se cae al nodo indicado por default.
+                idx = action['default']
+
+            self.dialogo.set_chosen(idx)
+            # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
+            # porque nuestra acción fue mostrar el ítem.
+            self.switch_panel(panel=self.frontend)
+
+        # avanzamos el diálogo hasta el punto designado.
+        # hablar() se ejecuta siempre, independientemente del panel
         self.hablar()
 
     @staticmethod
@@ -154,6 +194,12 @@ class Dialogo(Discurso):
                     choice = default
 
                 self.dialogo.set_chosen(choice)
+                if choice.event is not None:
+                    choice.post_event()
+
+                for exp in actual.expressions:
+                    GameState.set('tema.' + exp, True)
+
                 self.hablar()
                 self.emit_sound_event(self.locutores[actual.locutor])
 
@@ -174,6 +220,10 @@ class Dialogo(Discurso):
         elif type(actual) is Elemento:
             if actual.event is not None:
                 actual.post_event()
+
+            for exp in actual.expressions:
+                GameState.set('tema.'+exp, True)
+
             if actual.indice in self.tags_condicionales:
                 loc = self.locutores[actual.locutor]
                 supress = []
@@ -235,11 +285,27 @@ class Dialogo(Discurso):
         if self.SelMode:
             self.frontend.exit_sel_mode()
         self.dialogo = None
+        for panel in [self.objects_panel, self.themes_panel]:
+            if panel.menu is not None:
+                panel.menu.salir()
 
         if self.write_flag:
             GameState.set('dialog.' + self.name, 1)
 
         super().cerrar()
+
+    def switch_panel(self, i=0, panel=None):
+        if i != 0 and panel is None:
+            self.panel_idx += i
+            if self.panel_idx < -len(self.panels) + 1 or self.panel_idx > len(self.panels) - 1:
+                self.panel_idx = 0
+
+        elif panel is not None:
+            self.panel_idx = self.panels.index(panel)
+
+        for panel in self.panels:
+            panel.hide()
+        self.panels[self.panel_idx].show()
 
     def set_flag(self, event):
         self.write_flag = event.data['value']

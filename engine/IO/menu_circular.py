@@ -79,6 +79,7 @@ class CircularMenu(EventAware):
     acceso_cascadas = None
     center = 0, 0
     change_radius = True
+    nombre = ''
 
     def __init__(self, cascadas: dict, centerx: int, centery: int):
         self.cuadros = AzoeGroup('Cuadros')
@@ -211,4 +212,4 @@ class CircularMenu(EventAware):
             self.backward()
 
     def __repr__(self):
-        return 'Menu Circular'
+        return self.nombre+'CircularMenu'

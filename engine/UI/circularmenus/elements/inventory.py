@@ -1,4 +1,4 @@
-from .item_description import DescriptiveArea
+from .descriptive_area import DescriptiveArea
 from .letter import LetterElement
 from engine.globs import TEXT_FG
 from pygame import font
@@ -17,7 +17,7 @@ class InventoryElement(LetterElement):
         self.img_sel = self._create_icon_stack(33, 33, True, parent.entity)
 
         super().__init__(parent, self.item.nombre, None)
-        self.description = DescriptiveArea(self, item)
+        self.description = DescriptiveArea(self, item.efecto_des)
 
     def _create_icon_stack(self, w, h, count, entity):
         image, _rect = self._crear_base(w, h)

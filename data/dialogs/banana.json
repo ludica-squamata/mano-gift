@@ -1,12 +1,15 @@
 {
   "head":{
-    "class":"chosen",
+    "class":"invalid",
     "conditional_tags":{
-      "0":{"b":{
-        "objects":["Estrella"],
-        "attrs":{
-          "Carisma":[">",9]
-        }}}
+      "0":{
+        "b":{
+          "objects":["Estrella"],
+          "attrs":{
+            "Carisma":[">",9]
+          }
+        }
+      }
     },
     "style":"tagarrays/estilo.json",
     "locutors":["heroe", "commoner"],

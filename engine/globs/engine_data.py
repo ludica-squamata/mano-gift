@@ -4,20 +4,15 @@ from .event_dispatcher import EventDispatcher, AzoeEvent
 from .game_groups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo
+from .mod_data import ModData
 
 
 class EngineData:
     mapas = {}
-    HUD = None
-    current_qcm_idx = 0
     acceso_menues = []
     MENUS = {}
-    MODO = ''
-    onPause = False
-    scene_data = None
     setKey = False
     save_data = {}
-    current_view = 'north'
 
     @classmethod
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
@@ -58,9 +53,8 @@ class EngineData:
         cls.setKey = event.data['value']
 
     @classmethod
-    def end_dialog(cls, event):
+    def end_dialog(cls):
         EventDispatcher.trigger('TogglePause', 'EngineData', {'value': False})
-        cls.MODO = event.data.get('Modo', 'Aventura')
 
     @classmethod
     def salvar(cls, event):
@@ -83,7 +77,6 @@ class EngineData:
 
     @classmethod
     def cargar_juego(cls, event):
-        from engine.UI.hud import HUD
         data = event.data
         cls.acceso_menues.clear()
 
@@ -96,9 +89,6 @@ class EngineData:
 
         cls.check_focus_position(focus, mapa, data['entrada'])
         focus.character_name = data['name']
-
-        cls.MODO = 'Aventura'
-        cls.HUD = HUD()
 
     @classmethod
     def check_focus_position(cls, focus, mapa, entrada):
@@ -116,23 +106,14 @@ class EngineData:
             EventDispatcher.trigger('SaveDataFile', 'EngineData', cls.save_data)
 
     @classmethod
-    def rotarte_view(cls, event):
-        cls.current_view = event.data['new_view']
-
-    @classmethod
-    def toggle_pause(cls, event):
-        cls.onPause = event.data['value']
-
-    @staticmethod
-    def toggle_mode():
-        EventDispatcher.trigger('OpenMenu', 'Modo.Aventura', {'value': 'Pausa'})
-
-    @classmethod
-    def pop_menu(cls, event):
-        from .mod_data import ModData
+    def pop_menu(cls, event=None):
         from engine.UI.menues import default_menus
 
-        titulo = event.data['value']
+        if event is None:
+            titulo = 'Pausa'
+        else:
+            titulo = event.data['value']
+
         if titulo == 'Previous':
             del cls.acceso_menues[-1]
             titulo = cls.acceso_menues[-1]
@@ -153,8 +134,7 @@ class EngineData:
 
         menu.register()
         cls.MODO = 'Menu'
-        if not cls.onPause:
-            EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
+        EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
 
@@ -163,13 +143,8 @@ EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
 EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
 EventDispatcher.register(EngineData.salvar, "SaveDataFile")
 EventDispatcher.register(EngineData.compound_save_data, "SaveData")
-EventDispatcher.register(EngineData.rotarte_view, 'RotateEverything')
-EventDispatcher.register(EngineData.toggle_pause, 'TogglePause')
-EventDispatcher.register(EngineData.toggle_mode, AzoeEvent('Key',
-                                                           'Modo.Aventura',
-                                                           {'nom': 'menu',
-                                                            'type': 'tap'}))
+EventDispatcher.register(EngineData.pop_menu, AzoeEvent('Key', 'Input', {'nom': 'menu', 'type': 'tap'}))
 EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
-EventDispatcher.register(EngineData.end_dialog, 'EndDialog')
+EventDispatcher.register(lambda e: EngineData.end_dialog(), 'EndDialog')
 EventDispatcher.register(salir_handler, 'QUIT')
 EventDispatcher.register(EngineData.cargar_juego, 'LoadGame')

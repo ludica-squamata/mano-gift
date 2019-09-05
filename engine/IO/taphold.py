@@ -194,15 +194,15 @@ def get_events(holding=100):
 
         if key.get('hold', False):
             data = {'nom': key['nom'], 'type': 'hold', 'value': key['holding']}
-            EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
+            EventDispatcher.trigger('Key', 'Input', data)
 
         elif key.get('tap', False):
             data = {'nom': key['nom'], 'type': 'tap'}
-            EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
+            EventDispatcher.trigger('Key', 'Input', data)
             key['tap'] = False
 
         elif key.get('release', False):
             data = {'nom': key['nom'], 'type': 'release', 'value': key['held']}
-            EventDispatcher.trigger('Key', 'Modo.' + EngineData.MODO, data)
+            EventDispatcher.trigger('Key', 'Input', data)
             key['release'] = False
             key['held'] = 0

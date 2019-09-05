@@ -6,17 +6,23 @@ from engine.misc.config import Config as Cfg
 class MenuPrincipal(Menu):
     def __init__(self):
         super().__init__('Principal', "Azoe's Gifts")
-
         x = self.rect.centerx - (32 * 3) - 10
 
-        m, k, c = 'nombre', 'direcciones', 'comando'
-        a, b = 'arriba', 'abajo'
+        nombres = []
+        from . import inital_menus
+        # acá hacemos un truco similar al que se hace en Pausa,
+        # pero tiene menos efecto porque no hay menus custom en Principal.
+        for name in inital_menus:
+            m = name[4:]
+            if m not in nombres:
+                nombres.append(m)
 
-        nombres = ['Nuevo', 'Cargar', 'Opciones']
         botones = []
+        a, b = 'arriba', 'abajo'
+        # expandí un poco las keys para hacer el array más legible
         for j, nombre in enumerate(nombres):
-            botones.append({m: nombre, k: {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]},
-                            c: self.new_menu, 'pos': [x, 50 * j + 120]})
+            botones.append({'nombre': nombre, 'direcciones': {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]},
+                            'comando': self.new_menu, 'pos': [x, 50 * j + 120]})
 
         self.establecer_botones(botones, 6)
 

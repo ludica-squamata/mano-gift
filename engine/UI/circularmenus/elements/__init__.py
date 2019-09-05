@@ -1,13 +1,15 @@
 from .letter import LetterElement
-from .dialog_elems import TopicElement, DialogOptionElement
+from .dialog_elems import DialogOptionElement, DialogObjectElement, DialogThemeElement, DialogTopicElement
 from .inventory import InventoryElement
 from .command import CommandElement
 from .title import Title
 
 __all__ = ['LetterElement',
-           'TopicElement',
            'DialogOptionElement',
+           'DialogObjectElement',
+           'DialogThemeElement',
            'InventoryElement',
+           'DialogTopicElement',
            'CommandElement',
            'Title'
            ]

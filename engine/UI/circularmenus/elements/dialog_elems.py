@@ -1,41 +1,5 @@
 from .letter import LetterElement
-from engine.IO.dialogo import Dialogo, Discurso
-from engine.globs import EngineData
-from engine.misc.resources import cargar_imagen
-
-
-class TopicElement(LetterElement):
-    active = True
-    item = None
-
-    def __init__(self, parent, item):
-        data = item['head']
-        nombre = data['name']
-        self.idx = item['idx']
-        if data['icon']:
-            icono = cargar_imagen(data['icon'])
-        else:
-            icono = nombre[0].upper()
-        self.item = item
-
-        super().__init__(parent, nombre, icono)
-
-    def do_action(self):
-        if self.active:
-            if self.pre_init(self.item['head'], self.parent.locutores):
-                self.parent.supress_all()
-                dialogo = Dialogo(self.item, *self.parent.locutores)
-                dialogo.frontend.set_menu(self.parent)
-                EngineData.MODO = 'Dialogo'
-                self.active = False
-                self.parent.deregister()
-            else:
-                self.parent.cerrar()
-        return True
-
-    @staticmethod
-    def pre_init(head, locutores):
-        return Discurso.pre_init(head, *locutores)
+from .descriptive_area import DescriptiveArea
 
 
 class DialogOptionElement(LetterElement):
@@ -50,3 +14,50 @@ class DialogOptionElement(LetterElement):
         self.idx = item['idx']
 
         super().__init__(parent, nombre, icono)
+
+
+class DialogObjectElement(LetterElement):
+    active = True
+    item = None
+    idx = 0
+
+    def __init__(self, parent, idx, item):
+        self.item = item
+        self.idx = idx
+        self.img_uns = self._create(21, 21)
+        self.img_sel = self._create(33, 33)
+
+        super().__init__(parent, self.item.nombre, None)
+
+    def _create(self, w, h):
+        image, _rect = self._crear_base(w, h)
+        iconrect = self.item.image.get_rect(center=_rect.center)
+        image.blit(self.item.image, iconrect)
+
+        return image
+
+    def do_action(self):
+        pass
+
+
+class DialogThemeElement(LetterElement):
+    active = True
+    item = None
+    idx = 0
+
+    def __init__(self, parent, idx, item):
+        self.item = item
+        self.idx = idx
+
+        super().__init__(parent, self.item, self.item[0])
+
+    def do_action(self):
+        pass
+
+
+class DialogTopicElement(DialogThemeElement):
+
+    def __init__(self, parent, idx, item):
+        super().__init__(parent, idx, item)
+        # Esta descripción es un placeholder. Debería haber algún lugar donde se ubicara la info sobre el topic.
+        self.description = DescriptiveArea(self, 'Sabes sobre {}'.format(self.item.title()))

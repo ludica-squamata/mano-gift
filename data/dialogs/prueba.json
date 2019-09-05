@@ -1,6 +1,6 @@
 {
   "head":{
-    "class":"chosen",
+    "class":"invalid",
     "conditional_tags":[],
     "style":"",
     "locutors":["heroe", "commoner"],

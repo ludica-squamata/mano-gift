@@ -1,5 +1,5 @@
 from .dialog_interface import DialogInterface
-from engine.globs import EngineData, CAPA_OVERLAYS_DIALOGOS
+from engine.globs import CAPA_OVERLAYS_DIALOGOS
 from engine.globs.event_aware import EventAware
 from engine.globs.event_dispatcher import EventDispatcher
 
@@ -27,8 +27,6 @@ class PropDescription (EventAware):
         self.functions['hold'].update({
             'arriba': lambda: self.desplazar_texto('arriba'),
             'abajo': lambda: self.desplazar_texto('abajo')})
-
-        EngineData.MODO = 'Dialogo'
 
     def desplazar_texto(self, direccion):
         if direccion == 'arriba':

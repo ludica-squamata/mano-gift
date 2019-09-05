@@ -151,6 +151,15 @@ class DialogInterface(BaseWidget):
         self.sel = 0
         self.text_rect.y = 3  # reset scrolling
 
+    def show(self):
+        self.active = True
+        Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
+        self.menu.switch_cascades()
+
+    def hide(self):
+        self.active = False
+        Renderer.del_overlay(self)
+
     def update(self):
         self.ticks += 1
         self.image.fill(CANVAS_BG, self.erase_area)
