@@ -20,6 +20,7 @@ class NameScreen(BaseWidget):
         self.teclas = AzoeGroup('Teclas')  # teclado en pantalla
         self.area_input = AzoeGroup('Letras')  # letras del nombre
         self.lineas = AzoeGroup('Linea Punteada')  # linea punteada
+        self.ins_txt = "Escriba a continuación el nombre del personaje. Puede usar los caracteres provistos abajo"
 
         # generar teclado y cursor
         self.area_teclas = self.create_sunken_canvas(448 + 12, 224 + 12)  # marco y parte del fondo del teclado

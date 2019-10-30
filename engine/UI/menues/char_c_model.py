@@ -19,6 +19,7 @@ class ModelScreen:
         # cargar imagenes
         self.faces = cycle(split_spritesheet('mobs/imagenes/pc_face.png', w=89, h=89))
         self.char_face = next(self.faces)
+        self.ins_txt = 'Esto es un ejemplo para el modo Modelo'
 
         self.images = self.cargar_anims('mobs/imagenes/heroe_idle_walk.png')
         self.anim_img = self.images['Sabajo']

@@ -20,6 +20,7 @@ class MenuNuevo(Menu):
         self.screens = [NameScreen(self), ModelScreen(self), AttrsScreen(self)]
         self.screens[2].toggle_hidden()
         self.current_screen = self.screens[self.curr_scr_idx]
+        self.f_ins = font.SysFont('Verdana', 14, italic=True)
 
         # generar botones
         n, c, d, a, b = 'nombre', 'cmd', 'direcciones', 'arriba', 'abajo'
@@ -63,9 +64,9 @@ class MenuNuevo(Menu):
         if foco == 'nombre':
             s = "Escriba a continuación el nombre del personaje. Puede usar los caracteres provistos abajo"
         elif foco == 'modelo':
-            s = ''
+            s = 'Esto es un ejemplo para el modo Modelo'
         elif foco == 'atributos':
-            s = ''
+            s = 'Y esto otro son  las instrucciones para los Atributos'
         else:
             s = ''
         fuente = font.SysFont('Verdana', 14, italic=True)
