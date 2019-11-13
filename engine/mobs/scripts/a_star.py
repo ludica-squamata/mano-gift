@@ -96,7 +96,7 @@ class Nodo:
         self.y = y
 
     def __repr__(self):
-        return '(' + str(self.x) + ',' + str(self.y) + ') f: '+str(self.f)
+        return '(' + str(self.x) + ',' + str(self.y) + ') f: ' + str(self.f)
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y

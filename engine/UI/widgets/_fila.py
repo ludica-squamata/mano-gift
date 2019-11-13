@@ -67,7 +67,7 @@ class Fila(BaseWidget):
 
         self.image = self.img_uns
         self.nombre = texto
-    
+
     def reset_text(self, texto):
         self.set_text(texto, self.w, self.justification)
 

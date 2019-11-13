@@ -4,6 +4,7 @@ from .event_dispatcher import EventDispatcher
 
 class GameState:
     _innerdict = {}
+
     # la implementación puede cambiar en el futuro
     # por un tree, un par de arrays, una db o algo así.
 

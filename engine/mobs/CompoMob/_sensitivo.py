@@ -8,6 +8,7 @@ from math import tan, radians
 class Sight(AzoeBaseSprite):
     ultima_direccion = ''
     mask = None
+
     # la mascara se crea al rotarse, por eso no está en el init.
 
     def __init__(self, parent, lenght):

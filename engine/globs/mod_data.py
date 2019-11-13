@@ -70,10 +70,10 @@ class ModData:
                                 d.update({'cmd': spec})
                             cls.QMC.append(d)
 
-            folders = [cls.fd_scripts, cls.fd_scripts+'behaviours/', cls.fd_scripts+'events/']
+            folders = [cls.fd_scripts, cls.fd_scripts + 'behaviours/', cls.fd_scripts + 'events/']
             for folder in folders:
                 for script in listdir(folder):
-                    ruta = folder+script
+                    ruta = folder + script
                     if path.isfile(ruta):
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:

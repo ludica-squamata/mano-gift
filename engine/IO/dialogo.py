@@ -1,4 +1,4 @@
-﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
+from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
@@ -222,7 +222,7 @@ class Dialogo(Discurso):
                 actual.post_event()
 
             for exp in actual.expressions:
-                GameState.set('tema.'+exp, True)
+                GameState.set('tema.' + exp, True)
 
             if actual.indice in self.tags_condicionales:
                 loc = self.locutores[actual.locutor]

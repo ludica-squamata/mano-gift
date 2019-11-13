@@ -51,9 +51,9 @@ class Menu(EventAware, BaseWidget):
         :param x: integer
         :param y: integer
         """
-        marco = self.create_titled_canvas(ancho-20, alto, nombre)
+        marco = self.create_titled_canvas(ancho - 20, alto, nombre)
         self.canvas.blit(marco, (x, y))
-        self.draw_space_rect = Rect(x+3, y+26, ancho-30, alto-15)
+        self.draw_space_rect = Rect(x + 3, y + 26, ancho - 30, alto - 15)
         self.draw_space = Surface(self.draw_space_rect.size)
         self.draw_space.fill(CANVAS_BG)
 

@@ -1,4 +1,4 @@
-﻿from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
+from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_aware import EventAware
 from math import sin, cos, radians
 
@@ -122,7 +122,7 @@ class CircularMenu(EventAware):
         for cubo in self.cuadros:
             cubo.stop = True
 
-    def stop_everything(self, on_spot=None,):
+    def stop_everything(self, on_spot=None):
         cuadros = self.cuadros.sprites()
         angle = 360 // len(cuadros)  # base
 
@@ -212,4 +212,4 @@ class CircularMenu(EventAware):
             self.backward()
 
     def __repr__(self):
-        return self.nombre+'CircularMenu'
+        return self.nombre + 'CircularMenu'

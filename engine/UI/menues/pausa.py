@@ -21,7 +21,7 @@ class MenuPausa(Menu):
 
         names = []
         from . import pause_menus
-        for menu_name in pause_menus+(list(ModData.custommenus.keys())):
+        for menu_name in pause_menus + (list(ModData.custommenus.keys())):
             # los menúes por default, más los menúes custom declarados en mod.json
             button_name = menu_name[4:]
             if button_name not in names:

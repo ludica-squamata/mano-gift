@@ -1,4 +1,5 @@
 from .resources import abrir_json, guardar_json
+from pygame import K_LEFT, K_RIGHT, K_DOWN, K_UP, K_x, K_z, K_RETURN
 import os
 
 
@@ -13,13 +14,13 @@ class Config:
         "metodo_de_entrada": 'teclado',
 
         "comandos": {
-            "arriba": 273,
-            "abajo": 274,
-            "derecha": 275,
-            "izquierda": 276,
-            "accion": 120,
-            "menu": 13,
-            "contextual": 122,
+            "arriba": K_UP,
+            "abajo": K_DOWN,
+            "derecha": K_RIGHT,
+            "izquierda": K_LEFT,
+            "accion": K_x,
+            "menu": K_RETURN,
+            "contextual": K_z,
         }
     }
     savedir = os.path.join(os.getcwd(), "save")

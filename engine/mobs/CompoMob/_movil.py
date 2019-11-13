@@ -52,7 +52,7 @@ class Movil(Caracterizado):
 
         if self.stage.mascara_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
             r, g, b, a = self.stage.imagen_salidas.get_at((self.mapRect.x + dx, self.mapRect.y + dy))
-            self.stage.salidas[b*255+g].trigger(self)
+            self.stage.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])
 

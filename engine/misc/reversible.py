@@ -21,9 +21,9 @@ class ReversibleDict:
             return self._left[idx]
 
         elif type(key) is int:
-            macro = self._left+self._right
+            macro = self._left + self._right
             macro.sort()
-            if 0 <= key <= len(macro)-1:
+            if 0 <= key <= len(macro) - 1:
                 return macro[key]
             else:
                 raise IndexError()
@@ -76,4 +76,4 @@ class ReversibleDict:
 
     def n_pairs(self):
         """Return the number of pairs in the ReversibleDict"""
-        return self._lenght//2
+        return self._lenght // 2

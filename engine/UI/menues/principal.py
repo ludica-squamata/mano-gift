@@ -21,7 +21,7 @@ class MenuPrincipal(Menu):
         a, b = 'arriba', 'abajo'
         # expandí un poco las keys para hacer el array más legible
         for j, nombre in enumerate(nombres):
-            botones.append({'nombre': nombre, 'direcciones': {a: nombres[j-1], b: nombres[j-(len(nombres)-1)]},
+            botones.append({'nombre': nombre, 'direcciones': {a: nombres[j - 1], b: nombres[j - (len(nombres) - 1)]},
                             'comando': self.new_menu, 'pos': [x, 50 * j + 120]})
 
         self.establecer_botones(botones, 6)

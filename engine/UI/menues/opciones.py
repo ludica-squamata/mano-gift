@@ -51,7 +51,7 @@ class MenuOpciones(Menu):
         n, d, p, c = 'nombre', 'direcciones', 'pos', 'comando'
         a, b = 'arriba', 'abajo'
         factor_y = 2
-        
+
         nom = "Mostrar Intro,Recordar Menus,Arriba,Abajo,Derecha,Izquierda,Menu,Accion,Contextual,Defaults".split(",")
         botones = []
         for j, nombre in enumerate(nom):
@@ -61,7 +61,7 @@ class MenuOpciones(Menu):
                 cmd = self.restore_defaults
             else:
                 cmd = self.set_tecla
-            botones.append({n: nombre, c: cmd, d: {a: nom[j-1], b: nom[j-(len(nom)-1)]}})
+            botones.append({n: nombre, c: cmd, d: {a: nom[j - 1], b: nom[j - (len(nom) - 1)]}})
 
         if joystick.get_count():
             factor_y = 1
@@ -69,7 +69,7 @@ class MenuOpciones(Menu):
             botones.insert(2, {n: "Metodo de Entrada", c: self.set_input_device, d: {b: "Arriba", a: "Recordar Menus"}})
 
         for i in range(len(botones)):
-            botones[i][p] = [6, 38 * i + (32*factor_y)]
+            botones[i][p] = [6, 38 * i + (32 * factor_y)]
 
         return botones
 
@@ -208,7 +208,7 @@ class MenuOpciones(Menu):
             if nom in data['comandos']:
                 txt = data['comandos'][nom]
                 espacio.reset_text(key_name(txt))
-                Cfg.asignar('comandos/'+nom, txt)
+                Cfg.asignar('comandos/' + nom, txt)
             else:
                 nom = nom.replace(' ', '_')
                 if nom in data:

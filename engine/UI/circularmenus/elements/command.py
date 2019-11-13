@@ -7,7 +7,6 @@ class CommandElement(LetterElement):
     _command = None
 
     def __init__(self, parent, item):
-
         nombre = item['name']
         icono = item['icon']
         self._command = item['cmd']

@@ -83,7 +83,6 @@ class MobGroup:
 
 
 class ItemGroup:
-
     _group = {}
     _indexes = []
     _lenght = 0
@@ -126,7 +125,7 @@ class ItemGroup:
             raise TypeError()
 
     def __delitem__(self, key):
-        
+
         if type(key) is int:
             if 0 <= key <= self._lenght:
                 del self._indexes[key]

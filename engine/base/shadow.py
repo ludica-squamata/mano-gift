@@ -299,7 +299,7 @@ class ShadowSprite(AzoeSprite):
         x, y = source.rect.topleft
         a = t // 2
         b = a + t
-        topleft = Rect((-b+x, -b+y), size)
+        topleft = Rect((-b + x, -b + y), size)
         topright = Rect((a + 1, -b), size)
         topmid = Rect((-a, -b), size)
         bottomleft = Rect((-b, a + 1), size)

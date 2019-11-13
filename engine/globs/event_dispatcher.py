@@ -51,7 +51,7 @@ class EventDispatcher:
         :type event_data:list/AzoeEvent
         :return:None
         """
-        
+
         event = AzoeEvent(*event_data)
         cls._cola.append(event)
 
@@ -72,7 +72,7 @@ class EventDispatcher:
             if evento.tipo in cls._oyentes:
                 for listener in cls._oyentes[evento.tipo]:
                     listener(evento)
-    
+
     @classmethod
     def get_queqed(cls):
         print('quequed events:', len(cls._cola))
@@ -90,7 +90,7 @@ class EventDispatcher:
     @classmethod
     def get_registered(cls):
         for name in sorted(cls._oyentes):
-            print(name+',', 'oyentes:', len(cls._oyentes[name]))
+            print(name + ',', 'oyentes:', len(cls._oyentes[name]))
 
 
 class AzoeEvent:

@@ -10,7 +10,7 @@ class ObjectsCircularMenu(RenderedCircularMenu):
     def __init__(self, parent):
         self.parent = parent
         self.entity = Mob_Group.get_controlled_mob()
-        self.nombre = self.parent.nombre+'Objects'
+        self.nombre = self.parent.nombre + 'Objects'
 
         cascadas = {
             'inicial': [DialogObjectElement(self, i, item) for i, item in enumerate(self.entity.inventario)]}
@@ -30,7 +30,7 @@ class ThemesCircularMenu(RenderedCircularMenu):
     def __init__(self, parent):
         self.parent = parent
         self.entity = Mob_Group.get_controlled_mob()
-        self.nombre = self.parent.nombre+'Themes'
+        self.nombre = self.parent.nombre + 'Themes'
 
         temas = GameState.variables()
         lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
