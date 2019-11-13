@@ -222,7 +222,7 @@ class Dialogo(Discurso):
                 actual.post_event()
 
             for exp in actual.expressions:
-                GameState.set('tema.'+exp, True)
+                GameState.set('tema.' + exp, True)
 
             if actual.indice in self.tags_condicionales:
                 loc = self.locutores[actual.locutor]

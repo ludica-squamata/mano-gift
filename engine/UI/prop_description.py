@@ -4,7 +4,7 @@ from engine.globs.event_aware import EventAware
 from engine.globs.event_dispatcher import EventDispatcher
 
 
-class PropDescription (EventAware):
+class PropDescription(EventAware):
     item = None
     frontend = None
 
@@ -16,7 +16,7 @@ class PropDescription (EventAware):
             self.salir()
         else:
             self.frontend = DialogInterface(self)
-            self.frontend.set_text(item.nombre+': '+self.item.descripcion)
+            self.frontend.set_text(item.nombre + ': ' + self.item.descripcion)
 
         self.functions['tap'].update({
             'accion': self.salir,

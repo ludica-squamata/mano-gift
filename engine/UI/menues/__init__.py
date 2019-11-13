@@ -32,7 +32,6 @@ inital_menus = [
     'MenuOpciones'
 ]
 
-
 __all__ = [
     'Menu',
     "default_menus",

@@ -22,7 +22,7 @@ class Consumible(Item):
         valor = 0
 
         if method == 'percentage':
-            valmaximo = mob[stat+'Max']
+            valmaximo = mob[stat + 'Max']
             valactual = mob[stat]
             valor = int((mod * valmaximo) / 100)
             if valor + valactual > valmaximo:

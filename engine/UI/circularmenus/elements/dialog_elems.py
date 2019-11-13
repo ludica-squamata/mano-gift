@@ -7,7 +7,6 @@ class DialogOptionElement(LetterElement):
     item = None
 
     def __init__(self, parent, item):
-
         nombre = item['name']
         icono = item['icon']
         self.item = item['item']

@@ -36,8 +36,8 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
         self.ID = data['ID']
         self.nombre = data['nombre']
         self.estado = 'idle'
-        image = self.images['S'+self.direccion]
-        mask = self.mascaras['S'+self.direccion]
+        image = self.images['S' + self.direccion]
+        mask = self.mascaras['S' + self.direccion]
         super().__init__(data, imagen=image, x=x, y=y, alpha=mask, center=focus)
 
         if self.nombre not in Mob_Group:
@@ -52,4 +52,4 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
         self.mapRect.center = x, y
 
     def __repr__(self):
-        return "Mob "+self.nombre
+        return "Mob " + self.nombre

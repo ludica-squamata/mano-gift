@@ -16,7 +16,7 @@ class Salida:
 
     def __init__(self, nombre, stage, rect, chunk, entrada, direcciones):
         self.nombre = self.tipo + '.' + nombre
-        self.flag_name = nombre+'.triggered'
+        self.flag_name = nombre + '.triggered'
         self.mapRect = Rect(*rect)
         self.chunk = chunk
         self.target_stage = stage
