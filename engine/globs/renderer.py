@@ -145,7 +145,7 @@ class Camara:
         else:
             new_map = cls.focus.stage
 
-        if new_map and new_map not in map_at_center:
+        if new_map is not False and new_map not in map_at_center:
             cls.set_background(new_map)
             for obj in new_map.properties.sprites():
                 if obj not in cls.real:
