@@ -88,9 +88,10 @@ class MenuAbility(Menu):
                 self.posicion_horizontal = 'derecha'
 
     def modificar_valor(self):
-        for counter in self.counters:
-            if counter.isSelected:
-                self.current_counter.accion()
+        if any(counter.isSelected for counter in self.counters.sprites()):
+            for counter in self.counters.sprites():
+                if counter.isSelected:
+                    self.current_counter.accion()
         else:
             self.fin.ser_presionado()
 
@@ -148,6 +149,7 @@ class Counter(BaseWidget):
             self.boton_mas.ser_elegido()
         elif posicion == 'izquierda':
             self.boton_menos.ser_elegido()
+        self.isSelected = True
 
     def elegir_mas(self):
         self.boton_menos.ser_deselegido()
@@ -158,6 +160,7 @@ class Counter(BaseWidget):
         self.boton_menos.ser_elegido()
 
     def deselegir(self):
+        self.isSelected = False
         self.boton_mas.ser_deselegido()
         self.boton_menos.ser_deselegido()
 
