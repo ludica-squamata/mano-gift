@@ -1,72 +1,86 @@
-from engine.globs import CANVAS_BG, TEXT_SEL, BISEL_BG
-from engine.UI.widgets import BaseWidget
+from engine.globs import CANVAS_BG, TEXT_SEL, BISEL_BG, TEXT_FG
+from engine.UI.widgets import BaseWidget, Boton
 from engine.globs.azoe_group import AzoeBaseSprite, AzoeGroup
 from pygame import font, Rect, Surface, draw
+from .menu import Menu
+from engine.libs import render_textrect
 
 
-class NameScreen(BaseWidget):
+class MenuName(Menu):
     area_teclas = None
     area_rect = None
     area_input = None
     cursor = None
     teclas = None
     lineas = None
-    hidden = False
+    foco = 'nombre'
 
     # noinspection PyMissingConstructor
-    def __init__(self, parent):
-
-        self.parent = parent
+    def __init__(self):
+        super().__init__('MenuName', 'Nombre')
         self.teclas = AzoeGroup('Teclas')  # teclado en pantalla
         self.area_input = AzoeGroup('Letras')  # letras del nombre
         self.lineas = AzoeGroup('Linea Punteada')  # linea punteada
-        self.ins_txt = "Escriba a continuación el nombre del personaje. Puede usar los caracteres provistos abajo"
+
+        self.print_instructions()
 
         # generar teclado y cursor
         self.area_teclas = self.create_sunken_canvas(448 + 12, 224 + 12)  # marco y parte del fondo del teclado
-        r = self.parent.rect
-        self.area_rect = self.area_teclas.get_rect(center=(r.centerx - 80, r.centery + 90))
+        self.area_rect = self.area_teclas.get_rect(center=(self.rect.centerx - 20, self.rect.centery + 50))
         self.crear_teclas(6, 6)  # genera el teclado en pantalla
 
         # el espacio se añade por separado porque ' ' es el delimitador en self.crear_teclas
-        self.teclas.add(Character(' ', CANVAS_BG, 10 + 12 * 32 + 6, 212 + 6 * 32 + 6))
+        self.teclas.add(Character(' ', CANVAS_BG, 6 + 14 * 32 + 6, 212 + 6 * 32 + 6))
 
         # Cursor del teclado en pantalla
         self.cursor = Cursor(*self.teclas.get_sprite(0).rect.center)
 
         # area del nombre del personaje
-        y = 165
+        y = 115
         self.area_nombre = Rect(13, y, 400, 25)
 
         # lineas punteadas
-        for i in range(20):
-            lin = LineaChr(i, 15 + (i * 20), y + 27)
+        for i in range(23):
+            lin = LineaChr(i, 75 + (i * 20), y + 27)
             self.lineas.add(lin)
         self.lineas.get_sprite(0).isSelected = True
 
         self.ltr_idx = -1  # idx de self.area_input
         self.lin_idx = 0  # idx de self.lineas
 
+        b_x = self.area_rect.centerx - 85
+        b_y = self.area_rect.bottom + 10
+        self.btn = Boton('Aceptar', 6, self.set_name, [b_x, b_y])
+        self.botones.add(self.btn)
+
         self.functions = {
-                'tap': {
-                    'accion': self.input_character,
-                    'contextual': self.erase_character,
-                    'arriba': lambda: self.movercursor(0, -1),
-                    'abajo': lambda: self.movercursor(0, 1),
-                    'izquierda': lambda: self.movercursor(-1, 0),
-                    'derecha': lambda: self.movercursor(1, 0)
-                },
-                'hold': {
-                    'accion': self.input_character,
-                    'arriba': lambda: self.movercursor(0, -1),
-                    'abajo': lambda: self.movercursor(0, 1),
-                    'izquierda': lambda: self.movercursor(-1, 0),
-                    'derecha': lambda: self.movercursor(1, 0)
-                },
-                'release': {
-                    'contextual': self.erase_character
-                }
+            'tap': {
+                'accion': lambda: self.aceptar('tap'),
+                'contextual': self.cancelar,
+                'arriba': lambda: self.movercursor(0, -1),
+                'abajo': lambda: self.movercursor(0, 1),
+                'izquierda': lambda: self.movercursor(-1, 0),
+                'derecha': lambda: self.movercursor(1, 0)
+            },
+            'hold': {
+                'accion': lambda: self.aceptar('hold'),
+                'contextual': self.cancelar,
+                'arriba': lambda: self.movercursor(0, -1),
+                'abajo': lambda: self.movercursor(0, 1),
+                'izquierda': lambda: self.movercursor(-1, 0),
+                'derecha': lambda: self.movercursor(1, 0)
+            },
+            'release': {
+                'contextual': self.cancelar
             }
+        }
+
+    def print_instructions(self):
+        s = "Escriba a continuación el nombre del personaje.\nPuede usar los caracteres provistos abajo"
+        fuente = font.SysFont('Verdana', 14, italic=True)
+        rect = Rect(10, 32, 600, 64)
+        render = render_textrect(s, fuente, rect, TEXT_FG, CANVAS_BG, justification=1)
+        self.canvas.blit(render, rect)
 
     def crear_teclas(self, x, y):
         """Genera el teclado en pantalla, con excepción del espacio, que se genera por separado"""
@@ -125,7 +139,7 @@ class NameScreen(BaseWidget):
         """Borra el caracter del espacio actualmente seleccionado"""
 
         if self.ltr_idx >= 0:
-            self.parent.canvas.fill(CANVAS_BG, self.area_nombre)
+            self.canvas.fill(CANVAS_BG, self.area_nombre)
 
             spr = self.area_input.get_sprite(self.ltr_idx)
             self.area_input.remove(spr)
@@ -147,10 +161,44 @@ class NameScreen(BaseWidget):
         if not collides:
             if self.area_rect.collidepoint(self.cursor.pos):
                 self.movercursor(dx, dy)  # repetir el movimiento
-            elif self.cursor.x > self.area_rect.right and len(self.area_input):
-                self.parent.cambiar_foco('menu')  # el cursor busca el boton "aceptar"
+            elif self.cursor.y > self.area_rect.bottom and len(self.area_input):
+                self.cambiar_foco('menu')
             else:
                 self.movercursor(-dx, -dy)  # deshacer el movimiento
+
+    def aceptar(self, modo='tap'):
+        if self.foco == 'nombre':
+            self.input_character()
+        elif self.foco == 'menu':
+            if modo == 'tap':
+                self.btn.ser_presionado()
+            elif modo == 'hold':
+                self.btn.mantener_presion()
+
+    def cancelar(self):
+        if self.foco == 'nombre':
+            if not len(self.area_input):
+                super().cancelar()
+            self.erase_character()
+        else:
+            self.cambiar_foco('nombre')
+            self.cursor.reset()
+
+    def cambiar_foco(self, foco):
+        """Cambia el foco de selección de un grupo a otro."""
+
+        if foco == 'menu':
+            self.foco = 'menu'
+            self.btn.ser_elegido()
+
+        elif foco == 'nombre':
+            self.deselect_all(self.botones)
+            self.foco = 'nombre'
+
+    def set_name(self):
+        print(''.join([spr.key for spr in self.area_input]))
+        # self.deregister()
+        # EventDispatcher.trigger('OpenMenu', self.nombre, {'value': self.current.nombre})
 
     def use_funcion(self, mode, key):
         if key in self.functions[mode]:
@@ -164,14 +212,12 @@ class NameScreen(BaseWidget):
             elif t.isSelected:
                 t.ser_deselegido()
 
-        if not self.hidden:
-            self.parent.canvas.blit(self.area_teclas, self.area_rect)
-            self.teclas.draw(self.parent.canvas)
-            self.lineas.draw(self.parent.canvas)
-            self.area_input.draw(self.parent.canvas)
-
-    def toggle_hidden(self):
-        self.hidden = not self.hidden
+        self.botones.update()
+        self.botones.draw(self.canvas)
+        self.canvas.blit(self.area_teclas, self.area_rect)
+        self.teclas.draw(self.canvas)
+        self.lineas.draw(self.canvas)
+        self.area_input.draw(self.canvas)
 
 
 class Character(BaseWidget):
@@ -253,6 +299,8 @@ class Cursor:
         self.x, self.y = x, y
         self.pos = x, y
 
+        self._x, self._y = x, y
+
     def mover(self, dx, dy):
         self.x += dx
         self.y += dy
@@ -261,6 +309,11 @@ class Cursor:
         if self.y < 0:
             self.y = 0
 
+        self.pos = self.x, self.y
+
+    def reset(self):
+        self.x = self._x
+        self.y = self._y
         self.pos = self.x, self.y
 
     def set_current(self, tecla):

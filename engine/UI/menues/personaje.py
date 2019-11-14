@@ -5,8 +5,8 @@ from pygame import font, Rect
 from engine.libs import render_textrect
 from .menu import Menu
 
-from .char_c_name import NameScreen
-from .char_c_model import ModelScreen
+from .name import MenuName
+from .model import MenuModel
 from .char_c_attrs import AttrsScreen
 
 
@@ -17,7 +17,7 @@ class MenuNuevo(Menu):
     def __init__(self):
         super().__init__('Personaje')
         w, h = self.canvas.get_size()
-        self.screens = [NameScreen(self), ModelScreen(self), AttrsScreen(self)]
+        self.screens = [MenuName(self), MenuModel(self), AttrsScreen(self)]
         self.screens[2].toggle_hidden()
         self.current_screen = self.screens[self.curr_scr_idx]
         self.f_ins = font.SysFont('Verdana', 14, italic=True)

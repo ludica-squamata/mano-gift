@@ -2,16 +2,20 @@ from .pausa import MenuPausa
 from .equipo import MenuEquipo, _boton_equipo
 from .opciones import MenuOpciones, _boton_opciones
 from .cargar import MenuCargar, _boton_cargar
-from .personaje import MenuNuevo
+# from .personaje import MenuNuevo
 from .principal import MenuPrincipal
 from .menu import Menu
+from .model import MenuModel
+from .name import MenuName
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
                  'MenuCargar': MenuCargar,
-                 'MenuNuevo': MenuNuevo,
+                 # 'MenuNuevo': MenuNuevo,
                  'MenuPrincipal': MenuPrincipal,
-                 'MenuOpciones': MenuOpciones
+                 'MenuOpciones': MenuOpciones,
+                 'MenuModel': MenuModel,
+                 'MenuName': MenuName
                  }
 
 # estructuras para los menues raiz Principal y Pausa.
@@ -22,12 +26,13 @@ default_menus = {'MenuPausa': MenuPausa,
 pause_menus = [
     'MenuEquipo',
     'MenuOpciones',
-    'MenuCargar'
+    'MenuCargar',
+    'MenuModel'
 ]
 
 # Botones del Menú Principal
 inital_menus = [
-    'MenuNuevo',
+    # 'MenuNuevo',
     'MenuCargar',
     'MenuOpciones'
 ]

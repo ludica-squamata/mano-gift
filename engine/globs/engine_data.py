@@ -13,6 +13,7 @@ class EngineData:
     MENUS = {}
     setKey = False
     save_data = {}
+    character = {}
 
     @classmethod
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
@@ -137,6 +138,10 @@ class EngineData:
         EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)
+
+    @classmethod
+    def create_character(cls, event):
+        cls.character.update(event.data)
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
