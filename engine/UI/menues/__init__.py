@@ -7,6 +7,7 @@ from .principal import MenuPrincipal
 from .menu import Menu
 from .model import MenuModel
 from .name import MenuName
+from .ability import MenuAbility
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
@@ -15,7 +16,8 @@ default_menus = {'MenuPausa': MenuPausa,
                  'MenuPrincipal': MenuPrincipal,
                  'MenuOpciones': MenuOpciones,
                  'MenuModel': MenuModel,
-                 'MenuName': MenuName
+                 'MenuName': MenuName,
+                 'MenuAbility': MenuAbility
                  }
 
 # estructuras para los menues raiz Principal y Pausa.
@@ -27,7 +29,7 @@ pause_menus = [
     'MenuEquipo',
     'MenuOpciones',
     'MenuCargar',
-    'MenuModel'
+    'MenuAbility'
 ]
 
 # Botones del Menú Principal

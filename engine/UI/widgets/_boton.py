@@ -14,12 +14,15 @@ class Boton(BaseWidget):
     timer = 0
     animar = False
 
-    def __init__(self, nombre, ancho_mod, comando, pos):
+    def __init__(self, nombre, ancho_mod, comando, pos, texto=None):
         self.tipo = 'boton'
         self.comando = None
         self.direcciones = {}
         self.nombre = nombre
-        sel, pre, uns, dis = self.crear(nombre, ancho_mod)
+        if texto is None:
+            sel, pre, uns, dis = self.crear(nombre, ancho_mod)
+        else:
+            sel, pre, uns, dis = self.crear(texto, ancho_mod)
         self.img_sel = sel
         self.img_pre = pre
         self.img_uns = uns

@@ -125,7 +125,7 @@ class Menu(EventAware, BaseWidget):
 
     def establecer_botones(self, botones, ancho_mod):
         for btn in botones:
-            boton = Boton(btn['nombre'], ancho_mod, btn['comando'], btn['pos'])
+            boton = Boton(btn['nombre'], ancho_mod, btn['comando'], btn['pos'], texto=btn.get('texto', None))
             for direccion in ['arriba', 'abajo', 'izquierda', 'derecha']:
                 if direccion in btn['direcciones']:
                     boton.direcciones[direccion] = btn['direcciones'][direccion]
