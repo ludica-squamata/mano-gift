@@ -5,7 +5,7 @@
     "Fuerza": 2,
     "Carisma": 5,
     "Agilidad": 1,
-    "Resistencia": 2,
+    "Resistencia": 20,
     "Inteligencia": 0,
     "Percepción": 5
   },
@@ -16,5 +16,5 @@
     "diag_face": "mobs/imagenes/npc_face.png"
   },
   "alpha": "mobs/colisiones/human_walk.png",
-  "AI": "new_wander"
+  "AI": "ai"
 }

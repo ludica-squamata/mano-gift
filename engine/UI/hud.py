@@ -20,7 +20,7 @@ class ProgressBar(Sprite):
     tracked_stat = ''
     do_subdivision = True
 
-    def __init__(self, maximo, stat, color_actual, color_fondo, x, y, w, h):
+    def __init__(self, maximo, stat, color_actual, color_fondo, x, y, w, h, focus=None):
         super().__init__()
 
         self.colorAct = color_actual
@@ -32,9 +32,12 @@ class ProgressBar(Sprite):
 
         self.x, self.y = x, y
         self.w, self.h = w, h
-        self.draw_area_rect = Rect(1, 1, self.w - 1, self.h - 2)
+        self.draw_area_rect = Rect(1, 1, self.w - 2, self.h - 2)
         self.image = Surface((self.w, self.h))
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        EventDispatcher.register(self.toggle, "TogglePause")
+        if focus is not None:
+            self.set_focus(focus)
 
     def _actual(self):
         x, y, w, h = self.draw_area_rect
@@ -65,6 +68,18 @@ class ProgressBar(Sprite):
             self.set_variable(actual=event.data["value"])
             self.actualizar()
 
+    def show(self):
+        Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+
+    def hide(self):
+        Renderer.del_overlay(self)
+
+    def toggle(self, event):
+        if event.data['value']:
+            self.hide()
+        else:
+            self.show()
+
     def set_focus(self, focus):
         self.focus = focus
 
@@ -84,6 +99,7 @@ class CharacterName(Sprite):
         self.text = focus.character_name
         self.image = self.generate([255, 255, 255])
         self.rect = self.image.get_rect(topleft=(x, y))
+        EventDispatcher.register(self.toggle, "TogglePause")
 
     def generate(self, fg_color):
         outline = []
@@ -115,6 +131,18 @@ class CharacterName(Sprite):
     def colorear(self, bg_color):
         self.image = self.generate(bg_color)
 
+    def show(self):
+        Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+
+    def hide(self):
+        Renderer.del_overlay(self)
+
+    def toggle(self, event):
+        if event.data['value']:
+            self.hide()
+        else:
+            self.show()
+
 
 class MiniBar(ProgressBar):
     do_subdivision = False
@@ -122,16 +150,21 @@ class MiniBar(ProgressBar):
 
     def __init__(self):
         super().__init__(0, 'Salud', (0, 255, 0), (0, 150, 0), 0, 0, 32, 5)
+        EventDispatcher.register(self.event_update, 'MobWounded', 'UsedItem')
         self.timer = 0
 
     def event_update(self, event):
         mob = event.data['mob']
         stat = event.data.get('stat', None)
         if not mob.has_hud and stat == self.tracked_stat:
-            self.show(event)
+            self.set_focus(event.data['mob'])
+            self.show()
 
-    def show(self, event):
-        self.set_focus(event.data['mob'])
+    def toggle(self, event):
+        # hook para evitar un crash. No tocar.
+        pass
+
+    def show(self):
         self.maximo = self.focus['SaludMax']
         self.actual = self.focus['Salud']
 
@@ -160,10 +193,6 @@ class MiniBar(ProgressBar):
 
 
 class HUD:
-    is_shown = False
-    BarraVida = None
-    BarraMana = None
-    screen_name = None
 
     @classmethod
     def init(cls):
@@ -172,46 +201,19 @@ class HUD:
         _rect = Renderer.camara.rect
         w, h = ANCHO // 4, CUADRO // 4
         dx, dy = _rect.x + 3, _rect.y + 50
-        cls.BarraVida = ProgressBar(focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h)
-        cls.BarraMana = ProgressBar(focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h)
-        cls.BarraVida.set_variable(divisiones=4)
-        cls.screen_name = CharacterName(focus, dx, dy - 32)
+        barra_vida = ProgressBar(focus["SaludMax"], 'Salud', (200, 50, 50), (100, 0, 0), dx, dy - 11, w, h, focus)
+        barra_mana = ProgressBar(focus['ManaMax'], 'Mana', (125, 0, 255), (75, 0, 100), dx, dy - 1, w, h, focus)
+        barra_vida.set_variable(divisiones=4)
+        CharacterName(focus, dx, dy - 32)
 
-        EventDispatcher.register(cls.BarraVida.event_update, 'MobWounded', 'UsedItem')
-        EventDispatcher.register(cls.toggle, "TogglePause")
+        EventDispatcher.register(barra_vida.event_update, 'MobWounded', 'UsedItem')
         EventDispatcher.deregister(cls.init, 'LoadGame')
 
-        cls.BarraVida.set_focus(focus)
-        cls.BarraMana.set_focus(focus)
-
         if FEATURE_SHOW_MINIBARS:
-            cls.minibars = MiniBar()
-            EventDispatcher.register(cls.minibars.event_update, 'MobWounded', 'UsedItem')
+            MiniBar()
 
-        cls.BarraVida.actualizar()
-        cls.BarraMana.actualizar()
-
-        cls.show()
-
-    @classmethod
-    def toggle(cls, event):
-        if event.data['value']:
-            cls.hide()
-        else:
-            cls.show()
-
-    @classmethod
-    def show(cls):
-        if not cls.is_shown:
-            Renderer.add_overlay(cls.BarraVida, CAPA_OVERLAYS_HUD)
-            Renderer.add_overlay(cls.BarraMana, CAPA_OVERLAYS_HUD)
-            Renderer.add_overlay(cls.screen_name, CAPA_OVERLAYS_HUD)
-            cls.is_shown = True
-
-    @classmethod
-    def hide(cls):
-        cls.is_shown = False
-        Renderer.clear(layer=CAPA_OVERLAYS_HUD)
+        barra_vida.actualizar()
+        barra_mana.actualizar()
 
 
 EventDispatcher.register(lambda e: HUD.init(), 'LoadGame')
