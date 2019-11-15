@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+     y="0px"
+     width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 <path id="Colorear" fill="#FFFFFF" stroke="#000000" d="M10.836,28.622c-0.738-0.213-1.305-0.806-1.898-1.261
 	c-0.717-0.551-1.483-0.93-2.234-1.411c-0.494-0.318-1.166-0.867-0.938-1.533c0.396-1.158,1.686-1.229,1.56-2.672
 	c-0.109-1.24-1.111-2.162-2.045-2.888c-0.548-0.426-1.586-0.955-1.467-1.83c0.141-1.025,1.627-1.933,2.403-2.417
@@ -13,31 +14,31 @@
 	c-1.711,0.226-1.531,2.476-1.068,3.771c0.252,0.701,0.648,0.976,0.734,1.731c0.068,0.597,0.223,1.951-0.014,2.48
 	c-0.523,1.168-2.906,2.305-3.984,2.771c-1.445,0.625-3.656,0.248-5.252,0.248c-1.459,0-2.919,0.008-4.378,0.002
 	c-0.563-0.002-1.197,0.08-1.746-0.049C10.906,28.643,10.872,28.632,10.836,28.622z"/>
-<g id="Detalles">
+    <g id="Detalles">
 	<path fill="none" stroke="#000000" stroke-linecap="round" d="M10.004,23.279c2.5-2.688,10.125-2.813,12.75,0.125"/>
-	<path fill="none" stroke="#000000" stroke-linecap="round" d="M21.316,24.628"/>
-	<path fill="none" stroke="#000000" stroke-linecap="round" d="M11.942,24.753"/>
-	<g>
+        <path fill="none" stroke="#000000" stroke-linecap="round" d="M21.316,24.628"/>
+        <path fill="none" stroke="#000000" stroke-linecap="round" d="M11.942,24.753"/>
+        <g>
 		<line fill="none" stroke="#000000" x1="8.667" y1="9.375" x2="13.458" y2="14"/>
-		<line fill="none" stroke="#000000" x1="8.583" y1="14.083" x2="13.292" y2="9.125"/>
+            <line fill="none" stroke="#000000" x1="8.583" y1="14.083" x2="13.292" y2="9.125"/>
 	</g>
-	<g>
+        <g>
 		<line fill="none" stroke="#000000" x1="18.416" y1="9.292" x2="23.208" y2="13.917"/>
-		<line fill="none" stroke="#000000" x1="18.333" y1="14" x2="23.041" y2="9.042"/>
+            <line fill="none" stroke="#000000" x1="18.333" y1="14" x2="23.041" y2="9.042"/>
 	</g>
-	<path fill="#68190D" stroke="#000000" stroke-linecap="round" d="M18.833,25.833c-1.942,0.206-2.5-4.333-2.5-4.333l3.167,0.208
+        <path fill="#68190D" stroke="#000000" stroke-linecap="round" d="M18.833,25.833c-1.942,0.206-2.5-4.333-2.5-4.333l3.167,0.208
 		C19.5,21.708,20.792,25.625,18.833,25.833z"/>
-	<line fill="none" stroke="#000000" stroke-width="0.25" x1="18.125" y1="22.594" x2="18.25" y2="23.531"/>
+        <line fill="none" stroke="#000000" stroke-width="0.25" x1="18.125" y1="22.594" x2="18.25" y2="23.531"/>
 </g>
-<g id="Picker">
+    <g id="Picker">
 	<rect x="-19.544" y="1.085" fill="#4561AC" stroke="#20439B" width="5" height="4"/>
-	<rect x="-19.544" y="7.49" fill="#FEDE2F" stroke="#F9A250" width="5" height="4"/>
-	<rect x="-19.544" y="13.894" fill="#ED1E24" stroke="#9C1C4F" width="5" height="4"/>
-	<rect x="-19.544" y="20.298" fill="#2DB34B" stroke="#00421C" width="5" height="4"/>
-	<rect x="-11.878" y="1.085" fill="#7182B1" stroke="#51669B" width="5" height="4"/>
-	<rect x="-11.878" y="7.49" fill="#C9BB6F" stroke="#B59476" width="5" height="4"/>
-	<rect x="-11.878" y="13.894" fill="#EC777A" stroke="#9C4D6D" width="5" height="4"/>
-	<rect x="-11.878" y="20.298" fill="#769C7F" stroke="#3D624D" width="5" height="4"/>
-	<rect x="-19.5" y="26.417" fill="#FFFFFF" stroke="#000000" width="12.667" height="3"/>
+        <rect x="-19.544" y="7.49" fill="#FEDE2F" stroke="#F9A250" width="5" height="4"/>
+        <rect x="-19.544" y="13.894" fill="#ED1E24" stroke="#9C1C4F" width="5" height="4"/>
+        <rect x="-19.544" y="20.298" fill="#2DB34B" stroke="#00421C" width="5" height="4"/>
+        <rect x="-11.878" y="1.085" fill="#7182B1" stroke="#51669B" width="5" height="4"/>
+        <rect x="-11.878" y="7.49" fill="#C9BB6F" stroke="#B59476" width="5" height="4"/>
+        <rect x="-11.878" y="13.894" fill="#EC777A" stroke="#9C4D6D" width="5" height="4"/>
+        <rect x="-11.878" y="20.298" fill="#769C7F" stroke="#3D624D" width="5" height="4"/>
+        <rect x="-19.5" y="26.417" fill="#FFFFFF" stroke="#000000" width="12.667" height="3"/>
 </g>
 </svg>

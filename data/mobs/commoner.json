@@ -1,19 +1,20 @@
 {
-  "ID":1,"nombre":"commoner",
-  "atributos":{
-    "Fuerza":2,
-    "Carisma":5,
-    "Agilidad":1,
-    "Resistencia":20,
-    "Inteligencia":1,
-    "Percepción":5
+  "ID": 1,
+  "nombre": "commoner",
+  "atributos": {
+    "Fuerza": 2,
+    "Carisma": 5,
+    "Agilidad": 1,
+    "Resistencia": 20,
+    "Inteligencia": 1,
+    "Percepción": 5
   },
-  "imagenes":{
-    "idle":"mobs/imagenes/commoner12.png",
-    "atk":null,
-    "death":null,
-    "diag_face":"mobs/imagenes/npc_face.png"
+  "imagenes": {
+    "idle": "mobs/imagenes/commoner12.png",
+    "atk": null,
+    "death": null,
+    "diag_face": "mobs/imagenes/npc_face.png"
   },
-  "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"ai"
+  "alpha": "mobs/colisiones/human_walk.png",
+  "AI": "ai"
 }

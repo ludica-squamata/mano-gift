@@ -1,44 +1,81 @@
 {
-  "tipo":"estructura3D",
-  "nombre":"CasaLados",
-  "componentes":{
-    "front":{
-      "casa_lados":[[0,0,0]],
-      "puerta":[[18,48,1]]
+  "tipo": "estructura3D",
+  "nombre": "CasaLados",
+  "componentes": {
+    "front": {
+      "casa_lados": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "puerta": [
+        [
+          18,
+          48,
+          1
+        ]
+      ]
     },
-    "left":{
-      "casa_lados":[[0,0,0]]
+    "left": {
+      "casa_lados": [
+        [
+          0,
+          0,
+          0
+        ]
+      ]
     },
-    "right":{
-      "casa_lados":[[0,0,0]]
+    "right": {
+      "casa_lados": [
+        [
+          0,
+          0,
+          0
+        ]
+      ]
     },
-    "back":{
-      "casa_lados":[[0,0,0]]
+    "back": {
+      "casa_lados": [
+        [
+          0,
+          0,
+          0
+        ]
+      ]
     }
   },
-  "referencias":{
-    "casa_lados":"props/casa_lados.png",
-    "puerta":{
-      "ID":4,"tipo":"operable",
-      "peso":10, "volumen":5,
-      "image":"props/puerta_c.png",
-      "propiedades":["solido"],
-      "proyecta_sombra":false,
-      "operable":[
-          {"ID":0,
-           "image":"props/puerta_c.png",
-           "solido":true,
-           "next":1
-          },
-          {"ID":1,
-           "image":"props/puerta_a.png",
-           "solido":false,
-           "next":0
-          }]
+  "referencias": {
+    "casa_lados": "props/casa_lados.png",
+    "puerta": {
+      "ID": 4,
+      "tipo": "operable",
+      "peso": 10,
+      "volumen": 5,
+      "image": "props/puerta_c.png",
+      "propiedades": [
+        "solido"
+      ],
+      "proyecta_sombra": false,
+      "operable": [
+        {
+          "ID": 0,
+          "image": "props/puerta_c.png",
+          "solido": true,
+          "next": 1
+        },
+        {
+          "ID": 1,
+          "image": "props/puerta_a.png",
+          "solido": false,
+          "next": 0
+        }
+      ]
     }
   },
-  "width":128, "height":128,
-  "cara":"front",
-  "proyecta_sombra":true
-
+  "width": 128,
+  "height": 128,
+  "cara": "front",
+  "proyecta_sombra": true
 }

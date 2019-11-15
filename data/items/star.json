@@ -1,14 +1,16 @@
 {
-  "nombre":"Estrella",
-  "ID":0,"tipo":"agarrable",
+  "nombre": "Estrella",
+  "ID": 0,
+  "tipo": "agarrable",
   "subtipo": "consumible",
-  "peso":2, "volumen":0,
+  "peso": 2,
+  "volumen": 0,
   "image": "props/star.png",
-  "propiedades":[],
-  "efecto":{
-    "des":"Aumenta tu carisma en 2.",
-    "stat":"Carisma",
-    "mod":2,
+  "propiedades": [],
+  "efecto": {
+    "des": "Aumenta tu carisma en 2.",
+    "stat": "Carisma",
+    "mod": 2,
     "method": "incremental"
   }
 }

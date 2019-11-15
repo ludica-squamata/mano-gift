@@ -110,10 +110,15 @@ class EngineData:
     def pop_menu(cls, event=None):
         from engine.UI.menues import default_menus
 
-        if event is None:
+        if event is None and not len(cls.acceso_menues):
             titulo = 'Pausa'
-        else:
+        elif event is not None:
             titulo = event.data['value']
+        else:
+            # esto evita que se abra el menú Pausa desde Menú Cargar (lo que provoca un crash).
+            # es necesario porque Modos ya no existe, y sería la única otra forma
+            # de evitar que pop_menu() respodiese al tap de la tecla Menu.
+            return
 
         if titulo == 'Previous':
             del cls.acceso_menues[-1]
@@ -134,7 +139,6 @@ class EngineData:
             menu.reset()
 
         menu.register()
-        cls.MODO = 'Menu'
         EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})
         Renderer.add_overlay(menu, CAPA_OVERLAYS_MENUS)
         Renderer.overlays.move_to_front(menu)

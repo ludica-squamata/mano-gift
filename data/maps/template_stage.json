@@ -1,20 +1,39 @@
 {
-    "entradas": {
-      "<nombre>": {
-        "chunk":"",
-        "pos": [0,0]
-      }
-    },
-    "salidas":[{
-      "stage":"",
-      "nombre":"",
-      "rect":[0,0,0,0],
-      "chunk":"",
-      "entrada":"",
-      "direcciones":[]}
-    ],
-    "ambiente":"",
-    "amanece":[0, 0],
-    "atardece":[0, 0],
-    "anochece":[0, 0]
+  "entradas": {
+    "<nombre>": {
+      "chunk": "",
+      "pos": [
+        0,
+        0
+      ]
+    }
+  },
+  "salidas": [
+    {
+      "stage": "",
+      "nombre": "",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "chunk": "",
+      "entrada": "",
+      "direcciones": []
+    }
+  ],
+  "ambiente": "",
+  "amanece": [
+    0,
+    0
+  ],
+  "atardece": [
+    0,
+    0
+  ],
+  "anochece": [
+    0,
+    0
+  ]
 }

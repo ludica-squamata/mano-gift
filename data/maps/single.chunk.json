@@ -1,22 +1,58 @@
 {
-  "fondo":"maps/fondos/prueba.png",
-  "colisiones":"maps/colisiones/prueba.png",
+  "fondo": "maps/fondos/prueba.png",
+  "colisiones": "maps/colisiones/prueba.png",
   "props": {
-    "star":["star"],
-    "arbol":[[100,100]],
-    "crate":[[200,200]],
-    "casa_cerrada":[[600,600]],
-    "armor":[[254,256]],
-    "banana":[[464,464]]
+    "star": [
+      "star"
+    ],
+    "arbol": [
+      [
+        100,
+        100
+      ]
+    ],
+    "crate": [
+      [
+        200,
+        200
+      ]
+    ],
+    "casa_cerrada": [
+      [
+        600,
+        600
+      ]
+    ],
+    "armor": [
+      [
+        254,
+        256
+      ]
+    ],
+    "banana": [
+      [
+        464,
+        464
+      ]
+    ]
   },
-  "mobs": {"hero":["centre"],"commoner":[[480,480]]
+  "mobs": {
+    "hero": [
+      "centre"
+    ],
+    "commoner": [
+      [
+        480,
+        480
+      ]
+    ]
   },
-  "limites":{
+  "limites": {
   },
-  "refs":{
-    "arbol":"props/arbol_escalado.png",
-    "crate":"crate.json",
-    "casa_cerrada":"casa_cerrada.json",
-    "armor":"armor.json"
+  "refs": {
+    "arbol": "props/arbol_escalado.png",
+    "crate": "crate.json",
+    "casa_cerrada": "casa_cerrada.json",
+    "armor": "armor.json"
   }
 }

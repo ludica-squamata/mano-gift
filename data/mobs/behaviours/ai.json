@@ -1,32 +1,108 @@
 {
-  "head":{
-    "script":{
-      "behaviours/wander":["GetMap","IsTalking","GetRandomDir","GetRoute","NextPosition","Move","Wait"],
-      "behaviours/ai":["HasSetLocation","ReachExit"]
-      },
-    "special":{
-      "Repeater":{"ID":null,"times":0}
+  "head": {
+    "script": {
+      "behaviours/wander": [
+        "GetMap",
+        "IsTalking",
+        "GetRandomDir",
+        "GetRoute",
+        "NextPosition",
+        "Move",
+        "Wait"
+      ],
+      "behaviours/ai": [
+        "HasSetLocation",
+        "ReachExit"
+      ]
+    },
+    "special": {
+      "Repeater": {
+        "ID": null,
+        "times": 0
       }
+    }
   },
-  "body":
-  {
-    "0":{"name":"Repeater","child":1},
-    "1":{"name":"Sequence","children":[2,3,9]},
-    "2":{"name":"GetMap"},
-    "3":{"name":"Succeeder","child":4},
-    "4":{"name":"Selector","children":[5,6]},
-    "5":{"name":"HasSetLocation"},
-    "6":{"name":"Sequence","children":[7,8]},
-    "7":{"name":"GetRandomDir"},
-    "8":{"name":"Wait"},
-    "9":{"name":"Sequence","children":[10,11]},
-    "10":{"name":"GetRoute"},
-    "11":{"name":"UntilFail","child": 12},
-    "12":{"name":"Sequence","children":[13,14,16,17]},
-    "13":{"name":"NextPosition"},
-    "14":{"name":"Inverter","child":15},
-    "15":{"name":"IsTalking"},
-    "16":{"name":"ReachExit"},
-    "17":{"name":"Move"}
+  "body": {
+    "0": {
+      "name": "Repeater",
+      "child": 1
+    },
+    "1": {
+      "name": "Sequence",
+      "children": [
+        2,
+        3,
+        9
+      ]
+    },
+    "2": {
+      "name": "GetMap"
+    },
+    "3": {
+      "name": "Succeeder",
+      "child": 4
+    },
+    "4": {
+      "name": "Selector",
+      "children": [
+        5,
+        6
+      ]
+    },
+    "5": {
+      "name": "HasSetLocation"
+    },
+    "6": {
+      "name": "Sequence",
+      "children": [
+        7,
+        8
+      ]
+    },
+    "7": {
+      "name": "GetRandomDir"
+    },
+    "8": {
+      "name": "Wait"
+    },
+    "9": {
+      "name": "Sequence",
+      "children": [
+        10,
+        11
+      ]
+    },
+    "10": {
+      "name": "GetRoute"
+    },
+    "11": {
+      "name": "UntilFail",
+      "child": 12
+    },
+    "12": {
+      "name": "Sequence",
+      "children": [
+        13,
+        14,
+        16,
+        17
+      ]
+    },
+    "13": {
+      "name": "NextPosition"
+    },
+    "14": {
+      "name": "Inverter",
+      "child": 15
+    },
+    "15": {
+      "name": "IsTalking"
+    },
+    "16": {
+      "name": "ReachExit"
+    },
+    "17": {
+      "name": "Move"
+    }
   }
 }

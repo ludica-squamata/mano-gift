@@ -19,7 +19,8 @@ class MenuCargar(Menu):
             'accion': self.cargar,
             'contextual': self.cancelar,
             'arriba': lambda: self.elegir_opcion('arriba'),
-            'abajo': lambda: self.elegir_opcion('abajo')
+            'abajo': lambda: self.elegir_opcion('abajo'),
+            'menu': self.cargar
         })
         self.functions['hold'].update({
             'arriba': lambda: self.elegir_opcion('arriba'),

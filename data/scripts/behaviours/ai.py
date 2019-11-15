@@ -34,6 +34,6 @@ class ReachExit(Leaf):
         mapa = e.stage
         if mapa.mascara_salidas.overlap(e.mask, rect.topleft) is not None:
             r, g, b, a = mapa.imagen_salidas.get_at(rect.topleft)
-            mapa.salidas[b*255+g].trigger(e)
+            mapa.salidas[b * 255 + g].trigger(e)
 
         return Success
