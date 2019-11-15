@@ -26,4 +26,5 @@ FEATURE_ROTACION_MAPA = False
 FEATURE_MENUS_ADICIONALES = False
 
 # features opcionales para transformar al engine
-FEATURE_SHOW_MINIBARS = True  # PyRTS
+FEATURE_SHOW_MINIBARS = False  # PyRTS
+FEATURE_FLOATING_NUMBERS = True

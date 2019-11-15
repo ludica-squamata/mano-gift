@@ -8,7 +8,12 @@ class Combativo(Sensitivo, Animado):
 
     def hurt(self, damage):
         self['Salud'] -= damage
-        EventDispatcher.trigger('MobWounded', self.tipo, {'mob': self, "value": self['Salud'], "stat": "Salud"})
+        EventDispatcher.trigger('MobWounded', self.tipo,
+                                {'mob': self,
+                                 "value": self['Salud'],
+                                 "stat": "Salud",
+                                 "factor": -damage}
+                                )
 
         if self['Salud'] <= 0:
             if self.death_img is not None:

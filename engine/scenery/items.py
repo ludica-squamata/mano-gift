@@ -37,7 +37,8 @@ class Consumible(Item):
             valor = actual + mod
             mob[stat] = valor
 
-        EventDispatcher.trigger('UsedItem', self.nombre, {'mob': mob, 'stat': stat, 'value': valor})
+        m, s, v, f, h = 'mob', 'stat', 'value', 'factor', 'method'
+        EventDispatcher.trigger('UsedItem', self.nombre, {m: mob, s: stat, v: valor, f: mod, h: method})
         return mob.inventario.remover(self)
 
 

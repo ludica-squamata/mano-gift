@@ -1,4 +1,5 @@
-from engine.globs import CAPA_OVERLAYS_HUD, ANCHO, CUADRO, TEXT_FG, Mob_Group, FEATURE_SHOW_MINIBARS
+from engine.globs import CAPA_OVERLAYS_HUD, FEATURE_SHOW_MINIBARS, FEATURE_FLOATING_NUMBERS
+from engine.globs import ANCHO, CUADRO, TEXT_FG, Mob_Group
 from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Surface, Rect, draw, SRCALPHA, font
 from engine.globs.renderer import Renderer
@@ -192,6 +193,38 @@ class MiniBar(ProgressBar):
                 self.hide()
 
 
+class FloatingNumber(Sprite):
+    image = None
+    rect = None
+    active = True
+    timer = 0
+
+    def __init__(self):
+        super().__init__()
+        self.fuente = font.SysFont('Verdana', 11)
+        EventDispatcher.register(self.show, 'MobWounded', 'UsedItem')
+
+    def show(self, event):
+        factor = event.data['factor']
+        mob_rect = event.data['mob'].rect
+        if factor < 0:
+            color = 255, 0, 0
+        else:
+            color = 0, 255, 0
+
+        string = str(factor).lstrip('-')
+        self.image = self.fuente.render(string, 1, color)
+        self.rect = self.image.get_rect(midbottom=mob_rect.midtop)
+        Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+
+    def update(self):
+        self.timer += 1
+        self.rect.centery -= 1
+        if self.timer == 15:
+            self.timer = 0
+            Renderer.del_overlay(self)
+
+
 class HUD:
 
     @classmethod
@@ -211,6 +244,8 @@ class HUD:
 
         if FEATURE_SHOW_MINIBARS:
             MiniBar()
+        elif FEATURE_FLOATING_NUMBERS:
+            FloatingNumber()
 
         barra_vida.actualizar()
         barra_mana.actualizar()
