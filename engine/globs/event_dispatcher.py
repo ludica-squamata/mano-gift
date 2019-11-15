@@ -15,7 +15,6 @@ class EventDispatcher:
         :param listener:es la referencia a una funcion. la misma debe aceptar como parametro un
                         objeto de tipo AzoeEvent.
         :param events:lista de string con los eventos que desean registrarse.
-        :type events:tuple
         :return:None
         """
         for event in events:
@@ -32,7 +31,6 @@ class EventDispatcher:
         :param listener:la funcion que desea borrarse
         :param events:lista de string con los eventos que desean borrarse
         :type listener:(AzoeEvent)->None
-        :type events:tuple
         :return:None
         """
         for event in events:
