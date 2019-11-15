@@ -1,19 +1,20 @@
 {
-  "ID":6,"nombre":"girl",
-  "atributos":{
-    "Fuerza":2,
-    "Carisma":5,
-    "Agilidad":1,
-    "Resistencia":2,
-    "Inteligencia":0,
-    "Percepción":5
+  "ID": 6,
+  "nombre": "girl",
+  "atributos": {
+    "Fuerza": 2,
+    "Carisma": 5,
+    "Agilidad": 1,
+    "Resistencia": 2,
+    "Inteligencia": 0,
+    "Percepción": 5
   },
-  "imagenes":{
-    "idle":"mobs/imagenes/green_girl.png",
-    "atk":null,
-    "death":null,
-    "diag_face":"mobs/imagenes/npc_face.png"
+  "imagenes": {
+    "idle": "mobs/imagenes/green_girl.png",
+    "atk": null,
+    "death": null,
+    "diag_face": "mobs/imagenes/npc_face.png"
   },
-  "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"new_wander"
+  "alpha": "mobs/colisiones/human_walk.png",
+  "AI": "new_wander"
 }

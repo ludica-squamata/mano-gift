@@ -1,23 +1,40 @@
 {
   "entradas": {
-    "center":{
-      "chunk":"white",
-      "pos":[32,32]
+    "center": {
+      "chunk": "white",
+      "pos": [
+        32,
+        32
+      ]
     }
   },
-  "salidas":[
+  "salidas": [
     {
-      "stage":"prueba",
-      "rect":[400,350,32,32],
-      "chunk":"black",
-      "nombre":"black.salida1",
-      "entrada":"centre",
-      "direcciones":[]
+      "stage": "prueba",
+      "rect": [
+        400,
+        350,
+        32,
+        32
+      ],
+      "chunk": "black",
+      "nombre": "black.salida1",
+      "entrada": "centre",
+      "direcciones": []
     }
   ],
-  "ambiente":"exterior",
-  "amanece":[6,0],
-  "atardece":[17,0],
-  "anochece":[20,0],
-  "latitude":30
+  "ambiente": "exterior",
+  "amanece": [
+    6,
+    0
+  ],
+  "atardece": [
+    17,
+    0
+  ],
+  "anochece": [
+    20,
+    0
+  ],
+  "latitude": 30
 }

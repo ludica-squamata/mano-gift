@@ -1,51 +1,88 @@
 {
   "entradas": {
     "bottomright": {
-      "chunk":"single",
-      "pos": [750,750]
+      "chunk": "single",
+      "pos": [
+        750,
+        750
+      ]
     },
-    "topleft":{
-      "chunk":"single",
-      "pos": [32,32]
+    "topleft": {
+      "chunk": "single",
+      "pos": [
+        32,
+        32
+      ]
     },
-    "centre":{
-      "chunk":"single",
-      "pos":[400,400]
+    "centre": {
+      "chunk": "single",
+      "pos": [
+        400,
+        400
+      ]
     },
-    "topright":{
-      "chunk":"single",
-      "pos":[750,32]
+    "topright": {
+      "chunk": "single",
+      "pos": [
+        750,
+        32
+      ]
     },
-    "bottomleft":{
-      "chunk":"single",
-      "pos":[32,750]
+    "bottomleft": {
+      "chunk": "single",
+      "pos": [
+        32,
+        750
+      ]
     },
-    "star":{
-      "chunk":"single",
-      "pos":[432,432]
+    "star": {
+      "chunk": "single",
+      "pos": [
+        432,
+        432
+      ]
     }
   },
-  "salidas":[
+  "salidas": [
     {
-      "stage":"new",
-      "rect":[32,32,32,16],
-      "chunk":"single",
-      "nombre":"Single.salida1",
-      "entrada":"center",
-      "direcciones":[]
+      "stage": "new",
+      "rect": [
+        32,
+        32,
+        32,
+        16
+      ],
+      "chunk": "single",
+      "nombre": "Single.salida1",
+      "entrada": "center",
+      "direcciones": []
     },
     {
-      "stage":"new",
-      "rect":[608,608,32,16],
-      "chunk":"single",
-      "nombre":"Single.house",
-      "entrada":"center",
-      "direcciones":[]
+      "stage": "new",
+      "rect": [
+        608,
+        608,
+        32,
+        16
+      ],
+      "chunk": "single",
+      "nombre": "Single.house",
+      "entrada": "center",
+      "direcciones": []
     }
   ],
-  "ambiente":"exterior",
-  "amanece":[19,0],
-  "atardece":[17,0],
-  "anochece":[18,0],
-  "latitude":30
+  "ambiente": "exterior",
+  "amanece": [
+    19,
+    0
+  ],
+  "atardece": [
+    17,
+    0
+  ],
+  "anochece": [
+    18,
+    0
+  ],
+  "latitude": 30
 }

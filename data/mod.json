@@ -1,21 +1,35 @@
 {
-  "nombre":"Proyecto Mano-Gift",
-  "icono":"favicon.png",
-  "folders":{
-    "graficos":"grafs",
-    "dialogos":"dialogs",
-    "mapas":"maps",
-    "mobs":"mobs",
-    "items":"items",
-    "scripts":"scripts"
+  "nombre": "Proyecto Mano-Gift",
+  "icono": "favicon.png",
+  "folders": {
+    "graficos": "grafs",
+    "dialogos": "dialogs",
+    "mapas": "maps",
+    "mobs": "mobs",
+    "items": "items",
+    "scripts": "scripts"
   },
-  "use_latitude":true,
-  "caracteristicas":{
-    "Fuerza": ["ModCarga","DañoCC","Retroceso"],
-    "Agilidad":["Velocidad"],
-    "Resistencia": ["Salud","SaludMax"],
-    "Inteligencia":["Mana","ManaMax"],
+  "use_latitude": true,
+  "caracteristicas": {
+    "Fuerza": [
+      "ModCarga",
+      "DañoCC",
+      "Retroceso"
+    ],
+    "Agilidad": [
+      "Velocidad"
+    ],
+    "Resistencia": [
+      "Salud",
+      "SaludMax"
+    ],
+    "Inteligencia": [
+      "Mana",
+      "ManaMax"
+    ],
     "Carisma": [],
-    "Percepción":["Vista"]
+    "Percepción": [
+      "Vista"
+    ]
   }
 }

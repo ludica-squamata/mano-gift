@@ -1,60 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
-	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
-	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
-	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
-	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
-	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
-	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
-]>
+        <!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+        <!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+        <!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+        <!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+        <!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+        <!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+        <!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+        <!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+        ]>
 <svg version="1.1" id="Un_palote" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10.5px" height="32px"
-	 viewBox="10.167 -0.5 10.5 32" enable-background="new 10.167 -0.5 10.5 32" xml:space="preserve">
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10.5px"
+     height="32px"
+     viewBox="10.167 -0.5 10.5 32" enable-background="new 10.167 -0.5 10.5 32" xml:space="preserve">
 <switch>
 	<foreignObject requiredExtensions="&ns_ai;" x="0" y="0" width="1" height="1">
-		<i:pgfRef  xlink:href="#adobe_illustrator_pgf">
+		<i:pgfRef xlink:href="#adobe_illustrator_pgf">
 		</i:pgfRef>
 	</foreignObject>
-	<g i:extraneous="self">
+    <g i:extraneous="self">
 		<rect x="-147" y="-52" fill="#FFFFFF" stroke="#000000" width="128" height="128"/>
-		<g>
+        <g>
 			<path fill="#A57C52" stroke="#613917" stroke-width="0.25" d="M20.373,26.633c0,2.697-2.217,4.883-4.956,4.883
 				c-2.736,0-4.956-2.186-4.956-4.883V4.367h9.912V26.633z"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="15.47" y1="10.938" x2="15.47" y2="30.422"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="13.688" y1="10.239" x2="13.688" y2="29.723"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="11.907" y1="9.252" x2="11.907" y2="28.735"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="17.251" y1="10.239" x2="17.251" y2="29.723"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="19.033" y1="9.252" x2="19.033" y2="28.735"/>
-			<ellipse fill="#C59C6E" stroke="#412312" stroke-width="0.25" cx="15.417" cy="4.367" rx="4.956" ry="4.883"/>
-			<ellipse fill="#A57C52" stroke="#C59C6E" stroke-width="0.25" cx="15.345" cy="4.367" rx="4.001" ry="3.941"/>
-			<ellipse fill="#C59C6E" stroke="#A57C52" stroke-width="0.25" cx="15.345" cy="4.367" rx="3.001" ry="2.956"/>
-			<ellipse fill="#A57C52" stroke="#412312" stroke-width="0.25" cx="15.345" cy="4.367" rx="2" ry="1.971"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="15.47" y1="10.938" x2="15.47" y2="30.422"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="13.688" y1="10.239" x2="13.688" y2="29.723"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="11.907" y1="9.252" x2="11.907" y2="28.735"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="17.251" y1="10.239" x2="17.251" y2="29.723"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="19.033" y1="9.252" x2="19.033" y2="28.735"/>
+            <ellipse fill="#C59C6E" stroke="#412312" stroke-width="0.25" cx="15.417" cy="4.367" rx="4.956" ry="4.883"/>
+            <ellipse fill="#A57C52" stroke="#C59C6E" stroke-width="0.25" cx="15.345" cy="4.367" rx="4.001" ry="3.941"/>
+            <ellipse fill="#C59C6E" stroke="#A57C52" stroke-width="0.25" cx="15.345" cy="4.367" rx="3.001" ry="2.956"/>
+            <ellipse fill="#A57C52" stroke="#412312" stroke-width="0.25" cx="15.345" cy="4.367" rx="2" ry="1.971"/>
 		</g>
-		<g>
+        <g>
 			<path fill="#A57C52" stroke="#613917" stroke-width="0.25" d="M-63.197,57.043c0,10.789-8.867,19.531-19.824,19.531
 				c-10.945,0-19.824-8.742-19.824-19.531V-32.02h39.648V57.043z"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="-82.811" y1="-5.734" x2="-82.811" y2="72.199"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="-89.936" y1="-8.531" x2="-89.936" y2="69.402"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="-97.061" y1="-12.48" x2="-97.061" y2="65.453"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="-75.686" y1="-8.531" x2="-75.686" y2="69.402"/>
-			<line fill="none" stroke="#754D24" stroke-linecap="round" x1="-68.557" y1="-12.48" x2="-68.557" y2="65.453"/>
-			<ellipse fill="#C59C6E" stroke="#412312" stroke-width="0.25" cx="-83.021" cy="-32.02" rx="19.824" ry="19.531"/>
-			<path fill="#A57C52" stroke="#C59C6E" stroke-width="0.25" d="M-83.311-47.783c8.84,0,16.004,7.059,16.004,15.764
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="-82.811" y1="-5.734" x2="-82.811"
+                  y2="72.199"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="-89.936" y1="-8.531" x2="-89.936"
+                  y2="69.402"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="-97.061" y1="-12.48" x2="-97.061"
+                  y2="65.453"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="-75.686" y1="-8.531" x2="-75.686"
+                  y2="69.402"/>
+            <line fill="none" stroke="#754D24" stroke-linecap="round" x1="-68.557" y1="-12.48" x2="-68.557"
+                  y2="65.453"/>
+            <ellipse fill="#C59C6E" stroke="#412312" stroke-width="0.25" cx="-83.021" cy="-32.02" rx="19.824"
+                     ry="19.531"/>
+            <path fill="#A57C52" stroke="#C59C6E" stroke-width="0.25" d="M-83.311-47.783c8.84,0,16.004,7.059,16.004,15.764
 				c0,8.707-7.164,15.766-16.004,15.766c-8.836,0-16-7.059-16-15.766C-99.311-40.725-92.146-47.783-83.311-47.783z"/>
-			<path fill="#C59C6E" stroke="#A57C52" stroke-width="0.25" d="M-83.311-43.842c6.629,0,12.004,5.293,12.004,11.822
+            <path fill="#C59C6E" stroke="#A57C52" stroke-width="0.25" d="M-83.311-43.842c6.629,0,12.004,5.293,12.004,11.822
 				c0,6.531-5.375,11.824-12.004,11.824c-6.625,0-12-5.293-12-11.824C-95.311-38.549-89.936-43.842-83.311-43.842z"/>
-			<path fill="#A57C52" stroke="#412312" stroke-width="0.25" d="M-83.311-39.902c4.422,0,8,3.529,8,7.883
+            <path fill="#A57C52" stroke="#412312" stroke-width="0.25" d="M-83.311-39.902c4.422,0,8,3.529,8,7.883
 				c0,4.355-3.578,7.883-8,7.883c-4.418,0-8-3.527-8-7.883C-91.311-36.373-87.729-39.902-83.311-39.902z"/>
 		</g>
-		<text transform="matrix(1 0 0 1 -94.833 85.833)" font-family="'MyriadPro-Regular'" font-size="12">400%</text>
-		<text transform="matrix(1 0 0 1 -201.1665 15.167)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="12">128 </tspan><tspan x="21.011" y="0" font-family="'MyriadPro-Regular'" font-size="12">p</tspan><tspan x="27.671" y="0" font-family="'MyriadPro-Regular'" font-size="12">x</tspan></text>
-		<text transform="matrix(0.42 0 0 1 -166.3779 58.3164)" font-family="'MyriadPro-Regular'" font-size="160.7268">{</text>
+        <text transform="matrix(1 0 0 1 -94.833 85.833)" font-family="'MyriadPro-Regular'" font-size="12">400%</text>
+        <text transform="matrix(1 0 0 1 -201.1665 15.167)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="12">128 </tspan>
+            <tspan x="21.011" y="0" font-family="'MyriadPro-Regular'" font-size="12">p</tspan>
+            <tspan x="27.671" y="0" font-family="'MyriadPro-Regular'" font-size="12">x</tspan></text>
+        <text transform="matrix(0.42 0 0 1 -166.3779 58.3164)" font-family="'MyriadPro-Regular'"
+              font-size="160.7268">{</text>
 	</g>
 </switch>
-<i:pgf  id="adobe_illustrator_pgf">
+    <i:pgf id="adobe_illustrator_pgf">
 	<![CDATA[
 	eJzM3WuPJMl1p/n3Avgdcl8IIIFllZvfnfOq1WxqORDVBC8aaYRBo1iVZNeouqqnLtT0fvq1c+z/
 HLMTUTPDwaYG2lmI7V7pEZmRHr90s/DH/a//r1//9qdfvHr3h8efLs+mhx/91V//9ZfvH198fPf+

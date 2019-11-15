@@ -1,8 +1,8 @@
 {
-  "fondo":"maps/fondos/blanco.png",
-  "colisiones":"maps/colisiones/800.png",
+  "fondo": "maps/fondos/blanco.png",
+  "colisiones": "maps/colisiones/800.png",
   "props": {},
   "mobs": {},
-  "limites":{},
-  "refs":{}
+  "limites": {},
+  "refs": {}
 }

@@ -4,21 +4,23 @@
   "volumen": 0,
   "proyecta_sombra": false,
   "image": "props/btn_unpressed.png",
-  "propiedades": ["solido"],
+  "propiedades": [
+    "solido"
+  ],
   "operable": [
     {
       "ID": 0,
       "image": "props/btn_unpressed.png",
       "next": 1,
       "event": "boton_step",
-      "pressed":false
+      "pressed": false
     },
     {
       "ID": 1,
       "image": "props/btn_pressed_green.png",
       "next": 0,
       "event": "boton_step",
-      "pressed":true
+      "pressed": true
     }
   ],
   "script": "script.py"

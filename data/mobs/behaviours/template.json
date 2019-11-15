@@ -1,17 +1,45 @@
 {
-  "head":{
-    "script":{
-      "module":["<Functions>", "<SubClasses>"]
-      },
-    "special":{
-      "Repeater":{"ID":null,"times":0}
+  "head": {
+    "script": {
+      "module": [
+        "<Functions>",
+        "<SubClasses>"
+      ]
+    },
+    "special": {
+      "Repeater": {
+        "ID": null,
+        "times": 0
       }
+    }
   },
-  "body":{
-    "0":{"name":"Repeater","child":0},
-    "1":{"name":"Sequence","children":[0,0,0]},
-    "2":{"name":"Selector","children":[0,0,0]},
-    "3":{"name":"UntilFail","child":0},
-    "4":{"name":"<leaf>"}
+  "body": {
+    "0": {
+      "name": "Repeater",
+      "child": 0
+    },
+    "1": {
+      "name": "Sequence",
+      "children": [
+        0,
+        0,
+        0
+      ]
+    },
+    "2": {
+      "name": "Selector",
+      "children": [
+        0,
+        0,
+        0
+      ]
+    },
+    "3": {
+      "name": "UntilFail",
+      "child": 0
+    },
+    "4": {
+      "name": "<leaf>"
+    }
   }
 }

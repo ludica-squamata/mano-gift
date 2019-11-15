@@ -1,7 +1,11 @@
 {
-  "nombre":"Crate",
-  "ID":3,"tipo":"movible",
-  "peso":10, "volumen":4,
-  "image":"props/crate.png",
-  "propiedades":["solido"]
+  "nombre": "Crate",
+  "ID": 3,
+  "tipo": "movible",
+  "peso": 10,
+  "volumen": 4,
+  "image": "props/crate.png",
+  "propiedades": [
+    "solido"
+  ]
 }

@@ -1,18 +1,30 @@
 {
-  "fondo":"maps/fondos/blanco.png",
-  "colisiones":"maps/colisiones/800.png",
+  "fondo": "maps/fondos/blanco.png",
+  "colisiones": "maps/colisiones/800.png",
   "props": {
-    "crate":[[300,300]]
+    "crate": [
+      [
+        300,
+        300
+      ]
+    ]
   },
-  "mobs": {"hero":[[400,400]]},
-  "limites":{
-    "sup":"negro",
-    "inf":"negro",
-    "izq":"negro",
-    "der":"negro"
+  "mobs": {
+    "hero": [
+      [
+        400,
+        400
+      ]
+    ]
   },
-  "refs":{
-    "arbol":"props/arbol_escalado.png",
-    "crate":"crate.json"
+  "limites": {
+    "sup": "negro",
+    "inf": "negro",
+    "izq": "negro",
+    "der": "negro"
+  },
+  "refs": {
+    "arbol": "props/arbol_escalado.png",
+    "crate": "crate.json"
   }
 }

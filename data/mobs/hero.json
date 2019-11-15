@@ -1,19 +1,20 @@
 {
-  "ID":0,"nombre":"heroe",
-  "atributos":{
-    "Fuerza":5,
-    "Resistencia":10,
-    "Carisma":8,
-    "Agilidad":3,
-    "Inteligencia":1,
-    "Percepción":5
+  "ID": 0,
+  "nombre": "heroe",
+  "atributos": {
+    "Fuerza": 5,
+    "Resistencia": 10,
+    "Carisma": 8,
+    "Agilidad": 3,
+    "Inteligencia": 1,
+    "Percepción": 5
   },
-  "imagenes":{
-    "idle":"mobs/imagenes/heroe_idle_walk.png",
-    "cmb":"mobs/imagenes/heroe_cmb_walk.png",
-    "atk":"mobs/imagenes/heroe_cmb_atk.png",
-    "diag_face":"mobs/imagenes/pc_face.png"
+  "imagenes": {
+    "idle": "mobs/imagenes/heroe_idle_walk.png",
+    "cmb": "mobs/imagenes/heroe_cmb_walk.png",
+    "atk": "mobs/imagenes/heroe_cmb_atk.png",
+    "diag_face": "mobs/imagenes/pc_face.png"
   },
-  "alpha":"mobs/colisiones/human_walk.png",
-  "AI":"controllable"
+  "alpha": "mobs/colisiones/human_walk.png",
+  "AI": "controllable"
 }

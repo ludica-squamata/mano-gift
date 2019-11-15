@@ -1,13 +1,13 @@
 {
-  "fondo":"maps/fondos/negro.png",
-  "colisiones":"maps/colisiones/800.png",
+  "fondo": "maps/fondos/negro.png",
+  "colisiones": "maps/colisiones/800.png",
   "props": {},
   "mobs": {},
-  "limites":{
-    "sup":"white",
-    "inf":"white",
-    "izq":"white",
-    "der":"white"
+  "limites": {
+    "sup": "white",
+    "inf": "white",
+    "izq": "white",
+    "der": "white"
   },
-  "refs":{}
+  "refs": {}
 }

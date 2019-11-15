@@ -1,19 +1,20 @@
 {
-  "ID":4,"nombre":"blue",
-  "atributos":{
-    "Fuerza":3,
-    "Carisma":0,
-    "Agilidad":1,
-    "Resistencia":3,
-    "Inteligencia":0,
-    "Percepción":1
+  "ID": 4,
+  "nombre": "blue",
+  "atributos": {
+    "Fuerza": 3,
+    "Carisma": 0,
+    "Agilidad": 1,
+    "Resistencia": 3,
+    "Inteligencia": 0,
+    "Percepción": 1
   },
-  "imagenes":{
-    "idle":"mobs/imagenes/blue.png",
-    "atk":"mobs/imagenes/blue_atk.png",
-    "death":"mobs/imagenes/blue_death.png",
-    "diag_face":null
+  "imagenes": {
+    "idle": "mobs/imagenes/blue.png",
+    "atk": "mobs/imagenes/blue_atk.png",
+    "death": "mobs/imagenes/blue_death.png",
+    "diag_face": null
   },
-  "alphas":"mobs/colisiones/monster_walk.png",
-  "AI":null
+  "alphas": "mobs/colisiones/monster_walk.png",
+  "AI": null
 }

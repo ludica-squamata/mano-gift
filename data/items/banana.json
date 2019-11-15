@@ -1,14 +1,18 @@
 {
-  "nombre":"Banana",
-  "ID":1,"tipo":"agarrable",
-  "subtipo":"consumible",
-  "peso":1, "volumen":1,
+  "nombre": "Banana",
+  "ID": 1,
+  "tipo": "agarrable",
+  "subtipo": "consumible",
+  "peso": 1,
+  "volumen": 1,
   "image": "props/banana.png",
-  "propiedades":["stackable"],
-  "efecto":{
-    "des":"Restaura tu salud al máximo.",
-    "stat":"Salud",
-    "mod":100,
+  "propiedades": [
+    "stackable"
+  ],
+  "efecto": {
+    "des": "Restaura tu salud al máximo.",
+    "stat": "Salud",
+    "mod": 100,
     "method": "percentage"
   }
 }

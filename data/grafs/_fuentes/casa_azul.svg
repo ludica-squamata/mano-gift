@@ -1,47 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="129px"
-	 height="163.727px" viewBox="0 0 129 163.727" enable-background="new 0 0 129 163.727" xml:space="preserve">
-<g id="Layer_2" sodipodi:docname="casa_azul.svg" inkscape:version="0.48.4 r9939" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://creativecommons.org/ns#">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     width="129px"
+     height="163.727px" viewBox="0 0 129 163.727" enable-background="new 0 0 129 163.727" xml:space="preserve">
+<g id="Layer_2" sodipodi:docname="casa_azul.svg" inkscape:version="0.48.4 r9939"
+   xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:cc="http://creativecommons.org/ns#">
 	
-		<sodipodi:namedview  id="namedview284" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="640" inkscape:window-height="480" inkscape:window-y="0" inkscape:current-layer="Layer_2" inkscape:window-x="0" showgrid="true" bordercolor="#666666" pagecolor="#ffffff" inkscape:cx="42.119502" objecttolerance="10" borderopacity="1" guidetolerance="10" inkscape:zoom="1.4414238" gridtolerance="10" inkscape:cy="83.017441" inkscape:window-maximized="0">
-		<inkscape:grid  type="xygrid" id="grid3265"></inkscape:grid>
+		<sodipodi:namedview id="namedview284" inkscape:pageopacity="0" inkscape:pageshadow="2"
+                            inkscape:window-width="640" inkscape:window-height="480" inkscape:window-y="0"
+                            inkscape:current-layer="Layer_2" inkscape:window-x="0" showgrid="true" bordercolor="#666666"
+                            pagecolor="#ffffff" inkscape:cx="42.119502" objecttolerance="10" borderopacity="1"
+                            guidetolerance="10" inkscape:zoom="1.4414238" gridtolerance="10" inkscape:cy="83.017441"
+                            inkscape:window-maximized="0">
+		<inkscape:grid type="xygrid" id="grid3265"></inkscape:grid>
 	</sodipodi:namedview>
-	
-		<image overflow="visible" enable-background="new    " width="129" height="64" id="image236" xlink:href="textura_frente_casa.png"  sodipodi:relref="textura_frente_casa.png" transform="matrix(0.9922 0 0 1.0158 0.8335 98.8538)">
+
+    <image overflow="visible" enable-background="new    " width="129" height="64" id="image236"
+           xlink:href="textura_frente_casa.png" sodipodi:relref="textura_frente_casa.png"
+           transform="matrix(0.9922 0 0 1.0158 0.8335 98.8538)">
 	</image>
-	<rect id="rect238" x="72.723" y="131.99" width="15.676" height="31.736"/>
-	
-		<linearGradient id="rect265_1_" gradientUnits="userSpaceOnUse" x1="573.6191" y1="795.4924" x2="573.6191" y2="810.4924" gradientTransform="matrix(1 0 0 1 -540.9609 -678.3125)">
-		<stop  offset="0" style="stop-color:#000000"/>
-		<stop  offset="0.003" style="stop-color:#060809"/>
-		<stop  offset="0.0191" style="stop-color:#233237"/>
-		<stop  offset="0.0373" style="stop-color:#3E5A62"/>
-		<stop  offset="0.0569" style="stop-color:#567C88"/>
-		<stop  offset="0.0782" style="stop-color:#6A9AA8"/>
-		<stop  offset="0.1018" style="stop-color:#7BB3C4"/>
-		<stop  offset="0.1284" style="stop-color:#89C7DA"/>
-		<stop  offset="0.1594" style="stop-color:#94D6EB"/>
-		<stop  offset="0.1978" style="stop-color:#9CE1F6"/>
-		<stop  offset="0.2516" style="stop-color:#A0E7FD"/>
-		<stop  offset="0.4011" style="stop-color:#A1E9FF"/>
+    <rect id="rect238" x="72.723" y="131.99" width="15.676" height="31.736"/>
+
+    <linearGradient id="rect265_1_" gradientUnits="userSpaceOnUse" x1="573.6191" y1="795.4924" x2="573.6191"
+                    y2="810.4924" gradientTransform="matrix(1 0 0 1 -540.9609 -678.3125)">
+		<stop offset="0" style="stop-color:#000000"/>
+        <stop offset="0.003" style="stop-color:#060809"/>
+        <stop offset="0.0191" style="stop-color:#233237"/>
+        <stop offset="0.0373" style="stop-color:#3E5A62"/>
+        <stop offset="0.0569" style="stop-color:#567C88"/>
+        <stop offset="0.0782" style="stop-color:#6A9AA8"/>
+        <stop offset="0.1018" style="stop-color:#7BB3C4"/>
+        <stop offset="0.1284" style="stop-color:#89C7DA"/>
+        <stop offset="0.1594" style="stop-color:#94D6EB"/>
+        <stop offset="0.1978" style="stop-color:#9CE1F6"/>
+        <stop offset="0.2516" style="stop-color:#A0E7FD"/>
+        <stop offset="0.4011" style="stop-color:#A1E9FF"/>
 	</linearGradient>
-	<rect id="rect265" x="19.658" y="117.18" fill="url(#rect265_1_)" stroke="#8B6339" width="26" height="15"/>
-	
-		<linearGradient id="rect280_1_" gradientUnits="userSpaceOnUse" x1="604.3379" y1="778.7112" x2="604.3379" y2="682.262" gradientTransform="matrix(1.0028 0 0 0.9964 -541.1741 -678.306)">
-		<stop  offset="0" style="stop-color:#0040FF"/>
-		<stop  offset="0.0685" style="stop-color:#0050FF"/>
-		<stop  offset="0.1739" style="stop-color:#0061FF"/>
-		<stop  offset="0.305" style="stop-color:#006CFF"/>
-		<stop  offset="0.4891" style="stop-color:#0073FF"/>
-		<stop  offset="1" style="stop-color:#0075FF"/>
+    <rect id="rect265" x="19.658" y="117.18" fill="url(#rect265_1_)" stroke="#8B6339" width="26" height="15"/>
+
+    <linearGradient id="rect280_1_" gradientUnits="userSpaceOnUse" x1="604.3379" y1="778.7112" x2="604.3379"
+                    y2="682.262" gradientTransform="matrix(1.0028 0 0 0.9964 -541.1741 -678.306)">
+		<stop offset="0" style="stop-color:#0040FF"/>
+        <stop offset="0.0685" style="stop-color:#0050FF"/>
+        <stop offset="0.1739" style="stop-color:#0061FF"/>
+        <stop offset="0.305" style="stop-color:#006CFF"/>
+        <stop offset="0.4891" style="stop-color:#0073FF"/>
+        <stop offset="1" style="stop-color:#0075FF"/>
 	</linearGradient>
-	
-		<rect id="rect280" x="2.192" y="1.499" fill="url(#rect280_1_)" stroke="#2E3191" stroke-width="2.9988" width="125.328" height="96.102"/>
-	<rect id="rect282" x="3.705" y="0.02" fill="#0075FF" width="122.264" height="17.355"/>
+
+    <rect id="rect280" x="2.192" y="1.499" fill="url(#rect280_1_)" stroke="#2E3191" stroke-width="2.9988"
+          width="125.328" height="96.102"/>
+    <rect id="rect282" x="3.705" y="0.02" fill="#0075FF" width="122.264" height="17.355"/>
 </g>
-<g id="Layer_3">
+    <g id="Layer_3">
 	<rect y="-2.969" fill="none" width="128" height="166.696"/>
 </g>
 </svg>

@@ -16,7 +16,7 @@ class GetMobPos(Leaf):
         else:
             return Failure
 
-        punto = cuadros[mob_pos.x//32, mob_pos.y//32]
+        punto = cuadros[mob_pos.x // 32, mob_pos.y // 32]
         self.tree.set_context('punto_final', punto)
 
         return Success
