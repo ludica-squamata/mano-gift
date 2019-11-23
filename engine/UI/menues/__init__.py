@@ -12,12 +12,11 @@ from .ability import MenuAbility
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
                  'MenuCargar': MenuCargar,
-                 # 'MenuNuevo': MenuNuevo,
                  'MenuPrincipal': MenuPrincipal,
                  'MenuOpciones': MenuOpciones,
-                 'MenuModel': MenuModel,
-                 'MenuName': MenuName,
-                 'MenuAbility': MenuAbility
+                 'MenuNuevo': MenuModel,  # en realidad sería MenuModel,
+                 'MenuName': MenuName,  # pero está así para que diga "nuevo" en Principal.
+                 'MenuAbility': MenuAbility  # No es el verdadero (y viejo) "MenuNuevo".
                  }
 
 # estructuras para los menues raiz Principal y Pausa.
@@ -28,15 +27,14 @@ default_menus = {'MenuPausa': MenuPausa,
 pause_menus = [
     'MenuEquipo',
     'MenuOpciones',
-    'MenuCargar',
-    'MenuAbility'
+    'MenuCargar'
 ]
 
 # Botones del Menú Principal
 inital_menus = [
-    # 'MenuNuevo',
+    'MenuNuevo',
     'MenuCargar',
-    'MenuOpciones'
+    'MenuOpciones',
 ]
 
 __all__ = [

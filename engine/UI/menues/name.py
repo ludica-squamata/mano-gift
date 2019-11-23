@@ -1,9 +1,10 @@
 from engine.globs import CANVAS_BG, TEXT_SEL, BISEL_BG, TEXT_FG
-from engine.UI.widgets import BaseWidget, Boton
 from engine.globs.azoe_group import AzoeBaseSprite, AzoeGroup
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.UI.widgets import BaseWidget, Boton
 from pygame import font, Rect, Surface, draw
-from .menu import Menu
 from engine.libs import render_textrect
+from .menu import Menu
 
 
 class MenuName(Menu):
@@ -30,7 +31,7 @@ class MenuName(Menu):
         self.crear_teclas(6, 6)  # genera el teclado en pantalla
 
         # el espacio se añade por separado porque ' ' es el delimitador en self.crear_teclas
-        self.teclas.add(Character(' ', CANVAS_BG, 6 + 14 * 32 + 6, 212 + 6 * 32 + 6))
+        self.teclas.add(Character(' ', CANVAS_BG, 6 + 14 * 32 + 6, 210 + 5 * 32))
 
         # Cursor del teclado en pantalla
         self.cursor = Cursor(*self.teclas.get_sprite(0).rect.center)
@@ -196,9 +197,10 @@ class MenuName(Menu):
             self.foco = 'nombre'
 
     def set_name(self):
-        print(''.join([spr.key for spr in self.area_input]))
-        # self.deregister()
-        # EventDispatcher.trigger('OpenMenu', self.nombre, {'value': self.current.nombre})
+        name = ''.join([spr.key for spr in self.area_input])
+        self.deregister()
+        EventDispatcher.trigger('CharacterCreation', self.nombre, {'nombre': name, 'final': True})
+        EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def use_funcion(self, mode, key):
         if key in self.functions[mode]:

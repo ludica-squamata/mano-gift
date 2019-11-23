@@ -1,3 +1,4 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs.textrect import render_textrect
 from engine.globs import CANVAS_BG, TEXT_FG
 from engine.globs.mod_data import ModData
@@ -27,7 +28,7 @@ class MenuAbility(Menu):
         for i, char in enumerate(chars):
             self.counters.add(Counter(self, char, 200, 130 + i * 40, 58, 22))
 
-        self.fin = Boton('Finalizar', 6, lambda: print('fin'), [self.rect.centerx, self.rect.bottom-64])
+        self.fin = Boton('Finalizar', 6, self.finalizar, [self.rect.centerx, self.rect.bottom-64])
         self.botones.add(self.fin)
 
         self.elegir_uno(0)
@@ -94,6 +95,11 @@ class MenuAbility(Menu):
                     self.current_counter.accion()
         else:
             self.fin.ser_presionado()
+
+    def finalizar(self):
+        self.deregister()
+        EventDispatcher.trigger('CharacterCreation', self.nombre, {'atributos': self.valores, 'final': False})
+        EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Name'})
 
     def update(self):
         self.counters.update()

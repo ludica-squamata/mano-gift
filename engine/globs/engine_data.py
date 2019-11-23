@@ -145,7 +145,11 @@ class EngineData:
 
     @classmethod
     def create_character(cls, event):
+        final = event.data.pop('final')
         cls.character.update(event.data)
+        if final:
+            cls.character.update({'AI': 'controllable'})
+            cls.new_game(cls.character['nombre'])
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
@@ -157,3 +161,4 @@ EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
 EventDispatcher.register(lambda e: EngineData.end_dialog(), 'EndDialog')
 EventDispatcher.register(salir_handler, 'QUIT')
 EventDispatcher.register(EngineData.cargar_juego, 'LoadGame')
+EventDispatcher.register(EngineData.create_character, 'CharacterCreation')

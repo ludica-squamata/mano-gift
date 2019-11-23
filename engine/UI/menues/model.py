@@ -1,3 +1,4 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc.resources import split_spritesheet
 from engine.globs import Tiempo, CANVAS_BG, TEXT_FG
 from pygame import font, Rect
@@ -57,38 +58,38 @@ class MenuModel(Menu):
             }
         }
 
-    @staticmethod
-    def set_model(modelo):
-        imgs = []
+    def set_model(self, modelo):
+        imgs = {'alpha': 'mobs/colisiones/human_walk.png', 'imagenes': {}, 'final': False}
         ruta = path.join(getcwd(), 'data/grafs/mobs/imagenes')
         for filename in listdir(ruta):
+            key = ''
+            name = filename.rstrip('.png')
             if modelo == 'el':
-                if 'heroe' in filename or filename.startswith('pc'):
-                    if 'idle' in filename:
-                        pass
-                    elif 'cmb' in filename and filename.endswith('walk'):
-                        pass
-                    elif 'cmb' in filename and filename.endswith('atk'):
-                        pass
-                    elif filename.endswith('face'):
-                        pass
-                    imgs.append('mobs/imagenes/'+filename)
+                if 'heroe' in name or name.startswith('pc'):
+                    if 'idle' in name:
+                        key = 'idle'
+                    elif 'cmb' in name and name.endswith('walk'):
+                        key = 'cmb'
+                    elif 'cmb' in name and name.endswith('atk'):
+                        key = 'atk'
+                    elif name.endswith('face'):
+                        key = 'diag_face'
+                    imgs['imagenes'][key] = 'mobs/imagenes/'+filename
 
             elif modelo == 'ella':
-                if 'girl' in filename or filename.startswith('npc'):
-                    if 'idle' in filename:
-                        pass
-                    elif 'cmb' in filename and filename.endswith('walk'):
-                        pass
-                    elif 'cmb' in filename and filename.endswith('atk'):
-                        pass
-                    elif filename.endswith('face'):
-                        pass
-                    imgs.append('mobs/imagenes/'+filename)
-        imgs.append('mobs/colisiones/human_walk.png')
-        print(imgs)
-        # self.deregister()
-        # EventDispatcher.trigger('OpenMenu', self.nombre, {'value': self.current.nombre})
+                if 'girl' in name or name.startswith('npc'):
+                    if 'idle' in name:
+                        imgs['imagenes']['idle'] = 'mobs/imagenes/'+filename
+                    elif 'cmb' in name and name.endswith('walk'):
+                        pass  # faltan hacer imagenes para la chica en combate
+                    elif 'cmb' in name and name.endswith('atk'):
+                        pass  # y para la chica peleando, sea como sea que pelee.
+                    elif name.endswith('face'):
+                        imgs['imagenes']['diag_face'] = 'mobs/imagenes/'+filename
+
+        self.deregister()
+        EventDispatcher.trigger('CharacterCreation', self.nombre, imgs)
+        EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Ability'})
 
     @staticmethod
     def cargar_anims(ruta_imgs):
