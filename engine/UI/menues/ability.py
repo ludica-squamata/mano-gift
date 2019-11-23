@@ -98,7 +98,7 @@ class MenuAbility(Menu):
 
     def finalizar(self):
         self.deregister()
-        EventDispatcher.trigger('CharacterCreation', self.nombre, {'atributos': self.valores, 'final': False})
+        EventDispatcher.trigger('CharacterCreation', self.nombre, {'atributos': self.valores, 'final': True})
         EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Name'})
 
     def update(self):

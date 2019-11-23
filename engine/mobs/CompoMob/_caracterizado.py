@@ -37,6 +37,6 @@ class Caracterizado(AzoeSprite):
         return item in self._allchars
 
     def mover(self, dx, dy):
-        dx *= self['Velocidad']
-        dy *= self['Velocidad']
+        dx *= 3
+        dy *= 3
         return dx, dy

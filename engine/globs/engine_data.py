@@ -13,7 +13,10 @@ class EngineData:
     MENUS = {}
     setKey = False
     save_data = {}
-    character = {}
+    character = {
+        'nombre': 'heroe',
+        'AI': 'controllable'
+    }
 
     @classmethod
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
@@ -145,11 +148,8 @@ class EngineData:
 
     @classmethod
     def create_character(cls, event):
-        final = event.data.pop('final')
         cls.character.update(event.data)
-        if final:
-            cls.character.update({'AI': 'controllable'})
-            cls.new_game(cls.character['nombre'])
+        guardar_json('data/mobs/hero.json', cls.character)
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
