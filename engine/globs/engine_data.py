@@ -14,7 +14,6 @@ class EngineData:
     setKey = False
     save_data = {}
     character = {
-        'nombre': 'heroe',
         'AI': 'controllable'
     }
 
@@ -62,15 +61,15 @@ class EngineData:
 
     @classmethod
     def salvar(cls, event):
-        name = event.data['name']
+        name = event.data['focus']
         data = abrir_json(Config.savedir + '/' + name + '.json')
         data.update(event.data)
         guardar_json(Config.savedir + '/' + name + '.json', data)
 
     @classmethod
     def new_game(cls, char_name):
-        guardar_json(Config.savedir + '/' + char_name + '.json', {"name": char_name})
-        EventDispatcher.trigger('NewGame', 'engine', {'savegame': {"name": char_name}})
+        guardar_json(Config.savedir + '/' + char_name + '.json', {"focus": char_name})
+        EventDispatcher.trigger('NewGame', 'engine', {'savegame': {"focus": char_name}})
 
     @classmethod
     def load_savefile(cls, filename):
@@ -92,7 +91,7 @@ class EngineData:
         Renderer.set_focus(focus)
 
         cls.check_focus_position(focus, mapa, data['entrada'])
-        focus.character_name = data['name']
+        focus.character_name = data['focus']
 
     @classmethod
     def check_focus_position(cls, focus, mapa, entrada):
@@ -148,8 +147,12 @@ class EngineData:
 
     @classmethod
     def create_character(cls, event):
+        final = event.data.pop('final')
         cls.character.update(event.data)
-        guardar_json('data/mobs/hero.json', cls.character)
+        if final:
+            name = cls.character['nombre']
+            guardar_json('data/mobs/' + name + '.json', cls.character)
+            cls.new_game(name)
 
 
 EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")

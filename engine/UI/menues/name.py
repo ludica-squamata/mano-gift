@@ -1,4 +1,4 @@
-from engine.globs import CANVAS_BG, TEXT_SEL, BISEL_BG, TEXT_FG, EngineData
+from engine.globs import CANVAS_BG, TEXT_SEL, BISEL_BG, TEXT_FG
 from engine.globs.azoe_group import AzoeBaseSprite, AzoeGroup
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.widgets import BaseWidget, Boton
@@ -198,7 +198,8 @@ class MenuName(Menu):
 
     def set_name(self):
         self.deregister()
-        EngineData.new_game(''.join([spr.key for spr in self.area_input]))
+        name = ''.join([spr.key for spr in self.area_input])
+        EventDispatcher.trigger('CharacterCreation', self.nombre, {'nombre': name, 'final': True})
         EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def use_funcion(self, mode, key):

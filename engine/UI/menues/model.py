@@ -24,8 +24,8 @@ class MenuModel(Menu):
         self.anim_rect = Rect(0, 0, 32, 32)
         self.anim_rect2 = Rect(0, 0, 32, 32)
 
-        x1 = self.rect.w//5
-        x2 = x1*3
+        x1 = self.rect.w // 5
+        x2 = x1 * 3
         n, d, c = 'nombre', 'direcciones', 'comando'
         botones = [
             {n: 'Héroe', d: {'derecha': 'Heroína'}, c: lambda: self.set_model('el'), 'pos': [x1, 250]},
@@ -36,8 +36,8 @@ class MenuModel(Menu):
         el, ella = self.botones.sprites()
         self.anim_rect.centerx = el.rect.centerx
         self.anim_rect2.centerx = ella.rect.centerx
-        self.anim_rect.bottom = el.rect.top-15
-        self.anim_rect2.bottom = ella.rect.top-15
+        self.anim_rect.bottom = el.rect.top - 15
+        self.anim_rect2.bottom = ella.rect.top - 15
 
         self.print_instructions()
 
@@ -74,18 +74,18 @@ class MenuModel(Menu):
                         key = 'atk'
                     elif name.endswith('face'):
                         key = 'diag_face'
-                    imgs['imagenes'][key] = 'mobs/imagenes/'+filename
+                    imgs['imagenes'][key] = 'mobs/imagenes/' + filename
 
             elif modelo == 'ella':
                 if 'girl' in name or name.startswith('npc'):
-                    if 'idle' in name:
-                        imgs['imagenes']['idle'] = 'mobs/imagenes/'+filename
+                    if 'girl' in name:
+                        imgs['imagenes']['idle'] = 'mobs/imagenes/' + filename
                     elif 'cmb' in name and name.endswith('walk'):
                         pass  # faltan hacer imagenes para la chica en combate
                     elif 'cmb' in name and name.endswith('atk'):
                         pass  # y para la chica peleando, sea como sea que pelee.
                     elif name.endswith('face'):
-                        imgs['imagenes']['diag_face'] = 'mobs/imagenes/'+filename
+                        imgs['imagenes']['diag_face'] = 'mobs/imagenes/' + filename
 
         self.deregister()
         EventDispatcher.trigger('CharacterCreation', self.nombre, imgs)

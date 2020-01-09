@@ -6,6 +6,7 @@ from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from pygame import mask, Rect, transform
 from .light_source import DayLight
+from engine.globs import Mob_Group
 
 
 class Stage:
@@ -132,6 +133,7 @@ class ChunkMap(AzoeBaseSprite):
             data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
 
         data.update({'entradas': entradas})
+        data['mobs'][Mob_Group.character_name] = data['mobs'].pop('hero')
         colisiones = cargar_imagen(data['colisiones'])
         self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
 
