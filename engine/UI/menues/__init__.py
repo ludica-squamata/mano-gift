@@ -2,16 +2,21 @@ from .pausa import MenuPausa
 from .equipo import MenuEquipo, _boton_equipo
 from .opciones import MenuOpciones, _boton_opciones
 from .cargar import MenuCargar, _boton_cargar
-from .personaje import MenuNuevo
+# from .personaje import MenuNuevo
 from .principal import MenuPrincipal
 from .menu import Menu
+from .model import MenuModel
+from .name import MenuName
+from .ability import MenuAbility
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
                  'MenuCargar': MenuCargar,
-                 'MenuNuevo': MenuNuevo,
                  'MenuPrincipal': MenuPrincipal,
-                 'MenuOpciones': MenuOpciones
+                 'MenuOpciones': MenuOpciones,
+                 'MenuNuevo': MenuModel,  # en realidad sería MenuModel,
+                 'MenuName': MenuName,  # pero está así para que diga "nuevo" en Principal.
+                 'MenuAbility': MenuAbility  # No es el verdadero (y viejo) "MenuNuevo".
                  }
 
 # estructuras para los menues raiz Principal y Pausa.
@@ -29,7 +34,7 @@ pause_menus = [
 inital_menus = [
     'MenuNuevo',
     'MenuCargar',
-    'MenuOpciones'
+    'MenuOpciones',
 ]
 
 __all__ = [

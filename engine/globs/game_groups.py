@@ -6,12 +6,14 @@ class MobGroup:
 
     _group = {}
     _indexes = []
+    _name = ''
 
     def __init__(self):
         self._group = {}
         self._indexes = []
 
         EventDispatcher.register(self.delete_mob, 'MobDeath')
+        EventDispatcher.register(self.register_name, "CharacterCreation", 'LoadGame')
 
     def __setitem__(self, key, value):
         if key not in self._group:
@@ -80,6 +82,23 @@ class MobGroup:
             mob = self._group[mob_name]
             if mob.AI_type == 'Controllable':
                 return mob
+
+    # Aunque estos tres métodos singularizan al héroe
+    # no se me ocurre otra forma de arrastrar su nombre.
+    def register_name(self, event):
+        # posiblemente esto se puede hacer en menos líneas.
+        if 'nombre' in event.data:
+            self._name = event.data['nombre']
+        elif 'focus' in event.data:
+            self._name = event.data['focus']
+
+    @property
+    def character_name(self):
+        return self._name
+
+    @character_name.deleter
+    def character_name(self):
+        self._name = ''
 
 
 class ItemGroup:
