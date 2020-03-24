@@ -16,9 +16,7 @@
       "DañoCC",
       "Retroceso"
     ],
-    "Agilidad": [
-      "Velocidad"
-    ],
+    "Agilidad": [],
     "Resistencia": [
       "Salud",
       "SaludMax"

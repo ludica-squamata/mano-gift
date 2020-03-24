@@ -35,6 +35,8 @@ class ControllableAI(EventAware):
         EventDispatcher.register(self.deregister, AzoeEvent('TogglePause', 'EngineData', {'value': True}))
 
     def mover(self, direccion):
+        self.entity['Velocidad'] = 3  # El Mob controllable se mueve más rápido que otros mobs. Acá seteamos eso.
+        # Este valor debería eliminarse (volver a ser 1) si el control sobre ese mob fuera a perderse.
         if direccion != self.entity.direccion:
             self.entity.cambiar_direccion(direccion)
         if not self.entity.detectar_colisiones():

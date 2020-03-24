@@ -26,6 +26,8 @@ class Caracterizado(AzoeSprite):
     def __getitem__(self, item):
         if item in self._chars:
             return self._chars[item]
+        else:  # esto viene a ser __missing__(), pero como ese método es llamado por dict.__getitem__(),
+            return 1  # es más sencillo simplemente devolver lo que habría devuelto ese método.
 
     def __setitem__(self, key, value):
         self._chars[key] = value
@@ -38,6 +40,6 @@ class Caracterizado(AzoeSprite):
         return item in self._allchars
 
     def mover(self, dx, dy):
-        dx *= 3
-        dy *= 3
+        dx *= self['Velocidad']  # Nótese que 'Velocidad' es una propiedad que solo tiene el mob Controllable.
+        dy *= self['Velocidad']  # Otros mobs la tienen, y por eso usan el '1' que devuelve __getitem__()
         return dx, dy
