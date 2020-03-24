@@ -6,7 +6,7 @@ from math import sin, cos, radians
 class BaseElement(EventAware, AzoeBaseSprite):
     selected = False
     delta = 0
-    stop = True
+    _stop = True
     parent = None
     command = None
     angle = 0
@@ -25,6 +25,14 @@ class BaseElement(EventAware, AzoeBaseSprite):
 
     def __repr__(self):
         return 'Elemento ' + self.nombre
+
+    @property
+    def stop(self):
+        return self._stop
+
+    @stop.setter
+    def stop(self, value):
+        self._stop = value
 
     def check_placement(self) -> bool:
         return self.angle == 0
