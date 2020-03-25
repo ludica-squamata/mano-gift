@@ -11,17 +11,5 @@
   "salidas": [
   ],
   "ambiente": "exterior",
-  "amanece": [
-    6,
-    0
-  ],
-  "atardece": [
-    7,
-    0
-  ],
-  "anochece": [
-    8,
-    0
-  ],
   "latitude": 30
 }

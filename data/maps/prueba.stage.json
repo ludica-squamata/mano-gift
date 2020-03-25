@@ -72,17 +72,5 @@
     }
   ],
   "ambiente": "exterior",
-  "amanece": [
-    19,
-    0
-  ],
-  "atardece": [
-    17,
-    0
-  ],
-  "anochece": [
-    18,
-    0
-  ],
   "latitude": 30
 }

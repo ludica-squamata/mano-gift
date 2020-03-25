@@ -5,7 +5,6 @@ from .loader import load_something, cargar_salidas
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from pygame import mask, Rect, transform
-from .light_source import DayLight
 from engine.globs import Mob_Group
 
 
@@ -40,7 +39,7 @@ class Stage:
         self.chunks.add(chunk)
         self.mapa = self.chunks.sprites()[0]
         self.rect = self.mapa.rect.copy()
-        self.cargar_timestamps()
+        Tiempo.crear_noche(self.rect.size)
 
         sld, masc, img = cargar_salidas(self.data, chunk.rect.size)
         self.salidas = sld  # la lista de salidas, igual que siempre.
@@ -52,31 +51,34 @@ class Stage:
 
         self.entrada = entrada
 
-        # EventDispatcher.register(self.anochecer, 'HourFlag')
+        EventDispatcher.register(self.cargar_timestamps, 'UpdateTime')
+        EventDispatcher.register(self.anochecer, 'HourFlag')
         EventDispatcher.register(self.save_map, 'Save')
         EventDispatcher.register(self.rotate_map, 'RotateEverything')
 
-    def register_at_renderer(self):
-        # esta función es obsoleta
-        luz_del_sol = DayLight(self.amanece, self.atardece, self.anochece)
-        if Tiempo.noche is None:
-            Tiempo.crear_noche(self.rect.size)
-        if self.data['ambiente'] == 'exterior':
-            Tiempo.noche.set_lights(luz_del_sol)
-        # elif self.data['ambiente'] == 'interior':
-        #     pass
+    def cargar_timestamps(self, event):
+        horas_dia = event.data['new_max_time']
+        offset = 12 - (horas_dia // 2)  # centra la duración del día a las 12:00
+        self.amanece = TimeStamp(offset + 1)
+        self.anochece = TimeStamp(horas_dia + offset)
 
-        # luz_del_sol.add_objs([obj for obj in self.properties if obj.proyectaSombra])
+    def anochecer(self, event=None):
+        noche = Tiempo.noche
+        if event is not None and self.data['ambiente'] == 'exterior':
+            ts = event.data['hora']
+            # aclararse y oscurecerse son flags de la noche que habilitan su update().
+            if ts == self.amanece:
+                noche.aclararse = True
+            if ts == self.anochece:
+                noche.oscurecerse = True
 
-        # for salida in self.salidas:
-        #     if salida.sprite is not None:
-        #         Renderer.camara.add_real(salida.sprite)
+        elif self.data['ambiente'] == 'interior':
+            noche.set_transparency(0)
 
-    def cargar_timestamps(self):
-        if self.data['ambiente'] == 'exterior':
-            self.amanece = TimeStamp(*self.data["amanece"])
-            self.atardece = TimeStamp(*self.data["atardece"])
-            self.anochece = TimeStamp(*self.data["anochece"])
+        else:  # el ambiente es exterior, pero no hay evento.
+            if self.amanece < Tiempo.clock.timestamp() < self.anochece:
+                # mismo resultado, pero es porque es de día.
+                noche.set_transparency(0)
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'link': self.entrada})
@@ -247,3 +249,6 @@ class ChunkMap(AzoeBaseSprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
+
+    def update(self):
+        self.parent.anochecer()
