@@ -31,7 +31,7 @@ class MenuCargar(Menu):
         })
 
         self.filas = AzoeGroup('Filas')
-        self.create_draw_space('Elija un archivo', ANCHO - 16, ALTO / 2.4, 11, 65)
+        self.create_draw_space('Elija un archivo', ANCHO - 16, ALTO / 2-6, 11, 65)
         self.llenar_espacio_selectivo()
         if len(self.filas):
             self.elegir_opcion(0)
@@ -52,6 +52,12 @@ class MenuCargar(Menu):
         if self.opciones > 0:
             elegido = self.filas.get_sprite(self.sel)
             elegido.ser_elegido()
+            if elegido.rect.y > self.draw_space_rect.h:
+                for fila in self.filas:
+                    fila.rect.y -= fila.rect.h
+            elif elegido.rect.y < 0:
+                for fila in self.filas:
+                    fila.rect.y += fila.rect.h
 
     def cargar(self):
         if self.opciones > 0:

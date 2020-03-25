@@ -17,7 +17,6 @@ class Stage:
     offset_x = 320  # camara.rect.centerx
     offset_y = 240  # camara.rect.centery
     amanece = None
-    atardece = None
     anochece = None
 
     def __init__(self, nombre, entrada):
@@ -76,9 +75,12 @@ class Stage:
             noche.set_transparency(0)
 
         else:  # el ambiente es exterior, pero no hay evento.
-            if self.amanece < Tiempo.clock.timestamp() < self.anochece:
+            ts = Tiempo.clock.timestamp()
+            if self.amanece <= ts <= self.anochece:
                 # mismo resultado, pero es porque es de día.
                 noche.set_transparency(0)
+            else:
+                noche.set_transparency(230)
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'link': self.entrada})

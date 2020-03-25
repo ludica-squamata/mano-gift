@@ -139,10 +139,10 @@ class Menu(EventAware, BaseWidget):
     def posicionar_cursor(self, i):
         self.sel += i
         if self.sel < 0:
-            self.sel = self.opciones - 1
+            self.sel = 0
 
         elif self.sel > self.opciones - 1:
-            self.sel = 0
+            self.sel = self.opciones-1
 
     def __repr__(self):
         return 'Menu_' + self.nombre + ' (en ' + str(len(self.groups())) + ' grupos)'

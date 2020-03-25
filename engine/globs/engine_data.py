@@ -3,7 +3,7 @@ from .constantes import CAPA_OVERLAYS_MENUS
 from .event_dispatcher import EventDispatcher, AzoeEvent
 from .game_groups import Mob_Group
 from .renderer import Renderer
-from .tiempo import Tiempo
+from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
 
 
@@ -40,6 +40,7 @@ class EngineData:
             cls.setear_mapa(evento.data['target_stage'],
                             evento.data['target_entrada'],
                             mob=evento.data['mob'])
+            SeasonalYear.propagate()
             stage = evento.data['target_stage']
             x, y = cls.mapas[stage].posicion_entrada(evento.data['target_entrada'])
             Renderer.camara.focus.ubicar_en_entrada(x, y)

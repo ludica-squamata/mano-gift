@@ -180,23 +180,18 @@ class TimeStamp:
     # rich comparison methods
     def __lt__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
-            if self._h < other.h:
+            s1 = self._h * 3600 + self._m * 60 + self._s
+            s2 = other.h * 3600 + other.m * 60 + other.s
+            if s1 < s2:
                 return True
-
-            if self._m < other.m:
-                return True
-
-            if self._s < other.s:
-                return True
-
         return False
 
     def __le__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
-            if self._h <= other.h:
-                if self._m <= other.m:
-                    if self._s <= other.s:
-                        return True
+            s1 = self._h * 3600 + self._m * 60 + self._s
+            s2 = other.h * 3600 + other.m * 60 + other.s
+            if s1 <= s2:
+                return True
         return False
 
     def __eq__(self, other):
@@ -206,29 +201,23 @@ class TimeStamp:
 
     def __ne__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
-            if self._h != other.h:
-                if self._m != other.m:
-                    if self._s != other.s:
-                        return True
-            return False
+            return self._h != other.h and self._m != other.m and self._s != other.s
         return True
 
     def __gt__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
-            if self._h > other.h:
-                return True
-            if self._m > other.m:
-                return True
-            if self._s > other.s:
+            s1 = self._h * 3600 + self._m * 60 + self._s
+            s2 = other.h * 3600 + other.m * 60 + other.s
+            if s1 > s2:
                 return True
         return False
 
     def __ge__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
-            if self._h >= other.h:
-                if self._m >= other.m:
-                    if self._s >= other.s:
-                        return True
+            s1 = self._h * 3600 + self._m * 60 + self._s
+            s2 = other.h * 3600 + other.m * 60 + other.s
+            if s1 >= s2:
+                return True
         return False
 
     # operations, add, sub, mul
@@ -426,9 +415,7 @@ class SeasonalYear:
         cls.biome = 'template'
         cls.season = next(cls.cycler)
         cls.set_day_duration()
-        max_h = cls.max_hour
-        # Este trigger es para setear las timestamps en Stage.
-        EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_max_time': max_h})
+        cls.propagate()
 
     @classmethod
     def count_days(cls, event):
@@ -447,6 +434,12 @@ class SeasonalYear:
     def set_day_duration(cls):
         cls.max_hour = cls.biomes[cls.biome][cls.season]['max']
         cls.min_hour = cls.biomes[cls.biome][cls.season]['min']
+
+    @classmethod
+    def propagate(cls):
+        max_h = cls.max_hour
+        # Este trigger es para setear las timestamps en Stage.
+        EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_max_time': max_h})
 
 
 EventDispatcher.register(Tiempo.save_time, 'Save')
