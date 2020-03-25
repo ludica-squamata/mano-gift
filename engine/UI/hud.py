@@ -69,6 +69,10 @@ class ProgressBar(Sprite):
             self.set_variable(actual=event.data["value"])
             self.actualizar()
 
+    def event_trigger(self):
+        origin = 'Barra' + self.tracked_stat
+        EventDispatcher.trigger('SetBar', origin, {'image': self.image})
+
     def show(self):
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
 
@@ -78,6 +82,7 @@ class ProgressBar(Sprite):
     def toggle(self, event):
         if event.data['value']:
             self.hide()
+            self.event_trigger()
         else:
             self.show()
 

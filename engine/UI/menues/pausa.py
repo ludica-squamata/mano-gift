@@ -56,6 +56,8 @@ class MenuPausa(Menu):
         self.functions['release'].update({
             'accion': self.liberar_presion})
 
+        EventDispatcher.register(self.set_bars, 'SetBar')
+
     def update_charname_display(self):
         r = self.canvas.blit(self.entity.diag_face[0], (6, 100))
         fuente = SysFont('Verdana', 22)
@@ -66,8 +68,12 @@ class MenuPausa(Menu):
         render = render_textrect(self.entity.character_name, fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
 
-        # self.canvas.blit(HUD.BarraVida.image, (r.right + 2, r.centery + 4))
-        # self.canvas.blit(HUD.BarraMana.image, (r.right + 2, r.centery + 16))
+    def set_bars(self, event):
+        r = self.entity.diag_face[0].get_rect(topleft=(6, 100))
+        if event.origin == 'BarraSalud':
+            self.canvas.blit(event.data['image'], (r.right + 2, r.centery + 4))
+        elif event.origin == 'BarraMana':
+            self.canvas.blit(event.data['image'], (r.right + 2, r.centery + 16))
 
     def cancelar(self):
         EngineData.acceso_menues.clear()
