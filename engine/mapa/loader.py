@@ -29,7 +29,6 @@ def load_something(alldata, requested):
 
         if 'Props' in requested:
             for prop in load_props(alldata):
-                # noinspection PyUnresolvedReferences
                 loaded.append((prop, prop[0].grupo))
 
         return loaded

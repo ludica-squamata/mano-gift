@@ -6,13 +6,13 @@ __all__ = ['RandomSequence', 'RandomSelector']
 
 
 class RandomComposite(Composite):
-    explored_children = []
+    explored_children = None
     type = "RandomComposite"
 
     def __init___(self, tree, idx, children):
         super().__init__(tree, idx, children)
         self.current_id = randint(0, len(children))
-        self.explored_children.clear()
+        self.explored_children = []
         self.explored_children.append(self.children[self.current_id])
 
 
