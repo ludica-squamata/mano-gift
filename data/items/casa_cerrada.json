@@ -31,9 +31,8 @@
       "volumen": 5,
       "image": "props/puerta_c.png",
       "propiedades": [
-        "solido"
+        "solido","sin_sombra"
       ],
-      "proyecta_sombra": false,
       "enabled": true,
       "operable": [
         {

@@ -7,7 +7,7 @@
   "volumen": 4,
   "image": "props/armor.png",
   "propiedades": [
-    "stackable"
+    "stackable","sin_sombra"
   ],
   "efecto": {
     "des": "Es un peto de hierro.",

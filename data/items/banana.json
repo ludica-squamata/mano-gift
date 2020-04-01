@@ -7,7 +7,7 @@
   "volumen": 1,
   "image": "props/banana.png",
   "propiedades": [
-    "stackable"
+    "stackable","sin_sombra"
   ],
   "efecto": {
     "des": "Restaura tu salud al máximo.",

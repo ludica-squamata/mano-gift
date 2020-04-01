@@ -23,8 +23,7 @@ class AzoeSprite(sprite.Sprite):
     IMAGEN_UL = 'ariz'
     IMAGEN_UR = 'arde'
 
-    direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0],
-                   'ninguna': [0, 0]}
+    direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0], 'ninguna': [0, 0]}
     direccion = 'abajo'
     parent = None
     mapa_actual = None

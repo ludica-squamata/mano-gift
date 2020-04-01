@@ -6,6 +6,6 @@
   "volumen": 4,
   "image": "props/crate.png",
   "propiedades": [
-    "solido"
+    "solido","sin_sombra"
   ]
 }
