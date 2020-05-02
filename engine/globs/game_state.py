@@ -9,6 +9,13 @@ class GameState:
     # por un tree, un par de arrays, una db o algo así.
 
     @classmethod
+    def init(cls):
+        EventDispatcher.register_many(
+            (cls.load, 'NewGame'),
+            (cls.save, 'Save')
+        )
+
+    @classmethod
     def get(cls, key, default_value=False):
         if key in cls._innerdict:
             return cls._innerdict[key]
@@ -35,5 +42,4 @@ class GameState:
         return cls._innerdict.copy()
 
 
-EventDispatcher.register(GameState.load, 'NewGame')
-EventDispatcher.register(GameState.save, 'Save')
+GameState.init()

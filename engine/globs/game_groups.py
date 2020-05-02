@@ -12,8 +12,10 @@ class MobGroup:
         self._group = {}
         self._indexes = []
 
-        EventDispatcher.register(self.delete_mob, 'MobDeath')
-        EventDispatcher.register(self.register_name, "CharacterCreation", 'LoadGame')
+        EventDispatcher.register_many(
+            (self.delete_mob, 'MobDeath'),
+            (self.register_name, "CharacterCreation", 'LoadGame')
+        )
 
     def __setitem__(self, key, value):
         if key not in self._group:

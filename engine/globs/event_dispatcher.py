@@ -25,8 +25,10 @@ class EventDispatcher:
 
     @classmethod
     def register_many(cls, *pairs):
-        for listener, events in pairs:
-            cls.register(listener, events)
+        for pair in pairs:
+            listener = pair[0]
+            events = pair[1:]
+            cls.register(listener, *events)
 
     @classmethod
     def deregister(cls, listener, *events):

@@ -21,6 +21,13 @@ class Camara:
     view_name = 'north'
 
     @classmethod
+    def init(cls):
+        EventDispatcher.register_many(
+            (cls.save_focus, 'Save'),
+            (cls.rotate_view, 'Rotate')
+        )
+
+    @classmethod
     def set_background(cls, spr):
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
@@ -253,13 +260,18 @@ class Renderer:
     debug_text = None
     debug_pos = 0, 0
 
-    @staticmethod
-    def init(nombre, favicon):
+    @classmethod
+    def init(cls, nombre, favicon):
         os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
         display.set_caption(nombre)
         display.set_icon(image.load(favicon))
         display.set_mode((ANCHO, ALTO))
         mouse.set_visible(False)
+
+        EventDispatcher.register_many(
+            (cls.get_debug_text, 'DEBUG'),
+            (cls.clear, 'EndDialog', 'NewGame', 'SetMap')
+        )
 
     @classmethod
     def set_focus(cls, spr=None):
@@ -316,9 +328,3 @@ class Renderer:
         ret += cls.overlays.draw(fondo)
 
         display.update(ret)
-
-
-EventDispatcher.register(Renderer.get_debug_text, 'DEBUG')
-EventDispatcher.register(Camara.save_focus, 'Save')
-EventDispatcher.register(Camara.rotate_view, 'Rotate')
-EventDispatcher.register(Renderer.clear, 'EndDialog', 'NewGame', 'SetMap')

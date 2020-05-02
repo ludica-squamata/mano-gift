@@ -31,8 +31,10 @@ class ControllableAI(EventAware):
             'derecha': self.entity.detener_movimiento
         })
 
-        EventDispatcher.register(self.register, AzoeEvent('TogglePause', 'EngineData', {'value': False}))
-        EventDispatcher.register(self.deregister, AzoeEvent('TogglePause', 'EngineData', {'value': True}))
+        EventDispatcher.register_many(
+            (self.register, AzoeEvent('TogglePause', 'EngineData', {'value': False})),
+            (self.deregister, AzoeEvent('TogglePause', 'EngineData', {'value': True}))
+        )
 
     def mover(self, direccion):
         self.entity['Velocidad'] = 3  # El Mob controllable se mueve más rápido que otros mobs. Acá seteamos eso.

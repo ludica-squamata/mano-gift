@@ -50,10 +50,12 @@ class Stage:
 
         self.entrada = entrada
 
-        EventDispatcher.register(self.cargar_timestamps, 'UpdateTime')
-        EventDispatcher.register(self.anochecer, 'HourFlag')
-        EventDispatcher.register(self.save_map, 'Save')
-        EventDispatcher.register(self.rotate_map, 'RotateEverything')
+        EventDispatcher.register(
+            (self.cargar_timestamps, 'UpdateTime'),
+            (self.anochecer, 'HourFlag'),
+            (self.save_map, 'Save'),
+            (self.rotate_map, 'RotateEverything')
+        )
 
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_max_time']
