@@ -10,10 +10,10 @@ class Sombra(AzoeSprite):
     dif_x = 0
     alpha = 0
 
-    def __init__(self, spr, dfx, img, mascara, dz):
+    def __init__(self, spr, direccion, dfx, img, mascara, dz):
         self.spr = spr
         self.tipo = "sombra"
-        self.nombre = "sombra de " + self.spr.nombre
+        self.nombre = "sombra "+direccion+" de " + self.spr.nombre
         super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z, dz=dz - 1)
         self.mask = mascara
         self.alpha = 150
@@ -72,20 +72,26 @@ class ShadowSprite(AzoeSprite):
                 self.sombras[img_n + dire] = [None]*8
                 self._prevLuces[img_n + dire] = [0, 0, 0, 0, 0, 0, 0, 0]
 
+        # esta lista contiene todas las sombras creadas para este objeto, independientemente de su orientación o
+        # su paso. Existe porque de otro modo las sombras que no se están mostrando no se actualizan, por lo que
+        # quedan defasadas con respecto a la posición actual del objeto. En realidad, más que actualizar lo que
+        # no se ve, deberían actualizarse AL VERSE, pero no estoy seguro de cómo hacer eso.
+        self._todas_las_sombras = []
+
         # 4 , 5, 6 , 7,  0, 1,  2, 3
         # SO, O, NO, N, NE, E, SE, S # sombras
         # NE, E, SE, S, SO, O, NO, N # luces
         # 0 , 1, 2 , 0, 4,  5, 6,  7
 
-        if FEATURE_SOMBRAS_DINAMICAS:
-            super().__init__(**kwargs)
-
-    def add_shadow(self, n):
+    def add_shadow(self, direccion):
         Renderer.camara.remove_obj(self.sombra)
-        idx = self._luces[n].index(1)
-        if self.sombras[n][idx] is None:
-            self.sombras[n][idx] = Sombra(self, *self.crear_sombras())
-        self.sombra = self.sombras[n][idx]
+        idx = self._luces[direccion].index(1)
+        if self.sombras[direccion][idx] is None:
+            s = Sombra(self, direccion, *self.crear_sombras())
+            self.sombras[direccion][idx] = s
+            self._todas_las_sombras.append(s)
+        self.sombra = self.sombras[direccion][idx]
+
         Renderer.camara.add_visible(self.sombra)
 
     def crear_sombras(self):
@@ -354,13 +360,13 @@ class ShadowSprite(AzoeSprite):
         n = self.step + self.direccion
         if self._prevLuces[n] != self._luces[n]:
             self._prevLuces[n] = self._luces[n][:]
-            for i in range(0, 8):
-                if (self._luces[n][(i + 4) % 8] - self._luces[n][i]) == 1:  # bool
+            for i in range(0, 7):
+                if (self._luces[n][(i + 4) % 7] - self._luces[n][i]) == 1:  # bool
                     self._sombras[n][i] = 1
                 else:
                     self._sombras[n][i] = 0
 
-        if any(self._sombras[n]):
+        if any(self._sombras[n]) and FEATURE_SOMBRAS_DINAMICAS:
             self.add_shadow(n)
 
     def update_luces(self, event):
@@ -384,5 +390,6 @@ class ShadowSprite(AzoeSprite):
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
-        if self.sombra is not None:
-            self.sombra.reubicar(dx, dy)
+        for sombra in self._todas_las_sombras:
+            # todas las sombras que haya se mueven con el objeto, independientemente de si se ven o no.
+            sombra.reubicar(dx, dy)

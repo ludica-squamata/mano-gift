@@ -178,9 +178,9 @@ class Camara:
         sign_x, sign_y = 0, 0
         # Extraer el signo + o -
         if dx:
-            sign_x = dx / abs_x  # +1 ó -1
+            sign_x = int(dx / abs_x)  # +1 ó -1
         if dy:
-            sign_y = dy / abs_y  # +1 ó -1
+            sign_y = int(dy / abs_y)  # +1 ó -1
 
         while abs_x:
             # acá restauramos el valor para hacer la comparación
