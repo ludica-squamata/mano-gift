@@ -50,7 +50,7 @@ class Stage:
 
         self.entrada = entrada
 
-        EventDispatcher.register(
+        EventDispatcher.register_many(
             (self.cargar_timestamps, 'UpdateTime'),
             (self.anochecer, 'HourFlag'),
             (self.save_map, 'Save'),
