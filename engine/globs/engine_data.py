@@ -18,6 +18,21 @@ class EngineData:
     }
 
     @classmethod
+    def init(cls):
+        EventDispatcher.register_many(
+            (cls.on_cambiarmapa, "SetMap"),
+            (cls.on_setkey, "ToggleSetKey"),
+            (cls.salvar, "SaveDataFile"),
+            (cls.compound_save_data, "SaveData"),
+            (cls.pop_menu, AzoeEvent('Key', 'Input', {'nom': 'menu', 'type': 'tap'})),
+            (cls.pop_menu, 'OpenMenu'),
+            (lambda e: cls.end_dialog(), 'EndDialog'),
+            (salir_handler, 'QUIT'),
+            (cls.cargar_juego, 'LoadGame'),
+            (cls.create_character, 'CharacterCreation')
+        )
+
+    @classmethod
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
         from engine.mapa import Stage
         if stage not in cls.mapas or is_new_game:
@@ -156,13 +171,4 @@ class EngineData:
             cls.new_game(name)
 
 
-EventDispatcher.register(EngineData.on_cambiarmapa, "SetMap")
-EventDispatcher.register(EngineData.on_setkey, "ToggleSetKey")
-EventDispatcher.register(EngineData.salvar, "SaveDataFile")
-EventDispatcher.register(EngineData.compound_save_data, "SaveData")
-EventDispatcher.register(EngineData.pop_menu, AzoeEvent('Key', 'Input', {'nom': 'menu', 'type': 'tap'}))
-EventDispatcher.register(EngineData.pop_menu, 'OpenMenu')
-EventDispatcher.register(lambda e: EngineData.end_dialog(), 'EndDialog')
-EventDispatcher.register(salir_handler, 'QUIT')
-EventDispatcher.register(EngineData.cargar_juego, 'LoadGame')
-EventDispatcher.register(EngineData.create_character, 'CharacterCreation')
+EngineData.init()

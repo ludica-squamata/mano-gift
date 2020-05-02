@@ -24,6 +24,11 @@ class EventDispatcher:
                 cls._oyentes[event].append(listener)
 
     @classmethod
+    def register_many(cls, *pairs):
+        for listener, events in pairs:
+            cls.register(listener, events)
+
+    @classmethod
     def deregister(cls, listener, *events):
         """
         Se llama para removerse de la cola de notificaciones (por ejemplo, al morir un mob).
