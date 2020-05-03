@@ -94,6 +94,7 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
 
     def cambiar_direccion(self, direccion=None):
         super().cambiar_direccion(direccion)
+        self.image = self.images['S' + self.direccion]
         self.step = 'S'
 
     def update(self, *args):
