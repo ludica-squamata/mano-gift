@@ -1,7 +1,7 @@
 from pygame import mask as mask_module, Surface, SRCALPHA
+from engine.misc import abrir_json, cargar_imagen
 from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.scenery import new_prop
-from engine.misc import abrir_json
 from engine.globs import ModData
 from engine.mobs import Mob
 from .salida import Salida
@@ -39,12 +39,13 @@ def load_props(alldata):
     pos = alldata['props']
 
     loaded_props = []
+    img = None
     for ref in pos:
-        if ref in alldata['refs']:
-            if alldata['refs'][ref].endswith('.json'):
+        if ref in imgs:
+            if imgs[ref].endswith('.json'):
                 data = abrir_json(ModData.items + alldata['refs'][ref])
             else:
-                # points to a .png file instead.
+                img = cargar_imagen(imgs[ref])  # because it points to a .png file instead.
                 data = False
         else:
             # use ref as filename
@@ -60,7 +61,7 @@ def load_props(alldata):
                 prop = new_prop(x, y, data=data)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable
             else:
-                prop = new_prop(x, y, img=imgs[ref])
+                prop = new_prop(x, y, nombre=ref, img=img)
                 is_interactive = False
 
             if type(prop) is list:

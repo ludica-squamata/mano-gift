@@ -82,19 +82,21 @@ class Operable(Escenografia):
     accionable = True
 
     def __init__(self, x, y, z, data):
-        super().__init__(x, y, z=z, data=data)
         self.estados = {}
-        self.enabled = self.data.get('enabled', True)
+        self.enabled = data.get('enabled', True)
         self.grupo = GRUPO_OPERABLES
-        Item_Group.add(self.nombre, self, self.grupo)
 
+        images = {}
         for estado in data['operable']:
             idx = estado['ID']
             self.estados[idx] = {}
             for attr in estado:
                 if attr == 'image':
-                    img = cargar_imagen(estado[attr])
-                    # mascara = mask.from_surface(img)
+                    if estado[attr] not in images:
+                        img = cargar_imagen(estado[attr])
+                        images[estado[attr]] = img
+                    else:
+                        img = images[estado[attr]]
                     self.estados[idx].update({'image': img})
                 elif attr == 'next':
                     self.estados[idx].update({'next': estado[attr]})
@@ -103,6 +105,9 @@ class Operable(Escenografia):
                     self.estados[idx].update({'event': f})
                 else:
                     self.estados[idx].update({attr: estado[attr]})
+
+        super().__init__(x, y, z=z, imagen=self.estados[0]['image'], data=data)
+        Item_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
         if entity.tipo == 'Mob' and self.enabled:

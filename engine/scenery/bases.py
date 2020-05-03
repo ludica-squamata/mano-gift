@@ -29,8 +29,6 @@ class Escenografia(ShadowSprite, EventListener):
         super().__init__(imagen=imagen, rect=rect, x=x, y=y, dz=z)
         self.data = data
         self.nombre = data.get('nombre', nombre)
-        if self.nombre is None:
-            self.nombre = imagen[6:-4]
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'sin_sombra' not in data.get('propiedades', [])
         if data.get('proyecta_luz', False):
