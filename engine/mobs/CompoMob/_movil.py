@@ -9,12 +9,12 @@ class Movil(Caracterizado):
 
     def cambiar_direccion(self, direccion=None):
         self.direccion = direccion
-        self.image = self.images['S' + self.direccion]
 
-    # noinspection PyMethodOverriding
-    def mover(self):
+    def mover(self, dx=0, dy=0):
+        # 'dx' y 'dy' son agregados para mantener la firma
+        # cuestiones de PyCharm.
         self.moviendose = True
-        dx, dy = super().mover(*self.direcciones[self.direccion])
+        dx, dy = super().mover(dx, dy)
         self.reubicar(dx, dy)
         EventDispatcher.trigger('SoundEvent', self, {'type': 'movement', 'volume': 1})
 

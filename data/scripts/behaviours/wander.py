@@ -96,7 +96,7 @@ class Move(Leaf):
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             if direccion != e.direccion:
                 e.cambiar_direccion(direccion)
-            e.mover()
+            e.mover(*e.direcciones[direccion])
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Is moving to point', 'pos': (400, 0)})
             return Running
         else:

@@ -19,7 +19,7 @@ class Caracterizado(AzoeSprite):
         for char in ModData.data['caracteristicas']:
             if char in self._chars:
                 for sub in ModData.data['caracteristicas'][char]:
-                    # acá habría que hacer algún cambio a la D&D, pero eso tendría que determinarlo el mooder.
+                    # acá habría que hacer algún cambio a la D&D, pero eso tendría que determinarlo el modder.
                     self._chars[sub] = self._chars[char]
                     self._allchars.append(sub)
 
@@ -41,5 +41,5 @@ class Caracterizado(AzoeSprite):
 
     def mover(self, dx, dy):
         dx *= self['Velocidad']  # Nótese que 'Velocidad' es una propiedad que solo tiene el mob Controllable.
-        dy *= self['Velocidad']  # Otros mobs la tienen, y por eso usan el '1' que devuelve __getitem__()
+        dy *= self['Velocidad']  # Otros mobs no la tienen, y por eso usan el '1' que devuelve __getitem__()
         return dx, dy

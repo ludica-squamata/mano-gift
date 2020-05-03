@@ -73,8 +73,8 @@ class Sight(AzoeBaseSprite):
 
         self.move(direccion)
         mapa = self.parent.mapa_actual
-        lista = mapa.properties.sprites() if (mapa is not None) and (len(mapa.properties.sprites()) > 0) else [
-            self.parent]
+        sprites = mapa.properties.sprites()
+        lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
         if self.parent in lista:
             idx = lista.index(self.parent)
         else:
@@ -100,10 +100,10 @@ class Touch(AzoeBaseSprite):
     def __init__(self, parent):
         super().__init__(parent, 'Tacto', rect=parent.rect)
 
-    def __call__(self):
+    def __call__(self, passive=True):
         mapa = self.parent.mapa_actual
-        lista = mapa.properties.sprites() if (mapa is not None) and (len(mapa.properties.sprites()) > 0) else [
-            self.parent]
+        sprites = mapa.properties.sprites()
+        lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
 
         lista.reverse()
         if self.parent in lista:
@@ -112,10 +112,13 @@ class Touch(AzoeBaseSprite):
             idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
             if self.rect.colliderect(obj.rect):
-                if obj.accionable:
+                if not passive:
                     self.parent.perceived['touched'].append(obj)
                 else:
                     self.parent.perceived['felt'].append(obj)
+
+    def touch(self):
+        self.__call__(passive=False)
 
 
 class Sensitivo(Caracterizado):
@@ -127,6 +130,7 @@ class Sensitivo(Caracterizado):
         self.oido = Hearing(self)
         self.tacto = Touch(self)
         self.perceived = {"heard": [], "seen": [], "touched": [], "felt": []}
+        self.touch = self.tacto.touch
 
     def update(self, *args):
         super().update(*args)

@@ -42,9 +42,10 @@ class ControllableAI(EventAware):
         if direccion != self.entity.direccion:
             self.entity.cambiar_direccion(direccion)
         if not self.entity.detectar_colisiones():
-            self.entity.mover()
+            self.entity.mover(*self.entity.direcciones[direccion])
 
     def set_action(self):
+        self.entity.touch()
         self.accion = True
 
     def contextual_event_key(self):
