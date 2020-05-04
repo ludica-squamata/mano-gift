@@ -16,7 +16,6 @@ class MenuName(Menu):
     lineas = None
     foco = 'nombre'
 
-    # noinspection PyMissingConstructor
     def __init__(self):
         super().__init__('MenuName', 'Nombre')
         self.teclas = AzoeGroup('Teclas')  # teclado en pantalla

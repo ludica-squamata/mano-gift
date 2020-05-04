@@ -3,7 +3,6 @@
   "tipo": "operable",
   "peso": 10,
   "volumen": 5,
-  "image": "props/puerta_c.png",
   "propiedades": [
     "solido","sin_sombra"
   ],
