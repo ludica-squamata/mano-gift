@@ -225,7 +225,8 @@ class FloatingNumber(Sprite):
     def update(self):
         self.timer += 1
         self.rect.centery -= 1
-        if self.timer == 15:
+        self.image.set_alpha(255-self.timer*20)
+        if self.image.get_alpha() == 0:
             self.timer = 0
             Renderer.del_overlay(self)
 
