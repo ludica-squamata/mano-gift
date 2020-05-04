@@ -5,6 +5,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from .renderer import Renderer
 from datetime import datetime
 from itertools import cycle
+from math import floor
 
 
 class Clock:
@@ -157,6 +158,11 @@ class Clock:
 
 class TimeStamp:
     def __init__(self, h=0, m=0, s=0):
+        if type(h) is float:
+            decimales = h-floor(h)
+            h = int(h-decimales)
+            m = int(decimales*60)
+
         self._h = h
         self._m = m
         self._s = s
@@ -248,6 +254,10 @@ class TimeStamp:
         s = (self._h * 3600 + self._m * 60 + self._s) * factor
         return self._convert(s)
 
+    def __float__(self):
+        s = (self._h * 3600 + self._m * 60 + self._s)
+        return float(s/3600)
+
     def __repr__(self):
         return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
 
@@ -260,6 +270,7 @@ class Noche(AzoeSprite):
 
     aclararse = False
     oscurecerse = False
+    atardecer = False
 
     def __init__(self, size):
         img = Surface(size, SRCALPHA)
@@ -306,8 +317,8 @@ class Noche(AzoeSprite):
         nch = pxarray.make_surface()
         self.image = nch
 
-    def trasparentar(self, mod):  # this is gradual
-        if 0 < self.alpha + mod < 230:
+    def trasparentar(self, mod, max_alpha=230):  # this is gradual
+        if 0 < self.alpha + mod < max_alpha:
             self.alpha += mod
             self.image.fill((0, 0, 0, self.alpha))
             return True
@@ -323,6 +334,8 @@ class Noche(AzoeSprite):
             self.aclararse = self.trasparentar(-1)
         if self.oscurecerse:
             self.oscurecerse = self.trasparentar(+1)
+        if self.atardecer:
+            self.atardecer = self.trasparentar(+1, 120)
 
 
 class Tiempo:
@@ -353,6 +366,10 @@ class Tiempo:
         EventDispatcher.trigger(event.tipo + 'Data', 'Tiempo', {'tiempo': cls.get_time()})
 
     @classmethod
+    def reset_days(cls):
+        cls.dia = 0
+
+    @classmethod
     def update(cls, rate=0):
         cls.FPS.tick(rate)
 
@@ -362,7 +379,7 @@ class Tiempo:
             cls._frames = 0
             if cls.clock.day_flag:
                 cls.dia += 1
-                EventDispatcher.trigger('DayFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
+                EventDispatcher.trigger('DayFlag', 'Tiempo', {'days': cls.dia})
             if cls.clock.hour_flag:
                 EventDispatcher.trigger('HourFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
             if cls.clock.minute_flag:
@@ -379,34 +396,20 @@ class Tiempo:
 
 
 class SeasonalYear:
-    rate = 1
-    day_count = 0
-
-    max_hour = 0
-    min_hour = 0
+    year_lenght = -1
+    season_lenght = -1
+    day_lenght = 0
 
     biome = None
     season = None
 
-    biomes = {  # min/max son la cantidad de horas que puede tener un día.
-        # los dos biomas polares están rotos
+    biomes = {  # los valores son la cantidad de horas que puede tener un día.
         "polar": {  # corresponde a latitudes entre 90º y 30º N/S
-            "spring": {"min": 0, "max": 23},
-            "summer": {"min": 23, "max": 24},
-            "fall": {"min": 0, "max": 24},
-            "winter": {"min": 0, "max": 1}},
-
+            "spring": 24, "summer": 24, "fall": 0, "winter": 0},
         "equatorial": {  # corresponde a latitudes entre 30ºS y 30ºN
-            "spring": {"min": 8, "max": 10},
-            "summer": {"min": 11, "max": 16},
-            "fall": {"min": 9, "max": 10},
-            "winter": {"min": 7, "max": 8}},
-
+            "spring": 12, "summer": 12, "fall": 12, "winter": 12},
         "template": {  # corresponde a latitudes entre 30º y 90º N/S.
-            "spring": {"min": 9, "max": 13},
-            "summer": {"min": 14, "max": 16},
-            "fall": {"min": 11, "max": 13},
-            "winter": {"min": 8, "max": 10}}
+            "spring": 12, "summer": 19, "fall": 12, "winter": 10}
     }
     cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
 
@@ -417,30 +420,32 @@ class SeasonalYear:
         cls.set_day_duration()
         cls.propagate()
 
-    @classmethod
-    def count_days(cls, event):
-        hora = event.data['hora']
-        if hora == TimeStamp(0):
-            cls.day_count += cls.rate
-            if cls.day_count >= cls.rate:
-                max_h = cls.max_hour - cls.rate
-                EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_max_time': max_h})
+        EventDispatcher.register(cls.cycle_seasons, 'DayFlag')
 
-                if max_h < cls.min_hour:
-                    cls.season = next(cls.cycler)
-                    cls.set_day_duration()
+    @classmethod
+    def cycle_seasons(cls, event):
+        # Tiempo ya de por si cuenta los días.
+        number_of_days = event.data['days']
+        # No hay necesidad de que SeasonalYear los cuente también
+        if number_of_days == cls.season_lenght:
+            # habría que ver cómo se establece season lenght igual.
+            cls.season = next(cls.cycler)
+            cls.set_day_duration()
+            EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
+
+        if number_of_days == cls.year_lenght:
+            # y lo mismo con year lenght.
+            cls.season = next(cls.cycler)
+            Tiempo.reset_days()
 
     @classmethod
     def set_day_duration(cls):
-        cls.max_hour = cls.biomes[cls.biome][cls.season]['max']
-        cls.min_hour = cls.biomes[cls.biome][cls.season]['min']
+        cls.day_lenght = cls.biomes[cls.biome][cls.season]
 
     @classmethod
     def propagate(cls):
-        max_h = cls.max_hour
         # Este trigger es para setear las timestamps en Stage.
-        EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_max_time': max_h})
+        EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
 
 
 EventDispatcher.register(Tiempo.save_time, 'Save')
-EventDispatcher.register(SeasonalYear.count_days, 'DayFlag')

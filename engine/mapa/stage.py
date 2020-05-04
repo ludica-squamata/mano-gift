@@ -6,6 +6,7 @@ from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from pygame import mask, Rect, transform
 from engine.globs import Mob_Group
+from math import ceil
 
 
 class Stage:
@@ -16,7 +17,9 @@ class Stage:
     data = {}
     offset_x = 320  # camara.rect.centerx
     offset_y = 240  # camara.rect.centery
+    mediodia = None  # porque no siempre es a las 12 en punto.
     amanece = None
+    atardece = None
     anochece = None
 
     def __init__(self, nombre, entrada):
@@ -52,16 +55,20 @@ class Stage:
 
         EventDispatcher.register_many(
             (self.cargar_timestamps, 'UpdateTime'),
-            (self.anochecer, 'HourFlag'),
+            (self.anochecer, 'MinuteFlag'),
             (self.save_map, 'Save'),
             (self.rotate_map, 'RotateEverything')
         )
 
     def cargar_timestamps(self, event):
-        horas_dia = event.data['new_max_time']
-        offset = 12 - (horas_dia // 2)  # centra la duración del día a las 12:00
+        horas_dia = event.data['new_daylenght']
+        offset = ceil(12 - (horas_dia / 2))
         self.amanece = TimeStamp(offset + 1)
-        self.anochece = TimeStamp(horas_dia + offset)
+        self.mediodia = TimeStamp(offset + (horas_dia / 2))
+        self.anochece = TimeStamp(offset + horas_dia)
+        self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
+
+        self.anochecer()
 
     def anochecer(self, event=None):
         noche = Tiempo.noche
@@ -70,7 +77,9 @@ class Stage:
             # aclararse y oscurecerse son flags de la noche que habilitan su update().
             if ts == self.amanece:
                 noche.aclararse = True
-            if ts == self.anochece:
+            elif ts == self.atardece:
+                noche.atardecer = True
+            elif ts == self.anochece:
                 noche.oscurecerse = True
 
         elif self.data['ambiente'] == 'interior':
@@ -78,9 +87,10 @@ class Stage:
 
         else:  # el ambiente es exterior, pero no hay evento.
             ts = Tiempo.clock.timestamp()
-            if self.amanece <= ts <= self.anochece:
-                # mismo resultado, pero es porque es de día.
+            if self.amanece <= ts <= self.atardece:
                 noche.set_transparency(0)
+            elif self.atardece <= ts <= self.anochece:
+                noche.set_transparency(120)
             else:
                 noche.set_transparency(230)
 
@@ -237,6 +247,7 @@ class ChunkMap(AzoeBaseSprite):
             self.parent.chunks.add(mapa)
         else:
             mapa = self.limites[ady]
+            # noinspection PyUnresolvedReferences
             mapa.ubicar(dx, dy)
 
         if ady == 'izq' or ady == 'der':
@@ -253,6 +264,3 @@ class ChunkMap(AzoeBaseSprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
-
-    def update(self):
-        self.parent.anochecer()
