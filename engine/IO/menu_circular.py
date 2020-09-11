@@ -158,7 +158,7 @@ class CircularMenu(EventAware):
         self.cascadas[self.cascadaActual].clear()
 
     def switch_cascades(self):
-        for cuadro in self.cuadros:
+        for cuadro in self.cuadros.sprs():
             cuadro.deregister()
         self.cuadros.empty()
         self.cuadros.add(*self.cascadas[self.cascadaActual])

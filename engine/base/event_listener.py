@@ -17,6 +17,7 @@ class EventListener:
             # cargar un archivo por ruta
             loader = machinery.SourceFileLoader("module.name", Md.fd_scripts + self.data['script'])
             # if sys.version_info.minor == 3:
+            # noinspection PyArgumentList
             m = loader.load_module()
             # elif sys.version_info.minor == 4:
             # en 3.4 lo cambiaron a exec_module()

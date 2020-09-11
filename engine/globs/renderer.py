@@ -93,7 +93,7 @@ class Camara:
     @classmethod
     def detectar_mapas_adyacentes(cls):
         r = cls.rect.inflate(5, 5)
-        map_at = cls.bgs.get_sprites_at
+        map_at = cls.bgs.get_spr_at
         adyacent_map_key = ''
         reference = []
 
@@ -173,7 +173,7 @@ class Camara:
 
     @classmethod
     def update_sprites_layer(cls):
-        for spr in cls.visible:
+        for spr in cls.visible.sprs():
             cls.visible.change_layer(spr, spr.z)
 
     @classmethod
@@ -215,7 +215,7 @@ class Camara:
         for spr in cls.bgs:
             spr.rect.move_ip(dx, dy)
 
-        for spr in cls.real:
+        for spr in cls.real.sprs():
             x = spr.stage.rect.x + spr.mapRect.x
             y = spr.stage.rect.y + spr.mapRect.y
             spr.ubicar(x, y)
@@ -226,7 +226,7 @@ class Camara:
         for spr in cls.bgs:
             spr.rect.topleft = x, y
 
-        for spr in cls.real:
+        for spr in cls.real.sprs():
             x = spr.stage.rect.x + spr.mapRect.x
             y = spr.stage.rect.y + spr.mapRect.y
             spr.ubicar(x, y)
@@ -309,7 +309,7 @@ class Renderer:
             w = ANCHO - event.data['pos'][0]
             h = fuente.get_height()
             spr.image = Surface((w, h))
-            spr.image.blit(fuente.render(event.data['text'], 1, (255, 0, 0)), (0, 0))
+            spr.image.blit(fuente.render(event.data['text'], True, (255, 0, 0)), (0, 0))
             spr.rect = spr.image.get_rect(topleft=event.data['pos'])
 
             spr.active = True
@@ -321,7 +321,7 @@ class Renderer:
         fondo.fill((0, 0, 0))
         cls.camara.update(cls.use_focus)
 
-        for over in cls.overlays:
+        for over in cls.overlays.sprs():
             if over.active:
                 over.update()
         ret = cls.camara.draw(fondo)

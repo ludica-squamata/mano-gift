@@ -13,7 +13,7 @@ class Title(AzoeBaseSprite):
         w, h = fuente.size(nombre)
         image = Surface((w + 6, h + 2))
         image.fill(CANVAS_BG, (1, 1, w + 4, h))
-        image.blit(fuente.render(nombre, 1, TEXT_FG, CANVAS_BG), (2, 1))
+        image.blit(fuente.render(nombre, True, TEXT_FG, CANVAS_BG), (2, 1))
         super().__init__(parent, nombre, image, image.get_rect())
 
     def center(self, rect):

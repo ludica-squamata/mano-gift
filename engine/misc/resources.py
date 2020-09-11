@@ -17,7 +17,6 @@ def split_spritesheet(ruta, w=32, h=32):
     ss = spritesheet.subsurface  # function alias
     ancho = spritesheet.get_width()
     alto = spritesheet.get_height()
-    tamanio = w, h
     sprites = []
     dh = int(alto / h)
     dw = int(ancho / w)
@@ -26,7 +25,7 @@ def split_spritesheet(ruta, w=32, h=32):
     else:
         for y in range(dh):
             for x in range(dw):
-                sprites.append(ss(Rect(((int(ancho / (ancho / w)) * x, int(alto / (alto / h)) * y), tamanio))))
+                sprites.append(ss(Rect(((ancho / (ancho / w)) * x, (alto / (alto / h)) * y, w, h))))
     return sprites
 
 
@@ -59,10 +58,12 @@ def guardar_json(ruta, datos, encoding='utf-8'):
 def load_module_from_script(name):
     from engine.globs.mod_data import ModData
     ruta = ModData.fd_scripts + name + '.py'
+    # noinspection PyArgumentList
     _module = machinery.SourceFileLoader("module.name", ruta).load_module()
     return _module
 
 
-def raw_load_module(ruta):
+def raw_load_module(ruta: str):
+    # noinspection PyArgumentList
     _module = machinery.SourceFileLoader("module.name", ruta).load_module()
     return _module

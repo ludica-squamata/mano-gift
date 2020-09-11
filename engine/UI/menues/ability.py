@@ -2,6 +2,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs.textrect import render_textrect
 from engine.globs import CANVAS_BG, TEXT_FG
 from engine.globs.mod_data import ModData
+from engine.globs.azoe_group import AzoeGroup
 from pygame import font, draw, Surface
 from pygame.sprite import LayeredUpdates
 from ..widgets import BaseWidget, Boton
@@ -17,11 +18,11 @@ class MenuAbility(Menu):
         super().__init__('Atributos', 'Atributos')
 
         chars = list(ModData.data['caracteristicas'].keys())
-        self.counters = LayeredUpdates()
+        self.counters = AzoeGroup('Counters')
 
         fuente = font.SysFont('Verdana', 16, bold=True)
         for i, char in enumerate(chars):
-            render = fuente.render(char, 1, TEXT_FG, CANVAS_BG)
+            render = fuente.render(char, True, TEXT_FG, CANVAS_BG)
             rect = render.get_rect(topleft=[6, 125 + i * 43])
             self.canvas.blit(render, rect)
 
@@ -50,13 +51,13 @@ class MenuAbility(Menu):
     @property
     def valores(self):
         vs = {}
-        for counter in self.counters.sprites():
+        for counter in self.counters.sprs():
             vs[counter.char] = counter.value
 
         return vs
 
     def elegir_uno(self, delta):
-        for counter in self.counters:
+        for counter in self.counters.sprs():
             counter.deselegir()
 
         self.current_idx += delta
@@ -65,7 +66,7 @@ class MenuAbility(Menu):
         elif self.current_idx < 0:
             self.current_idx = len(self.counters) - 1
 
-        self.current_counter = self.counters.sprites()[self.current_idx]
+        self.current_counter = self.counters.sprs()[self.current_idx]
         self.current_counter.elegir(self.posicion_horizontal)
 
     def eleccion_horizontal(self, direccion):
@@ -75,7 +76,7 @@ class MenuAbility(Menu):
                 self.posicion_horizontal = 'derecha'
             else:
                 self.posicion_horizontal = 'ninguna'
-                for counter in self.counters:
+                for counter in self.counters.sprs():
                     counter.deselegir()
                 self.fin.ser_elegido()
 
@@ -85,12 +86,12 @@ class MenuAbility(Menu):
                 self.posicion_horizontal = 'izquierda'
             elif self.posicion_horizontal == 'ninguna':
                 self.fin.ser_deselegido()
-                self.counters.sprites()[self.current_idx].elegir('derecha')
+                self.counters.sprs()[self.current_idx].elegir('derecha')
                 self.posicion_horizontal = 'derecha'
 
     def modificar_valor(self):
-        if any(counter.isSelected for counter in self.counters.sprites()):
-            for counter in self.counters.sprites():
+        if any(counter.isSelected for counter in self.counters.sprs()):
+            for counter in self.counters.sprs():
                 if counter.isSelected:
                     self.current_counter.accion()
         else:

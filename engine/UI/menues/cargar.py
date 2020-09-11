@@ -50,7 +50,7 @@ class MenuCargar(Menu):
         self.deselect_all(self.filas)
         self.posicionar_cursor(i)
         if self.opciones > 0:
-            elegido = self.filas.get_sprite(self.sel)
+            elegido = self.filas.get_spr(self.sel)
             elegido.ser_elegido()
             if elegido.rect.y > self.draw_space_rect.h:
                 for fila in self.filas:

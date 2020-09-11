@@ -1,6 +1,6 @@
 from pygame import mask, PixelArray, Surface, SRCALPHA, transform
 from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA
-# from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from .azoe_sprite import AzoeSprite
 from math import floor
@@ -16,8 +16,9 @@ class Sombra(AzoeSprite):
         self.nombre = "sombra " + direccion + " de " + self.spr.nombre
         super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z, dz=dz - 1)
         self.mask = mascara
-        self.alpha = 150
+        self.alpha = 230
         self.dif_x = dfx
+        EventDispatcher.register(self.set_fade, 'SetNight')
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla
@@ -26,6 +27,9 @@ class Sombra(AzoeSprite):
         """
 
         super().ubicar(x - self.dif_x, y)
+
+    def set_fade(self, event):
+        self.fade(-event.data['alpha'])
 
     def fade(self, value):
         w, h = self.image.get_size()
@@ -36,6 +40,7 @@ class Sombra(AzoeSprite):
             for y in range(h):
                 for x in range(w):
                     if self.mask.get_at((x, y)):
+                        # noinspection PyUnresolvedReferences
                         pxarray[x, y] = 0, 0, 0, self.alpha
             self.image = pxarray.make_surface()
             del pxarray
@@ -85,6 +90,7 @@ class ShadowSprite(AzoeSprite):
         idx = self._luces[direccion].index(1)
         if self.sombras[direccion][idx] is None:
             s = Sombra(self, direccion, *self.crear_sombras())
+            # noinspection PyTypeChecker
             self.sombras[direccion][idx] = s
             self._todas_las_sombras.append(s)
         self.sombra = self.sombras[direccion][idx]
@@ -191,6 +197,7 @@ class ShadowSprite(AzoeSprite):
 
         return h_2, t_surface, mascara, z
 
+    # noinspection PyUnresolvedReferences
     @staticmethod
     def orientar_sombra(surface, arg=None, _mask=None):
         h = surface.get_height()
@@ -291,6 +298,7 @@ class ShadowSprite(AzoeSprite):
         for y in range(h):
             for x in range(start, stop):
                 if _mask.get_at((x, y)):
+                    # noinspection PyUnresolvedReferences
                     pxarray[x, y] = COLOR_SOMBRA
 
         return pxarray.make_surface().convert_alpha()

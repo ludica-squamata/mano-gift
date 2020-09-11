@@ -24,8 +24,7 @@ class Teclas:
         }
 
         for key in cls.key_dict:
-            cls.key_dict[key].update({'pressed': False, 'tap': False, 'holding': 0,
-                                      'hold': False, 'release': False, 'held': 0})
+            cls.key_dict[key].update(dict(pressed=False, tap=False, holding=0, hold=False, release=False, held=0))
 
 
 Teclas.asignar()

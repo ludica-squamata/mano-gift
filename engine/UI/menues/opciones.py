@@ -69,6 +69,7 @@ class MenuOpciones(Menu):
             botones.insert(2, {n: "Metodo de Entrada", c: self.set_input_device, d: {b: "Arriba", a: "Recordar Menus"}})
 
         for i in range(len(botones)):
+            # noinspection PyTypeChecker
             botones[i][p] = [6, 38 * i + (32 * factor_y)]
 
         return botones
@@ -77,7 +78,7 @@ class MenuOpciones(Menu):
         margen_derecho = 3
         margen_inferior = 9
         ancho = 88
-        for boton in self.botones:
+        for boton in self.botones.sprs():
             nom = boton.nombre.lower()
             x, y = boton.rect.topright
             x += margen_derecho
@@ -111,8 +112,8 @@ class MenuOpciones(Menu):
     def elegir_boton_espacio(self, n=None):
         if n is None:
             n = self.cur_btn
-        tecla = self.espacios.get_sprite(n)
-        boton = self.botones.get_sprite(n)
+        tecla = self.espacios.get_spr(n)
+        boton = self.botones.get_spr(n)
         return boton, tecla
 
     def cambiar_booleano(self):

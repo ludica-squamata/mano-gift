@@ -115,8 +115,8 @@ class CharacterName(Sprite):
         canvas = Surface((width, height), SRCALPHA)
 
         for character in self.text:
-            fondo = fuente.render(character, 1, TEXT_FG)
-            frente = fuente.render(character, 1, fg_color)
+            fondo = fuente.render(character, True, TEXT_FG)
+            frente = fuente.render(character, True, fg_color)
             w, h = fuente.size(character)
             img = Surface((w + 2, h + 2), SRCALPHA)
 
@@ -218,7 +218,7 @@ class FloatingNumber(Sprite):
             color = 0, 255, 0
 
         string = str(factor).lstrip('-')
-        self.image = self.fuente.render(string, 1, color)
+        self.image = self.fuente.render(string, True, color)
         self.rect = self.image.get_rect(midbottom=mob_rect.midtop)
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
 

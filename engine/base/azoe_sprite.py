@@ -67,7 +67,7 @@ class AzoeSprite(sprite.Sprite):
             self.z = self.mapRect.bottom
         self.z += dz
 
-        self.mapa_actual_rect = Rect(self.mapRect)
+        self.mapa_actual_rect = Rect(*self.mapRect)
 
     def set_parent_map(self, parent):
         self.stage = parent

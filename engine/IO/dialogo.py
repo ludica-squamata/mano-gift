@@ -254,7 +254,7 @@ class Dialogo(Discurso):
         else:
             self.cerrar()
 
-    def mostrar_nodo(self, nodo, omitir_tags=False):
+    def mostrar_nodo(self, nodo, omitir_tags: list = False):
         """
         :type nodo: Elemento
         :type omitir_tags: bool

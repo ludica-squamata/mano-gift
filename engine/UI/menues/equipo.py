@@ -61,7 +61,7 @@ class MenuEquipo(Menu):
 
         # seleccionar un espacio por default
         self.cur_esp = 1
-        selected = self.espacios.get_sprite(self.cur_esp)
+        selected = self.espacios.get_spr(self.cur_esp)
         selected.ser_elegido()
         self.current = selected
 
@@ -140,6 +140,7 @@ class MenuEquipo(Menu):
 
         return render
 
+    # noinspection PyUnresolvedReferences
     def select_one(self, direccion):
         """Desplaza la selección al espacio equipable actual, y lo resalta.
         :param direccion: string
@@ -173,7 +174,7 @@ class MenuEquipo(Menu):
             j = 0
 
         if self.opciones > 0:
-            for fila in self.filas:
+            for fila in self.filas.sprs():
                 fila.ser_deselegido()
             self.posicionar_cursor(j)
             self.mover_cursor(self.filas.get_sprite(self.sel))
@@ -186,7 +187,7 @@ class MenuEquipo(Menu):
         h, w = 32, self.draw_space_rect.w
 
         self.filas.empty()
-        espacio = self.espacios.get_sprite(self.cur_esp)  # por ejemplo: peto
+        espacio = self.espacios.get_spr(self.cur_esp)  # por ejemplo: peto
         items = self.entity.inventario('equipable', espacio.nombre)
         self.fill_draw_space(items, w, h)
 
@@ -206,7 +207,7 @@ class MenuEquipo(Menu):
         """Cuando un espacio esta seleccionado, y el foco está en la lista de items
         usar esta función traslada el item de la lista al espacio seleccionado."""
 
-        espacio = self.espacios.get_sprite(self.cur_esp)
+        espacio = self.espacios.get_spr(self.cur_esp)
         item = self.current.item
         if espacio.nombre == item.espacio:
             espacio.ocupar(item)
@@ -218,7 +219,7 @@ class MenuEquipo(Menu):
             self.cambio = True
 
     def desequipar_espacio(self):
-        espacio = self.espacios.get_sprite(self.cur_esp)
+        espacio = self.espacios.get_spr(self.cur_esp)
         item = self.current.item
         espacio.desocupar()
         self.entity.desequipar_item(item)
@@ -230,7 +231,7 @@ class MenuEquipo(Menu):
             self.deregister()
             return super().cancelar()
         else:
-            for fila in self.filas:
+            for fila in self.filas.sprs():
                 fila.ser_deselegido()
             self.foco = 'espacios'
 

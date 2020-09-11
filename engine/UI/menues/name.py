@@ -113,7 +113,7 @@ class MenuName(Menu):
             espacio = self.lineas.get_sprite(self.lin_idx).rect
 
             fuente = font.SysFont('Verdana', 20)
-            image = fuente.render(key, 1, (0, 0, 0), CANVAS_BG)
+            image = fuente.render(key, True, (0, 0, 0), CANVAS_BG)
             rect = image.get_rect()
             rect.bottom = espacio.top - 2
             rect.centerx = espacio.centerx
@@ -197,7 +197,7 @@ class MenuName(Menu):
 
     def set_name(self):
         self.deregister()
-        name = ''.join([spr.key for spr in self.area_input])
+        name = ''.join([spr.key for spr in self.area_input.sprs()])
         EventDispatcher.trigger('CharacterCreation', self.nombre, {'nombre': name, 'final': True})
         EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
@@ -206,7 +206,7 @@ class MenuName(Menu):
             self.functions[mode][key]()
 
     def update(self):
-        for t in self.teclas:
+        for t in self.teclas.sprs():
             if t.rect.collidepoint(self.cursor.pos):
                 t.ser_elegido()
                 self.cursor.set_current(t)
@@ -238,7 +238,7 @@ class Character(BaseWidget):
         fuente = font.SysFont('Verdana', 20)
         img = Surface((32, 32))
         img.fill(bg)
-        render = fuente.render(char, 1, (0, 0, 0), bg)
+        render = fuente.render(char, True, (0, 0, 0), bg)
         rect = render.get_rect(center=img.get_rect().center)
         img.blit(render, rect)
         return img

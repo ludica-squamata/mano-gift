@@ -19,6 +19,8 @@ class Clock:
     second_flag = False
     enabled = False
 
+    alarms = None
+
     def __init__(self, real=False, h=0, m=0, s=0, minute_lenght=60):
         """Nuevo Reloj Clock con capacidades superiores. Puede ser real o ficticio.
         Ahora con nuevas flags para minutos y segundos, además de horas y días.
@@ -52,6 +54,8 @@ class Clock:
         self._s = s
 
         EventDispatcher.register(self.on_pause, 'TogglePause')
+        # las alarmas son tiempos específicos en los que Clock debe lanzar un evento.
+        self.alarms = {}
 
     def on_pause(self, event):
         self.enabled = not event.data['value']
@@ -155,13 +159,17 @@ class Clock:
             else:
                 self.s += self.ds
 
+            ts = self.timestamp()
+            if ts in self.alarms:
+                EventDispatcher.trigger('ClockAlarm', 'Clock', {'time': self.alarms[ts]})
+
 
 class TimeStamp:
     def __init__(self, h=0, m=0, s=0):
         if type(h) is float:
-            decimales = h-floor(h)
-            h = int(h-decimales)
-            m = int(decimales*60)
+            decimales = h - floor(h)
+            h = int(h - decimales)
+            m = int(decimales * 60)
 
         self._h = h
         self._m = m
@@ -210,6 +218,9 @@ class TimeStamp:
             return self._h != other.h and self._m != other.m and self._s != other.s
         return True
 
+    def __hash__(self):
+        return hash((self._h, self._m, self._s))
+
     def __gt__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
             s1 = self._h * 3600 + self._m * 60 + self._s
@@ -256,7 +267,7 @@ class TimeStamp:
 
     def __float__(self):
         s = (self._h * 3600 + self._m * 60 + self._s)
-        return float(s/3600)
+        return float(s / 3600)
 
     def __repr__(self):
         return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
@@ -281,7 +292,23 @@ class Noche(AzoeSprite):
         self.alpha = 230
 
         Renderer.camara.add_visible(self)
+        EventDispatcher.register(self.get_alarms, 'ClockAlarm')
 
+    @staticmethod
+    def set_alarms(alarm_dict):
+        atardece = alarm_dict['atardece']
+        anochece = alarm_dict['anochece']
+        ts = anochece-atardece
+        s = ts.h * 3600 + ts.m * 60 + ts.s
+        print(s)
+
+    def get_alarms(self, event):
+        if event.data['time'] == 'atardece':
+            print(self, 'atardece')
+        elif event.data['time'] == 'anochece':
+            print(self, 'anochece')
+
+    # noinspection PyUnresolvedReferences
     def set_lights(self, *lights):
 
         def clamp(n):
@@ -321,6 +348,7 @@ class Noche(AzoeSprite):
         if 0 < self.alpha + mod < max_alpha:
             self.alpha += mod
             self.image.fill((0, 0, 0, self.alpha))
+            EventDispatcher.trigger('SetNight', 'Noche', {'alpha': self.alpha})
             return True
         else:
             return False
@@ -331,9 +359,9 @@ class Noche(AzoeSprite):
 
     def update(self):
         if self.aclararse:
-            self.aclararse = self.trasparentar(-1)
+            self.aclararse = self.trasparentar(-5)
         if self.oscurecerse:
-            self.oscurecerse = self.trasparentar(+1)
+            self.oscurecerse = self.trasparentar(+5)
         if self.atardecer:
             self.atardecer = self.trasparentar(+1, 120)
 
@@ -387,23 +415,20 @@ class Tiempo:
             if cls.clock.second_flag:
                 EventDispatcher.trigger('SecondFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
 
-        if cls.noche is not None:
-            cls.noche.update()
-
     @classmethod
     def crear_noche(cls, size):
         cls.noche = Noche(size)
 
 
 class SeasonalYear:
-    year_lenght = -1
-    season_lenght = -1
+    year_lenght = 360  # chapuza para velocidad
+    season_lenght = year_lenght//4  # 90
     day_lenght = 0
 
     biome = None
     season = None
 
-    biomes = {  # los valores son la cantidad de horas que puede tener un día.
+    biomes = {  # los valores son la cantidad de horas de luz que puede tener un día.
         "polar": {  # corresponde a latitudes entre 90º y 30º N/S
             "spring": 24, "summer": 24, "fall": 0, "winter": 0},
         "equatorial": {  # corresponde a latitudes entre 30ºS y 30ºN
@@ -427,14 +452,12 @@ class SeasonalYear:
         # Tiempo ya de por si cuenta los días.
         number_of_days = event.data['days']
         # No hay necesidad de que SeasonalYear los cuente también
-        if number_of_days == cls.season_lenght:
-            # habría que ver cómo se establece season lenght igual.
+        if number_of_days % cls.season_lenght == 0:  # 90, 180, 270, 360
             cls.season = next(cls.cycler)
             cls.set_day_duration()
             EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
 
         if number_of_days == cls.year_lenght:
-            # y lo mismo con year lenght.
             cls.season = next(cls.cycler)
             Tiempo.reset_days()
 

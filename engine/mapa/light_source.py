@@ -1,5 +1,5 @@
 ﻿from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import Mob_Group
+# from engine.globs import Mob_Group
 from pygame import Rect
 
 
@@ -20,12 +20,11 @@ class LightSource:
         self.rect.center = item.rect.x + x, item.rect.y + y
         self.origen = self.rect.center
 
-        EventDispatcher.register(self.update, 'MinuteFlag')
+        # EventDispatcher.register(self.update, 'MinuteFlag')
 
-    def update(self, event):
-        del event
-        for mob in Mob_Group:
-            mob.recibir_luz(self)
+    # def update(self, event):
+    #     for mob in Mob_Group:
+    #         mob.recibir_luz(self)
 
     def __repr__(self):
         x, y = str(self.rect.centerx), str(self.rect.centery)

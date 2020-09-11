@@ -28,7 +28,7 @@ class BasePanel(BaseWidget):
     def update(self, *args):
         self.image.fill(CANVAS_BG)
         self.image.blit(self.marco, (0, 0))
-        self.image.blit(self.f.render(self.nombre, 1, TEXT_FG, CANVAS_BG), (4, 3))
+        self.image.blit(self.f.render(self.nombre, True, TEXT_FG, CANVAS_BG), (4, 3))
 
 
 class DialogObjectsPanel(BasePanel):
@@ -57,7 +57,7 @@ class DialogObjectsPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mostrar {}>'.format(self.menu.actual.item.nombre), 1, TEXT_FG, CANVAS_BG)
+            render = self.f.render('<mostrar {}>'.format(self.menu.actual.item.nombre), True, TEXT_FG, CANVAS_BG)
             self.image.blit(render, (3, 23))
 
 
@@ -88,5 +88,5 @@ class DialogThemesPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mencionar {}>'.format(self.menu.actual.item), 1, TEXT_FG, CANVAS_BG)
+            render = self.f.render('<mencionar {}>'.format(self.menu.actual.item), True, TEXT_FG, CANVAS_BG)
             self.image.blit(render, (3, 23))

@@ -67,6 +67,8 @@ class Stage:
         self.mediodia = TimeStamp(offset + (horas_dia / 2))
         self.anochece = TimeStamp(offset + horas_dia)
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
+        Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece'})
+        Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
 
         self.anochecer()
 
@@ -102,7 +104,7 @@ class Stage:
         view = event.data['new_view']
         x, y = 0, 0
 
-        for mapa in self.chunks:
+        for mapa in self.chunks.sprs():
             mapa.rotate(angle)
 
         for obj in self.properties:
@@ -128,6 +130,7 @@ class Stage:
         dx, dy = self.data['entradas'][entrada]['pos']
         x = self.offset_x - dx
         y = self.offset_y - dy
+        # noinspection PyUnresolvedReferences
         self.mapa.ubicar(x, y)
 
     def __repr__(self):
@@ -207,7 +210,7 @@ class ChunkMap(AzoeBaseSprite):
     def cargar_limites(self, limites):
         for key in limites:
             rect = Rect(self._get_newmap_pos(key), self.rect.size)
-            mapa = self.parent.chunks.get_sprites_at(rect.center)
+            mapa = self.parent.chunks.get_spr_at(rect.center)
             if not mapa:
                 self.limites[key.lower()] = limites[key]
             else:
@@ -243,6 +246,7 @@ class ChunkMap(AzoeBaseSprite):
         if type(self.limites[ady]) is str:
             entradas = self.parent.data['entradas']
             mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['Props'])
+            # noinspection PyTypeChecker
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:

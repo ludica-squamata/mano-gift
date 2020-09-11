@@ -72,7 +72,7 @@ class Menu(EventAware, BaseWidget):
     def mover_cursor(self, item):
         if item.tipo == 'boton':
             for i in range(len(self.botones)):
-                spr = self.botones.get_sprite(i)
+                spr = self.botones.get_spr(i)
                 if spr.nombre == item.nombre:
                     self.cur_btn = i
                     self.current = spr
@@ -108,14 +108,14 @@ class Menu(EventAware, BaseWidget):
     def select_one(self, direccion):
         self.deselect_all(self.botones)
         if len(self.botones) > 0:
-            current = self.botones.get_sprite(self.cur_btn)
+            current = self.botones.get_spr(self.cur_btn)
             if direccion in current.direcciones:
                 selected = current.direcciones[direccion]
             else:
                 selected = current.nombre
 
             for i in range(len(self.botones)):
-                boton = self.botones.get_sprite(i)
+                boton = self.botones.get_spr(i)
                 if boton.nombre == selected:
                     boton.ser_elegido()
                     self.mover_cursor(boton)
