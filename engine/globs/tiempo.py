@@ -279,9 +279,9 @@ class Noche(AzoeSprite):
     proyectaSombra = False
     nombre = 'Noche'
 
-    aclararse = False
-    oscurecerse = False
-    atardecer = False
+    oscurecer = False
+    aclarar = False
+    flag = False
 
     def __init__(self, size):
         img = Surface(size, SRCALPHA)
@@ -290,23 +290,37 @@ class Noche(AzoeSprite):
         super().__init__(img, center=True)
         self.z = 100000
         self.alpha = 230
+        self.alpha_mod = 0
 
         Renderer.camara.add_visible(self)
         EventDispatcher.register(self.get_alarms, 'ClockAlarm')
+        EventDispatcher.register(self.set_darkness, 'MinuteFlag')
 
-    @staticmethod
-    def set_alarms(alarm_dict):
+    def set_alarms(self, alarm_dict):
         atardece = alarm_dict['atardece']
         anochece = alarm_dict['anochece']
         ts = anochece-atardece
         s = ts.h * 3600 + ts.m * 60 + ts.s
-        print(s)
+        self.alpha_mod = round(230/(s//60))  # 1
 
     def get_alarms(self, event):
         if event.data['time'] == 'atardece':
-            print(self, 'atardece')
+            self.oscurecer = True
         elif event.data['time'] == 'anochece':
-            print(self, 'anochece')
+            self.oscurecer = False
+
+        elif event.data['time'] == 'amanece':
+            self.aclarar = True
+        elif event.data['time'] == 'mediodía':
+            self.aclarar = False
+
+    def set_darkness(self, event):
+        if event.tipo == 'MinuteFlag':
+            if self.oscurecer:
+                self.trasparentar(self.alpha_mod)
+
+            elif self.aclarar:
+                self.trasparentar(-self.alpha_mod)
 
     # noinspection PyUnresolvedReferences
     def set_lights(self, *lights):
@@ -356,14 +370,6 @@ class Noche(AzoeSprite):
     def set_transparency(self, mod):  # this is direct
         self.alpha = mod
         self.image.fill((0, 0, 0, self.alpha))
-
-    def update(self):
-        if self.aclararse:
-            self.aclararse = self.trasparentar(-5)
-        if self.oscurecerse:
-            self.oscurecerse = self.trasparentar(+5)
-        if self.atardecer:
-            self.atardecer = self.trasparentar(+1, 120)
 
 
 class Tiempo:

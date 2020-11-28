@@ -55,7 +55,6 @@ class Stage:
 
         EventDispatcher.register_many(
             (self.cargar_timestamps, 'UpdateTime'),
-            (self.anochecer, 'MinuteFlag'),
             (self.save_map, 'Save'),
             (self.rotate_map, 'RotateEverything')
         )
@@ -67,24 +66,16 @@ class Stage:
         self.mediodia = TimeStamp(offset + (horas_dia / 2))
         self.anochece = TimeStamp(offset + horas_dia)
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
-        Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece'})
+        Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
+                                    self.amanece: 'amanece', self.mediodia: 'medidía'})
         Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
 
         self.anochecer()
 
-    def anochecer(self, event=None):
+    def anochecer(self):
         noche = Tiempo.noche
-        if event is not None and self.data['ambiente'] == 'exterior':
-            ts = event.data['hora']
-            # aclararse y oscurecerse son flags de la noche que habilitan su update().
-            if ts == self.amanece:
-                noche.aclararse = True
-            elif ts == self.atardece:
-                noche.atardecer = True
-            elif ts == self.anochece:
-                noche.oscurecerse = True
 
-        elif self.data['ambiente'] == 'interior':
+        if self.data['ambiente'] == 'interior':
             noche.set_transparency(0)
 
         else:  # el ambiente es exterior, pero no hay evento.
