@@ -362,10 +362,7 @@ class Noche(AzoeSprite):
         if 0 < self.alpha + mod < max_alpha:
             self.alpha += mod
             self.image.fill((0, 0, 0, self.alpha))
-            EventDispatcher.trigger('SetNight', 'Noche', {'alpha': self.alpha})
-            return True
-        else:
-            return False
+            EventDispatcher.trigger('SetNight', 'Noche', {'alpha': mod})
 
     def set_transparency(self, mod):  # this is direct
         self.alpha = mod

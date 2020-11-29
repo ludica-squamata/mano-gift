@@ -10,15 +10,14 @@ class Sombra(AzoeSprite):
     dif_x = 0
     alpha = 0
 
-    def __init__(self, spr, direccion, dfx, img, mascara, dz):
+    def __init__(self, spr, dfx, img, mascara, dz):
         self.spr = spr
         self.tipo = "sombra"
-        self.nombre = "sombra " + direccion + " de " + self.spr.nombre
+        self.nombre = "sombra de " + self.spr.nombre
         super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z, dz=dz - 1)
         self.mask = mascara
-        self.alpha = 230
+        self.alpha = 150
         self.dif_x = dfx
-        EventDispatcher.register(self.set_fade, 'SetNight')
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla
@@ -28,29 +27,11 @@ class Sombra(AzoeSprite):
 
         super().ubicar(x - self.dif_x, y)
 
-    def set_fade(self, event):
-        self.fade(-event.data['alpha'])
-
-    def fade(self, value):
-        w, h = self.image.get_size()
-        surface = self.image.copy()
-        pxarray = PixelArray(surface)
-        self.alpha += value
-        if 0 <= self.alpha <= 150:
-            for y in range(h):
-                for x in range(w):
-                    if self.mask.get_at((x, y)):
-                        # noinspection PyUnresolvedReferences
-                        pxarray[x, y] = 0, 0, 0, self.alpha
-            self.image = pxarray.make_surface()
-            del pxarray
-
     def __repr__(self):
         return self.nombre
 
 
 class ShadowSprite(AzoeSprite):
-    step = 'S'
     _sombras = None
     """:type : list"""
     sombra = None
@@ -62,39 +43,40 @@ class ShadowSprite(AzoeSprite):
     """:type : list"""
     _prevLuces = None
     """:type : list"""
+    alpha = 230
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._sombras = {}
-        self._luces = {}
-        self.sombras = {}
+        self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
+        self._luces = [0, 0, 0, 0, 1, 0, 0, 0]
         self.sombra = None
-        self._prevLuces = {}
-        for img_n in ['S', 'R', 'L']:
-            for dire in ['arriba', 'abajo', 'izquierda', 'derecha']:
-                self._sombras[img_n + dire] = [0, 0, 0, 0, 0, 0, 0, 0]
-                self._luces[img_n + dire] = [0, 0, 0, 0, 1, 0, 0, 0]
-                self.sombras[img_n + dire] = [None] * 8
-                self._prevLuces[img_n + dire] = [0, 0, 0, 0, 0, 0, 0, 0]
-
-        # esta lista contiene todas las sombras creadas para este objeto, independientemente de su orientación o
-        # su paso. Existe porque de otro modo las sombras que no se están mostrando no se actualizan, por lo que
-        # quedan defasadas con respecto a la posición actual del objeto. En realidad, más que actualizar lo que
-        # no se ve, deberían actualizarse AL VERSE, pero no estoy seguro de cómo hacer eso.
-        self._todas_las_sombras = []
-
+        self.spr_sombras = {}
+        self._prevLuces = [0, 0, 0, 0, 0, 0, 0, 0]
+        EventDispatcher.register(self.set_alpha, 'SetNight')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
-    def add_shadow(self, direccion):
-        Renderer.camara.remove_obj(self.sombra)
-        idx = self._luces[direccion].index(1)
-        if self.sombras[direccion][idx] is None:
-            s = Sombra(self, direccion, *self.crear_sombras())
-            # noinspection PyTypeChecker
-            self.sombras[direccion][idx] = s
-            self._todas_las_sombras.append(s)
-        self.sombra = self.sombras[direccion][idx]
+    def set_alpha(self, event):
+        self.alpha -= event.data['alpha'] * 3
 
+    def add_shadow(self):
+        z = self.sombra.z if self.sombra is not None else 0
+        Renderer.camara.remove_obj(self.sombra)
+
+        if self.image not in self.spr_sombras:
+            self.spr_sombras[self.image] = None
+
+        if self.spr_sombras[self.image] is None:
+            s = Sombra(self, *self.crear_sombras())
+            self.spr_sombras[self.image] = s
+
+        else:
+            s = self.spr_sombras[self.image]
+
+        if z:
+            s.z = z
+
+        s.image.set_alpha(self.alpha)
+        self.sombra = s
         Renderer.camara.add_visible(self.sombra)
 
     def crear_sombras(self):
@@ -114,32 +96,31 @@ class ShadowSprite(AzoeSprite):
         mascara = mask.from_surface(t_surface)
         mascara.clear()
 
-        n = self.step + self.direccion
-        if self._sombras[n][0]:
+        if self._sombras[0]:
             img = self.orientar_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
-        if self._sombras[n][6]:
+        if self._sombras[6]:
             img = self.orientar_sombra(surface, "NO")
             t_surface.blit(img, (0, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
-        if self._sombras[n][4]:
+        if self._sombras[4]:
             img = self.orientar_sombra(surface, "SO")
             t_surface.blit(img, (3, h_2 - 6))
             t_surface.blit(self.dark_overlay(surface), (centerx, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             z = h
-        if self._sombras[n][2]:
+        if self._sombras[2]:
             img = self.orientar_sombra(surface, "SE")
             t_surface.blit(img, (centerx, h_2 - 4))
             t_surface.blit(self.dark_overlay(surface), (centerx, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             z = h
-        if self._sombras[n][1]:  # Luz: 5
+        if self._sombras[1]:  # Luz: 5
             print('Luz 5: E')
             # top = h_2 + 5
             # if self.images is not None:
@@ -155,7 +136,7 @@ class ShadowSprite(AzoeSprite):
             # t_surface.blit(img, r)
             # _draw = mask.from_surface(t_surface, 100)
             # mascara.draw(_draw, (0, 0))
-        if self._sombras[n][5]:
+        if self._sombras[5]:
             print('Luz 1: O')
             # top = h_2 + 5
             # if self.images is not None:
@@ -174,7 +155,7 @@ class ShadowSprite(AzoeSprite):
             # _draw = mask.from_surface(t_surface, 100)
             # mascara.draw(_draw, (0, 0))
             # z = h - 2
-        if self._sombras[n][7]:
+        if self._sombras[7]:
             img = self.orientar_sombra(surface, "N")
             img = transform.scale(img, [w, h // 2])
             r = img.get_rect(centerx=w // 2, bottom=h - 1)
@@ -184,7 +165,7 @@ class ShadowSprite(AzoeSprite):
             mascara.draw(_draw, (0, 0))
             h_2 = 0
             z = -h
-        if self._sombras[n][3]:
+        if self._sombras[3]:
             img = self.orientar_sombra(surface, "S")
             r = img.get_rect(centerx=w // 2, y=h - 3)
             t_surface = Surface((w, h * 2), SRCALPHA)
@@ -291,9 +272,6 @@ class ShadowSprite(AzoeSprite):
 
         if stop == 0:
             stop = w
-        # 0, w
-        # 0, w//2
-        # w//2, w
 
         for y in range(h):
             for x in range(start, stop):
@@ -320,27 +298,17 @@ class ShadowSprite(AzoeSprite):
 
         :return:
         """
-        n = self.step + self.direccion
-        if self._prevLuces[n] != self._luces[n]:
-            self._prevLuces[n] = self._luces[n][:]
+        if self._prevLuces != self._luces:
+            self._prevLuces = self._luces[:]
             for i in range(0, 8):
                 if self.filtrar_luces(i):
-                    if (self._luces[n][(i + 4) % 8] - self._luces[n][i]) == 1:  # bool
-                        self._sombras[n][i] = 1
+                    if (self._luces[(i + 4) % 8] - self._luces[i]) == 1:  # bool
+                        self._sombras[i] = 1
                     else:
-                        self._sombras[n][i] = 0
+                        self._sombras[i] = 0
 
-        if any(self._sombras[n]) and FEATURE_SOMBRAS_DINAMICAS:
-            self.add_shadow(n)
-
-    def update_luces(self, event):
-        p = event.data['light']
-        if self.filtrar_luces(p):
-            n = self.step + self.direccion
-            self._luces[n][p] = 1
-            self._luces[n][(p + 4) % 8] = 0  # las luces de lados contrarios se anulan
-            if self.proyectaSombra:
-                self.update_sombra()
+        if any(self._sombras) and FEATURE_SOMBRAS_DINAMICAS:
+            self.add_shadow()
 
     def update(self, *args):
         if self.proyectaSombra:
@@ -351,9 +319,9 @@ class ShadowSprite(AzoeSprite):
         super().ubicar(dx, dy)
         if self.sombra is not None:
             self.sombra.ubicar(dx, dy)
+            self.sombra.z = self.z-1
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
-        for sombra in self._todas_las_sombras:
-            # todas las sombras que haya se mueven con el objeto, independientemente de si se ven o no.
-            sombra.reubicar(dx, dy)
+        if self.proyectaSombra:
+            self.sombra.reubicar(dx, dy)
