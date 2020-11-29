@@ -1,5 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.game_state import GameState
+from engine.globs.renderer import Renderer
 from pygame import Mask, Surface, Rect
 from engine.base import AzoeSprite
 import sys
@@ -14,7 +15,7 @@ class Salida:
     sprite = None
     solido = False
 
-    def __init__(self, nombre, stage, rect, chunk, entrada, direcciones):
+    def __init__(self, nombre, mapa, stage, rect, chunk, entrada, direcciones):
         self.nombre = self.tipo + '.' + nombre
         self.flag_name = nombre + '.triggered'
         self.mapRect = Rect(*rect)
@@ -26,7 +27,8 @@ class Salida:
         self.mask.fill()
         GameState.set(self.flag_name, False)
         if 'pydevd' in sys.modules:
-            self.sprite = SpriteSalida(self.nombre, *self.mapRect)
+            self.sprite = SpriteSalida(self.nombre, mapa,  *self.mapRect)
+            Renderer.camara.add_real(self.sprite)
 
     def trigger(self, mob):
         # este método, que antes era update(), toma los datos de la salida
@@ -46,9 +48,10 @@ class Salida:
 class SpriteSalida(AzoeSprite):
     """Intented only for debugging"""
 
-    def __init__(self, nombre, x, y, w, h):
+    def __init__(self, nombre, mapa, x, y, w, h):
         img = Surface((w, h))
         img.fill((255, 255, 0))
         self.nombre = nombre + '.Sprite'
+        self.stage = mapa
 
         super().__init__(imagen=img, x=x, y=y, z=5000)

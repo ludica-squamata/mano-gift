@@ -57,7 +57,7 @@ class GetRoute(Leaf):
 
         pi = Nodo(*e.mapRect.center, 32)
         ruta = a_star(pi, pd, mapa)
-        if ruta is None:
+        if ruta is None or len(ruta) == 1:
             return Failure
 
         self.tree.set_context('camino', ruta)

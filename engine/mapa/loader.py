@@ -90,7 +90,7 @@ def load_mobs(alldata):
     return loaded_mobs
 
 
-def cargar_salidas(alldata, size):
+def cargar_salidas(mapa, alldata, size):
     salidas = []
     img = Surface(size, SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
@@ -102,7 +102,7 @@ def cargar_salidas(alldata, size):
         entrada = datos['entrada']
         direcciones = datos['direcciones']
 
-        salidas.append(Salida(nombre, stage, rect, chunk, entrada, direcciones))
+        salidas.append(Salida(nombre, mapa, stage, rect, chunk, entrada, direcciones))
         r, g, b, a = 255, i % 255, i // 255, 255
         # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
         # después se usará b*255+g para devolver el index.

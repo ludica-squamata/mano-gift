@@ -308,6 +308,7 @@ class Noche(AzoeSprite):
             self.oscurecer = True
         elif event.data['time'] == 'anochece':
             self.oscurecer = False
+            EventDispatcher.trigger('NightFall', 'Noche', {'value': True})
 
         elif event.data['time'] == 'amanece':
             self.aclarar = True

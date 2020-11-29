@@ -37,3 +37,27 @@ class ReachExit(Leaf):
             mapa.salidas[b * 255 + g].trigger(e)
 
         return Success
+
+
+def night_event(event):
+    GameState.set('NightTime', event.data['value'])
+
+
+EventDispatcher.register(night_event, "NightFall")
+
+
+class ItsNightTime(Leaf):
+    @staticmethod
+    def process():
+        if GameState.get('NightTime', False):
+            GameState.set('NightTime', False)
+            return Success
+        else:
+            return Failure
+
+
+class GoToBed(Leaf):
+    def process(self):
+        nodo = Nodo(608, 608, 32)
+        self.tree.set_context('punto_final', nodo)
+        return Success

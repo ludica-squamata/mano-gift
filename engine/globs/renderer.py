@@ -270,7 +270,7 @@ class Renderer:
 
         EventDispatcher.register_many(
             (cls.get_debug_text, 'DEBUG'),
-            (cls.clear, 'EndDialog', 'NewGame', 'SetMap')
+            (cls.clear, 'EndDialog', 'NewGame')
         )
 
     @classmethod

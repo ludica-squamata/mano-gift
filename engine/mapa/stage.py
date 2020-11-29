@@ -43,7 +43,7 @@ class Stage:
         self.rect = self.mapa.rect.copy()
         Tiempo.crear_noche(self.rect.size)
 
-        sld, masc, img = cargar_salidas(self.data, chunk.rect.size)
+        sld, masc, img = cargar_salidas(self.mapa, self.data, chunk.rect.size)
         self.salidas = sld  # la lista de salidas, igual que siempre.
         self.mask_salidas = masc  # máscara de colisiones de salidas.
         self.img_salidas = img  # imagen de colores codificados
@@ -69,7 +69,7 @@ class Stage:
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
                                     self.amanece: 'amanece', self.mediodia: 'medidía'})
         Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
-
+        print('amanece', self.amanece, 'atardece', self.atardece, 'anochece', self.anochece)
         self.anochecer()
 
     def anochecer(self):

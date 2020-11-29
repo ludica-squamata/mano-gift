@@ -63,6 +63,8 @@ class Selector(Composite):
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
+        else:
+            self.reset()
 
         if self.parent is not None:
             self.parent.get_child_status(status)

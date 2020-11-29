@@ -5,6 +5,7 @@ from .game_groups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
+from random import randrange
 
 
 class EngineData:
@@ -16,6 +17,7 @@ class EngineData:
     character = {
         'AI': 'controllable'
     }
+    transient_mobs = {}
 
     @classmethod
     def init(cls):
@@ -44,6 +46,11 @@ class EngineData:
             cls.mapas[stage].mapa.add_property(mob, 2)
             mob.set_parent_map(cls.mapas[stage].mapa)
 
+        if stage in cls.transient_mobs:
+            for mob in cls.transient_mobs[stage]:
+                cls.mapas[stage].mapa.add_property(mob, 2)
+                mob.set_parent_map(cls.mapas[stage].mapa)
+
         return cls.mapas[stage]
 
     @classmethod
@@ -52,6 +59,7 @@ class EngineData:
         mob = evento.data['mob']
         mapa_actual.del_property(mob)
         if Renderer.camara.is_focus(evento.data['mob']):
+            EventDispatcher.trigger('EndDialog', 'Salida', {})
             cls.setear_mapa(evento.data['target_stage'],
                             evento.data['target_entrada'],
                             mob=evento.data['mob'])
@@ -60,7 +68,15 @@ class EngineData:
             x, y = cls.mapas[stage].posicion_entrada(evento.data['target_entrada'])
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
-            mob.set_parent_map(None)
+            x = randrange(32, 400, 32)
+            y = randrange(32, 400, 32)
+            stage = evento.data['target_stage']
+            if stage not in cls.transient_mobs:
+                cls.transient_mobs[stage] = []
+            cls.transient_mobs[stage].append(mob)
+            Renderer.camara.remove_obj(mob.sombra)
+            mob.ubicar(x, y)
+            mob.AI.reset()
 
     @classmethod
     def on_setkey(cls, event):
