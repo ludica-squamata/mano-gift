@@ -323,5 +323,5 @@ class ShadowSprite(AzoeSprite):
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
-        if self.proyectaSombra:
+        if self.sombra is not None:
             self.sombra.reubicar(dx, dy)

@@ -24,6 +24,7 @@ class EngineData:
         EventDispatcher.register_many(
             (cls.on_cambiarmapa, "SetMap"),
             (cls.on_setkey, "ToggleSetKey"),
+            (cls.save_transient_mobs, 'Save'),
             (cls.salvar, "SaveDataFile"),
             (cls.compound_save_data, "SaveData"),
             (cls.pop_menu, AzoeEvent('Key', 'Input', {'nom': 'menu', 'type': 'tap'})),
@@ -38,7 +39,7 @@ class EngineData:
     def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
         from engine.mapa import Stage
         if stage not in cls.mapas or is_new_game:
-            cls.mapas[stage] = Stage(stage, entrada)
+            cls.mapas[stage] = Stage(stage, mob, entrada)
         else:
             cls.mapas[stage].ubicar_en_entrada(entrada)
 
@@ -48,8 +49,9 @@ class EngineData:
 
         if stage in cls.transient_mobs:
             for mob in cls.transient_mobs[stage]:
-                cls.mapas[stage].mapa.add_property(mob, 2)
-                mob.set_parent_map(cls.mapas[stage].mapa)
+                if type(mob) is not str:
+                    cls.mapas[stage].mapa.add_property(mob, 2)
+                    mob.set_parent_map(cls.mapas[stage].mapa)
 
         return cls.mapas[stage]
 
@@ -59,7 +61,8 @@ class EngineData:
         mob = evento.data['mob']
         mapa_actual.del_property(mob)
         if Renderer.camara.is_focus(evento.data['mob']):
-            EventDispatcher.trigger('EndDialog', 'Salida', {})
+            EventDispatcher.trigger('EndDialog', cls, {})
+            EventDispatcher.trigger('ShowNight', cls, {})  # because an empty call of end_dialog erases the night layer.
             cls.setear_mapa(evento.data['target_stage'],
                             evento.data['target_entrada'],
                             mob=evento.data['mob'])
@@ -107,23 +110,50 @@ class EngineData:
     def load_savefile(cls, filename):
         data = abrir_json(Config.savedir + '/' + filename)
         cls.save_data.update(data)
+        cls.transient_mobs = data['transient']
         Mob_Group.clear()
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
     @classmethod
     def cargar_juego(cls, event):
+        from engine.mapa.loader import load_mobs
         data = event.data
         cls.acceso_menues.clear()
 
-        mapa = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
+        stage = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
 
         focus = Mob_Group[data['focus']]
-        Renderer.set_focus(focus)
+        if type(focus) is str:
+            datos = {'mobs': {focus: [data['entrada']]}}
+            datos.update({'entradas': stage.data['entradas']})
+            focus, grupo = load_mobs(datos)[0]
 
-        cls.check_focus_position(focus, mapa, data['entrada'])
+            obj = stage.mapa.add_property(focus, grupo)
+            obj.set_parent_map(stage.mapa)
+
+        for mob_name in cls.transient_mobs[stage.nombre]:
+            x = randrange(32, 400, 32)
+            y = randrange(32, 400, 32)
+            datos = {'mobs': {mob_name: [[x, y]]}}
+            datos.update({'entradas': stage.data['entradas']})
+            item, grupo = load_mobs(datos)[0]
+
+            obj = stage.mapa.add_property(item, grupo)
+            obj.set_parent_map(stage.mapa)
+
+        Renderer.set_focus(focus)
+        cls.check_focus_position(focus, stage, data['entrada'])
         focus.character_name = data['focus']
+
+
+    @classmethod
+    def save_transient_mobs(cls, event):
+        transient = {}
+        for stage in cls.transient_mobs:
+            transient[stage] = [i.nombre for i in cls.transient_mobs[stage]]
+        EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
 
     @classmethod
     def check_focus_position(cls, focus, mapa, entrada):

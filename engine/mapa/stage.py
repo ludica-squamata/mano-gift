@@ -22,7 +22,7 @@ class Stage:
     atardece = None
     anochece = None
 
-    def __init__(self, nombre, entrada):
+    def __init__(self, nombre, mob, entrada):
         self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
         self.cuadrantes.clear()
         self.nombre = nombre
@@ -34,12 +34,12 @@ class Stage:
         entradas = self.data['entradas']
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, data=singleton, requested=['Mobs', 'Props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, data=singleton, requested=['Mobs', 'Props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, requested=['Mobs', 'Props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, requested=['Mobs', 'Props'])
 
         self.chunks.add(chunk)
-        self.mapa = self.chunks.sprites()[0]
+        self.mapa = self.chunks.sprs()[0]
         self.rect = self.mapa.rect.copy()
         Tiempo.crear_noche(self.rect.size)
 
@@ -69,7 +69,6 @@ class Stage:
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
                                     self.amanece: 'amanece', self.mediodia: 'medidía'})
         Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
-        print('amanece', self.amanece, 'atardece', self.atardece, 'anochece', self.anochece)
         self.anochecer()
 
     def anochecer(self):
@@ -88,7 +87,7 @@ class Stage:
                 noche.set_transparency(230)
 
     def save_map(self, event):
-        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'link': self.entrada})
+        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
 
     def rotate_map(self, event):
         angle = event.data['angle']
@@ -121,7 +120,6 @@ class Stage:
         dx, dy = self.data['entradas'][entrada]['pos']
         x = self.offset_x - dx
         y = self.offset_y - dy
-        # noinspection PyUnresolvedReferences
         self.mapa.ubicar(x, y)
 
     def __repr__(self):
@@ -134,7 +132,7 @@ class ChunkMap(AzoeBaseSprite):
     properties = None
     interactives = []
 
-    def __init__(self, stage, nombre, off_x, off_y, entradas, data=False, requested=None):
+    def __init__(self, stage, nombre, off_x, off_y, entradas, transient_mob=None, data=False, requested=None):
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
         self.interactives.clear()
         self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
@@ -144,7 +142,15 @@ class ChunkMap(AzoeBaseSprite):
 
         data.update({'entradas': entradas})
         if 'hero' in data['mobs']:
-            data['mobs'][Mob_Group.character_name] = data['mobs'].pop('hero')
+            name = Mob_Group.character_name
+            if transient_mob is not None and name != transient_mob.character_name:
+                data['mobs'][name] = data['mobs'].pop('hero')
+            else:
+                del data['mobs']['hero']
+
+        for mob in Mob_Group.get_existing(data['mobs']):
+            del data['mobs'][mob]
+
         colisiones = cargar_imagen(data['colisiones'])
         self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
 

@@ -292,9 +292,13 @@ class Noche(AzoeSprite):
         self.alpha = 230
         self.alpha_mod = 0
 
+        self.show()
+        EventDispatcher.register_many((self.get_alarms, 'ClockAlarm'),
+                                      (self.set_darkness, 'MinuteFlag'),
+                                      (lambda e: self.show(), 'ShowNight'))
+
+    def show(self):
         Renderer.camara.add_visible(self)
-        EventDispatcher.register(self.get_alarms, 'ClockAlarm')
-        EventDispatcher.register(self.set_darkness, 'MinuteFlag')
 
     def set_alarms(self, alarm_dict):
         atardece = alarm_dict['atardece']
@@ -421,7 +425,8 @@ class Tiempo:
 
     @classmethod
     def crear_noche(cls, size):
-        cls.noche = Noche(size)
+        if cls.noche is None:
+            cls.noche = Noche(size)
 
 
 class SeasonalYear:

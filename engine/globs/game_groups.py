@@ -33,7 +33,7 @@ class MobGroup:
             else:
                 raise IndexError
         else:
-            raise KeyError(key)
+            return self.__missing__(key)
 
     def __delitem__(self, key):
         if key in self._group:
@@ -63,6 +63,16 @@ class MobGroup:
             if item.nombre in self._group:
                 return True
         return False
+
+    def __missing__(self, key):
+        return key
+
+    def get_existing(self, mobs):
+        flagged = []
+        for mob in mobs:
+            if mob in self:
+                flagged.append(mob)
+        return flagged
 
     def delete_mob(self, event):
         nombre = event.data['obj'].nombre
