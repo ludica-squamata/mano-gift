@@ -4,6 +4,10 @@ from engine.misc import abrir_json, Config
 from engine.globs import Tiempo, ModData
 from pygame import init as py_init
 from engine.IO import taphold
+from platform import system
+
+if system() == 'Linux':
+    raise OSError('Unsupported Platform, use Windows')
 
 py_init()
 ModData.init(abrir_json("engine.json"))
