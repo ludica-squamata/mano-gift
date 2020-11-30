@@ -1,6 +1,7 @@
 ﻿from engine.globs.event_dispatcher import EventDispatcher
 # from engine.globs import Mob_Group
-from pygame import Rect
+from pygame import draw, Surface, SRCALPHA
+from engine.globs.tiempo import Tiempo
 
 
 class LightSource:
@@ -12,23 +13,22 @@ class LightSource:
     estatico = False  # para simular luces lejanas, como el sol. no les cambia el rect.pos
     encendido = True  # apaguen esas luces!
     # animacion???
-    nombre = 'luz'
 
-    def __init__(self, item, x, y):
-        self.item = item
-        self.rect = Rect(0, 0, 32, 32)
-        self.rect.center = item.rect.x + x, item.rect.y + y
-        self.origen = self.rect.center
+    def __init__(self, nombre, radius, x, y):
+        self.nombre = nombre
+        self.image = Surface((radius * 2, radius * 2), SRCALPHA)
+        self.rect = self.image.get_rect(center=(x, y))
 
-        # EventDispatcher.register(self.update, 'MinuteFlag')
+        # TODO: no se ve el circulo no importa cuál sea el radio. Puede ser un problema de Noche.set_lights()
+        draw.circle(self.image, (0, 0, 0, 230), self.rect.center, 1)
 
-    # def update(self, event):
-    #     for mob in Mob_Group:
-    #         mob.recibir_luz(self)
+    def update(self):
+        if Tiempo.noche is not None and not self.encendido:
+            Tiempo.noche.set_lights([self])
+            self.encendido = True
 
     def __repr__(self):
-        x, y = str(self.rect.centerx), str(self.rect.centery)
-        return 'LightSource of ' + self.item.nombre + ' @' + ','.join([x, y])
+        return 'LightSource of ' + self.nombre
 
 
 class DayLight:

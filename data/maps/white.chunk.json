@@ -1,7 +1,9 @@
 {
   "fondo": "maps/fondos/blanco.png",
   "colisiones": "maps/colisiones/800.png",
-  "props": {},
+  "props": {
+    "light_post": [[288,288]]
+  },
   "mobs": {},
   "limites": {
     "sup": "black",

@@ -32,7 +32,7 @@ class Escenografia(ShadowSprite, EventListener):
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'sin_sombra' not in data.get('propiedades', [])
         if data.get('proyecta_luz', False):
-            self.luz = LightSource(self, *data['proyecta_luz'])
+            self.luz = LightSource(self.nombre, data['proyecta_luz'], x, y)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         self.face = data.get('cara', 'front')
 
@@ -46,6 +46,10 @@ class Escenografia(ShadowSprite, EventListener):
 
     def show_description(self):
         PropDescription(self)
+
+    def update(self, *args):
+        if hasattr(self, 'luz'):
+            self.luz.update()
 
 
 class Item:

@@ -298,14 +298,14 @@ class Noche(AzoeSprite):
                                       (lambda e: self.show(), 'ShowNight'))
 
     def show(self):
-        Renderer.camara.add_visible(self)
+        EventDispatcher.trigger('SetTheNight', 'Noche', {'noche': self})
 
     def set_alarms(self, alarm_dict):
         atardece = alarm_dict['atardece']
         anochece = alarm_dict['anochece']
-        ts = anochece-atardece
+        ts = anochece - atardece
         s = ts.h * 3600 + ts.m * 60 + ts.s
-        self.alpha_mod = round(230/(s//60))  # 1
+        self.alpha_mod = round(230 / (s // 60))  # 1
 
     def get_alarms(self, event):
         if event.data['time'] == 'atardece':
@@ -328,7 +328,7 @@ class Noche(AzoeSprite):
                 self.trasparentar(-self.alpha_mod)
 
     # noinspection PyUnresolvedReferences
-    def set_lights(self, *lights):
+    def set_lights(self, lights):
 
         def clamp(n):
             return 0 if n < 0 else 255 if n > 255 else n
@@ -337,29 +337,26 @@ class Noche(AzoeSprite):
         pxarray = PixelArray(self.image)
 
         for light in lights:
-            if light.nombre == 'Sol':
-                # chapuza para velocidad
-                self.image.fill((0, 0, 0, 0))
-            else:
-                image = light.image
-                lx = light.rect.x
-                ly = light.rect.y
+            image = light.image
+            w, h = image.get_size()
+            lx = light.rect.x
+            ly = light.rect.y
 
-                light_array = PixelArray(image)
-                lmap = image.unmap_rgb
-                for y in range(0, image.get_width()):
-                    for x in range(0, image.get_height()):
-                        ox, oy = lx + x, ly + y
-                        r, g, b, a = lmap(light_array[x, y])
-                        if (r, g, b) != COLOR_IGNORADO:
-                            _r, _g, _b, _a = imap(pxarray[ox, oy])
-                            r = clamp(r + _r)
-                            g = clamp(g + _g)
-                            b = clamp(b + _b)
-                            a = clamp(_a - (255 - a))
-                            pxarray[ox, oy] = r, g, b, a
-                            # self.luces.append(light)
-                            # light.update()
+            light_array = PixelArray(image)
+            lmap = image.unmap_rgb
+            for y in range(0, h):
+                for x in range(0, w):
+                    ox, oy = lx + x, ly + y
+                    r, g, b, a = lmap(light_array[x, y])
+                    if (r, g, b) != COLOR_IGNORADO:
+                        _r, _g, _b, _a = imap(pxarray[ox, oy])
+                        r = clamp(r + _r)
+                        g = clamp(g + _g)
+                        b = clamp(b + _b)
+                        a = clamp(_a - (255 - a))
+                        pxarray[ox, oy] = r, g, b, a
+                        # self.luces.append(light)
+                        # light.update()
         nch = pxarray.make_surface()
         self.image = nch
 
@@ -431,7 +428,7 @@ class Tiempo:
 
 class SeasonalYear:
     year_lenght = 360  # chapuza para velocidad
-    season_lenght = year_lenght//4  # 90
+    season_lenght = year_lenght // 4  # 90
     day_lenght = 0
 
     biome = None
