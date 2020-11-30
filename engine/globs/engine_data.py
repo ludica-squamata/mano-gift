@@ -110,7 +110,7 @@ class EngineData:
     def load_savefile(cls, filename):
         data = abrir_json(Config.savedir + '/' + filename)
         cls.save_data.update(data)
-        cls.transient_mobs = data['transient']
+        cls.transient_mobs = data.get('transient', {})
         Mob_Group.clear()
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
@@ -133,9 +133,9 @@ class EngineData:
             obj = stage.mapa.add_property(focus, grupo)
             obj.set_parent_map(stage.mapa)
 
-        for mob_name in cls.transient_mobs[stage.nombre]:
-            x = randrange(32, 400, 32)
-            y = randrange(32, 400, 32)
+        for mob_name in cls.transient_mobs.get(stage.nombre, []):
+            x = randrange(32, stage.mapa.rect.w, 32)
+            y = randrange(32, stage.mapa.rect.h, 32)
             datos = {'mobs': {mob_name: [[x, y]]}}
             datos.update({'entradas': stage.data['entradas']})
             item, grupo = load_mobs(datos)[0]
@@ -146,7 +146,6 @@ class EngineData:
         Renderer.set_focus(focus)
         cls.check_focus_position(focus, stage, data['entrada'])
         focus.character_name = data['focus']
-
 
     @classmethod
     def save_transient_mobs(cls, event):
