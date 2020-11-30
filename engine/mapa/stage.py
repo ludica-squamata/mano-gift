@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
 from .loader import load_something, cargar_salidas
@@ -41,7 +41,6 @@ class Stage:
         self.chunks.add(chunk)
         self.mapa = self.chunks.sprs()[0]
         self.rect = self.mapa.rect.copy()
-        Tiempo.crear_noche(self.rect.size)
 
         sld, masc, img = cargar_salidas(self.mapa, self.data, chunk.rect.size)
         self.salidas = sld  # la lista de salidas, igual que siempre.
@@ -68,23 +67,23 @@ class Stage:
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
                                     self.amanece: 'amanece', self.mediodia: 'medidía'})
-        Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
-        self.anochecer()
+        # Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
+        # self.anochecer()
 
-    def anochecer(self):
-        noche = Tiempo.noche
-
-        if self.data['ambiente'] == 'interior':
-            noche.set_transparency(0)
-
-        else:  # el ambiente es exterior, pero no hay evento.
-            ts = Tiempo.clock.timestamp()
-            if self.amanece <= ts <= self.atardece:
-                noche.set_transparency(0)
-            elif self.atardece <= ts <= self.anochece:
-                noche.set_transparency(120)
-            else:
-                noche.set_transparency(230)
+    # def anochecer(self):
+    #     noche = Tiempo.noche
+    #
+    #     if self.data['ambiente'] == 'interior':
+    #         noche.set_transparency(0)
+    #
+    #     else:  # el ambiente es exterior, pero no hay evento.
+    #         ts = Tiempo.clock.timestamp()
+    #         if self.amanece <= ts <= self.atardece:
+    #             noche.set_transparency(0)
+    #         elif self.atardece <= ts <= self.anochece:
+    #             noche.set_transparency(120)
+    #         else:
+    #             noche.set_transparency(230)
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
@@ -156,6 +155,7 @@ class ChunkMap(AzoeBaseSprite):
 
         image = cargar_imagen(data['fondo'])
         rect = image.get_rect(topleft=(off_x, off_y))
+        self.noche = Noche(self, self.rect.size)
 
         super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))

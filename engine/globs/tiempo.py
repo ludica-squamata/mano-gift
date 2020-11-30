@@ -1,10 +1,7 @@
-from pygame import time, Surface, PixelArray, SRCALPHA
-from engine.base import AzoeSprite
-from .colores import COLOR_IGNORADO
 from engine.globs.event_dispatcher import EventDispatcher
-from .renderer import Renderer
 from datetime import datetime
 from itertools import cycle
+from pygame import time
 from math import floor
 
 
@@ -273,104 +270,6 @@ class TimeStamp:
         return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
 
 
-class Noche(AzoeSprite):
-    luces = None
-    solido = False
-    proyectaSombra = False
-    nombre = 'Noche'
-
-    oscurecer = False
-    aclarar = False
-    flag = False
-
-    def __init__(self, size):
-        img = Surface(size, SRCALPHA)
-        img.fill((0, 0, 0, 230))
-        self.luces = []
-        super().__init__(img, center=True)
-        self.z = 100000
-        self.alpha = 230
-        self.alpha_mod = 0
-
-        self.show()
-        EventDispatcher.register_many((self.get_alarms, 'ClockAlarm'),
-                                      (self.set_darkness, 'MinuteFlag'),
-                                      (lambda e: self.show(), 'ShowNight'))
-
-    def show(self):
-        EventDispatcher.trigger('SetTheNight', 'Noche', {'noche': self})
-
-    def set_alarms(self, alarm_dict):
-        atardece = alarm_dict['atardece']
-        anochece = alarm_dict['anochece']
-        ts = anochece - atardece
-        s = ts.h * 3600 + ts.m * 60 + ts.s
-        self.alpha_mod = round(230 / (s // 60))  # 1
-
-    def get_alarms(self, event):
-        if event.data['time'] == 'atardece':
-            self.oscurecer = True
-        elif event.data['time'] == 'anochece':
-            self.oscurecer = False
-            EventDispatcher.trigger('NightFall', 'Noche', {'value': True})
-
-        elif event.data['time'] == 'amanece':
-            self.aclarar = True
-        elif event.data['time'] == 'mediodía':
-            self.aclarar = False
-
-    def set_darkness(self, event):
-        if event.tipo == 'MinuteFlag':
-            if self.oscurecer:
-                self.trasparentar(self.alpha_mod)
-
-            elif self.aclarar:
-                self.trasparentar(-self.alpha_mod)
-
-    # noinspection PyUnresolvedReferences
-    def set_lights(self, lights):
-
-        def clamp(n):
-            return 0 if n < 0 else 255 if n > 255 else n
-
-        imap = self.image.unmap_rgb  # cache para velocidad
-        pxarray = PixelArray(self.image)
-
-        for light in lights:
-            image = light.image
-            w, h = image.get_size()
-            lx = light.rect.x
-            ly = light.rect.y
-
-            light_array = PixelArray(image)
-            lmap = image.unmap_rgb
-            for y in range(0, h):
-                for x in range(0, w):
-                    ox, oy = lx + x, ly + y
-                    r, g, b, a = lmap(light_array[x, y])
-                    if (r, g, b) != COLOR_IGNORADO:
-                        _r, _g, _b, _a = imap(pxarray[ox, oy])
-                        r = clamp(r + _r)
-                        g = clamp(g + _g)
-                        b = clamp(b + _b)
-                        a = clamp(_a - (255 - a))
-                        pxarray[ox, oy] = r, g, b, a
-                        # self.luces.append(light)
-                        # light.update()
-        nch = pxarray.make_surface()
-        self.image = nch
-
-    def trasparentar(self, mod, max_alpha=230):  # this is gradual
-        if 0 < self.alpha + mod < max_alpha:
-            self.alpha += mod
-            self.image.fill((0, 0, 0, self.alpha))
-            EventDispatcher.trigger('SetNight', 'Noche', {'alpha': mod})
-
-    def set_transparency(self, mod):  # this is direct
-        self.alpha = mod
-        self.image.fill((0, 0, 0, self.alpha))
-
-
 class Tiempo:
     FPS = time.Clock()
     dia, _frames = 0, 0
@@ -419,11 +318,6 @@ class Tiempo:
                 EventDispatcher.trigger('MinuteFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
             if cls.clock.second_flag:
                 EventDispatcher.trigger('SecondFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
-
-    @classmethod
-    def crear_noche(cls, size):
-        if cls.noche is None:
-            cls.noche = Noche(size)
 
 
 class SeasonalYear:

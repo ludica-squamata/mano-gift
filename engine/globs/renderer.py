@@ -13,7 +13,6 @@ class Camara:
     visible = AzoeGroup('visible')  # objetos que se ven (incluye sombras)
     real = AzoeGroup('real')  # objetos reales del mundo (no incluye sombras)
     noche = None  # es la capa de la noche
-    nights = AzoeGroup('nights')
     x, y = 0, 0
     w, h = ANCHO, ALTO
     rect = Rect(x, y, w, h)
@@ -26,8 +25,7 @@ class Camara:
     def init(cls):
         EventDispatcher.register_many(
             (cls.save_focus, 'Save'),
-            (cls.rotate_view, 'Rotate'),
-            (cls.set_night, 'SetTheNight')
+            (cls.rotate_view, 'Rotate')
         )
 
     @classmethod
@@ -35,18 +33,6 @@ class Camara:
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
-
-    @classmethod
-    def set_night(cls, event):
-        cls.noche = event.data['noche']
-
-    @classmethod
-    def set_nights(cls):
-        #  TODO: ¿cómo duplicamos la noche sin sus agujeros?
-        spr = sprite.Sprite()
-        spr.image = cls.noche.image
-
-        cls.nights.add(cls.noche)
 
     @classmethod
     def add_real(cls, obj):
@@ -169,7 +155,6 @@ class Camara:
 
         if new_map is not False and new_map not in map_at_center:
             cls.set_background(new_map)
-            # TODO: la noche debería duplicarse acá, como lo hacen los mapas.
             for obj in new_map.properties.sprites():
                 if obj not in cls.real:
                     cls.add_real(obj)
@@ -228,11 +213,9 @@ class Camara:
     @classmethod
     def pan(cls, dx, dy):
         cls.bgs_rect.move_ip(dx, dy)
-        # TODO: deberían moverse todos los sprites-noche, no solo 1.
-        if cls.noche is not None:
-            cls.noche.rect.move_ip(dx, dy)
-        for spr in cls.bgs:
+        for spr in cls.bgs.sprs():
             spr.rect.move_ip(dx, dy)
+            spr.noche.rect.move_ip(dx, dy)
 
         for spr in cls.real.sprs():
             x = spr.stage.rect.x + spr.mapRect.x
@@ -264,9 +247,6 @@ class Camara:
     def draw(cls, fondo):
         ret = cls.bgs.draw(fondo)
         ret += cls.visible.draw(fondo)
-        # TODO: ret+= cls.nights.draw(fondo)
-        if cls.noche is not None:
-            ret += fondo.blit(cls.noche.image, cls.noche.rect)
         if 'pydevd' in sys.modules:
             draw.line(fondo, (0, 100, 255), (cls.rect.centerx, 0), (cls.rect.centerx, cls.h))
             draw.line(fondo, (0, 100, 255), (0, cls.rect.centery), (cls.w, cls.rect.centery))
