@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from pygame import Rect, draw, display, image, mouse, font, sprite, Surface
+from pygame import Rect, draw, display, image, mouse, font, sprite, Surface, SCALED as PYGAME_SCALED
 from engine.globs.azoe_group import AzoeGroup
 from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
 import sys
@@ -265,7 +265,7 @@ class Renderer:
         os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
         display.set_caption(nombre)
         display.set_icon(image.load(favicon))
-        display.set_mode((ANCHO, ALTO))
+        display.set_mode((ANCHO, ALTO), PYGAME_SCALED)
         mouse.set_visible(False)
 
         EventDispatcher.register_many(
