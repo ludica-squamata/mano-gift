@@ -66,7 +66,7 @@ class Stage:
         self.mediodia = TimeStamp(offset + (horas_dia / 2))
         self.anochece = TimeStamp(offset + horas_dia)
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
-        print('amanece',self.amanece, 'atardece',self.atardece, 'anochece',self.anochece, 'mediodia', self.mediodia)
+
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
                                     self.amanece: 'amanece', self.mediodia: 'medidía'})
         Noche.set_mod(actual, self.amanece, self.mediodia, self.atardece, self.anochece)

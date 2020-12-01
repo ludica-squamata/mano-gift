@@ -1,7 +1,5 @@
 ﻿from engine.globs.event_dispatcher import EventDispatcher
-# from engine.globs import Mob_Group
 from pygame import draw, Surface, SRCALPHA
-from engine.globs.tiempo import Tiempo
 
 
 class LightSource:
@@ -11,20 +9,27 @@ class LightSource:
     # por ejemplo para un poste con iluminacion en la punta? por defecto center
 
     estatico = False  # para simular luces lejanas, como el sol. no les cambia el rect.pos
-    encendido = True  # apaguen esas luces!
+    encendido = False  # apaguen esas luces!
     # animacion???
 
-    def __init__(self, nombre, radius, x, y):
+    def __init__(self, parent, nombre, data, x, y):
+        self.parent = parent
+        radius = data['proyecta_luz']
+        self.origen = data['origen']
+
         self.nombre = nombre
         self.image = Surface((radius * 2, radius * 2), SRCALPHA)
-        self.rect = self.image.get_rect(center=(x, y))
+        self.image.fill((1, 1, 1, 255))
+        self.rect = self.image.get_rect()
+        self.rect.right = x+self.origen[0]
+        self.rect.bottom = y+self.origen[1]
 
-        # TODO: no se ve el circulo no importa cuál sea el radio. Puede ser un problema de Noche.set_lights()
-        draw.circle(self.image, (0, 0, 0, 230), self.rect.center, 1)
+        draw.circle(self.image, (255, 0, 0, 15), (self.rect.w//2, self.rect.h//2), radius)
 
     def update(self):
-        if Tiempo.noche is not None and not self.encendido:
-            Tiempo.noche.set_lights([self])
+        noche = self.parent.stage.noche
+        if not self.encendido:
+            noche.set_light(self)
             self.encendido = True
 
     def __repr__(self):

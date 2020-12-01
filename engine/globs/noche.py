@@ -10,8 +10,11 @@ class Noche(AzoeBaseSprite):
 
     alpha = 0
     mod = 0
+    last_alpha = 0
 
     overriden = False
+
+    lights = None
 
     @classmethod
     def init(cls):
@@ -21,6 +24,7 @@ class Noche(AzoeBaseSprite):
     def __init__(self, parent, rect):
         img = Surface(rect.size, SRCALPHA)
         img.fill((0, 0, 0, self.alpha))
+        self.lights = []
         super().__init__(parent, 'night block', image=img, rect=rect)
 
     @classmethod
@@ -77,38 +81,24 @@ class Noche(AzoeBaseSprite):
             elif cls.aclarar:
                 cls.trasparentar(-cls.mod)
 
-    # noinspection PyUnresolvedReferences
-    def set_lights(self, lights):
+    def set_light(self, light):
+        self.lights.append(light)
 
-        def clamp(n):
-            return 0 if n < 0 else 255 if n > 255 else n
+    def draw_lights(self):
+        self.image.fill((0, 0, 0, self.alpha))
+        pxarray = PixelArray(self.image.copy())
+        dx, dy = self.rect.topleft
+        for light in self.lights:
+            px_li = PixelArray(light.image)
+            w, h = light.rect.size
+            lx, ly = light.rect.center
+            for x in range(w):
+                for y in range(h):
+                    color = light.image.unmap_rgb(px_li[x, y])
+                    if color != COLOR_IGNORADO:
+                        pxarray[x+lx, y+ly] = color
 
-        imap = self.image.unmap_rgb  # cache para velocidad
-        pxarray = PixelArray(self.image)
-
-        for light in lights:
-            image = light.image
-            w, h = image.get_size()
-            lx = light.rect.x
-            ly = light.rect.y
-
-            light_array = PixelArray(image)
-            lmap = image.unmap_rgb
-            for y in range(0, h):
-                for x in range(0, w):
-                    ox, oy = lx + x, ly + y
-                    r, g, b, a = lmap(light_array[x, y])
-                    if (r, g, b) != COLOR_IGNORADO:
-                        _r, _g, _b, _a = imap(pxarray[ox, oy])
-                        r = clamp(r + _r)
-                        g = clamp(g + _g)
-                        b = clamp(b + _b)
-                        a = clamp(_a - (255 - a))
-                        pxarray[ox, oy] = r, g, b, a
-                        # self.luces.append(light)
-                        # light.update()
-        nch = pxarray.make_surface()
-        self.image = nch
+        self.image = pxarray.make_surface()
 
     @classmethod
     def trasparentar(cls, mod, max_alpha=230):  # this is gradual
@@ -118,9 +108,9 @@ class Noche(AzoeBaseSprite):
 
     def update(self):
         self.rect.topleft = self.parent.rect.topleft
-        if self.oscurecer or self.aclarar or self.overriden:
-            self.image.fill((0, 0, 0, self.alpha))
-            self.overriden = False
+        if self.alpha != self.last_alpha:
+            self.last_alpha = self.alpha
+            self.draw_lights()
 
 
 Noche.init()
