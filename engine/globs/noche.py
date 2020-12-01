@@ -7,39 +7,50 @@ from .colores import COLOR_IGNORADO
 class Noche(AzoeBaseSprite):
     oscurecer = False
     aclarar = False
-    flag = False
 
     alpha = 0
     mod = 0
-    color = None
+
+    overriden = False
 
     @classmethod
     def init(cls):
-        cls.alpha = 0
-        cls.mod = 0
-        cls.color = (0, 0, 0, 0)
+        EventDispatcher.register_many((cls.get_alarms, 'ClockAlarm'),
+                                      (cls.set_darkness, 'MinuteFlag'))
 
-    def __init__(self, parent, size):
-        img = Surface(size, SRCALPHA)
-        img.fill(self.color)
-        rect = img.get_rect()
+    def __init__(self, parent, rect):
+        img = Surface(rect.size, SRCALPHA)
+        img.fill((0, 0, 0, self.alpha))
         super().__init__(parent, 'night block', image=img, rect=rect)
-        # self.z = 100000
-        # self.alpha = 230
-        # self.alpha_mod = 0
-
-    #     self.show()
-    #     EventDispatcher.register_many((self.get_alarms, 'ClockAlarm'),
-    #                                   (self.set_darkness, 'MinuteFlag'),
-    #                                   (lambda e: self.show(), 'ShowNight'))
-    #
-    # def show(self):
-    #     EventDispatcher.trigger('SetTheNight', 'Noche', {'noche': self})
 
     @classmethod
-    def set_mod(cls, alarm_dict):
-        atardece = alarm_dict['atardece']
-        anochece = alarm_dict['anochece']
+    def set_mod(cls, actual, amanece, mediodia, atardece, anochece):
+
+        if amanece < actual < mediodia:  # mañana
+            if actual-amanece < mediodia-actual:
+                elapsed = actual-amanece
+                cls.alpha = 230-(elapsed.h * 60 + elapsed.m)
+            else:
+                elapsed = mediodia-actual
+                cls.alpha = elapsed.h * 60 + elapsed.m
+
+        elif atardece < actual < anochece:  # tarde noche
+            if actual-atardece < anochece-actual:
+                elapsed = actual-atardece
+                cls.alpha = elapsed.h * 60 + elapsed.m
+            else:
+                elapsed = anochece-actual
+                cls.alpha = 230 - (elapsed.h * 60 + elapsed.m)
+
+        elif mediodia < actual < atardece:  # dia
+            cls.alpha = 0
+
+        elif anochece < actual or actual < amanece:  # noche
+            cls.alpha = 230
+
+        EventDispatcher.trigger('SetNight', 'Noche', {'alpha': cls.alpha})
+
+        cls.overriden = True
         ts = anochece - atardece
         s = ts.h * 3600 + ts.m * 60 + ts.s
         cls.mod = round(230 / (s // 60))  # 1
@@ -103,12 +114,13 @@ class Noche(AzoeBaseSprite):
     def trasparentar(cls, mod, max_alpha=230):  # this is gradual
         if 0 < cls.alpha + mod < max_alpha:
             cls.alpha += mod
-            # self.image.fill((0, 0, 0, self.alpha))
-            EventDispatcher.trigger('SetNight', 'Noche', {'alpha': mod})
-    #
-    # def set_transparency(self, mod):  # this is direct
-    #     self.alpha = mod
-    #     self.image.fill((0, 0, 0, self.alpha))
+            EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
+
+    def update(self):
+        self.rect.topleft = self.parent.rect.topleft
+        if self.oscurecer or self.aclarar or self.overriden:
+            self.image.fill((0, 0, 0, self.alpha))
+            self.overriden = False
 
 
 Noche.init()

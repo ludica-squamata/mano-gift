@@ -61,29 +61,15 @@ class Stage:
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_daylenght']
         offset = ceil(12 - (horas_dia / 2))
+        actual = Tiempo.clock.timestamp()
         self.amanece = TimeStamp(offset + 1)
         self.mediodia = TimeStamp(offset + (horas_dia / 2))
         self.anochece = TimeStamp(offset + horas_dia)
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
+        print('amanece',self.amanece, 'atardece',self.atardece, 'anochece',self.anochece, 'mediodia', self.mediodia)
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
                                     self.amanece: 'amanece', self.mediodia: 'medidía'})
-        # Tiempo.noche.set_alarms({'atardece': self.atardece, 'anochece': self.anochece})
-        # self.anochecer()
-
-    # def anochecer(self):
-    #     noche = Tiempo.noche
-    #
-    #     if self.data['ambiente'] == 'interior':
-    #         noche.set_transparency(0)
-    #
-    #     else:  # el ambiente es exterior, pero no hay evento.
-    #         ts = Tiempo.clock.timestamp()
-    #         if self.amanece <= ts <= self.atardece:
-    #             noche.set_transparency(0)
-    #         elif self.atardece <= ts <= self.anochece:
-    #             noche.set_transparency(120)
-    #         else:
-    #             noche.set_transparency(230)
+        Noche.set_mod(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
@@ -155,7 +141,7 @@ class ChunkMap(AzoeBaseSprite):
 
         image = cargar_imagen(data['fondo'])
         rect = image.get_rect(topleft=(off_x, off_y))
-        self.noche = Noche(self, self.rect.size)
+        self.noche = Noche(self, rect)
 
         super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))

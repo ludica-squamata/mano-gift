@@ -48,6 +48,7 @@ class Escenografia(ShadowSprite, EventListener):
         PropDescription(self)
 
     def update(self, *args):
+        super().update(*args)
         if hasattr(self, 'luz'):
             self.luz.update()
 

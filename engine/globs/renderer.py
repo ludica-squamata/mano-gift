@@ -12,7 +12,7 @@ class Camara:
     bgs = AzoeGroup('bgs')  # el grupo de todos los fondos cargados    
     visible = AzoeGroup('visible')  # objetos que se ven (incluye sombras)
     real = AzoeGroup('real')  # objetos reales del mundo (no incluye sombras)
-    noche = None  # es la capa de la noche
+    nchs = AzoeGroup('noches')
     x, y = 0, 0
     w, h = ANCHO, ALTO
     rect = Rect(x, y, w, h)
@@ -33,6 +33,7 @@ class Camara:
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
+        cls.nchs.add(spr.noche)
 
     @classmethod
     def add_real(cls, obj):
@@ -215,7 +216,6 @@ class Camara:
         cls.bgs_rect.move_ip(dx, dy)
         for spr in cls.bgs.sprs():
             spr.rect.move_ip(dx, dy)
-            spr.noche.rect.move_ip(dx, dy)
 
         for spr in cls.real.sprs():
             x = spr.stage.rect.x + spr.mapRect.x
@@ -237,6 +237,7 @@ class Camara:
     def update(cls, use_focus):
         cls.bgs.update()
         cls.real.update()
+        cls.nchs.update()
         if use_focus:
             cls.detectar_mapas_adyacentes()
             cls.panear()
@@ -247,6 +248,7 @@ class Camara:
     def draw(cls, fondo):
         ret = cls.bgs.draw(fondo)
         ret += cls.visible.draw(fondo)
+        ret += cls.nchs.draw(fondo)
         if 'pydevd' in sys.modules:
             draw.line(fondo, (0, 100, 255), (cls.rect.centerx, 0), (cls.rect.centerx, cls.h))
             draw.line(fondo, (0, 100, 255), (0, cls.rect.centery), (cls.w, cls.rect.centery))

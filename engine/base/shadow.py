@@ -43,7 +43,7 @@ class ShadowSprite(AzoeSprite):
     """:type : list"""
     _prevLuces = None
     """:type : list"""
-    alpha = 230
+    alpha = 150
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -56,7 +56,12 @@ class ShadowSprite(AzoeSprite):
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
     def set_alpha(self, event):
-        self.alpha -= event.data['alpha'] * 3
+        if 'mod' in event.data:
+            self.alpha -= event.data['mod'] * 3
+
+        elif 'alpha' in event.data:
+            negative = event.data['alpha']
+            self.alpha = 0 if self.alpha-negative < 0 else self.alpha-negative
 
     def add_shadow(self):
         z = self.sombra.z if self.sombra is not None else 0
