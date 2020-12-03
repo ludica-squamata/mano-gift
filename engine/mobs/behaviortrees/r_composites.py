@@ -30,6 +30,8 @@ class RandomSequence(RandomComposite):
 
             if not len(self.explored_children) == len(self.children):
                 status = Running
+            else:
+                self.reset()
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
@@ -54,6 +56,8 @@ class RandomSelector(RandomComposite):
 
             if not len(self.explored_children) == len(self.children):
                 status = Running
+            else:
+                self.reset()
 
         if status is Running:
             self.tree.set_to_check(self.children[self.current_id])
