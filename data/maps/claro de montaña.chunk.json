@@ -1,0 +1,15 @@
+{
+  "fondo": "maps/fondos/claro de montaña.png",
+  "colisiones": "maps/colisiones/claro de montaña.png",
+  "props": {"arbol escalado 2":[[432, 309], [235, 149], [577, 171], [633,417]]},
+  "mobs": {},
+  "limites": {
+    "izq": "arboles y castillo 2",
+    "der": null,
+    "inf": "cadena montañosa",
+    "sup": null
+  },
+  "refs": {
+	"arbol escalado 2": "props/arbol escalado 2.png"
+	}
+}

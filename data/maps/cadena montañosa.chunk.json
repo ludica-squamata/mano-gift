@@ -1,0 +1,15 @@
+{
+  "fondo": "maps/fondos/cadena montañosa.png",
+  "colisiones": "maps/colisiones/cadena montañosa.png",
+  "props": {"arbol escalado 2":[[184,340]]},
+  "mobs": {},
+  "limites": {
+    "izq": null,
+    "der": "cadena montañosa 2",
+    "inf": null,
+    "sup": "arboles y castillo 2"
+  },
+  "refs": {
+	"arbol escalado 2": "props/arbol escalado 2.png"
+	}
+}
