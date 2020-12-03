@@ -18,9 +18,9 @@
       ]
     },
     "special": {
-      "Repeater": {
-        "ID": null,
-        "times": 0
+      "Parallel": {
+        "ID": 15,
+        "Sucess_value": 1
       }
     }
   },
@@ -39,11 +39,12 @@
     "11": {"name": "Wait"},
     "12": {"name": "GetRoute"},
     "13": {"name": "UntilFail","child": 14},
-    "14": {"name": "Sequence","children": [15,16,18,19]},
-    "15": {"name": "NextPosition"},
-    "16": {"name": "Inverter","child": 17},
-    "17": {"name": "IsTalking"},
-    "18": {"name": "ReachExit"},
-    "19": {"name": "Move"}
+    "14": {"name": "Sequence","children": [15,16,19]},
+    "15": {"name": "Parallel","children": [16, 20]},
+    "16": {"name": "NextPosition"},
+    "17": {"name": "Inverter","child": 17},
+    "18": {"name": "IsTalking"},
+    "19": {"name": "ReachExit"},
+    "20": {"name": "Move"}
   }
 }

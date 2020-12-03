@@ -80,11 +80,11 @@ class Parallel(Composite):
     success_value = 0
     failure_value = 0
 
-    def __init__(self, tree, idx, children, s=0, f=0):
+    def __init__(self, tree, idx, children, s, f):
         super().__init__(tree, idx, children)
         self.children_status = [i * 0 for i in children]
-        self.success_value = s
-        self.failure_value = f
+        self.success_value = s if s > 0 else len(self.children)
+        self.failure_value = f if f > 0 else len(self.children)
 
     def update(self):
         for child in self.children:
@@ -93,7 +93,7 @@ class Parallel(Composite):
 
     def get_child_status(self, status):
         self.children_status[self.current_id] = status
-        self.current_id += 1
+        self.current_id += 1 if self.current_id+1 <= len(self.children)-1 else 0
         if self.children_status.count(Success) >= self.success_value:
             self.parent.get_child_status(Success)
 

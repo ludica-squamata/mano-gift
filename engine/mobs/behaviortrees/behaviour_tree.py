@@ -4,6 +4,7 @@ from engine.globs import ModData
 from engine.misc import abrir_json, load_module_from_script
 from .status import Success
 from .composites import *
+from .r_composites import *
 from .decorators import *
 from .leaves import Leaf
 
@@ -27,8 +28,8 @@ class BehaviourTree:
         self.shared_context = {}
         self._loaded_functions = {}
 
-        head = tree_data.pop('head')
-        self.load_head(head)
+        special = tree_data['head'].pop('special')
+        self.load_script_information(tree_data['head'].pop('script'))
         self.tree_structure = OrderedDict()
         self.entity = entity
         tree_data = self.analyze_tree(tree_data['body'])
@@ -46,13 +47,25 @@ class BehaviourTree:
                     node = Selector(self, idx, data['children'])
                 elif name == 'Sequence':
                     node = Sequence(self, idx, data['children'])
+                elif name == 'Parallel':
+                    sucess_value, failure_value = 0, 0
+                    parallel = special.get('Parallel', False)
+                    if parallel and parallel['ID'] == idx:
+                        sucess_value = special['Parallel'].get('Sucess_value', 0)
+                        failure_value = special['Parallel'].get('Failure_value', 0)
+                    node = Parallel(self, idx, data['children'], sucess_value, failure_value)
+                elif name == 'RSelector':
+                    node = RandomSelector(self, idx, data['children'])
+                elif name == 'RSequence':
+                    node = RandomSequence(self, idx, data['children'])
 
             elif 'child' in data:  # decorator
                 self.tree_structure[idx].append(int(data['child']))
                 if name == 'Repeater':
                     times = 0
-                    if head['special']['Repeater']['ID'] == idx:
-                        times = head['special']['Repeater']['times']
+                    repeater = special.get('Repeater', False)
+                    if repeater and repeater['ID'] == idx:
+                        times = special['Repeater']['times']
                     node = Repeater(self, idx, data['child'], times=times)
                 elif name == 'UntilFail':
                     node = UntilFail(self, idx, data['child'])
@@ -88,10 +101,10 @@ class BehaviourTree:
     def __repr__(self):
         return 'BehaviourTree: current node #' + str(self.to_check.idx)
 
-    def load_head(self, head_data):
-        for script in head_data['script']:
+    def load_script_information(self, scripts):
+        for script in scripts:
             modulo = load_module_from_script(script)
-            for name in head_data['script'][script]:
+            for name in scripts[script]:
                 if hasattr(modulo, name):
                     self._loaded_functions[name] = getattr(modulo, name)
 
@@ -107,7 +120,7 @@ class BehaviourTree:
                 head = extension.pop('head')
                 body = extension.pop('body')
                 new_tree = self.extend_tree(body, idx)
-                self.load_head(head)
+                self.load_script_information(head)
                 break
 
         if new_tree:
