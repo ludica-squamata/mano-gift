@@ -63,7 +63,7 @@ class EngineData:
         mapa_actual.del_property(mob)
         if Renderer.camara.is_focus(evento.data['mob']):
             EventDispatcher.trigger('EndDialog', cls, {})
-            EventDispatcher.trigger('ShowNight', cls, {})  # because an empty call of end_dialog erases the night layer.
+
             cls.setear_mapa(evento.data['target_stage'],
                             evento.data['target_entrada'],
                             mob=evento.data['mob'])
@@ -129,7 +129,7 @@ class EngineData:
         if type(focus) is str:
             datos = {'mobs': {focus: [data['entrada']]}}
             datos.update({'entradas': stage.data['entradas']})
-            datos.update({'refs': {focus:'data/mobs/player/'+focus+'.json'}})
+            datos.update({'refs': {focus: ModData.fd_player+focus+'.json'}})
             focus, grupo = load_mobs(datos)[0]
 
             obj = stage.mapa.add_property(focus, grupo)
@@ -212,7 +212,7 @@ class EngineData:
     def create_character(cls, event):
         final = event.data.pop('final')
         cls.character.update(event.data)
-        ruta = path.join(getcwd(),'data/mobs/player')
+        ruta = path.join(getcwd(), ModData.fd_player)
         if final:
             name = cls.character['nombre']
             if not path.exists(ruta):

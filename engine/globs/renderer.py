@@ -72,6 +72,7 @@ class Camara:
         cls.visible.empty()
         cls.bgs.empty()
         cls.bgs_rect = None
+        cls.nchs.empty()
 
     @classmethod
     def rotate_view(cls, event):

@@ -87,7 +87,7 @@ class Noche(AzoeBaseSprite):
     def draw_lights(self):
         self.image.fill((0, 0, 0, self.alpha))
         pxarray = PixelArray(self.image.copy())
-        dx, dy = self.rect.topleft
+
         for light in self.lights:
             px_li = PixelArray(light.image)
             w, h = light.rect.size
