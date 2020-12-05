@@ -1,6 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import ModData as Md
-from importlib import machinery
+from engine.misc.resources import load_module_from_script
+from engine.globs import ModData
 import types
 
 
@@ -15,23 +15,16 @@ class EventListener:
         """
         if self.data.get('script') and self.data.get('eventos'):
             # cargar un archivo por ruta
-            loader = machinery.SourceFileLoader("module.name", Md.fd_scripts + self.data['script'])
-            # if sys.version_info.minor == 3:
-            # noinspection PyArgumentList
-            m = loader.load_module()
-            # elif sys.version_info.minor == 4:
-            # en 3.4 lo cambiaron a exec_module()
-            # noinspection PyArgumentList
-            # m = loader.exec_module()
+            ruta = ModData.fd_scripts+'events/'+self.data['script']
+            m = load_module_from_script(self.data['script'][:-3], ruta)
 
             for event_name, func_name in self.data['eventos'].items():
-                f = getattr(m, func_name)
-                if f:
-                    # esto le asigna la instancia actual como self a la funcion,
-                    # asi puede acceder a propiedades del sprite
-                    f = types.MethodType(f, self)
-                    self.event_handlers[event_name] = f
-                    EventDispatcher.register(f, event_name)
+                if hasattr(m, func_name):
+                    # esto le asigna la instancia actual como self a la función,
+                    # así puede acceder a propiedades del sprite
+                    method = types.MethodType(getattr(m, func_name), self)
+                    self.event_handlers[event_name] = method
+                    EventDispatcher.register(method, event_name)
 
     def remove_listeners(self):
         """

@@ -14,6 +14,7 @@ class ModData:
     mobs = ''
     items = ''
     fd_scripts = ''
+    pkg_scripts = ''
     custommenus = {}
     QMC = None
 
@@ -41,6 +42,8 @@ class ModData:
             cls.mobs = root + data['folders']['mobs'] + '/'
             cls.items = root + data['folders']['items'] + '/'
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
+
+            cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
 
             loaded = []
             for keyword in cls.data.get('custom', ''):
@@ -72,12 +75,13 @@ class ModData:
 
             folders = [cls.fd_scripts, cls.fd_scripts + 'behaviours/', cls.fd_scripts + 'events/']
             for folder in folders:
+                package = folder.split('/')[-2]+'.' if folder != cls.fd_scripts else ''
                 for script in listdir(folder):
                     ruta = folder + script
                     if path.isfile(ruta):
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:
-                            raw_load_module(ruta)
+                            raw_load_module(folder, cls.pkg_scripts+'.' + package + script_name)
 
     @classmethod
     def _find_mod_folder(cls, ini):

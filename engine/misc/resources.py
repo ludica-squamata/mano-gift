@@ -1,5 +1,5 @@
+from importlib import import_module
 from pygame import image, Rect
-from importlib import machinery
 import json
 
 __all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json',
@@ -55,15 +55,11 @@ def guardar_json(ruta, datos, encoding='utf-8'):
         json.dump(datos, file, sort_keys=True, indent=2, separators=(',', ':'), ensure_ascii=False)
 
 
-def load_module_from_script(name):
+def load_module_from_script(name, route):
     from engine.globs.mod_data import ModData
-    ruta = ModData.fd_scripts + name + '.py'
-    # noinspection PyArgumentList
-    _module = machinery.SourceFileLoader("module.name", ruta).load_module()
-    return _module
+    ruta = ModData.fd_scripts + route
+    return import_module(name, ruta)
 
 
-def raw_load_module(ruta: str):
-    # noinspection PyArgumentList
-    _module = machinery.SourceFileLoader("module.name", ruta).load_module()
-    return _module
+def raw_load_module(ruta: str, name: str):
+    return import_module(name, ruta)
