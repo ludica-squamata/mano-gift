@@ -46,6 +46,7 @@ class MenuModel(Menu):
                 'accion': self.press_button,
                 'derecha': lambda: self.select_one('derecha'),
                 'izquierda': lambda: self.select_one('izquierda'),
+                'contextual': self.cancelar
 
             },
             'hold': {

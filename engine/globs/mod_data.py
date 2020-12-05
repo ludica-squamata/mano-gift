@@ -15,6 +15,7 @@ class ModData:
     items = ''
     fd_scripts = ''
     pkg_scripts = ''
+    fd_player = ''
     custommenus = {}
     QMC = None
 
@@ -42,7 +43,7 @@ class ModData:
             cls.mobs = root + data['folders']['mobs'] + '/'
             cls.items = root + data['folders']['items'] + '/'
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
-
+            cls.fd_player = root + data['folders']['player'] + '/'
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
 
             loaded = []

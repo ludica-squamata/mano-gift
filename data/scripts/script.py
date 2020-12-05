@@ -36,7 +36,7 @@ def init_game(event):
 
 def init_system(event):
     if event.data['intro']:
-        _module = load_module_from_script('intro')
+        _module = load_module_from_script('data.scripts.intro', '')
 
         # se supone que el modder sabe cómo se llama la función
         getattr(_module, 'creditos_introduccion')()

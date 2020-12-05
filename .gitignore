@@ -1,3 +1,4 @@
-.idea
-/save
+save/
 __pycache__
+/data/mobs/player/
+.idea/

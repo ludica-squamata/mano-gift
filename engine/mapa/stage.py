@@ -128,10 +128,10 @@ class ChunkMap(AzoeBaseSprite):
         data.update({'entradas': entradas})
         if 'hero' in data['mobs']:
             name = Mob_Group.character_name
-            if transient_mob is not None and name != transient_mob.character_name:
-                data['mobs'][name] = data['mobs'].pop('hero')
-            else:
-                del data['mobs']['hero']
+            data['mobs'][name] = data['mobs'].pop('hero')
+            data['refs'][name] = ModData.fd_player + name + '.json'
+            if transient_mob is not None and name == transient_mob.character_name:
+                del data['mobs'][transient_mob.character_name]
 
         for mob in Mob_Group.get_existing(data['mobs']):
             del data['mobs'][mob]

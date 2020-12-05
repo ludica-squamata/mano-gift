@@ -6,6 +6,7 @@ from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
 from random import randrange
+from os import path, mkdir, getcwd
 
 
 class EngineData:
@@ -128,6 +129,7 @@ class EngineData:
         if type(focus) is str:
             datos = {'mobs': {focus: [data['entrada']]}}
             datos.update({'entradas': stage.data['entradas']})
+            datos.update({'refs': {focus:'data/mobs/player/'+focus+'.json'}})
             focus, grupo = load_mobs(datos)[0]
 
             obj = stage.mapa.add_property(focus, grupo)
@@ -210,9 +212,12 @@ class EngineData:
     def create_character(cls, event):
         final = event.data.pop('final')
         cls.character.update(event.data)
+        ruta = path.join(getcwd(),'data/mobs/player')
         if final:
             name = cls.character['nombre']
-            guardar_json('data/mobs/' + name + '.json', cls.character)
+            if not path.exists(ruta):
+                mkdir(ruta)
+            guardar_json(path.join(ruta, name + '.json'), cls.character)
             cls.new_game(name)
 
 
