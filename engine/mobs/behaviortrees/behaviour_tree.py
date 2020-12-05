@@ -102,10 +102,10 @@ class BehaviourTree:
         return 'BehaviourTree: current node #' + str(self.to_check.idx)
 
     def load_script_information(self, head_data):
-        for script in head_data['script']:
+        for script in head_data:
             ruta = ModData.pkg_scripts.replace('.', '/') + '/' + script
             modulo = raw_load_module(ruta, '.'.join([ModData.pkg_scripts, script.replace('/', '.')]))
-            for name in head_data['script'][script]:
+            for name in head_data[script]:
                 if hasattr(modulo, name):
                     self._loaded_functions[name] = getattr(modulo, name)
 
