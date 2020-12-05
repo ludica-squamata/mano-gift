@@ -45,7 +45,7 @@ def load_props(alldata):
             if imgs[ref].endswith('.json'):
                 data = abrir_json(ModData.items + alldata['refs'][ref])
             else:
-                img = cargar_imagen(imgs[ref])  # because it points to a .png file instead.
+                img = cargar_imagen(ModData.graphs + imgs[ref])  # because it points to a .png file instead.
                 data = False
         else:
             # use ref as filename

@@ -1,10 +1,10 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc.resources import split_spritesheet
-from engine.globs import Tiempo, CANVAS_BG, TEXT_FG
+from engine.globs import Tiempo, CANVAS_BG, TEXT_FG, ModData
 from pygame import font, Rect
 from .menu import Menu
 from engine.libs import render_textrect
-from os import getcwd, path, listdir
+from os import path, listdir
 
 
 class MenuModel(Menu):
@@ -17,8 +17,8 @@ class MenuModel(Menu):
     def __init__(self):
         super().__init__('ModelMenu', 'Avatar')
 
-        self.images = self.cargar_anims('mobs/imagenes/heroe_idle_walk.png')
-        self.images2 = self.cargar_anims('mobs/imagenes/green_girl.png')
+        self.images = self.cargar_anims(ModData.graphs + 'mobs/imagenes/heroe_idle_walk.png')
+        self.images2 = self.cargar_anims(ModData.graphs + 'mobs/imagenes/green_girl.png')
         self.anim_img = self.images['Sabajo']
         self.anim_img2 = self.images2['Sabajo']
         self.anim_rect = Rect(0, 0, 32, 32)
@@ -61,8 +61,7 @@ class MenuModel(Menu):
 
     def set_model(self, modelo):
         imgs = {'alpha': 'mobs/colisiones/human_walk.png', 'imagenes': {}, 'final': False}
-        ruta = path.join(getcwd(), 'data/grafs/mobs/imagenes')
-        for filename in listdir(ruta):
+        for filename in listdir(path.join(ModData.graphs, 'mobs/imagenes')):
             key = ''
             name = filename.rstrip('.png')
             if modelo == 'el':

@@ -93,7 +93,7 @@ class Operable(Escenografia):
             for attr in estado:
                 if attr == 'image':
                     if estado[attr] not in images:
-                        img = cargar_imagen(estado[attr])
+                        img = cargar_imagen(ModData.graphs + estado[attr])
                         images[estado[attr]] = img
                     else:
                         img = images[estado[attr]]
@@ -181,7 +181,7 @@ class Estructura3D(Escenografia):
 
     def chop_faces(self, ruta_img, w, h, required_face='front'):
         if not self._chopped:
-            spritesheet = split_spritesheet(ruta_img, w=w, h=h)
+            spritesheet = split_spritesheet(ModData.graphs + ruta_img, w=w, h=h)
             d = {}
             if len(spritesheet) > 1:
                 for idx, face in enumerate(['front', 'left', 'right', 'back']):

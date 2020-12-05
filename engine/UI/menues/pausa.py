@@ -3,7 +3,6 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs import render_textrect
 from engine.misc import Config as Cfg
 from pygame.font import SysFont
-# from engine.UI.hud import HUD
 from pygame import Rect
 from .menu import Menu
 
@@ -44,7 +43,7 @@ class MenuPausa(Menu):
             buttons[i]['comando'] = self.new_menu
 
         self.establecer_botones(buttons, 6)
-        # self.update_charname_display()
+
         self.functions['tap'].update({
             'accion': self.press_button,
             'arriba': lambda: self.select_one('arriba'),

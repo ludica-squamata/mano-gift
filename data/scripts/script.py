@@ -1,8 +1,7 @@
 # script.py
-
-from engine.globs import GameState
+from importlib import import_module
+from engine.globs import GameState, ModData
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc.resources import load_module_from_script
 
 
 def boton_step(nombre, data):
@@ -36,10 +35,10 @@ def init_game(event):
 
 def init_system(event):
     if event.data['intro']:
-        _module = load_module_from_script('data.scripts.intro', '')
+        module = import_module('data.scripts.intro', ModData.fd_scripts)
 
         # se supone que el modder sabe cómo se llama la función
-        getattr(_module, 'creditos_introduccion')()
+        getattr(module, 'creditos_introduccion')()
     EventDispatcher.trigger('OpenMenu', 'Script', {'value': 'Principal'})
 
 

@@ -1,15 +1,11 @@
-from importlib import import_module
 from pygame import image, Rect
 import json
 
-__all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json',
-           'load_module_from_script', 'raw_load_module']
+__all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json']
 
 
 def cargar_imagen(ruta):
-    from engine.globs.mod_data import ModData
-    ar = image.load(ModData.graphs + ruta).convert_alpha()
-    return ar
+    return image.load(ruta).convert_alpha()
 
 
 def split_spritesheet(ruta, w=32, h=32):
@@ -53,13 +49,3 @@ def guardar_json(ruta, datos, encoding='utf-8'):
     """
     with open(ruta, 'w', encoding=encoding) as file:
         json.dump(datos, file, sort_keys=True, indent=2, separators=(',', ':'), ensure_ascii=False)
-
-
-def load_module_from_script(name, route):
-    from engine.globs.mod_data import ModData
-    ruta = ModData.fd_scripts + route
-    return import_module(name, ruta)
-
-
-def raw_load_module(ruta: str, name: str):
-    return import_module(name, ruta)

@@ -1,6 +1,7 @@
 from os import getcwd as cwd, path, listdir
-from engine.misc import salir, abrir_json, raw_load_module
+from engine.misc import salir, abrir_json
 from engine.globs.tiempo import Tiempo
+from importlib import import_module
 
 
 class ModData:
@@ -16,7 +17,7 @@ class ModData:
     fd_scripts = ''
     pkg_scripts = ''
     fd_player = ''
-    custommenus = {}
+    custommenus = None
     QMC = None
 
     @classmethod
@@ -47,32 +48,33 @@ class ModData:
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
 
             loaded = []
+            cls.custommenus = {}
+            cls.QMC = []
             for keyword in cls.data.get('custom', ''):
-                cls.custommenus = {}
                 if keyword == 'menus':
                     for d in cls.data['custom']['menus']:
                         loaded.append(d['script'])
-                        ruta = cls.fd_scripts + d['script'] + '.py'
-                        _module = raw_load_module(ruta)
-                        menu = getattr(_module, d['name'])
+                        ruta = cls.fd_scripts + d['script']
+                        module = import_module(cls.pkg_scripts + '.' + d['script'], ruta)
+                        menu = getattr(module, d['name'])
                         cls.custommenus[d['name']] = menu
 
                 elif keyword == 'circular':
-                    cls.QMC = []
-                    i = -1
-                    for d in cls.data['custom']['circular']:
-                        ruta = cls.fd_scripts + d['script'] + '.py'
-                        _module = raw_load_module(ruta)
+                    skip = 0
+                    for i, d in enumerate(cls.data['custom']['circular']):
+                        ruta = cls.fd_scripts + d['script']
+                        module = import_module(cls.pkg_scripts + '.' + d['script'], ruta)
                         loaded.append(d['script'])
-                        if hasattr(_module, d['name']):
-                            i += 1
-                            d.update({'idx': i})
-                            spec = getattr(_module, d['name'])
+                        if hasattr(module, d['name']):
+                            d.update({'idx': i-skip})
+                            spec = getattr(module, d['name'])
                             if type(spec) is list:
                                 d.update({'csc': spec})
                             else:
                                 d.update({'cmd': spec})
                             cls.QMC.append(d)
+                        else:
+                            skip += 1
 
             folders = [cls.fd_scripts, cls.fd_scripts + 'behaviours/', cls.fd_scripts + 'events/']
             for folder in folders:
@@ -82,7 +84,7 @@ class ModData:
                     if path.isfile(ruta):
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:
-                            raw_load_module(folder, cls.pkg_scripts+'.' + package + script_name)
+                            load_module(folder, cls.pkg_scripts + '.' + package + script_name)
 
     @classmethod
     def _find_mod_folder(cls, ini):
@@ -107,6 +109,6 @@ class ModData:
     @classmethod
     def get_script_method(cls, scriptname, methodname):
         ruta = cls.fd_scripts + scriptname
-        _module = raw_load_module(ruta)
-        if hasattr(_module, methodname):
-            return getattr(_module, methodname)
+        module = import_module(cls.fd_scripts + scriptname, ruta)
+        if hasattr(module, methodname):
+            return getattr(module, methodname)

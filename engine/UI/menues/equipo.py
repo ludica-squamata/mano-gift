@@ -1,4 +1,4 @@
-from engine.globs import CANVAS_BG, TEXT_FG, Mob_Group
+from engine.globs import CANVAS_BG, TEXT_FG, Mob_Group, ModData
 from engine.libs.textrect import render_textrect
 from engine.misc.resources import cargar_imagen
 from engine.UI.widgets import EspacioEquipable
@@ -67,7 +67,7 @@ class MenuEquipo(Menu):
 
         # dibujar
         self.espacios.draw(self.canvas)
-        self.hombre = cargar_imagen('hombre_mimbre.png')
+        self.hombre = cargar_imagen(ModData.graphs + 'hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))
         w = self.canvas.get_width() - 256
         h = self.canvas.get_height() - 62

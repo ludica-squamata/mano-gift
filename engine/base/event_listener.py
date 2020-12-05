@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc.resources import load_module_from_script
+from importlib import import_module
 from engine.globs import ModData
 import types
 
@@ -16,7 +16,7 @@ class EventListener:
         if self.data.get('script') and self.data.get('eventos'):
             # cargar un archivo por ruta
             ruta = ModData.fd_scripts+'events/'+self.data['script']
-            m = load_module_from_script(self.data['script'][:-3], ruta)
+            m = import_module(ruta, self.data['script'][:-3])
 
             for event_name, func_name in self.data['eventos'].items():
                 if hasattr(m, func_name):

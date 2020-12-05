@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, COLOR_COLISION
+from engine.globs import Tiempo, COLOR_COLISION, ModData
 from engine.misc.resources import split_spritesheet
 from ._movil import Movil
 from pygame import mask
@@ -30,7 +30,7 @@ class Animado(Movil):  # necesita Movil para tener direccion, giftSprite para la
     @staticmethod
     def cargar_anims(ruta_imgs, seq, alpha=False):
         dicc = {}
-        spritesheet = split_spritesheet(ruta_imgs)
+        spritesheet = split_spritesheet(ModData.graphs + ruta_imgs)
         idx = -1
         for L in seq:
             for D in ['abajo', 'arriba', 'izquierda', 'derecha']:

@@ -1,10 +1,11 @@
+from importlib import import_module
 from collections import OrderedDict
-from types import FunctionType
+from engine.misc import abrir_json
 from engine.globs import ModData
-from engine.misc import abrir_json, raw_load_module
+from types import FunctionType
 from .status import Success
-from .composites import *
 from .r_composites import *
+from .composites import *
 from .decorators import *
 from .leaves import Leaf
 
@@ -104,7 +105,7 @@ class BehaviourTree:
     def load_script_information(self, head_data):
         for script in head_data:
             ruta = ModData.pkg_scripts.replace('.', '/') + '/' + script
-            modulo = raw_load_module(ruta, '.'.join([ModData.pkg_scripts, script.replace('/', '.')]))
+            modulo = import_module('.'.join([ModData.pkg_scripts, script.replace('/', '.')]), ruta)
             for name in head_data[script]:
                 if hasattr(modulo, name):
                     self._loaded_functions[name] = getattr(modulo, name)

@@ -136,10 +136,10 @@ class ChunkMap(AzoeBaseSprite):
         for mob in Mob_Group.get_existing(data['mobs']):
             del data['mobs'][mob]
 
-        colisiones = cargar_imagen(data['colisiones'])
+        colisiones = cargar_imagen(ModData.graphs + data['colisiones'])
         self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
 
-        image = cargar_imagen(data['fondo'])
+        image = cargar_imagen(ModData.graphs + data['fondo'])
         rect = image.get_rect(topleft=(off_x, off_y))
         self.noche = Noche(self, rect)
 

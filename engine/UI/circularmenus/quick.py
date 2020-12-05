@@ -10,10 +10,9 @@ class QuickCircularMenu(RenderedCircularMenu):
 
     def __init__(self):
         self.entity = Mob_Group.get_controlled_mob()
-        cascadas = ModData.QMC
         self.nombre = 'Quick'
 
-        if cascadas is None:
+        if ModData.QMC is None:
             cascadas = {
                 'inicial': [
                     CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': self.entity.cambiar_estado}),
@@ -24,6 +23,12 @@ class QuickCircularMenu(RenderedCircularMenu):
                 ],
                 'Consumibles': [InventoryElement(self, item) for item in self.entity.inventario('consumible')],
                 'Equipables': [InventoryElement(self, item) for item in self.entity.inventario('equipable')],
+            }
+        else:
+            commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]
+            cascades = [LetterElement(self, *data) for data in ModData.QMC if 'csc' in data]
+            cascadas = {
+                'inicial': [i for i in commands]+[i for i in cascades]
             }
 
         temas = GameState.variables()

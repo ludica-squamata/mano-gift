@@ -1,5 +1,5 @@
 from .CompoMob import Equipado, Combativo, Autonomo, Parlante
-from engine.globs import Mob_Group
+from engine.globs import Mob_Group, ModData
 from engine.misc import cargar_imagen, split_spritesheet
 from engine.base import ShadowSprite
 from engine.globs.event_dispatcher import EventDispatcher
@@ -28,9 +28,9 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
                 elif key == 'cmb':
                     self.cmb_walk_img = self.cargar_anims(imgs['cmb'], dirs)
                 elif key == 'death':
-                    self.death_img = cargar_imagen(imgs['death'])
+                    self.death_img = cargar_imagen(ModData.graphs + imgs['death'])
                 elif key == "diag_face":
-                    self.diag_face = split_spritesheet(imgs['diag_face'], w=89, h=89)
+                    self.diag_face = split_spritesheet(ModData.graphs + imgs['diag_face'], w=89, h=89)
 
         self.images = self.idle_walk_img
         # self.ID = data['ID']

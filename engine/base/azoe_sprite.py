@@ -1,5 +1,6 @@
 from pygame import sprite, mask, Surface, Rect
 from engine.misc import cargar_imagen
+from engine.globs import ModData
 
 
 class AzoeSprite(sprite.Sprite):
@@ -35,7 +36,7 @@ class AzoeSprite(sprite.Sprite):
         super().__init__()
 
         if isinstance(imagen, str):
-            self.image = cargar_imagen(imagen)
+            self.image = cargar_imagen(ModData.graphs + imagen)
         elif isinstance(imagen, Surface):
             self.image = imagen
         elif imagen is None:
