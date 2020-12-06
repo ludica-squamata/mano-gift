@@ -84,7 +84,7 @@ class ModData:
                     if path.isfile(ruta):
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:
-                            load_module(folder, cls.pkg_scripts + '.' + package + script_name)
+                            import_module(cls.pkg_scripts + '.' + package + script_name, folder)
 
     @classmethod
     def _find_mod_folder(cls, ini):
