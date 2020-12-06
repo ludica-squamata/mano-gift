@@ -1,43 +1,56 @@
-from .rendered import RenderedCircularMenu
-from engine.globs import ModData
-from engine.misc.resources import abrir_json
-from os import path, listdir
+from engine.globs import ModData, Mob_Group, GameState
 from engine.IO.dialogo import Dialogo, Discurso
+from engine.misc.resources import abrir_json
+from .rendered import RenderedCircularMenu
+from os import path, listdir
 
 
 class DialogCircularMenu(RenderedCircularMenu):
     locutores = None
 
-    def __init__(self, *locutores):
+    def __init__(self, file, *locutores):
         self.locutores = locutores
         self.change_radius = False
         self.radius = 60
         self.nombre = 'Dialog'
 
-        for script in listdir(ModData.dialogos):
-            ruta = ModData.dialogos + script
-            if path.isfile(ruta):
-                file = abrir_json(ruta)
-                if Discurso.pre_init(file['head'], *locutores):
-                    # hay que ver que pre_init() verifique bien los dialogos, porque ahora son todos scripteados.
-                    dialogo = Dialogo(file, *locutores)
-                    dialogo.frontend.set_menu(self)
-                else:
-                    # aca habría que cerrar el menu, porque es inválido, o capaz abrir el dialogo por default.
-                    # aunque en realidad, este else esta mal porque los dialogos inválidos se descartan en el loop
-                    pass
+        dialogo = Dialogo(file, *locutores)
+        dialogo.frontend.set_menu(self)
 
         super().__init__({'inicial': []})
         self.deregister()
 
     @classmethod
-    def is_possible(cls, *locutores) -> bool:
+    def is_possible(cls, *locutores):
         for script in listdir(ModData.dialogos):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
-                file = abrir_json(ruta)
+                file = cls.preprocess_locutor(abrir_json(ruta))
+                name = 'dialog.'+file['head']['name']+'.enabled'
+                if not GameState.get(name):
+                    GameState.set(name, False)
                 if Discurso.pre_init(file['head'], *locutores):
-                    return True
+                    return file, True
+        return None, False
+
+    @staticmethod
+    def preprocess_locutor(file):
+        hero_name = Mob_Group.character_name
+        if 'heroe' in file['head']['locutors']:
+            idx = file['head']['locutors'].index('heroe')
+            file['head']['locutors'][idx] = hero_name
+
+            for s_idx in file['body']:
+                node = file['body'][s_idx]
+                if node['from'] == 'heroe':
+                    node['from'] = hero_name
+                # elif, because the hero wouldn't be talking to himself.
+                elif node['to'] == 'heroe':
+                    node['to'] = hero_name
+
+                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
+                    node['reqs']['loc'] = hero_name
+        return file
 
     def cerrar(self):
         for mob in self.locutores:

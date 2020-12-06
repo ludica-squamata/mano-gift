@@ -1,6 +1,6 @@
 # script.py
 from importlib import import_module
-from engine.globs import GameState, ModData
+from engine.globs import GameState, ModData, Mob_Group
 from engine.globs.event_dispatcher import EventDispatcher
 
 
@@ -44,3 +44,17 @@ def init_system(event):
 
 EventDispatcher.register(init_system, 'InitSystem')
 EventDispatcher.register(init_game, 'NewGame')
+
+
+def about(event):
+    what = event.data['what']
+    who = event.data['who']
+    if who.nombre == Mob_Group.character_name:
+        if what == 'Estrella':
+            GameState.set('dialog.star.enabled', True)
+
+        elif what == 'Banana':
+            GameState.set('dialog.banana.enabled', True)
+
+
+EventDispatcher.register(about, 'TookItem')

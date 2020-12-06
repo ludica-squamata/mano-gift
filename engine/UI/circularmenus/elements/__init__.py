@@ -1,11 +1,11 @@
 from .letter import LetterElement
-from .dialog_elems import DialogOptionElement, DialogObjectElement, DialogThemeElement, DialogTopicElement
+from .dialog_elems import BranchElement, DialogObjectElement, DialogThemeElement, DialogTopicElement
 from .inventory import InventoryElement
 from .command import CommandElement
 from .title import Title
 
 __all__ = ['LetterElement',
-           'DialogOptionElement',
+           'BranchElement',
            'DialogObjectElement',
            'DialogThemeElement',
            'InventoryElement',

@@ -2,11 +2,12 @@ from .letter import LetterElement
 from .descriptive_area import DescriptiveArea
 
 
-class DialogOptionElement(LetterElement):
+class BranchElement(LetterElement):
     active = True
     item = None
 
     def __init__(self, parent, item):
+        """Elemento para las opciones de un branch."""
         nombre = item['name']
         icono = item['icon']
         self.item = item['item']
@@ -21,6 +22,7 @@ class DialogObjectElement(LetterElement):
     idx = 0
 
     def __init__(self, parent, idx, item):
+        """Elemento para mostrar ítems en un diálogo"""
         self.item = item
         self.idx = idx
         self.img_uns = self._create(21, 21)
@@ -45,6 +47,7 @@ class DialogThemeElement(LetterElement):
     idx = 0
 
     def __init__(self, parent, idx, item):
+        """Elemento para cambiar de tema en un diálogo"""
         self.item = item
         self.idx = idx
 

@@ -1,0 +1,23 @@
+{
+  "head": {
+    "class": "scripted",
+    "conditional_tags": {},
+    "style": "",
+    "locutors": ["heroe","commoner"],
+    "name": "star",
+    "about": "Estrella",
+    "icon": "S",
+    "keywords": [],
+    "events": {}
+  },
+  "body": {
+    "0": {
+      "type": "node","leads": 1, "from": "commoner", "to": "heroe",
+      "txt": "Hey! tenés la estrella! Me la das?"
+    },
+    "1": {
+      "type": "leaf", "from": "heroe", "to": "commoner",
+      "txt": "No, es mía."
+    }
+  }
+}

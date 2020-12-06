@@ -1,14 +1,14 @@
 {
   "head": {
-    "class": "invalid",
+    "class": "scripted",
     "conditional_tags": {},
     "style": "",
     "locutors": [
       "heroe",
       "commoner"
     ],
-    "name": "Salida",
-    "about": "salida",
+    "name": "salida",
+    "about": "Salida",
     "icon": "",
     "keywords": [],
     "events": {

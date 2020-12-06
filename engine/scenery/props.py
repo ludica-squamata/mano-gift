@@ -1,5 +1,5 @@
 from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
-from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES
+from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo
 from engine.globs.renderer import Renderer
 from .bases import Escenografia
 from pygame import Rect
@@ -21,8 +21,10 @@ class Agarrable(Escenografia):
     def action(self, entity):
         if entity.tipo == 'Mob':
             item = self.return_item()
+            name = item.nombre
             entity.inventario.agregar(item)
             EventDispatcher.trigger('DeleteItem', 'Mob', {'obj': self})
+            EventDispatcher.trigger('TookItem', 'Prop', {'who': entity, 'what': name, 'when': Tiempo.clock.timestamp()})
 
     def return_item(self):
         args = self.nombre, self.image, self.data

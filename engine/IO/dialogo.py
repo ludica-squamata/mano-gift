@@ -17,7 +17,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if GameState.get('dialog.' + meta['name']):
+        if not GameState.get('dialog.' + meta['name'] + '.enabled'):
             allow = False
 
         if meta['class'] != 'scripted':
@@ -290,7 +290,7 @@ class Dialogo(Discurso):
                 panel.menu.salir()
 
         if self.write_flag:
-            GameState.set('dialog.' + self.name, 1)
+            GameState.set('dialog.' + self.name + '.enabled', 0)
 
         super().cerrar()
 

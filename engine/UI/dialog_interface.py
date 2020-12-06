@@ -73,7 +73,7 @@ class DialogInterface(BaseWidget):
         self.drawn = True
 
     def set_sel_mode(self, opciones):
-        from engine.UI.circularmenus.elements.dialog_elems import DialogOptionElement
+        from engine.UI.circularmenus.elements.dialog_elems import BranchElement
         self.menu.supress_all()
 
         cascada = []
@@ -92,7 +92,7 @@ class DialogInterface(BaseWidget):
                 icon = item.image
                 name = item.nombre
 
-            cascada.append(DialogOptionElement(self, {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}))
+            cascada.append(BranchElement(self, {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}))
 
         self.menu.add_cascades({'inicial': cascada})
 

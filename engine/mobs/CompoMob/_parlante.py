@@ -25,8 +25,9 @@ class Parlante(Movil):
         """
         if sprite.hablante:
             self.hablar(sprite)
-            if DialogCircularMenu.is_possible(self, sprite):
-                DialogCircularMenu(self, sprite)
+            file, is_possible = DialogCircularMenu.is_possible(self, sprite)
+            if is_possible:
+                DialogCircularMenu(file, self, sprite)
 
             else:
                 Monologo(sprite, self)
