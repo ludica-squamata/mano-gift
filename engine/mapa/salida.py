@@ -10,21 +10,22 @@ class Salida:
     tipo = 'Salida'
     nombre = ''
     chunk = ''  # string, mapa de destino.
-    link = ''  # string, nombre de la entrada en dest con la cual conecta
+    entrada = ''  # string, nombre de la entrada en dest con la cual conecta
     mask = None
     sprite = None
     solido = False
 
-    def __init__(self, nombre, mapa, stage, rect, chunk, entrada, direcciones):
+    def __init__(self, nombre, id, mapa, stage, rect, chunk, entrada, direcciones):
         self.nombre = self.tipo + '.' + nombre
-        self.flag_name = nombre + '.triggered'
+        self.flag_name = self.nombre + '.triggered'
         self.mapRect = Rect(*rect)
         self.chunk = chunk
         self.target_stage = stage
-        self.link = entrada  # string, nombre de la entrada en dest con la cual conecta
+        self.entrada = entrada  # string, nombre de la entrada en dest con la cual conecta
         self.direcciones = direcciones
         self.mask = Mask(self.mapRect.size)
         self.mask.fill()
+        self.id = id
         GameState.set(self.flag_name, False)
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, mapa,  *self.mapRect)
@@ -36,7 +37,7 @@ class Salida:
         data = {'mob': mob,
                 'target_stage': self.target_stage,
                 'target_chunk': self.chunk,
-                'target_entrada': self.link}
+                'target_entrada': self.entrada}
 
         EventDispatcher.trigger('SetMap', 'Salida', data)
         GameState.set(self.flag_name, True)

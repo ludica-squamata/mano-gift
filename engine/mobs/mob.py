@@ -33,7 +33,6 @@ class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
                     self.diag_face = split_spritesheet(ModData.graphs + imgs['diag_face'], w=89, h=89)
 
         self.images = self.idle_walk_img
-        # self.ID = data['ID']
         self.nombre = data['nombre']
         self.estado = 'idle'
         image = self.images['S' + self.direccion]

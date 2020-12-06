@@ -53,7 +53,7 @@
         16
       ],
       "chunk": "single",
-      "nombre": "Single.salida1",
+      "nombre": "Salida1",
       "entrada": "center",
       "direcciones": []
     },
@@ -66,7 +66,7 @@
         32
       ],
       "chunk": "single",
-      "nombre": "Single.house",
+      "nombre": "house",
       "entrada": "center",
       "direcciones": []
     }

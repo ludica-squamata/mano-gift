@@ -129,7 +129,7 @@ class EngineData:
         if type(focus) is str:
             datos = {'mobs': {focus: [data['entrada']]}}
             datos.update({'entradas': stage.data['entradas']})
-            datos.update({'refs': {focus: ModData.fd_player+focus+'.json'}})
+            datos.update({'refs': {focus: ModData.fd_player + focus + '.json'}})
             focus, grupo = load_mobs(datos)[0]
 
             obj = stage.mapa.add_property(focus, grupo)

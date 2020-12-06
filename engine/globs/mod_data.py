@@ -20,6 +20,8 @@ class ModData:
     custommenus = None
     QMC = None
 
+    _next_id = 0
+
     @classmethod
     def init(cls, ini_data):
 
@@ -88,6 +90,12 @@ class ModData:
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:
                             import_module(cls.pkg_scripts + '.' + package + script_name, folder)
+
+    @classmethod
+    def next_id(cls):
+        n = cls._next_id
+        cls._next_id += 1
+        return n
 
     @classmethod
     def _find_mod_folder(cls, ini):
