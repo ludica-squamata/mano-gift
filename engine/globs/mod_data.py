@@ -76,6 +76,9 @@ class ModData:
                         else:
                             skip += 1
 
+            if not len(cls.QMC):
+                cls.QMC = None
+
             folders = [cls.fd_scripts, cls.fd_scripts + 'behaviours/', cls.fd_scripts + 'events/']
             for folder in folders:
                 package = folder.split('/')[-2]+'.' if folder != cls.fd_scripts else ''
