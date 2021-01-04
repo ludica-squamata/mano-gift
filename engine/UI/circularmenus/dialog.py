@@ -26,7 +26,7 @@ class DialogCircularMenu(RenderedCircularMenu):
             ruta = ModData.dialogos + script
             if path.isfile(ruta):
                 file = cls.preprocess_locutor(abrir_json(ruta))
-                name = 'dialog.'+file['head']['name']+'.enabled'
+                name = 'dialog.{}.enabled'.format(file['head']['about'])
                 if not GameState.get(name) and '..' not in name:
                     GameState.set(name, False)
                 if Discurso.pre_init(file['head'], *locutores):

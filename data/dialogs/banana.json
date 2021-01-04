@@ -11,8 +11,7 @@
     },
     "style": "tagarrays/estilo.json",
     "locutors": ["heroe","commoner"],
-    "name": "banana",
-    "about": "Banana",
+    "about": "banana",
     "icon": "props/banana.png",
     "keywords": [],
     "events": {}

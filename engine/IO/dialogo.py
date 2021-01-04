@@ -17,7 +17,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if not GameState.get('dialog.' + meta['name'] + '.enabled'):
+        if not GameState.get('dialog.{}.enabled'.format(meta['about'])):
             allow = False
 
         if meta['class'] != 'scripted':
@@ -52,7 +52,7 @@ class Dialogo(Discurso):
         EventDispatcher.register(self.set_flag, 'Flag')
         head = arbol['head']
         self.tags_condicionales = head['conditional_tags']
-        self.name = head['name']
+        self.about = head['name']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
         self.objects = head.get('panels', {}).get('objects', {})
@@ -290,7 +290,7 @@ class Dialogo(Discurso):
                 panel.menu.salir()
 
         if self.write_flag:
-            GameState.set('dialog.' + self.name + '.enabled', 0)
+            GameState.set('dialog.{}.enabled'.format(self.about), False)
 
         super().cerrar()
 
