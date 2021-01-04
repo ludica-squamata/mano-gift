@@ -1,7 +1,7 @@
 from engine.UI.prop_description import PropDescription
 from engine.base import ShadowSprite, EventListener
 from engine.mapa.light_source import LightSource
-from engine.globs import GRUPO_ITEMS
+from engine.globs import GRUPO_ITEMS, ModData
 
 
 class Escenografia(ShadowSprite, EventListener):
@@ -61,14 +61,14 @@ class Item:
     def __init__(self, nombre, imagen, data):
         self.nombre = nombre
         self.image = imagen
-        self.ID = data['ID']
+        self.id = ModData.next_id()
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data['efecto']['des']
         self.stackable = 'stackable' in data['propiedades']
 
     def __eq__(self, other):
-        if other.__class__ == self.__class__ and self.ID == other.ID:
+        if other.__class__ == self.__class__ and self.id == other.id:
             return True
         else:
             return False
@@ -76,7 +76,7 @@ class Item:
     def __ne__(self, other):
         if other.__class__ != self.__class__:
             return True
-        elif self.ID != other.ID:
+        elif self.id != other.ID:
             return True
         else:
             return False
