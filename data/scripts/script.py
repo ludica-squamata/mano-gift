@@ -47,14 +47,9 @@ EventDispatcher.register(init_game, 'NewGame')
 
 
 def about(event):
-    what = event.data['what']
     who = event.data['who']
     if who.nombre == Mob_Group.character_name:
-        if what == 'Estrella':
-            GameState.set('dialog.star.enabled', True)
-
-        elif what == 'Banana':
-            GameState.set('dialog.banana.enabled', True)
+        GameState.set('dialog.{}.enabled'.format(event.data['about']), True)
 
 
 EventDispatcher.register(about, 'TookItem')

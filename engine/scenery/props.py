@@ -21,10 +21,13 @@ class Agarrable(Escenografia):
     def action(self, entity):
         if entity.tipo == 'Mob':
             item = self.return_item()
-            name = item.nombre
+            ref = self.reference
             entity.inventario.agregar(item)
             EventDispatcher.trigger('DeleteItem', 'Mob', {'obj': self})
-            EventDispatcher.trigger('TookItem', 'Prop', {'who': entity, 'what': name, 'when': Tiempo.clock.timestamp()})
+            EventDispatcher.trigger('TookItem', 'Prop', {'who': entity,
+                                                         'what': item,
+                                                         'when': Tiempo.clock.timestamp(),
+                                                         'about': ref})
 
     def return_item(self):
         args = self.nombre, self.image, self.data

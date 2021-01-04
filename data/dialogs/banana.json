@@ -12,7 +12,7 @@
     "style": "tagarrays/estilo.json",
     "locutors": ["heroe","commoner"],
     "name": "banana",
-    "about": "item.banana",
+    "about": "Banana",
     "icon": "props/banana.png",
     "keywords": [],
     "events": {}
