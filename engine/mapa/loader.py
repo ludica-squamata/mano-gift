@@ -105,8 +105,9 @@ def cargar_salidas(mapa, alldata, size):
         chunk = datos['chunk']
         entrada = datos['entrada']
         direcciones = datos['direcciones']
+        id = ModData.next_id()
 
-        salidas.append(Salida(nombre, mapa, stage, rect, chunk, entrada, direcciones))
+        salidas.append(Salida(nombre, id, mapa, stage, rect, chunk, entrada, direcciones))
         r, g, b, a = 255, i % 255, i // 255, 255
         # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
         # después se usará b*255+g para devolver el index.

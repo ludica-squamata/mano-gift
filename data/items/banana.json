@@ -1,6 +1,5 @@
 {
   "nombre": "Banana",
-  "ID": 1,
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
