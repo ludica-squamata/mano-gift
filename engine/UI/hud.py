@@ -207,9 +207,10 @@ class FloatingNumber(Sprite):
     def __init__(self):
         super().__init__()
         self.fuente = font.SysFont('Verdana', 11)
-        EventDispatcher.register(self.show, 'MobWounded', 'UsedItem')
+        EventDispatcher.register(self.show_numbers, 'MobWounded', 'UsedItem')
+        EventDispatcher.register(self.show_words, 'MissedAttack')
 
-    def show(self, event):
+    def show_numbers(self, event):
         factor = event.data['factor']
         mob_rect = event.data['mob'].rect
         if factor < 0:
@@ -217,7 +218,15 @@ class FloatingNumber(Sprite):
         else:
             color = 0, 255, 0
 
-        string = str(factor).lstrip('-')
+        string = str(abs(factor))
+        self.image = self.fuente.render(string, True, color)
+        self.rect = self.image.get_rect(midbottom=mob_rect.midtop)
+        Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+
+    def show_words(self, event):
+        mob_rect = event.data['mob'].rect
+        string = 'miss'
+        color = 133, 108, 25
         self.image = self.fuente.render(string, True, color)
         self.rect = self.image.get_rect(midbottom=mob_rect.midtop)
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)

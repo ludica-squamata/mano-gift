@@ -1,9 +1,10 @@
 from ._animado import Animado
 from ._sensitivo import Sensitivo
+from ._suertudo import Suertudo
 from engine.globs.event_dispatcher import EventDispatcher
 
 
-class Combativo(Sensitivo, Animado):
+class Combativo(Sensitivo, Animado, Suertudo):
     is_damageable = True
 
     def hurt(self, damage):
@@ -28,5 +29,11 @@ class Combativo(Sensitivo, Animado):
             x, y = self.direcciones[self.direccion]
 
             x, y = x * self['Retroceso'], y * self['Retroceso']
-            sprite.reubicar(x, y)
-            sprite.hurt(self['DañoCC'])
+            a, b = self.luck(), sprite.luck()
+
+            if self['Ataque']+a >= sprite['Evasión']+b:
+                EventDispatcher.trigger('AttackSuccess', self.tipo, {'victim': sprite, 'attaker': self})
+                sprite.reubicar(x, y)
+                sprite.hurt(self['DañoCC'])
+            else:
+                EventDispatcher.trigger('MissedAttack', self.tipo, {'mob': sprite})

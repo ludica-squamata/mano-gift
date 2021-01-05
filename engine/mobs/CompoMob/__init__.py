@@ -6,3 +6,4 @@ from ._movil import Movil
 from ._autonomo import Autonomo
 from ._parlante import Parlante
 from ._combativo import Combativo
+from ._suertudo import Suertudo
