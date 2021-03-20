@@ -1,13 +1,15 @@
 from ._animado import Animado
 from ._sensitivo import Sensitivo
 from ._suertudo import Suertudo
+from ._equipado import Equipado
 from engine.globs.event_dispatcher import EventDispatcher
 
 
-class Combativo(Sensitivo, Animado, Suertudo):
+class Combativo(Sensitivo, Animado, Suertudo, Equipado):
     is_damageable = True
 
     def hurt(self, damage):
+        damage -= self.dureza
         self['Salud'] -= damage
         EventDispatcher.trigger('MobWounded', self.tipo,
                                 {'mob': self,
@@ -31,7 +33,7 @@ class Combativo(Sensitivo, Animado, Suertudo):
             x, y = x * self['Retroceso'], y * self['Retroceso']
             a, b = self.luck(), sprite.luck()
 
-            if self['Ataque']+a >= sprite['Evasión']+b:
+            if self['Ataque']+self['Nivel']+a >= sprite['Evasión']+sprite['Nivel']+b:
                 EventDispatcher.trigger('AttackSuccess', self.tipo, {'victim': sprite, 'attaker': self})
                 sprite.reubicar(x, y)
                 sprite.hurt(self['DañoCC'])

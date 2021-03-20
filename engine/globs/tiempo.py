@@ -322,7 +322,6 @@ class Tiempo:
 
 class SeasonalYear:
     year_lenght = 360  # chapuza para velocidad
-    season_lenght = year_lenght // 4  # 90
     day_lenght = 0
 
     biome = None
@@ -330,11 +329,11 @@ class SeasonalYear:
 
     biomes = {  # los valores son la cantidad de horas de luz que puede tener un día.
         "polar": {  # corresponde a latitudes entre 90º y 30º N/S
-            "spring": 24, "summer": 24, "fall": 0, "winter": 0},
+            "summer": 24, "winter": 0, 'seaon_lenght': year_lenght // 2},
         "equatorial": {  # corresponde a latitudes entre 30ºS y 30ºN
-            "spring": 12, "summer": 12, "fall": 12, "winter": 12},
+            "spring": 12, "fall": 12, 'seaon_lenght': year_lenght // 2},
         "template": {  # corresponde a latitudes entre 30º y 90º N/S.
-            "spring": 12, "summer": 19, "fall": 12, "winter": 10}
+            "spring": 12, "summer": 19, "fall": 12, "winter": 10, 'seaon_lenght': year_lenght // 4}
     }
     cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
 
@@ -352,7 +351,7 @@ class SeasonalYear:
         # Tiempo ya de por si cuenta los días.
         number_of_days = event.data['days']
         # No hay necesidad de que SeasonalYear los cuente también
-        if number_of_days % cls.season_lenght == 0:  # 90, 180, 270, 360
+        if number_of_days % cls.biomes[cls.biome]['seaon_lenght'] == 0:
             cls.season = next(cls.cycler)
             cls.set_day_duration()
             EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
@@ -363,7 +362,8 @@ class SeasonalYear:
 
     @classmethod
     def set_day_duration(cls):
-        cls.day_lenght = cls.biomes[cls.biome][cls.season]
+        if cls.season in cls.biomes[cls.biome]:
+            cls.day_lenght = cls.biomes[cls.biome][cls.season]
 
     @classmethod
     def propagate(cls):

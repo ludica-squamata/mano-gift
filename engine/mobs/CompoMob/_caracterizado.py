@@ -11,10 +11,13 @@ class Caracterizado(AzoeSprite):
         enteramente del modder."""
         self._chars = {}
         self._allchars = []
+        proto_nivel = 0
         super().__init__(**kwargs)
         for attr in self.data['atributos']:
             self._chars[attr] = self.data['atributos'][attr]
             self._allchars.append(attr)
+            proto_nivel += self._chars[attr]
+        self['Nivel'] = 1 + (proto_nivel - 50) // 6
 
         for char in ModData.data['caracteristicas']:
             if char in self._chars:

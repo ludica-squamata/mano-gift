@@ -6,6 +6,7 @@ class Equipable(Item):
     def __init__(self, nombre, imagen, data):
         super().__init__(nombre, imagen, data)
         self.tipo = 'equipable'
+        self.subtipo = data['subtipo']
         self.espacio = data['efecto']['equipo']
 
 
@@ -51,22 +52,19 @@ class Colocable(Item):
 class Armadura(Equipable):
     def __init__(self, nombre, imagen, data):
         super().__init__(nombre, imagen, data)
-        self.subtipo = 'armadura'
+        self.proteccion = data['efecto']['proteccion']
 
 
 class Arma(Equipable):
     def __init__(self, nombre, imagen, data):
         super().__init__(nombre, imagen, data)
-        self.subtipo = 'arma'
 
 
 class Accesorio(Equipable):
     def __init__(self, nombre, imagen, data):
         super().__init__(nombre, imagen, data)
-        self.subtipo = 'accesorio'
 
 
 class Pocion(Consumible):
     def __init__(self, nombre, imagen, data):
         super().__init__(nombre, imagen, data)
-        self.subtipo = 'pocion'

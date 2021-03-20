@@ -28,7 +28,7 @@ class Boton(BaseWidget):
         self.img_uns = uns
         self.img_dis = dis
         self.pos = pos
-        super().__init__(self.img_uns)
+        super().__init__(imagen=self.img_uns)
         self.rect = self.img_sel.get_rect(topleft=self.pos)
 
         self.comando = comando

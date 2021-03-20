@@ -10,6 +10,7 @@
   ],
   "efecto": {
     "des": "Es un peto de hierro.",
-    "equipo": "peto"
+    "equipo": "peto",
+    "proteccion": 2
   }
 }

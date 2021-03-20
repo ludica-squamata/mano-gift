@@ -1,11 +1,11 @@
-from .CompoMob import Equipado, Combativo, Autonomo, Parlante
-from engine.globs import Mob_Group, ModData
-from engine.misc import cargar_imagen, split_spritesheet
-from engine.base import ShadowSprite
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.misc import cargar_imagen, split_spritesheet
+from .CompoMob import Combativo, Autonomo, Parlante
+from engine.globs import Mob_Group, ModData
+from engine.base import ShadowSprite
 
 
-class Mob(Combativo, Equipado, Autonomo, Parlante, ShadowSprite):
+class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
     accionable = False
     character_name = ''
     has_hud = False  # by default, non-controlled mobs don't have a HUD.

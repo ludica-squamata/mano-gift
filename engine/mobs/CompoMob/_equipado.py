@@ -12,11 +12,16 @@ class Equipado(Caracterizado):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.inventario = Inventory(10, 10 + self['ModCarga'])
+        self.dureza = 0
 
     def equipar_item(self, item):
         self.equipo[item.espacio] = item
+        if hasattr(item, 'proteccion'):
+            self.dureza += item.proteccion
         self.inventario.remover(item)
 
     def desequipar_item(self, item):
         self.equipo[item.espacio] = None
+        if hasattr(item, 'proteccion'):
+            self.dureza -= item.proteccion
         self.inventario.agregar(item)

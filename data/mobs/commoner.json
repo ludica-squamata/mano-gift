@@ -1,12 +1,12 @@
 {
   "nombre": "commoner",
   "atributos": {
-    "Fuerza": 2,
-    "Carisma": 5,
+    "Fuerza": 4,
+    "Carisma": 7,
     "Agilidad": 8,
     "Resistencia": 20,
-    "Inteligencia": 1,
-    "Percepción": 5
+    "Inteligencia": 5,
+    "Percepción": 6
   },
   "imagenes": {
     "idle": "mobs/imagenes/commoner12.png",
