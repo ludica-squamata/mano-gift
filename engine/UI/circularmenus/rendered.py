@@ -10,6 +10,7 @@ class RenderedCircularMenu(CircularMenu):
 
     def __init__(self, cascadas):
         cx, cy = Renderer.camara.rect.center
+        self.overwritten = False
         super().__init__(cascadas, cx, cy)
         self._update_rendered()
 
@@ -49,7 +50,7 @@ class RenderedCircularMenu(CircularMenu):
         super().turn(delta)
 
     def salir(self):
-        if self.cascadaActual == 'inicial':
+        if self.cascadaActual == 'inicial' or self.overwritten:
             for cuadro in self.cuadros:
                 cuadro.deregister()
             self.deregister()

@@ -34,6 +34,7 @@ class Menu(EventAware, BaseWidget):
         self.functions['tap'].update({'contextual': self.cancelar})
         self.functions['release'].update({'contextual': self.cancelar})
         EngineData.MENUS[nombre] = self
+        EventDispatcher.trigger('TogglePause', 'EngineData', {'value': True})
 
     def crear_titulo(self, titulo, ancho):
         fuente = font.Font('engine/libs/Verdana.ttf', 16)

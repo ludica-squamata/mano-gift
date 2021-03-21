@@ -1,4 +1,5 @@
-from engine.globs import CANVAS_BG, TEXT_FG, Mob_Group, ModData
+from engine.globs import CANVAS_BG, TEXT_FG, Mob_Group, ModData, EngineData
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs.textrect import render_textrect
 from engine.misc.resources import cargar_imagen
 from engine.UI.widgets import EspacioEquipable
@@ -229,7 +230,11 @@ class MenuEquipo(Menu):
     def cancelar(self):
         if self.foco == 'espacios':
             self.deregister()
-            return super().cancelar()
+            if len(EngineData.acceso_menues) == 1:
+                EngineData.acceso_menues.clear()
+                EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
+            else:
+                return super().cancelar()
         else:
             for fila in self.filas.sprs():
                 fila.ser_deselegido()

@@ -1,3 +1,4 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from .descriptive_area import DescriptiveArea
 from .letter import LetterElement
 from engine.globs import TEXT_FG
@@ -40,3 +41,7 @@ class InventoryElement(LetterElement):
             self.image = self.img_sel
             if value == 0:
                 self.parent.del_item_from_cascade(self.nombre, 'Consumibles')
+        elif self.item.tipo == 'equipable':
+            self.parent.overwritten = True
+            self.parent.salir()
+            EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo'})

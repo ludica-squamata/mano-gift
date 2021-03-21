@@ -52,7 +52,7 @@ class Dialogo(Discurso):
         EventDispatcher.register(self.set_flag, 'Flag')
         head = arbol['head']
         self.tags_condicionales = head['conditional_tags']
-        self.about = head['name']
+        self.about = head['about']
 
         self.dialogo = ArboldeDialogo(arbol['body'])
         self.objects = head.get('panels', {}).get('objects', {})
