@@ -33,7 +33,7 @@ class Combativo(Sensitivo, Animado, Suertudo, Equipado):
             x, y = x * self['Retroceso'], y * self['Retroceso']
             a, b = self.luck(), sprite.luck()
 
-            if self['Ataque']+self['Nivel']+a >= sprite['Evasión']+sprite['Nivel']+b:
+            if self['Ataque']+a >= sprite['Evasión']+b:
                 EventDispatcher.trigger('AttackSuccess', self.tipo, {'victim': sprite, 'attaker': self})
                 sprite.reubicar(x, y)
                 sprite.hurt(self['DañoCC'])

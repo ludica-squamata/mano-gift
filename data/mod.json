@@ -33,5 +33,10 @@
     "Percepción": [
       "Vista"
     ]
+  },
+  "custom": {
+    "attributes": [
+      {"name":"nivel", "script": "nivelado.py"}
+    ]
   }
 }

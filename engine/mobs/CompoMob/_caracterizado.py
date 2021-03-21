@@ -11,13 +11,10 @@ class Caracterizado(AzoeSprite):
         enteramente del modder."""
         self._chars = {}
         self._allchars = []
-        proto_nivel = 0
         super().__init__(**kwargs)
         for attr in self.data['atributos']:
             self._chars[attr] = self.data['atributos'][attr]
             self._allchars.append(attr)
-            proto_nivel += self._chars[attr]
-        self['Nivel'] = 1 + (proto_nivel - 50) // 6
 
         for char in ModData.data['caracteristicas']:
             if char in self._chars:
@@ -26,7 +23,17 @@ class Caracterizado(AzoeSprite):
                     self._chars[sub] = self._chars[char]
                     self._allchars.append(sub)
 
+        for attr in ModData.custom_attr:
+            ModData.custom_attr[attr](self)
+
+    def get_chars(self):
+        for attr in self.data['atributos']:
+            # no sé si este generator está bien hecho. Soy nuevo en esto, pero me pareció que correspondía. 20/3/2021
+            yield self._chars[attr]
+
     def __getitem__(self, item):
+        if type(item) == int and 0 <= item < len(self._allchars):
+            return self[self._allchars[item]]
         if item in self._chars:
             return self._chars[item]
         else:  # esto viene a ser __missing__(), pero como ese método es llamado por dict.__getitem__(),

@@ -18,6 +18,7 @@ class ModData:
     pkg_scripts = ''
     fd_player = ''
     custommenus = None
+    custom_attr = None
     QMC = None
 
     _next_id = 0
@@ -51,6 +52,7 @@ class ModData:
 
             loaded = []
             cls.custommenus = {}
+            cls.custom_attr = {}
             cls.QMC = []
             for keyword in cls.data.get('custom', ''):
                 if keyword == 'menus':
@@ -68,7 +70,7 @@ class ModData:
                         module = import_module(cls.pkg_scripts + '.' + d['script'], ruta)
                         loaded.append(d['script'])
                         if hasattr(module, d['name']):
-                            d.update({'idx': i-skip})
+                            d.update({'idx': i - skip})
                             spec = getattr(module, d['name'])
                             if type(spec) is list:
                                 d.update({'csc': spec})
@@ -78,12 +80,20 @@ class ModData:
                         else:
                             skip += 1
 
+                elif keyword == 'attributes':
+                    for c in cls.data['custom']['attributes']:
+                        loaded.append(c['name'])
+                        ruta = cls.fd_scripts + 'mobs/' + c['script']
+                        script_name = c['script'].rstrip('.py')
+                        module = import_module(cls.pkg_scripts + '.mobs.' + script_name, ruta)
+                        cls.custom_attr[c['name']] = getattr(module, c['name'])
+
             if not len(cls.QMC):
                 cls.QMC = None
 
             folders = [cls.fd_scripts, cls.fd_scripts + 'behaviours/', cls.fd_scripts + 'events/']
             for folder in folders:
-                package = folder.split('/')[-2]+'.' if folder != cls.fd_scripts else ''
+                package = folder.split('/')[-2] + '.' if folder != cls.fd_scripts else ''
                 for script in listdir(folder):
                     ruta = folder + script
                     if path.isfile(ruta):
