@@ -1,11 +1,10 @@
 from ._animado import Animado
-from ._sensitivo import Sensitivo
 from ._suertudo import Suertudo
 from ._equipado import Equipado
 from engine.globs.event_dispatcher import EventDispatcher
 
 
-class Combativo(Sensitivo, Animado, Suertudo, Equipado):
+class Combativo(Animado, Suertudo, Equipado):
     is_damageable = True
 
     def hurt(self, damage):
