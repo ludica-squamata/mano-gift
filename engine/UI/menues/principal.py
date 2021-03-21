@@ -16,6 +16,7 @@ class MenuPrincipal(Menu):
             m = name[4:]
             if m not in nombres:
                 nombres.append(m)
+        nombres.append('Salir')
 
         botones = []
         a, b = 'arriba', 'abajo'
@@ -24,6 +25,7 @@ class MenuPrincipal(Menu):
             botones.append({'nombre': nombre, 'direcciones': {a: nombres[j - 1], b: nombres[j - (len(nombres) - 1)]},
                             'comando': self.new_menu, 'pos': [x, 50 * j + 120]})
 
+        botones[-1]['comando'] = lambda: EventDispatcher.trigger('QUIT', self, {'status': 'normal'})
         self.establecer_botones(botones, 6)
 
         self.functions['tap'].update({
