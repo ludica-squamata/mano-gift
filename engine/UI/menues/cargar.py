@@ -32,7 +32,7 @@ class MenuCargar(Menu):
         })
 
         self.filas = AzoeGroup('Filas')
-        self.create_draw_space('Elija un archivo', ANCHO - 16, ALTO / 2 - 6, 11, 65)
+        self.create_draw_space('Elija un archivo', 11, 65, ANCHO - 16, ALTO / 2 - 6)
         self.llenar_espacio_selectivo()
         if len(self.filas):
             self.elegir_opcion(0)

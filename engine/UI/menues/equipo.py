@@ -71,8 +71,8 @@ class MenuEquipo(Menu):
         self.hombre = cargar_imagen(ModData.graphs + 'hombre_mimbre.png')
         self.canvas.blit(self.hombre, (96, 96))
         w = self.canvas.get_width() - 256
-        h = self.canvas.get_height() - 62
-        self.create_draw_space('Inventario', w, h, 270, 40)
+        h = self.canvas.get_height() // 2
+        self.create_draw_space('Inventario', 270, 40, w, h)
 
         # determinar qué tecla activa qué función.
         self.functions = {
@@ -180,6 +180,7 @@ class MenuEquipo(Menu):
             self.posicionar_cursor(j)
             self.mover_cursor(self.filas.get_sprite(self.sel))
             self.current.ser_elegido()
+            self.mostrar_caracteristicas(self.current.item)
 
     def llenar_espacio_selectivo(self):
         """Llena el espacio selectivo con los items que se correspondan con el espacio
@@ -191,6 +192,24 @@ class MenuEquipo(Menu):
         espacio = self.espacios.get_spr(self.cur_esp)  # por ejemplo: peto
         items = self.entity.inventario('equipable', espacio.nombre)
         self.fill_draw_space(items, w, h)
+
+    def mostrar_caracteristicas(self, item):
+        fuentea = font.Font('engine/libs/Verdana.ttf', 14)
+        fuenteb = font.Font('engine/libs/Verdanab.ttf', 14)
+
+        d = [
+            {'nombre': 'Peso', 'data': item.peso},
+            {'nombre': 'Volumen', 'data': item.volumen},
+            {'nombre': 'Protección', 'data': item.proteccion}
+        ]
+        for i, p in enumerate(d):
+            key = fuenteb.render(str(p['nombre']), True, TEXT_FG, CANVAS_BG)
+            rect_key = key.get_rect(x=270, y=290 + i * 22)
+
+            data = fuentea.render(': ' + str(p['data']), True, TEXT_FG, CANVAS_BG)
+            rect_data = data.get_rect(x=rect_key.right, y=290 + i * 22)
+            self.canvas.blit(key, rect_key)
+            self.canvas.blit(data, rect_data)
 
     def cambiar_foco(self):
         """Cambia el foco (las funciones que se utilizarán segun el imput)
@@ -239,6 +258,7 @@ class MenuEquipo(Menu):
             for fila in self.filas.sprs():
                 fila.ser_deselegido()
             self.foco = 'espacios'
+            self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
 
     def use_function(self, mode, key):
         """Determina qué grupo de funciones se van a usar según el foco actual.
@@ -252,6 +272,7 @@ class MenuEquipo(Menu):
         if self.cambio:
             self.llenar_espacio_selectivo()
             self.cambio = False
+            self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
         self.filas.update()
         self.filas.draw(self.draw_space)
         self.espacios.draw(self.canvas)

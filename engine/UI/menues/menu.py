@@ -43,14 +43,14 @@ class Menu(EventAware, BaseWidget):
         ttl_txt = render_textrect(titulo, fuente, ttl_rect, TEXT_SEL, CANVAS_BG, 1)
         self.canvas.blit(ttl_txt, ttl_rect.topleft)
 
-    def create_draw_space(self, nombre, ancho, alto, x, y):
+    def create_draw_space(self, nombre, x, y, ancho, alto, ):
         """Crea el marco donde aparecerán las listas de items que se correspondan
         con el espacio actualmente seleccionado
         :param nombre: string
-        :param alto: integer
-        :param ancho: integer
         :param x: integer
         :param y: integer
+        :param alto: integer
+        :param ancho: integer
         """
         marco = self.create_titled_canvas(ancho - 20, alto, nombre)
         self.canvas.blit(marco, (x, y))
