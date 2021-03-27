@@ -106,10 +106,7 @@ class Touch(AzoeBaseSprite):
         lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
 
         lista.reverse()
-        if self.parent in lista:
-            idx = lista.index(self.parent)
-        else:
-            idx = 0
+        idx = -1 if self.parent not in lista else lista.index(self.parent)  # it would be the same as str.find()
         for obj in lista[0:idx] + lista[idx + 1:]:
             if self.rect.colliderect(obj.rect):
                 if not passive:
