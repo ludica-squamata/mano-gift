@@ -71,7 +71,8 @@ class MenuName(Menu):
                 'derecha': lambda: self.movercursor(1, 0)
             },
             'release': {
-                'contextual': self.cancelar
+                'contextual': self.cancelar,
+                'accion': lambda: self.aceptar('release'),
             }
         }
 
@@ -126,7 +127,7 @@ class MenuName(Menu):
             self.select_line(+1)
 
         if self.lin_idx == len(self.lineas):
-            self.parent.cambiar_foco('menu')
+            self.cambiar_foco('menu')
 
     def select_line(self, delta):
         for linea in self.lineas:
@@ -169,11 +170,16 @@ class MenuName(Menu):
     def aceptar(self, modo='tap'):
         if self.foco == 'nombre':
             self.input_character()
+
         elif self.foco == 'menu':
             if modo == 'tap':
                 self.btn.ser_presionado()
+
             elif modo == 'hold':
                 self.btn.mantener_presion()
+
+            elif modo == 'release':
+                self.btn.liberar_presion()
 
     def cancelar(self):
         if self.foco == 'nombre':

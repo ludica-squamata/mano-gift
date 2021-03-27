@@ -6,7 +6,11 @@ from engine.globs.azoe_group import AzoeGroup
 from pygame import font, draw, Surface
 from pygame.sprite import LayeredUpdates
 from ..widgets import BaseWidget, Boton
+from random import choice
 from .menu import Menu
+
+
+memoria = {}
 
 
 class MenuAbility(Menu):
@@ -29,12 +33,16 @@ class MenuAbility(Menu):
 
         for i, char in enumerate(chars):
             counter = Counter(self, char, 200, 130 + i * 40, 58, 22)
+            if char in memoria:
+                counter.value = memoria[char]
+                counter.render_value()
             self.counters.add(counter)
             self.properties.add(counter)
 
         self.puntos = PuntosDisponibles(self, 6, 50)
         self.fin = Boton('Finalizar', 6, self.finalizar, [self.rect.centerx, self.rect.bottom - 64])
-        self.properties.add(self.fin, self.puntos)
+        self.random = Boton('Aleatorio', 6, self.generate_random_values, [self.rect.centerx, self.rect.top + 110])
+        self.properties.add(self.fin, self.puntos, self.random)
 
         self.elegir_uno(0)
         self.functions['tap'].update({
@@ -52,9 +60,11 @@ class MenuAbility(Menu):
 
     @property
     def valores(self):
+        global memoria
         vs = {}
         for counter in self.counters.sprs():
             vs[counter.char] = counter.value
+            memoria[counter.char] = counter.value
 
         return vs
 
@@ -72,34 +82,67 @@ class MenuAbility(Menu):
             self.current_counter = self.counters.sprs()[self.current_idx]
             self.current_counter.elegir(self.posicion_horizontal)
 
+        elif self.fin.enabled and delta > 0:
+            self.random.ser_deselegido()
+            self.fin.ser_elegido()
+
+        elif delta < 0:
+            self.fin.ser_deselegido()
+            self.random.ser_elegido()
+
     def eleccion_horizontal(self, direccion):
         if direccion == 'derecha':
             if self.posicion_horizontal == 'izquierda':
                 self.current_counter.elegir_mas()
                 self.posicion_horizontal = 'derecha'
-            elif self.fin.enabled:
+            else:
                 self.posicion_horizontal = 'ninguna'
                 for counter in self.counters.sprs():
                     counter.deselegir()
-                else:
+
+                if self.fin.enabled:
                     self.fin.ser_elegido()
+
+                elif self.random.enabled:
+                    self.random.ser_elegido()
 
         elif direccion == 'izquierda':
             if self.posicion_horizontal == 'derecha':
                 self.current_counter.elegir_menos()
                 self.posicion_horizontal = 'izquierda'
+
             elif self.posicion_horizontal == 'ninguna':
                 self.fin.ser_deselegido()
+                self.random.ser_deselegido()
                 self.counters.sprs()[self.current_idx].elegir('derecha')
                 self.posicion_horizontal = 'derecha'
+
+    def generate_random_values(self):
+        counters = self.counters.sprs()
+        self.puntos.reset()
+        for counter in counters:
+            counter.reset()
+
+        for counter in counters:
+            if self.puntos.update_value(-1):
+                counter.value += 1
+                counter.render_value()
+
+        while self.puntos.update_value(-1):
+            elegido = choice(counters)
+            elegido.value += 1
+            elegido.render_value()
 
     def modificar_valor(self):
         if any(counter.isSelected for counter in self.counters.sprs()):
             for counter in self.counters.sprs():
                 if counter.isSelected:
                     self.current_counter.accion()
-        else:
+        elif self.fin.isSelected:
             self.fin.ser_presionado()
+
+        elif self.random.isSelected:
+            self.random.ser_presionado()
 
     def comprobar(self):
         valido = self.puntos.value == 0
@@ -162,6 +205,9 @@ class Counter(BaseWidget):
             self.value -= 1
             self.render_value()
 
+    def reset(self):
+        self.value = 0
+
     def render_value(self):
         string = '{:+}'.format(self.value)
         render = render_textrect(string, self.fuente, self.rect, TEXT_FG, CANVAS_BG, 1)
@@ -193,18 +239,22 @@ class Counter(BaseWidget):
         self.botones.update()
         self.botones.draw(self.parent.canvas)
 
+    def __repr__(self):
+        return self.char
+
 
 class PuntosDisponibles(BaseWidget):
-    value = 50
-    t = 'Tienes {} puntos para repartir entre tus atributos.'.format(str(value))
+    t = ''
 
     def __init__(self, parent, x, y):
         self.parent = parent
         self.f = font.SysFont('Verdana', 16)
         self.pos = x, y
+        self.value = 50 if not len(memoria) else 0
         image = self.f.render(self.t, True, TEXT_FG, CANVAS_BG)
         rect = image.get_rect(topleft=[x, y])
         super().__init__(imagen=image, rect=rect, x=x, y=y)
+        self.update_text()
 
     def update_value(self, mod):
         if 0 <= self.value + mod <= 50:
@@ -217,6 +267,10 @@ class PuntosDisponibles(BaseWidget):
             self.t = 'Tienes {} puntos para repartir entre tus {}.'.format(str(self.value), self.parent.nombre.lower())
         else:
             self.t = 'No quedan más puntos para repartir entre tus {}.'.format(self.parent.nombre.lower())
+
+    def reset(self):
+        self.value = 50
+        self.update_text()
 
     def update(self):
         self.update_text()

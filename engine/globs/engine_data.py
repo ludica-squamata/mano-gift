@@ -191,7 +191,7 @@ class EngineData:
         else:
             cls.acceso_menues.append(titulo)
 
-        if titulo not in EngineData.MENUS:
+        if titulo not in cls.MENUS:
             name = 'Menu' + titulo
             if name in ModData.custommenus:
                 menu = ModData.custommenus[name]()
