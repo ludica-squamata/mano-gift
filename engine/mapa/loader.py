@@ -35,7 +35,7 @@ def load_something(alldata, requested):
 
 
 def load_props(alldata):
-    imgs = alldata['refs']
+    imgs = alldata.get('refs', {})
     pos = alldata['props']
 
     loaded_props = []

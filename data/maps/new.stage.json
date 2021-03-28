@@ -23,6 +23,9 @@
       "direcciones": []
     }
   ],
+  "props": {
+    "light_post": [[288,288]]
+  },
   "ambiente": "exterior",
   "latitude": 30
 }

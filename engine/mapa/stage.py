@@ -4,14 +4,13 @@ from engine.globs.event_dispatcher import EventDispatcher
 from .loader import load_something, cargar_salidas
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
-from pygame import mask, Rect, transform
 from engine.globs import Mob_Group
+from pygame import mask, Rect
 from math import ceil
 
 
 class Stage:
     properties = None
-    cuadrantes = []
     chunks = None
     mapa = None
     data = {}
@@ -22,9 +21,12 @@ class Stage:
     atardece = None
     anochece = None
 
+    interactives = []
+
     def __init__(self, nombre, mob, entrada):
         self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
-        self.cuadrantes.clear()
+        self.interactives.clear()
+        self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
         dx, dy = self.data['entradas'][entrada]['pos']
@@ -42,6 +44,9 @@ class Stage:
         self.mapa = self.chunks.sprs()[0]
         self.rect = self.mapa.rect.copy()
 
+        if 'props' in self.data:
+            self.load_unique_props(self.data, 0, 0)
+
         sld, masc, img = cargar_salidas(self.mapa, self.data, chunk.rect.size)
         self.salidas = sld  # la lista de salidas, igual que siempre.
         self.mask_salidas = masc  # máscara de colisiones de salidas.
@@ -54,8 +59,7 @@ class Stage:
 
         EventDispatcher.register_many(
             (self.cargar_timestamps, 'UpdateTime'),
-            (self.save_map, 'Save'),
-            (self.rotate_map, 'RotateEverything')
+            (self.save_map, 'Save')
         )
 
     def cargar_timestamps(self, event):
@@ -74,29 +78,33 @@ class Stage:
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
 
-    def rotate_map(self, event):
-        angle = event.data['angle']
-        view = event.data['new_view']
-        x, y = 0, 0
+    def load_unique_props(self, alldata: dict, dx: int, dy: int):
+        """Carga los props que se hallen definidos en el archivo json del stage.
+        Estos props no se repiten como lo harían si fueran definidos en los chunks,
+        pues si los chunks se repiten, los props definidos en ellos también lo harán.
 
-        for mapa in self.chunks.sprs():
-            mapa.rotate(angle)
+        @param alldata: los datos del archivo json completo.
+        @param dx: el offset en x del stage
+        @param dy: el offset en y del stage.
+        """
+        for item, grupo in load_something(alldata, 'Props'):
+            obj = self.add_property(item, grupo)
+            obj.reubicar(-dx, -dy)
+            obj.set_parent_map(self.mapa)
 
-        for obj in self.properties:
-            if view == 'north':
-                x = obj.left
-                y = obj.top
-            elif view == 'east':
-                x = obj.right
-                y = obj.top
-            elif view == 'south':
-                x = obj.right
-                y = obj.bottom
-            elif view == 'west':
-                x = obj.left
-                y = obj.bottom
+    @property
+    def noche(self):
+        # Para evitar un conflicto con las Luces.
+        return self.mapa.noche
 
-        EventDispatcher.trigger('RotateMobs', 'Stage', {'x': x, 'y': y})
+    def add_property(self, obj, _layer):
+        add_interactive = False
+        if type(obj) is tuple:
+            obj, add_interactive = obj
+        self.properties.add(obj, layer=_layer)
+        if add_interactive:
+            self.interactives.append(obj)
+        return obj
 
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
@@ -199,14 +207,14 @@ class ChunkMap(AzoeBaseSprite):
             else:
                 self.limites[key.lower()] = mapa[0]
 
-    def checkear_adyacencia(self, clave):
+    def checkear_adyacencia(self, clave: str):
         type_adyacente = type(self.limites.get(clave, False))
         if type_adyacente is str or type_adyacente is ChunkMap:
             return self.cargar_mapa_adyacente(clave)
         else:
             return False
 
-    def _get_newmap_pos(self, ady):
+    def _get_newmap_pos(self, ady: str):
         w, h = self.rect.size
         dx, dy = self.rect.topleft
 
@@ -223,18 +231,16 @@ class ChunkMap(AzoeBaseSprite):
 
         return dx, dy
 
-    def cargar_mapa_adyacente(self, ady):
+    def cargar_mapa_adyacente(self, ady: str):
         dx, dy = self._get_newmap_pos(ady)
 
         if type(self.limites[ady]) is str:
             entradas = self.parent.data['entradas']
             mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['Props'])
-            # noinspection PyTypeChecker
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:
             mapa = self.limites[ady]
-            # noinspection PyUnresolvedReferences
             mapa.ubicar(dx, dy)
 
         if ady == 'izq' or ady == 'der':
@@ -244,10 +250,6 @@ class ChunkMap(AzoeBaseSprite):
             self.parent.rect.inflate_ip(0, mapa.rect.h)
 
         return mapa
-
-    def rotate(self, angle):
-        self.image = transform.rotate(self.image, angle)
-        # falta rotar la posición de los sprites y de la capa de colisiones
 
     def __repr__(self):
         return "ChunkMap " + self.nombre

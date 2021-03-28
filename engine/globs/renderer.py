@@ -157,7 +157,7 @@ class Camara:
 
         if new_map is not False and new_map not in map_at_center:
             cls.set_background(new_map)
-            for obj in new_map.properties.sprites():
+            for obj in new_map.properties.sprites()+new_map.parent.properties.sprites():
                 if obj not in cls.real:
                     cls.add_real(obj)
 

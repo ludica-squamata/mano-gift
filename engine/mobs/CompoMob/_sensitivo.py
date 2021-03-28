@@ -102,7 +102,7 @@ class Touch(AzoeBaseSprite):
 
     def __call__(self, passive=True):
         mapa = self.parent.mapa_actual
-        sprites = mapa.properties.sprites()
+        sprites = mapa.properties.sprites() + mapa.parent.properties.sprites()
         lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
 
         lista.reverse()
