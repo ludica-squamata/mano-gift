@@ -33,7 +33,7 @@ class ThemesCircularMenu(RenderedCircularMenu):
         self.nombre = self.parent.nombre + 'Themes'
 
         temas = GameState.variables()
-        lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
+        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
 
         cascadas = {
             'inicial': [DialogThemeElement(self, i, item) for i, item in enumerate(lista)]
@@ -47,8 +47,9 @@ class ThemesCircularMenu(RenderedCircularMenu):
 
     def update_cascades(self):
         temas = GameState.variables()
-        lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
+        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
         cascadas = {
             'inicial': [DialogThemeElement(self, i, item) for i, item in enumerate(lista)]
         }
+        self.cascadas.clear()
         self.add_cascades(cascadas)

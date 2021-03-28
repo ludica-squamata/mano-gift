@@ -36,11 +36,13 @@ class Elemento:
 
         self.tags = []
         self.expressions = []
+        self.tagged_expressions = {}
         tags = compile(r'<([a-z]*?)>([^<]*)</\1>').findall(self.texto)
         if self.texto.count('<') == len(tags) * 2:
             for tag in tags:
                 self.tags.append(tag[0])
                 self.expressions.append(tag[1])
+                self.tagged_expressions[tag[0]] = tag[1]
         else:
             # si es que son ilógicos...
             raise TypeError('Verificar las tags. No se permiten tags anidadas y los grupos deben estar cerrados')
@@ -52,6 +54,16 @@ class Elemento:
 
     def post_event(self):
         EventDispatcher.trigger(*self.event)
+
+    def remove_tagged_expression(self, tag_name):
+        expression = self.tagged_expressions[tag_name]
+        if expression in self.expressions:
+            self.expressions.remove(expression)
+
+    def restore_tagged_expression(self, tag_name):
+        expression = self.tagged_expressions[tag_name]
+        if expression not in self.expressions:
+            self.expressions.append(expression)
 
     def __repr__(self):
         return self.nombre

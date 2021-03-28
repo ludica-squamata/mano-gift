@@ -102,21 +102,22 @@ class Dialogo(Discurso):
             else:
                 action = self.themes
 
-            if panel.menu.actual.nombre in action:
-                # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
-                # de manera que realmente se verifique que se está mostrando ESE item en particular.
+            if len(action):
+                if panel.menu.actual.nombre in action:
+                    # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
+                    # de manera que realmente se verifique que se está mostrando ESE item en particular.
 
-                idx = action[panel.menu.actual.nombre]
-                # si el elemento seleccionado coincide con el nombre indicado en head,
-                # entonces el dialogo salta a ese numero de índice.
-            else:
-                # de otro modo se cae al nodo indicado por default.
-                idx = action['default']
+                    idx = action[panel.menu.actual.nombre]
+                    # si el elemento seleccionado coincide con el nombre indicado en head,
+                    # entonces el dialogo salta a ese numero de índice.
+                else:
+                    # de otro modo se cae al nodo indicado por default.
+                    idx = action['default']
 
-            self.dialogo.set_chosen(idx)
-            # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
-            # porque nuestra acción fue mostrar el ítem.
-            self.switch_panel(panel=self.frontend)
+                self.dialogo.set_chosen(idx)
+                # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
+                # porque nuestra acción fue mostrar el ítem.
+                self.switch_panel(panel=self.frontend)
 
         # avanzamos el diálogo hasta el punto designado.
         # hablar() se ejecuta siempre, independientemente del panel
@@ -198,6 +199,7 @@ class Dialogo(Discurso):
                     choice.post_event()
 
                 for exp in actual.expressions:
+                    # No estoy seguro de porqué puse esto acá...
                     GameState.set('tema.' + exp, True)
 
                 self.hablar()
@@ -221,9 +223,6 @@ class Dialogo(Discurso):
             if actual.event is not None:
                 actual.post_event()
 
-            for exp in actual.expressions:
-                GameState.set('tema.' + exp, True)
-
             if actual.indice in self.tags_condicionales:
                 loc = self.locutores[actual.locutor]
                 supress = []
@@ -231,6 +230,7 @@ class Dialogo(Discurso):
                     condiciones = self.tags_condicionales[actual.indice][tag_name]
                     if self.supress_element(condiciones, loc):
                         supress.append(tag_name)
+                        actual.remove_tagged_expression(tag_name)
 
                 self.mostrar_nodo(actual, omitir_tags=supress)
 
@@ -266,6 +266,9 @@ class Dialogo(Discurso):
             self.frontend.set_text(nodo.texto)
         else:
             self.frontend.set_text(nodo.texto, omitir_tags=omitir_tags)
+
+        for exp in nodo.expressions:
+            GameState.set('tema.' + exp, True)
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':
