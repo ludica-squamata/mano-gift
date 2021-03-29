@@ -1,0 +1,16 @@
+{
+  "nombre": "Anillo",
+  "tipo": "agarrable",
+  "subtipo": "accesorio",
+  "peso": 1,
+  "volumen": 0,
+  "image": "props/anillo.png",
+  "propiedades": [],
+  "efecto": {
+    "des": "Aumenta tu carisma en 2.",
+    "stat": "Carisma",
+    "equipo": "anillo",
+    "mod": 2,
+    "method": "incremental"
+  }
+}

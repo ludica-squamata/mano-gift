@@ -13,7 +13,7 @@ class BranchElement(LetterElement):
         self.item = item['item']
         self.idx = item['idx']
 
-        super().__init__(parent, nombre, icono)
+        super().__init__(parent, nombre, icono, do_title=False)
 
 
 class DialogObjectElement(LetterElement):

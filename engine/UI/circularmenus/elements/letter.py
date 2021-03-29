@@ -8,7 +8,7 @@ class LetterElement(BaseElement):
     title = None
     active = True
 
-    def __init__(self, parent, nombre, icono):
+    def __init__(self, parent, nombre, icono, do_title=True):
 
         super().__init__(parent, nombre)
 
@@ -30,7 +30,8 @@ class LetterElement(BaseElement):
             self.image = self.img_uns
             self.rect = self.rect_uns
 
-        self.title = Title(self, nombre)
+        if do_title:
+            self.title = Title(self, nombre)
 
     @staticmethod
     def _crear_base(w, h):

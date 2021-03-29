@@ -18,6 +18,8 @@ class Equipado(Caracterizado):
         self.equipo[item.espacio] = item
         if hasattr(item, 'proteccion'):
             self.dureza += item.proteccion
+        elif hasattr(item, 'efecto'):
+            pass
         self.inventario.remover(item)
 
     def desequipar_item(self, item):

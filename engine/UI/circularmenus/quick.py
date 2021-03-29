@@ -32,7 +32,7 @@ class QuickCircularMenu(RenderedCircularMenu):
             }
 
         temas = GameState.variables()
-        lista = [item.lstrip('tema.').title() for item in temas if item.startswith('tema.') and temas[item]]
+        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
         cascadas.update({
             "Temas": [DialogTopicElement(self, i, t) for i, t in enumerate(lista)]
         })
