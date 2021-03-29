@@ -198,10 +198,6 @@ class Dialogo(Discurso):
                 if choice.event is not None:
                     choice.post_event()
 
-                for exp in actual.expressions:
-                    # No estoy seguro de porqué puse esto acá...
-                    GameState.set('tema.' + exp, True)
-
                 self.hablar()
                 self.emit_sound_event(self.locutores[actual.locutor])
 
