@@ -1,8 +1,7 @@
-from engine.globs import ModData, Mob_Group, GameState
 from engine.IO.dialogo import Dialogo, Discurso
 from engine.misc.resources import abrir_json
+from engine.globs import ModData, Mob_Group
 from .rendered import RenderedCircularMenu
-from os import path, listdir
 
 
 class DialogCircularMenu(RenderedCircularMenu):
@@ -22,16 +21,11 @@ class DialogCircularMenu(RenderedCircularMenu):
 
     @classmethod
     def is_possible(cls, *locutores):
-        for script in listdir(ModData.dialogos):
-            ruta = ModData.dialogos + script
-            if path.isfile(ruta):
-                file = cls.preprocess_locutor(abrir_json(ruta))
-                name = 'dialog.{}.enabled'.format(file['head']['about'])
-                if not GameState.get(name) and '..' not in name:
-                    GameState.set(name, False)
-                if Discurso.pre_init(file['head'], *locutores):
-                    return file, True
-        return None, False
+        for about in ModData.dialogs_by_topic:
+            ruta = ModData.dialogs_by_topic[about]
+            file = cls.preprocess_locutor(abrir_json(ruta))
+            if Discurso.pre_init(file['head'], *locutores):
+                return file
 
     @staticmethod
     def preprocess_locutor(file):

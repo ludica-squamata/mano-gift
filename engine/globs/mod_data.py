@@ -23,6 +23,8 @@ class ModData:
 
     _next_id = 0
 
+    dialogs_by_topic = None
+
     @classmethod
     def init(cls, ini_data):
 
@@ -49,6 +51,7 @@ class ModData:
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
             cls.fd_player = root + data['folders']['player'] + '/'
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
+            cls.class_dialogs_by_topic()
 
             loaded = []
             cls.custommenus = {}
@@ -100,6 +103,16 @@ class ModData:
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:
                             import_module(cls.pkg_scripts + '.' + package + script_name, folder)
+
+    @classmethod
+    def class_dialogs_by_topic(cls):
+        cls.dialogs_by_topic = {}
+        for script in listdir(cls.dialogos):
+            ruta = cls.dialogos + script
+            if path.isfile(ruta):
+                about = abrir_json(ruta)['head']['about']
+                if about != '':  # rules out the template.
+                    cls.dialogs_by_topic[about] = ruta  # la ruta, y no el dict entero, para evitar la sobrecarga.
 
     @classmethod
     def next_id(cls):
