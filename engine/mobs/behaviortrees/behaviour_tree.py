@@ -181,6 +181,7 @@ class BehaviourTree:
     def reset(self):
         self.status = None
         self.to_check = self.nodes[0]
+        self.clear_context()
         for node in self.nodes:
             node.reset()
 
