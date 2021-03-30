@@ -19,7 +19,7 @@
       "txt": "No, es mía."
     },
     "2": {
-      "type": "branch", "leads": 3,"from": "heroe", "to": "commoner", "item": "star",
+      "type": "branch", "leads": 3,"from": "heroe", "to": "commoner", "item": "Estrella",
       "reqs": {"objects": ["Estrella"]},
       "txt": "Aquí tienes."
     },

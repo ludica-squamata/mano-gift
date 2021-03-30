@@ -27,7 +27,7 @@ class Discurso(EventAware):
 
     @staticmethod
     def emit_sound_event(locutor):
-        """"Este método es un shortcut para el post del SoundEvent.
+        """Este método es un shortcut para el post del SoundEvent.
         Pertence a Discurso, y no a Dialogo, porque el héroe también
         escucha el Monólogo del npc."""
 
@@ -161,10 +161,14 @@ class Dialogo(Discurso):
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event is not None:
                 self.sel.post_event()
+            if self.sel.item is not None:
+                loc = self.locutores[self.sel.emisor]
+                rec = self.locutores[self.sel.receptor]
+                loc.enviar_item(self.sel.item, rec)
             self.dialogo.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
-            self.emit_sound_event(self.locutores[actual.locutor])
+            self.emit_sound_event(self.locutores[actual.emisor])
             self.hablar()
 
         elif type(actual) is BranchArray:
@@ -198,11 +202,16 @@ class Dialogo(Discurso):
                 if choice.event is not None:
                     choice.post_event()
 
+                if choice.item is not None:
+                    loc = self.locutores[choice.emisor]
+                    rec = self.locutores[choice.receptor]
+                    loc.enviar_item(choice.item, rec)
+
                 self.hablar()
-                self.emit_sound_event(self.locutores[actual.locutor])
+                self.emit_sound_event(self.locutores[actual.emisor])
 
             elif self.SelMode is False:
-                loc = self.locutores[actual.locutor]
+                loc = self.locutores[actual.emisor]
 
                 for nodo in actual:
                     if nodo.reqs is not None:
@@ -220,7 +229,7 @@ class Dialogo(Discurso):
                 actual.post_event()
 
             if actual.indice in self.tags_condicionales:
-                loc = self.locutores[actual.locutor]
+                loc = self.locutores[actual.emisor]
                 supress = []
                 for tag_name in self.tags_condicionales[actual.indice]:
                     condiciones = self.tags_condicionales[actual.indice][tag_name]
@@ -235,17 +244,23 @@ class Dialogo(Discurso):
                     # si el requisito especifica un locutor, hay que tenerlo en cuenta.
                     loc = self.locutores[actual.reqs['loc']]
                 else:
-                    loc = self.locutores[actual.locutor]
+                    loc = self.locutores[actual.emisor]
 
                 if self.supress_element(actual.reqs, loc):
                     self.hablar()
                 else:
                     self.mostrar_nodo(actual)
 
+            elif actual.item is not None:
+                loc = self.locutores[actual.emisor]
+                rec = self.locutores[actual.receptor]
+                loc.enviar_item(actual.item, rec)
+                self.mostrar_nodo(actual)
+
             else:
                 self.mostrar_nodo(actual)
 
-            self.emit_sound_event(self.locutores[actual.locutor])
+            self.emit_sound_event(self.locutores[actual.emisor])
 
         else:
             self.cerrar()
@@ -256,7 +271,7 @@ class Dialogo(Discurso):
         :type omitir_tags: bool
         """
         self.frontend.borrar_todo()
-        loc = self.locutores[nodo.locutor]
+        loc = self.locutores[nodo.emisor]
         self.frontend.set_loc_img(loc)
         if not omitir_tags:
             self.frontend.set_text(nodo.texto)

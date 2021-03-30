@@ -7,9 +7,6 @@ class InventoryError(Exception):
 
 
 class Inventory:
-    __slots__ = ['_volumen_max', '_volumen_actual',
-                 '_peso_max', '_peso_actual', '_contenido']
-
     def __init__(self, maxvol, maxpeso):
         self._volumen_max = maxvol
         self._peso_max = maxpeso
@@ -32,11 +29,19 @@ class Inventory:
                     return True
             return False
 
+        else:
+            return item in self._contenido
+
     def __getitem__(self, item):
-        if type(item) != int:
-            raise TypeError()
-        elif item < 0:
+        if type(item) is int and item < 0:
             item += len(self._contenido)
+        elif type(item) is str:
+            for _item in self._contenido:
+                if _item.nombre == item:
+                    item = self._contenido.index(_item)
+                    break
+        else:
+            raise TypeError()
 
         if item > len(self._contenido) - 1:
             raise IndexError()
@@ -61,7 +66,7 @@ class Inventory:
         else:
             for item in self._contenido:
                 if item.tipo == tipo:
-                    if item.espacio == espacio:
+                    if item.espacio == espacio.accepts:
                         if item.nombre not in visto:
                             visto.append(item.nombre)
                             subtotales.append(item)

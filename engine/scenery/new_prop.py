@@ -1,4 +1,6 @@
+from engine.misc.resources import abrir_json
 from .props import *
+from .items import *
 
 
 def new_prop(x, y, z=0, nombre=None, data=None, img=None):
@@ -32,3 +34,23 @@ def new_prop(x, y, z=0, nombre=None, data=None, img=None):
             return prop
     else:
         return prop
+
+
+def new_item(nombre, ruta):
+    data = abrir_json(ruta)
+    subtipo = data['subtipo']
+    item = None
+    if subtipo == 'consumible':
+        item = Consumible
+    elif subtipo == 'equipable':
+        item = Equipable
+    elif subtipo == 'armadura':
+        item = Armadura
+    elif subtipo == 'arma':
+        item = Arma
+    elif subtipo == 'accesorio':
+        item = Accesorio
+    elif subtipo == 'pocion':
+        item = Pocion
+
+    return item(nombre, data['image'], data)

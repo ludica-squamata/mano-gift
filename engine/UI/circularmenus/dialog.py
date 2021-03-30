@@ -24,6 +24,7 @@ class DialogCircularMenu(RenderedCircularMenu):
         for about in ModData.dialogs_by_topic:
             ruta = ModData.dialogs_by_topic[about]
             file = cls.preprocess_locutor(abrir_json(ruta))
+            file = cls.process_items(file)
             if Discurso.pre_init(file['head'], *locutores):
                 return file
 
@@ -44,6 +45,16 @@ class DialogCircularMenu(RenderedCircularMenu):
 
                 if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
                     node['reqs']['loc'] = hero_name
+        return file
+
+    @staticmethod
+    def process_items(file):
+        for s_idx in file['body']:
+            node = file['body'][s_idx]
+            if "item" in node:
+                item_name = node['item']
+                node['item'] = ModData.items + item_name + '.json'
+
         return file
 
     def cerrar(self):

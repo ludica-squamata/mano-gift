@@ -9,7 +9,7 @@ class EspacioEquipable(BaseWidget):
     draw_area = None
     draw_area_rect = None
 
-    def __init__(self, nombre, item, direcciones, x, y):
+    def __init__(self, nombre, item, direcciones, acepta, x, y):
         """Inicializa las variables de un espacio equipable."""
 
         self.img_uns = self.crear_base(CANVAS_BG)
@@ -24,6 +24,7 @@ class EspacioEquipable(BaseWidget):
         self.direcciones.update(direcciones)
         if item:
             self.ocupar(item)
+        self.accepts = acepta
         self.nombre = nombre
         self.rect = self.image.get_rect(topleft=(x, y))
 
@@ -63,10 +64,11 @@ class EspacioEquipable(BaseWidget):
     def ocupar(self, item):
         """Inserta un item en ambas imagenes del espacio."""
 
-        self.item = item
-        self.draw_area.blit(item.image, (1, 5))
-        self.img_uns.blit(self.draw_area, self.draw_area_rect)
-        self.img_sel.blit(self.draw_area, self.draw_area_rect)
+        if item.espacio == self.accepts:
+            self.item = item
+            self.draw_area.blit(item.image, (1, 5))  # la imagen queda descentrada por alguna razón.
+            self.img_uns.blit(self.draw_area, self.draw_area_rect)
+            self.img_sel.blit(self.draw_area, self.draw_area_rect)
 
     def desocupar(self):
         """Restaura las imágenes del espacio a su version sin item."""
@@ -75,3 +77,6 @@ class EspacioEquipable(BaseWidget):
         self.draw_area.fill((153, 153, 153))
         self.img_uns.blit(self.draw_area, self.draw_area_rect)
         self.img_sel.blit(self.draw_area, self.draw_area_rect)
+
+    def __repr__(self):
+        return 'Espacio ({},{})'.format(self.nombre, self.accepts)

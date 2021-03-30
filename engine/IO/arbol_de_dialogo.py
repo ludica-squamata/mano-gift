@@ -9,13 +9,15 @@ class Elemento:
     hasLeads = False
     tipo = ''
     indice = None
-    locutor = None  # el que habla
-    inter = None  # a quien le habla
+    emisor = None  # el que habla
+    receptor = None  # a quien le habla
     leads = None
     reqs = None
     event = None
     tags = None
     texto = ''
+
+    item = None
 
     def __init__(self, indice, data):
         self.leads = None
@@ -24,12 +26,13 @@ class Elemento:
         self.tipo = data['type']
         self.nombre = self.tipo.capitalize() + ' #' + str(self.indice)
         self.texto = data['txt']
-        self.locutor = data['from']
-        self.inter = data['to']
+        self.emisor = data['from']
+        self.receptor = data['to']
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
         self.event = data.get('event', None)
         self.pre = data.get('pre', 0)
+        self.item = data.get('item', None)  # the filename.
 
         if type(self.leads) is list:
             self.hasLeads = True
@@ -94,9 +97,10 @@ class Elemento:
 class BranchArray:
     _lenght = 0
     is_exclusive = False
-    locutor = None
+    emisor = None
     array = []
     flaged = []
+    item = None
 
     def __init__(self, node, elementos):
         self.array = []
@@ -105,7 +109,8 @@ class BranchArray:
         if node.tipo == 'exclusive':
             self.is_exclusive = True
 
-        self.locutor = self.array[0].locutor
+        self.emisor = self.array[0].emisor
+        self.item = self.array[0].item
 
     def __getitem__(self, item):
         if type(item) != int:
