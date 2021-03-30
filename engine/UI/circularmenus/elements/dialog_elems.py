@@ -1,5 +1,7 @@
+from engine.globs import ModData
 from .letter import LetterElement
 from .descriptive_area import DescriptiveArea
+from engine.misc.resources import cargar_imagen
 
 
 class BranchElement(LetterElement):
@@ -48,10 +50,11 @@ class DialogThemeElement(LetterElement):
 
     def __init__(self, parent, idx, item):
         """Elemento para cambiar de tema en un diálogo"""
+        image = cargar_imagen(ModData.graphs + 'themeglob left mini.png')
         self.item = item
         self.idx = idx
 
-        super().__init__(parent, self.item, self.item[0])
+        super().__init__(parent, self.item, image)
 
     def do_action(self):
         pass

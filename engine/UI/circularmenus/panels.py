@@ -3,17 +3,21 @@ from .elements import DialogObjectElement, DialogThemeElement
 from engine.globs import Mob_Group, GameState
 
 
-class ObjectsCircularMenu(RenderedCircularMenu):
+class PanelCircularMenu(RenderedCircularMenu):
     radius = 80
     change_radius = False
 
-    def __init__(self, parent):
+    def __init__(self, parent, name, lista):
         self.parent = parent
-        self.entity = Mob_Group.get_controlled_mob()
-        self.nombre = self.parent.nombre + 'Objects'
+        self.nombre = self.parent.nombre + name
+
+        if name == 'Objects':
+            element = DialogObjectElement
+        else:
+            element = DialogThemeElement
 
         cascadas = {
-            'inicial': [DialogObjectElement(self, i, item) for i, item in enumerate(self.entity.inventario)]}
+            'inicial': [element(self, i, item) for i, item in enumerate(lista)]}
 
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.salir})
@@ -23,27 +27,22 @@ class ObjectsCircularMenu(RenderedCircularMenu):
             super().turn(delta)
 
 
-class ThemesCircularMenu(RenderedCircularMenu):
-    radius = 80
-    change_radius = False
-
+class ObjectsCircularMenu(PanelCircularMenu):
     def __init__(self, parent):
-        self.parent = parent
         self.entity = Mob_Group.get_controlled_mob()
-        self.nombre = self.parent.nombre + 'Themes'
-
-        temas = GameState.variables()
-        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
-
-        cascadas = {
-            'inicial': [DialogThemeElement(self, i, item) for i, item in enumerate(lista)]
-        }
-
-        super().__init__(cascadas)
+        super().__init__(parent, 'Objects', self.entity.inventario)
 
     def turn(self, delta):
         if len(self.cuadros):
             super().turn(delta)
+
+
+class ThemesCircularMenu(PanelCircularMenu):
+    def __init__(self, parent):
+        temas = GameState.variables()
+        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
+
+        super().__init__(parent, 'Themes', lista)
 
     def update_cascades(self):
         temas = GameState.variables()

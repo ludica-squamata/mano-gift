@@ -33,20 +33,19 @@ class Inventory:
             return item in self._contenido
 
     def __getitem__(self, item):
-        if type(item) is int and item < 0:
-            item += len(self._contenido)
-        elif type(item) is str:
+        if type(item) is str:
             for _item in self._contenido:
                 if _item.nombre == item:
                     item = self._contenido.index(_item)
                     break
-        else:
+
+        elif type(item) is not int:
             raise TypeError()
 
-        if item > len(self._contenido) - 1:
-            raise IndexError()
-        else:
+        if 0 >= item >= len(self._contenido):
             return self._contenido[item]
+        else:
+            raise IndexError()
 
     def __call__(self, tipo=None, espacio=None):
         subtotales, visto = [], []

@@ -1,5 +1,7 @@
-from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG, Tiempo
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, CANVAS_BG, SCROLL_BG
+from engine.globs import ModData, Item_Group, Deleted_Items, Tiempo
 from engine.misc.tag_loader import load_tagarrayfile
+from engine.misc.resources import cargar_imagen
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
 from pygame import Rect, Surface
@@ -76,10 +78,12 @@ class DialogInterface(BaseWidget):
         from engine.UI.circularmenus.elements.dialog_elems import BranchElement
         self.menu.supress_all()
 
+        left = cargar_imagen(ModData.graphs + 'diaglobe left mini.png')
+        right = cargar_imagen(ModData.graphs + 'diaglobe right mini.png')
+
         cascada = []
         for i in range(len(sorted(opciones, key=lambda o: o.indice))):
             opt = opciones[i]
-            icon = str(opt.indice)
             name = str(opt.leads)
             if opt.reqs is not None and 'objects' in opt.reqs:
                 objeto = opt.reqs['objects'][0]
@@ -91,6 +95,11 @@ class DialogInterface(BaseWidget):
 
                 icon = item.image
                 name = item.nombre
+
+            elif self.loc_rect.x == 3:
+                icon = left
+            else:
+                icon = right
 
             cascada.append(BranchElement(self, {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}))
 
