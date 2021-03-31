@@ -1,11 +1,3 @@
-class InventoryError(Exception):
-    def __init__(self, message=None):
-        self.message = message
-
-    def __str__(self):
-        return self.message
-
-
 class Inventory:
     def __init__(self, maxvol, maxpeso):
         self._volumen_max = maxvol
@@ -42,7 +34,7 @@ class Inventory:
         elif type(item) is not int:
             raise TypeError()
 
-        if 0 >= item >= len(self._contenido):
+        if 0 <= item <= len(self._contenido):
             return self._contenido[item]
         else:
             raise IndexError()

@@ -1,5 +1,5 @@
+from engine.IO.dialogo import Monologo, Dialogo, Discurso
 from engine.UI.circularmenus import DialogCircularMenu
-from engine.IO.dialogo import Monologo
 from engine.misc import ReversibleDict
 from ._movil import Movil
 
@@ -25,9 +25,12 @@ class Parlante(Movil):
         """
         if sprite.hablante:
             self.hablar(sprite)
-            file = DialogCircularMenu.is_possible(self, sprite)
+            locutores = self, sprite
+            file = Discurso.is_possible(*locutores)
             if file is not None:
-                DialogCircularMenu(file, self, sprite)
+                dialogo = Dialogo(file, *locutores)
+                menu = DialogCircularMenu(*locutores)
+                dialogo.frontend.set_menu(menu)
 
             else:
                 Monologo(sprite, self)

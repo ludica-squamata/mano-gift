@@ -1,8 +1,9 @@
-﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
-from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
+﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState, ModData, Mob_Group
+from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
+from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
-from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
+from engine.misc.resources import abrir_json
 
 
 class Discurso(EventAware):
@@ -24,6 +25,44 @@ class Discurso(EventAware):
             allow = False
 
         return allow
+
+    @classmethod
+    def is_possible(cls, *locutores):
+        for about in ModData.dialogs_by_topic:
+            ruta = ModData.dialogs_by_topic[about]
+            file = cls.preprocess_locutor(abrir_json(ruta))
+            file = cls.process_items(file)
+            if Discurso.pre_init(file['head'], *locutores):
+                return file
+
+    @staticmethod
+    def preprocess_locutor(file):
+        hero_name = Mob_Group.character_name
+        if 'heroe' in file['head']['locutors']:
+            idx = file['head']['locutors'].index('heroe')
+            file['head']['locutors'][idx] = hero_name
+
+            for s_idx in file['body']:
+                node = file['body'][s_idx]
+                if node['from'] == 'heroe':
+                    node['from'] = hero_name
+                # elif, because the hero wouldn't be talking to himself.
+                elif node['to'] == 'heroe':
+                    node['to'] = hero_name
+
+                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
+                    node['reqs']['loc'] = hero_name
+        return file
+
+    @staticmethod
+    def process_items(file):
+        for s_idx in file['body']:
+            node = file['body'][s_idx]
+            if "item" in node:
+                item_name = node['item']
+                node['item'] = ModData.items + item_name + '.json'
+
+        return file
 
     @staticmethod
     def emit_sound_event(locutor):
@@ -118,10 +157,12 @@ class Dialogo(Discurso):
                 # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
                 # porque nuestra acción fue mostrar el ítem.
                 self.switch_panel(panel=self.frontend)
-
-        # avanzamos el diálogo hasta el punto designado.
-        # hablar() se ejecuta siempre, independientemente del panel
-        self.hablar()
+                # hablar() no se ejecuta si el item mostrado o tema mencionado no tienen efecto.
+                # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
+                # se menciona un tema que no tiene sentido para el NPC.
+                self.hablar()
+        else:
+            self.hablar()
 
     @staticmethod
     def supress_element(condiciones, locutor):

@@ -4,7 +4,7 @@ from engine.globs import Mob_Group, GameState
 
 
 class PanelCircularMenu(RenderedCircularMenu):
-    radius = 80
+    radius = 60
     change_radius = False
 
     def __init__(self, parent, name, lista):
