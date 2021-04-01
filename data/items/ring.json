@@ -7,7 +7,7 @@
   "image": "props/anillo.png",
   "propiedades": [],
   "efecto": {
-    "des": "Aumenta tu carisma en 2.",
+    "des": "Tiene engarzado una esmeralda.",
     "stat": "Carisma",
     "equipo": "anillo",
     "mod": 2,

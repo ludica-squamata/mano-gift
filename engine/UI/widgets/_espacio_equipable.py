@@ -66,15 +66,8 @@ class EspacioEquipable(BaseWidget):
 
         if item.espacio == self.accepts:
             self.item = item
-            w, h = item.image.get_size()
-            if w > self.draw_area_rect.w or h > self.draw_area_rect.h:  # workaround
-                image = item.image.subsurface([3, 3, 26, 26])
-                # esto es necesario hasta que pueda hacer un recorte de la imagen,
-                # porque al ser de 32x32 es demasiado grande.
-            else:
-                image = item.image
-            rect = image.get_rect(center=self.draw_area.get_rect().center)
-            self.draw_area.blit(image, rect)
+            rect = item.image.get_rect(center=self.draw_area.get_rect().center)
+            self.draw_area.blit(item.image, rect)
             self.img_uns.blit(self.draw_area, self.draw_area_rect)
             self.img_sel.blit(self.draw_area, self.draw_area_rect)
 

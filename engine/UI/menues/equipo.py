@@ -153,6 +153,7 @@ class MenuEquipo(Menu):
 
     # noinspection PyUnresolvedReferences
     def select_one(self, direccion):
+        self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
         """Desplaza la selección al espacio equipable actual, y lo resalta.
         :param direccion: string
         """
@@ -175,6 +176,8 @@ class MenuEquipo(Menu):
                 break
 
         self.espacios.draw(self.canvas)
+        if self.current.item is not None:
+            self.mostrar_caracteristicas(self.current.item)
 
     def elegir_fila(self, direccion=None):
         if direccion == 'arriba':
@@ -190,7 +193,7 @@ class MenuEquipo(Menu):
             self.posicionar_cursor(j)
             self.mover_cursor(self.filas.get_sprite(self.sel))
             self.current.ser_elegido()
-            # self.mostrar_caracteristicas(self.current.item)
+            self.mostrar_caracteristicas(self.current.item)
 
     def llenar_espacio_selectivo(self):
         """Llena el espacio selectivo con los items que se correspondan con el espacio
@@ -210,7 +213,7 @@ class MenuEquipo(Menu):
         d = [
             {'nombre': 'Peso', 'data': item.peso},
             {'nombre': 'Volumen', 'data': item.volumen},
-            {'nombre': 'Protección', 'data': item.proteccion}
+            {'nombre': 'Descripción', 'data': item.efecto_des}
         ]
         for i, p in enumerate(d):
             key = fuenteb.render(str(p['nombre']), True, TEXT_FG, CANVAS_BG)
@@ -282,7 +285,7 @@ class MenuEquipo(Menu):
         if self.cambio:
             self.llenar_espacio_selectivo()
             self.cambio = False
-            self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
+
         self.filas.update()
         self.filas.draw(self.draw_space)
         self.espacios.draw(self.canvas)
