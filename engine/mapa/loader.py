@@ -7,7 +7,7 @@ from engine.mobs import Mob
 from .salida import Salida
 
 
-def load_everything(alldata):
+def load_everything(alldata: dict):
     loaded = []
     for mob in load_mobs(alldata):
         loaded.append((mob, GRUPO_MOBS))
@@ -16,7 +16,7 @@ def load_everything(alldata):
     return loaded
 
 
-def load_something(alldata, requested):
+def load_something(alldata: dict, requested: str):
     """
     :type requested: list
     :type alldata: dict
@@ -34,7 +34,7 @@ def load_something(alldata, requested):
         return loaded
 
 
-def load_props(alldata):
+def load_props(alldata: dict):
     imgs = alldata.get('refs', {})
     pos = alldata['props']
 
@@ -74,7 +74,7 @@ def load_props(alldata):
     return loaded_props
 
 
-def load_mobs(alldata):
+def load_mobs(alldata: dict):
     loaded_mobs = []
     for name in alldata['mobs']:
         pos = alldata['mobs'][name]

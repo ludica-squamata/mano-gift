@@ -12,7 +12,6 @@ class Equipado(Caracterizado):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(self)
         self.inventario = Inventory(10, 10 + self['ModCarga'])
         self.dureza = 0
 

@@ -109,10 +109,14 @@ class Stage:
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
 
-    def ubicar_en_entrada(self, entrada):
-        dx, dy = self.data['entradas'][entrada]['pos']
+    def offseted_possition(self, entrada):
+        dx, dy = self.posicion_entrada(entrada)
         x = self.offset_x - dx
         y = self.offset_y - dy
+        return x, y
+
+    def ubicar_en_entrada(self, entrada):
+        x, y = self.offseted_possition(entrada)
         self.mapa.ubicar(x, y)
 
     def __repr__(self):
@@ -240,7 +244,7 @@ class ChunkMap(AzoeBaseSprite):
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:
-            mapa = self.limites[ady]
+            mapa: ChunkMap = self.limites[ady]
             mapa.ubicar(dx, dy)
 
         if ady == 'izq' or ady == 'der':

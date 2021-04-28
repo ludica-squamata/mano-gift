@@ -67,6 +67,10 @@ class Camara:
         return cls.focus == spr
 
     @classmethod
+    def get_current_map(cls):
+        return cls.focus.stage
+
+    @classmethod
     def clear(cls):
         cls.real.empty()
         cls.visible.empty()

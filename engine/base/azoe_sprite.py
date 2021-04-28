@@ -93,6 +93,11 @@ class AzoeSprite(sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    def ubicar_en_mapa(self, x, y):
+        self.mapRect.centerx = x
+        self.mapRect.centery = y
+        self.z = self.mapRect.bottom
+
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
             x = self.rect.x + off_x - other.rect.x
