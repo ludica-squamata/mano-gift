@@ -5,7 +5,6 @@ from .game_groups import Mob_Group
 from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
-from random import randrange
 from os import path, mkdir, getcwd
 
 
@@ -49,7 +48,13 @@ class EngineData:
             mob.set_parent_map(cls.mapas[stage].mapa)
 
         if stage in cls.transient_mobs:
-            for mob in cls.transient_mobs[stage]:
+            for item in cls.transient_mobs[stage]:
+                mob = item['mob']
+                x, y = cls.mapas[stage].posicion_entrada(item['pos'])
+                dx, dy = mob.direcciones[mob.direccion]
+                dx *= 32
+                dy *= 32
+                mob.ubicar_en_mapa(x+dx, y+dy)
                 if type(mob) is not str:
                     cls.mapas[stage].mapa.add_property(mob, 2)
                     mob.set_parent_map(cls.mapas[stage].mapa)
@@ -61,25 +66,20 @@ class EngineData:
         mapa_actual = Renderer.camara.focus.stage
         mob = evento.data['mob']
         mapa_actual.del_property(mob)
-        if Renderer.camara.is_focus(evento.data['mob']):
+        stage = evento.data['target_stage']
+        entrada = evento.data['target_entrada']
+        if Renderer.camara.is_focus(mob):
             EventDispatcher.trigger('EndDialog', cls, {})
-
-            cls.setear_mapa(evento.data['target_stage'],
-                            evento.data['target_entrada'],
-                            mob=evento.data['mob'])
+            cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
-            stage = evento.data['target_stage']
-            x, y = cls.mapas[stage].posicion_entrada(evento.data['target_entrada'])
+            x, y = cls.mapas[stage].posicion_entrada(entrada)
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
-            x = randrange(32, 400, 32)
-            y = randrange(32, 400, 32)
-            stage = evento.data['target_stage']
+            pos = entrada if stage not in cls.mapas else cls.mapas[stage].posicion_entrada(entrada)
             if stage not in cls.transient_mobs:
                 cls.transient_mobs[stage] = []
-            cls.transient_mobs[stage].append(mob)
+            cls.transient_mobs[stage].append({'mob': mob, 'pos': pos})
             Renderer.camara.remove_obj(mob.sombra)
-            mob.ubicar(x, y)
             mob.AI.reset()
 
     @classmethod
@@ -135,9 +135,9 @@ class EngineData:
             obj = stage.mapa.add_property(focus, grupo)
             obj.set_parent_map(stage.mapa)
 
-        for mob_name in cls.transient_mobs.get(stage.nombre, []):
-            x = randrange(32, stage.mapa.rect.w, 32)
-            y = randrange(32, stage.mapa.rect.h, 32)
+        for item in cls.transient_mobs.get(stage.nombre, []):
+            mob_name = item['mob']
+            x, y = cls.mapas[stage].posicion_entrada(item['pos'])
             datos = {'mobs': {mob_name: [[x, y]]}}
             datos.update({'entradas': stage.data['entradas']})
             item, grupo = load_mobs(datos)[0]

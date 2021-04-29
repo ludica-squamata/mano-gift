@@ -11,6 +11,7 @@ class IsTalking(Leaf):
         if e.hablando:
             opuesta = ReversibleDict(arriba='abajo', derecha='izquierda')
             e.cambiar_direccion(opuesta[e.interlocutor.direccion])
+            e.detener_movimiento()
             EventDispatcher.trigger('DEBUG', 'Leaf', {'text': 'Is talking', 'pos': (400, 0)})
             # must keep the present continous
             return Running

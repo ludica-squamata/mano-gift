@@ -9,13 +9,15 @@ class Elemento:
     hasLeads = False
     tipo = ''
     indice = None
-    locutor = None  # el que habla
-    inter = None  # a quien le habla
+    emisor = None  # el que habla
+    receptor = None  # a quien le habla
     leads = None
     reqs = None
     event = None
     tags = None
     texto = ''
+
+    item = None
 
     def __init__(self, indice, data):
         self.leads = None
@@ -24,23 +26,26 @@ class Elemento:
         self.tipo = data['type']
         self.nombre = self.tipo.capitalize() + ' #' + str(self.indice)
         self.texto = data['txt']
-        self.locutor = data['from']
-        self.inter = data['to']
+        self.emisor = data['from']
+        self.receptor = data['to']
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
         self.event = data.get('event', None)
         self.pre = data.get('pre', 0)
+        self.item = data.get('item', None)  # the filename.
 
         if type(self.leads) is list:
             self.hasLeads = True
 
         self.tags = []
         self.expressions = []
+        self.tagged_expressions = {}
         tags = compile(r'<([a-z]*?)>([^<]*)</\1>').findall(self.texto)
         if self.texto.count('<') == len(tags) * 2:
             for tag in tags:
                 self.tags.append(tag[0])
                 self.expressions.append(tag[1])
+                self.tagged_expressions[tag[0]] = tag[1]
         else:
             # si es que son ilógicos...
             raise TypeError('Verificar las tags. No se permiten tags anidadas y los grupos deben estar cerrados')
@@ -52,6 +57,16 @@ class Elemento:
 
     def post_event(self):
         EventDispatcher.trigger(*self.event)
+
+    def remove_tagged_expression(self, tag_name):
+        expression = self.tagged_expressions[tag_name]
+        if expression in self.expressions:
+            self.expressions.remove(expression)
+
+    def restore_tagged_expression(self, tag_name):
+        expression = self.tagged_expressions[tag_name]
+        if expression not in self.expressions:
+            self.expressions.append(expression)
 
     def __repr__(self):
         return self.nombre
@@ -82,9 +97,10 @@ class Elemento:
 class BranchArray:
     _lenght = 0
     is_exclusive = False
-    locutor = None
+    emisor = None
     array = []
     flaged = []
+    item = None
 
     def __init__(self, node, elementos):
         self.array = []
@@ -93,7 +109,8 @@ class BranchArray:
         if node.tipo == 'exclusive':
             self.is_exclusive = True
 
-        self.locutor = self.array[0].locutor
+        self.emisor = self.array[0].emisor
+        self.item = self.array[0].item
 
     def __getitem__(self, item):
         if type(item) != int:

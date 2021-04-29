@@ -1,7 +1,9 @@
-from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Item_Group, Deleted_Items, CANVAS_BG, SCROLL_BG, Tiempo
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, CANVAS_BG, SCROLL_BG
 from engine.misc.tag_loader import load_tagarrayfile
+from engine.misc.resources import cargar_imagen
 from engine.libs import render_tagged_text
 from engine.globs.renderer import Renderer
+from engine.globs import ModData, Tiempo
 from pygame import Rect, Surface
 from .widgets import BaseWidget
 from itertools import cycle
@@ -14,7 +16,6 @@ class DialogInterface(BaseWidget):
     loc_img = None
     loc_rect = None
     menu = None
-    w, h = 0, 0
     sel_mode = False
     opciones = 0
     marco = None
@@ -51,6 +52,8 @@ class DialogInterface(BaseWidget):
         self.frame_animacion = 1000 / 6
 
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
+        self.glob_left = cargar_imagen(ModData.graphs + 'diaglobe left mini.png')
+        self.glob_right = cargar_imagen(ModData.graphs + 'diaglobe right mini.png')
 
     def ubicar(self, x=0, y=0, z=0):
         assert x > 0 or y > 0, 'Coordenadas inválidas'
@@ -73,35 +76,18 @@ class DialogInterface(BaseWidget):
         self.drawn = True
 
     def set_sel_mode(self, opciones):
-        from engine.UI.circularmenus.elements.dialog_elems import BranchElement
-        self.menu.supress_all()
-
-        cascada = []
-        for i in range(len(sorted(opciones, key=lambda o: o.indice))):
-            opt = opciones[i]
-            icon = str(opt.indice)
-            name = str(opt.leads)
-            if opt.reqs is not None and 'objects' in opt.reqs:
-                objeto = opt.reqs['objects'][0]
-                # la alternativa a este embrollo es que el branch especifique nombre e icono
-                item = None
-                existing_items = Item_Group + Deleted_Items
-                if objeto in existing_items:
-                    item = existing_items[objeto]
-
-                icon = item.image
-                name = item.nombre
-
-            cascada.append(BranchElement(self, {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}))
-
-        self.menu.add_cascades({'inicial': cascada})
-
+        self.menu.create_elements(self, opciones)
         self.opciones = len(opciones)
-        self.menu.switch_cascades()
-        self.menu.actual = self.menu.check_on_spot()
         self.set_text(opciones[0].texto)
         self.sel_mode = True
         self.drawn = False
+
+    def request_icon(self):
+        if self.loc_rect.x == 3:
+            icon = self.glob_left
+        else:
+            icon = self.glob_right
+        return icon
 
     def set_menu(self, menu):
         self.menu = menu

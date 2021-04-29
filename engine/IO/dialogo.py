@@ -1,8 +1,9 @@
-﻿from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
-from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState
+﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState, ModData, Mob_Group
+from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
+from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
-from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
+from engine.misc.resources import abrir_json
 
 
 class Discurso(EventAware):
@@ -25,9 +26,47 @@ class Discurso(EventAware):
 
         return allow
 
+    @classmethod
+    def is_possible(cls, *locutores):
+        for about in ModData.dialogs_by_topic:
+            ruta = ModData.dialogs_by_topic[about]
+            file = cls.preprocess_locutor(abrir_json(ruta))
+            file = cls.process_items(file)
+            if Discurso.pre_init(file['head'], *locutores):
+                return file
+
+    @staticmethod
+    def preprocess_locutor(file):
+        hero_name = Mob_Group.character_name
+        if 'heroe' in file['head']['locutors']:
+            idx = file['head']['locutors'].index('heroe')
+            file['head']['locutors'][idx] = hero_name
+
+            for s_idx in file['body']:
+                node = file['body'][s_idx]
+                if node['from'] == 'heroe':
+                    node['from'] = hero_name
+                # elif, because the hero wouldn't be talking to himself.
+                elif node['to'] == 'heroe':
+                    node['to'] = hero_name
+
+                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
+                    node['reqs']['loc'] = hero_name
+        return file
+
+    @staticmethod
+    def process_items(file):
+        for s_idx in file['body']:
+            node = file['body'][s_idx]
+            if "item" in node:
+                item_name = node['item']
+                node['item'] = ModData.items + item_name + '.json'
+
+        return file
+
     @staticmethod
     def emit_sound_event(locutor):
-        """"Este método es un shortcut para el post del SoundEvent.
+        """Este método es un shortcut para el post del SoundEvent.
         Pertence a Discurso, y no a Dialogo, porque el héroe también
         escucha el Monólogo del npc."""
 
@@ -102,25 +141,28 @@ class Dialogo(Discurso):
             else:
                 action = self.themes
 
-            if panel.menu.actual.nombre in action:
-                # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
-                # de manera que realmente se verifique que se está mostrando ESE item en particular.
+            if len(action):
+                if panel.menu.actual.nombre in action:
+                    # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
+                    # de manera que realmente se verifique que se está mostrando ESE item en particular.
 
-                idx = action[panel.menu.actual.nombre]
-                # si el elemento seleccionado coincide con el nombre indicado en head,
-                # entonces el dialogo salta a ese numero de índice.
-            else:
-                # de otro modo se cae al nodo indicado por default.
-                idx = action['default']
+                    idx = action[panel.menu.actual.nombre]
+                    # si el elemento seleccionado coincide con el nombre indicado en head,
+                    # entonces el dialogo salta a ese numero de índice.
+                else:
+                    # de otro modo se cae al nodo indicado por default.
+                    idx = action['default']
 
-            self.dialogo.set_chosen(idx)
-            # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
-            # porque nuestra acción fue mostrar el ítem.
-            self.switch_panel(panel=self.frontend)
-
-        # avanzamos el diálogo hasta el punto designado.
-        # hablar() se ejecuta siempre, independientemente del panel
-        self.hablar()
+                self.dialogo.set_chosen(idx)
+                # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
+                # porque nuestra acción fue mostrar el ítem.
+                self.switch_panel(panel=self.frontend)
+                # hablar() no se ejecuta si el item mostrado o tema mencionado no tienen efecto.
+                # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
+                # se menciona un tema que no tiene sentido para el NPC.
+                self.hablar()
+        else:
+            self.hablar()
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -160,10 +202,14 @@ class Dialogo(Discurso):
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event is not None:
                 self.sel.post_event()
+            if self.sel.item is not None:
+                loc = self.locutores[self.sel.emisor]
+                rec = self.locutores[self.sel.receptor]
+                loc.enviar_item(self.sel.item, rec)
             self.dialogo.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
-            self.emit_sound_event(self.locutores[actual.locutor])
+            self.emit_sound_event(self.locutores[actual.emisor])
             self.hablar()
 
         elif type(actual) is BranchArray:
@@ -197,14 +243,16 @@ class Dialogo(Discurso):
                 if choice.event is not None:
                     choice.post_event()
 
-                for exp in actual.expressions:
-                    GameState.set('tema.' + exp, True)
+                if choice.item is not None:
+                    loc = self.locutores[choice.emisor]
+                    rec = self.locutores[choice.receptor]
+                    loc.enviar_item(choice.item, rec)
 
                 self.hablar()
-                self.emit_sound_event(self.locutores[actual.locutor])
+                self.emit_sound_event(self.locutores[actual.emisor])
 
             elif self.SelMode is False:
-                loc = self.locutores[actual.locutor]
+                loc = self.locutores[actual.emisor]
 
                 for nodo in actual:
                     if nodo.reqs is not None:
@@ -221,16 +269,14 @@ class Dialogo(Discurso):
             if actual.event is not None:
                 actual.post_event()
 
-            for exp in actual.expressions:
-                GameState.set('tema.' + exp, True)
-
             if actual.indice in self.tags_condicionales:
-                loc = self.locutores[actual.locutor]
+                loc = self.locutores[actual.emisor]
                 supress = []
                 for tag_name in self.tags_condicionales[actual.indice]:
                     condiciones = self.tags_condicionales[actual.indice][tag_name]
                     if self.supress_element(condiciones, loc):
                         supress.append(tag_name)
+                        actual.remove_tagged_expression(tag_name)
 
                 self.mostrar_nodo(actual, omitir_tags=supress)
 
@@ -239,17 +285,23 @@ class Dialogo(Discurso):
                     # si el requisito especifica un locutor, hay que tenerlo en cuenta.
                     loc = self.locutores[actual.reqs['loc']]
                 else:
-                    loc = self.locutores[actual.locutor]
+                    loc = self.locutores[actual.emisor]
 
                 if self.supress_element(actual.reqs, loc):
                     self.hablar()
                 else:
                     self.mostrar_nodo(actual)
 
+            elif actual.item is not None:
+                loc = self.locutores[actual.emisor]
+                rec = self.locutores[actual.receptor]
+                loc.enviar_item(actual.item, rec)
+                self.mostrar_nodo(actual)
+
             else:
                 self.mostrar_nodo(actual)
 
-            self.emit_sound_event(self.locutores[actual.locutor])
+            self.emit_sound_event(self.locutores[actual.emisor])
 
         else:
             self.cerrar()
@@ -260,12 +312,15 @@ class Dialogo(Discurso):
         :type omitir_tags: bool
         """
         self.frontend.borrar_todo()
-        loc = self.locutores[nodo.locutor]
+        loc = self.locutores[nodo.emisor]
         self.frontend.set_loc_img(loc)
         if not omitir_tags:
             self.frontend.set_text(nodo.texto)
         else:
             self.frontend.set_text(nodo.texto, omitir_tags=omitir_tags)
+
+        for exp in nodo.expressions:
+            GameState.set('tema.' + exp, True)
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':

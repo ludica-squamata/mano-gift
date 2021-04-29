@@ -25,8 +25,9 @@ class RenderedCircularMenu(CircularMenu):
             self.last_on_spot = on_spot
 
         if self.last_on_spot is not None:
-            self.last_on_spot.title.update()
-            Renderer.add_overlay(self.last_on_spot.title, self.layer)
+            if self.last_on_spot.title is not None:
+                self.last_on_spot.title.update()
+                Renderer.add_overlay(self.last_on_spot.title, self.layer)
             if hasattr(self.last_on_spot, 'description'):
                 Renderer.add_overlay(self.last_on_spot.description, self.layer)
 

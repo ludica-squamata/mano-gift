@@ -53,3 +53,5 @@ def about(event):
 
 
 EventDispatcher.register(about, 'TookItem')
+
+GameState.set('dialog.tags.enabled', True)

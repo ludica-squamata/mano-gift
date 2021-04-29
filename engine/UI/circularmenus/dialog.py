@@ -1,56 +1,45 @@
-from engine.globs import ModData, Mob_Group, GameState
-from engine.IO.dialogo import Dialogo, Discurso
-from engine.misc.resources import abrir_json
+from engine.globs import Item_Group, Deleted_Items
 from .rendered import RenderedCircularMenu
-from os import path, listdir
+from .elements import BranchElement
 
 
 class DialogCircularMenu(RenderedCircularMenu):
     locutores = None
 
-    def __init__(self, file, *locutores):
+    def __init__(self, *locutores):
         self.locutores = locutores
         self.change_radius = False
         self.radius = 60
         self.nombre = 'Dialog'
 
-        dialogo = Dialogo(file, *locutores)
-        dialogo.frontend.set_menu(self)
-
         super().__init__({'inicial': []})
         self.deregister()
 
-    @classmethod
-    def is_possible(cls, *locutores):
-        for script in listdir(ModData.dialogos):
-            ruta = ModData.dialogos + script
-            if path.isfile(ruta):
-                file = cls.preprocess_locutor(abrir_json(ruta))
-                name = 'dialog.{}.enabled'.format(file['head']['about'])
-                if not GameState.get(name) and '..' not in name:
-                    GameState.set(name, False)
-                if Discurso.pre_init(file['head'], *locutores):
-                    return file, True
-        return None, False
+    def create_elements(self, parent, opciones):
+        self.supress_all()
+        cascada = []
+        for i in range(len(sorted(opciones, key=lambda o: o.indice))):
+            opt = opciones[i]
+            name = str(opt.leads)
+            if opt.reqs is not None and 'objects' in opt.reqs:
+                objeto = opt.reqs['objects'][0]
+                # la alternativa a este embrollo es que el branch especifique nombre e icono
+                item = None
+                existing_items = Item_Group + Deleted_Items
+                if objeto in existing_items:
+                    item = existing_items[objeto]
 
-    @staticmethod
-    def preprocess_locutor(file):
-        hero_name = Mob_Group.character_name
-        if 'heroe' in file['head']['locutors']:
-            idx = file['head']['locutors'].index('heroe')
-            file['head']['locutors'][idx] = hero_name
+                icon = item.image
+                name = item.nombre
 
-            for s_idx in file['body']:
-                node = file['body'][s_idx]
-                if node['from'] == 'heroe':
-                    node['from'] = hero_name
-                # elif, because the hero wouldn't be talking to himself.
-                elif node['to'] == 'heroe':
-                    node['to'] = hero_name
+            else:
+                icon = parent.request_icon()
 
-                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
-                    node['reqs']['loc'] = hero_name
-        return file
+            cascada.append(BranchElement(parent, {'idx': i + 1, 'icon': icon, 'name': name, 'item': opciones[i]}))
+
+        self.add_cascades({'inicial': cascada})
+        self.switch_cascades()
+        self.actual = self.check_on_spot()
 
     def cerrar(self):
         for mob in self.locutores:

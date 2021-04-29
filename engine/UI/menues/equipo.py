@@ -32,30 +32,40 @@ class MenuEquipo(Menu):
         # "direcciones" indica a qué espacio se salta cuando se presiona qué tecla de dirección.
         n, e, t, k = 'nom', 'e_pos', 't_pos', 'direcciones'
         a, b, i, d = 'arriba', 'abajo', 'izquierda', 'derecha'
+
+        # abreviaturas para legibilidad
+        ye, a1, a2, cu, pe, gu, br = 'yelmo', 'aro 1', 'aro 2', 'cuello', 'peto', 'guardabrazos', 'brazales'
+        fa, qu, gr, mb, mm, bo, ca = 'faldar', 'quijotes', 'grebas', 'mano buena', 'mano mala', 'botas', 'capa'
+        ci, ga, r1, r2 = 'cinto', 'guantes', 'anillo 1', 'anillo 2'
+
+        # nueva propiedad que determina qué tipo de objeto puede llenar el espacio.
+        # Por ejemplo, objetos con espacio "anillo", pueden llenar tanto anillo 1 como anillo 2.
+        acc = 'accepts'
+
         esp = [
-            {n: 'yelmo', e: [96, 64], t: [93, 48], k: {i: 'aro 1', d: 'cuello'}},
-            {n: 'aro 1', e: [32, 64], t: [32, 48], k: {b: 'peto', d: 'yelmo'}},
-            {n: 'aro 2', e: [224, 64], t: [224, 48], k: {b: 'faldar', i: 'cuello'}},
-            {n: 'cuello', e: [160, 64], t: [157, 48], k: {i: 'yelmo', d: 'aro 2'}},
-            {n: 'peto', e: [32, 128], t: [34, 112], k: {a: 'aro 1', b: 'guardabrazos', d: 'faldar'}},
-            {n: 'guardabrazos', e: [32, 192], t: [7, 176], k: {a: 'peto', b: 'brazales', d: 'quijotes'}},
-            {n: 'brazales', e: [32, 256], t: [23, 240], k: {a: 'guardabrazos', b: 'capa', d: 'grebas'}},
-            {n: 'faldar', e: [224, 128], t: [222, 112], k: {a: 'aro 2', b: 'quijotes', i: 'peto'}},
-            {n: 'quijotes', e: [224, 192], t: [213, 176], k: {a: 'faldar', b: 'grebas', i: 'guardabrazos'}},
-            {n: 'grebas', e: [224, 256], t: [217, 240], k: {a: 'quijotes', b: 'cinto', i: 'brazales'}},
-            {n: 'mano buena', e: [96, 352], t: [50, 320], k: {a: 'capa', b: 'anillo 1', i: 'capa', d: 'mano mala'}},
-            {n: 'mano mala', e: [160, 352], t: [165, 320], k: {a: 'cinto', b: 'anillo 2', i: 'mano buena', d: 'cinto'}},
-            {n: 'botas', e: [224, 384], t: [223, 368], k: {a: 'cinto', b: 'anillo 2', i: 'anillo 2'}},
-            {n: 'capa', e: [32, 320], t: [32, 304], k: {a: 'brazales', b: 'guantes', d: 'mano buena'}},
-            {n: 'cinto', e: [224, 320], t: [224, 304], k: {a: 'grebas', b: 'botas', i: 'mano mala'}},
-            {n: 'guantes', e: [32, 384], t: [22, 368], k: {a: 'capa', b: 'anillo 1', d: 'anillo 1'}},
-            {n: 'anillo 1', e: [96, 416], t: [90, 400], k: {a: 'mano buena', i: 'guantes', d: 'anillo 2'}},
-            {n: 'anillo 2', e: [160, 416], t: [154, 400], k: {a: 'mano mala', i: 'anillo 1', d: 'botas'}},
+            {n: ye, e: [96, 64], t: [93, 48], k: {i: a1, d: cu}, acc: 'yelmo'},
+            {n: a1, e: [32, 64], t: [32, 48], k: {b: pe, d: ye}, acc: 'aro'},
+            {n: a2, e: [224, 64], t: [224, 48], k: {b: fa, i: cu}, acc: 'aro'},
+            {n: cu, e: [160, 64], t: [157, 48], k: {i: ye, d: a2}, acc: 'cuello'},
+            {n: pe, e: [32, 128], t: [34, 112], k: {a: a1, b: gu, d: fa}, acc: 'peto'},
+            {n: gu, e: [32, 192], t: [7, 176], k: {a: pe, b: br, d: qu}, acc: 'guardabrazos'},
+            {n: br, e: [32, 256], t: [23, 240], k: {a: gu, b: ca, d: gr}, acc: 'brazales'},
+            {n: fa, e: [224, 128], t: [222, 112], k: {a: a2, b: qu, i: pe}, acc: 'faldar'},
+            {n: qu, e: [224, 192], t: [213, 176], k: {a: fa, b: gr, i: gu}, acc: 'quijotes'},
+            {n: gr, e: [224, 256], t: [217, 240], k: {a: qu, b: ci, i: br}, acc: 'grebas'},
+            {n: mb, e: [96, 352], t: [50, 320], k: {a: ca, b: r1, i: ca, d: mm}, acc: 'arma'},
+            {n: mm, e: [160, 352], t: [165, 320], k: {a: ci, b: r2, i: mb, d: ci}, acc: 'escudo'},
+            {n: bo, e: [224, 384], t: [223, 368], k: {a: ci, b: r2, i: r2}, acc: 'botas'},
+            {n: ca, e: [32, 320], t: [32, 304], k: {a: br, b: ga, d: mb}, acc: 'capa'},
+            {n: ci, e: [224, 320], t: [224, 304], k: {a: gr, b: bo, i: mm}, acc: 'cinto'},
+            {n: ga, e: [32, 384], t: [22, 368], k: {a: ca, b: r1, d: r1}, acc: 'guantes'},
+            {n: r1, e: [96, 416], t: [90, 400], k: {a: mb, i: ga, d: r2}, acc: 'anillo'},
+            {n: r2, e: [160, 416], t: [154, 400], k: {a: mm, i: r1, d: bo}, acc: 'anillo'},
         ]
 
         for e in esp:
             item = self.entity.equipo[e['nom']]
-            cuadro = EspacioEquipable(e['nom'], item, e['direcciones'], *e['e_pos'])
+            cuadro = EspacioEquipable(e['nom'], item, e['direcciones'], e['accepts'], *e['e_pos'])
             titulo = self.titular(e['nom'])
             self.canvas.blit(titulo, e['t_pos'])
             self.espacios.add(cuadro)
@@ -143,6 +153,7 @@ class MenuEquipo(Menu):
 
     # noinspection PyUnresolvedReferences
     def select_one(self, direccion):
+        self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
         """Desplaza la selección al espacio equipable actual, y lo resalta.
         :param direccion: string
         """
@@ -165,6 +176,8 @@ class MenuEquipo(Menu):
                 break
 
         self.espacios.draw(self.canvas)
+        if self.current.item is not None:
+            self.mostrar_caracteristicas(self.current.item)
 
     def elegir_fila(self, direccion=None):
         if direccion == 'arriba':
@@ -190,7 +203,7 @@ class MenuEquipo(Menu):
 
         self.filas.empty()
         espacio = self.espacios.get_spr(self.cur_esp)  # por ejemplo: peto
-        items = self.entity.inventario('equipable', espacio.nombre)
+        items = self.entity.inventario('equipable', espacio)
         self.fill_draw_space(items, w, h)
 
     def mostrar_caracteristicas(self, item):
@@ -200,7 +213,7 @@ class MenuEquipo(Menu):
         d = [
             {'nombre': 'Peso', 'data': item.peso},
             {'nombre': 'Volumen', 'data': item.volumen},
-            {'nombre': 'Protección', 'data': item.proteccion}
+            {'nombre': 'Descripción', 'data': item.efecto_des}
         ]
         for i, p in enumerate(d):
             key = fuenteb.render(str(p['nombre']), True, TEXT_FG, CANVAS_BG)
@@ -229,9 +242,9 @@ class MenuEquipo(Menu):
 
         espacio = self.espacios.get_spr(self.cur_esp)
         item = self.current.item
-        if espacio.nombre == item.espacio:
+        if espacio.accepts == item.espacio:
             espacio.ocupar(item)
-            self.entity.equipar_item(item)
+            self.entity.equipar_item(item, espacio.accepts)
             self.draw_space.fill(CANVAS_BG)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
@@ -272,7 +285,7 @@ class MenuEquipo(Menu):
         if self.cambio:
             self.llenar_espacio_selectivo()
             self.cambio = False
-            self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
+
         self.filas.update()
         self.filas.draw(self.draw_space)
         self.espacios.draw(self.canvas)

@@ -1,0 +1,16 @@
+{
+  "nombre": "Anillo",
+  "tipo": "agarrable",
+  "subtipo": "accesorio",
+  "peso": 1,
+  "volumen": 0,
+  "image": "props/anillo.png",
+  "propiedades": [],
+  "efecto": {
+    "des": "Tiene engarzado una esmeralda.",
+    "stat": "Carisma",
+    "equipo": "anillo",
+    "mod": 2,
+    "method": "incremental"
+  }
+}

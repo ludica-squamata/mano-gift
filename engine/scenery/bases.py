@@ -1,7 +1,7 @@
+from engine.base import ShadowSprite, EventListener, AzoeSprite
 from engine.UI.prop_description import PropDescription
-from engine.base import ShadowSprite, EventListener
 from engine.mapa.light_source import LightSource
-from engine.globs import GRUPO_ITEMS, ModData
+from engine.globs import GRUPO_ITEMS
 
 
 class Escenografia(ShadowSprite, EventListener):
@@ -54,18 +54,17 @@ class Escenografia(ShadowSprite, EventListener):
             self.luz.update()
 
 
-class Item:
+class Item(AzoeSprite):
     stackable = False
     tipo = ''
 
     def __init__(self, nombre, imagen, data):
         self.nombre = nombre
-        self.image = imagen
-        self.id = ModData.next_id()
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data['efecto']['des']
         self.stackable = 'stackable' in data['propiedades']
+        super().__init__(imagen=imagen)
 
     def __eq__(self, other):
         if other.__class__ == self.__class__ and self.id == other.id:
