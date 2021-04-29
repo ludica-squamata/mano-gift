@@ -6,6 +6,7 @@
   "volumen": 0,
   "image": "props/star.png",
   "propiedades": [],
+  "dialog": "star",
   "efecto": {
     "des": "Aumenta tu carisma en 2.",
     "stat": "Carisma",

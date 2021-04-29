@@ -4,6 +4,7 @@
   "subtipo": "consumible",
   "peso": 1,
   "volumen": 1,
+  "dialog": "banana",
   "image": "props/banana.png",
   "propiedades": [
     "stackable","sin_sombra"
