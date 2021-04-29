@@ -112,6 +112,14 @@ class MenuEquipo(Menu):
                     'contextual': self.cancelar,
                     'arriba': lambda: self.elegir_fila('arriba'),
                     'abajo': lambda: self.elegir_fila('abajo')
+                },
+                'hold': {
+                    'arriba': lambda: self.elegir_fila('arriba'),
+                    'abajo': lambda: self.elegir_fila('abajo')
+                },
+                'release': {
+                    'accion': self.equipar_item,
+                    'contextual': self.cancelar
                 }
             }
         }
@@ -270,8 +278,9 @@ class MenuEquipo(Menu):
         :param mode: string,
         :param key: string
         """
-        if key in self.functions[self.foco][mode]:
-            self.functions[self.foco][mode][key]()
+        if mode in self.functions[self.foco]:
+            if key in self.functions[self.foco][mode]:
+                self.functions[self.foco][mode][key]()
 
     def update(self):
         if self.cambio:
