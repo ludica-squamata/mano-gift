@@ -19,11 +19,13 @@ class Agarrable(Escenografia):
         Item_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
+        item = self.return_item()
         if entity.tipo == 'Mob':
-            item = self.return_item()
-            ref = self.reference
             entity.inventario.agregar(item)
             EventDispatcher.trigger('DeleteItem', 'Mob', {'obj': self})
+
+        if "dialog" in self.data:
+            ref = self.data['dialog']
             EventDispatcher.trigger('TookItem', 'Prop', {'who': entity,
                                                          'what': item,
                                                          'when': Tiempo.clock.timestamp(),

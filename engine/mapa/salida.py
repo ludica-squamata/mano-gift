@@ -26,7 +26,6 @@ class Salida:
         self.mask = Mask(self.mapRect.size)
         self.mask.fill()
         self.id = id
-        GameState.set(self.flag_name, False)
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, mapa,  *self.mapRect)
             Renderer.camara.add_real(self.sprite)
