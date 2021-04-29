@@ -112,14 +112,6 @@ class MenuEquipo(Menu):
                     'contextual': self.cancelar,
                     'arriba': lambda: self.elegir_fila('arriba'),
                     'abajo': lambda: self.elegir_fila('abajo')
-                },
-                'hold': {
-                    'arriba': lambda: self.elegir_fila('arriba'),
-                    'abajo': lambda: self.elegir_fila('abajo')
-                },
-                'release': {
-                    'accion': self.equipar_item,
-                    'contextual': self.cancelar
                 }
             }
         }
