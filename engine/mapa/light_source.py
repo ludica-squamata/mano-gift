@@ -1,8 +1,10 @@
 ﻿from engine.globs.event_dispatcher import EventDispatcher
 from pygame import draw, Surface, SRCALPHA
+from engine.globs import COLOR_IGNORADO
+from pygame.sprite import Sprite
 
 
-class LightSource:
+class LightSource(Sprite):
     """Los objetos de esta clase tienen un area de luz, que permite ver y genera sombras"""
     origen = None
     # una coordenada desde donde se calcula el area.
@@ -13,24 +15,29 @@ class LightSource:
     # animacion???
 
     def __init__(self, parent, nombre, data, x, y):
+        super().__init__()
         self.parent = parent
         radius = data['proyecta_luz']
         self.origen = data['origen']
 
         self.nombre = nombre
         self.image = Surface((radius * 2, radius * 2), SRCALPHA)
-        self.image.fill((1, 1, 1, 255))
+        self.image.fill(COLOR_IGNORADO)
         self.rect = self.image.get_rect()
         self.rect.right = x+self.origen[0]
         self.rect.bottom = y+self.origen[1]
 
         draw.circle(self.image, (255, 0, 0, 15), (self.rect.w//2, self.rect.h//2), radius)
+        EventDispatcher.register(self.switch, 'LightLevel')
 
-    def update(self):
+    def switch(self, event):
         noche = self.parent.stage.noche
-        if not self.encendido:
-            noche.set_light(self)
+        if event.data['level'] < 100 and not self.encendido:
             self.encendido = True
+            noche.set_light(self)
+        elif event.data['level'] > 200:
+            self.encendido = False
+            noche.unset_light(self)
 
     def __repr__(self):
         return 'LightSource of ' + self.nombre

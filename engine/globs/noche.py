@@ -84,6 +84,10 @@ class Noche(AzoeBaseSprite):
     def set_light(self, light):
         self.lights.append(light)
 
+    def unset_light(self, light):
+        if light in self.lights:
+            self.lights.remove(light)
+
     def draw_lights(self):
         self.image.fill((0, 0, 0, self.alpha))
         pxarray = PixelArray(self.image.copy())
@@ -105,6 +109,7 @@ class Noche(AzoeBaseSprite):
         if 0 < cls.alpha + mod < max_alpha:
             cls.alpha += mod
             EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
+            EventDispatcher.trigger("LightLevel", "Noche", {"level": 230-cls.alpha})
 
     def update(self):
         self.rect.topleft = self.parent.rect.topleft
