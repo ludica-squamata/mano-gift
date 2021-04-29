@@ -3,7 +3,6 @@ from collections import OrderedDict
 from engine.misc import abrir_json
 from engine.globs import ModData
 from types import FunctionType
-from .status import Success
 from .r_composites import *
 from .composites import *
 from .decorators import *
@@ -172,11 +171,40 @@ class BehaviourTree:
     def set_context(self, key, value):
         self.shared_context[key] = value
 
-    def get_context(self, key):
-        return self.shared_context[key]
+    def get_context(self, key, default_value=False):
+        if key in self.shared_context:
+            return self.shared_context[key]
+        else:
+            return default_value
 
     def clear_context(self):
         self.shared_context.clear()
+
+    def erase_keys(self, *keys):
+        """
+        This method erases the indicated keys from the shared context. It works as clear_context(), but selectively.
+        """
+        for key in keys:
+            if key in self.shared_context:
+                del self.shared_context[key]
+
+    def preserve_keys(self, *keys):
+        """
+        This method erases all keys from the shared conext, except those which are preserved.
+        """
+        preserved = {}
+        for key in keys:
+            preserved[key] = self.shared_context[key]
+
+        self.clear_context()
+        for key in preserved:
+            self.set_context(key, preserved[key])
+
+    def set_status(self, status):
+        """"
+        Sets the status of the entire tree. Otherwise, the status is None.
+        """
+        self.status = status
 
     def reset(self):
         self.status = None
@@ -186,7 +214,7 @@ class BehaviourTree:
             node.reset()
 
     def update(self):
-        if self.status is not Success:
+        if self.status is None:
             self.to_check.update()
             self.node_set = False
         else:

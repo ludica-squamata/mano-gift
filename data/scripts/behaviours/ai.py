@@ -46,11 +46,10 @@ def night_event(event):
 EventDispatcher.register(night_event, "NightFall")
 
 
-class ItsNightTime(Leaf):
+class IsItNightTime(Leaf):
     @staticmethod
     def process():
         if GameState.get('NightTime', False):
-            GameState.set('NightTime', False)
             return Success
         else:
             return Failure
@@ -60,4 +59,13 @@ class GoToBed(Leaf):
     def process(self):
         nodo = Nodo(608, 608, 32)
         self.tree.set_context('punto_final', nodo)
+        self.tree.set_context('in_bed', True)
         return Success
+
+
+class IsInBed(Leaf):
+    def process(self):
+        if self.tree.get_context('in_bed'):
+            return Success
+        else:
+            return Failure

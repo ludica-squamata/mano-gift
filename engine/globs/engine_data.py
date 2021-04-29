@@ -153,7 +153,7 @@ class EngineData:
     def save_transient_mobs(cls, event):
         transient = {}
         for stage in cls.transient_mobs:
-            transient[stage] = [i.nombre for i in cls.transient_mobs[stage]]
+            transient[stage] = [i['mob'].nombre for i in cls.transient_mobs[stage]]
         EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
 
     @classmethod
