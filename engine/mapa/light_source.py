@@ -25,20 +25,19 @@ class LightSource(Sprite):
         self.image = Surface((radius * 2, radius * 2), SRCALPHA)
         img = self.image.copy()
         self.image.fill(COLOR_IGNORADO)
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(center=self.parent.rect.midtop)
 
         # origin_rect es para la Noche
         self.origin_rect = self.rect.copy()
-        self.origin_rect.right = x+self.origen[0]
-        self.origin_rect.bottom = y+self.origen[1]
-
-        self.rect.x = x
-        self.rect.y = y
+        self.origin_rect.right = x + self.origen[0]
+        self.origin_rect.bottom = y + self.origen[1]
         self.z = self.rect.bottom
 
-        self.mapRect = self.image.get_rect(center=(x, y))
+        self.mapRect = self.image.get_rect(center=self.origin_rect.center)
+        self.mapRect.x += self.rect.w//2
+        self.mapRect.y += self.rect.h//2
 
-        draw.circle(self.image, (255, 255, 225, 0), (self.rect.w//2, self.rect.h//2), radius)
+        draw.circle(self.image, (255, 255, 225, 0), (self.rect.w // 2, self.rect.h // 2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')
         draw.circle(img, (255, 255, 255, 255), (self.rect.w // 2, self.rect.h // 2), radius)
         self.mask = mask.from_surface(img)
@@ -56,9 +55,11 @@ class LightSource(Sprite):
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre and self.encendido:
-            x = self.rect.centerx+self.parent.stage.rect.x + off_x - other.rect.x
-            y = self.rect.centery+self.parent.stage.rect.y + off_y - other.rect.y
-            if self.mask.overlap(other.mask, (x, -y)):
+            x = self.rect.x + off_x - other.rect.x
+            y = self.rect.x + off_y - other.rect.x
+            # No colisiona en toda el área, en los bordes más extremos la detección falla,
+            # Pero funciona bastante bien.
+            if self.mask.overlap(other.mask, (-x, -y)):
                 other.recibir_luz_especular(self)
 
     def ubicar(self, x, y):

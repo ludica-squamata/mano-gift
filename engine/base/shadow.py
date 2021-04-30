@@ -64,7 +64,7 @@ class ShadowSprite(AzoeSprite):
 
         elif 'alpha' in event.data:
             negative = event.data['alpha']
-            self.alpha = 0 if self.alpha-negative < 0 else self.alpha-negative
+            self.alpha = 0 if self.alpha - negative < 0 else self.alpha - negative
 
     def add_shadow(self):
         # z = self.sombra.z if self.sombra is not None else 0
@@ -296,7 +296,7 @@ class ShadowSprite(AzoeSprite):
         :type source:LightSource
         :return:
         """
-        tolerancia = 10
+        tolerancia = 0
         if self.proyectaSombra:
             # calcular direccion de origen
             dx = self.rect.centerx - source.rect.centerx
@@ -304,7 +304,7 @@ class ShadowSprite(AzoeSprite):
             self.alpha = 150
             self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
             # marcar direccion como iluminada
-            if dx > tolerancia:
+            if dx > 0:
                 if dy > tolerancia:
                     # print(dx, dy, 'noreste')
                     self._luces[6] = True  # noreste
