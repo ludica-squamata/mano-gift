@@ -22,8 +22,8 @@ def door_activate(puerta, event):
 
 
 def init_game(event):
-    data = {"mapa": "prueba",
-            "entrada": "centre",
+    data = {"mapa": "new",
+            "entrada": "center",
             "tiempo": [0, 0, 0],
             "focus": "heroe"}
 

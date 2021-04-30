@@ -1,6 +1,7 @@
 ﻿from engine.globs.event_dispatcher import EventDispatcher
-from pygame import draw, Surface, SRCALPHA
-from engine.globs import COLOR_IGNORADO
+from pygame import draw, Surface, SRCALPHA, mask
+from engine.globs.renderer import Camara
+from engine.globs import COLOR_IGNORADO, Light_Group
 from pygame.sprite import Sprite
 
 
@@ -22,13 +23,27 @@ class LightSource(Sprite):
 
         self.nombre = nombre
         self.image = Surface((radius * 2, radius * 2), SRCALPHA)
+        img = self.image.copy()
         self.image.fill(COLOR_IGNORADO)
         self.rect = self.image.get_rect()
-        self.rect.right = x+self.origen[0]
-        self.rect.bottom = y+self.origen[1]
 
-        draw.circle(self.image, (255, 0, 0, 15), (self.rect.w//2, self.rect.h//2), radius)
+        # origin_rect es para la Noche
+        self.origin_rect = self.rect.copy()
+        self.origin_rect.right = x+self.origen[0]
+        self.origin_rect.bottom = y+self.origen[1]
+
+        self.rect.x = x
+        self.rect.y = y
+        self.z = self.rect.bottom
+
+        self.mapRect = self.image.get_rect(center=(x, y))
+
+        draw.circle(self.image, (255, 255, 225, 0), (self.rect.w//2, self.rect.h//2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')
+        draw.circle(img, (255, 255, 255, 255), (self.rect.w // 2, self.rect.h // 2), radius)
+        self.mask = mask.from_surface(img)
+        Camara.add_real(self)
+        Light_Group.add(self)
 
     def switch(self, event):
         noche = self.parent.stage.noche
@@ -38,6 +53,17 @@ class LightSource(Sprite):
         elif event.data['level'] > 200:
             self.encendido = False
             noche.unset_light(self)
+
+    def colisiona(self, other, off_x=0, off_y=0):
+        if self.nombre != other.nombre and self.encendido:
+            x = self.rect.centerx+self.parent.stage.rect.x + off_x - other.rect.x
+            y = self.rect.centery+self.parent.stage.rect.y + off_y - other.rect.y
+            if self.mask.overlap(other.mask, (x, -y)):
+                other.recibir_luz_especular(self)
+
+    def ubicar(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
 
     def __repr__(self):
         return 'LightSource of ' + self.nombre

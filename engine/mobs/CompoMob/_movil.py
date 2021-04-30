@@ -1,5 +1,5 @@
+from engine.globs import GRUPO_MOVIBLES, GRUPO_MOBS, Item_Group, Light_Group
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import GRUPO_MOVIBLES, GRUPO_MOBS, Item_Group
 from engine.scenery.props import Movible
 from ._caracterizado import Caracterizado
 
@@ -49,6 +49,9 @@ class Movil(Caracterizado):
                 if spr.solido and self is not spr:
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
+
+            for spr in Light_Group:
+                spr.colisiona(self,  dx, dy)
 
         if self.stage.mascara_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
             r, g, b, a = self.stage.imagen_salidas.get_at((self.mapRect.x + dx, self.mapRect.y + dy))

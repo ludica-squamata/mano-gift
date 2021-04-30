@@ -9,13 +9,15 @@ from math import floor
 class Sombra(AzoeSprite):
     dif_x = 0
     alpha = 0
+    ensombrece = False
 
-    def __init__(self, spr, dfx, img, mascara, dz):
+    def __init__(self, spr, dfx, img, mascara, over):
         self.spr = spr
         self.tipo = "sombra"
         self.nombre = "sombra de " + self.spr.nombre
-        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y, z=spr.z, dz=dz - 1)
+        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y)
         self.mask = mascara
+        self.ensombrece = over
         self.alpha = 150
         self.dif_x = dfx
 
@@ -27,6 +29,9 @@ class Sombra(AzoeSprite):
 
         super().ubicar(x - self.dif_x, y)
 
+        dz = 1 if self.ensombrece else -1
+        self.z = self.spr.z + dz
+
     def __repr__(self):
         return self.nombre
 
@@ -36,8 +41,6 @@ class ShadowSprite(AzoeSprite):
     """:type : list"""
     sombra = None
     """:type : Sprite"""
-    sombras = None
-    """:type : list"""
     proyectaSombra = True
     _luces = None
     """:type : list"""
@@ -50,7 +53,7 @@ class ShadowSprite(AzoeSprite):
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
         self._luces = [0, 0, 0, 0, 1, 0, 0, 0]
         self.sombra = None
-        self.spr_sombras = {}
+        # self.spr_sombras = {}
         self._prevLuces = [0, 0, 0, 0, 0, 0, 0, 0]
         EventDispatcher.register(self.set_alpha, 'SetNight')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
@@ -64,21 +67,24 @@ class ShadowSprite(AzoeSprite):
             self.alpha = 0 if self.alpha-negative < 0 else self.alpha-negative
 
     def add_shadow(self):
-        z = self.sombra.z if self.sombra is not None else 0
+        # z = self.sombra.z if self.sombra is not None else 0
         Renderer.camara.remove_obj(self.sombra)
 
-        if self.image not in self.spr_sombras:
-            self.spr_sombras[self.image] = None
+        # if self.image not in self.spr_sombras:
+        #     self.spr_sombras[self.image] = None
 
-        if self.spr_sombras[self.image] is None:
-            s = Sombra(self, *self.crear_sombras())
-            self.spr_sombras[self.image] = s
+        # if self.spr_sombras[self.image] is None:
+        s = Sombra(self, *self.crear_sombras())
+        # parece haber un error acá. Si se crea la sombra nueva, no importa cuando, funciona bien
+        # pero si se guarda, las sombras son incorrectas.
 
-        else:
-            s = self.spr_sombras[self.image]
+        # self.spr_sombras[self.image] = s
+        #
+        # else:
+        #     s = self.spr_sombras[self.image]
 
-        if z:
-            s.z = z
+        # if z:
+        #     s.z = z
 
         s.image.set_alpha(self.alpha)
         self.sombra = s
@@ -89,18 +95,15 @@ class ShadowSprite(AzoeSprite):
         h = self.rect.h
         w = self.rect.w
         h_2 = h // 2
-        z = 0
-        # dr = 0  # un pequeño ajuste en el eje +x ("delta derecha")
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
-        # t_rect = t_surface.get_rect()
         centerx = t_surface.get_width() // 4
         """:type t_surface: SurfaceType"""
 
         surface = self.image
         mascara = mask.from_surface(t_surface)
         mascara.clear()
-
+        ensombrece = False
         if self._sombras[0]:
             img = self.orientar_sombra(surface, "NE")
             t_surface.blit(img, (h_2, 0))
@@ -116,15 +119,15 @@ class ShadowSprite(AzoeSprite):
             t_surface.blit(img, (3, h_2 - 6))
             t_surface.blit(self.dark_overlay(surface), (centerx, 0))
             _draw = mask.from_surface(t_surface, 100)
+            ensombrece = True
             mascara.draw(_draw, (0, 0))
-            z = h
         if self._sombras[2]:
             img = self.orientar_sombra(surface, "SE")
             t_surface.blit(img, (centerx, h_2 - 4))
             t_surface.blit(self.dark_overlay(surface), (centerx, 0))
             _draw = mask.from_surface(t_surface, 100)
+            ensombrece = True
             mascara.draw(_draw, (0, 0))
-            z = h
         if self._sombras[1]:  # Luz: 5
             print('Luz 5: E')
             # top = h_2 + 5
@@ -169,7 +172,6 @@ class ShadowSprite(AzoeSprite):
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             h_2 = 0
-            z = -h
         if self._sombras[3]:
             img = self.orientar_sombra(surface, "S")
             r = img.get_rect(centerx=w // 2, y=h - 3)
@@ -178,12 +180,11 @@ class ShadowSprite(AzoeSprite):
             t_surface.blit(self.dark_overlay(surface), (0, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
+            ensombrece = True
             h_2 = 0
-            z = h
 
-        return h_2, t_surface, mascara, z
+        return h_2, t_surface, mascara, ensombrece
 
-    # noinspection PyUnresolvedReferences
     @staticmethod
     def orientar_sombra(surface, arg=None, _mask=None):
         h = surface.get_height()
@@ -281,7 +282,6 @@ class ShadowSprite(AzoeSprite):
         for y in range(h):
             for x in range(start, stop):
                 if _mask.get_at((x, y)):
-                    # noinspection PyUnresolvedReferences
                     pxarray[x, y] = COLOR_SOMBRA
 
         return pxarray.make_surface().convert_alpha()
@@ -290,18 +290,52 @@ class ShadowSprite(AzoeSprite):
     def filtrar_luces(i):
         return i not in (1, 5)
 
+    def recibir_luz_especular(self, source):
+        """
+        :param source:
+        :type source:LightSource
+        :return:
+        """
+        tolerancia = 10
+        if self.proyectaSombra:
+            # calcular direccion de origen
+            dx = self.rect.centerx - source.rect.centerx
+            dy = self.rect.centery - source.rect.centery
+            self.alpha = 150
+            self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+            # marcar direccion como iluminada
+            if dx > tolerancia:
+                if dy > tolerancia:
+                    # print(dx, dy, 'noreste')
+                    self._luces[6] = True  # noreste
+                elif dy < -tolerancia:
+                    # print(dx, dy, 'sureste')
+                    self._luces[4] = True  # sureste
+                else:
+                    # print(dx, dy, 'este')
+                    self._luces[1] = True  # este
+            elif dx < -tolerancia:
+                if dy > tolerancia:
+                    # print(dx, dy, 'noroeste')
+                    self._luces[0] = True  # noroeste
+                elif dy < -tolerancia:
+                    # print(dx, dy, 'suroeste')
+                    self._luces[2] = True  # suroeste
+                else:
+                    # print(dx, dy, 'oeste')
+                    self._luces[5] = True  # oeste
+            else:
+                if dy > tolerancia:
+                    # print(dx, dy, 'norte')
+                    self._luces[7] = True  # norte
+                else:
+                    # print(dx, dy, 'sur')
+                    self._luces[3] = True  # sur
+
     def update_sombra(self):
         """
         generar sombra en direccion contraria a los slots iluminados
         si cambio la lista, actualizar imagen de sombra y centrar
-
-        para el calculo de sombras ha de usarse la imagen que veria la fuente de luz.
-        ej: si el personaje estuviera en posicion D, la sombra O se hace en base a la imagen R
-        si estuviera en posicion U, se usaria L
-
-        a resolver: que imagen usar para las diagonales
-
-        :return:
         """
         if self._prevLuces != self._luces:
             self._prevLuces = self._luces[:]
@@ -324,7 +358,6 @@ class ShadowSprite(AzoeSprite):
         super().ubicar(dx, dy)
         if self.sombra is not None:
             self.sombra.ubicar(dx, dy)
-            self.sombra.z = self.z-1
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)

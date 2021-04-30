@@ -225,8 +225,33 @@ class DeletedItems(ItemGroup):
         self[obj.nombre] = obj
 
 
+class LightGroup:
+    lights = None
+    _lenght = 0
+    """A simple group. It's a little more than a list."""
+
+    def __init__(self):
+        self.lights = []
+
+    def add(self, light):
+        # podría agrupar luces por mapas, se me ocurre.
+        if light not in self.lights:
+            self.lights.append(light)
+            self._lenght += 1
+
+    def remove(self, light):
+        if light in self.lights:
+            self.lights.remove(light)
+            self._lenght -= 1
+
+    def __getitem__(self, item):
+        if type(item) is int and 0 <= item <= self._lenght:
+            return self.lights[item]
+
+
 Mob_Group = MobGroup()
 Item_Group = ItemGroup()
 Deleted_Items = DeletedItems()
+Light_Group = LightGroup()
 
-__all__ = ["Mob_Group", "Item_Group", "Deleted_Items"]
+__all__ = ["Mob_Group", "Item_Group", "Deleted_Items", "Light_Group"]

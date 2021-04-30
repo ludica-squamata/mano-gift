@@ -54,6 +54,7 @@ class ControllableAI(EventAware):
         self.deregister()
 
     def update(self):
+        self.entity.update_sombra()
         if self.accion:
             self.entity.accion()
             sprites = self.entity.perceived['touched'] + self.entity.perceived['felt']

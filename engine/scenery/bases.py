@@ -9,6 +9,7 @@ class Escenografia(ShadowSprite, EventListener):
     action = None
     tipo = 'Prop'
     grupo = GRUPO_ITEMS
+    luz = None
 
     def __init__(self, x, y, z=0, nombre=None, data=None, imagen=None, rect=None):
         """
@@ -38,8 +39,11 @@ class Escenografia(ShadowSprite, EventListener):
 
         self.add_listeners()  # carga de event listeners
 
-    def rotate_view(self, np):
-        pass
+    def set_parent_map(self, parent):
+        super().set_parent_map(parent)
+        if self.luz is not None:
+            self.luz.stage = parent
+            self.luz.mapa_actual = parent
 
     def __repr__(self):
         return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
@@ -49,7 +53,7 @@ class Escenografia(ShadowSprite, EventListener):
 
     def update(self, *args):
         super().update(*args)
-        if hasattr(self, 'luz'):
+        if self.luz is not None:
             self.luz.update()
 
 

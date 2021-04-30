@@ -37,6 +37,7 @@ class Noche(AzoeBaseSprite):
             else:
                 elapsed = mediodia-actual
                 cls.alpha = elapsed.h * 60 + elapsed.m
+            cls.aclarar = True
 
         elif atardece < actual < anochece:  # tarde noche
             if actual-atardece < anochece-actual:
@@ -45,6 +46,7 @@ class Noche(AzoeBaseSprite):
             else:
                 elapsed = anochece-actual
                 cls.alpha = 230 - (elapsed.h * 60 + elapsed.m)
+            cls.oscurecer = True
 
         elif mediodia < actual < atardece:  # dia
             cls.alpha = 0
@@ -95,7 +97,7 @@ class Noche(AzoeBaseSprite):
         for light in self.lights:
             px_li = PixelArray(light.image)
             w, h = light.rect.size
-            lx, ly = light.rect.center
+            lx, ly = light.origin_rect.center
             for x in range(w):
                 for y in range(h):
                     color = light.image.unmap_rgb(px_li[x, y])
@@ -108,6 +110,7 @@ class Noche(AzoeBaseSprite):
     def trasparentar(cls, mod, max_alpha=230):  # this is gradual
         if 0 < cls.alpha + mod < max_alpha:
             cls.alpha += mod
+            # print(230-cls.alpha)
             EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
             EventDispatcher.trigger("LightLevel", "Noche", {"level": 230-cls.alpha})
 
