@@ -33,9 +33,10 @@ class LightSource(Sprite):
         self.origin_rect.bottom = y + self.origen[1]
         self.z = self.rect.bottom
 
+        self.stage = self.parent.stage
         self.mapRect = self.image.get_rect(center=self.origin_rect.center)
-        self.mapRect.x += self.rect.w//2
-        self.mapRect.y += self.rect.h//2
+        self.mapRect.x += self.rect.w // 2
+        self.mapRect.y += self.rect.h // 2
 
         draw.circle(self.image, (255, 255, 225, 0), (self.rect.w // 2, self.rect.h // 2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')
@@ -61,6 +62,13 @@ class LightSource(Sprite):
             # Pero funciona bastante bien.
             if self.mask.overlap(other.mask, (-x, -y)):
                 other.recibir_luz_especular(self)
+            else:
+                # aunque debería apagarse sólo la luz que se prendió.
+                # algo como recibir_luz_especular sería útil,
+                # pero que guarde una referencia a la fuente de luz
+                # en lugar de tener que calcular el offset una y otra vez
+                # (cosa que si no colisiona no tendría sentido).
+                other.desiluminar()
 
     def ubicar(self, x, y):
         self.rect.x = x

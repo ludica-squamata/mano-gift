@@ -53,7 +53,6 @@ class ShadowSprite(AzoeSprite):
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
         self._luces = [0, 0, 0, 0, 1, 0, 0, 0]
         self.sombra = None
-        # self.spr_sombras = {}
         self._prevLuces = [0, 0, 0, 0, 0, 0, 0, 0]
         EventDispatcher.register(self.set_alpha, 'SetNight')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
@@ -67,25 +66,8 @@ class ShadowSprite(AzoeSprite):
             self.alpha = 0 if self.alpha - negative < 0 else self.alpha - negative
 
     def add_shadow(self):
-        # z = self.sombra.z if self.sombra is not None else 0
         Renderer.camara.remove_obj(self.sombra)
-
-        # if self.image not in self.spr_sombras:
-        #     self.spr_sombras[self.image] = None
-
-        # if self.spr_sombras[self.image] is None:
         s = Sombra(self, *self.crear_sombras())
-        # parece haber un error acá. Si se crea la sombra nueva, no importa cuando, funciona bien
-        # pero si se guarda, las sombras son incorrectas.
-
-        # self.spr_sombras[self.image] = s
-        #
-        # else:
-        #     s = self.spr_sombras[self.image]
-
-        # if z:
-        #     s.z = z
-
         s.image.set_alpha(self.alpha)
         self.sombra = s
         Renderer.camara.add_visible(self.sombra)
@@ -296,7 +278,7 @@ class ShadowSprite(AzoeSprite):
         :type source:LightSource
         :return:
         """
-        tolerancia = 0
+        tolerancia = 8
         if self.proyectaSombra:
             # calcular direccion de origen
             dx = self.rect.centerx - source.rect.centerx
@@ -332,6 +314,9 @@ class ShadowSprite(AzoeSprite):
                     # print(dx, dy, 'sur')
                     self._luces[3] = True  # sur
 
+    def desiluminar(self):
+        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+
     def update_sombra(self):
         """
         generar sombra en direccion contraria a los slots iluminados
@@ -348,6 +333,9 @@ class ShadowSprite(AzoeSprite):
 
         if any(self._sombras) and FEATURE_SOMBRAS_DINAMICAS:
             self.add_shadow()
+        else:
+            # de otro modo el mob no pierde la sombra icluso si se aleja de la fuente de luz.
+            Renderer.camara.remove_obj(self.sombra)
 
     def update(self, *args):
         if self.proyectaSombra:
