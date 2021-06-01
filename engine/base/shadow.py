@@ -1,4 +1,4 @@
-from pygame import mask, PixelArray, Surface, SRCALPHA, transform
+from pygame import mask, PixelArray, Surface, SRCALPHA, transform, draw
 from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
@@ -50,11 +50,11 @@ class ShadowSprite(AzoeSprite):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._origins = [0, 0, 0, 0, 0, 0, 0, 0]
+        self._sombras = [0] * 9  # la nueva luz y sombra
+        self._luces = [0] * 9  # es la sombra en el cénit.
+        self._origins = [0] * 9  # lo puse así para que sea más fácil
+        self._prevLuces = [0] * 9  # distinguir una lista de 0s de otra
         self.sombra = None
-        self._prevLuces = [0, 0, 0, 0, 0, 0, 0, 0]
         EventDispatcher.register(self.set_alpha, 'SetNight')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
@@ -81,8 +81,6 @@ class ShadowSprite(AzoeSprite):
 
         t_surface = Surface((h * 2, h * 2), SRCALPHA)
         centerx = t_surface.get_width() // 4
-        """:type t_surface: SurfaceType"""
-
         surface = self.image
         mascara = mask.from_surface(t_surface)
         mascara.clear()
@@ -165,6 +163,13 @@ class ShadowSprite(AzoeSprite):
             mascara.draw(_draw, (0, 0))
             ensombrece = True
             h_2 = 0
+        if self._sombras[8]:
+            img = Surface((14, 7), SRCALPHA)
+            r = img.get_rect(centerx=w, y=h-6)
+            draw.ellipse(img, COLOR_SOMBRA, [0, 0, r.w, r.h])
+            t_surface.blit(img, r)
+            _draw = mask.from_surface(t_surface, 100)
+            mascara.draw(_draw, (0, 0))
 
         return h_2, t_surface, mascara, ensombrece
 
@@ -285,10 +290,7 @@ class ShadowSprite(AzoeSprite):
             # calcular direccion de origen
             dx = self.rect.centerx - source.rect.centerx
             dy = self.rect.centery - source.rect.centery
-            if source in self._origins:
-                origin_idx = self._origins.index(source)
-                self._luces[origin_idx] = 0
-                self._origins[origin_idx] = 0
+            self.unset_origin(source)
             self.alpha = 150
             # marcar direccion como iluminada
             if dx > 0:
@@ -298,7 +300,6 @@ class ShadowSprite(AzoeSprite):
                     light_idx = 4  # sureste
                 else:
                     light_idx = 1  # este
-
             elif dx < -tolerancia:
                 if dy > tolerancia:
                     light_idx = 0  # noroeste
@@ -314,6 +315,18 @@ class ShadowSprite(AzoeSprite):
 
         self._luces[light_idx] = 1
         self._origins[light_idx] = source
+
+    def recibir_luz_solar(self, light_idx):
+        self.unset_origin('Sun')
+        if light_idx is not None:
+            self._luces[light_idx] = 1
+            self._origins[light_idx] = 'Sun'
+
+    def unset_origin(self, source):
+        if source in self._origins:
+            origin_idx = self._origins.index(source)
+            self._luces[origin_idx] = 0
+            self._origins[origin_idx] = 0
 
     def desiluminar(self, source):
         if source in self._origins:
@@ -333,6 +346,9 @@ class ShadowSprite(AzoeSprite):
                         self._sombras[i] = 1
                     else:
                         self._sombras[i] = 0
+            else:
+                if self._luces[8]:
+                    self._sombras[8] = 1
 
         if any(self._sombras) and FEATURE_SOMBRAS_DINAMICAS:
             self.add_shadow()

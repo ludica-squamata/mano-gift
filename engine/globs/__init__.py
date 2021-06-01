@@ -7,3 +7,4 @@ from .mod_data import ModData
 from .game_state import GameState
 from .colores import *
 from .noche import Noche
+from .sun import Sun

@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
 from .loader import load_something, cargar_salidas
@@ -34,6 +34,8 @@ class Stage:
         offx = self.offset_x - dx
         offy = self.offset_y - dy
         entradas = self.data['entradas']
+        latitud = self.data['latitude']
+        Sun.init(latitud)
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
             chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, data=singleton, requested=['Mobs', 'Props'])
@@ -72,8 +74,9 @@ class Stage:
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
 
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
-                                    self.amanece: 'amanece', self.mediodia: 'medidía'})
+                                    self.amanece: 'amanece', self.mediodia: 'mediodía'})
         Noche.set_mod(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
+        Sun.calculate(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
