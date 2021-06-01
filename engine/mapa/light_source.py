@@ -57,25 +57,18 @@ class LightSource(Sprite):
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre and self.encendido:
             x = self.rect.x + off_x - other.rect.x
-            y = self.rect.x + off_y - other.rect.x
-            # No colisiona en toda el área, en los bordes más extremos la detección falla,
-            # Pero funciona bastante bien.
+            y = self.rect.y + off_y - other.rect.y
             if self.mask.overlap(other.mask, (-x, -y)):
                 other.recibir_luz_especular(self)
             else:
-                # aunque debería apagarse sólo la luz que se prendió.
-                # algo como recibir_luz_especular sería útil,
-                # pero que guarde una referencia a la fuente de luz
-                # en lugar de tener que calcular el offset una y otra vez
-                # (cosa que si no colisiona no tendría sentido).
-                other.desiluminar()
+                other.desiluminar(self)
 
     def ubicar(self, x, y):
         self.rect.x = x
         self.rect.y = y
 
     def __repr__(self):
-        return 'LightSource of ' + self.nombre
+        return 'LightSource of ' + self.nombre + ' '+str(self.parent.id)
 
 
 class DayLight:

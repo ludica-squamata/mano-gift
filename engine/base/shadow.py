@@ -51,7 +51,8 @@ class ShadowSprite(AzoeSprite):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._sombras = [0, 0, 0, 0, 0, 0, 0, 0]
-        self._luces = [0, 0, 0, 0, 1, 0, 0, 0]
+        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+        self._origins = [0, 0, 0, 0, 0, 0, 0, 0]
         self.sombra = None
         self._prevLuces = [0, 0, 0, 0, 0, 0, 0, 0]
         EventDispatcher.register(self.set_alpha, 'SetNight')
@@ -275,47 +276,49 @@ class ShadowSprite(AzoeSprite):
     def recibir_luz_especular(self, source):
         """
         :param source:
-        :type source:LightSource
-        :return:
+        :type source: LightSource
+        :return: None
         """
         tolerancia = 8
+        light_idx = None
         if self.proyectaSombra:
             # calcular direccion de origen
             dx = self.rect.centerx - source.rect.centerx
             dy = self.rect.centery - source.rect.centery
+            if source in self._origins:
+                origin_idx = self._origins.index(source)
+                self._luces[origin_idx] = 0
+                self._origins[origin_idx] = 0
             self.alpha = 150
-            self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
             # marcar direccion como iluminada
             if dx > 0:
                 if dy > tolerancia:
-                    # print(dx, dy, 'noreste')
-                    self._luces[6] = True  # noreste
+                    light_idx = 6  # noreste
                 elif dy < -tolerancia:
-                    # print(dx, dy, 'sureste')
-                    self._luces[4] = True  # sureste
+                    light_idx = 4  # sureste
                 else:
-                    # print(dx, dy, 'este')
-                    self._luces[1] = True  # este
+                    light_idx = 1  # este
+
             elif dx < -tolerancia:
                 if dy > tolerancia:
-                    # print(dx, dy, 'noroeste')
-                    self._luces[0] = True  # noroeste
+                    light_idx = 0  # noroeste
                 elif dy < -tolerancia:
-                    # print(dx, dy, 'suroeste')
-                    self._luces[2] = True  # suroeste
+                    light_idx = 2  # suroeste
                 else:
-                    # print(dx, dy, 'oeste')
-                    self._luces[5] = True  # oeste
+                    light_idx = 5  # oeste
             else:
                 if dy > tolerancia:
-                    # print(dx, dy, 'norte')
-                    self._luces[7] = True  # norte
+                    light_idx = 7  # norte
                 else:
-                    # print(dx, dy, 'sur')
-                    self._luces[3] = True  # sur
+                    light_idx = 3  # sur
 
-    def desiluminar(self):
-        self._luces = [0, 0, 0, 0, 0, 0, 0, 0]
+        self._luces[light_idx] = 1
+        self._origins[light_idx] = source
+
+    def desiluminar(self, source):
+        if source in self._origins:
+            idx = self._origins.index(source)
+            self._luces[idx] = 0
 
     def update_sombra(self):
         """
