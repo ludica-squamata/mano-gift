@@ -1,6 +1,6 @@
 from pygame import sprite, mask, Surface, Rect
+from engine.globs import ModData, ANCHO, ALTO
 from engine.misc import cargar_imagen
-from engine.globs import ModData
 
 
 class AzoeSprite(sprite.Sprite):
@@ -46,7 +46,7 @@ class AzoeSprite(sprite.Sprite):
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
 
         if center:
-            self.rect = self.image.get_rect(center=(320, 240))
+            self.rect = self.image.get_rect(center=(ANCHO//2, ALTO//2))
         elif imagen is not None:
             self.rect = self.image.get_rect(topleft=(x, y))
         else:

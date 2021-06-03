@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
 from .loader import load_something, cargar_salidas
@@ -14,8 +14,8 @@ class Stage:
     chunks = None
     mapa = None
     data = {}
-    offset_x = 320  # camara.rect.centerx
-    offset_y = 240  # camara.rect.centery
+    offset_x = ANCHO//2  # camara.rect.centerx
+    offset_y = ALTO//2  # camara.rect.centery
     mediodia = None  # porque no siempre es a las 12 en punto.
     amanece = None
     atardece = None
