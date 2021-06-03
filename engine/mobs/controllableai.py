@@ -13,10 +13,10 @@ class ControllableAI(EventAware):
             'contextual': self.contextual_event_key,
             'menu': self.deregister,
             'accion': self.set_action,
-            'arriba': lambda: self.entity.cambiar_direccion('arriba'),
-            'abajo': lambda: self.entity.cambiar_direccion('abajo'),
-            'izquierda': lambda: self.entity.cambiar_direccion('izquierda'),
-            'derecha': lambda: self.entity.cambiar_direccion('derecha')
+            'arriba': lambda: self.entity.cambiar_direccion2('back'),
+            'abajo': lambda: self.entity.cambiar_direccion2('front'),
+            'izquierda': lambda: self.entity.cambiar_direccion2('left'),
+            'derecha': lambda: self.entity.cambiar_direccion2('right')
         })
         self.functions['hold'].update({
             'arriba': lambda: self.mover('arriba'),

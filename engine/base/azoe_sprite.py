@@ -15,15 +15,6 @@ class AzoeSprite(sprite.Sprite):
 
     mapRect = None  # mapX y mapY
 
-    IMAGEN_D = 'abajo'
-    IMAGEN_U = 'arriba'
-    IMAGEN_L = 'izquierda'
-    IMAGEN_R = 'derecha'
-    IMAGEN_DL = 'abiz'
-    IMAGEN_DR = 'abde'
-    IMAGEN_UL = 'ariz'
-    IMAGEN_UR = 'arde'
-
     direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0], 'ninguna': [0, 0]}
     direccion = 'abajo'
     parent = None
