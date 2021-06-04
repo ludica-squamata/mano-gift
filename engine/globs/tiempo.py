@@ -302,6 +302,10 @@ class Tiempo:
         cls.dia = 0
 
     @classmethod
+    def get_frames(cls):
+        return cls._frames
+
+    @classmethod
     def update(cls, rate=0):
         cls.FPS.tick(rate)
 
