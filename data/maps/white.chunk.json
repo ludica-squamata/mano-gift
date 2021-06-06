@@ -1,6 +1,6 @@
 {
   "fondo": "maps/fondos/pasto.png",
-  "colisiones": "maps/colisiones/800.png",
+  "colisiones": null,
   "props": {},
   "mobs": {},
   "limites": {
