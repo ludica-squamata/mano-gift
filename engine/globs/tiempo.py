@@ -290,6 +290,10 @@ class Tiempo:
         SeasonalYear.init()
 
     @classmethod
+    def set_year(cls, year, month, week):
+        SeasonalYear.set_year(year, month, week, cls.dia)
+
+    @classmethod
     def get_time(cls):
         return cls.dia, cls.clock.h, cls.clock.m, cls.clock.s
 
@@ -299,7 +303,7 @@ class Tiempo:
 
     @classmethod
     def reset_days(cls):
-        cls.dia = 0
+        cls.dia = -1
 
     @classmethod
     def get_frames(cls):
@@ -325,11 +329,19 @@ class Tiempo:
 
 
 class SeasonalYear:
-    year_lenght = 360  # chapuza para velocidad
-    day_lenght = 0
+    # default values
+    year_lenght = 360  # days
+    month_lenght = 30  # days
+    week_lenght = 7  # days
+
+    # varies with season and biome
+    day_lenght = 0  # hours
 
     biome = None
     season = None
+
+    week_day = 0
+    month_day = 0
 
     biomes = {  # los valores son la cantidad de horas de luz que puede tener un día.
         "polar": {  # corresponde a latitudes entre 90º y 30º N/S
@@ -337,32 +349,56 @@ class SeasonalYear:
         "equatorial": {  # corresponde a latitudes entre 30ºS y 30ºN
             "spring": 12, "fall": 12, 'seaon_lenght': year_lenght // 2},
         "tempered": {  # corresponde a latitudes entre 30º y 90º N/S.
-            "spring": 12, "summer": 19, "fall": 12, "winter": 10, 'seaon_lenght': year_lenght // 4}
+            "spring": 12, "summer": 19, "fall": 12, "winter": 10, 'season_lenght': year_lenght // 4}
     }
-    cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
+    season_cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
+    month_cycler = None
 
     @classmethod
     def init(cls):
         cls.biome = 'tempered'
-        cls.season = next(cls.cycler)
+        cls.season = next(cls.season_cycler)
         cls.set_day_duration()
         cls.propagate()
 
-        EventDispatcher.register(cls.cycle_seasons, 'DayFlag')
+        EventDispatcher.register(cls.cycle_time, 'DayFlag')
+        if cls.month_cycler is None:  # cls.set_year() was not called.
+            cls.month_cycler = cycle([i for i in range(cls.year_lenght // cls.month_lenght)])
+            cls.month = next(cls.month_cycler)
 
     @classmethod
-    def cycle_seasons(cls, event):
+    def set_year(cls, year, month, week):
+        # this method may not be called if custom "world_properties" are not present in mod.json
+        cls.year_lenght = year
+        cls.month_lenght = month
+        cls.week_lenght = week
+
+        cls.month_cycler = cycle([i for i in range(year // month)])
+        cls.month = next(cls.month_cycler)
+
+        cls.week_day = 0
+
+    @classmethod
+    def cycle_time(cls, event):
         # Tiempo ya de por si cuenta los días.
         number_of_days = event.data['days']
         # No hay necesidad de que SeasonalYear los cuente también
-        if number_of_days % cls.biomes[cls.biome]['seaon_lenght'] == 0:
-            cls.season = next(cls.cycler)
+        if number_of_days % cls.biomes[cls.biome]['season_lenght'] == 0:
+            cls.season = next(cls.season_cycler)
             cls.set_day_duration()
             EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
 
         if number_of_days == cls.year_lenght:
-            cls.season = next(cls.cycler)
+            cls.season = next(cls.season_cycler)
             Tiempo.reset_days()
+
+        if number_of_days % cls.month_lenght == 0:
+            cls.month = next(cls.month_cycler)
+            cls.month_day = 0
+        else:
+            cls.month_day += 1
+
+        cls.week_day = number_of_days % cls.week_lenght
 
     @classmethod
     def set_day_duration(cls):

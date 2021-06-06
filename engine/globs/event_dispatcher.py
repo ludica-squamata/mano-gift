@@ -57,8 +57,9 @@ class EventDispatcher:
         :return:None
         """
 
-        event = AzoeEvent(*event_data)
-        cls._cola.append(event)
+        if event_data[0] in cls._oyentes:
+            event = AzoeEvent(*event_data)
+            cls._cola.append(event)
 
     @classmethod
     def process(cls):

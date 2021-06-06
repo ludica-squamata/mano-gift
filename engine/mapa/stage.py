@@ -34,8 +34,13 @@ class Stage:
         offx = self.offset_x - dx
         offy = self.offset_y - dy
         entradas = self.data['entradas']
-        latitud = self.data['latitude']
+
+        if ModData.use_latitude:
+            latitud = self.data['latitude']
+        else:
+            latitud = 30
         Sun.init(latitud)
+
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
             chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, data=singleton, requested=['mobs', 'props'])
@@ -153,15 +158,15 @@ class ChunkMap(AzoeBaseSprite):
             for mob in Mob_Group.get_existing(data['mobs']):
                 del data['mobs'][mob]
 
+        image = cargar_imagen(ModData.graphs + data['fondo'])
+        rect = image.get_rect(topleft=(off_x, off_y))
+        self.noche = Noche(self, rect)
+
         if data['colisiones'] is not None:
             colisiones = cargar_imagen(ModData.graphs + data['colisiones'])
             self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
         else:
-            self.mask = mask.Mask(self.image.get_size())
-
-        image = cargar_imagen(ModData.graphs + data['fondo'])
-        rect = image.get_rect(topleft=(off_x, off_y))
-        self.noche = Noche(self, rect)
+            self.mask = mask.Mask(rect.size)
 
         super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))

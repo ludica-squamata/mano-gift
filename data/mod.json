@@ -10,7 +10,6 @@
     "scripts": "scripts",
     "player": "mobs/player"
   },
-  "use_latitude": true,
   "caracteristicas": {
     "Fuerza": [
       "ModCarga",
@@ -37,6 +36,12 @@
   "custom": {
     "attributes": [
       {"name":"nivel", "script": "nivelado.py"}
-    ]
+    ],
+    "world_properties":{
+      "use_latitude": true,
+      "year_lenght": 360,
+      "month_lenght": 30,
+      "week_lenght": 7
+    }
   }
 }
