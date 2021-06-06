@@ -291,7 +291,7 @@ class Tiempo:
 
     @classmethod
     def set_year(cls, year, month, week):
-        SeasonalYear.set_year(year, month, week, cls.dia)
+        SeasonalYear.set_year(year, month, week)
 
     @classmethod
     def get_time(cls):
