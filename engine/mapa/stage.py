@@ -14,8 +14,8 @@ class Stage:
     chunks = None
     mapa = None
     data = {}
-    offset_x = ANCHO//2  # camara.rect.centerx
-    offset_y = ALTO//2  # camara.rect.centery
+    offset_x = ANCHO // 2  # camara.rect.centerx
+    offset_y = ALTO // 2  # camara.rect.centery
     mediodia = None  # porque no siempre es a las 12 en punto.
     amanece = None
     atardece = None
@@ -34,13 +34,18 @@ class Stage:
         offx = self.offset_x - dx
         offy = self.offset_y - dy
         entradas = self.data['entradas']
-        latitud = self.data['latitude']
+
+        if ModData.use_latitude:
+            latitud = self.data['latitude']
+        else:
+            latitud = 30
         Sun.init(latitud)
+
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, data=singleton, requested=['Mobs', 'Props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, data=singleton, requested=['mobs', 'props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, requested=['Mobs', 'Props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, requested=['mobs', 'props'])
 
         self.chunks.add(chunk)
         self.mapa = self.chunks.sprs()[0]
@@ -90,7 +95,7 @@ class Stage:
         @param dx: el offset en x del stage
         @param dy: el offset en y del stage.
         """
-        for item, grupo in load_something(alldata, 'Props'):
+        for item, grupo in load_something(alldata, 'props'):
             obj = self.add_property(item, grupo)
             obj.reubicar(-dx, -dy)
             obj.set_parent_map(self.mapa)
@@ -128,17 +133,18 @@ class Stage:
 
 class ChunkMap(AzoeBaseSprite):
     tipo = 'chunk'
-    limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
+    limites = None
     properties = None
-    interactives = []
+    interactives = None
 
     def __init__(self, stage, nombre, off_x, off_y, entradas, transient_mob=None, data=False, requested=None):
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
-        self.interactives.clear()
-        self.limites = {'sup': None, 'inf': None, 'izq': None, 'der': None}
+        self.interactives = []
 
         if not data:
             data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
+
+        self.limites = data['limites']
 
         data.update({'entradas': entradas})
         if 'hero' in data['mobs']:
@@ -148,22 +154,27 @@ class ChunkMap(AzoeBaseSprite):
             if transient_mob is not None and name == transient_mob.character_name:
                 del data['mobs'][transient_mob.character_name]
 
-        for mob in Mob_Group.get_existing(data['mobs']):
-            del data['mobs'][mob]
-
-        colisiones = cargar_imagen(ModData.graphs + data['colisiones'])
-        self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
+        if len(data['mobs']):
+            for mob in Mob_Group.get_existing(data['mobs']):
+                del data['mobs'][mob]
 
         image = cargar_imagen(ModData.graphs + data['fondo'])
         rect = image.get_rect(topleft=(off_x, off_y))
         self.noche = Noche(self, rect)
 
+        if data['colisiones'] is not None:
+            colisiones = cargar_imagen(ModData.graphs + data['colisiones'])
+            self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
+        else:
+            self.mask = mask.Mask(rect.size)
+
         super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))
 
-        for item, grupo in load_something(data, requested):
-            obj = self.add_property(item, grupo)
-            obj.set_parent_map(self)
+        if any([len(data[req]) > 0 for req in requested]):
+            for item, grupo in load_something(data, requested):
+                obj = self.add_property(item, grupo)
+                obj.set_parent_map(self)
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
@@ -207,12 +218,13 @@ class ChunkMap(AzoeBaseSprite):
 
     def cargar_limites(self, limites):
         for key in limites:
-            rect = Rect(self._get_newmap_pos(key), self.rect.size)
+            x, y, w, h = self.rect
+            dy = y - h if key == 'sup' else y + h if key == 'inf' else y
+            dx = x - w if key == 'izq' else x + w if key == 'der' else x
+            rect = Rect((dx, dy), self.rect.size)
             mapa = self.parent.chunks.get_spr_at(rect.center)
-            if not mapa:
-                self.limites[key.lower()] = limites[key]
-            else:
-                self.limites[key.lower()] = mapa[0]
+            if mapa is not None:
+                self.limites[key.lower()] = mapa
 
     def checkear_adyacencia(self, clave: str):
         type_adyacente = type(self.limites.get(clave, False))
@@ -221,29 +233,14 @@ class ChunkMap(AzoeBaseSprite):
         else:
             return False
 
-    def _get_newmap_pos(self, ady: str):
-        w, h = self.rect.size
-        dx, dy = self.rect.topleft
-
-        ady = ady.lower()  # por si acaso.
-
-        if ady == 'sup':
-            dy -= h
-        elif ady == 'inf':
-            dy += h
-        elif ady == 'izq':
-            dx -= w
-        elif ady == 'der':
-            dx += w
-
-        return dx, dy
-
     def cargar_mapa_adyacente(self, ady: str):
-        dx, dy = self._get_newmap_pos(ady)
+        x, y, w, h = self.rect
+        dy = y - h if ady == 'sup' else y + h if ady == 'inf' else y
+        dx = x - w if ady == 'izq' else x + w if ady == 'der' else x
 
         if type(self.limites[ady]) is str:
             entradas = self.parent.data['entradas']
-            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['Props'])
+            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['props'])
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:

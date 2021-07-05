@@ -3,9 +3,14 @@ import json
 
 __all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json', 'combine_mob_spritesheets']
 
+_images = {}
+
 
 def cargar_imagen(ruta):
-    return image.load(ruta).convert_alpha()
+    if ruta not in _images:
+        _images[ruta] = image.load(ruta).convert_alpha()
+
+    return _images[ruta]
 
 
 def split_spritesheet(ruta, w=32, h=32):

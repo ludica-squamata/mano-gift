@@ -7,18 +7,17 @@ class AzoeGroup(LayeredUpdates):
 
     def __init__(self, name, *sprites, **kwargs):
         self.name = name
+        self.collition_rect = Rect(0, 0, 1, 1)
         super().__init__(*sprites, **kwargs)
 
     def __repr__(self):
         return "<%s[%d]>" % (self.name, len(self))
 
     def get_spr_at(self, pos):
-        """Funciona como Pygame.LayeredUpdates, excepto que usa un rect válido"""
         _sprites = self._spritelist
-        # en LayeredUpdates, el rect tiene un tamaño igual a 0,0.
-        rect = Rect(pos, (1, 1))
-        colliding_idx = rect.collidelistall(_sprites)
-        colliding = [_sprites[i] for i in colliding_idx]
+        self.collition_rect.topleft = pos
+        colliding_idxs = self.collition_rect.collidelist(_sprites)
+        colliding = _sprites[colliding_idxs] if colliding_idxs >= 0 else None
         return colliding
 
     def get_spr(self, idx):

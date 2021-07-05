@@ -25,6 +25,8 @@ class ModData:
 
     dialogs_by_topic = None
 
+    use_latitude = True
+
     @classmethod
     def init(cls, ini_data):
 
@@ -90,6 +92,14 @@ class ModData:
                         script_name = c['script'].rstrip('.py')
                         module = import_module(cls.pkg_scripts + '.mobs.' + script_name, ruta)
                         cls.custom_attr[c['name']] = getattr(module, c['name'])
+
+                elif keyword == 'world_properties':
+                    props = cls.data['custom']['world_properties']
+                    cls.use_latitude = props['use_latitude']
+                    year = props['year_lenght']
+                    month = props['month_lenght']
+                    week = props['week_lenght']
+                    Tiempo.set_year(year, month, week)
 
             if not len(cls.QMC):
                 cls.QMC = None

@@ -99,26 +99,28 @@ class Camara:
 
     @classmethod
     def detectar_mapas_adyacentes(cls):
+        map_at_center, map_at_bottom, map_at_right, map_at_top, map_at_left = [None]*5
         r = cls.rect.inflate(5, 5)
         map_at = cls.bgs.get_spr_at
         adyacent_map_key = ''
-        reference = []
+        reference = None
 
         # shortcuts
-        map_at_center = map_at(r.center)
-        map_at_bottom = map_at(r.midbottom)
-        map_at_right = map_at(r.midright)
-        map_at_top = map_at(r.midtop)
-        map_at_left = map_at(r.midleft)
+        if len(cls.bgs):
+            map_at_center = map_at(r.center)
+            map_at_bottom = map_at(r.midbottom)
+            map_at_right = map_at(r.midright)
+            map_at_top = map_at(r.midtop)
+            map_at_left = map_at(r.midleft)
 
         # check in ortogonal positions
-        if not map_at_top:
+        if map_at_top is None:
             adyacent_map_key = 'sup'
-        elif not map_at_bottom:
+        elif map_at_bottom is None:
             adyacent_map_key = 'inf'
-        if not map_at_left:
+        elif map_at_left is None:
             adyacent_map_key = 'izq'
-        elif not map_at_right:
+        elif map_at_right is None:
             adyacent_map_key = 'der'
 
         if adyacent_map_key == '':
@@ -154,27 +156,27 @@ class Camara:
         else:
             reference = map_at_center
 
-        if adyacent_map_key != '' and len(reference):
-            new_map = reference[0].checkear_adyacencia(adyacent_map_key)
+        if adyacent_map_key != '' and reference is not None:
+            new_map = reference.checkear_adyacencia(adyacent_map_key)
         else:
             new_map = cls.focus.stage
 
-        if new_map is not False and new_map not in map_at_center:
+        if new_map is not False and new_map is not map_at_center:
             cls.set_background(new_map)
-            for obj in new_map.properties.sprites()+new_map.parent.properties.sprites():
+            for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
                 if obj not in cls.real:
                     cls.add_real(obj)
 
-            if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
-                cls.bgs_rect.w += new_map.rect.w
-                if adyacent_map_key == 'izq':
-                    cls.bgs_rect.x = new_map.rect.x
-            elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
-                cls.bgs_rect.h += new_map.rect.h
-                if adyacent_map_key == 'sup':
-                    cls.bgs_rect.y = new_map.rect.y
+            # if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
+            #     cls.bgs_rect.w += new_map.rect.w
+            #     if adyacent_map_key == 'izq':
+            #         cls.bgs_rect.x = new_map.rect.x
+            # elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
+            #     cls.bgs_rect.h += new_map.rect.h
+            #     if adyacent_map_key == 'sup':
+            #         cls.bgs_rect.y = new_map.rect.y
 
-        a_map = map_at_center[0] if len(map_at_center) else new_map
+        a_map = map_at_center if map_at_center is not None else new_map
         if cls.focus.mapa_actual != a_map:
             cls.focus.translocate(a_map, *cls.rect.center)
 
@@ -274,7 +276,7 @@ class Renderer:
         os.environ['SDL_VIDEO_CENTERED'] = "{!s},{!s}".format(0, 0)
         display.set_caption(nombre)
         display.set_icon(image.load(favicon))
-        display.set_mode((ANCHO, ALTO), SCALED)
+        display.set_mode((ANCHO, ALTO), flags=SCALED, vsync=1)
         mouse.set_visible(False)
         cls.camara.init()
 

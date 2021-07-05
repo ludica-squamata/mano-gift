@@ -1,13 +1,13 @@
 {
   "fondo": "maps/fondos/pasto.png",
-  "colisiones": "maps/colisiones/800.png",
+  "colisiones": null,
   "props": {},
   "mobs": {},
   "limites": {
-    "sup": "white",
-    "inf": "white",
-    "izq": "white",
-    "der": "white"
+    "sup": "black",
+    "inf": "black",
+    "izq": "black",
+    "der": "black"
   },
   "refs": {}
 }

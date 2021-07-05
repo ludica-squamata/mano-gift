@@ -23,11 +23,11 @@ def load_something(alldata: dict, requested: str):
     """
     loaded = []
     if requested is not None:
-        if 'Mobs' in requested:
+        if 'mobs' in requested:
             for mob in load_mobs(alldata):
                 loaded.append((mob, GRUPO_MOBS))
 
-        if 'Props' in requested:
+        if 'props' in requested:
             for prop in load_props(alldata):
                 loaded.append((prop, prop[0].grupo))
 
