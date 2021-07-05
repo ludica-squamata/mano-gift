@@ -19,15 +19,12 @@ class Animado(Movil):  # necesita Movil para tener dirección
     # Nuevos sets de imágenes para los movimientos de la cabeza.
     idle_left_img = None  # idle, head left
     idle_right_img = None  # idle, head right
-    idle_back_img = None
 
     atk_left_img = None  # attacking, head left
     atk_right_img = None  # attacking, head right
-    atk_back_img = None
 
     cmb_left_img = None  # combat, head left
     cmb_right_img = None  # combat, head right
-    cmb_back_img = None
 
     head_direction = 'front'  # front, left, right
     body_direction = 'abajo'  # abajo, arriba, izquierda, derecha
@@ -39,6 +36,8 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     timer_animacion = 0
     frame_animacion = 0
+    timer_orientacion = 0
+    timer_rotacion = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,6 +80,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
         """cambia la orientación del sprite y controla parte de la animación"""
 
         self.timer_animacion += Tiempo.FPS.get_time()
+        self.timer_orientacion += Tiempo.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
@@ -89,8 +89,44 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 else:
                     self.step = 'R'
 
+        if self.timer_orientacion >= self.frame_animacion*6:
+            self.rotar_cabeza()
+
         key = self.step + self.direccion
         self.image = self.imagen_n(key)
+
+    def animate_standing_position(self):
+        """It rotates the body to align it with the head at the same direction"""
+        orientacion = None
+        self.timer_rotacion += 1
+        if self.timer_rotacion == 120 and self.head_direction != 'front':
+
+            if self.body_direction == 'izquierda':
+                if self.head_direction == 'left':
+                    orientacion = 'back'
+                elif self.head_direction == 'right':
+                    orientacion = 'front'
+
+            elif self.body_direction == 'derecha':
+                if self.head_direction == 'left':
+                    orientacion = 'front'
+                elif self.head_direction == 'right':
+                    orientacion = 'back'
+
+            elif self.body_direction == 'abajo':
+                if self.head_direction == 'left':
+                    orientacion = 'left'
+                elif self.head_direction == 'right':
+                    orientacion = 'right'
+
+            elif self.body_direction == 'arriba':
+                if self.head_direction == 'left':
+                    orientacion = 'right'
+                elif self.head_direction == 'right':
+                    orientacion = 'left'
+
+            self.rotar_cabeza(orientacion)
+            self.cambiar_direccion(self.body_direction)
 
     def animar_ataque(self, limite):
         # construir la animación
@@ -135,75 +171,96 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     def rotar_cabeza(self, orientacion='front'):
         head_direction = None
-        # estos dos bloques sólo funcionan bien cuando el cuerpo mira hacia abajo
-        # quizás habría que discriminar primero por la dirección del cuerpo.
-        if self.head_direction == 'left':
-            if orientacion != 'left':
+        self.timer_rotacion = 0
+        if self.body_direction == 'abajo':
+            if orientacion == 'back':
+                self.body_direction = 'arriba'
                 head_direction = 'front'
 
-        elif self.head_direction == 'right':
-            if orientacion != 'right':
-                head_direction = 'front'
+            if orientacion == 'right':
+                if self.head_direction == 'right':
+                    self.body_direction = 'derecha'
+                    head_direction = 'front'
+                elif self.head_direction == 'left':
+                    head_direction = 'front'
 
-        elif orientacion == 'back':
-            # este bloque funciona bien, porque la cabeza no puede mirar hacia atrás si el cuerpo mira adelante
-            head_direction = 'front'
-            self.body_direction = 'arriba'
-
-        elif self.head_direction == 'front' and self.body_direction == 'arriba':
-            # este bloque es para cuando el cuerpo mira hacia arriba. Derecha e izquierda deberían estar invertidos.
-            # tal vez habría que hacer lo mismo para cuando el cuerpo mira a derecha y a izquierda.
-            if orientacion == 'left':
-                head_direction = 'right'
-
-            elif orientacion == 'right':
-                head_direction = 'left'
+            elif orientacion == 'left':
+                if self.head_direction == 'left':
+                    self.body_direction = 'izquierda'
+                    head_direction = 'front'
+                elif self.head_direction == 'right':
+                    head_direction = 'front'
 
             elif orientacion == 'front':
+                head_direction = 'front'
+
+        elif self.body_direction == 'arriba':
+            if orientacion == 'front':
+                self.body_direction = 'abajo'
+                head_direction = 'front'
+
+            if orientacion == 'left':
+                if self.head_direction != 'right':
+                    head_direction = 'right'
+                else:
+                    self.body_direction = 'izquierda'
+                    head_direction = 'front'
+
+            elif orientacion == 'right':
+                if self.head_direction != 'left':
+                    head_direction = 'left'
+                else:
+                    self.body_direction = 'derecha'
+                    head_direction = 'front'
+            elif orientacion == 'back':
+                head_direction = 'front'
+
+        elif self.body_direction == 'izquierda':
+            if orientacion == 'back':
+                if self.head_direction != 'left':
+                    head_direction = 'left'
+                else:
+                    self.body_direction = 'arriba'
+                    head_direction = 'front'
+            elif orientacion == 'front':
+                if self.head_direction != 'right':
+                    head_direction = 'right'
+                else:
+                    self.body_direction = 'abajo'
+            elif orientacion == 'right':
+                if self.head_direction != 'right':
+                    head_direction = 'right'
+                else:
+                    head_direction = 'front'
+                    self.body_direction = 'abajo'
+            elif orientacion == 'left':
+                head_direction = 'front'
+
+        elif self.body_direction == 'derecha':
+            if orientacion == 'back':
+                if self.head_direction != 'right':
+                    head_direction = 'right'
+                else:
+                    head_direction = 'front'
+                    self.body_direction = 'arriba'
+            elif orientacion == 'front':
+                if self.head_direction != 'left':
+                    head_direction = 'left'
+                else:
+                    self.body_direction = 'abajo'
+            elif orientacion == 'left':
+                if self.head_direction != 'left':
+                    head_direction = 'left'
+                else:
+                    head_direction = 'front'
+                    self.body_direction = 'abajo'
+            elif orientacion == 'right':
                 head_direction = 'front'
 
         if head_direction is None:
             head_direction = orientacion
         self.head_direction = head_direction
         self.images = self.heads[self.head_direction]  # front, left or right
-
-    def translate(self, orientacion):
-        # esta funcion debería mover sólo el cuerpo.
-        if self.direccion == 'abajo':
-            if orientacion != 'back':
-                return 'abajo'
-            else:
-                return 'arriba'
-
-        elif self.direccion == 'arriba':
-            if orientacion == 'left':
-                return 'arriba'
-            elif orientacion == 'right':
-                return 'arriba'
-            elif orientacion == 'back':
-                pass
-            elif orientacion == 'front':
-                pass
-
-        elif self.direccion == 'izquierda':
-            if orientacion == 'left':
-                pass
-            elif orientacion == 'right':
-                pass
-            elif orientacion == 'back':
-                pass
-            elif orientacion == 'front':
-                pass
-
-        elif self.direccion == 'derecha':
-            if orientacion == 'left':
-                pass
-            elif orientacion == 'right':
-                pass
-            elif orientacion == 'back':
-                pass
-            elif orientacion == 'front':
-                pass
 
     def cambiar_direccion(self, direccion=None):
         super().cambiar_direccion(direccion)
@@ -212,9 +269,8 @@ class Animado(Movil):  # necesita Movil para tener dirección
             self.step = 'S'
 
     def cambiar_direccion2(self, orientacion):
-        direccion = self.translate(orientacion)
         self.rotar_cabeza(orientacion)
-        self.cambiar_direccion(direccion)
+        self.cambiar_direccion(self.body_direction)
 
     def update(self, *args):
         super().update(*args)
@@ -222,6 +278,9 @@ class Animado(Movil):  # necesita Movil para tener dirección
             self.animar_ataque(5)
         if self.moviendose:
             self.animar_caminar()
+            self.timer_rotacion = 0
+        else:
+            self.animate_standing_position()
 
     def detener_movimiento(self):
         super().detener_movimiento()
