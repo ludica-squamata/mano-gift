@@ -21,12 +21,7 @@ class Sight(AzoeBaseSprite):
         """Crea el triangulo de la visión (fg azul, bg transparente).
         Devuelve un surface."""
 
-        def _ancho(_largo):
-            an = radians(40)
-            return round(_largo * round(tan(an), 2))
-
-        ancho = _ancho(largo)
-
+        ancho = round(largo * round(tan(radians(40)), 2))
         megasurf = Surface((ancho * 2, largo))
         draw.polygon(megasurf, (0, 0, 255), [[0, 0], [ancho, largo], [ancho * 2, 0]])
         megasurf.set_colorkey((0, 0, 0))
@@ -53,7 +48,7 @@ class Sight(AzoeBaseSprite):
             w, h = surf.get_size()
             x = tx - w
             y = ty + (th / 2) - h / 2
-        else:
+        else:  # direccion == 'arriba'
             surf = self.image.copy()
             w, h = surf.get_size()
             y = ty - h
@@ -62,15 +57,38 @@ class Sight(AzoeBaseSprite):
         self.rect.topleft = int(x), int(y)
         self.mask = mask_module.from_surface(surf)
 
+    def _translate(self):
+        orientacion = self.parent.head_direction
+        direccion = self.parent.body_direction
+        sight_direction = None
+        if orientacion == 'front':
+            sight_direction = direccion
+        elif orientacion == 'left':
+            if direccion == 'abajo':
+                sight_direction = 'iquierda'
+            elif direccion == 'arriba':
+                sight_direction = 'derecha'
+            elif direccion == 'izquierda':
+                sight_direction = 'arriba'
+            elif direccion == 'derecha':
+                sight_direction = 'abajo'
+
+        elif orientacion == 'right':
+            if direccion == 'abajo':
+                sight_direction = 'derecha'
+            elif direccion == 'arriba':
+                sight_direction = 'izquierda'
+            elif direccion == 'izquierda':
+                sight_direction = 'abajo'
+            elif direccion == 'derecha':
+                sight_direction = 'arriba'
+
+        return sight_direction
+
     def __call__(self):
         """Realiza detecciones con la visión del mob"""
 
-        direccion = self.parent.direccion
-        if direccion == 'ninguna':
-            direccion = self.ultima_direccion
-        else:
-            self.ultima_direccion = self.parent.direccion
-
+        direccion = self._translate()
         self.move(direccion)
         mapa = self.parent.mapa_actual
         sprites = mapa.properties.sprites()
