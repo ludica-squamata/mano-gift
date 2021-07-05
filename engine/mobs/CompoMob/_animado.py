@@ -36,8 +36,8 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     timer_animacion = 0
     frame_animacion = 0
-    timer_orientacion = 0
     timer_rotacion = 0
+    cuentapasos = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,17 +80,14 @@ class Animado(Movil):  # necesita Movil para tener dirección
         """cambia la orientación del sprite y controla parte de la animación"""
 
         self.timer_animacion += Tiempo.FPS.get_time()
-        self.timer_orientacion += Tiempo.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
+                self.cuentapasos += 1
                 if self.step == 'R':
                     self.step = 'L'
                 else:
                     self.step = 'R'
-
-        if self.timer_orientacion >= self.frame_animacion*6:
-            self.rotar_cabeza()
 
         key = self.step + self.direccion
         self.image = self.imagen_n(key)
@@ -99,7 +96,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
         """It rotates the body to align it with the head at the same direction"""
         orientacion = None
         self.timer_rotacion += 1
-        if self.timer_rotacion == 120 and self.head_direction != 'front':
+        if self.timer_rotacion % 120 == 0 and self.head_direction != 'front':
 
             if self.body_direction == 'izquierda':
                 if self.head_direction == 'left':
@@ -125,8 +122,21 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 elif self.head_direction == 'right':
                     orientacion = 'left'
 
-            self.rotar_cabeza(orientacion)
-            self.cambiar_direccion(self.body_direction)
+            self.cambiar_direccion2(orientacion)
+
+    def animate_walking_head_orientation(self):
+        orientacion = None
+        if self.cuentapasos % 12 == 0:
+            if self.body_direction == 'abajo':
+                orientacion = 'front'
+            elif self.body_direction == 'arriba':
+                orientacion = 'back'
+            elif self.body_direction == 'izquierda':
+                orientacion = 'left'
+            elif self.body_direction == 'derecha':
+                orientacion = 'right'
+
+            self.cambiar_direccion2(orientacion)
 
     def animar_ataque(self, limite):
         # construir la animación
@@ -264,6 +274,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     def cambiar_direccion(self, direccion=None):
         super().cambiar_direccion(direccion)
+        self.body_direction = direccion
         if not self.moviendose:
             self.image = self.images['S' + self.direccion]
             self.step = 'S'
@@ -278,12 +289,13 @@ class Animado(Movil):  # necesita Movil para tener dirección
             self.animar_ataque(5)
         if self.moviendose:
             self.animar_caminar()
-            self.timer_rotacion = 0
+            self.animate_walking_head_orientation()
         else:
             self.animate_standing_position()
 
     def detener_movimiento(self):
         super().detener_movimiento()
+        self.cuentapasos = 0
         self.step = 'S'
         key = 'S' + self.direccion
         self.image = self.imagen_n(key)
