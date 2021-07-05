@@ -25,18 +25,15 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
                     self.idle_walk_img = self.cargar_head_anims(heads, imgs[key], dirs)  # request='front'
                     self.idle_left_img = self.cargar_head_anims(heads, imgs[key], dirs, request='left')
                     self.idle_right_img = self.cargar_head_anims(heads, imgs[key], dirs, request='right')
-                    self.idle_back_img = self.cargar_head_anims(heads, imgs[key], dirs, request='back')
                     self.mascaras = self.cargar_alpha(data['alpha'], dirs)
                 elif key == 'atk':
                     self.cmb_atk_img = self.cargar_head_anims(heads, imgs[key], atk)
                     self.atk_left_img = self.cargar_head_anims(heads, imgs[key], atk, request='left')
                     self.atk_right_img = self.cargar_head_anims(heads, imgs[key], atk, request='right')
-                    self.atk_back_img = self.cargar_head_anims(heads, imgs[key], atk, request='back')
                 elif key == 'cmb':
                     self.cmb_walk_img = self.cargar_head_anims(heads, imgs[key], dirs)
                     self.cmb_left_img = self.cargar_head_anims(heads, imgs[key], dirs, request='left')
                     self.cmb_right_img = self.cargar_head_anims(heads, imgs[key], dirs, request='right')
-                    self.cmb_back_img = self.cargar_head_anims(heads, imgs[key], dirs, request='back')
                 elif key == 'death':
                     self.death_img = cargar_imagen(ModData.graphs + imgs['death'])
                 elif key == "diag_face":
@@ -45,8 +42,7 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
         self.images = self.idle_walk_img
         self.heads = {'front': self.idle_walk_img,
                       'right': self.idle_left_img,
-                      'left': self.idle_right_img,
-                      'back': self.idle_back_img}
+                      'left': self.idle_right_img}
         self.nombre = data['nombre']
         self.estado = 'idle'
         image = self.images['S' + self.direccion]

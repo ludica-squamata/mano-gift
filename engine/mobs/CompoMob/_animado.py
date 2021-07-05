@@ -75,7 +75,6 @@ class Animado(Movil):  # necesita Movil para tener dirección
         dicc['front'] = sprites[0:12]  # las 12 imagenes que venimos usando hasta ahora. mirando al frente
         dicc['left'] = sprites[12:24]  # nuevas imagenes con el mob mirando a izquierda
         dicc['right'] = sprites[24:36]  # y a derecha.
-        dicc['back'] = [sprites[i] for i in [0, 1, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10]]
         return self.cargar_anims2(dicc[request], seq)
 
     def animar_caminar(self):
@@ -123,78 +122,88 @@ class Animado(Movil):  # necesita Movil para tener dirección
             self.images = self.cmb_walk_img
             self.heads = {'front': self.cmb_walk_img,
                           'left': self.cmb_left_img,
-                          'right': self.cmb_right_img,
-                          'back': self.cmb_back_img}
+                          'right': self.cmb_right_img}
 
         elif self.estado == 'cmb':
             self.estado = 'idle'
             self.images = self.idle_walk_img
             self.heads = {'front': self.idle_walk_img,
                           'right': self.idle_left_img,
-                          'left': self.idle_right_img,
-                          'back': self.idle_back_img}
+                          'left': self.idle_right_img}
 
         self.animar_caminar()
 
     def rotar_cabeza(self, orientacion='front'):
-        self.images = self.heads[orientacion]  # front, left or right
+        head_direction = None
+        # estos dos bloques sólo funcionan bien cuando el cuerpo mira hacia abajo
+        # quizás habría que discriminar primero por la dirección del cuerpo.
+        if self.head_direction == 'left':
+            if orientacion != 'left':
+                head_direction = 'front'
 
-    def translate(self, orientacion):
-        if orientacion == 'front':
-            if self.direccion == 'abajo':
-                print(orientacion, 'abajo')
-                return 'abajo'
-            elif self.direccion == 'arriba':
-                print(orientacion, 'arriba')
-                return 'arriba'
-            elif self.direccion == 'izquierda':
-                print(orientacion, 'izquierda')
-                return 'izquierda'
-            elif self.direccion == 'derecha':
-                print(orientacion, 'derecha')
-                return 'derecha'
-
-        elif orientacion == 'left':
-            if self.direccion == 'abajo':
-                print(orientacion, 'abajo')
-                return 'abajo'  # ok
-            elif self.direccion == 'arriba':
-                print(orientacion, 'derecha')
-                return 'izquierda'
-            elif self.direccion == 'izquierda':
-                print(orientacion, 'abajo')
-                return 'arriba'
-            elif self.direccion == 'derecha':
-                print(orientacion, 'arriba')
-                return 'abajo'
-
-        elif orientacion == 'right':
-            if self.direccion == 'abajo':
-                print(orientacion, 'abajo')
-                return 'abajo'
-            elif self.direccion == 'arriba':
-                print(orientacion, 'izquierda')
-                return 'abajo'
-            elif self.direccion == 'izquierda':
-                print(orientacion, 'arriba')
-                return 'arriba'
-            elif self.direccion == 'derecha':
-                print(orientacion, 'abajo')
-                return 'abajo'
+        elif self.head_direction == 'right':
+            if orientacion != 'right':
+                head_direction = 'front'
 
         elif orientacion == 'back':
-            if self.direccion == 'abajo':
-                print(orientacion, 'arriba')
-                return 'arriba'
-            elif self.direccion == 'arriba':
-                print(orientacion, 'abajo')
+            # este bloque funciona bien, porque la cabeza no puede mirar hacia atrás si el cuerpo mira adelante
+            head_direction = 'front'
+            self.body_direction = 'arriba'
+
+        elif self.head_direction == 'front' and self.body_direction == 'arriba':
+            # este bloque es para cuando el cuerpo mira hacia arriba. Derecha e izquierda deberían estar invertidos.
+            # tal vez habría que hacer lo mismo para cuando el cuerpo mira a derecha y a izquierda.
+            if orientacion == 'left':
+                head_direction = 'right'
+
+            elif orientacion == 'right':
+                head_direction = 'left'
+
+            elif orientacion == 'front':
+                head_direction = 'front'
+
+        if head_direction is None:
+            head_direction = orientacion
+        self.head_direction = head_direction
+        self.images = self.heads[self.head_direction]  # front, left or right
+
+    def translate(self, orientacion):
+        # esta funcion debería mover sólo el cuerpo.
+        if self.direccion == 'abajo':
+            if orientacion != 'back':
                 return 'abajo'
-            elif self.direccion == 'izquierda':
-                print(orientacion, 'derecha')
-                return 'derecha'
-            elif self.direccion == 'derecha':
-                print(orientacion, 'izquierda')
-                return 'izquierda'
+            else:
+                return 'arriba'
+
+        elif self.direccion == 'arriba':
+            if orientacion == 'left':
+                return 'arriba'
+            elif orientacion == 'right':
+                return 'arriba'
+            elif orientacion == 'back':
+                pass
+            elif orientacion == 'front':
+                pass
+
+        elif self.direccion == 'izquierda':
+            if orientacion == 'left':
+                pass
+            elif orientacion == 'right':
+                pass
+            elif orientacion == 'back':
+                pass
+            elif orientacion == 'front':
+                pass
+
+        elif self.direccion == 'derecha':
+            if orientacion == 'left':
+                pass
+            elif orientacion == 'right':
+                pass
+            elif orientacion == 'back':
+                pass
+            elif orientacion == 'front':
+                pass
 
     def cambiar_direccion(self, direccion=None):
         super().cambiar_direccion(direccion)
