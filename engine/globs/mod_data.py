@@ -93,6 +93,14 @@ class ModData:
                         module = import_module(cls.pkg_scripts + '.mobs.' + script_name, ruta)
                         cls.custom_attr[c['name']] = getattr(module, c['name'])
 
+                elif keyword == 'derivation':
+                    c = cls.data['custom']['derivation']
+                    loaded.append(c['name'])
+                    ruta = cls.fd_scripts + c['script']
+                    script_name = c['script'].rstrip('.py')
+                    module = import_module(cls.pkg_scripts + '.' + script_name, ruta)
+                    cls.attr_derivation = getattr(module, c['name'])
+
                 elif keyword == 'world_properties':
                     props = cls.data['custom']['world_properties']
                     cls.use_latitude = props['use_latitude']
@@ -113,6 +121,11 @@ class ModData:
                         script_name = script.rstrip('.py')
                         if script_name not in loaded:
                             import_module(cls.pkg_scripts + '.' + package + script_name, folder)
+
+    @staticmethod
+    def attr_derivation(attr):
+        # this hook is intentended to be applied when no custom derivation exists.
+        return attr
 
     @classmethod
     def class_dialogs_by_topic(cls):
