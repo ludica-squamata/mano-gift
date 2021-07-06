@@ -203,7 +203,7 @@ class MenuEquipo(Menu):
 
         self.filas.empty()
         espacio = self.espacios.get_spr(self.cur_esp)  # por ejemplo: peto
-        items = self.entity.inventario('equipable', espacio)
+        items = self.entity.inventario.get_equipables(espacio.accepts)
         self.fill_draw_space(items, w, h)
 
     def mostrar_caracteristicas(self, item):

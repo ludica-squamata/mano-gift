@@ -5,6 +5,7 @@ class Inventory:
         self._volumen_actual = 0
         self._peso_actual = 0
         self._contenido = []
+        self._by_type = {'consumible': [], 'equipable': []}
 
     def __contains__(self, item):
         if type(item) == str:
@@ -25,6 +26,7 @@ class Inventory:
             return item in self._contenido
 
     def __getitem__(self, item):
+        # no entiendo porqué escribí así este método.
         if type(item) is str:
             for _item in self._contenido:
                 if _item.nombre == item:
@@ -39,39 +41,26 @@ class Inventory:
         else:
             raise IndexError()
 
-    def __call__(self, tipo=None, espacio=None):
+    def get_equipables(self, espacio):
+        # estos "vistos", creo, se podrían suprimir con sets.
         subtotales, visto = [], []
-        if tipo is None:
-            for item in self._contenido:
+        for item in self._by_type['equipable']:
+            if item.espacio == espacio:
                 if item.nombre not in visto:
                     visto.append(item.nombre)
                     subtotales.append(item)
+        return subtotales
 
-        elif espacio is None:
-            for item in self._contenido:
-                if item.tipo == tipo:
-                    if item.nombre not in visto:
-                        visto.append(item.nombre)
-                        subtotales.append(item)
-
-        else:
-            for item in self._contenido:
-                if item.tipo == tipo:
-                    if item.espacio == espacio.accepts:
-                        if item.nombre not in visto:
-                            visto.append(item.nombre)
-                            subtotales.append(item)
-
+    def get_by_type(self, type):
+        subtotales, visto = [], []
+        for item in self._by_type[type]:
+            if item.nombre not in visto:
+                visto.append(item.nombre)
+                subtotales.append(item)
         return subtotales
 
     def __len__(self):
         return len(self._contenido)
-
-    def peso_actual(self):
-        return self._peso_actual
-
-    def volumen_actual(self):
-        return self._volumen_actual
 
     def cantidad(self, item):
         return self._contenido.count(item)
@@ -86,6 +75,7 @@ class Inventory:
         self._peso_actual += item.peso
         self._volumen_actual += item.volumen
         self._contenido.append(item)
+        self._by_type[item.tipo].append(item)
 
     def remover(self, item):
         if item in self._contenido:
