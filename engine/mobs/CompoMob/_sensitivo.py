@@ -2,7 +2,7 @@ from pygame import Surface, draw, mask as mask_module, transform
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeBaseSprite
 from ._caracterizado import Caracterizado
-from math import tan, radians
+from math import tan, radians, sqrt
 
 
 class Sight(AzoeBaseSprite):
@@ -91,7 +91,7 @@ class Sight(AzoeBaseSprite):
         direccion = self._translate()
         self.move(direccion)
         mapa = self.parent.mapa_actual
-        sprites = mapa.properties.sprites()
+        sprites = mapa.properties.sprites() + mapa.parent.properties.sprites()
         lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
         if self.parent in lista:
             idx = lista.index(self.parent)
@@ -99,8 +99,13 @@ class Sight(AzoeBaseSprite):
             idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
             x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
+            ox, oy = obj.mapRect.topleft
+            sx, sy = self.parent.mapRect.topleft
+            distance = round(sqrt(abs(oy - sy)**2 + abs(ox - sx)**2))
             if obj.mask.overlap(self.mask, (x, y)):
                 self.parent.perceived['seen'].append(obj)
+            if distance < 64:
+                self.parent.perceived['close'].append(obj)
 
 
 class Hearing(AzoeBaseSprite):
@@ -144,7 +149,7 @@ class Sensitivo(Caracterizado):
         self.vista = Sight(self, 32 * self['Vista'])
         self.oido = Hearing(self)
         self.tacto = Touch(self)
-        self.perceived = {"heard": [], "seen": [], "touched": [], "felt": []}
+        self.perceived = {"heard": [], "seen": [], "touched": [], "felt": [], "close": []}
         self.touch = self.tacto.touch
 
     def update(self, *args):

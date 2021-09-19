@@ -57,7 +57,7 @@ class ControllableAI(EventAware):
         self.entity.update_sombra()
         if self.accion:
             self.entity.accion()
-            sprites = self.entity.perceived['touched'] + self.entity.perceived['felt']
+            sprites = self.entity.perceived['touched'] + self.entity.perceived['felt'] + self.entity.perceived['close']
             for sprite in sprites:
                 if sprite is not None:
                     if self.entity.estado == 'cmb':
