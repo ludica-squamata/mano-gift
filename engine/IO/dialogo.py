@@ -70,7 +70,10 @@ class Discurso(EventAware):
         Pertence a Discurso, y no a Dialogo, porque el héroe también
         escucha el Monólogo del npc."""
 
-        EventDispatcher.trigger('SoundEvent', locutor, {'type': 'dialog', 'volume': 1})
+        EventDispatcher.trigger('SoundEvent', locutor, {'type': 'dialog', 'intensity': 60})
+        # 60dB es la intensidad sonora de una conversacion normal.
+
+        # aunque habría que ver qué pasa si el emisor susurra (20dB) y el receptor no lo puede escuchar
 
     def direccionar_texto(self, direccion):
         raise NotImplementedError

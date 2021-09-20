@@ -16,7 +16,7 @@ class Movil(Caracterizado):
         self.moviendose = True
         dx, dy = super().mover(dx, dy)
         self.reubicar(dx, dy)
-        EventDispatcher.trigger('SoundEvent', self, {'type': 'movement', 'volume': 1})
+        EventDispatcher.trigger('SoundEvent', self, {'type': 'movement', 'intensity': 40})
 
     def atacar(self, sprite):
         # 'sprite' es agregado para mantener la firma

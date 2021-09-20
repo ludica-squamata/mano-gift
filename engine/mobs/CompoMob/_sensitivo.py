@@ -114,9 +114,21 @@ class Hearing(AzoeBaseSprite):
         EventDispatcher.register(self.listener, 'SoundEvent')
 
     def listener(self, event):
-        # acá se podría negar la recepción del sonido por la distancia
-        # pero por el momento con que se escuche el sonido basta.
-        self.parent.perceived['heard'].append(event)
+        if event.origin is not self.parent:
+            ox, oy = event.origin.mapRect.topleft
+            sx, sy = self.parent.mapRect.topleft
+            distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
+        else:
+            distance = 1
+            # the mob will always hear itself.
+
+        if event.data['intensity'] * 1/distance**2 > 1E-12:
+            # inverse-square law: the intensity of a sound decreses with distance;
+            # weak sounds produced far away from the mob won't be heard by it.
+            # 1E-12 W/m**2 is the Threshold of human hearing.
+            self.parent.perceived['heard'].append(event)
+        # aunque habría que ver si "podes" escuchar un sonido separándolo del background noise.
+        # para que se pueda escuchar por encima del BgN, log(signal/noise) debe ser mayor que 0.
 
 
 class Touch(AzoeBaseSprite):
