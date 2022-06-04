@@ -39,7 +39,7 @@ class Stage:
             self.current_latitude = self.data['latitude']
         else:
             self.current_latitude = 30
-        self.current_longitude = self.data['longitude']
+        self.current_longitude = self.data.get('longitude', 30)
         Sun.init(self.current_latitude)
 
         if chunk_name in self.data.get('chunks', {}):

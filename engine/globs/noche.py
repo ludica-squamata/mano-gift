@@ -12,8 +12,6 @@ class Noche(AzoeBaseSprite):
     mod = 0
     last_alpha = 0
 
-    overriden = False
-
     lights = None
 
     @classmethod
@@ -56,10 +54,10 @@ class Noche(AzoeBaseSprite):
 
         EventDispatcher.trigger('SetNight', 'Noche', {'alpha': cls.alpha})
 
-        cls.overriden = True
         ts = anochece - atardece
         s = ts.h * 3600 + ts.m * 60 + ts.s
         cls.mod = round(230 / (s // 60))  # 1
+        cls.propagate(cls.alpha)
 
     @classmethod
     def get_alarms(cls, event):
@@ -107,11 +105,15 @@ class Noche(AzoeBaseSprite):
         self.image = pxarray.make_surface()
 
     @classmethod
-    def trasparentar(cls, mod, max_alpha=230):  # this is gradual
-        if 0 < cls.alpha + mod < max_alpha:
+    def trasparentar(cls, mod, max_alpha=230):
+        if 0 < cls.alpha + mod <= max_alpha:
             cls.alpha += mod
-            EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
-            EventDispatcher.trigger("LightLevel", "Noche", {"level": 230-cls.alpha})
+            cls.propagate(cls.alpha)
+
+    @classmethod
+    def propagate(cls, mod):
+        EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
+        EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - cls.alpha})
 
     def update(self):
         self.rect.topleft = self.parent.rect.topleft
