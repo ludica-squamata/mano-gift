@@ -44,6 +44,10 @@ class ControllableAI(EventAware):
         if not self.entity.detectar_colisiones():
             self.entity.mover(*self.entity.direcciones[direccion])
 
+        if self.entity.mapRect.y % 800 == 0 or self.entity.mapRect.x % 800 == 0:
+            # 800 porque es el tamaño de un chunk. Este valor podría ser configurable.
+            self.entity.mapa_actual.parent.set_coordinates(direccion)
+
     def set_action(self):
         self.entity.touch()
         self.accion = True
