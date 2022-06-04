@@ -72,5 +72,6 @@
     }
   ],
   "ambiente": "exterior",
-  "latitude": 30
+  "latitude": 30,
+  "longitude": 30
 }
