@@ -78,9 +78,9 @@ class MenuModel(Menu):
                 if 'heroe' in name or name.startswith('pc'):
                     if 'idle' in name:
                         key = 'idle'
-                    elif 'cmb' in name and name.endswith('walk'):
+                    elif 'cmb' in name and 'walk' in name:
                         key = 'cmb'
-                    elif 'cmb' in name and name.endswith('atk'):
+                    elif 'cmb' in name and 'atk' in name:
                         key = 'atk'
                     elif name.endswith('face'):
                         key = 'diag_face'
@@ -92,9 +92,9 @@ class MenuModel(Menu):
                 if 'commoner' in name or name.startswith('npc'):
                     if 'idle' in name:
                         key = 'idle'  # faltan hacer imágenes para la chica sin cabeza
-                    elif 'cmb' in name and name.endswith('walk'):
+                    elif 'cmb' in name and 'walk' in name:
                         imgs['imagenes']['cmb'] = None  # y para la chica en combate
-                    elif 'cmb' in name and name.endswith('atk'):
+                    elif 'cmb' in name and 'atk' in name:
                         imgs['imagenes']['atk'] = None  # y también para la chica peleando, sea como sea que pelee.
                     elif name.endswith('face'):
                         key = 'diag_face'
