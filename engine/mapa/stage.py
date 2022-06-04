@@ -36,10 +36,11 @@ class Stage:
         entradas = self.data['entradas']
 
         if ModData.use_latitude:
-            latitud = self.data['latitude']
+            self.current_latitude = self.data['latitude']
         else:
-            latitud = 30
-        Sun.init(latitud)
+            self.current_latitude = 30
+        self.current_longitude = self.data['longitude']
+        Sun.init(self.current_latitude)
 
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
@@ -126,6 +127,21 @@ class Stage:
     def ubicar_en_entrada(self, entrada):
         x, y = self.offseted_possition(entrada)
         self.mapa.ubicar(x, y)
+
+    def set_coordinates(self, direccion):
+        if direccion == 'arriba':
+            self.current_latitude -= 1
+
+        elif direccion == 'abajo':
+            self.current_latitude += 1
+
+        elif direccion == 'derecha':
+            self.current_longitude += 1
+
+        elif direccion == 'izquierda':
+            self.current_longitude -= 1
+
+        Sun.set_latitude(self.current_latitude)
 
     def __repr__(self):
         return "Stage " + self.nombre
