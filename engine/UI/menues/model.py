@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc.resources import split_spritesheet
+from engine.misc.resources import cargar_head_anims
 from engine.globs import Tiempo, CANVAS_BG, TEXT_FG, ModData
 from pygame import font, Rect
 from .menu import Menu
@@ -17,8 +17,18 @@ class MenuModel(Menu):
     def __init__(self):
         super().__init__('ModelMenu', 'Avatar')
 
-        self.images = self.cargar_anims(ModData.graphs + 'mobs/imagenes/heroe_idle_walk.png')
-        self.images2 = self.cargar_anims(ModData.graphs + 'mobs/imagenes/green_girl.png')
+        parts_of = {
+            'his': {
+                'heads': ModData.graphs+'mobs/imagenes/heads_heroe.png',
+                'body': ModData.graphs + 'mobs/imagenes/heroe_idle_walk_body.png'},
+            'her': {
+                'heads': ModData.graphs + 'mobs/imagenes/heads_commoner.png',
+                'body': ModData.graphs + 'mobs/imagenes/commoner_idle_walk_body.png'
+            }
+        }
+        dirs = ['S', 'L', 'R']
+        self.images = cargar_head_anims(parts_of['his']['heads'], parts_of['his']['body'], dirs)
+        self.images2 = cargar_head_anims(parts_of['her']['heads'], parts_of['her']['body'], dirs)
         self.anim_img = self.images['Sabajo']
         self.anim_img2 = self.images2['Sabajo']
         self.anim_rect = Rect(0, 0, 32, 32)
@@ -74,35 +84,27 @@ class MenuModel(Menu):
                         key = 'atk'
                     elif name.endswith('face'):
                         key = 'diag_face'
+                    elif name.startswith('heads'):
+                        key = 'heads'
                     imgs['imagenes'][key] = 'mobs/imagenes/' + filename
 
             elif modelo == 'ella':
-                if 'girl' in name or name.startswith('npc'):
-                    if 'girl' in name:
-                        imgs['imagenes']['idle'] = 'mobs/imagenes/' + filename
+                if 'commoner' in name or name.startswith('npc'):
+                    if 'idle' in name:
+                        key = 'idle'  # faltan hacer imágenes para la chica sin cabeza
                     elif 'cmb' in name and name.endswith('walk'):
-                        pass  # faltan hacer imagenes para la chica en combate
+                        imgs['imagenes']['cmb'] = None  # y para la chica en combate
                     elif 'cmb' in name and name.endswith('atk'):
-                        pass  # y para la chica peleando, sea como sea que pelee.
+                        imgs['imagenes']['atk'] = None  # y también para la chica peleando, sea como sea que pelee.
                     elif name.endswith('face'):
-                        imgs['imagenes']['diag_face'] = 'mobs/imagenes/' + filename
+                        key = 'diag_face'
+                    elif name.startswith('heads'):
+                        key = 'heads'
+                    imgs['imagenes'][key] = 'mobs/imagenes/' + filename
 
         self.deregister()
         EventDispatcher.trigger('CharacterCreation', self.nombre, imgs)
         EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Ability'})
-
-    @staticmethod
-    def cargar_anims(ruta_imgs):
-        dicc = {}
-        spritesheet = split_spritesheet(ruta_imgs)
-        idx = -1
-        for L in ['S', 'I', 'D']:
-            for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
-                key = L + D
-                idx += 1
-                dicc[key] = spritesheet[idx]
-
-        return dicc
 
     def animar_sprite(self):
         """Cambia la imagen del sprite para mostrarlo animado"""
@@ -110,10 +112,10 @@ class MenuModel(Menu):
         self.timer_animacion += Tiempo.FPS.get_time()
         if self.timer_animacion >= 250:
             self.timer_animacion = 0
-            if self._step == 'D':
-                self._step = 'I'
+            if self._step == 'R':
+                self._step = 'L'
             else:
-                self._step = 'D'
+                self._step = 'R'
 
             key = self._step + 'abajo'
             self.anim_img = self.images[key]

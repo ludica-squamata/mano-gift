@@ -1,5 +1,5 @@
+from engine.misc import cargar_imagen, split_spritesheet, cargar_head_anims
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc import cargar_imagen, split_spritesheet
 from .CompoMob import Combativo, Autonomo, Parlante
 from engine.globs import Mob_Group, ModData
 from engine.base import ShadowSprite
@@ -18,26 +18,27 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
 
         dirs, atk = ['S', 'L', 'R'], ['A', 'B', 'C']
         imgs = data['imagenes']
-        heads = imgs.pop('heads')
+        g = ModData.graphs
+        heads = g + imgs.pop('heads')
         for key in imgs:
             if imgs[key] is not None:
                 if key == 'idle':
-                    self.idle_walk_img = self.cargar_head_anims(heads, imgs[key], dirs)  # request='front'
-                    self.idle_left_img = self.cargar_head_anims(heads, imgs[key], dirs, request='left')
-                    self.idle_right_img = self.cargar_head_anims(heads, imgs[key], dirs, request='right')
+                    self.idle_walk_img = cargar_head_anims(heads, g + imgs[key], dirs)  # request='front'
+                    self.idle_left_img = cargar_head_anims(heads, g + imgs[key], dirs, request='left')
+                    self.idle_right_img = cargar_head_anims(heads, g + imgs[key], dirs, request='right')
                     self.mascaras = self.cargar_alpha(data['alpha'], dirs)
                 elif key == 'atk':
-                    self.cmb_atk_img = self.cargar_head_anims(heads, imgs[key], atk)
-                    self.atk_left_img = self.cargar_head_anims(heads, imgs[key], atk, request='left')
-                    self.atk_right_img = self.cargar_head_anims(heads, imgs[key], atk, request='right')
+                    self.cmb_atk_img = cargar_head_anims(heads, g + imgs[key], atk)
+                    self.atk_left_img = cargar_head_anims(heads, g + imgs[key], atk, request='left')
+                    self.atk_right_img = cargar_head_anims(heads, g + imgs[key], atk, request='right')
                 elif key == 'cmb':
-                    self.cmb_walk_img = self.cargar_head_anims(heads, imgs[key], dirs)
-                    self.cmb_left_img = self.cargar_head_anims(heads, imgs[key], dirs, request='left')
-                    self.cmb_right_img = self.cargar_head_anims(heads, imgs[key], dirs, request='right')
+                    self.cmb_walk_img = cargar_head_anims(heads, g + imgs[key], dirs)
+                    self.cmb_left_img = cargar_head_anims(heads, g + imgs[key], dirs, request='left')
+                    self.cmb_right_img = cargar_head_anims(heads, g + imgs[key], dirs, request='right')
                 elif key == 'death':
-                    self.death_img = cargar_imagen(ModData.graphs + imgs['death'])
+                    self.death_img = cargar_imagen(g + imgs['death'])
                 elif key == "diag_face":
-                    self.diag_face = split_spritesheet(ModData.graphs + imgs['diag_face'], w=89, h=89)
+                    self.diag_face = split_spritesheet(g + imgs['diag_face'], w=89, h=89)
 
         self.images = self.idle_walk_img
         self.heads = {'front': self.idle_walk_img,

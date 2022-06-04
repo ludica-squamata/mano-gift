@@ -61,18 +61,6 @@ class MenuName(Menu):
                 'abajo': lambda: self.movercursor(0, 1),
                 'izquierda': lambda: self.movercursor(-1, 0),
                 'derecha': lambda: self.movercursor(1, 0)
-            },
-            'hold': {
-                'accion': lambda: self.aceptar('hold'),
-                'contextual': self.cancelar,
-                'arriba': lambda: self.movercursor(0, -1),
-                'abajo': lambda: self.movercursor(0, 1),
-                'izquierda': lambda: self.movercursor(-1, 0),
-                'derecha': lambda: self.movercursor(1, 0)
-            },
-            'release': {
-                'contextual': self.cancelar,
-                'accion': lambda: self.aceptar('release'),
             }
         }
 
@@ -194,12 +182,12 @@ class MenuName(Menu):
         """Cambia el foco de selección de un grupo a otro."""
 
         if foco == 'menu':
-            self.foco = 'menu'
             self.btn.ser_elegido()
 
         elif foco == 'nombre':
             self.deselect_all(self.botones)
-            self.foco = 'nombre'
+
+        self.foco = foco
 
     def set_name(self):
         self.deregister()
@@ -218,6 +206,10 @@ class MenuName(Menu):
                 self.cursor.set_current(t)
             elif t.isSelected:
                 t.ser_deselegido()
+
+        if any([t.isSelected for t in self.teclas.sprs()]):
+            self.btn.ser_deselegido()
+            self.foco = 'nombre'
 
         self.botones.update()
         self.botones.draw(self.canvas)

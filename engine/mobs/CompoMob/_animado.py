@@ -1,5 +1,5 @@
-from engine.misc.resources import split_spritesheet, combine_mob_spritesheets
 from engine.globs import Tiempo, COLOR_COLISION, ModData
+from engine.misc.resources import split_spritesheet
 from ._movil import Movil
 from pygame import mask
 
@@ -55,26 +55,6 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 idx += 1
                 dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
         return dicc
-
-    @staticmethod
-    def cargar_anims2(frames: list, seq: list):
-        dicc = {}
-        idx = -1
-        for L in seq:
-            for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
-                key = L + D
-                idx += 1
-                dicc[key] = frames[idx]
-
-        return dicc
-
-    def cargar_head_anims(self, ruta_heads, ruta_body, seq, request='front'):
-        dicc = {}
-        sprites = combine_mob_spritesheets(ModData.graphs + ruta_heads, ModData.graphs + ruta_body)
-        dicc['front'] = sprites[0:12]  # las 12 imagenes que venimos usando hasta ahora. mirando al frente
-        dicc['left'] = sprites[12:24]  # nuevas imagenes con el mob mirando a izquierda
-        dicc['right'] = sprites[24:36]  # y a derecha.
-        return self.cargar_anims2(dicc[request], seq)
 
     def animar_caminar(self):
         """cambia la orientación del sprite y controla parte de la animación"""

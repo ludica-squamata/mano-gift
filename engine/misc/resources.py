@@ -1,7 +1,8 @@
 from pygame import image, Rect, Surface, SRCALPHA
 import json
 
-__all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json', 'combine_mob_spritesheets']
+__all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json', 'combine_mob_spritesheets',
+           'cargar_head_anims']
 
 _images = {}
 
@@ -47,6 +48,27 @@ def combine_mob_spritesheets(head_file, body_file, w=32, h=32):
         sprites.extend(split_spritesheet(copy, w, h))
 
     return sprites
+
+
+def cargar_anims2(frames: list, seq: list):
+    dicc = {}
+    idx = -1
+    for L in seq:
+        for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
+            key = L + D
+            idx += 1
+            dicc[key] = frames[idx]
+
+    return dicc
+
+
+def cargar_head_anims(ruta_heads, ruta_body, seq, request='front'):
+    dicc = {}
+    sprites = combine_mob_spritesheets(ruta_heads, ruta_body)
+    dicc['front'] = sprites[0:12]  # las 12 imagenes que venimos usando hasta ahora. mirando al frente
+    dicc['left'] = sprites[12:24]  # nuevas imagenes con el mob mirando a izquierda
+    dicc['right'] = sprites[24:36]  # y a derecha.
+    return cargar_anims2(dicc[request], seq)
 
 
 def abrir_json(ruta, encoding='utf-8'):
