@@ -55,6 +55,7 @@ class ShadowSprite(AzoeSprite):
         self._origins = [0] * 9  # lo puse así para que sea más fácil
         self._prevLuces = [0] * 9  # distinguir una lista de 0s de otra
         self.sombra = None
+        self.registerd_shadows = {}
         EventDispatcher.register(self.set_alpha, 'SetNight')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
@@ -68,7 +69,15 @@ class ShadowSprite(AzoeSprite):
 
     def add_shadow(self):
         Renderer.camara.remove_obj(self.sombra)
-        s = Sombra(self, *self.crear_sombras())
+        if self.image not in self.registerd_shadows:
+            self.registerd_shadows[self.image] = {}
+
+        idx = self._sombras.index(1)
+        if idx not in self.registerd_shadows[self.image]:
+            s = Sombra(self, *self.crear_sombras())
+            self.registerd_shadows[self.image][idx] = s
+        else:
+            s = self.registerd_shadows[self.image][idx]
         s.image.set_alpha(self.alpha)
         self.sombra = s
         Renderer.camara.add_visible(self.sombra)

@@ -110,7 +110,6 @@ class Noche(AzoeBaseSprite):
     def trasparentar(cls, mod, max_alpha=230):  # this is gradual
         if 0 < cls.alpha + mod < max_alpha:
             cls.alpha += mod
-            # print(230-cls.alpha)
             EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
             EventDispatcher.trigger("LightLevel", "Noche", {"level": 230-cls.alpha})
 
@@ -118,7 +117,8 @@ class Noche(AzoeBaseSprite):
         self.rect.topleft = self.parent.rect.topleft
         if self.alpha != self.last_alpha:
             self.last_alpha = self.alpha
-            self.draw_lights()
+            if len(self.lights):
+                self.draw_lights()
 
 
 Noche.init()
