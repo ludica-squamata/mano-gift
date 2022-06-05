@@ -3,12 +3,13 @@ from .props import *
 from .items import *
 
 
-def new_prop(x, y, z=0, nombre=None, data=None, img=None):
+def new_prop(x, y, z=0, nombre=None, data=None, img=None, map_id=None):
     if data is None and img is None:
         raise TypeError
     elif data is None:
         data = {}
 
+    data['map_id'] = map_id
     args = x, y, z, data
     tipo = data.get('tipo')
     if tipo == 'agarrable':

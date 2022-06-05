@@ -33,7 +33,7 @@ class Escenografia(ShadowSprite, EventListener):
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'sin_sombra' not in data.get('propiedades', [])
         if data.get('proyecta_luz', False):
-            self.luz = LightSource(self, self.nombre, data, x, y)
+            self.luz = LightSource(self, self.nombre, data, x, y, map_id=data['map_id'])
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         self.face = data.get('cara', 'front')
 

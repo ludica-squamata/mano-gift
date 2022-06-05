@@ -379,3 +379,11 @@ class ShadowSprite(AzoeSprite):
         super().reubicar(dx, dy)
         if self.sombra is not None:
             self.sombra.reubicar(dx, dy)
+
+    def clear_shadows(self):
+        self._sombras = [0] * 9
+        self._luces = [0] * 9
+        self._origins = [0] * 9
+        # self._prevLuces = [0] * 9
+        Renderer.camara.remove_obj(self.sombra)
+        self.sombra = None

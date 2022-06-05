@@ -1,8 +1,8 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from datetime import datetime
+from math import floor, ceil
 from itertools import cycle
 from pygame import time
-from math import floor
 
 
 class Clock:
@@ -386,7 +386,7 @@ class SeasonalYear:
         if number_of_days % cls.biomes[cls.biome]['season_lenght'] == 0:
             cls.season = next(cls.season_cycler)
             cls.set_day_duration()
-            EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
+            cls.propagate()
 
         if number_of_days == cls.year_lenght:
             cls.season = next(cls.season_cycler)
@@ -409,6 +409,21 @@ class SeasonalYear:
     def propagate(cls):
         # Este trigger es para setear las timestamps en Stage.
         EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
+
+    @classmethod
+    def cargar_timestamps(cls):
+        horas_dia = cls.day_lenght
+        offset = ceil(12 - (horas_dia / 2))
+        actual = Tiempo.clock.timestamp()
+        amanece = TimeStamp(offset + 1)
+        mediodia = TimeStamp(offset + (horas_dia / 2))
+        anochece = TimeStamp(offset + horas_dia)
+        atardece = TimeStamp((float(mediodia) + float(anochece) + 1) / 2)
+
+        Tiempo.clock.alarms.update({atardece: 'atardece', anochece: 'anochece',
+                                    amanece: 'amanece', mediodia: 'mediodía'})
+
+        return actual, amanece, mediodia, anochece, atardece
 
 
 EventDispatcher.register(Tiempo.save_time, 'Save')

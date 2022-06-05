@@ -2,84 +2,47 @@ from engine.globs.azoe_group import AzoeBaseSprite
 from pygame import Surface, PixelArray, SRCALPHA
 from .event_dispatcher import EventDispatcher
 from .colores import COLOR_IGNORADO
+from .sun import Sun
 
 
 class Noche(AzoeBaseSprite):
     oscurecer = False
     aclarar = False
 
-    alpha = 0
-    mod = 0
+    mod = 1
     last_alpha = 0
 
     lights = None
 
-    @classmethod
-    def init(cls):
-        EventDispatcher.register_many((cls.get_alarms, 'ClockAlarm'),
-                                      (cls.set_darkness, 'MinuteFlag'))
+    images = None
 
     def __init__(self, parent, rect):
         img = Surface(rect.size, SRCALPHA)
-        img.fill((0, 0, 0, self.alpha))
+        img.fill((0, 0, 0, Sun.alpha))
+        self.images = {Sun.alpha: img}
         self.lights = []
         super().__init__(parent, 'night block', image=img, rect=rect)
+        EventDispatcher.register(self.set_darkness, 'MinuteFlag')
+    #
+    # def get_alarms(self, event):
+    #     if event.data['time'] == 'atardece':
+    #         self.oscurecer = True
+    #     elif event.data['time'] == 'anochece':
+    #         self.oscurecer = False
+    #         EventDispatcher.trigger('NightFall', 'Noche', {'value': True})
+    #
+    #     elif event.data['time'] == 'amanece':
+    #         self.aclarar = True
+    #     elif event.data['time'] == 'mediodía':
+    #         self.aclarar = False
 
-    @classmethod
-    def set_mod(cls, actual, amanece, mediodia, atardece, anochece):
-
-        if amanece < actual < mediodia:  # mañana
-            if actual-amanece < mediodia-actual:
-                elapsed = actual-amanece
-                cls.alpha = 230-(elapsed.h * 60 + elapsed.m)
-            else:
-                elapsed = mediodia-actual
-                cls.alpha = elapsed.h * 60 + elapsed.m
-            cls.aclarar = True
-
-        elif atardece < actual < anochece:  # tarde noche
-            if actual-atardece < anochece-actual:
-                elapsed = actual-atardece
-                cls.alpha = elapsed.h * 60 + elapsed.m
-            else:
-                elapsed = anochece-actual
-                cls.alpha = 230 - (elapsed.h * 60 + elapsed.m)
-            cls.oscurecer = True
-
-        elif mediodia < actual < atardece:  # dia
-            cls.alpha = 0
-
-        elif anochece < actual or actual < amanece:  # noche
-            cls.alpha = 230
-
-        EventDispatcher.trigger('SetNight', 'Noche', {'alpha': cls.alpha})
-
-        ts = anochece - atardece
-        s = ts.h * 3600 + ts.m * 60 + ts.s
-        cls.mod = round(230 / (s // 60))  # 1
-        cls.propagate(cls.alpha)
-
-    @classmethod
-    def get_alarms(cls, event):
-        if event.data['time'] == 'atardece':
-            cls.oscurecer = True
-        elif event.data['time'] == 'anochece':
-            cls.oscurecer = False
-            EventDispatcher.trigger('NightFall', 'Noche', {'value': True})
-
-        elif event.data['time'] == 'amanece':
-            cls.aclarar = True
-        elif event.data['time'] == 'mediodía':
-            cls.aclarar = False
-
-    @classmethod
-    def set_darkness(cls, event):
+    def set_darkness(self, event):
         if event.tipo == 'MinuteFlag':
-            if cls.oscurecer:
-                cls.trasparentar(cls.mod)
+            if Sun.oscurecer:
+                self.trasparentar(1)
 
-            elif cls.aclarar:
-                cls.trasparentar(-cls.mod)
+            elif Sun.aclarar:
+                self.trasparentar(-1)
 
     def set_light(self, light):
         self.lights.append(light)
@@ -89,38 +52,45 @@ class Noche(AzoeBaseSprite):
             self.lights.remove(light)
 
     def draw_lights(self):
-        self.image.fill((0, 0, 0, self.alpha))
-        pxarray = PixelArray(self.image.copy())
+        if Sun.alpha in self.images:
+            self.image = self.images[Sun.alpha]
+            # images are cached to boost performance by avoiding unnecessary PixelArraying
+        else:
+            self.image.fill((0, 0, 0, Sun.alpha))
+            pxarray = PixelArray(self.image.copy())
 
-        for light in self.lights:
-            px_li = PixelArray(light.image)
-            w, h = light.rect.size
-            lx, ly = light.origin_rect.center
-            for x in range(w):
-                for y in range(h):
-                    color = light.image.unmap_rgb(px_li[x, y])
-                    if color != COLOR_IGNORADO:
-                        pxarray[x+lx, y+ly] = color
+            for light in self.lights:
+                px_li = PixelArray(light.image)
+                w, h = light.rect.size
+                lx, ly = light.origin_rect.center
+                for x in range(w):
+                    for y in range(h):
+                        color = light.image.unmap_rgb(px_li[x, y])
+                        if color != COLOR_IGNORADO:
+                            pxarray[x+lx, y+ly] = color
 
-        self.image = pxarray.make_surface()
+            image = pxarray.make_surface()
+            self.images[Sun.alpha] = image
+            self.image = image
 
-    @classmethod
-    def trasparentar(cls, mod, max_alpha=230):
-        if 0 < cls.alpha + mod <= max_alpha:
-            cls.alpha += mod
-            cls.propagate(cls.alpha)
+    def trasparentar(self, mod, max_alpha=230):
+        if 0 < Sun.alpha + mod <= max_alpha:
+            Sun.alpha += mod
+            self.propagate(Sun.alpha)
 
-    @classmethod
-    def propagate(cls, mod):
+    def set_transparency(self):
+        self.image.fill((0, 0, 0, Sun.alpha))
+
+    @staticmethod
+    def propagate(mod):
         EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
-        EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - cls.alpha})
+        EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
 
     def update(self):
         self.rect.topleft = self.parent.rect.topleft
-        if self.alpha != self.last_alpha:
-            self.last_alpha = self.alpha
-            if len(self.lights):
-                self.draw_lights()
-
-
-Noche.init()
+        # if self.alpha != self.last_alpha:
+        #     self.last_alpha = self.alpha
+        if len(self.lights):
+            self.draw_lights()
+        else:
+            self.set_transparency()

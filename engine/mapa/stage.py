@@ -35,12 +35,14 @@ class Stage:
         offy = self.offset_y - dy
         entradas = self.data['entradas']
 
+        self.id = ModData.generate_id()
+
         if ModData.use_latitude:
             self.current_latitude = self.data['latitude']
         else:
             self.current_latitude = 30
         self.current_longitude = self.data.get('longitude', 30)
-        Sun.init(self.current_latitude)
+        # Sun.init(self.current_latitude)
 
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
@@ -83,7 +85,7 @@ class Stage:
 
         Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
                                     self.amanece: 'amanece', self.mediodia: 'mediodía'})
-        Noche.set_mod(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
+        Sun.set_mod(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
         Sun.calculate(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
 
     def save_map(self, event):
@@ -98,7 +100,7 @@ class Stage:
         @param dx: el offset en x del stage
         @param dy: el offset en y del stage.
         """
-        for item, grupo in load_something(alldata, 'props'):
+        for item, grupo in load_something(self.id, alldata, 'props'):
             obj = self.add_property(item, grupo)
             obj.reubicar(-dx, -dy)
             obj.set_parent_map(self.mapa)
@@ -191,7 +193,7 @@ class ChunkMap(AzoeBaseSprite):
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
         if any([len(data[req]) > 0 for req in requested]):
-            for item, grupo in load_something(data, requested):
+            for item, grupo in load_something(self.id, data, requested):
                 obj = self.add_property(item, grupo)
                 obj.set_parent_map(self)
 

@@ -225,27 +225,28 @@ class DeletedItems(ItemGroup):
 
 
 class LightGroup:
-    lights = None
-    _lenght = 0
-    """A simple group. It's a little more than a list."""
+    _lights = None
+    """A group for lights that belong to a certain map"""
 
     def __init__(self):
-        self.lights = []
+        self._lights = {}
 
-    def add(self, light):
-        # podría agrupar luces por mapas, se me ocurre.
-        if light not in self.lights:
-            self.lights.append(light)
-            self._lenght += 1
+    def add(self, map_id, light):
+        if map_id not in self._lights:
+            self._lights[map_id] = []
+        if light not in self._lights:
+            self._lights[map_id].append(light)
 
     def remove(self, light):
-        if light in self.lights:
-            self.lights.remove(light)
-            self._lenght -= 1
+        for map_id in self._lights:
+            if light in self._lights[map_id]:
+                self._lights[map_id].remove(light)
 
-    def __getitem__(self, item):
-        if type(item) is int and 0 <= item <= self._lenght:
-            return self.lights[item]
+    def list(self, map_id):
+        if map_id in self._lights:
+            return self._lights[map_id]
+        else:
+            return []
 
 
 Mob_Group = MobGroup()

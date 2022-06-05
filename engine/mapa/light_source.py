@@ -14,7 +14,7 @@ class LightSource(Sprite):
     encendido = False  # apaguen esas luces!
     # animacion???
 
-    def __init__(self, parent, nombre, data, x, y):
+    def __init__(self, parent, nombre, data, x, y, map_id=None):
         super().__init__()
         self.parent = parent
         radius = data['proyecta_luz']
@@ -42,7 +42,7 @@ class LightSource(Sprite):
         draw.circle(img, (255, 255, 255, 255), (self.rect.w // 2, self.rect.h // 2), radius)
         self.mask = mask.from_surface(img)
         Camara.add_real(self)
-        Light_Group.add(self)
+        Light_Group.add(map_id, self)
 
     def switch(self, event):
         noche = self.parent.stage.noche
@@ -58,6 +58,7 @@ class LightSource(Sprite):
             x = self.rect.x + off_x - other.rect.x
             y = self.rect.y + off_y - other.rect.y
             if self.mask.overlap(other.mask, (-x, -y)):
+                print(self, 'colisiona', x, y)
                 other.recibir_luz_especular(self)
             else:
                 other.desiluminar(self)

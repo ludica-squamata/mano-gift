@@ -6,6 +6,7 @@ from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
 from os import path, mkdir, getcwd
+from .sun import Sun
 
 
 class EngineData:
@@ -121,9 +122,12 @@ class EngineData:
         data = event.data
         cls.acceso_menues.clear()
 
-        stage = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
+        map_data = abrir_json(ModData.mapas + data['mapa'] + '.stage.json')
+        Sun.init(map_data['latitude'])
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
+        Sun.set_mod(*SeasonalYear.cargar_timestamps())
+        stage = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
 
         focus = Mob_Group[data['focus']]
         if type(focus) is str:

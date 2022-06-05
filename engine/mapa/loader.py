@@ -1,25 +1,17 @@
 from pygame import mask as mask_module, Surface, SRCALPHA
 from engine.misc import abrir_json, cargar_imagen
-from engine.globs import GRUPO_ITEMS, GRUPO_MOBS
 from engine.scenery import new_prop
+from engine.globs import GRUPO_MOBS
 from engine.globs import ModData
 from engine.mobs import Mob
 from .salida import Salida
 
 
-def load_everything(alldata: dict):
-    loaded = []
-    for mob in load_mobs(alldata):
-        loaded.append((mob, GRUPO_MOBS))
-    for prop in load_props(alldata):
-        loaded.append((prop, GRUPO_ITEMS))
-    return loaded
-
-
-def load_something(alldata: dict, requested: str):
+def load_something(map_id: str, alldata: dict, requested: str):
     """
     :type requested: list
     :type alldata: dict
+    :type map_id: str
     """
     loaded = []
     if requested is not None:
@@ -28,13 +20,13 @@ def load_something(alldata: dict, requested: str):
                 loaded.append((mob, GRUPO_MOBS))
 
         if 'props' in requested:
-            for prop in load_props(alldata):
+            for prop in load_props(map_id, alldata):
                 loaded.append((prop, prop[0].grupo))
 
         return loaded
 
 
-def load_props(alldata: dict):
+def load_props(id, alldata: dict):
     imgs = alldata.get('refs', {})
     pos = alldata['props']
 
@@ -58,10 +50,10 @@ def load_props(alldata: dict):
                 x, y = item
 
             if data:
-                prop = new_prop(x, y, data=data)
+                prop = new_prop(x, y, data=data, map_id=id)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable
             else:
-                prop = new_prop(x, y, nombre=ref, img=img)
+                prop = new_prop(x, y, nombre=ref, img=img, map_id=id)
                 is_interactive = False
 
             if type(prop) is list:

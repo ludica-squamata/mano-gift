@@ -40,8 +40,7 @@
   "mobs": {
     "hero": [
       "centre"
-    ],
-    "commoner": [[480,480],[480,512]]
+    ]
   },
   "limites": {
   },

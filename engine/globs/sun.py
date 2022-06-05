@@ -6,6 +6,10 @@ class Sun:
     light = None
     lights = None
 
+    alpha = 0  # nigth alpha, this value and it accompanying function have nothing to do with the Sun.
+    aclarar = False
+    oscurecer = False
+
     @classmethod
     def init(cls, latitude):
         # noroeste, noreste, suroeste, sureste
@@ -53,3 +57,37 @@ class Sun:
 
         for mob in Mob_Group:
             mob.recibir_luz_solar(cls.light)
+
+    @classmethod
+    def set_mod(cls, actual, amanece, mediodia, atardece, anochece):
+
+        if amanece < actual < mediodia:  # mañana
+            if actual-amanece < mediodia-actual:
+                elapsed = actual-amanece
+                cls.alpha = 230-(elapsed.h * 60 + elapsed.m)
+            else:
+                elapsed = mediodia-actual
+                cls.alpha = elapsed.h * 60 + elapsed.m
+            cls.aclarar = True
+
+        elif atardece < actual < anochece:  # tarde noche
+            if actual-atardece < anochece-actual:
+                elapsed = actual-atardece
+                cls.alpha = elapsed.h * 60 + elapsed.m
+            else:
+                elapsed = anochece-actual
+                cls.alpha = 230 - (elapsed.h * 60 + elapsed.m)
+            cls.oscurecer = True
+
+        elif mediodia < actual < atardece:  # dia
+            cls.alpha = 0
+
+        elif anochece < actual or actual < amanece:  # noche
+            cls.alpha = 230
+
+        EventDispatcher.trigger('SetNight', 'Noche', {'alpha': cls.alpha})
+
+        ts = anochece - atardece
+        s = ts.h * 3600 + ts.m * 60 + ts.s
+        cls.mod = round(230 / (s // 60))  # 1
+        # cls.propagate(cls.alpha)

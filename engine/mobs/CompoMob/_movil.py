@@ -50,7 +50,7 @@ class Movil(Caracterizado):
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
-            for spr in Light_Group:
+            for spr in Light_Group.list(self.mapa_actual.id) + Light_Group.list(self.mapa_actual.parent.id):
                 spr.colisiona(self,  dx, dy)
 
         if self.stage.mascara_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
