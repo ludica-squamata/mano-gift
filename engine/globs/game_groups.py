@@ -59,8 +59,8 @@ class MobGroup:
                     return True
                 else:
                     raise IndexError
-        elif hasattr(item, 'nombre'):
-            if item.nombre in self._group:
+        elif hasattr(item, 'id'):
+            if item.id in self._group:
                 return True
         return False
 
@@ -75,8 +75,7 @@ class MobGroup:
         return flagged
 
     def delete_mob(self, event):
-        nombre = event.data['obj'].nombre
-        del self[nombre]
+        del self[event.data['obj'].id]
 
     def __str__(self):
         return 'MobGroup keys (' + ','.join([self._group[i].nombre for i in self._indexes]) + ')'
@@ -90,8 +89,8 @@ class MobGroup:
 
     def get_controlled_mob(self):
         # creo que esto se podría hacer con un oneliner
-        for mob_name in self._group:
-            mob = self._group[mob_name]
+        for mob_id in self._group:
+            mob = self._group[mob_id]
             if mob.AI_type == 'Controllable':
                 return mob
 

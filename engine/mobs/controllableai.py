@@ -61,26 +61,27 @@ class ControllableAI(EventAware):
         self.entity.update_sombra()
         if self.accion:
             self.entity.accion()
-            sprites = self.entity.perceived['touched'] + self.entity.perceived['felt'] + self.entity.perceived['close']
+            preception = self.entity.perceived
+            sprites = set(preception['touched'] + preception['felt'] + preception['close'])
+            # a set because it filters repeated units.
             for sprite in sprites:
-                if sprite is not None:
-                    if self.entity.estado == 'cmb':
-                        self.entity.atacar(sprite)
+                if self.entity.estado == 'cmb':
+                    self.entity.atacar(sprite)
 
-                    elif sprite.tipo == 'Mob':
-                        self.entity.dialogar(sprite)
-                        self.deregister()
+                elif sprite.tipo == 'Mob':
+                    self.entity.dialogar(sprite)
+                    self.deregister()
+                    break
+
+                elif sprite.tipo == 'Prop':
+                    if sprite.accionable and sprite.action is not None:
+                        # should Movible Props have an action?
+                        sprite.action(self.entity)
                         break
 
-                    elif sprite.tipo == 'Prop':
-                        if sprite.accionable and sprite.action is not None:
-                            # should Movible Props have an action?
-                            sprite.action(self.entity)
-                            break
-
-                        else:
-                            sprite.show_description()
-                            self.deregister()
+                    else:
+                        sprite.show_description()
+                        self.deregister()
 
         self.accion = False
 

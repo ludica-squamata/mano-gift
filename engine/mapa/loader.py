@@ -78,7 +78,7 @@ def load_mobs(alldata: dict):
     loaded_mobs = []
     for name in alldata['mobs']:
         pos = alldata['mobs'][name]
-        for item in pos:
+        for i, item in enumerate(pos):
             if type(item) is str:
                 x, y = alldata['entradas'][item]['pos']
             else:
@@ -86,6 +86,8 @@ def load_mobs(alldata: dict):
 
             if name in alldata['refs']:
                 data = abrir_json(alldata['refs'][name])
+            elif name in ModData.character_generator:
+                data = ModData.character_generator[name]()
             else:
                 data = abrir_json(ModData.mobs + name + '.json')
             mob = Mob(x, y, data)
@@ -105,7 +107,7 @@ def cargar_salidas(mapa, alldata, size):
         chunk = datos['chunk']
         entrada = datos['entrada']
         direcciones = datos['direcciones']
-        id = ModData.next_id()
+        id = ModData.generate_id()
 
         salidas.append(Salida(nombre, id, mapa, stage, rect, chunk, entrada, direcciones))
         r, g, b, a = 255, i % 255, i // 255, 255

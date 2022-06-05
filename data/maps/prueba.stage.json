@@ -3,8 +3,8 @@
     "bottomright": {
       "chunk": "single",
       "pos": [
-        750,
-        750
+        736,
+        736
       ]
     },
     "topleft": {
@@ -17,14 +17,14 @@
     "centre": {
       "chunk": "single",
       "pos": [
-        400,
-        400
+        320,
+        320
       ]
     },
     "topright": {
       "chunk": "single",
       "pos": [
-        750,
+        736,
         32
       ]
     },
@@ -32,14 +32,14 @@
       "chunk": "single",
       "pos": [
         32,
-        750
+        736
       ]
     },
     "star": {
       "chunk": "single",
       "pos": [
-        432,
-        432
+        416,
+        416
       ]
     }
   },

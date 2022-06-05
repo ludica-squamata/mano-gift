@@ -70,6 +70,8 @@ class Stage:
             (self.save_map, 'Save')
         )
 
+        self.id = ModData.generate_id()
+
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_daylenght']
         offset = ceil(12 - (horas_dia / 2))
@@ -186,7 +188,7 @@ class ChunkMap(AzoeBaseSprite):
 
         super().__init__(stage, nombre, image, rect)
         self.cargar_limites(data.get('limites', self.limites))
-
+        self.id = ModData.generate_id()
         if any([len(data[req]) > 0 for req in requested]):
             for item, grupo in load_something(data, requested):
                 obj = self.add_property(item, grupo)

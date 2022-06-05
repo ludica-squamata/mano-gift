@@ -78,7 +78,7 @@ class Item(AzoeSprite):
     def __ne__(self, other):
         if other.__class__ != self.__class__:
             return True
-        elif self.id != other.ID:
+        elif self.id != other.id:
             return True
         else:
             return False

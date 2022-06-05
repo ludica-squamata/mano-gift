@@ -42,6 +42,10 @@
       "year_lenght": 360,
       "month_lenght": 30,
       "week_lenght": 7
+    },
+    "characters":{
+      "aristocrat": {"script": "generate_npcs.py", "name": "gen_chararcter"}
     }
+
   }
 }

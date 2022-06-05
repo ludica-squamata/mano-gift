@@ -2,6 +2,7 @@ from os import getcwd as cwd, path, listdir
 from engine.misc import salir, abrir_json
 from engine.globs.tiempo import Tiempo
 from importlib import import_module
+from datetime import datetime
 
 
 class ModData:
@@ -21,11 +22,11 @@ class ModData:
     custom_attr = None
     QMC = None
 
-    _next_id = 0
-
     dialogs_by_topic = None
 
     use_latitude = True
+
+    character_generator = None
 
     @classmethod
     def init(cls, ini_data):
@@ -58,10 +59,11 @@ class ModData:
             loaded = []
             cls.custommenus = {}
             cls.custom_attr = {}
+            cls.character_generator = {}
             cls.QMC = []
             for keyword in cls.data.get('custom', ''):
                 if keyword == 'menus':
-                    for d in cls.data['custom']['menus']:
+                    for d in cls.data['custom'][keyword]:
                         loaded.append(d['script'])
                         ruta = cls.fd_scripts + d['script']
                         module = import_module(cls.pkg_scripts + '.' + d['script'], ruta)
@@ -70,7 +72,7 @@ class ModData:
 
                 elif keyword == 'circular':
                     skip = 0
-                    for i, d in enumerate(cls.data['custom']['circular']):
+                    for i, d in enumerate(cls.data['custom'][keyword]):
                         ruta = cls.fd_scripts + d['script']
                         module = import_module(cls.pkg_scripts + '.' + d['script'], ruta)
                         loaded.append(d['script'])
@@ -86,7 +88,7 @@ class ModData:
                             skip += 1
 
                 elif keyword == 'attributes':
-                    for c in cls.data['custom']['attributes']:
+                    for c in cls.data['custom'][keyword]:
                         loaded.append(c['name'])
                         ruta = cls.fd_scripts + 'mobs/' + c['script']
                         script_name = c['script'].rstrip('.py')
@@ -94,7 +96,7 @@ class ModData:
                         cls.custom_attr[c['name']] = getattr(module, c['name'])
 
                 elif keyword == 'derivation':
-                    c = cls.data['custom']['derivation']
+                    c = cls.data['custom'][keyword]
                     loaded.append(c['name'])
                     ruta = cls.fd_scripts + c['script']
                     script_name = c['script'].rstrip('.py')
@@ -102,12 +104,21 @@ class ModData:
                     cls.attr_derivation = getattr(module, c['name'])
 
                 elif keyword == 'world_properties':
-                    props = cls.data['custom']['world_properties']
+                    props = cls.data['custom'][keyword]
                     cls.use_latitude = props['use_latitude']
                     year = props['year_lenght']
                     month = props['month_lenght']
                     week = props['week_lenght']
                     Tiempo.set_year(year, month, week)
+
+                elif keyword == "characters":
+                    for c in cls.data['custom'][keyword]:
+                        data = cls.data['custom'][keyword][c]
+                        loaded.append(data['name'])
+                        ruta = cls.fd_scripts + 'mobs/' + data['script']
+                        script_name = data['script'].rstrip('.py')
+                        module = import_module(cls.pkg_scripts + '.mobs.' + script_name, ruta)
+                        cls.character_generator[c] = getattr(module, data['name'])
 
             if not len(cls.QMC):
                 cls.QMC = None
@@ -137,11 +148,11 @@ class ModData:
                 if about != '':  # rules out the template.
                     cls.dialogs_by_topic[about] = ruta  # la ruta, y no el dict entero, para evitar la sobrecarga.
 
-    @classmethod
-    def next_id(cls):
-        n = cls._next_id
-        cls._next_id += 1
-        return n
+    @staticmethod
+    def generate_id():
+        now = ''.join([char for char in str(datetime.now()) if char not in [' ', '.', ':', '-']])
+        now = now[0:-5] + '-' + now[-5:]
+        return now
 
     @classmethod
     def _find_mod_folder(cls, ini):

@@ -61,7 +61,7 @@ class AzoeSprite(sprite.Sprite):
 
         self.mapa_actual_rect = Rect(*self.mapRect)
 
-        self.id = ModData.next_id()
+        self.id = ModData.generate_id()
 
     def set_parent_map(self, parent):
         self.stage = parent

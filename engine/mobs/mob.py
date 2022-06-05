@@ -50,8 +50,8 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
         mask = self.mascaras['S' + self.direccion]
         super().__init__(data, imagen=image, x=x, y=y, alpha=mask, center=focus)
 
-        if self.nombre not in Mob_Group:
-            Mob_Group[self.nombre] = self
+        if self.id not in Mob_Group:
+            Mob_Group[self.id] = self
 
         EventDispatcher.register(self.rotate_and_pos, 'RotateMobs')
 
