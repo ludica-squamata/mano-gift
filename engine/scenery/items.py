@@ -33,7 +33,7 @@ class Consumible(Item):
 
             mob[stat] = valor
 
-        if method == 'incremental':
+        elif method == 'incremental':
             actual = mob[stat]
             valor = actual + mod
             mob[stat] = valor

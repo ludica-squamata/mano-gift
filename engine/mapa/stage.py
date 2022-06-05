@@ -162,6 +162,7 @@ class ChunkMap(AzoeBaseSprite):
         if not data:
             data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
 
+        self.datos = data.copy()
         self.limites = data['limites']
 
         data.update({'entradas': entradas})
@@ -227,6 +228,11 @@ class ChunkMap(AzoeBaseSprite):
         if obj in self.interactives:
             self.interactives.remove(obj)
         Renderer.camara.remove_obj(obj)
+
+    def get_property(self, name):
+        for obj in self.properties.sprs():
+            if obj.nombre == name:
+                return obj
 
     def del_interactive(self, event):
         obj = event.data['obj']

@@ -138,12 +138,13 @@ class Touch(AzoeBaseSprite):
 
     def __call__(self, passive=True):
         mapa = self.parent.mapa_actual
-        sprites = mapa.properties.sprites() + mapa.parent.properties.sprites()
-        lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
+        sprites = mapa.properties.sprs() + mapa.parent.properties.sprs()
+        lista = sprites if (mapa is not None) and (len(sprites) > 0) else []
 
         lista.reverse()
-        idx = -1 if self.parent not in lista else lista.index(self.parent)  # it would be the same as str.find()
-        for obj in lista[0:idx] + lista[idx + 1:]:
+        while self.parent in lista:
+            lista.remove(self.parent)
+        for obj in lista:
             if self.rect.colliderect(obj.rect):
                 if not passive:
                     self.parent.perceived['touched'].append(obj)

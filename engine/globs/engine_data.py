@@ -24,7 +24,7 @@ class EngineData:
         EventDispatcher.register_many(
             (cls.on_cambiarmapa, "SetMap"),
             (cls.on_setkey, "ToggleSetKey"),
-            (cls.save_transient_mobs, 'Save'),
+            (cls.save_transient_npcs, 'Save'),
             (cls.salvar, "SaveDataFile"),
             (cls.compound_save_data, "SaveData"),
             (cls.pop_menu, AzoeEvent('Key', 'Input', {'nom': 'menu', 'type': 'tap'})),
@@ -54,7 +54,7 @@ class EngineData:
                 dx, dy = mob.direcciones[mob.direccion]
                 dx *= 32
                 dy *= 32
-                mob.ubicar_en_mapa(x+dx, y+dy)
+                mob.ubicar_en_mapa(x + dx, y + dy)
                 if type(mob) is not str:
                     cls.mapas[stage].mapa.add_property(mob, 2)
                     mob.set_parent_map(cls.mapas[stage].mapa)
@@ -127,13 +127,16 @@ class EngineData:
 
         focus = Mob_Group[data['focus']]
         if type(focus) is str:
-            datos = {'mobs': {focus: [data['entrada']]}}
-            datos.update({'entradas': stage.data['entradas']})
-            datos.update({'refs': {focus: ModData.fd_player + focus + '.json'}})
-            focus, grupo = load_mobs(datos)[0]
+            if focus not in stage.mapa.datos['mobs']:
+                datos = {'mobs': {focus: [data['entrada']]}}
+                datos.update({'entradas': stage.data['entradas']})
+                datos.update({'refs': {focus: ModData.fd_player + focus + '.json'}})
+                focus, grupo = load_mobs(datos)[0]
 
-            obj = stage.mapa.add_property(focus, grupo)
-            obj.set_parent_map(stage.mapa)
+                obj = stage.mapa.add_property(focus, grupo)
+                obj.set_parent_map(stage.mapa)
+            else:
+                focus = stage.mapa.get_property(focus)
 
         for item in cls.transient_mobs.get(stage.nombre, []):
             mob_name = item['mob']
@@ -150,7 +153,8 @@ class EngineData:
         focus.character_name = data['focus']
 
     @classmethod
-    def save_transient_mobs(cls, event):
+    def save_transient_npcs(cls, event):
+        # transient NPCS porque el focus pasa por otro lado.
         transient = {}
         for stage in cls.transient_mobs:
             transient[stage] = [i['mob'].nombre for i in cls.transient_mobs[stage]]
@@ -161,8 +165,8 @@ class EngineData:
         fx, fy = focus.mapRect.center
         ex, ey = mapa.data['entradas'][entrada]['pos']
         if fx != ex or fy != ey:
-            texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco ' \
-                    'en el chunk ({},{}) sea la  misma que la posición de la entrada \n({},{}).'.format(fx, fy, ex, ey)
+            texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco '
+            texto += f'en el chunk ({fx},{fy}) sea la  misma que la posición de la entrada \n({ex},{ey}).'
             salir(texto)
 
     @classmethod

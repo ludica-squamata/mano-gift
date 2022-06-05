@@ -51,9 +51,9 @@ class Inventory:
                     subtotales.append(item)
         return subtotales
 
-    def get_by_type(self, type):
+    def get_by_type(self, tipo):
         subtotales, visto = [], []
-        for item in self._by_type[type]:
+        for item in self._by_type[tipo]:
             if item.nombre not in visto:
                 visto.append(item.nombre)
                 subtotales.append(item)
@@ -82,6 +82,7 @@ class Inventory:
             self._peso_actual -= item.peso
             self._volumen_actual -= item.volumen
             self._contenido.remove(item)
+            self._by_type[item.tipo].remove(item)
             return self._contenido.count(item)
         else:
             return 0

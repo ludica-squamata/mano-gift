@@ -162,6 +162,8 @@ class CircularMenu(EventAware):
             cuadro.deregister()
         self.cuadros.empty()
         self.cuadros.add(*self.cascadas[self.cascadaActual])
+        for cuadro in self.cuadros.sprs():
+            cuadro.register()
         if len(self.cascadas[self.cascadaActual]):
             self.stop_everything()
 
