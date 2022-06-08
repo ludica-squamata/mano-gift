@@ -166,15 +166,8 @@ class Camara:
             for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
                 if obj not in cls.real:
                     cls.add_real(obj)
-
-            # if adyacent_map_key == 'izq' or adyacent_map_key == 'der':
-            #     cls.bgs_rect.w += new_map.rect.w
-            #     if adyacent_map_key == 'izq':
-            #         cls.bgs_rect.x = new_map.rect.x
-            # elif adyacent_map_key == 'sup' or adyacent_map_key == 'inf':
-            #     cls.bgs_rect.h += new_map.rect.h
-            #     if adyacent_map_key == 'sup':
-            #         cls.bgs_rect.y = new_map.rect.y
+                if hasattr(obj, 'luz') and obj.luz is not None:
+                    cls.add_real(obj.luz)
 
         a_map = map_at_center if map_at_center is not None else new_map
         if cls.focus.mapa_actual != a_map:

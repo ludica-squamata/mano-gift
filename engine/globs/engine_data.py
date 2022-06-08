@@ -71,9 +71,9 @@ class EngineData:
         entrada = evento.data['target_entrada']
         if Renderer.camara.is_focus(mob):
             EventDispatcher.trigger('EndDialog', cls, {})
-            cls.setear_mapa(stage, entrada, mob=mob)
+            mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
-            x, y = cls.mapas[stage].posicion_entrada(entrada)
+            x, y = mapa.posicion_entrada(entrada)
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
             pos = entrada if stage not in cls.mapas else cls.mapas[stage].posicion_entrada(entrada)

@@ -28,6 +28,7 @@ class Salida:
         self.id = id
         if 'pydevd' in sys.modules:
             self.sprite = SpriteSalida(self.nombre, mapa,  *self.mapRect)
+            mapa.add_property(self.sprite, 10000)
             Renderer.camara.add_real(self.sprite)
 
     def trigger(self, mob):
