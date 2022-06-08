@@ -10,6 +10,8 @@ class Sun:
     aclarar = False
     oscurecer = False
 
+    current_light = None
+
     @classmethod
     def init(cls, latitude):
         # noroeste, noreste, suroeste, sureste
@@ -26,20 +28,6 @@ class Sun:
             cls.lights = [noroeste, 8, noreste]  # esté al revés.
 
     @classmethod
-    def calculate(cls, actual, amanece, mediodia, atardece, anochece):
-        alarm = None
-        if amanece < actual < mediodia:  # mañana
-            alarm = 'amanece'
-        elif mediodia < actual < atardece:  # dia
-            alarm = 'mediodía'
-        elif atardece < actual < anochece:  # tarde noche
-            alarm = 'atardece'
-        elif anochece < actual or actual < amanece:  # noche
-            alarm = 'anochece'
-
-        cls.set_light(alarm)
-
-    @classmethod
     def set_by_event(cls, event):
         alarm = event.data['time']
         cls.set_light(alarm)
@@ -48,12 +36,21 @@ class Sun:
     def set_light(cls, alarm):
         if alarm == 'amanece':
             cls.light = cls.lights[0]
+            cls.aclarar = True
         elif alarm == 'mediodía':
             cls.light = cls.lights[1]  # overhead light.
+            cls.aclarar = False
         elif alarm == 'atardece':
             cls.light = cls.lights[2]
-        elif alarm == 'anochece':
+            EventDispatcher.trigger('ShadowFade', 'Sun', {'bool': True})
+            cls.oscurecer = False
+        else:
+            cls.oscurecer = True
+            EventDispatcher.trigger('ShadowFade', 'Sun', {'bool': False})
+            EventDispatcher.trigger('NightFall', 'Night', {'value': True})
             cls.light = None
+
+        cls.current_light = cls.light
 
         for mob in Mob_Group:
             mob.recibir_luz_solar(cls.light)
@@ -61,33 +58,40 @@ class Sun:
     @classmethod
     def set_mod(cls, actual, amanece, mediodia, atardece, anochece):
 
+        alarm = None
         if amanece < actual < mediodia:  # mañana
-            if actual-amanece < mediodia-actual:
-                elapsed = actual-amanece
-                cls.alpha = 230-(elapsed.h * 60 + elapsed.m)
+            if actual - amanece < mediodia - actual:
+                elapsed = actual - amanece
+                cls.alpha = 230 - (elapsed.h * 60 + elapsed.m)
             else:
-                elapsed = mediodia-actual
+                elapsed = mediodia - actual
                 cls.alpha = elapsed.h * 60 + elapsed.m
             cls.aclarar = True
+            alarm = 'amanece'
 
         elif atardece < actual < anochece:  # tarde noche
-            if actual-atardece < anochece-actual:
-                elapsed = actual-atardece
+            if actual - atardece < anochece - actual:
+                elapsed = actual - atardece
                 cls.alpha = elapsed.h * 60 + elapsed.m
             else:
-                elapsed = anochece-actual
+                elapsed = anochece - actual
                 cls.alpha = 230 - (elapsed.h * 60 + elapsed.m)
             cls.oscurecer = True
+            alarm = 'atardece'
 
         elif mediodia < actual < atardece:  # dia
             cls.alpha = 0
+            alarm = 'mediodía'
 
         elif anochece < actual or actual < amanece:  # noche
             cls.alpha = 230
+            alarm = 'anochece'
 
-        EventDispatcher.trigger('SetNight', 'Noche', {'alpha': cls.alpha})
+        cls.set_light(alarm)
 
-        ts = anochece - atardece
-        s = ts.h * 3600 + ts.m * 60 + ts.s
-        cls.mod = round(230 / (s // 60))  # 1
-        # cls.propagate(cls.alpha)
+    @classmethod
+    def update(cls):
+        for mob in Mob_Group:
+            mob.unset_origin('Sun')
+            if cls.light is not None:
+                mob.recibir_luz_solar(cls.light)

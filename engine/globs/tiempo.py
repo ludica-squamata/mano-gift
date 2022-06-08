@@ -327,6 +327,11 @@ class Tiempo:
             if cls.clock.second_flag:
                 EventDispatcher.trigger('SecondFlag', 'Tiempo', {"hora": cls.clock.timestamp()})
 
+    @classmethod
+    def update_alarms(cls, alarms):
+        cls.clock.alarms.update(alarms)
+        cls.clock.update()
+
 
 class SeasonalYear:
     # default values
@@ -423,7 +428,7 @@ class SeasonalYear:
         Tiempo.clock.alarms.update({atardece: 'atardece', anochece: 'anochece',
                                     amanece: 'amanece', mediodia: 'mediodía'})
 
-        return actual, amanece, mediodia, anochece, atardece
+        return actual, amanece, mediodia, atardece, anochece
 
 
 EventDispatcher.register(Tiempo.save_time, 'Save')

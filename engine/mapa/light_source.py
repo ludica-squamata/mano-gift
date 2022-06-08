@@ -54,10 +54,10 @@ class LightSource(Sprite):
             noche.unset_light(self)
 
     def colisiona(self, other, off_x=0, off_y=0):
-        if self.nombre != other.nombre and self.encendido:
+        if self.nombre != other.nombre:
             x = self.rect.x + off_x - other.rect.x
             y = self.rect.y + off_y - other.rect.y
-            if self.mask.overlap(other.mask, (-x, -y)):
+            if self.mask.overlap(other.mask, (-x, -y)) and self.encendido:
                 other.recibir_luz_especular(self)
             else:
                 other.desiluminar(self)

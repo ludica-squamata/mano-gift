@@ -128,6 +128,7 @@ class EngineData:
             Tiempo.set_time(*data['tiempo'])
         Sun.set_mod(*SeasonalYear.cargar_timestamps())
         stage = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
+        SeasonalYear.propagate()
 
         focus = Mob_Group[data['focus']]
         if type(focus) is str:

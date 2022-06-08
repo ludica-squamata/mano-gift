@@ -48,6 +48,9 @@ class ShadowSprite(AzoeSprite):
     """:type : list"""
     alpha = 150
 
+    overwritten = False
+    fading = False
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._sombras = [0] * 9  # la nueva luz y sombra
@@ -56,16 +59,17 @@ class ShadowSprite(AzoeSprite):
         self._prevLuces = [0] * 9  # distinguir una lista de 0s de otra
         self.sombra = None
         self.registerd_shadows = {}
-        EventDispatcher.register(self.set_alpha, 'SetNight')
+        EventDispatcher.register(self.set_fading, 'ShadowFade', 'MinuteFlag')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
-    def set_alpha(self, event):
-        if 'mod' in event.data:
-            self.alpha -= event.data['mod'] * 3
-
-        elif 'alpha' in event.data:
-            negative = event.data['alpha']
-            self.alpha = 0 if self.alpha - negative < 0 else self.alpha - negative
+    def set_fading(self, event):
+        if event.tipo == 'ShadowFade':
+            self.fading = event.data['bool']
+        elif event.tipo == 'MinuteFlag':
+            if self.fading is True:
+                self.alpha -= 1 if self.alpha > 0 else 0
+            else:
+                self.alpha += 1 if self.alpha < 150 else 150
 
     def add_shadow(self):
         Renderer.camara.remove_obj(self.sombra)
@@ -174,7 +178,7 @@ class ShadowSprite(AzoeSprite):
             h_2 = 0
         if self._sombras[8]:
             img = Surface((14, 7), SRCALPHA)
-            r = img.get_rect(centerx=w, y=h-6)
+            r = img.get_rect(centerx=w, y=h - 6)
             draw.ellipse(img, COLOR_SOMBRA, [0, 0, r.w, r.h])
             t_surface.blit(img, r)
             _draw = mask.from_surface(t_surface, 100)
@@ -301,6 +305,7 @@ class ShadowSprite(AzoeSprite):
             dy = self.rect.centery - source.rect.centery
             self.unset_origin(source)
             self.alpha = 150
+            self.overwritten = True
             # marcar direccion como iluminada
             if dx > 0:
                 if dy > tolerancia:
@@ -332,6 +337,8 @@ class ShadowSprite(AzoeSprite):
             self._origins[light_idx] = 'Sun'
 
     def unset_origin(self, source):
+        if source != 'Sun':
+            self.overwritten = False
         if source in self._origins:
             origin_idx = self._origins.index(source)
             self._luces[origin_idx] = 0
@@ -358,6 +365,8 @@ class ShadowSprite(AzoeSprite):
             else:
                 if self._luces[8]:
                     self._sombras[8] = 1
+                else:
+                    self._sombras[8] = 0
 
         if any(self._sombras) and FEATURE_SOMBRAS_DINAMICAS:
             self.add_shadow()
@@ -379,11 +388,3 @@ class ShadowSprite(AzoeSprite):
         super().reubicar(dx, dy)
         if self.sombra is not None:
             self.sombra.reubicar(dx, dy)
-
-    def clear_shadows(self):
-        self._sombras = [0] * 9
-        self._luces = [0] * 9
-        self._origins = [0] * 9
-        # self._prevLuces = [0] * 9
-        Renderer.camara.remove_obj(self.sombra)
-        self.sombra = None

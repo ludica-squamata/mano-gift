@@ -74,16 +74,13 @@ class Stage:
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_daylenght']
         offset = ceil(12 - (horas_dia / 2))
-        actual = Tiempo.clock.timestamp()
         self.amanece = TimeStamp(offset + 1)
         self.mediodia = TimeStamp(offset + (horas_dia / 2))
         self.anochece = TimeStamp(offset + horas_dia)
         self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
 
-        Tiempo.clock.alarms.update({self.atardece: 'atardece', self.anochece: 'anochece',
-                                    self.amanece: 'amanece', self.mediodia: 'mediodía'})
-        Sun.set_mod(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
-        Sun.calculate(actual, self.amanece, self.mediodia, self.atardece, self.anochece)
+        Tiempo.update_alarms({self.atardece: 'atardece', self.anochece: 'anochece',
+                              self.amanece: 'amanece', self.mediodia: 'mediodía'})
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})

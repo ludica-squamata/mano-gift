@@ -19,22 +19,10 @@ class Noche(AzoeBaseSprite):
     def __init__(self, parent, rect):
         img = Surface(rect.size, SRCALPHA)
         img.fill((0, 0, 0, Sun.alpha))
-        self.images = {Sun.alpha: img}
+        self.images = {}
         self.lights = []
         super().__init__(parent, 'night block', image=img, rect=rect)
         EventDispatcher.register(self.set_darkness, 'MinuteFlag')
-    #
-    # def get_alarms(self, event):
-    #     if event.data['time'] == 'atardece':
-    #         self.oscurecer = True
-    #     elif event.data['time'] == 'anochece':
-    #         self.oscurecer = False
-    #         EventDispatcher.trigger('NightFall', 'Noche', {'value': True})
-    #
-    #     elif event.data['time'] == 'amanece':
-    #         self.aclarar = True
-    #     elif event.data['time'] == 'mediodía':
-    #         self.aclarar = False
 
     def set_darkness(self, event):
         if event.tipo == 'MinuteFlag':
@@ -73,24 +61,25 @@ class Noche(AzoeBaseSprite):
             self.images[Sun.alpha] = image
             self.image = image
 
-    def trasparentar(self, mod, max_alpha=230):
+    @staticmethod
+    def trasparentar(mod, max_alpha=230):
         if 0 < Sun.alpha + mod <= max_alpha:
             Sun.alpha += mod
-            self.propagate(Sun.alpha)
+            # print(Sun.alpha)
+            EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
 
     def set_transparency(self):
         self.image.fill((0, 0, 0, Sun.alpha))
 
-    @staticmethod
-    def propagate(mod):
-        EventDispatcher.trigger('SetNight', 'Noche', {'mod': mod})
-        EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
-
     def update(self):
         self.rect.topleft = self.parent.rect.topleft
-        # if self.alpha != self.last_alpha:
-        #     self.last_alpha = self.alpha
         if len(self.lights):
             self.draw_lights()
         else:
             self.set_transparency()
+
+        EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
+        Sun.update()
+
+    def __repr__(self):
+        return f'Nightblock of {self.parent}'

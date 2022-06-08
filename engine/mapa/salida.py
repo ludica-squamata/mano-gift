@@ -41,7 +41,6 @@ class Salida:
 
         EventDispatcher.trigger('SetMap', 'Salida', data)
         GameState.set(self.flag_name, True)
-        mob.clear_shadows()
 
     def __repr__(self):
         return self.nombre
