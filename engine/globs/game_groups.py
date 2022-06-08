@@ -234,7 +234,7 @@ class LightGroup:
     def add(self, map_id, light):
         if map_id not in self._lights:
             self._lights[map_id] = []
-        if light not in self._lights:
+        if light not in self._lights[map_id]:
             self._lights[map_id].append(light)
 
     def remove(self, light):

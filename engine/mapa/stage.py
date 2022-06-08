@@ -42,7 +42,6 @@ class Stage:
         else:
             self.current_latitude = 30
         self.current_longitude = self.data.get('longitude', 30)
-        # Sun.init(self.current_latitude)
 
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
@@ -71,8 +70,6 @@ class Stage:
             (self.cargar_timestamps, 'UpdateTime'),
             (self.save_map, 'Save')
         )
-
-        self.id = ModData.generate_id()
 
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_daylenght']

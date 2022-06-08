@@ -58,7 +58,6 @@ class LightSource(Sprite):
             x = self.rect.x + off_x - other.rect.x
             y = self.rect.y + off_y - other.rect.y
             if self.mask.overlap(other.mask, (-x, -y)):
-                print(self, 'colisiona', x, y)
                 other.recibir_luz_especular(self)
             else:
                 other.desiluminar(self)
