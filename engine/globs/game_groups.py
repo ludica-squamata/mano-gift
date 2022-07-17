@@ -95,7 +95,17 @@ class MobGroup:
                 return mob
 
     def get_named(self, name):
-        named = [mob for mob in self.contents() if mob.nombre == name]
+        """Return a sorted list of mobs that have that name for the purposes of iteration.
+
+        This method may be expanded in the future to allow searching for mobs by other traits.
+        """
+
+        if type(name) is str:
+            named = [mob for mob in self.contents() if mob.nombre == name]
+        else:
+            named = [mob for mob in self.contents() if mob.nombre == name.nombre]
+
+        named.sort(key=lambda o: o.nombre)
         return named
 
     # Aunque estos tres métodos singularizan al héroe

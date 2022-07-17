@@ -114,18 +114,18 @@ class Stage:
             self.interactives.append(obj)
         return obj
 
-    def posicion_entrada(self, entrada):
-        if not self.data['entradas'][entrada].get('used', False):
+    def posicion_entrada(self, entrada, ignore_usage=False):
+        if not self.data['entradas'][entrada].get('used', False) or ignore_usage:
+            self.data['entradas'][entrada]['used'] = True
             return self.data['entradas'][entrada]['pos']
         else:
-            self.data['entradas'][entrada]['used'] = True
             poses = self.data['entradas'][entrada]['pos']
             idx = choice([0, 1])
             poses[idx] += choice([+32, -32])
             return poses
 
     def offseted_possition(self, entrada):
-        dx, dy = self.posicion_entrada(entrada)
+        dx, dy = self.posicion_entrada(entrada, True)
         x = self.offset_x - dx
         y = self.offset_y - dy
         return x, y
@@ -157,7 +157,7 @@ class Stage:
         if item in self.properties.sprites():
             folder = self.properties
         else:
-            for chunk in self.chunks:
+            for chunk in self.chunks.sprs():
                 if item in chunk.properties.sprites():
                     folder = chunk.properties
                     break

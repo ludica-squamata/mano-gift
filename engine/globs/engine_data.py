@@ -51,24 +51,27 @@ class EngineData:
 
         if stage in cls.transient_mobs:
             for i, item in enumerate(cls.transient_mobs[stage]):
-                mobs_with_that_name = Mob_Group.get_named(item['mob'])
-                mob = mobs_with_that_name[i]
-                x, y = cls.mapas[stage].posicion_entrada(item['pos']) if type(item['pos']) is str else item['pos']
-                dx, dy = mob.direcciones[mob.direccion]
-                dx *= 32
-                dy *= 32
-                mob.ubicar_en_mapa(x + dx, y + dy)
-                if type(mob) is not str:
-                    cls.mapas[stage].mapa.add_property(mob, 2)
-                    mob.set_parent_map(cls.mapas[stage].mapa)
-                item['flagged'] = True
+                if item['flagged'] is False:
+                    mobs_with_that_name = Mob_Group.get_named(item['mob'])
+                    mob = mobs_with_that_name[i]
+                    x, y = cls.mapas[stage].posicion_entrada(item['pos'])
+                    dx, dy = mob.direcciones[mob.direccion]
+                    dx *= 32
+                    dy *= 32
+                    mob.ubicar_en_mapa(x + dx, y + dy)
+                    if type(mob) is not str:
+                        cls.mapas[stage].mapa.add_property(mob, 2)
+                        mob.set_parent_map(cls.mapas[stage].mapa)
+                    item['flagged'] = True
 
-        for all_stage in cls.transient_mobs:
-            if all_stage != stage:
-                for all_item in set([i['mob'] for i in cls.transient_mobs[all_stage]]):
-                    for named_mob in Mob_Group.contents():
-                        if named_mob.nombre == all_item:
-                            cls.mapas[stage].search_and_delete(named_mob)
+        # this deletes the transient mobs from other maps so they don't get duplicated.
+        transient_copy = cls.transient_mobs.copy()
+        if stage in transient_copy:
+            transient_copy.pop(stage)
+            for every_other_stage in transient_copy:
+                for transient_mob in set([i['mob'] for i in transient_copy[every_other_stage]]):
+                    for named_mob in Mob_Group.get_named(transient_mob):
+                        cls.mapas[stage].search_and_delete(named_mob)
 
         return cls.mapas[stage]
 
@@ -83,7 +86,7 @@ class EngineData:
             EventDispatcher.trigger('EndDialog', cls, {})
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
-            x, y = mapa.posicion_entrada(entrada)
+            x, y = mapa.posicion_entrada(entrada, True)
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
             if stage not in cls.transient_mobs:
