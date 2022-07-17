@@ -6,6 +6,7 @@ from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
 from pygame import mask, Rect
+from random import choice
 from math import ceil
 
 
@@ -114,7 +115,14 @@ class Stage:
         return obj
 
     def posicion_entrada(self, entrada):
-        return self.data['entradas'][entrada]['pos']
+        if not self.data['entradas'][entrada].get('used', False):
+            return self.data['entradas'][entrada]['pos']
+        else:
+            self.data['entradas'][entrada]['used'] = True
+            poses = self.data['entradas'][entrada]['pos']
+            idx = choice([0, 1])
+            poses[idx] += choice([+32, -32])
+            return poses
 
     def offseted_possition(self, entrada):
         dx, dy = self.posicion_entrada(entrada)
@@ -143,6 +151,19 @@ class Stage:
 
     def __repr__(self):
         return "Stage " + self.nombre
+
+    def search_and_delete(self, item):
+        folder = None
+        if item in self.properties.sprites():
+            folder = self.properties
+        else:
+            for chunk in self.chunks:
+                if item in chunk.properties.sprites():
+                    folder = chunk.properties
+                    break
+
+        if folder is not None and item in folder:
+            folder.remove(item)
 
 
 class ChunkMap(AzoeBaseSprite):

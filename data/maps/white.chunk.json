@@ -2,7 +2,7 @@
   "fondo": "maps/fondos/pasto.png",
   "colisiones": null,
   "props": {},
-  "mobs": {},
+  "mobs": {"aristocrat": [[192, 192], [160, 192], [192, 160]]},
   "limites": {
     "sup": "black",
     "inf": "black",

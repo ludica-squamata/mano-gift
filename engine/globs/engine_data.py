@@ -33,7 +33,8 @@ class EngineData:
             (lambda e: cls.end_dialog(), 'EndDialog'),
             (salir_handler, 'QUIT'),
             (cls.cargar_juego, 'LoadGame'),
-            (cls.create_character, 'CharacterCreation')
+            (cls.create_character, 'CharacterCreation'),
+            (cls.remove_from_transient, 'MobDeath')
         )
 
     @classmethod
@@ -49,9 +50,10 @@ class EngineData:
             mob.set_parent_map(cls.mapas[stage].mapa)
 
         if stage in cls.transient_mobs:
-            for item in cls.transient_mobs[stage]:
-                mob = item['mob']
-                x, y = cls.mapas[stage].posicion_entrada(item['pos'])
+            for i, item in enumerate(cls.transient_mobs[stage]):
+                mobs_with_that_name = Mob_Group.get_named(item['mob'])
+                mob = mobs_with_that_name[i]
+                x, y = cls.mapas[stage].posicion_entrada(item['pos']) if type(item['pos']) is str else item['pos']
                 dx, dy = mob.direcciones[mob.direccion]
                 dx *= 32
                 dy *= 32
@@ -59,6 +61,14 @@ class EngineData:
                 if type(mob) is not str:
                     cls.mapas[stage].mapa.add_property(mob, 2)
                     mob.set_parent_map(cls.mapas[stage].mapa)
+                item['flagged'] = True
+
+        for all_stage in cls.transient_mobs:
+            if all_stage != stage:
+                for all_item in set([i['mob'] for i in cls.transient_mobs[all_stage]]):
+                    for named_mob in Mob_Group.contents():
+                        if named_mob.nombre == all_item:
+                            cls.mapas[stage].search_and_delete(named_mob)
 
         return cls.mapas[stage]
 
@@ -76,10 +86,11 @@ class EngineData:
             x, y = mapa.posicion_entrada(entrada)
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
-            pos = entrada if stage not in cls.mapas else cls.mapas[stage].posicion_entrada(entrada)
             if stage not in cls.transient_mobs:
                 cls.transient_mobs[stage] = []
-            cls.transient_mobs[stage].append({'mob': mob, 'pos': pos})
+            item = {'mob': mob, 'pos': entrada, 'flagged': False}
+            if item not in cls.transient_mobs[stage]:
+                cls.transient_mobs[stage].append(item)
             Renderer.camara.remove_obj(mob.sombra)
             mob.AI.reset()
 
@@ -144,7 +155,7 @@ class EngineData:
                 focus = stage.mapa.get_property(focus)
 
         for item in cls.transient_mobs.get(stage.nombre, []):
-            mob_name = item['mob']
+            mob_name = cls.transient_mobs[stage.nombre][item]
             x, y = cls.mapas[stage].posicion_entrada(item['pos'])
             datos = {'mobs': {mob_name: [[x, y]]}}
             datos.update({'entradas': stage.data['entradas']})
@@ -162,7 +173,16 @@ class EngineData:
         # transient NPCS porque el focus pasa por otro lado.
         transient = {}
         for stage in cls.transient_mobs:
-            transient[stage] = [i['mob'].nombre for i in cls.transient_mobs[stage]]
+            transient[stage] = []
+            for item in cls.transient_mobs[stage]:
+                newitem = {}
+                if type(item['mob']) is str:
+                    newitem['mob'] = item['mob']
+                else:
+                    newitem['mob'] = item['mob'].nombre
+                newitem.update({'pos': item['pos']})
+                transient[stage].append(newitem)
+
         EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
 
     @classmethod
@@ -228,6 +248,17 @@ class EngineData:
                 mkdir(ruta)
             guardar_json(path.join(ruta, name + '.json'), cls.character)
             cls.new_game(name)
+
+    @classmethod
+    def remove_from_transient(cls, event):
+        stage = event.data['mapa'].nombre
+        flag = 0
+        if len(cls.transient_mobs):
+            for idx, item in enumerate(cls.transient_mobs[stage]):
+                if item['mob'] == event.data['obj']:
+                    flag = idx
+
+            del cls.transient_mobs[stage][flag]
 
 
 EngineData.init()

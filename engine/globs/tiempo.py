@@ -1,8 +1,8 @@
 from engine.globs.event_dispatcher import EventDispatcher
+from pygame import time, font
 from datetime import datetime
 from math import floor, ceil
 from itertools import cycle
-from pygame import time
 
 
 class Clock:
@@ -159,6 +159,12 @@ class Clock:
             ts = self.timestamp()
             if ts in self.alarms:
                 EventDispatcher.trigger('ClockAlarm', 'Clock', {'time': self.alarms[ts]})
+
+    def render(self, color):
+        fuente = font.SysFont('Verdana', 16)
+        text = str(self.timestamp())
+        render = fuente.render(text, True, color)
+        return render
 
 
 class TimeStamp:

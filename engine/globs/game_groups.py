@@ -94,6 +94,10 @@ class MobGroup:
             if mob.AI_type == 'Controllable':
                 return mob
 
+    def get_named(self, name):
+        named = [mob for mob in self.contents() if mob.nombre == name]
+        return named
+
     # Aunque estos tres métodos singularizan al héroe
     # no se me ocurre otra forma de arrastrar su nombre.
     def register_name(self, event):

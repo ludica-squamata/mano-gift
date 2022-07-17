@@ -39,13 +39,6 @@ class ReachExit(Leaf):
         return Success
 
 
-def night_event(event):
-    GameState.set('NightTime', event.data['value'])
-
-
-EventDispatcher.register(night_event, "NightFall")
-
-
 class IsItNightTime(Leaf):
     @staticmethod
     def process():

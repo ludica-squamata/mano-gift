@@ -2,6 +2,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Rect, draw, display, image, mouse, font, sprite, Surface, SCALED
 from engine.globs.azoe_group import AzoeGroup
 from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
+from .tiempo import Tiempo
 import sys
 import os
 
@@ -99,7 +100,7 @@ class Camara:
 
     @classmethod
     def detectar_mapas_adyacentes(cls):
-        map_at_center, map_at_bottom, map_at_right, map_at_top, map_at_left = [None]*5
+        map_at_center, map_at_bottom, map_at_right, map_at_top, map_at_left = [None] * 5
         r = cls.rect.inflate(5, 5)
         map_at = cls.bgs.get_spr_at
         adyacent_map_key = ''
@@ -330,6 +331,8 @@ class Renderer:
             if over.active:
                 over.update()
         ret = cls.camara.draw(fondo)
+        clock = Tiempo.clock.render('red')
+        ret += [fondo.blit(clock, [ANCHO-clock.get_width(), 0])]
         ret += cls.overlays.draw(fondo)
 
         display.update(ret)
