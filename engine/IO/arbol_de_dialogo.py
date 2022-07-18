@@ -93,6 +93,10 @@ class Elemento:
         else:
             return True
 
+    def __next__(self):
+        # estaba escrito en el Árbol como un método estático.
+        return self.leads
+
 
 class BranchArray:
     _lenght = 0
@@ -129,10 +133,6 @@ class BranchArray:
 
         return ex + 'BranchArray (' + ', '.join(['#' + str(i.indice) for i in self.array]) + ')'
 
-    def add(self, x):
-        self.array.append(x)
-        self._lenght += 1
-
     def supress(self, nodo):
         if nodo in self.array:
             self.flaged.append(self.array.index(nodo))
@@ -147,13 +147,10 @@ class BranchArray:
 
 
 class ArboldeDialogo:
-    __slots__ = ['_elementos', '_future']
+    _future = 0
 
     def __init__(self, datos):
-        self._elementos = []
-        self._future = 0
-
-        self._elementos.extend(self._crear_lista(datos))
+        self._elementos = [Elemento(idx, data) for idx, data in enumerate(datos)]
 
         for obj in self._elementos:
             if obj.tipo != 'leaf':
@@ -162,52 +159,14 @@ class ArboldeDialogo:
                 else:
                     obj.leads = BranchArray(obj, self._elementos)
 
-    @staticmethod
-    def _crear_lista(datos):
-        _elem = []
-        for i in range(len(datos)):
-            idx = str(i)
-            data = datos[idx]
-
-            _elem.append(Elemento(idx, data))
-        return _elem
-
     def process_events(self, events):
         for elemento in self._elementos:
             if elemento.event is not None:
                 name = elemento.event
                 elemento.create_event(name, events[name])
 
-    def __len__(self):
-        return len(self._elementos)
-
     def __repr__(self):
         return '_Arbol de Dialogo (' + str(len(self._elementos)) + ' elementos)'
-
-    def __getitem__(self, item):
-        if type(item) != int:
-            raise TypeError('expected int, got' + str(type(item)))
-        elif not 0 <= item <= len(self._elementos) - 1:
-            raise IndexError
-        else:
-            return self._elementos[item]
-
-    def __contains__(self, item):
-        if item in self._elementos:
-            return True
-        return False
-
-    def get_lead_of(self, parent_i, lead_i=0):
-        if type(parent_i) is Elemento:
-            parent_i = self._elementos.index(parent_i)
-        item = self._elementos[parent_i]
-        if item.tipo != 'leaf':
-            if item.hasLeads:
-                return item.leads[lead_i]
-            else:
-                return item.leads
-        else:
-            raise TypeError('Leaf element has no lead')
 
     def set_actual(self, idx):
         if isinstance(idx, Elemento):
@@ -223,10 +182,6 @@ class ArboldeDialogo:
         else:
             return self._elementos[self._future]
 
-    @staticmethod
-    def next(nodo):
-        return nodo.leads
-
     def set_chosen(self, choice):
         if choice is None:
             # choice is a leaf
@@ -235,9 +190,7 @@ class ArboldeDialogo:
             self.set_actual(int(choice))
 
     def update(self):
-        """Devuelve el nodo actual, salvo que sea un leaf o branch,
-        en cuyo caso devuelve False y None (respectivamente), y
-        prepara se prepara para devolver el siguiente nodo"""
+        """Devuelve el nodo actual, y se prepara para devolver el siguiente nodo."""
 
         if self._future is not False:  # last was leaf; close
             if not type(self._future) is BranchArray:
@@ -252,8 +205,4 @@ class ArboldeDialogo:
 
                 return actual
 
-            else:  # branch
-                return self._future
-
-        else:  # last was leaf; close
-            return self._future
+        return self._future  # branch or close.
