@@ -36,6 +36,12 @@ class Stage:
         offy = self.offset_y - dy
         entradas = self.data['entradas']
 
+        self.special_adresses = {}
+        for special_chunk_key in self.data.get('chunks', {}):
+            special_chunk_data = self.data['chunks'][special_chunk_key]
+            adress = tuple(special_chunk_data['adress'])
+            self.special_adresses[adress] = [special_chunk_key, special_chunk_data]
+
         self.id = ModData.generate_id()
 
         if ModData.use_latitude:
@@ -165,6 +171,13 @@ class Stage:
         if folder is not None and item in folder:
             folder.remove(item)
 
+    def is_this_adress_special(self, x, y):
+        return (x, y) in self.special_adresses
+
+    def get_special_adress_at(self, x, y):
+        if (x, y) in self.special_adresses:
+            return self.special_adresses[x, y]
+
 
 class ChunkMap(AzoeBaseSprite):
     tipo = 'chunk'
@@ -172,7 +185,9 @@ class ChunkMap(AzoeBaseSprite):
     properties = None
     interactives = None
 
-    def __init__(self, stage, nombre, off_x, off_y, entradas, transient_mob=None, data=False, requested=None):
+    adress = None
+
+    def __init__(self, stage, nombre, off_x, off_y, entradas, trnsnt_mb=None, data=False, requested=None, adress=None):
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
         self.interactives = []
 
@@ -181,14 +196,18 @@ class ChunkMap(AzoeBaseSprite):
 
         self.datos = data.copy()
         self.limites = data['limites']
+        if adress is not None:
+            self.adress = ChunkAdress(self, *adress)
+        else:
+            self.adress = ChunkAdress(self, 0, 0)
 
         data.update({'entradas': entradas})
         if 'hero' in data['mobs']:
             name = Mob_Group.character_name
             data['mobs'][name] = data['mobs'].pop('hero')
             data['refs'][name] = ModData.fd_player + name + '.json'
-            if transient_mob is not None and name == transient_mob.character_name:
-                del data['mobs'][transient_mob.character_name]
+            if trnsnt_mb is not None and name == trnsnt_mb.character_name:
+                del data['mobs'][trnsnt_mb.character_name]
 
         if len(data['mobs']):
             for mob in Mob_Group.get_existing(data['mobs']):
@@ -279,9 +298,17 @@ class ChunkMap(AzoeBaseSprite):
         dy = y - h if ady == 'sup' else y + h if ady == 'inf' else y
         dx = x - w if ady == 'izq' else x + w if ady == 'der' else x
 
+        ax = self.adress.x + 1 if ady == 'der' else self.adress.x - 1 if ady == 'izq' else self.adress.x
+        ay = self.adress.y + 1 if ady == 'inf' else self.adress.y - 1 if ady == 'sup' else self.adress.y
+
         if type(self.limites[ady]) is str:
             entradas = self.parent.data['entradas']
-            mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['props'])
+            if self.parent.is_this_adress_special(ax, ay):
+                name, datos = self.parent.get_special_adress_at(ax, ay)
+                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos, requested=['props'], adress=(ax, ay))
+            else:
+                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['props'], adress=(ax, ay))
+
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:
@@ -298,3 +325,16 @@ class ChunkMap(AzoeBaseSprite):
 
     def __repr__(self):
         return "ChunkMap " + self.nombre
+
+
+class ChunkAdress:
+    x = 0
+    y = 0
+
+    def __init__(self, parent, x, y):
+        self.parent = parent
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f'{self.parent.nombre} @{self.x}, {self.y}'

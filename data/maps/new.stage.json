@@ -26,6 +26,23 @@
   "props": {
     "light_post": [[288,288],[384,288]]
   },
+  "chunks":{
+    "special":{
+      "fondo":"maps/fondos/pasto.png",
+      "colisiones":null,
+      "props": {
+        "light_post":[[400, 400]]
+      },
+      "mobs": {},
+      "limites":{
+        "sup": "white",
+        "inf": "white",
+        "izq": "white",
+        "der": "white"},
+      "adress": [0,-15],
+      "refs":{}
+    }
+  },
   "ambiente": "exterior",
   "latitude": 30,
   "longitude": 30
