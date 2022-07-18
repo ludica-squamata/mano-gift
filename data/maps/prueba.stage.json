@@ -71,6 +71,12 @@
       "direcciones": []
     }
   ],
+  "puntos_de_interes_para_la_IA": [
+    {
+    "chunk": "single",
+    "point":{"name": "bed", "node": [608, 608, 32]}
+    }
+  ],
   "ambiente": "exterior",
   "latitude": 30,
   "longitude": 30

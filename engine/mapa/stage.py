@@ -72,6 +72,13 @@ class Stage:
             (self.save_map, 'Save')
         )
 
+        self.points_of_interest = {}
+        for datapoint in self.data.get('puntos_de_interes_para_la_IA', {}):
+            chunk_name = datapoint['chunk']
+            if chunk_name not in self.points_of_interest:
+                self.points_of_interest[chunk_name] = {}
+            self.points_of_interest[chunk_name][datapoint['point']['name']] = datapoint['point']['node']
+
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_daylenght']
         offset = ceil(12 - (horas_dia / 2))

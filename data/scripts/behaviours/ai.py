@@ -48,9 +48,25 @@ class IsItNightTime(Leaf):
             return Failure
 
 
+class IsThereABed(Leaf):
+    def process(self):
+        e = self.get_entity()
+        mapa = e.stage
+        stage = mapa.parent
+        if 'bed' in stage.points_of_interest.get(mapa.nombre, {}):
+            print(f"{e.nombre}: 'phew! there is a bed. I'm going to sleep.")
+            return Success
+        else:
+            print(f"{e.nombre}: 'shit! there is no bed in this map!")
+            return Failure
+
+
 class GoToBed(Leaf):
     def process(self):
-        nodo = Nodo(608, 608, 32)
+        e = self.get_entity()
+        mapa = e.stage
+        stage = mapa.parent
+        nodo = Nodo(*stage.points_of_interest[mapa.nombre]['bed'])
         self.tree.set_context('punto_final', nodo)
         self.tree.set_context('in_bed', True)
         return Success
