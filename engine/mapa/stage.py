@@ -1,12 +1,11 @@
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
+from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
-from .loader import load_something, cargar_salidas
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
 from pygame import mask, Rect
-from random import choice
 from math import ceil
 
 
@@ -24,7 +23,8 @@ class Stage:
 
     interactives = []
 
-    def __init__(self, nombre, mob, entrada):
+    def __init__(self, nombre, mob, entrada, npcs_with_id=None):
+        NamedNPCs.npcs_with_ids = npcs_with_id
         self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
         self.interactives.clear()
         self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
@@ -121,18 +121,11 @@ class Stage:
             self.interactives.append(obj)
         return obj
 
-    def posicion_entrada(self, entrada, ignore_usage=False):
-        if not self.data['entradas'][entrada].get('used', False) or ignore_usage:
-            self.data['entradas'][entrada]['used'] = True
-            return self.data['entradas'][entrada]['pos']
-        else:
-            poses = self.data['entradas'][entrada]['pos']
-            idx = choice([0, 1])
-            poses[idx] += choice([+32, -32])
-            return poses
+    def posicion_entrada(self, entrada):
+        return self.data['entradas'][entrada]['pos']
 
     def offseted_possition(self, entrada):
-        dx, dy = self.posicion_entrada(entrada, True)
+        dx, dy = self.posicion_entrada(entrada)
         x = self.offset_x - dx
         y = self.offset_y - dy
         return x, y

@@ -22,7 +22,7 @@ class AzoeSprite(sprite.Sprite):
 
     is_damageable = False
 
-    def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0):
+    def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
         super().__init__()
 
@@ -61,7 +61,10 @@ class AzoeSprite(sprite.Sprite):
 
         self.mapa_actual_rect = Rect(*self.mapRect)
 
-        self.id = ModData.generate_id()
+        if id is None:
+            self.id = ModData.generate_id()
+        else:
+            self.id = id
 
     def set_parent_map(self, parent):
         self.stage = parent

@@ -7,6 +7,10 @@ from engine.mobs import Mob
 from .salida import Salida
 
 
+class NamedNPCs:
+    npcs_with_ids = None
+
+
 def load_something(map_id: str, alldata: dict, requested: str):
     """
     :type requested: list
@@ -82,6 +86,14 @@ def load_mobs(alldata: dict):
                 data = ModData.character_generator[name]()
             else:
                 data = abrir_json(ModData.mobs + name + '.json')
+
+            if NamedNPCs.npcs_with_ids is not None:
+                ids, names = NamedNPCs.npcs_with_ids
+                if data['nombre'] in names:
+                    idx = names.index(data['nombre'])
+                    data['id'] = ids[idx]
+                    del names[idx], ids[idx]
+
             mob = Mob(x, y, data)
             loaded_mobs.append((mob, GRUPO_MOBS))
 

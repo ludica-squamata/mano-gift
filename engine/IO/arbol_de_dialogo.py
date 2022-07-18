@@ -150,7 +150,7 @@ class ArboldeDialogo:
     _future = 0
 
     def __init__(self, datos):
-        self._elementos = [Elemento(idx, data) for idx, data in enumerate(datos)]
+        self._elementos = [Elemento(idx, data) for idx, data in datos.items()]
 
         for obj in self._elementos:
             if obj.tipo != 'leaf':
