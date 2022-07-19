@@ -1,7 +1,7 @@
 from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
 from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
+from random import randrange, choice
 from engine.misc import ReversibleDict
-from random import randrange, randint
 
 
 class IsTalking(Leaf):
@@ -21,13 +21,9 @@ class IsTalking(Leaf):
 class Wait(Leaf):
     def process(self):
         e = self.get_entity()
-        if randint(0, 101) <= 5:
-            # Is NOT waiting, therefore, Failure
-            return Failure
-        else:
-            e.detener_movimiento()
-            # must keep the present continous
-            return Running
+        e.detener_movimiento()
+        self.tree.set_context('timer', 60*3)
+        return Success
 
 
 class GetRandomDir(Leaf):
@@ -103,3 +99,28 @@ class GetMap(Leaf):
         self.tree.set_context('mapa', cuadros)
         self.tree.set_context('next', 0)
         return Success
+
+
+class LookAround(Leaf):
+    def process(self):
+        e = self.get_entity()
+        if self.tree.get_context('head_orientation') is False:
+            orientacion = choice('left,right'.split(','))
+            self.tree.set_context('head_orientation', orientacion)
+            e.cambiar_direccion2(self.tree.get_context('head_orientation'))
+        timer = self.tree.get_context('timer')
+        if timer > 30:
+            self.tree.set_context('timer', timer - 1)
+        else:
+            return Success
+
+
+class KeepLooking(Leaf):
+    def process(self):
+        timer = self.tree.get_context('timer')
+        if timer > 0:
+            self.tree.set_context('timer', timer-1)
+            return Running
+        else:
+            self.tree.erase_keys('head_orientation', 'timer')
+            return Success
