@@ -1,4 +1,4 @@
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO, GRUPO_ITEMS
 from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
@@ -13,7 +13,7 @@ class Stage:
     properties = None
     chunks = None
     mapa = None
-    data = {}
+    data = None
     offset_x = ANCHO // 2  # camara.rect.centerx
     offset_y = ALTO // 2  # camara.rect.centery
     mediodia = None  # porque no siempre es a las 12 en punto.
@@ -21,12 +21,10 @@ class Stage:
     atardece = None
     anochece = None
 
-    interactives = []
-
     def __init__(self, nombre, mob, entrada, npcs_with_id=None):
         NamedNPCs.npcs_with_ids = npcs_with_id
         self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
-        self.interactives.clear()
+        self.interactives = []
         self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
@@ -44,7 +42,7 @@ class Stage:
 
         self.id = ModData.generate_id()
 
-        if ModData.use_latitude:
+        if ModData.use_latitude and 'latitude' in self.data:
             self.current_latitude = self.data['latitude']
         else:
             self.current_latitude = 30
@@ -63,13 +61,10 @@ class Stage:
         if 'props' in self.data:
             self.load_unique_props(self.data, 0, 0)
 
-        sld, masc, img = cargar_salidas(self.mapa, self.data, chunk.rect.size)
+        sld, masc, img = cargar_salidas(self.mapa, self.data)
         self.salidas = sld  # la lista de salidas, igual que siempre.
         self.mask_salidas = masc  # máscara de colisiones de salidas.
-        self.img_salidas = img  # imagen de colores codificados
-        # estas tres propiedades, dado que se relacionan con las salidas,
-        # pertenecen a Stage, pero como se usa el tamaño del Chunk, la
-        # distinción es ambigua.
+        self.img_salidas = img  # imagen de colores codificados.
 
         self.entrada = entrada
 
@@ -130,15 +125,34 @@ class Stage:
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
 
-    def offseted_possition(self, entrada):
+    def ubicar_en_entrada(self, entrada):
         dx, dy = self.posicion_entrada(entrada)
+        datos = self.data['entradas'][entrada]
+        ax, ay = datos['adress']
+
+        if self.is_this_adress_special(ax, ay):
+
+            self.relocate_props()
+
+            name, chunk_data = self.get_special_adress_at(ax, ay)
+            if type(chunk_data) is dict:
+                self.mapa = ChunkMap(self, name, dx + (ax * 800), dy + (ay * 800), self.data['entradas'],
+                                     data=chunk_data, requested=['props', 'mobs'], adress=[ax, ay])
+            else:
+                self.mapa = chunk_data
+                self.relocate_props()
+
         x = self.offset_x - dx
         y = self.offset_y - dy
-        return x, y
-
-    def ubicar_en_entrada(self, entrada):
-        x, y = self.offseted_possition(entrada)
         self.mapa.ubicar(x, y)
+
+    def relocate_props(self):
+        # hay problemas en esta función;
+        # los props del mapa anterior quedan cargados en memoria.
+        # supongo que es porque no se están actualizando estas variables.
+        ax, ay = self.mapa.adress.get_value()
+        for prop in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
+            print(prop.stage.rect, prop.mapRect, prop.rect)
 
     def set_coordinates(self, direccion):
         if direccion == 'arriba':
@@ -177,6 +191,10 @@ class Stage:
     def get_special_adress_at(self, x, y):
         if (x, y) in self.special_adresses:
             return self.special_adresses[x, y]
+
+    def set_special_adress(self, x, y, mapa):
+        if self.is_this_adress_special(x, y):
+            self.special_adresses[x, y][1] = mapa
 
 
 class ChunkMap(AzoeBaseSprite):
@@ -224,6 +242,7 @@ class ChunkMap(AzoeBaseSprite):
             self.mask = mask.Mask(rect.size)
 
         super().__init__(stage, nombre, image, rect)
+        print(self.adress)
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
         if any([len(data[req]) > 0 for req in requested]):
@@ -306,6 +325,7 @@ class ChunkMap(AzoeBaseSprite):
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos, requested=['props'], adress=(ax, ay))
+                self.parent.set_special_adress(ax, ay, mapa)
             else:
                 mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['props'], adress=(ax, ay))
 
@@ -335,6 +355,9 @@ class ChunkAdress:
         self.parent = parent
         self.x = x
         self.y = y
+
+    def get_value(self):
+        return self.x, self.y
 
     def __str__(self):
         return f'{self.parent.nombre} @{self.x}, {self.y}'

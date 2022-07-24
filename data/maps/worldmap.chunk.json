@@ -4,10 +4,10 @@
   "props": {},
   "mobs": {},
   "limites": {
-    "sup": "white",
-    "inf": "white",
-    "izq": "white",
-    "der": "white"
+    "izq": null,
+    "der": null,
+    "inf": null,
+    "sup": null
   },
   "refs": {}
 }

@@ -2,24 +2,23 @@
   "entradas": {
     "center": {
       "chunk": "white",
-      "pos": [
-        32,
-        32
-      ]
+      "pos": [32,32],
+      "adress": [0,0]
+    },
+    "special": {
+      "chunk": "special",
+      "pos": [432,400],
+      "adress": [0,-15]
     }
   },
   "salidas": [
+
     {
-      "stage": "prueba",
-      "rect": [
-        400,
-        350,
-        32,
-        32
-      ],
+      "stage": "worldmap",
+      "rect": [400,32,32,32],
       "chunk": "black",
-      "nombre": "black.salida1",
-      "entrada": "centre",
+      "nombre": "exit_to_worldmap",
+      "entrada": "access",
       "direcciones": []
     }
   ],
