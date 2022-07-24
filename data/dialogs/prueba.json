@@ -31,7 +31,7 @@
     },
     "2": {
       "type": "branch", "leads": 8, "from": "heroe", "to": "commoner",
-      "txt": "Hmm, supongo que sería esta opción."
+      "txt": "Hmm, supongo que será esta opción."
     },
     "3": {
       "type": "branch", "leads": 9, "from": "heroe", "to": "commoner",
@@ -45,7 +45,7 @@
     "5": {
       "type": "branch", "leads": 11, "from": "heroe", "to": "commoner",
       "reqs": {"objects": ["Estrella"]},
-      "txt": "Aquí tengo una <b>estrella</b> que encontré."
+      "txt": "Aquí tengo una <b>estrella</b> que encontré"
     },
     "6": {"type": "branch","leads": 12, "from": "heroe", "to": "commoner",
       "txt": "¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."
@@ -64,7 +64,7 @@
     },
     "10": {
       "type": "leaf", "from": "commoner", "to": "heroe",
-      "txt": "¡Correcto! esta es la opción oculta!"
+      "txt": "¡Correcto! ¡esta es la opción oculta!"
     },
     "11": {
       "type": "leaf", "from": "commoner", "to": "heroe", "event": "Flag",
@@ -72,7 +72,7 @@
     },
     "12": {
       "type": "exclusive", "leads": [13, 14, 15], "from": "commoner", "to": "heroe",
-      "txt": "Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrías que ver un fragmento distinto."
+      "txt": "Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrás que ver un fragmento distinto."
     },
     "13": {
       "type": "node", "leads": 17, "from": "commoner", "to": "heroe",
@@ -90,7 +90,7 @@
     },
     "16": {
       "type": "node", "leads": 17, "from": "commoner", "to": "heroe",
-      "txt": "Es cierto! Tu <b>carisma</b> ha aumentado!"
+      "txt": "¡Es cierto! ¡Tu <b>carisma</b> ha aumentado!"
     },
     "17": {
       "type": "node", "leads": [18,19,20], "from": "commoner", "to": "heroe",
