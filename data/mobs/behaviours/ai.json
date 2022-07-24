@@ -32,7 +32,7 @@
           "5": {"name": "Sequence","children": [6,7,8,10]},
             "6": {"name": "IsItNightTime"},
             "7": {"name": "IsThereABed"},
-            "8": {"name": "Inverter", "child": 7},
+            "8": {"name": "Inverter", "child": 9},
               "9": {"name": "IsInBed"},
             "10": {"name": "GoToBed"},
           "11": {"name": "GetRandomDir"},
