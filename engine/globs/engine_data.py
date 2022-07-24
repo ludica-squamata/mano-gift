@@ -18,7 +18,7 @@ class EngineData:
     character = {
         'AI': 'controllable'
     }
-    transient_mobs = {}
+    transient_mobs = []
 
     @classmethod
     def init(cls):
@@ -33,14 +33,15 @@ class EngineData:
             (lambda e: cls.end_dialog(), 'EndDialog'),
             (salir_handler, 'QUIT'),
             (cls.cargar_juego, 'LoadGame'),
-            (cls.create_character, 'CharacterCreation')
+            (cls.create_character, 'CharacterCreation'),
+            (cls.remove_from_transient, 'MobDeath')
         )
 
     @classmethod
-    def setear_mapa(cls, stage, entrada, mob=None, is_new_game=False):
+    def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False):
         from engine.mapa import Stage
         if stage not in cls.mapas or is_new_game:
-            cls.mapas[stage] = Stage(stage, mob, entrada)
+            cls.mapas[stage] = Stage(stage, mob, entrada, named_npcs)
         else:
             cls.mapas[stage].ubicar_en_entrada(entrada)
 
@@ -48,10 +49,15 @@ class EngineData:
             cls.mapas[stage].mapa.add_property(mob, 2)
             mob.set_parent_map(cls.mapas[stage].mapa)
 
-        if stage in cls.transient_mobs:
-            for item in cls.transient_mobs[stage]:
-                mob = item['mob']
-                x, y = cls.mapas[stage].posicion_entrada(item['pos'])
+        for entry in cls.transient_mobs:
+            mob = Mob_Group[entry['id']]
+            from_stage = entry['from']
+            if from_stage in cls.mapas:
+                cls.mapas[from_stage].search_and_delete(mob)
+                entry['flagged'] = True
+
+            if entry['to'] == stage:
+                x, y = cls.mapas[stage].posicion_entrada(entry['pos']) if type(entry['pos']) is str else entry['pos']
                 dx, dy = mob.direcciones[mob.direccion]
                 dx *= 32
                 dy *= 32
@@ -63,12 +69,22 @@ class EngineData:
         return cls.mapas[stage]
 
     @classmethod
+    def delete_flagged_entries(cls):
+        flagged = [i for i in cls.transient_mobs if i['flagged']]
+        for each in flagged:
+            cls.transient_mobs.remove(each)
+
+    @classmethod
     def on_cambiarmapa(cls, evento):
         mapa_actual = Renderer.camara.focus.stage
         mob = evento.data['mob']
         mapa_actual.del_property(mob)
         stage = evento.data['target_stage']
         entrada = evento.data['target_entrada']
+        for entry in cls.transient_mobs:
+            transit_mob = Mob_Group[entry['id']]
+            entry['pos'] = transit_mob.mapRect.center
+
         if Renderer.camara.is_focus(mob):
             EventDispatcher.trigger('EndDialog', cls, {})
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
@@ -76,10 +92,8 @@ class EngineData:
             x, y = mapa.posicion_entrada(entrada)
             Renderer.camara.focus.ubicar_en_entrada(x, y)
         else:
-            pos = entrada if stage not in cls.mapas else cls.mapas[stage].posicion_entrada(entrada)
-            if stage not in cls.transient_mobs:
-                cls.transient_mobs[stage] = []
-            cls.transient_mobs[stage].append({'mob': mob, 'pos': pos})
+            item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
+            cls.transient_mobs.append(item)
             Renderer.camara.remove_obj(mob.sombra)
             mob.AI.reset()
 
@@ -112,7 +126,7 @@ class EngineData:
     def load_savefile(cls, filename):
         data = abrir_json(Config.savedir + '/' + filename)
         cls.save_data.update(data)
-        cls.transient_mobs = data.get('transient', {})
+        cls.transient_mobs = data.get('transient', [])
         Mob_Group.clear()
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
@@ -127,7 +141,12 @@ class EngineData:
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
         Sun.set_mod(*SeasonalYear.cargar_timestamps())
-        stage = cls.setear_mapa(data['mapa'], data['entrada'], is_new_game=True)
+
+        ids = [e['id'] for e in cls.transient_mobs]
+        names = [e['name'] for e in cls.transient_mobs]
+        named_npcs = [ids, names]
+
+        stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True)
         SeasonalYear.propagate()
 
         focus = Mob_Group[data['focus']]
@@ -143,15 +162,20 @@ class EngineData:
             else:
                 focus = stage.mapa.get_property(focus)
 
-        for item in cls.transient_mobs.get(stage.nombre, []):
-            mob_name = item['mob']
-            x, y = cls.mapas[stage].posicion_entrada(item['pos'])
-            datos = {'mobs': {mob_name: [[x, y]]}}
-            datos.update({'entradas': stage.data['entradas']})
-            item, grupo = load_mobs(datos)[0]
+        for entry in cls.transient_mobs:
+            mob = Mob_Group[entry['id']]
+            if entry['to'] == stage.nombre:
+                x, y = cls.mapas[stage].posicion_entrada(entry['pos'])
+                datos = {'mobs': {entry['mob']: [[x, y]]}}
+                datos.update({'entradas': stage.data['entradas']})
+                item, grupo = load_mobs(datos)[0]
 
-            obj = stage.mapa.add_property(item, grupo)
-            obj.set_parent_map(stage.mapa)
+                obj = stage.mapa.add_property(item, grupo)
+                obj.set_parent_map(stage.mapa)
+
+            else:
+                cls.mapas[entry['from']].search_and_delete(mob)
+                entry['flagged'] = True
 
         Renderer.set_focus(focus)
         cls.check_focus_position(focus, stage, data['entrada'])
@@ -160,9 +184,11 @@ class EngineData:
     @classmethod
     def save_transient_npcs(cls, event):
         # transient NPCS porque el focus pasa por otro lado.
-        transient = {}
-        for stage in cls.transient_mobs:
-            transient[stage] = [i['mob'].nombre for i in cls.transient_mobs[stage]]
+        transient = []
+        for entry in cls.transient_mobs:
+            entry.update({'mob': str(entry['mob'])})
+            transient.append(entry)
+
         EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
 
     @classmethod
@@ -228,6 +254,13 @@ class EngineData:
                 mkdir(ruta)
             guardar_json(path.join(ruta, name + '.json'), cls.character)
             cls.new_game(name)
+
+    @classmethod
+    def remove_from_transient(cls, event):
+        mob = event.data['obj']
+        for entry in cls.transient_mobs:
+            if entry['id'] == mob.id:
+                entry['flagged'] = True
 
 
 EngineData.init()

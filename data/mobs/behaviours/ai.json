@@ -8,45 +8,46 @@
         "GetRoute",
         "NextPosition",
         "Move",
-        "Wait"
+        "Wait",
+        "LookAround",
+        "KeepLooking"
       ],
       "behaviours/ai": [
         "HasSetLocation",
         "ReachExit",
+        "IsThereABed",
         "GoToBed",
         "IsItNightTime",
         "IsInBed"
       ]
     },
-    "special": {
-      "Parallel": {
-        "ID": 15,
-        "Sucess_value": 1
-      }
-    }
+    "special": {}
   },
   "body": {
     "0": {"name": "Repeater","child": 1},
-    "1": {"name": "Sequence","children": [2,3,11]},
-    "2": {"name": "GetMap"},
-    "3": {"name": "Selector","children": [4,5,10]},
-    "4": {"name": "HasSetLocation"},
-    "5": {"name": "Sequence","children": [6,8,9]},
-    "6": {"name": "Inverter", "child": 7},
-    "7": {"name": "IsInBed"},
-    "8": {"name": "IsItNightTime"},
-    "9": {"name": "GoToBed"},
-    "10": {"name": "GetRandomDir"},
-    "11": {"name": "Sequence","children": [12,14,15]},
-    "12": {"name": "Inverter","child": 13},
-    "13": {"name": "Wait"},
-    "14": {"name": "GetRoute"},
-    "15": {"name": "UntilFail","child": 16},
-    "16": {"name": "Sequence","children": [17,19,20,21]},
-    "17": {"name": "Inverter","child": 18},
-    "18": {"name": "IsTalking"},
-    "19": {"name": "NextPosition"},
-    "20": {"name": "ReachExit"},
-    "21": {"name": "Move"}
-  }
+      "1": {"name": "Sequence","children": [2,3,12]},
+        "2": {"name": "GetMap"},
+        "3": {"name": "Selector","children": [4,5,11]},
+          "4": {"name": "HasSetLocation"},
+          "5": {"name": "Sequence","children": [6,7,8,10]},
+            "6": {"name": "IsItNightTime"},
+            "7": {"name": "IsThereABed"},
+            "8": {"name": "Inverter", "child": 9},
+              "9": {"name": "IsInBed"},
+            "10": {"name": "GoToBed"},
+          "11": {"name": "GetRandomDir"},
+        "12": {"name": "Sequence","children": [13,17,18]},
+          "13": {"name": "Sequence", "children": [14,15,16]},
+            "14": {"name": "Wait"},
+            "15": {"name": "LookAround"},
+            "16": {"name": "KeepLooking"},
+          "17": {"name": "GetRoute"},
+          "18": {"name": "UntilFail","child": 19},
+            "19": {"name": "Sequence","children": [20,22,23,24]},
+              "20": {"name": "Inverter","child": 21},
+                "21": {"name": "IsTalking"},
+              "22": {"name": "NextPosition"},
+              "23": {"name": "ReachExit"},
+              "24": {"name": "Move"}
+    }
 }

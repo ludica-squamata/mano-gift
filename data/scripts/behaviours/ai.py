@@ -39,13 +39,6 @@ class ReachExit(Leaf):
         return Success
 
 
-def night_event(event):
-    GameState.set('NightTime', event.data['value'])
-
-
-EventDispatcher.register(night_event, "NightFall")
-
-
 class IsItNightTime(Leaf):
     @staticmethod
     def process():
@@ -55,10 +48,24 @@ class IsItNightTime(Leaf):
             return Failure
 
 
+class IsThereABed(Leaf):
+    def process(self):
+        e = self.get_entity()
+        mapa = e.stage
+        stage = mapa.parent
+        if 'bed' in stage.points_of_interest.get(mapa.nombre, {}):
+            self.tree.set_context('bed', stage.points_of_interest[mapa.nombre]['bed'])
+            # print(f"{e.nombre}: 'phew! there is a bed. I'm going to sleep.")
+            return Success
+        else:
+            # print(f"{e.nombre}: 'shit! there is no bed in this map!")
+            return Failure
+
+
 class GoToBed(Leaf):
     def process(self):
-        nodo = Nodo(608, 608, 32)
-        self.tree.set_context('punto_final', nodo)
+        bed = self.tree.get_context('bed')
+        self.tree.set_context('punto_final', Nodo(*bed))
         self.tree.set_context('in_bed', True)
         return Success
 

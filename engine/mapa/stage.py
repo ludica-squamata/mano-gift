@@ -1,7 +1,7 @@
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
+from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
-from .loader import load_something, cargar_salidas
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
@@ -23,7 +23,8 @@ class Stage:
 
     interactives = []
 
-    def __init__(self, nombre, mob, entrada):
+    def __init__(self, nombre, mob, entrada, npcs_with_id=None):
+        NamedNPCs.npcs_with_ids = npcs_with_id
         self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
         self.interactives.clear()
         self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
@@ -70,6 +71,13 @@ class Stage:
             (self.cargar_timestamps, 'UpdateTime'),
             (self.save_map, 'Save')
         )
+
+        self.points_of_interest = {}
+        for datapoint in self.data.get('puntos_de_interes_para_la_IA', {}):
+            chunk_name = datapoint['chunk']
+            if chunk_name not in self.points_of_interest:
+                self.points_of_interest[chunk_name] = {}
+            self.points_of_interest[chunk_name][datapoint['point']['name']] = datapoint['point']['node']
 
     def cargar_timestamps(self, event):
         horas_dia = event.data['new_daylenght']
@@ -143,6 +151,19 @@ class Stage:
 
     def __repr__(self):
         return "Stage " + self.nombre
+
+    def search_and_delete(self, item):
+        folder = None
+        if item in self.properties.sprites():
+            folder = self.properties
+        else:
+            for chunk in self.chunks.sprs():
+                if item in chunk.properties.sprites():
+                    folder = chunk.properties
+                    break
+
+        if folder is not None and item in folder:
+            folder.remove(item)
 
 
 class ChunkMap(AzoeBaseSprite):

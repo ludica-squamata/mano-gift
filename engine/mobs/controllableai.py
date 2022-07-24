@@ -73,7 +73,7 @@ class ControllableAI(EventAware):
                     self.deregister()
                     break
 
-                elif sprite.tipo == 'Prop':
+                elif sprite.tipo == 'Prop' and sprite in preception['touched']:
                     if sprite.accionable and sprite.action is not None:
                         # should Movible Props have an action?
                         sprite.action(self.entity)

@@ -36,6 +36,6 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
             return BehaviourTree(self, tree_data)
 
     def update(self, *args):
-        super().update(*args)
         if not self.paused and self.stage is Camara.get_current_map():
             self.AI.update()
+            super().update(*args)

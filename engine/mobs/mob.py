@@ -48,7 +48,7 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
         self.estado = 'idle'
         image = self.images['S' + self.direccion]
         mask = self.mascaras['S' + self.direccion]
-        super().__init__(data, imagen=image, x=x, y=y, alpha=mask, center=focus)
+        super().__init__(data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
 
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
@@ -63,3 +63,6 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
 
     def __repr__(self):
         return "Mob " + self.nombre
+
+    def __str__(self):
+        return self.nombre

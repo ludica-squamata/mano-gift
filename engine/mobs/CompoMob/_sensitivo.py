@@ -28,7 +28,7 @@ class Sight(AzoeBaseSprite):
 
         return megasurf
 
-    def move(self, direccion):
+    def rotate(self, direccion):
         """Gira el triangulo de la visión.
 
         Devuelve el surface del triangulo rotado, y la posicion en x e y"""
@@ -89,7 +89,7 @@ class Sight(AzoeBaseSprite):
         """Realiza detecciones con la visión del mob"""
 
         direccion = self._translate()
-        self.move(direccion)
+        self.rotate(direccion)
         mapa = self.parent.mapa_actual
         sprites = mapa.properties.sprites() + mapa.parent.properties.sprites()
         lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
