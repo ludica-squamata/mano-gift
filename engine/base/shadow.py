@@ -1,5 +1,5 @@
+from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA, Light_Group
 from pygame import mask, PixelArray, Surface, SRCALPHA, transform, draw
-from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from .azoe_sprite import AzoeSprite
@@ -359,6 +359,11 @@ class ShadowSprite(AzoeSprite):
             idx = self._origins.index(source)
             self._luces[idx] = 0
 
+    def detect_light_collition(self, dx, dy):
+        for spr in Light_Group.list(self.mapa_actual.id) + Light_Group.list(self.mapa_actual.parent.id):
+            # No siento que haya mucha diferencia invirtiendo los deltas, pero lo puse por probar, y quedó. (24/7/22)
+            spr.colisiona(self, -dx, -dy)
+
     def update_sombra(self):
         """
         generar sombra en direccion contraria a los slots iluminados
@@ -396,5 +401,6 @@ class ShadowSprite(AzoeSprite):
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
+        self.detect_light_collition(dx, dy)
         if self.sombra is not None:
             self.sombra.reubicar(dx, dy)
