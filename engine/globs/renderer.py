@@ -22,6 +22,8 @@ class Camara:
     compass_CCW = ['north', 'west', 'south', 'east']
     view_name = 'north'
 
+    current_map = None
+
     @classmethod
     def init(cls):
         EventDispatcher.register_many(
@@ -113,6 +115,10 @@ class Camara:
             map_at_right = map_at(r.midright)
             map_at_top = map_at(r.midtop)
             map_at_left = map_at(r.midleft)
+
+        cls.current_map = map_at_center
+        if map_at_center and cls.focus.chunk_actual is not map_at_center:
+            cls.focus.set_current_chunk(map_at_center)
 
         # check in ortogonal positions
         if map_at_top is None:

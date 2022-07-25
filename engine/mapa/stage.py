@@ -1,6 +1,6 @@
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO, GRUPO_ITEMS
+from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
 from .loader import load_something, cargar_salidas, NamedNPCs
-from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
@@ -23,7 +23,7 @@ class Stage:
 
     def __init__(self, nombre, mob, entrada, npcs_with_id=None):
         NamedNPCs.npcs_with_ids = npcs_with_id
-        self.chunks = AzoeGroup('Stage ' + nombre + ' chunks')
+        self.chunks = ChunkGroup()
         self.interactives = []
         self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
         self.nombre = nombre
@@ -129,27 +129,18 @@ class Stage:
 
         if self.is_this_adress_special(ax, ay):
 
-            self.relocate_props()
+            self.mapa.rect.move_ip(-ax * 800, -ay * 800)
 
             name, chunk_data = self.get_special_adress_at(ax, ay)
             if type(chunk_data) is dict:
-                self.mapa = ChunkMap(self, name, dx + (ax * 800), dy + (ay * 800), self.data['entradas'],
+                self.mapa = ChunkMap(self, name, 0, 0, self.data['entradas'],
                                      data=chunk_data, requested=['props', 'mobs'], adress=[ax, ay])
             else:
                 self.mapa = chunk_data
-                self.relocate_props()
 
         x = self.offset_x - dx
         y = self.offset_y - dy
         self.mapa.ubicar(x, y)
-
-    def relocate_props(self):
-        # hay problemas en esta función;
-        # los props del mapa anterior quedan cargados en memoria.
-        # supongo que es porque no se están actualizando estas variables.
-        ax, ay = self.mapa.adress.get_value()
-        for prop in self.properties.get_sprites_from_layer(GRUPO_ITEMS):
-            print(prop.stage.rect, prop.mapRect, prop.rect)
 
     def set_coordinates(self, direccion):
         if direccion == 'arriba':
@@ -239,13 +230,14 @@ class ChunkMap(AzoeBaseSprite):
             self.mask = mask.Mask(rect.size)
 
         super().__init__(stage, nombre, image, rect)
-        print(self.adress)
+
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
         if any([len(data[req]) > 0 for req in requested]):
             for item, grupo in load_something(self.id, data, requested):
                 obj = self.add_property(item, grupo)
                 obj.set_parent_map(self)
+                obj.set_current_chunk(self)
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
@@ -292,18 +284,30 @@ class ChunkMap(AzoeBaseSprite):
             self.del_property(obj.sombra)
         self.del_property(obj)
 
+    def translate(self, key):
+        if key == 'sup':
+            return self.adress.top
+        elif key == 'inf':
+            return self.adress.bottom
+        elif key == 'der':
+            return self.adress.right
+        elif key == 'izq':
+            return self.adress.left
+
     def cargar_limites(self, limites):
-        for key in limites:
-            x, y, w, h = self.rect
-            dy = y - h if key == 'sup' else y + h if key == 'inf' else y
-            dx = x - w if key == 'izq' else x + w if key == 'der' else x
-            rect = Rect((dx, dy), self.rect.size)
-            mapa = self.parent.chunks.get_spr_at(rect.center)
+        keys = [i for i in limites]
+        for key in keys:
+            adress = self.translate(key)
+            value = self.limites[key]
+            mapa = self.parent.chunks[adress]
             if mapa is not None:
-                self.limites[key.lower()] = mapa
+                self.limites[adress] = mapa
+            else:
+                del self.limites[key]
+                self.limites[adress] = value
 
     def checkear_adyacencia(self, clave: str):
-        type_adyacente = type(self.limites.get(clave, False))
+        type_adyacente = type(self.limites.get(self.translate(clave), False))
         if type_adyacente is str or type_adyacente is ChunkMap:
             return self.cargar_mapa_adyacente(clave)
         else:
@@ -314,29 +318,23 @@ class ChunkMap(AzoeBaseSprite):
         dy = y - h if ady == 'sup' else y + h if ady == 'inf' else y
         dx = x - w if ady == 'izq' else x + w if ady == 'der' else x
 
-        ax = self.adress.x + 1 if ady == 'der' else self.adress.x - 1 if ady == 'izq' else self.adress.x
-        ay = self.adress.y + 1 if ady == 'inf' else self.adress.y - 1 if ady == 'sup' else self.adress.y
-
-        if type(self.limites[ady]) is str:
+        ax, ay = self.translate(ady)
+        if type(self.limites[self.translate(ady)]) is str:
             entradas = self.parent.data['entradas']
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
-                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos, requested=['props'], adress=(ax, ay))
+                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos,
+                                requested=['props'], adress=(ax, ay))
                 self.parent.set_special_adress(ax, ay, mapa)
             else:
-                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, entradas, requested=['props'], adress=(ax, ay))
+                mapa = ChunkMap(self.parent, self.limites[self.translate(ady)], dx, dy, entradas,
+                                requested=['props'], adress=(ax, ay))
 
-            self.limites[ady] = mapa
+            self.limites[self.translate(ady)] = mapa
             self.parent.chunks.add(mapa)
         else:
-            mapa: ChunkMap = self.limites[ady]
+            mapa: ChunkMap = self.limites[self.translate(ady)]
             mapa.ubicar(dx, dy)
-
-        if ady == 'izq' or ady == 'der':
-            self.parent.rect.inflate_ip(mapa.rect.w, 0)
-
-        elif ady == 'sup' or ady == 'inf':
-            self.parent.rect.inflate_ip(0, mapa.rect.h)
 
         return mapa
 
@@ -353,8 +351,25 @@ class ChunkAdress:
         self.x = x
         self.y = y
 
-    def get_value(self):
+    @property
+    def center(self):
         return self.x, self.y
+
+    @property
+    def left(self):
+        return self.x - 1, self.y
+
+    @property
+    def right(self):
+        return self.x + 1, self.y
+
+    @property
+    def top(self):
+        return self.x, self.y - 1
+
+    @property
+    def bottom(self):
+        return self.x, self.y + 1
 
     def __str__(self):
         return f'{self.parent.nombre} @{self.x}, {self.y}'

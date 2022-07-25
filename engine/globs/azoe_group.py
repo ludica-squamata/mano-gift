@@ -38,3 +38,39 @@ class AzoeBaseSprite(Sprite):
             self.image = image
         if rect is not None:
             self.rect = rect
+
+
+class ChunkGroup:
+    lenght = 0
+
+    def __init__(self):
+        self._group = {}
+        self._list = []
+
+    def __getitem__(self, adress):
+        if adress in self._group:
+            return self._group[adress]
+
+    def __setitem__(self, adress, value):
+        if adress not in self._group:
+            self._group[adress] = value
+            self._list.append(value)
+            self.lenght += 1
+
+    def __delitem__(self, adress):
+        if adress in self._group:
+            item = self._group[adress]
+            del self._group[adress]
+            self._list.remove(item)
+            self.lenght -= 1
+
+    def __len__(self):
+        return self.lenght
+
+    def add(self, *chunks):
+        for chunk in chunks:
+            adress = chunk.adress.center
+            self[adress] = chunk
+
+    def sprs(self):
+        return self._list

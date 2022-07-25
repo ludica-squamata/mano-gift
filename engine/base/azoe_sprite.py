@@ -22,6 +22,8 @@ class AzoeSprite(sprite.Sprite):
 
     is_damageable = False
 
+    chunk_actual = None
+
     def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
         super().__init__()
@@ -69,6 +71,9 @@ class AzoeSprite(sprite.Sprite):
     def set_parent_map(self, parent):
         self.stage = parent
         self.mapa_actual = parent
+
+    def set_current_chunk(self, chunk):
+        self.chunk_actual = chunk
 
     def reubicar(self, dx, dy):
         """mueve el sprite una cantidad de pixeles"""

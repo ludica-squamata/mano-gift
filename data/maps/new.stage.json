@@ -15,7 +15,7 @@
 
     {
       "stage": "worldmap",
-      "rect": [400,32,32,32],
+      "rect": [400,64,32,32],
       "chunk": "black",
       "nombre": "exit_to_worldmap",
       "entrada": "access",
