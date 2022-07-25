@@ -59,7 +59,7 @@ class Stage:
         self.rect = self.mapa.rect.copy()
 
         if 'props' in self.data:
-            self.load_unique_props(self.data, 0, 0)
+            self.load_unique_props(self.data)
 
         sld, masc, img = cargar_salidas(self.mapa, self.data)
         self.salidas = sld  # la lista de salidas, igual que siempre.
@@ -94,18 +94,15 @@ class Stage:
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
 
-    def load_unique_props(self, alldata: dict, dx: int, dy: int):
+    def load_unique_props(self, alldata: dict):
         """Carga los props que se hallen definidos en el archivo json del stage.
         Estos props no se repiten como lo harían si fueran definidos en los chunks,
         pues si los chunks se repiten, los props definidos en ellos también lo harán.
 
         @param alldata: los datos del archivo json completo.
-        @param dx: el offset en x del stage
-        @param dy: el offset en y del stage.
         """
         for item, grupo in load_something(self.id, alldata, 'props'):
             obj = self.add_property(item, grupo)
-            obj.reubicar(-dx, -dy)
             obj.set_parent_map(self.mapa)
 
     @property

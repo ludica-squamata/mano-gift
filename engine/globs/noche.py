@@ -10,7 +10,6 @@ class Noche(AzoeBaseSprite):
     aclarar = False
 
     mod = 1
-    last_alpha = 0
 
     lights = None
 
@@ -27,7 +26,7 @@ class Noche(AzoeBaseSprite):
     def set_darkness(self, event):
         if event.tipo == 'MinuteFlag':
             if Sun.oscurecer:
-                self.trasparentar(1)
+                self.trasparentar(+1)
 
             elif Sun.aclarar:
                 self.trasparentar(-1)
@@ -61,12 +60,11 @@ class Noche(AzoeBaseSprite):
             self.images[Sun.alpha] = image
             self.image = image
 
-    @staticmethod
-    def trasparentar(mod, max_alpha=230):
+    def trasparentar(self, mod, max_alpha=230):
         if 0 < Sun.alpha + mod <= max_alpha:
             Sun.alpha += mod
-            # print(Sun.alpha)
             EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
+            self.set_transparency()
 
     def set_transparency(self):
         self.image.fill((0, 0, 0, Sun.alpha))

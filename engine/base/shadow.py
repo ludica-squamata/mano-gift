@@ -1,5 +1,5 @@
+from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA, Light_Group
 from pygame import mask, PixelArray, Surface, SRCALPHA, transform, draw
-from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from .azoe_sprite import AzoeSprite
@@ -49,7 +49,8 @@ class ShadowSprite(AzoeSprite):
     alpha = 150
 
     overwritten = False
-    fading = False
+    is_fading = None
+    fade_shadow = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -64,12 +65,20 @@ class ShadowSprite(AzoeSprite):
 
     def set_fading(self, event):
         if event.tipo == 'ShadowFade':
-            self.fading = event.data['bool']
+            self.is_fading = event.data['do_fade']
+            self.fade_shadow = event.data['inverted']
         elif event.tipo == 'MinuteFlag':
-            if self.fading is True:
-                self.alpha -= 1 if self.alpha > 0 else 0
-            else:
-                self.alpha += 1 if self.alpha < 150 else 150
+            if self.is_fading:
+                # print(self, 'is fading', event.data['hora'])
+                if self.fade_shadow is True:
+                    # print('is disapearing')
+                    self.alpha -= 1 if self.alpha - 1 >= 0 else 0
+                else:
+                    # print('is reapearing')
+                    self.alpha += 1 if self.alpha + 1 <= 150 else 0
+
+                if self.alpha == 0 or self.alpha == 150:
+                    self.is_fading = False
 
     def add_shadow(self):
         Renderer.camara.remove_obj(self.sombra)
@@ -82,6 +91,7 @@ class ShadowSprite(AzoeSprite):
             self.registerd_shadows[self.image][idx] = s
         else:
             s = self.registerd_shadows[self.image][idx]
+
         s.image.set_alpha(self.alpha)
         self.sombra = s
         Renderer.camara.add_visible(self.sombra)
@@ -349,6 +359,11 @@ class ShadowSprite(AzoeSprite):
             idx = self._origins.index(source)
             self._luces[idx] = 0
 
+    def detect_light_collition(self, dx, dy):
+        for spr in Light_Group.list(self.mapa_actual.id) + Light_Group.list(self.mapa_actual.parent.id):
+            # No siento que haya mucha diferencia invirtiendo los deltas, pero lo puse por probar, y quedó. (24/7/22)
+            spr.colisiona(self, -dx, -dy)
+
     def update_sombra(self):
         """
         generar sombra en direccion contraria a los slots iluminados
@@ -386,5 +401,6 @@ class ShadowSprite(AzoeSprite):
 
     def reubicar(self, dx, dy):
         super().reubicar(dx, dy)
+        self.detect_light_collition(dx, dy)
         if self.sombra is not None:
             self.sombra.reubicar(dx, dy)

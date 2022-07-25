@@ -37,18 +37,21 @@ class Sun:
     def set_light(cls, alarm):
         if alarm == 'amanece':
             cls.light = cls.lights[0]
-            GameState.set('NightTime', False)
             cls.aclarar = True
+            EventDispatcher.trigger('ShadowFade', 'Sun', {'do_fade': True, 'inverted': True})
+            EventDispatcher.trigger('NightFall', 'Night', {'value': False})
         elif alarm == 'mediodía':
             cls.light = cls.lights[1]  # overhead light.
             cls.aclarar = False
+            EventDispatcher.trigger('ShadowFade', 'Sun', {'do_fade': False, 'inverted': False})
         elif alarm == 'atardece':
             cls.light = cls.lights[2]
-            EventDispatcher.trigger('ShadowFade', 'Sun', {'bool': True})
+            EventDispatcher.trigger('ShadowFade', 'Sun', {'do_fade': True, 'inverted': True})
             cls.oscurecer = False
         else:
             cls.oscurecer = True
-            EventDispatcher.trigger('ShadowFade', 'Sun', {'bool': False})
+            EventDispatcher.trigger('ShadowFade', 'Sun', {'do_fade': False, 'inverted': False})
+            EventDispatcher.trigger('NightFall', 'Night', {'value': True})
             GameState.set('NightTime', True)
             cls.light = None
 
