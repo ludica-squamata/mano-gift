@@ -18,8 +18,8 @@ class MenuAbility(Menu):
     current_idx = 0
     posicion_horizontal = 'izquierda'
 
-    def __init__(self):
-        super().__init__('Atributos', 'Atributos')
+    def __init__(self, parent):
+        super().__init__(parent, 'Atributos', 'Atributos')
 
         chars = list(ModData.data['caracteristicas'].keys())
         self.counters = AzoeGroup('Counters')
@@ -40,8 +40,8 @@ class MenuAbility(Menu):
             self.properties.add(counter)
 
         self.puntos = PuntosDisponibles(self, 6, 50)
-        self.fin = Boton('Finalizar', 6, self.finalizar, [self.rect.centerx, self.rect.bottom - 64])
-        self.random = Boton('Aleatorio', 6, self.generate_random_values, [self.rect.centerx, self.rect.top + 110])
+        self.fin = Boton(self, 'Finalizar', 6, self.finalizar, [self.rect.centerx, self.rect.bottom - 64])
+        self.random = Boton(self, 'Aleatorio', 6, self.generate_random_values, [self.rect.centerx, self.rect.top + 110])
         self.properties.add(self.fin, self.puntos, self.random)
 
         self.elegir_uno(0)
@@ -171,7 +171,6 @@ class Counter(BaseWidget):
     char = ''
 
     def __init__(self, parent, char_name, x, y, w, h):
-        self.parent = parent
         self.char = char_name
         self.fuente = font.SysFont('Verdana', 16)
         image = Surface((w, h))
@@ -179,13 +178,13 @@ class Counter(BaseWidget):
         image.fill(CANVAS_BG)
         rect.topleft = x, y
         self.w, self.h = w, h
-        self.boton_mas = Boton(self.char + '+', 1, self.incrementar, [rect.right, 0], texto='+')
+        self.boton_mas = Boton(self, self.char + '+', 1, self.incrementar, [rect.right, 0], texto='+')
         self.boton_mas.rect.centery = rect.centery
-        self.boton_menos = Boton(self.char + '-', 1, self.decrementar, [rect.left - 40, 0], texto='-')
+        self.boton_menos = Boton(self, self.char + '-', 1, self.decrementar, [rect.left - 40, 0], texto='-')
         self.boton_menos.rect.centery = rect.centery
         self.botones = LayeredUpdates(self.boton_mas, self.boton_menos)
 
-        super().__init__(imagen=image, rect=rect, x=x, y=y)
+        super().__init__(parent, imagen=image, rect=rect, x=x, y=y)
         self.render_value()
 
     def accion(self):
@@ -247,13 +246,12 @@ class PuntosDisponibles(BaseWidget):
     t = ''
 
     def __init__(self, parent, x, y):
-        self.parent = parent
         self.f = font.SysFont('Verdana', 16)
         self.pos = x, y
         self.value = 50 if not len(memoria) else 0
         image = self.f.render(self.t, True, TEXT_FG, CANVAS_BG)
         rect = image.get_rect(topleft=[x, y])
-        super().__init__(imagen=image, rect=rect, x=x, y=y)
+        super().__init__(parent, imagen=image, rect=rect, x=x, y=y)
         self.update_text()
 
     def update_value(self, mod):

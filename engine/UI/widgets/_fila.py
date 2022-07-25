@@ -15,7 +15,7 @@ class Fila(BaseWidget):
     stack = True
     cantidad = 0
 
-    def __init__(self, item, w, x, y, h=0, tag=None, justification=0):
+    def __init__(self, parent, item, w, x, y, h=0, tag=None, justification=0):
         self.entity = Mob_Group.get_controlled_mob()
         self.item = item
         self.w = w
@@ -36,7 +36,7 @@ class Fila(BaseWidget):
             self.img_sel = self.construir_fila(TEXT_DIS)
             self.tagged = True
 
-        super().__init__(self.img_uns)
+        super().__init__(parent, imagen=self.img_uns)
         self.rect = self.image.get_rect(topleft=(x, y))
 
     def __repr__(self):

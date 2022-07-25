@@ -19,10 +19,10 @@ class MenuEquipo(Menu):
     draw_space_rect = None
     draw_space = None
 
-    def __init__(self):
+    def __init__(self, parent):
         """Crea e inicaliza las varibales del menú Equipo."""
 
-        super().__init__('Equipo')
+        super().__init__(parent, 'Equipo')
         self.entity = Mob_Group.get_controlled_mob()
         self.espacios = AzoeGroup('Espacios')  # grupo de espacios equipables.
         self.filas = AzoeGroup('Filas')  # grupo de items del espacio de selección.

@@ -32,7 +32,7 @@ class Sight(AzoeBaseSprite):
         """Gira el triangulo de la visión.
 
         Devuelve el surface del triangulo rotado, y la posicion en x e y"""
-        tx, ty, tw, th = self.parent.mapRect
+        tx, ty, tw, th = self.parent.x, self.parent.y, self.parent.rect.w, self.parent.rect.h
         if direccion == 'abajo':
             surf = transform.flip(self.image, False, True)
             w, h = surf.get_size()
@@ -158,17 +158,17 @@ class Touch(AzoeBaseSprite):
 class Sensitivo(Caracterizado):
     perceived = None  # un diccionario con los interactives que el mob ve, oye, o toca
 
-    def __init__(self, data, **kwargs):
-        super().__init__(data, **kwargs)
+    def __init__(self, parent, data, **kwargs):
+        super().__init__(parent, data, **kwargs)
         self.vista = Sight(self, 32 * self['Vista'])
         self.oido = Hearing(self)
         self.tacto = Touch(self)
         self.perceived = {"heard": [], "seen": [], "touched": [], "felt": [], "close": []}
         self.touch = self.tacto.touch
-
-    def update(self, *args):
-        super().update(*args)
-        for sense in self.perceived:
-            self.perceived[sense].clear()
-        self.vista()
-        self.tacto()
+    #
+    # def update(self, *args):
+    #     super().update(*args)
+    #     for sense in self.perceived:
+    #         self.perceived[sense].clear()
+    #     self.vista()
+    #     self.tacto()

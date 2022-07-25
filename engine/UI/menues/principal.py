@@ -4,8 +4,8 @@ from engine.misc.config import Config as Cfg
 
 
 class MenuPrincipal(Menu):
-    def __init__(self):
-        super().__init__('Principal', "Azoe's Gifts")
+    def __init__(self, parent):
+        super().__init__(parent, 'Principal', "Azoe's Gifts")
         x = self.rect.centerx - (32 * 3) - 10
 
         nombres = []

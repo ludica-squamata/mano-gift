@@ -36,7 +36,7 @@ class Camara:
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
-        cls.nchs.add(spr.noche)
+        # cls.nchs.add(spr.noche)
 
     @classmethod
     def add_real(cls, obj):
@@ -116,9 +116,9 @@ class Camara:
             map_at_top = map_at(r.midtop)
             map_at_left = map_at(r.midleft)
 
-        cls.current_map = map_at_center
-        if map_at_center and cls.focus.chunk_actual is not map_at_center:
-            cls.focus.set_current_chunk(map_at_center)
+        # cls.current_map = map_at_center
+        # if map_at_center and cls.focus.chunk_actual is not map_at_center:
+        #     cls.focus.set_current_chunk(map_at_center)
 
         # check in ortogonal positions
         if map_at_top is None:
@@ -166,7 +166,7 @@ class Camara:
         if adyacent_map_key != '' and reference is not None:
             new_map = reference.checkear_adyacencia(adyacent_map_key)
         else:
-            new_map = cls.focus.stage
+            new_map = cls.focus.parent
 
         if new_map is not False and new_map is not map_at_center:
             cls.set_background(new_map)
@@ -176,9 +176,9 @@ class Camara:
                 if hasattr(obj, 'luz') and obj.luz is not None:
                     cls.add_real(obj.luz)
 
-        a_map = map_at_center if map_at_center is not None else new_map
-        if cls.focus.mapa_actual != a_map:
-            cls.focus.translocate(a_map, *cls.rect.center)
+        # a_map = map_at_center if map_at_center is not None else new_map
+        # if cls.focus.mapa_actual != a_map:
+        #     cls.focus.translocate(a_map, *cls.rect.center)
 
     @classmethod
     def update_sprites_layer(cls):
@@ -187,57 +187,18 @@ class Camara:
 
     @classmethod
     def panear(cls):
-        dx = cls.focus.rect.x - cls.focus.mapRect.x - cls.focus.stage.rect.x
-        dy = cls.focus.rect.y - cls.focus.mapRect.y - cls.focus.stage.rect.y
-
-        abs_x, abs_y = abs(dx), abs(dy)
-        sign_x, sign_y = 0, 0
-        # Extraer el signo + o -
-        if dx:
-            sign_x = int(dx / abs_x)  # +1 ó -1
-        if dy:
-            sign_y = int(dy / abs_y)  # +1 ó -1
-
-        while abs_x:
-            # acá restauramos el valor para hacer la comparación
-            dx = abs_x * sign_x
-            if cls.focus.rect.centerx + dx != cls.rect.centerx:
-                # y acá achicamos el valor por si es muy alto
-                # no importa que sea negativo o positivo, porque eso
-                # lo preserva el sign.
-                abs_x -= 1
-            else:
-                break
-
-        while abs_y:
-            dy = abs_y * sign_y
-            if cls.focus.rect.centery + dy != cls.rect.centery:
-                abs_y -= 1
-            else:
-                break
-
+        dx = cls.focus.rect.x - cls.focus.x - cls.focus.parent.rect.x
+        dy = cls.focus.rect.y - cls.focus.y - cls.focus.parent.rect.y
         cls.pan(dx, dy)
 
     @classmethod
     def pan(cls, dx, dy):
-        cls.bgs_rect.move_ip(dx, dy)
         for spr in cls.bgs.sprs():
             spr.rect.move_ip(dx, dy)
 
         for spr in cls.real.sprs():
-            x = spr.stage.rect.x + spr.mapRect.x
-            y = spr.stage.rect.y + spr.mapRect.y
-            spr.ubicar(x, y)
-
-    @classmethod
-    def cut(cls, x, y):
-        cls.bgs_rect.topleft = x, y
-        for spr in cls.bgs:
-            spr.rect.topleft = x, y
-
-        for spr in cls.real.sprs():
-            x = spr.stage.rect.x + spr.mapRect.x
-            y = spr.stage.rect.y + spr.mapRect.y
+            x = spr.parent.rect.x + spr.x
+            y = spr.parent.rect.y + spr.y
             spr.ubicar(x, y)
 
     @classmethod
@@ -338,7 +299,7 @@ class Renderer:
                 over.update()
         ret = cls.camara.draw(fondo)
         clock = Tiempo.clock.render('red')
-        ret += [fondo.blit(clock, [ANCHO-clock.get_width(), 0])]
+        ret += [fondo.blit(clock, [ANCHO - clock.get_width(), 0])]
         ret += cls.overlays.draw(fondo)
 
         display.update(ret)

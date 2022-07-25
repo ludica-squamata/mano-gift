@@ -14,8 +14,8 @@ class MenuModel(Menu):
     char_face = None
     anim_img = None
 
-    def __init__(self):
-        super().__init__('ModelMenu', 'Avatar')
+    def __init__(self, parent):
+        super().__init__(parent, 'ModelMenu', 'Avatar')
 
         parts_of = {
             'his': {

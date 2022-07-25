@@ -18,8 +18,8 @@ class MenuOpciones(Menu):
     notice = None
     notice_area = None
 
-    def __init__(self):
-        super().__init__('Opciones')
+    def __init__(self, parent):
+        super().__init__(parent, 'Opciones')
         self.data = Cfg.cargar()
 
         self.botones = AzoeGroup('Botones')
@@ -89,17 +89,17 @@ class MenuOpciones(Menu):
                     opt = 'Sí'
                 else:
                     opt = 'No'
-                esp = Fila(opt, ancho, x, y, justification=1)
+                esp = Fila(self, opt, ancho, x, y, justification=1)
 
             elif nom == 'metodo de entrada':
                 nom = nom.replace(' ', '_')
                 txt = self.data[nom].title()
-                esp = Fila(txt, ancho, x, y, justification=1)
+                esp = Fila(self, txt, ancho, x, y, justification=1)
 
             elif nom in self.data['comandos']:
                 texto = self.data['comandos'][nom]
                 nom = key_name(texto)
-                esp = Fila(nom, ancho, x, y, justification=1)
+                esp = Fila(self, nom, ancho, x, y, justification=1)
 
             else:
                 nombre = 'dummy space'

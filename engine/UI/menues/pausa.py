@@ -10,8 +10,8 @@ from .menu import Menu
 class MenuPausa(Menu):
     nombres = None
 
-    def __init__(self):
-        super().__init__("Pausa")
+    def __init__(self, parent):
+        super().__init__(parent, "Pausa")
         self.entity = Mob_Group.get_controlled_mob()
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6

@@ -22,7 +22,7 @@ class Menu(EventAware, BaseWidget):
     draw_space_rect = None
     draw_space = None
 
-    def __init__(self, nombre, titulo=None):
+    def __init__(self, parent, nombre, titulo=None):
         self.nombre = nombre
         self.w, self.h = ANCHO - 20, ALTO - 20
         self.canvas = self.create_raised_canvas(self.w, self.h)
@@ -30,7 +30,7 @@ class Menu(EventAware, BaseWidget):
             titulo = nombre
         self.crear_titulo(titulo, self.w)
         self.botones = AzoeGroup('Botones')
-        super().__init__(self.canvas, center=True)
+        super().__init__(parent, imagen=self.canvas, center=True)
         self.functions['tap'].update({'contextual': self.cancelar})
         self.functions['release'].update({'contextual': self.cancelar})
         EngineData.MENUS[nombre] = self
@@ -60,7 +60,7 @@ class Menu(EventAware, BaseWidget):
 
     def fill_draw_space(self, items, w, h):
         for i, item in enumerate(items):
-            fila = Fila(item, w, 0, i * h + i, h=h, tag='n')
+            fila = Fila(self, item, w, 0, i * h + i, h=h, tag='n')
             self.filas.add(fila)
         self.opciones = len(self.filas)
 
@@ -126,7 +126,7 @@ class Menu(EventAware, BaseWidget):
 
     def establecer_botones(self, botones, ancho_mod):
         for btn in botones:
-            boton = Boton(btn['nombre'], ancho_mod, btn['comando'], btn['pos'], texto=btn.get('texto', None))
+            boton = Boton(self, btn['nombre'], ancho_mod, btn['comando'], btn['pos'], texto=btn.get('texto', None))
             for direccion in ['arriba', 'abajo', 'izquierda', 'derecha']:
                 if direccion in btn['direcciones']:
                     boton.direcciones[direccion] = btn['direcciones'][direccion]

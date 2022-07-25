@@ -11,26 +11,26 @@ class NamedNPCs:
     npcs_with_ids = None
 
 
-def load_something(map_id: str, alldata: dict, requested: str):
+def load_something(parent, alldata: dict, requested: str):
     """
     :type requested: list
     :type alldata: dict
-    :type map_id: str
+    :type parent: ChunkMap
     """
     loaded = []
     if requested is not None:
         if 'mobs' in requested:
-            for mob in load_mobs(alldata):
+            for mob in load_mobs(parent, alldata):
                 loaded.append((mob, GRUPO_MOBS))
 
         if 'props' in requested:
-            for prop in load_props(map_id, alldata):
+            for prop in load_props(parent, alldata):
                 loaded.append((prop, prop[0].grupo))
 
         return loaded
 
 
-def load_props(id, alldata: dict):
+def load_props(parent, alldata: dict):
     imgs = alldata.get('refs', {})
     pos = alldata['props']
 
@@ -54,10 +54,10 @@ def load_props(id, alldata: dict):
                 x, y = item
 
             if data:
-                prop = new_prop(x, y, data=data, map_id=id)
+                prop = new_prop(parent, x, y, data=data)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable
             else:
-                prop = new_prop(x, y, nombre=ref, img=img, map_id=id)
+                prop = new_prop(parent, x, y, nombre=ref, img=img)
                 is_interactive = False
 
             if type(prop) is list:
@@ -70,7 +70,7 @@ def load_props(id, alldata: dict):
     return loaded_props
 
 
-def load_mobs(alldata: dict):
+def load_mobs(parent, alldata: dict):
     loaded_mobs = []
     for name in alldata['mobs']:
         pos = alldata['mobs'][name]
@@ -94,7 +94,7 @@ def load_mobs(alldata: dict):
                     data['id'] = ids[idx]
                     del names[idx], ids[idx]
 
-            mob = Mob(x, y, data)
+            mob = Mob(parent, x, y, data, focus=alldata.get('focus', False))
             loaded_mobs.append((mob, GRUPO_MOBS))
 
     return loaded_mobs
@@ -119,7 +119,7 @@ def cargar_salidas(mapa, alldata):
         r, g, b, a = 255, i % 255, i // 255, 255
         # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
         # después se usará b*255+g para devolver el index.
-        _rect = rect.move(-rect.w//2, -rect.h//2)
+        _rect = rect.move(-rect.w // 2, -rect.h // 2)
         img.fill((r, g, b, a), _rect)
 
     # la mascara se usa para la detección de colisiones.

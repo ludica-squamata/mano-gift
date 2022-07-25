@@ -14,7 +14,7 @@ class LightSource(Sprite):
     encendido = False  # apaguen esas luces!
     # animacion???
 
-    def __init__(self, parent, nombre, data, x, y, map_id=None):
+    def __init__(self, parent, nombre, data, x, y):
         super().__init__()
         self.parent = parent
         radius = data['proyecta_luz']
@@ -32,17 +32,17 @@ class LightSource(Sprite):
         self.origin_rect.bottom = y + self.origen[1]
         self.z = self.rect.bottom
 
-        self.stage = self.parent.stage
-        self.mapRect = self.image.get_rect(center=self.origin_rect.center)
-        self.mapRect.x += self.rect.w // 2
-        self.mapRect.y += self.rect.h // 2
+        # self.stage = self.parent.stage
+        # self.mapRect = self.image.get_rect(center=self.origin_rect.center)
+        # self.mapRect.x += self.rect.w // 2
+        # self.mapRect.y += self.rect.h // 2
 
         draw.circle(self.image, (255, 255, 225, 0), (self.rect.w // 2, self.rect.h // 2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')
         draw.circle(img, (255, 255, 255, 255), (self.rect.w // 2, self.rect.h // 2), radius)
         self.mask = mask.from_surface(img)
         Camara.add_real(self)
-        Light_Group.add(map_id, self)
+        Light_Group.add(self.parent.parent.id, self)
 
     def switch(self, event):
         noche = self.parent.stage.noche

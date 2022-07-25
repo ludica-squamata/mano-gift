@@ -14,7 +14,7 @@ class Boton(BaseWidget):
     timer = 0
     animar = False
 
-    def __init__(self, nombre, ancho_mod, comando, pos, texto=None):
+    def __init__(self, parent, nombre, ancho_mod, comando, pos, texto=None):
         self.tipo = 'boton'
         self.comando = None
         self.direcciones = {}
@@ -28,7 +28,7 @@ class Boton(BaseWidget):
         self.img_uns = uns
         self.img_dis = dis
         self.pos = pos
-        super().__init__(imagen=self.img_uns)
+        super().__init__(parent, imagen=self.img_uns)
         self.rect = self.img_sel.get_rect(topleft=self.pos)
 
         self.comando = comando

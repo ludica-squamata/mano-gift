@@ -13,14 +13,14 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     paused = False
     AI_type = ''  # 'Controllable' or  'Autonomous'
 
-    def __init__(self, data, **kwargs):
+    def __init__(self, parent, data, **kwargs):
         ai_name = data['AI']
 
         self.AI = self.create_ai(ai_name)
         self._AI = self.AI
 
         EventDispatcher.register(self.toggle_pause_state, 'TogglePause')
-        super().__init__(data, **kwargs)
+        super().__init__(parent, data, **kwargs)
 
     def toggle_pause_state(self, event):
         self.paused = event.data['value']
@@ -36,6 +36,6 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
             return BehaviourTree(self, tree_data)
 
     def update(self, *args):
-        if not self.paused and Camara.current_map is self.chunk_actual:
+        if not self.paused:  # and Camara.current_map is self.chunk_actual:
             self.AI.update()
             super().update(*args)

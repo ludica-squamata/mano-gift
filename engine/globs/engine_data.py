@@ -41,7 +41,7 @@ class EngineData:
     def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False):
         from engine.mapa import Stage
         if stage not in cls.mapas or is_new_game:
-            cls.mapas[stage] = Stage(stage, mob, entrada, named_npcs)
+            cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs)
         else:
             cls.mapas[stage].ubicar_en_entrada(entrada)
 
@@ -151,31 +151,31 @@ class EngineData:
 
         focus = Mob_Group[data['focus']]
         if type(focus) is str:
-            if focus not in stage.mapa.datos['mobs']:
-                datos = {'mobs': {focus: [data['entrada']]}}
+            if not stage.exists_within_my_chunks(focus, 'mobs'):
+                mapa = stage.get_chunk_by_adress((0, 0))
+                datos = {'mobs': {focus: [data['entrada']]}, 'focus': True}
                 datos.update({'entradas': stage.data['entradas']})
                 datos.update({'refs': {focus: ModData.fd_player + focus + '.json'}})
-                focus, grupo = load_mobs(datos)[0]
+                focus, grupo = load_mobs(mapa, datos)[0]
 
-                obj = stage.mapa.add_property(focus, grupo)
-                obj.set_parent_map(stage.mapa)
+                mapa.add_property(focus, grupo)
             else:
-                focus = stage.mapa.get_property(focus)
+                focus = stage.get_entitiy_from_my_chunks(focus)
 
-        for entry in cls.transient_mobs:
-            mob = Mob_Group[entry['id']]
-            if entry['to'] == stage.nombre:
-                x, y = cls.mapas[stage].posicion_entrada(entry['pos'])
-                datos = {'mobs': {entry['mob']: [[x, y]]}}
-                datos.update({'entradas': stage.data['entradas']})
-                item, grupo = load_mobs(datos)[0]
-
-                obj = stage.mapa.add_property(item, grupo)
-                obj.set_parent_map(stage.mapa)
-
-            else:
-                cls.mapas[entry['from']].search_and_delete(mob)
-                entry['flagged'] = True
+        # for entry in cls.transient_mobs:
+        #     mob = Mob_Group[entry['id']]
+        #     if entry['to'] == stage.nombre:
+        #         x, y = cls.mapas[stage].posicion_entrada(entry['pos'])
+        #         datos = {'mobs': {entry['mob']: [[x, y]]}}
+        #         datos.update({'entradas': stage.data['entradas']})
+        #         item, grupo = load_mobs(datos)[0]
+        #
+        #         obj = stage.mapa.add_property(item, grupo)
+        #         obj.set_parent_map(stage.mapa)
+        #
+        #     else:
+        #         cls.mapas[entry['from']].search_and_delete(mob)
+        #         entry['flagged'] = True
 
         Renderer.set_focus(focus)
         cls.check_focus_position(focus, stage, data['entrada'])
@@ -193,7 +193,7 @@ class EngineData:
 
     @classmethod
     def check_focus_position(cls, focus, mapa, entrada):
-        fx, fy = focus.mapRect.center
+        fx, fy = focus.x, focus.y
         ex, ey = mapa.data['entradas'][entrada]['pos']
         if fx != ex or fy != ey:
             texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco '
@@ -229,9 +229,9 @@ class EngineData:
         if titulo not in cls.MENUS:
             name = 'Menu' + titulo
             if name in ModData.custommenus:
-                menu = ModData.custommenus[name]()
+                menu = ModData.custommenus[name](cls)
             elif name in default_menus:
-                menu = default_menus[name]()
+                menu = default_menus[name](cls)
             else:
                 raise NotImplementedError('El menu "{}" no existe'.format(titulo))
         else:

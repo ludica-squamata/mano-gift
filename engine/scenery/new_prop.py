@@ -3,29 +3,27 @@ from .props import *
 from .items import *
 
 
-def new_prop(x, y, z=0, nombre=None, data=None, img=None, map_id=None):
+def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
     if data is None and img is None:
         raise TypeError
     elif data is None:
         data = {}
 
-    data['map_id'] = map_id
-    args = x, y, z, data
     tipo = data.get('tipo')
     if tipo == 'agarrable':
-        prop = Agarrable(*args)
+        prop = Agarrable(parent, x, y, z, data)
     elif tipo == 'movible':
-        prop = Movible(*args)
+        prop = Movible(parent, x, y, z, data)
     elif tipo == 'trepable':
-        prop = Trepable(*args)
+        prop = Trepable(parent, x, y, z, data)
     elif tipo == 'operable':
-        prop = Operable(*args)
+        prop = Operable(parent, x, y, z, data)
     elif tipo == 'destruible':
-        prop = Destruible(*args)
+        prop = Destruible(parent, x, y, z, data)
     elif tipo == 'estructura3D':
-        prop = Estructura3D(x, y, data).props
+        prop = Estructura3D(parent, x, y, data).props
     else:
-        prop = Escenografia(x, y, z=z, nombre=nombre, data=data, imagen=img)
+        prop = Escenografia(parent, x, y, z=z, nombre=nombre, data=data, imagen=img)
 
     if type(prop) is list:
         try:

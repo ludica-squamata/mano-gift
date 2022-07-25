@@ -9,11 +9,11 @@ class EspacioEquipable(BaseWidget):
     draw_area = None
     draw_area_rect = None
 
-    def __init__(self, nombre, item, direcciones, acepta, x, y):
+    def __init__(self, parent, nombre, item, direcciones, acepta, x, y):
         """Inicializa las variables de un espacio equipable."""
 
         self.img_uns = self.crear_base(CANVAS_BG)
-        super().__init__(self.img_uns)
+        super().__init__(parent, imagen=self.img_uns)
         self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
 
         self.draw_area = Surface((28, 28))

@@ -11,9 +11,9 @@ __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'Estruc
 class Agarrable(Escenografia):
     accionable = True
 
-    def __init__(self, x, y, z, data):
+    def __init__(self, parent, x, y, z, data):
         data.setdefault('proyecta_sombra', False)
-        super().__init__(x, y, z=z, data=data)
+        super().__init__(parent, x, y, z=z, data=data)
         self.subtipo = data['subtipo']
         self.grupo = GRUPO_AGARRABLES
         Item_Group.add(self.nombre, self, self.grupo)
@@ -50,8 +50,8 @@ class Agarrable(Escenografia):
 class Movible(Escenografia):
     accionable = False
 
-    def __init__(self, x, y, z, data):
-        super().__init__(x, y, z=z, data=data)
+    def __init__(self, parent, x, y, z, data):
+        super().__init__(parent, x, y, z=z, data=data)
         self.grupo = GRUPO_MOVIBLES
         Item_Group.add(self.nombre, self, self.grupo)
 
@@ -61,11 +61,11 @@ class Movible(Escenografia):
     def mover(self, dx, dy):
         col_mapa = False
         # detectar colision contra otros props fijos, como la casa
-        if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
-            col_mapa = True
-
-        if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
-            col_mapa = True
+        # if self.parent.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
+        #     col_mapa = True
+        #
+        # if self.parent.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
+        #     col_mapa = True
 
         if not col_mapa:
             self.reubicar(dx, dy)
@@ -77,8 +77,8 @@ class Movible(Escenografia):
 class Trepable(Escenografia):
     accionable = True
 
-    def __init__(self, x, y, z, data):
-        super().__init__(x, y, z, data)
+    def __init__(self, parent, x, y, z, data):
+        super().__init__(parent, x, y, z, data)
         self.accion = 'trepar'
 
 
@@ -88,7 +88,7 @@ class Operable(Escenografia):
     enabled = True
     accionable = True
 
-    def __init__(self, x, y, z, data):
+    def __init__(self, parent, x, y, z, data):
         self.estados = {}
         self.enabled = data.get('enabled', True)
         self.grupo = GRUPO_OPERABLES
@@ -113,7 +113,7 @@ class Operable(Escenografia):
                 else:
                     self.estados[idx].update({attr: estado[attr]})
 
-        super().__init__(x, y, z=z, imagen=self.estados[0]['image'], data=data)
+        super().__init__(parent, x, y, z=z, imagen=self.estados[0]['image'], data=data)
         Item_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
@@ -133,8 +133,8 @@ class Operable(Escenografia):
 
 
 class Destruible(Escenografia):
-    def __init__(self, x, y, z, data):
-        super().__init__(x, y, z=z, data=data)
+    def __init__(self, parent, x, y, z, data):
+        super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'romper'
 
 
@@ -143,7 +143,7 @@ class Estructura3D(Escenografia):
     face = 'front'
     _chopped = False
 
-    def __init__(self, x, y, data):
+    def __init__(self, parent, x, y, data):
         self.faces = {'front': None, 'right': None, 'back': None, 'left': None}
         self.face = data.get('cara', 'front')
         self.x, self.y = x, y
@@ -155,7 +155,7 @@ class Estructura3D(Escenografia):
                 self.faces[face] = self.build_face(data, x, y, face)
 
         self.props = self.faces[self.face]
-        super().__init__(x, y, data=data, rect=self.rect)
+        super().__init__(parent, x, y, data=data, rect=self.rect)
         self.proyectaSombra = False
         EventDispatcher.register(self.rotate_view, 'RotateEverything')
 
@@ -181,7 +181,7 @@ class Estructura3D(Escenografia):
                 if 'cara' not in propdata:
                     propdata.update({'cara': face})
 
-                prop = new_prop(dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
+                prop = new_prop(self.parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
                 props.append(prop)
 
         return props

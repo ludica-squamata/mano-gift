@@ -1,18 +1,17 @@
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO, GRUPO_ITEMS
+from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
 from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
-from pygame import mask, Rect
+from pygame import mask
 from math import ceil
 
 
 class Stage:
     properties = None
     chunks = None
-    mapa = None
     data = None
     offset_x = ANCHO // 2  # camara.rect.centerx
     offset_y = ALTO // 2  # camara.rect.centery
@@ -21,8 +20,9 @@ class Stage:
     atardece = None
     anochece = None
 
-    def __init__(self, nombre, mob, entrada, npcs_with_id=None):
+    def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None):
         NamedNPCs.npcs_with_ids = npcs_with_id
+        self.parent = parent  # a Stage's parent is always EngineData
         self.chunks = ChunkGroup()
         self.interactives = []
         self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
@@ -55,16 +55,15 @@ class Stage:
             chunk = ChunkMap(self, chunk_name, offx, offy, entradas, mob, requested=['mobs', 'props'])
 
         self.chunks.add(chunk)
-        self.mapa = self.chunks.sprs()[0]
-        self.rect = self.mapa.rect.copy()
+        # self.rect = self.mapa.rect.copy()
 
-        if 'props' in self.data:
-            self.load_unique_props(self.data)
-
-        sld, masc, img = cargar_salidas(self.mapa, self.data)
-        self.salidas = sld  # la lista de salidas, igual que siempre.
-        self.mask_salidas = masc  # máscara de colisiones de salidas.
-        self.img_salidas = img  # imagen de colores codificados.
+        # if 'props' in self.data:
+        #     self.load_unique_props(self.data)
+        # #
+        # sld, masc, img = cargar_salidas(self.mapa, self.data)
+        # self.salidas = sld  # la lista de salidas, igual que siempre.
+        # self.mask_salidas = masc  # máscara de colisiones de salidas.
+        # self.img_salidas = img  # imagen de colores codificados.
 
         self.entrada = entrada
 
@@ -94,21 +93,21 @@ class Stage:
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
 
-    def load_unique_props(self, alldata: dict):
-        """Carga los props que se hallen definidos en el archivo json del stage.
-        Estos props no se repiten como lo harían si fueran definidos en los chunks,
-        pues si los chunks se repiten, los props definidos en ellos también lo harán.
+    # def load_unique_props(self, alldata: dict):
+    #     """Carga los props que se hallen definidos en el archivo json del stage.
+    #     Estos props no se repiten como lo harían si fueran definidos en los chunks,
+    #     pues si los chunks se repiten, los props definidos en ellos también lo harán.
+    #
+    #     @param alldata: los datos del archivo json completo.
+    #     """
+    #     for item, grupo in load_something(self.id, alldata, 'props'):
+    #         obj = self.add_property(item, grupo)
+    #         # obj.set_parent_map(self.mapa)
 
-        @param alldata: los datos del archivo json completo.
-        """
-        for item, grupo in load_something(self.id, alldata, 'props'):
-            obj = self.add_property(item, grupo)
-            obj.set_parent_map(self.mapa)
-
-    @property
-    def noche(self):
-        # Para evitar un conflicto con las Luces.
-        return self.mapa.noche
+    # @property
+    # def noche(self):
+    #     # Para evitar un conflicto con las Luces.
+    #     return self.mapa.noche
 
     def add_property(self, obj, _layer):
         add_interactive = False
@@ -122,25 +121,25 @@ class Stage:
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
 
-    def ubicar_en_entrada(self, entrada):
-        dx, dy = self.posicion_entrada(entrada)
-        datos = self.data['entradas'][entrada]
-        ax, ay = datos['adress']
+    # def ubicar_en_entrada(self, entrada):
+    #     dx, dy = self.posicion_entrada(entrada)
+    #     datos = self.data['entradas'][entrada]
+    #     ax, ay = datos['adress']
 
-        if self.is_this_adress_special(ax, ay):
-
-            self.mapa.rect.move_ip(-ax * 800, -ay * 800)
-
-            name, chunk_data = self.get_special_adress_at(ax, ay)
-            if type(chunk_data) is dict:
-                self.mapa = ChunkMap(self, name, 0, 0, self.data['entradas'],
-                                     data=chunk_data, requested=['props', 'mobs'], adress=[ax, ay])
-            else:
-                self.mapa = chunk_data
-
-        x = self.offset_x - dx
-        y = self.offset_y - dy
-        self.mapa.ubicar(x, y)
+    # if self.is_this_adress_special(ax, ay):
+    #
+    #     # self.mapa.rect.move_ip(-ax * 800, -ay * 800)
+    #
+    #     name, chunk_data = self.get_special_adress_at(ax, ay)
+    #     if type(chunk_data) is dict:
+    #         self.mapa = ChunkMap(self, name, 0, 0, self.data['entradas'],
+    #                              data=chunk_data, requested=['props', 'mobs'], adress=[ax, ay])
+    #     else:
+    #         # self.mapa = chunk_data
+    #
+    # x = self.offset_x - dx
+    # y = self.offset_y - dy
+    # self.mapa.ubicar(x, y)
 
     def set_coordinates(self, direccion):
         if direccion == 'arriba':
@@ -184,6 +183,24 @@ class Stage:
         if self.is_this_adress_special(x, y):
             self.special_adresses[x, y][1] = mapa
 
+    def exists_within_my_chunks(self, entity: str, key: str):
+        for chunk in self.chunks.sprs():
+            return entity in chunk.datos[key]
+
+    def chunk_where_it_exists(self, entity: str, key: str):
+        for chunk in self.chunks.sprs():
+            if entity in chunk.datos[key]:
+                return chunk
+
+    def get_entitiy_from_my_chunks(self, entity: str):
+        for chunk in self.chunks.sprs():
+            obj = chunk.get_property(entity)
+            if obj is not None:
+                return obj
+
+    def get_chunk_by_adress(self, adress):
+        return self.chunks[adress]
+
 
 class ChunkMap(AzoeBaseSprite):
     tipo = 'chunk'
@@ -193,7 +210,7 @@ class ChunkMap(AzoeBaseSprite):
 
     adress = None
 
-    def __init__(self, stage, nombre, off_x, off_y, entradas, trnsnt_mb=None, data=False, requested=None, adress=None):
+    def __init__(self, parent, nombre, off_x, off_y, entradas, trnsnt_mb=None, data=False, requested=None, adress=None):
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
         self.interactives = []
 
@@ -229,15 +246,15 @@ class ChunkMap(AzoeBaseSprite):
         else:
             self.mask = mask.Mask(rect.size)
 
-        super().__init__(stage, nombre, image, rect)
+        super().__init__(parent, nombre, image, rect)
 
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
-        if any([len(data[req]) > 0 for req in requested]):
-            for item, grupo in load_something(self.id, data, requested):
-                obj = self.add_property(item, grupo)
-                obj.set_parent_map(self)
-                obj.set_current_chunk(self)
+        # if any([len(data[req]) > 0 for req in requested]):
+        #     for item, grupo in load_something(self, data, requested):
+        #         obj = self.add_property(item, grupo)
+        #         # obj.set_parent_map(self)
+        #         # obj.set_current_chunk(self)
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 

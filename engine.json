@@ -1,6 +1,6 @@
 {
   "folder": "data",
-  "real_clock": false,
-  "minute_lenght": 60,
+  "real_clock": true,
+  "minute_lenght": 0,
   "data_file": "mod.json"
 }

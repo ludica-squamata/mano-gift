@@ -16,8 +16,8 @@ class MenuName(Menu):
     lineas = None
     foco = 'nombre'
 
-    def __init__(self):
-        super().__init__('MenuName', 'Nombre')
+    def __init__(self, parent):
+        super().__init__(parent, 'MenuName', 'Nombre')
         self.teclas = AzoeGroup('Teclas')  # teclado en pantalla
         self.area_input = AzoeGroup('Letras')  # letras del nombre
         self.lineas = AzoeGroup('Linea Punteada')  # linea punteada
@@ -30,10 +30,10 @@ class MenuName(Menu):
         self.crear_teclas(6, 6)  # genera el teclado en pantalla
 
         # el espacio se añade por separado porque ' ' es el delimitador en self.crear_teclas
-        self.teclas.add(Character(' ', CANVAS_BG, 6 + 14 * 32 + 6, 210 + 5 * 32))
+        self.teclas.add(Character(self, ' ', CANVAS_BG, 6 + 14 * 32 + 6, 210 + 5 * 32))
 
         # Cursor del teclado en pantalla
-        self.cursor = Cursor(*self.teclas.get_sprite(0).rect.center)
+        self.cursor = Cursor(self, *self.teclas.get_sprite(0).rect.center)
 
         # area del nombre del personaje
         y = 115
@@ -41,7 +41,7 @@ class MenuName(Menu):
 
         # lineas punteadas
         for i in range(23):
-            lin = LineaChr(i, 75 + (i * 20), y + 27)
+            lin = LineaChr(self, i, 75 + (i * 20), y + 27)
             self.lineas.add(lin)
         self.lineas.get_sprite(0).isSelected = True
 
@@ -50,7 +50,7 @@ class MenuName(Menu):
 
         b_x = self.area_rect.centerx - 85
         b_y = self.area_rect.bottom + 10
-        self.btn = Boton('Aceptar', 6, self.set_name, [b_x, b_y])
+        self.btn = Boton(self, 'Aceptar', 6, self.set_name, [b_x, b_y])
         self.botones.add(self.btn)
 
         self.functions = {
@@ -87,7 +87,7 @@ class MenuName(Menu):
                     bg = BISEL_BG
 
                 if t[i] != ' ':
-                    char = Character(t[i], bg, mx + x + dx * 32, my + y + dy * 32)
+                    char = Character(self, t[i], bg, mx + x + dx * 32, my + y + dy * 32)
                     self.teclas.add(char)
                 else:
                     # esta parte pinta el resto del fondo, que no tiene teclas activas
@@ -222,12 +222,12 @@ class MenuName(Menu):
 class Character(BaseWidget):
     """Caracter individual del teclado en pantalla"""
 
-    def __init__(self, char, bg, x, y):
+    def __init__(self, parent, char, bg, x, y):
 
         self.img_uns = self._crear_img(char, bg)
         self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
 
-        super().__init__(self.img_uns)
+        super().__init__(parent, imagen=self.img_uns)
         self.nombre = char
         self.rect.topleft = x, y
 
@@ -269,10 +269,10 @@ class LineaChr(BaseWidget):
     animado = False
     idx = 0
 
-    def __init__(self, idx, x, y):
+    def __init__(self, parent, idx, x, y):
         img = Surface((15, 2))
         img.fill((255, 255, 255))
-        super().__init__(img)
+        super().__init__(parent, imagen=img)
         self.rect.topleft = x, y
         self.idx = idx
 
@@ -294,7 +294,8 @@ class Cursor:
     x, y = 0, 0
     current = None
 
-    def __init__(self, x, y):
+    def __init__(self, parent, x, y):
+        self.parent = parent
         self.x, self.y = x, y
         self.pos = x, y
 

@@ -1,5 +1,5 @@
-from pygame import sprite, mask, Surface, Rect
 from engine.globs import ModData, ANCHO, ALTO
+from pygame import sprite, mask, Surface
 from engine.misc import cargar_imagen
 
 
@@ -11,22 +11,22 @@ class AzoeSprite(sprite.Sprite):
     mascaras = None
     data = None  # info importada de un json
     z = 0
-    stage = None  # stage donde existe el mob
-
-    mapRect = None  # mapX y mapY
+    x = 0  # ésta es la posición del item en el mundo
+    y = 0  # no en la cámara. Para esto último se usa su rect.
 
     direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0], 'ninguna': [0, 0]}
     direccion = 'abajo'
-    parent = None
-    mapa_actual = None
-
+    parent = None  # might be a map, in case of real objects, but things like widgets have their macro structure as
+    # parent
+    map_x = 0  # estos valores son los mismos que la adress
+    map_y = 0  # de los chunks.
     is_damageable = False
 
-    chunk_actual = None
-
-    def __init__(self, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
+    def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
         super().__init__()
+
+        self.parent = parent
 
         if isinstance(imagen, str):
             self.image = cargar_imagen(ModData.graphs + imagen)
@@ -41,7 +41,7 @@ class AzoeSprite(sprite.Sprite):
         if center:
             self.rect = self.image.get_rect(center=(ANCHO//2, ALTO//2))
         elif imagen is not None:
-            self.rect = self.image.get_rect(topleft=(x, y))
+            self.rect = self.image.get_rect(center=(x, y))
         else:
             self.rect = rect
 
@@ -52,50 +52,61 @@ class AzoeSprite(sprite.Sprite):
         else:
             self.mask = mask.Mask(self.rect.size)
 
-        self.mapRect = Rect(0, 0, *self.rect.size)
-        self.mapRect.center = x, y
+        if hasattr(self.parent, 'adress'):
+            self.x = x
+            self.y = y
+            self.map_x = self.parent.adress.x
+            self.map_y = self.parent.adress.y
+            self.rel_x = x
+            self.rel_y = y
 
         if z:
             self.z = z
         else:
-            self.z = self.mapRect.bottom
-        self.z += dz
+            self.z = self.y + self.rect.h  # bottom
 
-        self.mapa_actual_rect = Rect(*self.mapRect)
+        self.z += dz
 
         if id is None:
             self.id = ModData.generate_id()
         else:
             self.id = id
 
-    def set_parent_map(self, parent):
-        self.stage = parent
-        self.mapa_actual = parent
-
-    def set_current_chunk(self, chunk):
-        self.chunk_actual = chunk
-
     def reubicar(self, dx, dy):
-        """mueve el sprite una cantidad de pixeles"""
-        self.mapRect.move_ip(dx, dy)
-        self.mapa_actual_rect.move_ip(dx, dy)
+        if self.x + dx > 800:
+            self.rel_x = dx
+            self.map_x += 1
+        elif self.x + dx < 0:
+            self.rel_x = 800-dx
+            self.map_x -= 1
+        self.x += dx
+
+        if self.y + dy > 800:
+            self.rel_y = dy
+            self.map_y += 1
+        elif self.y + dy < 0:
+            self.rel_y = 800-dy
+            self.map_y -= 1
+
+        self.y += dy
+
         self.z += dy
 
-    def translocate(self, new_map, dx, dy):
-        self.mapa_actual = new_map
-        x, y = self.mapa_actual.rect.topleft
-        self.mapa_actual_rect.center = -x + dx, -y + dy
-        self.z = self.mapa_actual_rect.y + self.rect.h
+    # def translocate(self, new_map, dx, dy):
+    #     self.mapa_actual = new_map
+    #     x, y = self.mapa_actual.rect.topleft
+    #     self.mapa_actual_rect.center = -x + dx, -y + dy
+    #     self.z = self.mapa_actual_rect.y + self.rect.h
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
 
-    def ubicar_en_mapa(self, x, y):
-        self.mapRect.centerx = x
-        self.mapRect.centery = y
-        self.z = self.mapRect.bottom
+    # # def ubicar_en_mapa(self, x, y):
+    # #     self.mapRect.centerx = x
+    # #     self.mapRect.centery = y
+    #     self.z = self.mapRect.bottom
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
@@ -111,6 +122,6 @@ class AzoeSprite(sprite.Sprite):
         else:
             return self.image
 
-    def ubicar_en_entrada(self, x, y):
-        self.mapRect.center = x, y
-        self.z = self.mapRect.y + self.rect.h
+    # def ubicar_en_entrada(self, x, y):
+    #     self.mapRect.center = x, y
+    #     self.z = self.mapRect.y + self.rect.h

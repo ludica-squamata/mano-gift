@@ -28,31 +28,31 @@ class Movil(Caracterizado):
         col_mobs = False  # colision contra otros mobs
         col_props = False  # colision contra los props
         col_mapa = False  # colision contra las cajas de colision del propio mapa
-
-        if self.solido:
-            if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
-                col_mapa = True
-
-            if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
-                col_mapa = True
-
-            for spr in Item_Group.get_from_layer(GRUPO_MOVIBLES):
-                if self.colisiona(spr, dx, dy):
-                    if spr.solido:
-                        if isinstance(spr, Movible):
-                            if not spr.mover(dx, dy):
-                                col_props = True
-                        else:
-                            col_props = True
-
-            for spr in self.mapa_actual.properties.get_sprites_from_layer(GRUPO_MOBS):
-                if spr.solido and self is not spr:
-                    if self.colisiona(spr, dx, dy):
-                        col_mobs = True
-
-        if self.chunk_actual.mascara_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
-            r, g, b, a = self.chunk_actual.imagen_salidas.get_at((self.mapRect.x + dx, self.mapRect.y + dy))
-            self.chunk_actual.salidas[b * 255 + g].trigger(self)
+        #
+        # if self.solido:
+        #     if self.stage.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
+        #         col_mapa = True
+        #
+        #     if self.stage.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
+        #         col_mapa = True
+        #
+        #     for spr in Item_Group.get_from_layer(GRUPO_MOVIBLES):
+        #         if self.colisiona(spr, dx, dy):
+        #             if spr.solido:
+        #                 if isinstance(spr, Movible):
+        #                     if not spr.mover(dx, dy):
+        #                         col_props = True
+        #                 else:
+        #                     col_props = True
+        #
+        #     for spr in self.mapa_actual.properties.get_sprites_from_layer(GRUPO_MOBS):
+        #         if spr.solido and self is not spr:
+        #             if self.colisiona(spr, dx, dy):
+        #                 col_mobs = True
+        #
+        # if self.chunk_actual.mascara_salidas.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y + dy)) is not None:
+        #     r, g, b, a = self.chunk_actual.imagen_salidas.get_at((self.mapRect.x + dx, self.mapRect.y + dy))
+        #     self.chunk_actual.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])
 

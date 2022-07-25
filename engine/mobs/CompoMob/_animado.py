@@ -39,8 +39,8 @@ class Animado(Movil):  # necesita Movil para tener dirección
     timer_rotacion = 0
     cuentapasos = 0
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6
 

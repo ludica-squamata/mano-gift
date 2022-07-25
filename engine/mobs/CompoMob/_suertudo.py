@@ -3,8 +3,6 @@ from random import randint
 
 
 class Suertudo(Caracterizado):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     @staticmethod
     def luck():

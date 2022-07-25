@@ -6,12 +6,12 @@ class Caracterizado(AzoeSprite):
     _chars = None  # un diccionario con las caracteristicas y sus valores
     _allchars = None  # una lista con todos los nombres de caracteristicas, por si acaso
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, parent, *args, **kwargs):
         """Ignora cuáles son los atributos o para qué se usan, esa decisión depende
         enteramente del modder."""
         self._chars = {}
         self._allchars = []
-        super().__init__(**kwargs)
+        super().__init__(parent, *args, **kwargs)
         for attr in self.data['atributos']:
             self._chars[attr] = self.data['atributos'][attr]
             self._allchars.append(attr)

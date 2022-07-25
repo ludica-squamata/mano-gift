@@ -12,10 +12,9 @@ class Sombra(AzoeSprite):
     ensombrece = False
 
     def __init__(self, spr, dfx, img, mascara, over):
-        self.spr = spr
+        super().__init__(spr, imagen=img, x=spr.rect.x - dfx, y=spr.rect.y)
         self.tipo = "sombra"
-        self.nombre = "sombra de " + self.spr.nombre
-        super().__init__(imagen=img, x=spr.rect.x - dfx, y=spr.rect.y)
+        self.nombre = "sombra de " + self.parent.nombre
         self.mask = mascara
         self.ensombrece = over
         self.alpha = 150
@@ -30,7 +29,7 @@ class Sombra(AzoeSprite):
         super().ubicar(x - self.dif_x, y)
 
         dz = 1 if self.ensombrece else -1
-        self.z = self.spr.z + dz
+        self.z = self.parent.z + dz
 
     def __repr__(self):
         return self.nombre
@@ -52,8 +51,8 @@ class ShadowSprite(AzoeSprite):
     is_fading = None
     fade_shadow = None
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, **kwargs)
         self._sombras = [0] * 9  # la nueva luz y sombra
         self._luces = [0] * 9  # es la sombra en el cénit.
         self._origins = [0] * 9  # lo puse así para que sea más fácil
@@ -359,10 +358,10 @@ class ShadowSprite(AzoeSprite):
             idx = self._origins.index(source)
             self._luces[idx] = 0
 
-    def detect_light_collition(self, dx, dy):
-        for spr in Light_Group.list(self.mapa_actual.id) + Light_Group.list(self.mapa_actual.parent.id):
-            # No siento que haya mucha diferencia invirtiendo los deltas, pero lo puse por probar, y quedó. (24/7/22)
-            spr.colisiona(self, -dx, -dy)
+    # def detect_light_collition(self, dx, dy):
+    #     for spr in Light_Group.list(self.mapa_actual.id) + Light_Group.list(self.mapa_actual.parent.id):
+    #         # No siento que haya mucha diferencia invirtiendo los deltas, pero lo puse por probar, y quedó. (24/7/22)
+    #         spr.colisiona(self, -dx, -dy)
 
     def update_sombra(self):
         """
@@ -399,8 +398,8 @@ class ShadowSprite(AzoeSprite):
         if self.sombra is not None:
             self.sombra.ubicar(dx, dy)
 
-    def reubicar(self, dx, dy):
-        super().reubicar(dx, dy)
-        self.detect_light_collition(dx, dy)
-        if self.sombra is not None:
-            self.sombra.reubicar(dx, dy)
+    # def reubicar(self, dx, dy):
+    #     super().reubicar(dx, dy)
+    #     self.detect_light_collition(dx, dy)
+    #     if self.sombra is not None:
+    #         self.sombra.reubicar(dx, dy)

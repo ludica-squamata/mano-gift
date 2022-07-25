@@ -23,7 +23,7 @@ class Combativo(Animado, Suertudo, Equipado):
                 # esto queda hasta que haga sprites 'muertos' de los npcs
                 # pero necesito más resolución para hacerlos...
             self.dead = True
-            EventDispatcher.trigger('MobDeath', self.tipo, {'obj': self, 'mapa': self.stage})
+            EventDispatcher.trigger('MobDeath', self.tipo, {'obj': self, 'mapa': self.parent})
 
     def atacar(self, sprite):
         if super().atacar(sprite) and sprite.is_damageable:

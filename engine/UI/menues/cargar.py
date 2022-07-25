@@ -13,8 +13,8 @@ class MenuCargar(Menu):
     draw_space = None
     draw_space_rect = None
 
-    def __init__(self):
-        super().__init__("Cargar Partida")
+    def __init__(self, parent):
+        super().__init__(parent, "Cargar Partida")
         self.functions['tap'].update({
             'accion': self.press_button,
             'contextual': self.cancelar,
