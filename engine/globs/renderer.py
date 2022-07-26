@@ -175,10 +175,6 @@ class Camara:
                 if hasattr(obj, 'luz') and obj.luz is not None:
                     cls.add_real(obj.luz)
 
-        # a_map = map_at_center if map_at_center is not None else new_map
-        # if cls.focus.mapa_actual != a_map:
-        #     cls.focus.translocate(a_map, *cls.rect.center)
-
     @classmethod
     def update_sprites_layer(cls):
         for spr in cls.visible.sprs():
