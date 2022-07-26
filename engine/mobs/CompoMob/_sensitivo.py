@@ -90,17 +90,16 @@ class Sight(AzoeBaseSprite):
 
         direccion = self._translate()
         self.rotate(direccion)
-        mapa = self.parent.mapa_actual
-        sprites = mapa.properties.sprites() + mapa.parent.properties.sprites()
-        lista = sprites if (mapa is not None) and (len(sprites) > 0) else [self.parent]
+        sprites = self.parent.parent.properties.sprites() + self.parent.parent.parent.properties.sprites()
+        lista = sprites if (self.parent.parent is not None) and (len(sprites) > 0) else [self.parent]
         if self.parent in lista:
             idx = lista.index(self.parent)
         else:
             idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
-            x, y = self.rect.x - obj.mapRect.x, self.rect.y - obj.mapRect.y
-            ox, oy = obj.mapRect.topleft
-            sx, sy = self.parent.mapRect.topleft
+            x, y = self.rect.x - obj.x, self.rect.y - obj.y
+            ox, oy = obj.x, obj.y
+            sx, sy = self.parent.x, self.parent.y
             distance = round(sqrt(abs(oy - sy)**2 + abs(ox - sx)**2))
             if obj.mask.overlap(self.mask, (x, y)):
                 self.parent.perceived['seen'].append(obj)
@@ -115,8 +114,8 @@ class Hearing(AzoeBaseSprite):
 
     def listener(self, event):
         if event.origin is not self.parent:
-            ox, oy = event.origin.mapRect.topleft
-            sx, sy = self.parent.mapRect.topleft
+            ox, oy = event.origin.x, event.origin.y
+            sx, sy = self.parent.x, self.parent.y
             distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
         else:
             distance = 1
@@ -137,9 +136,8 @@ class Touch(AzoeBaseSprite):
         super().__init__(parent, 'Tacto', rect=parent.rect)
 
     def __call__(self, passive=True):
-        mapa = self.parent.mapa_actual
-        sprites = mapa.properties.sprs() + mapa.parent.properties.sprs()
-        lista = sprites if (mapa is not None) and (len(sprites) > 0) else []
+        sprites = self.parent.parent.properties.sprs() + self.parent.parent.parent.properties.sprs()
+        lista = sprites if (self.parent.parent is not None) and (len(sprites) > 0) else []
 
         lista.reverse()
         while self.parent in lista:
@@ -165,10 +163,10 @@ class Sensitivo(Caracterizado):
         self.tacto = Touch(self)
         self.perceived = {"heard": [], "seen": [], "touched": [], "felt": [], "close": []}
         self.touch = self.tacto.touch
-    #
-    # def update(self, *args):
-    #     super().update(*args)
-    #     for sense in self.perceived:
-    #         self.perceived[sense].clear()
-    #     self.vista()
-    #     self.tacto()
+
+    def update(self, *args):
+        super().update(*args)
+        for sense in self.perceived:
+            self.perceived[sense].clear()
+        self.vista()
+        self.tacto()

@@ -30,18 +30,15 @@ EventDispatcher.register(exit_event, "Exit")
 class ReachExit(Leaf):
     def process(self):
         e = self.get_entity()
-        rect = e.mapRect
-        mapa = e.stage
-        if mapa.mascara_salidas.overlap(e.mask, rect.topleft) is not None:
-            r, g, b, a = mapa.imagen_salidas.get_at(rect.topleft)
-            mapa.salidas[b * 255 + g].trigger(e)
+        if e.parent.mascara_salidas.overlap(e.mask, (e.x, e.y)) is not None:
+            r, g, b, a = e.parent.imagen_salidas.get_at((e.x, e.y))
+            e.parent.salidas[b * 255 + g].trigger(e)
 
         return Success
 
 
 class IsItNightTime(Leaf):
-    @staticmethod
-    def process():
+    def process(self):
         if GameState.get('NightTime', False):
             return Success
         else:
@@ -51,10 +48,8 @@ class IsItNightTime(Leaf):
 class IsThereABed(Leaf):
     def process(self):
         e = self.get_entity()
-        mapa = e.stage
-        stage = mapa.parent
-        if 'bed' in stage.points_of_interest.get(mapa.nombre, {}):
-            self.tree.set_context('bed', stage.points_of_interest[mapa.nombre]['bed'])
+        if 'bed' in e.parent.parent.points_of_interest.get(e.parent.nombre, {}):
+            self.tree.set_context('bed', e.parent.parent.points_of_interest[e.parent.nombre]['bed'])
             # print(f"{e.nombre}: 'phew! there is a bed. I'm going to sleep.")
             return Success
         else:

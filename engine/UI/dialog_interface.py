@@ -35,8 +35,8 @@ class DialogInterface(BaseWidget):
     def __init__(self, parent, custom_tags=''):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(CANVAS_BG)
-        self.parent = parent
-        super().__init__(image)
+
+        super().__init__(parent, imagen=image)
         if custom_tags != '':
             self.custom_tags = load_tagarrayfile('data/dialogs/' + custom_tags)
         self.marco = self.crear_marco(*self.rect.size)
@@ -54,10 +54,6 @@ class DialogInterface(BaseWidget):
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
         self.glob_left = cargar_imagen(ModData.graphs + 'diaglobe left mini.png')
         self.glob_right = cargar_imagen(ModData.graphs + 'diaglobe right mini.png')
-
-    def ubicar(self, x=0, y=0, z=0):
-        assert x > 0 or y > 0, 'Coordenadas inválidas'
-        self.rect.move_ip(x, y)
 
     def set_text(self, texto, omitir_tags=None):
         width = self.draw_space_rect.width

@@ -23,7 +23,10 @@
     }
   ],
   "props": {
-    "light_post": [[288,288],[384,288]]
+    "light_post": {
+      "chunk": [0,0],
+      "instances": [[288,288],[384,288]]
+    }
   },
   "chunks":{
     "special":{

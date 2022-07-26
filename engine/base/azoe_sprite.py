@@ -16,10 +16,9 @@ class AzoeSprite(sprite.Sprite):
 
     direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0], 'ninguna': [0, 0]}
     direccion = 'abajo'
-    parent = None  # might be a map, in case of real objects, but things like widgets have their macro structure as
-    # parent
-    map_x = 0  # estos valores son los mismos que la adress
-    map_y = 0  # de los chunks.
+    parent = None  # might be a map, in case of real objects, but things like widgets have their macro structure set as
+    # their parent
+    chunk_adresses = None
     is_damageable = False
 
     def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
@@ -89,8 +88,11 @@ class AzoeSprite(sprite.Sprite):
             self.map_y -= 1
 
         self.y += dy
-
         self.z += dy
+
+    def set_parent_map(self, chunk):
+        self.parent = chunk
+        self.chunk_adresses[chunk.parent.nombre] = chunk.adress.center
 
     # def translocate(self, new_map, dx, dy):
     #     self.mapa_actual = new_map
@@ -122,6 +124,7 @@ class AzoeSprite(sprite.Sprite):
         else:
             return self.image
 
-    # def ubicar_en_entrada(self, x, y):
-    #     self.mapRect.center = x, y
-    #     self.z = self.mapRect.y + self.rect.h
+    def ubicarse_en_entrada(self, x, y):
+        self.x = x
+        self.y = y
+        self.z = self.y + self.rect.h

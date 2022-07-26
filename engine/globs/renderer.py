@@ -116,9 +116,8 @@ class Camara:
             map_at_top = map_at(r.midtop)
             map_at_left = map_at(r.midleft)
 
-        # cls.current_map = map_at_center
-        # if map_at_center and cls.focus.chunk_actual is not map_at_center:
-        #     cls.focus.set_current_chunk(map_at_center)
+        if map_at_center is not None:
+            cls.current_map = map_at_center
 
         # check in ortogonal positions
         if map_at_top is None:
@@ -186,13 +185,10 @@ class Camara:
             cls.visible.change_layer(spr, spr.z)
 
     @classmethod
-    def panear(cls):
+    def pan(cls):
         dx = cls.focus.rect.x - cls.focus.x - cls.focus.parent.rect.x
         dy = cls.focus.rect.y - cls.focus.y - cls.focus.parent.rect.y
-        cls.pan(dx, dy)
 
-    @classmethod
-    def pan(cls, dx, dy):
         for spr in cls.bgs.sprs():
             spr.rect.move_ip(dx, dy)
 
@@ -208,7 +204,7 @@ class Camara:
         cls.nchs.update()
         if use_focus:
             cls.detectar_mapas_adyacentes()
-            cls.panear()
+            cls.pan()
 
         cls.update_sprites_layer()
 

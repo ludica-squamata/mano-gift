@@ -7,7 +7,6 @@ __all__ = ['Leaf', 'CallingLeaf']
 
 class Leaf(Node):
     type = 'Leaf'
-    process = None
     data = None
     process_name = ''
 
@@ -20,8 +19,10 @@ class Leaf(Node):
         return self.type + ' #' + str(self.idx) + ' (' + self.process_name + ')'
 
     def set_process(self, process):
-        self.process = None
-        self.process = MethodType(process, self)
+        setattr(self, 'process', MethodType(process, self))
+
+    def process(self):
+        raise NotImplementedError
 
     def update(self):
         status = self.process()

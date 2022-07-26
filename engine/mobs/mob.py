@@ -49,7 +49,7 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
         image = self.images['S' + self.direccion]
         mask = self.mascaras['S' + self.direccion]
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
-
+        self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
         #

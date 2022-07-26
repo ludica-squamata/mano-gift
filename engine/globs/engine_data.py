@@ -43,11 +43,13 @@ class EngineData:
         if stage not in cls.mapas or is_new_game:
             cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs)
         else:
-            cls.mapas[stage].ubicar_en_entrada(entrada)
+            cls.mapas[stage].ubicar_en_entrada(mob, entrada)
 
         if mob is not None:
-            cls.mapas[stage].mapa.add_property(mob, 2)
-            mob.set_parent_map(cls.mapas[stage].mapa)
+            adress = cls.mapas[stage].entradas[entrada]
+            chunk = cls.mapas[stage].get_chunk_by_adress(adress)
+            chunk.add_property(mob, 2)
+            mob.set_parent_map(chunk)
 
         for entry in cls.transient_mobs:
             mob = Mob_Group[entry['id']]
@@ -76,21 +78,23 @@ class EngineData:
 
     @classmethod
     def on_cambiarmapa(cls, evento):
-        mapa_actual = Renderer.camara.focus.stage
+        mapa_actual = Renderer.camara.focus.parent
         mob = evento.data['mob']
         mapa_actual.del_property(mob)
         stage = evento.data['target_stage']
         entrada = evento.data['target_entrada']
         for entry in cls.transient_mobs:
             transit_mob = Mob_Group[entry['id']]
-            entry['pos'] = transit_mob.mapRect.center
+            entry['pos'] = transit_mob.x, transit_mob.y
 
         if Renderer.camara.is_focus(mob):
             EventDispatcher.trigger('EndDialog', cls, {})
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
             x, y = mapa.posicion_entrada(entrada)
-            Renderer.camara.focus.ubicar_en_entrada(x, y)
+            # al teletransportarse, la posición del héroe debería cambiar, pero esto contradice la posición del mapa
+            # y arroja al héroe a un espacio vacío.
+            Renderer.camara.focus.ubicarse_en_entrada(x, y)
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
             cls.transient_mobs.append(item)

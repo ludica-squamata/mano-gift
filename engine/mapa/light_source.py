@@ -32,10 +32,9 @@ class LightSource(Sprite):
         self.origin_rect.bottom = y + self.origen[1]
         self.z = self.rect.bottom
 
-        # self.stage = self.parent.stage
-        # self.mapRect = self.image.get_rect(center=self.origin_rect.center)
-        # self.mapRect.x += self.rect.w // 2
-        # self.mapRect.y += self.rect.h // 2
+        rect = self.image.get_rect(center=self.origin_rect.center)
+        self.x = rect.x + rect.w // 2
+        self.y = rect.y + self.rect.h // 2
 
         draw.circle(self.image, (255, 255, 225, 0), (self.rect.w // 2, self.rect.h // 2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')

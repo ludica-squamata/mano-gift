@@ -1,9 +1,9 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.game_state import GameState
-from engine.globs.renderer import Renderer
-from pygame import Mask, Surface, Rect
+# from engine.globs.renderer import Renderer
+from pygame import Mask, Surface
 from engine.base import AzoeSprite
-import sys
+# import sys
 
 
 class Salida:
@@ -15,21 +15,21 @@ class Salida:
     sprite = None
     solido = False
 
-    def __init__(self, nombre, id, mapa, stage, rect, chunk, entrada, direcciones):
+    def __init__(self, nombre, id, stage, rect, chunk, entrada, direcciones):
         self.nombre = self.tipo + '.' + nombre
         self.flag_name = self.nombre + '.triggered'
-        self.mapRect = Rect(*rect)
+        self.x, self.y, w, h = rect
         self.chunk = chunk
         self.target_stage = stage
         self.entrada = entrada  # string, nombre de la entrada en dest con la cual conecta
         self.direcciones = direcciones
-        self.mask = Mask(self.mapRect.size)
+        self.mask = Mask(rect.size)
         self.mask.fill()
         self.id = id
-        if 'pydevd' in sys.modules:
-            self.sprite = SpriteSalida(self.nombre, mapa,  *self.mapRect)
-            mapa.add_property(self.sprite, 10000)
-            Renderer.camara.add_real(self.sprite)
+        # if 'pydevd' in sys.modules:
+        #     self.sprite = SpriteSalida(self, self.nombre, mapa,  self.x, self.y, w, h)
+        #     mapa.add_property(self.sprite, 10000)
+        #     Renderer.camara.add_real(self.sprite)
 
     def trigger(self, mob):
         # este método, que antes era update(), toma los datos de la salida
@@ -49,10 +49,10 @@ class Salida:
 class SpriteSalida(AzoeSprite):
     """Intented only for debugging"""
 
-    def __init__(self, nombre, mapa, x, y, w, h):
+    def __init__(self, parent, nombre, mapa, x, y, w, h):
         img = Surface((w, h))
         img.fill((255, 255, 0))
         self.nombre = nombre + '.Sprite'
         self.stage = mapa
 
-        super().__init__(imagen=img, x=x, y=y, z=5000)
+        super().__init__(parent, imagen=img, x=x, y=y, z=5000)

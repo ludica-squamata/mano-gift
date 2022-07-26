@@ -32,8 +32,8 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = data.get('nombre', nombre)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'sin_sombra' not in data.get('propiedades', [])
-        if data.get('proyecta_luz', False):
-            self.luz = LightSource(self, self.nombre, data, x, y)
+        # if data.get('proyecta_luz', False):
+        #     self.luz = LightSource(self, self.nombre, data, x, y)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         self.face = data.get('cara', 'front')
 
@@ -61,13 +61,13 @@ class Item(AzoeSprite):
     stackable = False
     tipo = ''
 
-    def __init__(self, nombre, imagen, data):
+    def __init__(self, parent, nombre, imagen, data):
         self.nombre = nombre
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data['efecto']['des']
         self.stackable = 'stackable' in data['propiedades']
-        super().__init__(imagen=imagen)
+        super().__init__(parent, imagen=imagen)
 
     def __eq__(self, other):
         if other.__class__ == self.__class__ and self.id == other.id:

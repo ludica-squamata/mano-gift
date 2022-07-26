@@ -100,11 +100,11 @@ def load_mobs(parent, alldata: dict):
     return loaded_mobs
 
 
-def cargar_salidas(mapa, alldata):
+def cargar_salidas(alldata):
     salidas = []
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
-    for i, datos in enumerate(alldata['salidas']):
+    for i, datos in enumerate(alldata):
         nombre = datos['nombre']
         stage = datos['stage']
         _rect = datos['rect']
@@ -115,7 +115,7 @@ def cargar_salidas(mapa, alldata):
         direcciones = datos['direcciones']
         id = ModData.generate_id()
 
-        salidas.append(Salida(nombre, id, mapa, stage, rect, chunk, entrada, direcciones))
+        salidas.append(Salida(nombre, id, stage, rect, chunk, entrada, direcciones))
         r, g, b, a = 255, i % 255, i // 255, 255
         # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
         # después se usará b*255+g para devolver el index.
