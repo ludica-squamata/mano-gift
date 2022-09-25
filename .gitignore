@@ -1,5 +1,5 @@
 save/
 __pycache__
 /data/mobs/player/
-.idea/
-engine.json
+/.idea/
+/engine.json

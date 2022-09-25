@@ -51,8 +51,8 @@ class Movil(Caracterizado):
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
-        if Camara.current_map.mascara_salidas.overlap(self.mask, (self.rel_x, self.rel_y)) is not None:
-            r, g, b, a = Camara.current_map.imagen_salidas.get_at((self.rel_x, self.rel_y))
+        if Camara.current_map.mascara_salidas.overlap(self.mask, (self.rel_x + dx, self.rel_y + dy)) is not None:
+            r, g, b, a = Camara.current_map.imagen_salidas.get_at((self.rel_x + dx, self.rel_y + dy))
             Camara.current_map.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])
