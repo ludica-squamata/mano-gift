@@ -92,8 +92,6 @@ class EngineData:
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
             x, y = mapa.posicion_entrada(entrada)
-            # al teletransportarse, la posición del héroe debería cambiar, pero esto contradice la posición del mapa
-            # y arroja al héroe a un espacio vacío.
             Renderer.camara.focus.ubicarse_en_entrada(x, y)
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
@@ -156,7 +154,7 @@ class EngineData:
         focus = Mob_Group[data['focus']]
         if type(focus) is str:
             if not stage.exists_within_my_chunks(focus, 'mobs'):
-                mapa = stage.get_chunk_by_adress((0, 0))
+                mapa = stage.get_chunk_by_adress([0, 0])
                 datos = {'mobs': {focus: [data['entrada']]}, 'focus': True}
                 datos.update({'entradas': stage.data['entradas']})
                 datos.update({'refs': {focus: ModData.fd_player + focus + '.json'}})

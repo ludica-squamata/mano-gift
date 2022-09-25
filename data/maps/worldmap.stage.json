@@ -11,8 +11,8 @@
     {
       "stage": "new",
       "nombre": "access",
-      "rect": [800,32,800,32],
-      "chunk": "special",
+      "rect": [0,0,800,32],
+      "chunk_adress": [0,0],
       "entrada": "special",
       "direcciones": []
     }

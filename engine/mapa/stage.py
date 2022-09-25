@@ -63,10 +63,7 @@ class Stage:
             adress = entradas[key]['adress']
             self.entradas[key] = tuple(adress)
 
-        sld, masc, img = cargar_salidas(self.data['salidas'])
-        self.salidas = sld  # la lista de salidas, igual que siempre.
-        self.mask_salidas = masc  # máscara de colisiones de salidas.
-        self.img_salidas = img  # imagen de colores codificados.
+        cargar_salidas(self, self.data['salidas'])
 
         self.entrada = entrada
 
@@ -104,8 +101,7 @@ class Stage:
         @param prop_data: los datos del archivo json.
         """
         for key in prop_data:
-            adress = tuple(prop_data[key]['chunk'])
-            chunk = self.get_chunk_by_adress(adress)
+            chunk = self.get_chunk_by_adress(prop_data[key]['chunk'])
             if chunk is not None:
                 data = {'props': {key: prop_data[key]['instances']}}
                 for item, grupo in load_something(chunk, data, 'props'):
@@ -137,9 +133,10 @@ class Stage:
             mob.reubicar(-ax * 800, -ay * 800)
             name, chunk_data = self.get_special_adress_at(ax, ay)
             if type(chunk_data) is dict:
-                mapa = ChunkMap(self, name, ax*800, ay*800, self.data['entradas'],
-                                data=chunk_data, requested=['props', 'mobs'], adress=[ax, ay])
-                self.chunks.add(mapa)
+                new_mapa = ChunkMap(self, name, ax * 800, ay * 800, self.data['entradas'],
+                                    data=chunk_data, requested=['props', 'mobs'], adress=[ax, ay])
+                self.chunks.add(new_mapa)
+                self.set_special_adress(ax, ay, new_mapa)
 
     def set_coordinates(self, direccion):
         if direccion == 'arriba':
@@ -199,7 +196,11 @@ class Stage:
                 return obj
 
     def get_chunk_by_adress(self, adress):
-        return self.chunks[adress]
+        chunk = self.chunks[tuple(adress)]
+        if chunk is None:
+            return adress
+        else:
+            return chunk
 
 
 class ChunkMap(AzoeBaseSprite):
@@ -209,6 +210,10 @@ class ChunkMap(AzoeBaseSprite):
     interactives = None
 
     adress = None
+
+    salidas = None  # las salidas ahora pertenecen a los chunks, porque la imagen de salidas
+    mask_salidas = None  # se lee desde Cámara.chunk_actual
+    imagen_salidas = None
 
     def __init__(self, parent, nombre, off_x, off_y, trnsnt_mb=None, data=False, requested=None, adress=None):
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
@@ -255,17 +260,17 @@ class ChunkMap(AzoeBaseSprite):
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
+    def set_salidas(self, sld, masc, img):
+        self.salidas = sld
+        self.imagen_salidas = img
+        self.mask_salidas = masc
+
     @property
     def mascara_salidas(self):
-        return self.parent.mask_salidas
-
-    @property
-    def imagen_salidas(self):
-        return self.parent.img_salidas
-
-    @property
-    def salidas(self):
-        return self.parent.salidas
+        if self.mask_salidas is None:
+            return mask.Mask(self.image.get_size())
+        else:
+            return self.mask_salidas
 
     def ubicar(self, x, y):
         self.rect.x = x
@@ -354,6 +359,9 @@ class ChunkMap(AzoeBaseSprite):
     def __repr__(self):
         return "ChunkMap " + self.nombre
 
+    def __bool__(self):
+        return True
+
 
 class ChunkAdress:
     x = 0
@@ -386,3 +394,6 @@ class ChunkAdress:
 
     def __str__(self):
         return f'{self.parent.nombre} @{self.x}, {self.y}'
+
+    def __bool__(self):
+        return False

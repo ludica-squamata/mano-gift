@@ -116,7 +116,7 @@ class Camara:
             map_at_top = map_at(r.midtop)
             map_at_left = map_at(r.midleft)
 
-        if map_at_center is not None:
+        if map_at_center is not None and cls.current_map is not map_at_center:
             cls.current_map = map_at_center
 
         # check in ortogonal positions
@@ -174,10 +174,6 @@ class Camara:
                     cls.add_real(obj)
                 if hasattr(obj, 'luz') and obj.luz is not None:
                     cls.add_real(obj.luz)
-
-        # a_map = map_at_center if map_at_center is not None else new_map
-        # if cls.focus.mapa_actual != a_map:
-        #     cls.focus.translocate(a_map, *cls.rect.center)
 
     @classmethod
     def update_sprites_layer(cls):

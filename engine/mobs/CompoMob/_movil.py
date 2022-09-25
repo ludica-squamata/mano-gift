@@ -31,7 +31,6 @@ class Movil(Caracterizado):
         col_mapa = False  # colision contra las cajas de colision del propio mapa
 
         if self.solido:
-            print(self.x, self.y)
             if Camara.current_map.mask.overlap(self.mask, (self.x + dx, self.y)) is not None:
                 col_mapa = True
 
@@ -52,8 +51,8 @@ class Movil(Caracterizado):
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
-        if Camara.current_map.mascara_salidas.overlap(self.mask, (self.x + dx, self.y + dy)) is not None:
-            r, g, b, a = Camara.current_map.imagen_salidas.get_at((self.x + dx, self.y + dy))
+        if Camara.current_map.mascara_salidas.overlap(self.mask, (self.rel_x, self.rel_y)) is not None:
+            r, g, b, a = Camara.current_map.imagen_salidas.get_at((self.rel_x, self.rel_y))
             Camara.current_map.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])

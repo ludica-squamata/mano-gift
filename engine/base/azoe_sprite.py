@@ -54,8 +54,6 @@ class AzoeSprite(sprite.Sprite):
         if hasattr(self.parent, 'adress'):
             self.x = x
             self.y = y
-            self.map_x = self.parent.adress.x
-            self.map_y = self.parent.adress.y
             self.rel_x = x
             self.rel_y = y
 
@@ -72,43 +70,39 @@ class AzoeSprite(sprite.Sprite):
             self.id = id
 
     def reubicar(self, dx, dy):
-        if self.x + dx > 800:
-            self.rel_x = dx
-            self.map_x += 1
-        elif self.x + dx < 0:
-            self.rel_x = 800-dx
-            self.map_x -= 1
         self.x += dx
-
-        if self.y + dy > 800:
-            self.rel_y = dy
-            self.map_y += 1
-        elif self.y + dy < 0:
-            self.rel_y = 800-dy
-            self.map_y -= 1
-
         self.y += dy
         self.z += dy
+
+        if self.rel_x + dx < 0:
+            self.rel_x = 800
+        elif self.rel_x > 800:
+            self.rel_x = 0
+        else:
+            self.rel_x += dx
+
+        if self.rel_y + dy < 0:
+            self.rel_y = 800
+        elif self.rel_y + dy > 800:
+            self.rel_y = 0
+        else:
+            self.rel_y += dy
 
     def set_parent_map(self, chunk):
         self.parent = chunk
         self.chunk_adresses[chunk.parent.nombre] = chunk.adress.center
-
-    # def translocate(self, new_map, dx, dy):
-    #     self.mapa_actual = new_map
-    #     x, y = self.mapa_actual.rect.topleft
-    #     self.mapa_actual_rect.center = -x + dx, -y + dy
-    #     self.z = self.mapa_actual_rect.y + self.rect.h
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
         self.rect.x = x
         self.rect.y = y
 
-    # # def ubicar_en_mapa(self, x, y):
-    # #     self.mapRect.centerx = x
-    # #     self.mapRect.centery = y
-    #     self.z = self.mapRect.bottom
+    def ubicar_en_mapa(self, x, y):
+        self.x = x
+        self.y = y
+        self.z = self.y + self.rect.h  # bottom
+        self.rel_x = x
+        self.rel_y = y
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
@@ -128,3 +122,5 @@ class AzoeSprite(sprite.Sprite):
         self.x = x
         self.y = y
         self.z = self.y + self.rect.h
+        self.rel_x = x
+        self.rel_y = y
