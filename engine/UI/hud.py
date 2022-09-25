@@ -40,6 +40,8 @@ class ProgressBar(Sprite):
         if focus is not None:
             self.set_focus(focus)
 
+        self.show()
+
     def _actual(self):
         x, y, w, h = self.draw_area_rect
         return Rect((x, y), ((self.actual / self.maximo) * self.draw_area_rect.w, h))
@@ -106,6 +108,7 @@ class CharacterName(Sprite):
         self.image = self.generate([255, 255, 255])
         self.rect = self.image.get_rect(topleft=(x, y))
         EventDispatcher.register(self.toggle, "TogglePause")
+        self.show()
 
     def generate(self, fg_color):
         outline = []
