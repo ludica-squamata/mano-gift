@@ -9,7 +9,6 @@ from ..widgets import BaseWidget, Boton
 from random import choice
 from .menu import Menu
 
-
 memoria = {}
 
 
@@ -29,10 +28,10 @@ class MenuAbility(Menu):
         for i, char in enumerate(chars):
             render = fuente.render(char, True, TEXT_FG, CANVAS_BG)
             rect = render.get_rect(topleft=[6, 125 + i * 43])
+            centery = rect.centery
             self.canvas.blit(render, rect)
 
-        for i, char in enumerate(chars):
-            counter = Counter(self, char, 200, 130 + i * 40, 58, 22)
+            counter = Counter(self, char, 200, centery, 58, 22)
             if char in memoria:
                 counter.value = memoria[char]
                 counter.render_value()
@@ -176,11 +175,11 @@ class Counter(BaseWidget):
         image = Surface((w, h))
         rect = image.get_rect()
         image.fill(CANVAS_BG)
-        rect.topleft = x, y
+        rect.midleft = x, y
         self.w, self.h = w, h
-        self.boton_mas = Boton(self, self.char + '+', 1, self.incrementar, [rect.right, 0], texto='+')
+        self.boton_mas = Boton(self, self.char + '+', 1, self.incrementar, [rect.right-25, 0], texto='+')
         self.boton_mas.rect.centery = rect.centery
-        self.boton_menos = Boton(self, self.char + '-', 1, self.decrementar, [rect.left - 40, 0], texto='-')
+        self.boton_menos = Boton(self, self.char + '-', 1, self.decrementar, [rect.left-70, 0], texto='-')
         self.boton_menos.rect.centery = rect.centery
         self.botones = LayeredUpdates(self.boton_mas, self.boton_menos)
 
@@ -262,9 +261,9 @@ class PuntosDisponibles(BaseWidget):
 
     def update_text(self):
         if self.value > 0:
-            self.t = 'Tienes {} puntos para repartir entre tus {}.'.format(str(self.value), self.parent.nombre.lower())
+            self.t = f'Tienes {str(self.value)} puntos para repartir entre tus {self.parent.nombre.lower()}.'
         else:
-            self.t = 'No quedan más puntos para repartir entre tus {}.'.format(self.parent.nombre.lower())
+            self.t = f'No quedan más puntos para repartir entre tus {self.parent.nombre.lower()}.'
 
     def reset(self):
         self.value = 50
