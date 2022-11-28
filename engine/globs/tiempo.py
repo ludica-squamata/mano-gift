@@ -356,10 +356,10 @@ class SeasonalYear:
 
     biomes = {  # los valores son la cantidad de horas de luz que puede tener un día.
         "polar": {  # corresponde a latitudes entre 90º y 30º N/S
-            "summer": 24, "winter": 0, 'seaon_lenght': year_lenght // 2},
+            "summer": 24, "winter": 0, 'season_lenght': year_lenght // 2},
         "equatorial": {  # corresponde a latitudes entre 30ºS y 30ºN
-            "spring": 12, "fall": 12, 'seaon_lenght': year_lenght // 2},
-        "tempered": {  # corresponde a latitudes entre 30º y 90º N/S.
+            "summer": 12, "winter": 12, 'season_lenght': year_lenght // 2},
+        "temperate": {  # corresponde a latitudes entre 30º y 90º N/S.
             "spring": 12, "summer": 19, "fall": 12, "winter": 10, 'season_lenght': year_lenght // 4}
     }
     season_cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
@@ -367,7 +367,7 @@ class SeasonalYear:
 
     @classmethod
     def init(cls):
-        cls.biome = 'tempered'
+        cls.biome = 'temperate'
         cls.season = next(cls.season_cycler)
         cls.set_day_duration()
         cls.propagate()
