@@ -32,18 +32,12 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = data.get('nombre', nombre)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'sin_sombra' not in data.get('propiedades', [])
-        # if data.get('proyecta_luz', False):
-        #     self.luz = LightSource(self, self.nombre, data, x, y)
+        if data.get('proyecta_luz', False):
+            self.luz = LightSource(self, self.nombre, data, x, y)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
         self.face = data.get('cara', 'front')
 
         self.add_listeners()  # carga de event listeners
-
-    # def set_parent_map(self, parent):
-    #     super().set_parent_map(parent)
-    #     if self.luz is not None:
-    #         self.luz.stage = parent
-    #         self.luz.mapa_actual = parent
 
     def __repr__(self):
         return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)

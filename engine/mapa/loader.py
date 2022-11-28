@@ -1,8 +1,7 @@
 from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
+from engine.globs import ModData, GRUPO_MOBS, Prop_Group
 from engine.misc import abrir_json, cargar_imagen
 from engine.scenery import new_prop
-from engine.globs import GRUPO_MOBS
-from engine.globs import ModData
 from engine.mobs import Mob
 from .salida import Salida
 from random import randint
@@ -26,6 +25,7 @@ def load_something(parent, alldata: dict, requested: str):
 
         if 'props' in requested:
             for prop in load_props(parent, alldata):
+                Prop_Group.add(prop[0].nombre, prop[0])
                 loaded.append((prop, prop[0].grupo))
 
         return loaded

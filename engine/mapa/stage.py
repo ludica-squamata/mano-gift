@@ -55,7 +55,7 @@ class Stage:
         self.chunks.add(chunk)
 
         if 'props' in self.data:
-            self.load_unique_props(self.data['props'])
+            self.load_unique_props(self.data)
 
         entradas = self.data['entradas']
         self.entradas = {}
@@ -93,24 +93,23 @@ class Stage:
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
 
-    def load_unique_props(self, prop_data: dict):
+    def load_unique_props(self, all_data: dict):
         """Carga los props que se hallen definidos en el archivo json del stage.
         Estos props no se repiten como lo harían si fueran definidos en los chunks,
         pues si los chunks se repiten, los props definidos en ellos también lo harán.
 
-        @param prop_data: los datos del archivo json.
+        @param all_data: los datos del archivo json.
         """
+        prop_data = all_data['props']
         for key in prop_data:
             chunk = self.get_chunk_by_adress(prop_data[key]['chunk'])
             if chunk is not None:
                 data = {'props': {key: prop_data[key]['instances']}}
+                if key in all_data['refs']:
+                    # esto es para que Stage pueda tener props que son solo imágenes
+                    data.update({'refs': {key: all_data['refs'][key]}})
                 for item, grupo in load_something(chunk, data, 'props'):
                     self.add_property(item, grupo)
-
-    # @property
-    # def noche(self):
-    #     # Para evitar un conflicto con las Luces.
-    #     return self.mapa.noche
 
     def add_property(self, obj, _layer):
         add_interactive = False

@@ -265,7 +265,8 @@ class LightGroup:
 
 Mob_Group = MobGroup()
 Item_Group = ItemGroup()
+Prop_Group = ItemGroup()
 Deleted_Items = DeletedItems()
 Light_Group = LightGroup()
 
-__all__ = ["Mob_Group", "Item_Group", "Deleted_Items", "Light_Group"]
+__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group"]

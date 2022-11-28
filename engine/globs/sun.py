@@ -1,5 +1,5 @@
 from .event_dispatcher import EventDispatcher
-from .game_groups import Mob_Group
+from .game_groups import Mob_Group, Prop_Group
 from .game_state import GameState
 
 
@@ -57,8 +57,7 @@ class Sun:
 
         cls.current_light = cls.light
 
-        for mob in Mob_Group:
-            mob.recibir_luz_solar(cls.light)
+        cls.update()
 
     @classmethod
     def set_mod(cls, actual, amanece, mediodia, atardece, anochece):
@@ -97,6 +96,9 @@ class Sun:
     @classmethod
     def update(cls):
         for mob in Mob_Group:
-            mob.unset_origin('Sun')
             if cls.light is not None:
                 mob.recibir_luz_solar(cls.light)
+
+        for item in Prop_Group:
+            if cls.light is not None:
+                item.recibir_luz_solar(cls.light)

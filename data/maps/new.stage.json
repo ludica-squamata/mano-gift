@@ -26,6 +26,10 @@
     "light_post": {
       "chunk": [0,0],
       "instances": [[288,288],[384,288]]
+    },
+    "arbol": {
+      "chunk": [0,0],
+      "instances": [[100,100]]
     }
   },
   "chunks":{
@@ -44,6 +48,9 @@
       "adress": [0,-15],
       "refs":{}
     }
+  },
+  "refs": {
+    "arbol": "props/arbol_escalado.png"
   },
   "ambiente": "exterior",
   "latitude": 30,

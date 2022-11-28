@@ -5,5 +5,5 @@
   "volumen": 4,
   "image": "props/poste_luz.png",
   "proyecta_luz":60,
-  "origen": [0,0]
+  "origen": [5, 15]
 }

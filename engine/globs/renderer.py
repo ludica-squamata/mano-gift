@@ -36,7 +36,7 @@ class Camara:
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
         cls.bgs.add(spr)
-        # cls.nchs.add(spr.noche)
+        cls.nchs.add(spr.noche)
 
     @classmethod
     def add_real(cls, obj):

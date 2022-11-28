@@ -47,7 +47,6 @@ class ShadowSprite(AzoeSprite):
     """:type : list"""
     alpha = 150
 
-    overwritten = False
     is_fading = None
     fade_shadow = None
 
@@ -186,12 +185,15 @@ class ShadowSprite(AzoeSprite):
             ensombrece = True
             h_2 = 0
         if self._sombras[8]:
-            img = Surface((14, 7), SRCALPHA)
-            r = img.get_rect(centerx=w, y=h - 6)
+            img = Surface((14 if w <= 32 else w, 7 if w <= 32 else w // 2), SRCALPHA)
+            dh = 16 if h > 50 else 6  # aunque esto es chapuza para el árbol.
+            # debería ser alguna medida relativa a las medidas del sprite. 28/11/2022
+            r = img.get_rect(centerx=w, y=h - dh)
             draw.ellipse(img, COLOR_SOMBRA, [0, 0, r.w, r.h])
             t_surface.blit(img, r)
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
+            h_2 = w // 2
 
         return h_2, t_surface, mascara, ensombrece
 
@@ -314,7 +316,6 @@ class ShadowSprite(AzoeSprite):
             dy = self.rect.centery - source.rect.centery
             self.unset_origin(source)
             self.alpha = 150
-            self.overwritten = True
             # marcar direccion como iluminada
             if dx > 0:
                 if dy > tolerancia:
@@ -338,6 +339,7 @@ class ShadowSprite(AzoeSprite):
 
         self._luces[light_idx] = 1
         self._origins[light_idx] = source
+        self.update_sombra()
 
     def recibir_luz_solar(self, light_idx):
         self.unset_origin('Sun')
@@ -346,22 +348,21 @@ class ShadowSprite(AzoeSprite):
             self._origins[light_idx] = 'Sun'
 
     def unset_origin(self, source):
-        if source != 'Sun':
-            self.overwritten = False
-        if source in self._origins:
+        while source in self._origins:
             origin_idx = self._origins.index(source)
             self._luces[origin_idx] = 0
             self._origins[origin_idx] = 0
+        if any(self._origins):
+            self.update_sombra()
 
     def desiluminar(self, source):
         if source in self._origins:
             idx = self._origins.index(source)
             self._luces[idx] = 0
 
-    # def detect_light_collition(self, dx, dy):
-    #     for spr in Light_Group.list(self.mapa_actual.id) + Light_Group.list(self.mapa_actual.parent.id):
-    #         # No siento que haya mucha diferencia invirtiendo los deltas, pero lo puse por probar, y quedó. (24/7/22)
-    #         spr.colisiona(self, -dx, -dy)
+    def detect_light_collition(self, dx, dy):
+        for spr in Light_Group.list(self.parent.id) + Light_Group.list(self.parent.parent.id):
+            spr.colisiona(self, dx, dy)
 
     def update_sombra(self):
         """
@@ -384,7 +385,7 @@ class ShadowSprite(AzoeSprite):
 
         if any(self._sombras) and FEATURE_SOMBRAS_DINAMICAS:
             self.add_shadow()
-        else:
+        elif self.sombra is not None:
             # de otro modo el mob no pierde la sombra icluso si se aleja de la fuente de luz.
             Renderer.camara.remove_obj(self.sombra)
 
@@ -398,8 +399,6 @@ class ShadowSprite(AzoeSprite):
         if self.sombra is not None:
             self.sombra.ubicar(dx, dy)
 
-    # def reubicar(self, dx, dy):
-    #     super().reubicar(dx, dy)
-    #     self.detect_light_collition(dx, dy)
-    #     if self.sombra is not None:
-    #         self.sombra.reubicar(dx, dy)
+    def reubicar(self, dx, dy):
+        super().reubicar(dx, dy)
+        self.detect_light_collition(dx, dy)

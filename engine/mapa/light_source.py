@@ -12,6 +12,7 @@ class LightSource(Sprite):
     # por ejemplo para un poste con iluminacion en la punta? por defecto center
 
     encendido = False  # apaguen esas luces!
+
     # animacion???
 
     def __init__(self, parent, nombre, data, x, y):
@@ -19,7 +20,6 @@ class LightSource(Sprite):
         self.parent = parent
         radius = data['proyecta_luz']
         self.origen = data['origen']
-
         self.nombre = nombre
         self.image = Surface((radius * 2, radius * 2), SRCALPHA)
         img = self.image.copy()
@@ -32,9 +32,9 @@ class LightSource(Sprite):
         self.origin_rect.bottom = y + self.origen[1]
         self.z = self.rect.bottom
 
-        rect = self.image.get_rect(center=self.origin_rect.center)
-        self.x = rect.x + rect.w // 2
-        self.y = rect.y + self.rect.h // 2
+        # self.x y self.y son importantes para el Renderer. No tocar (28/11/2022)
+        self.x = -self.rect.w // 2 + self.origen[0]
+        self.y = -self.rect.h // 2 + self.origen[1]
 
         draw.circle(self.image, (255, 255, 225, 0), (self.rect.w // 2, self.rect.h // 2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')
@@ -44,7 +44,7 @@ class LightSource(Sprite):
         Light_Group.add(self.parent.parent.id, self)
 
     def switch(self, event):
-        noche = self.parent.stage.noche
+        noche = self.parent.parent.noche
         if event.data['level'] < 100 and not self.encendido:
             self.encendido = True
             noche.set_light(self)
@@ -66,4 +66,4 @@ class LightSource(Sprite):
         self.rect.y = y
 
     def __repr__(self):
-        return 'LightSource of ' + self.nombre + ' '+str(self.parent.id)
+        return 'LightSource of ' + self.nombre + ' ' + str(self.parent.id)
