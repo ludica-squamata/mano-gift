@@ -182,6 +182,7 @@ class EngineData:
         Renderer.set_focus(focus)
         cls.check_focus_position(focus, stage, data['entrada'])
         focus.character_name = data['focus']
+        Sun.update()
 
     @classmethod
     def save_transient_npcs(cls, event):
