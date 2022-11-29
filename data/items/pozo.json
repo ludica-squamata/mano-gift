@@ -1,0 +1,6 @@
+{
+  "tipo": "trepable",
+  "propiedades": ["solido","sin_sombra"],
+  "image": "props/pozo_escalera.png",
+  "nombre": "Pozo"
+}

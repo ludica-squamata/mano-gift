@@ -109,7 +109,13 @@ def cargar_salidas(parent, alldata):
     for i, datos in enumerate(alldata):
         nombre = datos['nombre']
         stage = datos['stage']
-        rect = Rect(datos['rect'])
+        prop = None
+        if 'prop' in datos:
+            prop = Prop_Group[datos['prop'].capitalize()]
+            rect = Rect(0, 0, *prop.rect.size)
+            rect.center = prop.rect.bottomright
+        else:
+            rect = Rect(datos['rect'])
         chunk = parent.get_chunk_by_adress(datos['chunk_adress'])
         entrada = datos['entrada']
         direcciones = datos['direcciones']
@@ -119,7 +125,10 @@ def cargar_salidas(parent, alldata):
         # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
         # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
         color = Color(r, g, b, a)
-        salidas.append(Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color))
+        salida = Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color)
+        salidas.append(salida)
+        if prop is not None:
+            prop.salida = salida
 
         # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
         # después se usará b*255+g para devolver el index.

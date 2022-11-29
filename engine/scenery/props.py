@@ -76,10 +76,16 @@ class Movible(Escenografia):
 
 class Trepable(Escenografia):
     accionable = True
+    salida = None
 
     def __init__(self, parent, x, y, z, data):
-        super().__init__(parent, x, y, z, data)
+        super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'trepar'
+
+    def action(self, entity):
+        # acá debería iniciar una animación del mob trepando.
+        if self.salida is not None:
+            self.salida.trigger(entity)
 
 
 class Operable(Escenografia):
