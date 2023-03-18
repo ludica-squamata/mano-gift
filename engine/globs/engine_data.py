@@ -92,7 +92,7 @@ class EngineData:
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
             x, y = mapa.posicion_entrada(entrada)
-            Renderer.camara.focus.ubicarse_en_entrada(x, y)
+            Renderer.camara.focus.ubicar_en_mapa(x, y)
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
             cls.transient_mobs.append(item)

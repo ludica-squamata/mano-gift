@@ -72,7 +72,7 @@ class AzoeSprite(sprite.Sprite):
     def reubicar(self, dx, dy):
         self.x += dx
         self.y += dy
-        self.z += dy
+        # self.z += dy
 
         if self.rel_x + dx < 0:
             self.rel_x = 800
@@ -83,10 +83,13 @@ class AzoeSprite(sprite.Sprite):
 
         if self.rel_y + dy < 0:
             self.rel_y = 800
+            self.z = 800-32  # aunque no estoy seguro de esto
         elif self.rel_y + dy > 800:
             self.rel_y = 0
+            self.z = 32
         else:
             self.rel_y += dy
+            self.z += dy
 
     def set_parent_map(self, chunk):
         self.parent = chunk
@@ -117,10 +120,3 @@ class AzoeSprite(sprite.Sprite):
             return self.images[n]
         else:
             return self.image
-
-    def ubicarse_en_entrada(self, x, y):
-        self.x = x
-        self.y = y
-        self.z = self.y + self.rect.h
-        self.rel_x = x
-        self.rel_y = y

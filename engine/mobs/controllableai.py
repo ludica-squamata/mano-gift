@@ -1,6 +1,7 @@
 from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
 from engine.globs.event_aware import EventAware
 from engine.UI.circularmenus.quick import QuickCircularMenu
+from math import sqrt
 
 
 class ControllableAI(EventAware):
@@ -64,20 +65,26 @@ class ControllableAI(EventAware):
             preception = self.entity.perceived
             sprites = set(preception['touched'] + preception['felt'] + preception['close'])
             # a set because it filters repeated units.
-            for sprite in sprites:
+            ex, ey = self.entity.rect.center
+            close = [[q, sqrt((q.rect.x-ex)**2+(q.rect.y-ey)**2)] for q in sprites]
+            sprite = None
+            if len(close):
+                distances = [i[1] for i in close]
+                mobs = [i[0] for i in close]
+                dist_idx = distances.index(min(distances))
+                sprite = mobs[dist_idx]
+            if sprite is not None:
                 if self.entity.estado == 'cmb':
                     self.entity.atacar(sprite)
 
                 elif sprite.tipo == 'Mob':
                     self.entity.dialogar(sprite)
                     self.deregister()
-                    break
 
                 elif sprite.tipo == 'Prop' and sprite in preception['touched']:
                     if sprite.accionable and sprite.action is not None:
                         # should Movible Props have an action?
                         sprite.action(self.entity)
-                        break
 
                     else:
                         sprite.show_description()
