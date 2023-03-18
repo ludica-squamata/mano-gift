@@ -2,6 +2,7 @@ from pygame import Surface, draw, mask as mask_module, transform
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeBaseSprite
 from ._caracterizado import Caracterizado
+from engine.globs.renderer import Camara
 from math import tan, radians, sqrt
 
 
@@ -90,8 +91,11 @@ class Sight(AzoeBaseSprite):
 
         direccion = self._translate()
         self.rotate(direccion)
-        sprites = self.parent.parent.properties.sprites() + self.parent.parent.parent.properties.sprites()
-        lista = sprites if (self.parent.parent is not None) and (len(sprites) > 0) else [self.parent]
+
+        lista = []
+        if Camara.current_map is not None:
+            lista = Camara.current_map.properties.sprs() + Camara.current_map.parent.properties.sprs()
+
         if self.parent in lista:
             idx = lista.index(self.parent)
         else:
@@ -136,10 +140,11 @@ class Touch(AzoeBaseSprite):
         super().__init__(parent, 'Tacto', rect=parent.rect)
 
     def __call__(self, passive=True):
-        sprites = self.parent.parent.properties.sprs() + self.parent.parent.parent.properties.sprs()
-        lista = sprites if (self.parent.parent is not None) and (len(sprites) > 0) else []
+        lista = []
+        if Camara.current_map is not None:
+            lista = Camara.current_map.properties.sprs() + Camara.current_map.parent.properties.sprs()
+            lista.reverse()
 
-        lista.reverse()
         while self.parent in lista:
             lista.remove(self.parent)
         for obj in lista:
