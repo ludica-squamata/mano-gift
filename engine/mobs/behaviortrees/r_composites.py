@@ -39,7 +39,7 @@ class RandomSequence(RandomComposite):
         if self.parent is not None:
             self.parent.get_child_status(status)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
 
 class RandomSelector(RandomComposite):
@@ -65,4 +65,4 @@ class RandomSelector(RandomComposite):
         if self.parent is not None:
             self.parent.get_child_status(status)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)

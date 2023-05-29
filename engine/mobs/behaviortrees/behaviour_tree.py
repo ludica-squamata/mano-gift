@@ -96,10 +96,10 @@ class BehaviourTree:
 
         self.set_parents()
         self.set_children()
-        self.to_check = self.nodes[0]
+        self.to_check = [self.nodes[0]]
 
     def __repr__(self):
-        return 'BehaviourTree: current node #' + str(self.to_check.idx)
+        return 'BehaviourTree'
 
     def load_script_information(self, head_data):
         for script in head_data:
@@ -163,9 +163,9 @@ class BehaviourTree:
                     node = self.nodes[idxn]
                     self.nodes[idx].child = node
 
-    def set_to_check(self, node):
+    def set_to_check(self, *nodes):
         if self.node_set is False:
-            self.to_check = node
+            self.to_check = [*nodes]
             self.node_set = True
 
     def set_context(self, key, value):
@@ -215,7 +215,8 @@ class BehaviourTree:
 
     def update(self):
         if self.status is None:
-            self.to_check.update()
+            for node in self.to_check:
+                node.update()
             self.node_set = False
         else:
             return self.status

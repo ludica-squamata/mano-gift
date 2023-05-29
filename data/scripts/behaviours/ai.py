@@ -71,3 +71,9 @@ class IsInBed(Leaf):
             return Success
         else:
             return Failure
+
+
+class DoNothing(Leaf):
+    def process(self):
+        print('doing nothing')
+        return Success

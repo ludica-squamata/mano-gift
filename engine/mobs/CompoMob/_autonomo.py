@@ -1,7 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviortrees import BehaviourTree
 from engine.misc.resources import abrir_json
-from engine.globs.renderer import Camara
 from engine.mobs import ControllableAI
 from engine.globs import ModData
 from . import Sensitivo, Animado
@@ -36,6 +35,6 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
             return BehaviourTree(self, tree_data)
 
     def update(self, *args):
-        if not self.paused:  # and Camara.current_map is self.parent:
+        if not self.paused:
             self.AI.update()
             super().update(*args)
