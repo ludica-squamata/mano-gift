@@ -44,4 +44,4 @@ class InventoryElement(LetterElement):
         elif self.item.tipo == 'equipable':
             self.parent.overwritten = True
             self.parent.salir()
-            EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo', "select": 16})
+            EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo', "select": self.item.espacio})

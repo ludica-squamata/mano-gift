@@ -102,7 +102,7 @@ class Menu(EventAware, BaseWidget):
     def liberar_presion(self):
         self.current.liberar_presion()
 
-    def reset(self):
+    def reset(self, **kwargs):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
         self.active = True
 

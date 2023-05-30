@@ -71,7 +71,11 @@ class MenuEquipo(Menu):
             self.espacios.add(cuadro)
 
         # seleccionar un espacio por default
-        self.cur_esp = 1 if select is None else select
+        if select is not None:
+            espacios = [esp.index(e) for e in esp if e[acc] == select]
+            self.cur_esp = espacios[0]
+        else:
+            self.cur_esp = 1
         selected = self.espacios.get_spr(self.cur_esp)
         selected.ser_elegido()
         self.current = selected
@@ -273,6 +277,20 @@ class MenuEquipo(Menu):
                 fila.ser_deselegido()
             self.foco = 'espacios'
             self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
+
+    def reset(self, **kwargs):
+        self.deselect_all(self.espacios)
+        self.cur_esp = 1
+        if kwargs:
+            esp = self.espacios.sprs()
+            slot = kwargs['select']
+            espacios = [esp.index(e) for e in esp if e.accepts == slot]
+            self.cur_esp = espacios[0]
+
+        selected = self.espacios.get_spr(self.cur_esp)
+        selected.ser_elegido()
+        self.current = selected
+        self.llenar_espacio_selectivo()
 
     def use_function(self, mode, key):
         """Determina qué grupo de funciones se van a usar según el foco actual.
