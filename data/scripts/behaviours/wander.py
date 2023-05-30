@@ -46,8 +46,59 @@ class GetRoute(Leaf):
         prox = self.tree.get_context('next')
         pd = self.tree.get_context('punto_final')
 
-        pi = Nodo(e.x, e.y, 32)
+        class Point:
+            x = 0
+            y = 0
+
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+        pre_x, pre_y = None, None
+        if (e.x / 32).is_integer():
+            pi_x = e.x
+        else:
+            pi_x = round((e.x / 32) * 32)
+            pre_x = e.x
+
+        if (e.y / 32).is_integer():
+            pi_y = e.y
+        else:
+            pi_y = round((e.y / 32)) * 32
+            pre_y = e.y
+
+        pi = Nodo(pi_x, pi_y, 32)
+
+        post_x, post_y = None, None
+        pd_x, pd_y = None, None
+        if not (pd.x / 32).is_integer():
+            pd_x = round((pd.x / 32) * 32)
+            post_x = pd.x
+
+        if not (pd.y / 32).is_integer():
+            pd_y = round((pd.y / 32) * 32)
+            post_y = pd.y
+
+        if pd_x is not None or pd_y is not None:
+            pd = Nodo(pd_x, pd_y, 32)
+            self.tree.set_context('punto_final', pd)
+
         ruta = a_star(pi, pd, mapa)
+        if pre_x is not None or pre_y is not None:
+            if pre_x is None:
+                pre_x = pi_x
+            if pre_y is None:
+                pre_y = pi_y
+            punto = Point(pre_x, pre_y)
+            ruta.insert(0, punto)
+
+        if post_x is not None or post_y is not None:
+            if pre_x is None:
+                post_x = pi_x
+            if pre_y is None:
+                post_y = pi_y
+            punto = Point(post_x, post_y)
+            ruta.append(punto)
 
         if ruta is None or len(ruta) == 1:
             return Failure

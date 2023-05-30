@@ -32,7 +32,7 @@ class Agarrable(Escenografia):
                                                          'about': ref})
 
     def return_item(self):
-        args = self.nombre, self.image, self.data
+        args = self.parent, self.nombre, self.image, self.data
         if self.subtipo == 'consumible':
             return Consumible(*args)
         elif self.subtipo == 'equipable':

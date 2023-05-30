@@ -12,8 +12,7 @@ class DescriptiveArea(BaseWidget):
         megacanvas = self.create_raised_canvas(w, h)
         canvas = self.create_sunken_canvas(w - 8, h - 8)
         megacanvas.blit(canvas, (6, 6))
-        self.parent = parent
-        super().__init__(megacanvas)
+        super().__init__(parent, imagen=megacanvas)
 
         self.ubicar(0, ALTO - h)
         render = render_tagged_text(description, w - 16, h - 14, CANVAS_BG)

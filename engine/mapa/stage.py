@@ -232,6 +232,7 @@ class ChunkMap(AzoeBaseSprite):
             name = Mob_Group.character_name
             data['mobs'][name] = data['mobs'].pop('hero')
             data['refs'][name] = ModData.fd_player + name + '.json'
+            data['focus'] = name
             if trnsnt_mb is not None and name == trnsnt_mb.character_name:
                 del data['mobs'][trnsnt_mb.character_name]
 
@@ -253,6 +254,7 @@ class ChunkMap(AzoeBaseSprite):
 
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
+        data['entradas'] = self.parent.data['entradas']
         if any([len(data[req]) > 0 for req in requested]):
             for item, grupo in load_something(self, data, requested):
                 self.add_property(item, grupo)

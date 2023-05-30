@@ -12,8 +12,7 @@ class BasePanel(BaseWidget):
         image.fill(CANVAS_BG)
         self.f = font.SysFont('Verdana', 16)
         self.nombre = nombre
-        self.parent = parent
-        super().__init__(image)
+        super().__init__(parent, imagen=image)
         self.ubicar(0, ALTO - int(ALTO / 5))
         self.marco = self.crear_marco(*self.rect.size)
 

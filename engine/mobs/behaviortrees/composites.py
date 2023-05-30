@@ -47,7 +47,7 @@ class Sequence(Composite):
         if self.parent is not None:
             self.parent.get_child_status(status)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
 
 class Selector(Composite):
@@ -69,7 +69,7 @@ class Selector(Composite):
         if self.parent is not None:
             self.parent.get_child_status(status)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
 
 class Parallel(Composite):
@@ -91,14 +91,26 @@ class Parallel(Composite):
             child.update()
         self.reset()
 
+    def reset(self):
+        self.children_status = [i * 0 for i in range(len(self.children))]
+
     def get_child_status(self, status):
         self.children_status[self.current_id] = status
-        self.current_id += 1 if self.current_id+1 <= len(self.children)-1 else 0
-        if self.children_status.count(Success) >= self.success_value:
-            self.parent.get_child_status(Success)
+        self.current_id += 1 if self.current_id + 1 <= -1 else 0
 
-        elif self.children_status.count(Failure) >= self.failure_value:
-            self.parent.get_child_status(Failure)
-
+        if status is Running:
+            self.tree.set_to_check(*self.children)
         else:
-            self.parent.get_child_status(Running)
+            self.reset()
+
+        if self.parent is not None:
+            if self.children_status.count(Success) >= self.success_value:
+                self.parent.get_child_status(Success)
+
+            elif self.children_status.count(Failure) >= self.failure_value:
+                self.parent.get_child_status(Failure)
+
+            else:
+                self.parent.get_child_status(Running)
+        else:
+            self.tree.set_status(status)

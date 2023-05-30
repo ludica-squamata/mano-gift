@@ -42,7 +42,7 @@ class Repeater(Decorator):
         elif self.parent is not None:
             self.parent.get_child_status(status)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
     def update(self):
         self.current_time += 1
@@ -59,7 +59,7 @@ class UntilFail(Decorator):
             else:
                 self.tree.set_to_check(self.child)
         else:
-            self.tree.status = Success
+            self.tree.set_status(status)
 
 
 class Succeeder(Decorator):
@@ -69,7 +69,7 @@ class Succeeder(Decorator):
         if self.parent is not None:
             self.parent.get_child_status(Success)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
 
 class Inverter(Decorator):
@@ -85,7 +85,7 @@ class Inverter(Decorator):
         if self.parent is not None:
             self.parent.get_child_status(status)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
 
 # New Decorators based on http://guineashots.com/2014/08/15/an-introduction-to-behavior-trees-part-3
@@ -96,7 +96,7 @@ class Failer(Decorator):
         if self.parent is not None:
             self.parent.get_child_status(Failure)
         else:
-            self.tree.status = status
+            self.tree.set_status(Failure)
 
 
 class UntilSuccess(Decorator):
@@ -109,7 +109,7 @@ class UntilSuccess(Decorator):
             else:
                 self.tree.set_to_check(self.child)
         else:
-            self.tree.status = Success
+            self.tree.set_status(Success)
 
 
 class Limiter(Decorator):
@@ -129,7 +129,7 @@ class Limiter(Decorator):
         elif self.parent is not None:
             self.parent.get_child_status(Failure)
         else:
-            self.tree.status = status
+            self.tree.set_status(status)
 
     def update(self):
         self.total_calls += 1
