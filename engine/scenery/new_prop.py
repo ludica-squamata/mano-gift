@@ -35,7 +35,7 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
         return prop
 
 
-def new_item(nombre, ruta):
+def new_item(parent, nombre, ruta):
     data = abrir_json(ruta)
     subtipo = data['subtipo']
     item = None
@@ -52,4 +52,4 @@ def new_item(nombre, ruta):
     elif subtipo == 'pocion':
         item = Pocion
 
-    return item(nombre, data['image'], data)
+    return item(parent, nombre, data['image'], data)

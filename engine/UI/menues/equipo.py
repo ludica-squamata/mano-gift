@@ -19,7 +19,7 @@ class MenuEquipo(Menu):
     draw_space_rect = None
     draw_space = None
 
-    def __init__(self, parent):
+    def __init__(self, parent, select=None):
         """Crea e inicaliza las varibales del menú Equipo."""
 
         super().__init__(parent, 'Equipo')
@@ -65,13 +65,13 @@ class MenuEquipo(Menu):
 
         for e in esp:
             item = self.entity.equipo[e['nom']]
-            cuadro = EspacioEquipable(e['nom'], item, e['direcciones'], e['accepts'], *e['e_pos'])
+            cuadro = EspacioEquipable(self, e['nom'], item, e['direcciones'], e['accepts'], *e['e_pos'])
             titulo = self.titular(e['nom'])
             self.canvas.blit(titulo, e['t_pos'])
             self.espacios.add(cuadro)
 
         # seleccionar un espacio por default
-        self.cur_esp = 1
+        self.cur_esp = 1 if select is None else select
         selected = self.espacios.get_spr(self.cur_esp)
         selected.ser_elegido()
         self.current = selected
@@ -83,6 +83,7 @@ class MenuEquipo(Menu):
         w = self.canvas.get_width() - 256
         h = self.canvas.get_height() // 2
         self.create_draw_space('Inventario', 270, 40, w, h)
+        self.llenar_espacio_selectivo()
 
         # determinar qué tecla activa qué función.
         self.functions = {

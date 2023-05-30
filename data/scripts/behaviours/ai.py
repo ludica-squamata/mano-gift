@@ -75,5 +75,4 @@ class IsInBed(Leaf):
 
 class DoNothing(Leaf):
     def process(self):
-        print('doing nothing')
         return Success

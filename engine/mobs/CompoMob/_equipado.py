@@ -69,7 +69,7 @@ class Equipado(Caracterizado):
         if item_name in self.inventario:
             item = self.inventario[item_name]
         else:
-            item = new_item(item_name, item_data)
+            item = new_item(entity, item_name, item_data)
         if item in self.inventario:  # NPCs create items from scratch
             self.inventario.remover(item)
         entity.recibir_item(item)

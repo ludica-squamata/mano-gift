@@ -213,10 +213,12 @@ class EngineData:
     def pop_menu(cls, event=None):
         from engine.UI.menues import default_menus
 
+        kwargs = {}
         if event is None and not len(cls.acceso_menues):
             titulo = 'Pausa'
         elif event is not None:
-            titulo = event.data['value']
+            titulo = event.data.pop('value')
+            kwargs = event.data
         else:
             # esto evita que se abra el menú Pausa desde Menú Cargar (lo que provoca un crash).
             # es necesario porque Modos ya no existe, y sería la única otra forma
@@ -232,9 +234,9 @@ class EngineData:
         if titulo not in cls.MENUS:
             name = 'Menu' + titulo
             if name in ModData.custommenus:
-                menu = ModData.custommenus[name](cls)
+                menu = ModData.custommenus[name](cls, **kwargs)
             elif name in default_menus:
-                menu = default_menus[name](cls)
+                menu = default_menus[name](cls, **kwargs)
             else:
                 raise NotImplementedError('El menu "{}" no existe'.format(titulo))
         else:
