@@ -1,7 +1,6 @@
 from engine.globs import CUADRO, EngineData, FEATURE_MENUS_ADICIONALES, TEXT_FG, CANVAS_BG, Mob_Group, ModData
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs import render_textrect
-from engine.misc import Config as Cfg
 from pygame.font import SysFont
 from pygame import Rect
 from .menu import Menu
@@ -83,18 +82,10 @@ class MenuPausa(Menu):
         self.deregister()
         EventDispatcher.trigger('OpenMenu', self.nombre, {'value': self.current.nombre})
 
-    def reset(self):
-        """Reseta el presionado de todos los botones, y deja seleccionado
-        el que haya sido elegido anteriormente."""
-        self.deselect_all(self.botones)
-        if not Cfg.dato("recordar_menus"):
-            self.cur_btn = 0
-        selected = self.botones.get_sprite(self.cur_btn)
-        selected.ser_elegido()
-        self.current = selected
+    def reset(self, **kwargs):
+        """Reseta el presionado de todos los botones, y deja seleccionado el que haya sido elegido anteriormente."""
+        self.on_reset()
         self.update_charname_display()
-
-        self.active = True
 
     def update(self):
         self.botones.update()

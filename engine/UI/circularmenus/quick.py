@@ -71,11 +71,5 @@ class QuickCircularMenu(RenderedCircularMenu):
         cls.first = f
 
     @staticmethod
-    def cmd_rotar_vista(direccion):
-        # solo una abreviatura
-
-        EventDispatcher.trigger('Rotate', 'Menu Rápido', {'view': direccion})
-
-    @staticmethod
     def save():
         EventDispatcher.trigger('Save', 'Menu Rápido', {})

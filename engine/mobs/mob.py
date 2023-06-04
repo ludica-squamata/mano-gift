@@ -1,5 +1,4 @@
 from engine.misc import cargar_imagen, split_spritesheet, cargar_head_anims
-# from engine.globs.event_dispatcher import EventDispatcher
 from .CompoMob import Combativo, Autonomo, Parlante
 from engine.globs import Mob_Group, ModData
 from engine.base import ShadowSprite
@@ -52,14 +51,6 @@ class Mob(Combativo, Autonomo, Parlante, ShadowSprite):
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
-        #
-        # EventDispatcher.register(self.rotate_and_pos, 'RotateMobs')
-
-    # def rotate_and_pos(self, event):
-    #     x = event.data['x']
-    #     y = event.data['y']
-    #
-    #     self.mapRect.center = x, y
 
     def __repr__(self):
         return "Mob " + self.nombre

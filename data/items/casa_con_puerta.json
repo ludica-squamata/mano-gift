@@ -1,0 +1,19 @@
+{
+  "tipo": "estructura_compuesta",
+  "nombre": "casa_con_puerta",
+  "componentes": {
+    "casa_cerrada": [
+      [0,0,0]
+    ],
+    "puerta_cerrada": [
+      [14,66,1]
+    ]
+  },
+  "referencias": {
+    "casa_cerrada": "props/casa.png",
+    "puerta_cerrada": "puerta.json"
+  },
+  "width": 128,
+  "height": 164,
+  "proyecta_sombra": true
+}

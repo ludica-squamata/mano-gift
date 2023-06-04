@@ -1,7 +1,7 @@
 from .pausa import MenuPausa
-from .equipo import MenuEquipo, _boton_equipo
-from .opciones import MenuOpciones, _boton_opciones
-from .cargar import MenuCargar, _boton_cargar
+from .equipo import MenuEquipo
+from .opciones import MenuOpciones
+from .cargar import MenuCargar
 from .principal import MenuPrincipal
 from .menu import Menu
 from .model import MenuModel

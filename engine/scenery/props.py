@@ -1,11 +1,10 @@
-from engine.misc.resources import abrir_json, split_spritesheet, cargar_imagen
 from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo
-from engine.globs.renderer import Renderer
+from engine.misc.resources import abrir_json, cargar_imagen
 from .bases import Escenografia
 from pygame import Rect
 from .items import *
 
-__all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'Estructura3D', 'Escenografia']
+__all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'EstructuraCompuesta', 'Escenografia']
 
 
 class Agarrable(Escenografia):
@@ -138,35 +137,24 @@ class Destruible(Escenografia):
         self.accion = 'romper'
 
 
-class Estructura3D(Escenografia):
-    faces = {}
-    face = 'front'
-    _chopped = False
-
+class EstructuraCompuesta(Escenografia):
     def __init__(self, parent, x, y, data):
-        self.faces = {'front': None, 'right': None, 'back': None, 'left': None}
-        self.face = data.get('cara', 'front')
         self.x, self.y = x, y
         self.w, self.h = data['width'], data['height']
         self.rect = Rect(self.x, self.y, self.w, self.h)
+        self.props = self.build_props(data, x, y)
 
-        for face in data['componentes']:
-            if len(data['componentes'][face]):
-                self.faces[face] = self.build_face(data, x, y, face)
-
-        self.props = self.faces[self.face]
         super().__init__(parent, x, y, data=data, rect=self.rect)
-        self.proyectaSombra = False
-        EventDispatcher.register(self.rotate_view, 'RotateEverything')
+        self.proyectaSombra = data.get('proyecta_sombra', False)
 
-    def build_face(self, data, dx, dy, face):
+    def build_props(self, data, dx, dy):
         from engine.scenery import new_prop
         props = []
-        for nombre in data['componentes'][face]:
+        for nombre in data['componentes']:
             ruta = data['referencias'][nombre]
             imagen = None
             propdata = {}
-            for x, y, z in data['componentes'][face][nombre]:
+            for x, y, z in data['componentes'][nombre]:
                 if type(ruta) is dict:
                     propdata = ruta.copy()
 
@@ -174,41 +162,9 @@ class Estructura3D(Escenografia):
                     propdata = abrir_json(ruta)
 
                 elif ruta.endswith('.png'):
-                    w, h = data['width'], data['height']
-                    faces = self.chop_faces(ruta, w=w, h=h, required_face=face)
-                    imagen = faces[face]
-
-                if 'cara' not in propdata:
-                    propdata.update({'cara': face})
+                    imagen = ruta
 
                 prop = new_prop(self.parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
                 props.append(prop)
 
         return props
-
-    def chop_faces(self, ruta_img, w, h, required_face='front'):
-        if not self._chopped:
-            spritesheet = split_spritesheet(ModData.graphs + ruta_img, w=w, h=h)
-            d = {}
-            if len(spritesheet) > 1:
-                for idx, face in enumerate(['front', 'left', 'right', 'back']):
-                    d[face] = spritesheet[idx]
-            else:
-                d[required_face] = spritesheet[0]
-            return d
-        else:
-            return self._chopped
-
-    def rotate_view(self, event):
-        np = event.data['view']
-        objects_faces = ['front', 'right', 'back', 'left']
-        idx = objects_faces.index(self.face)
-        temp = [objects_faces[idx]] + objects_faces[idx + 1:] + objects_faces[:idx]
-
-        for prop in self.faces[self.face]:
-            Renderer.camara.remove_obj(prop)
-
-        self.face = temp[np]
-
-        for prop in self.faces[self.face]:
-            Renderer.camara.add_real(prop)

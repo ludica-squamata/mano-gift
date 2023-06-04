@@ -26,10 +26,7 @@ class Camara:
 
     @classmethod
     def init(cls):
-        EventDispatcher.register_many(
-            (cls.save_focus, 'Save'),
-            (cls.rotate_view, 'Rotate')
-        )
+        EventDispatcher.register(cls.save_focus, 'Save')
 
     @classmethod
     def set_background(cls, spr):
@@ -80,25 +77,6 @@ class Camara:
         cls.bgs.empty()
         cls.bgs_rect = None
         cls.nchs.empty()
-
-    @classmethod
-    def rotate_view(cls, event):
-
-        new_view = event.data['view']
-        cw = cls.compass_CW.index(new_view)
-        ccw = cls.compass_CCW.index(new_view)
-
-        if cw < ccw:
-            angle = -cw
-        else:
-            angle = ccw
-
-        if cls.view_name != new_view:
-            cls.view_name = new_view
-            cls.compass_CW = [cls.compass_CW[cw]] + cls.compass_CW[cw + 1:] + cls.compass_CW[:cw]
-            cls.compass_CCW = [cls.compass_CCW[ccw]] + cls.compass_CCW[ccw + 1:] + cls.compass_CCW[:ccw]
-
-        EventDispatcher.trigger('RotateEverything', 'Camara', {'new_view': new_view, 'view': cw, 'angle': angle * 90})
 
     @classmethod
     def detectar_mapas_adyacentes(cls):

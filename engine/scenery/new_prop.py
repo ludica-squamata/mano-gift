@@ -20,8 +20,8 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
         prop = Operable(parent, x, y, z, data)
     elif tipo == 'destruible':
         prop = Destruible(parent, x, y, z, data)
-    elif tipo == 'estructura3D':
-        prop = Estructura3D(parent, x, y, data).props
+    elif tipo == 'estructura_compuesta':
+        prop = EstructuraCompuesta(parent, x, y, data).props
     else:
         prop = Escenografia(parent, x, y, z=z, nombre=nombre, data=data, imagen=img)
 

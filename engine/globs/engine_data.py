@@ -241,7 +241,7 @@ class EngineData:
                 raise NotImplementedError('El menu "{}" no existe'.format(titulo))
         else:
             menu = cls.MENUS[titulo]
-            menu.reset(kwargs)
+            menu.reset(*kwargs)
 
         menu.register()
         EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})

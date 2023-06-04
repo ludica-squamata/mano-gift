@@ -4,6 +4,7 @@ from engine.UI.widgets import Boton, BaseWidget, Fila
 from engine.libs.textrect import render_textrect
 from engine.globs.event_aware import EventAware
 from engine.globs.azoe_group import AzoeGroup
+from engine.misc.config import Config as Cfg
 from pygame import Rect, font, Surface
 
 
@@ -104,6 +105,17 @@ class Menu(EventAware, BaseWidget):
 
     def reset(self, **kwargs):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
+        self.active = True
+
+    def on_reset(self):
+        """Usado por el menú Principal y por el menú Pausa para restablecer el estado de los botones."""
+        self.deselect_all(self.botones)
+        if not Cfg.dato("recordar_menus"):
+            self.cur_btn = 0
+        selected = self.botones.get_sprite(self.cur_btn)
+        selected.ser_elegido()
+        self.current = selected
+
         self.active = True
 
     def select_one(self, direccion):

@@ -33,7 +33,7 @@ class AzoeSprite(sprite.Sprite):
             self.image = imagen
         elif imagen is None:
             self.image = None
-            self.visible = 0  # no funciona con dirty
+            self.visible = 0
         else:
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
 
@@ -72,7 +72,6 @@ class AzoeSprite(sprite.Sprite):
     def reubicar(self, dx, dy):
         self.x += dx
         self.y += dy
-        # self.z += dy
 
         if self.rel_x + dx < 0:
             self.rel_x = 800
