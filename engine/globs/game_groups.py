@@ -121,6 +121,7 @@ class MobGroup:
     def character_name(self):
         return self._name
 
+    # noinspection PyUnresolvedReferences
     @character_name.deleter
     def character_name(self):
         self._name = ''

@@ -32,8 +32,8 @@ class QuickCircularMenu(RenderedCircularMenu):
                 'inicial': [i for i in commands]+[i for i in cascades]
             }
 
-        temas = GameState.variables()
-        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
+        temas = GameState.find('tema.')
+        lista = [item[5:].title() for item in temas if temas[item]]
         cascadas.update({
             "Temas": [DialogTopicElement(self, i, t) for i, t in enumerate(lista)]
         })
@@ -69,12 +69,6 @@ class QuickCircularMenu(RenderedCircularMenu):
     @classmethod
     def set_first(cls, f: int):
         cls.first = f
-
-    @staticmethod
-    def cmd_rotar_vista(direccion):
-        # solo una abreviatura
-
-        EventDispatcher.trigger('Rotate', 'Menu Rápido', {'view': direccion})
 
     @staticmethod
     def save():

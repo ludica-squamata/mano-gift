@@ -22,7 +22,6 @@ GAMEPAD = 'gamepad'
 
 # feature flags deshablitadas para la demo
 FEATURE_SOMBRAS_DINAMICAS = True
-FEATURE_ROTACION_MAPA = False
 FEATURE_MENUS_ADICIONALES = False
 
 # features opcionales para transformar al engine

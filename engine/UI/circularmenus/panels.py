@@ -39,14 +39,14 @@ class ObjectsCircularMenu(PanelCircularMenu):
 
 class ThemesCircularMenu(PanelCircularMenu):
     def __init__(self, parent):
-        temas = GameState.variables()
-        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
+        temas = GameState.find('tema.')
+        lista = [item[5:].title() for item in temas if temas[item]]
 
         super().__init__(parent, 'Themes', lista)
 
     def update_cascades(self):
-        temas = GameState.variables()
-        lista = [item[5:].title() for item in temas if item.startswith('tema.') and temas[item]]
+        temas = GameState.find('tema.')
+        lista = [item[5:].title() for item in temas if temas[item]]
         cascadas = {
             'inicial': [DialogThemeElement(self, i, item) for i, item in enumerate(lista)]
         }

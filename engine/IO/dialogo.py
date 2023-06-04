@@ -18,7 +18,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if not GameState.get('dialog.{}.enabled'.format(meta['about'])):
+        if not GameState.get2(f"dialog.{meta['about']}.disabled"):
             allow = False
 
         if meta['class'] != 'scripted':
@@ -196,7 +196,7 @@ class Dialogo(Discurso):
 
         if "flags" in condiciones:
             for flag in condiciones['flags']:
-                supress = supress or not GameState.get(flag)
+                supress = supress or flag not in GameState
 
         return supress
 
@@ -323,7 +323,7 @@ class Dialogo(Discurso):
             self.frontend.set_text(nodo.texto, omitir_tags=omitir_tags)
 
         for exp in nodo.expressions:
-            GameState.set('tema.' + exp, True)
+            GameState.set2('tema.' + exp + '.enabled')
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':
@@ -348,7 +348,7 @@ class Dialogo(Discurso):
                 panel.menu.salir()
 
         if self.write_flag:
-            GameState.set('dialog.{}.enabled'.format(self.about), False)
+            GameState.set2(f'dialog.{self.about}.disabled')
 
         super().cerrar()
 

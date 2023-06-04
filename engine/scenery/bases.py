@@ -53,7 +53,6 @@ class Escenografia(ShadowSprite, EventListener):
 
 class Item(AzoeSprite):
     stackable = False
-    tipo = ''
 
     def __init__(self, parent, nombre, imagen, data):
         self.nombre = nombre

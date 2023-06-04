@@ -40,7 +40,7 @@ class Salida:
                 'target_entrada': self.entrada}
 
         EventDispatcher.trigger('SetMap', 'Salida', data)
-        GameState.set(self.flag_name, True)
+        GameState.set2(self.flag_name)
 
     def __repr__(self):
         return self.nombre
