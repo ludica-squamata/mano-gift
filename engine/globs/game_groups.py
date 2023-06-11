@@ -264,10 +264,81 @@ class LightGroup:
             return []
 
 
+class TaggedGroup:
+    """Es un diccionario cuyas keys son características de los props/mobs que lo componen. Un prop o mob puede
+    pertenecer a más de una key, pero no pueden aparecer más de una vez bajo una key dada.
+
+    Esto permite obtener props o mobs por caracterísicas como "solido" o "agresivo" sin tener que generar nuevas listas
+    en el mapa o entradas en Constantes.
+    """
+
+    def __init__(self):
+        self._inner_dict = {}
+
+    def add(self, key: str, item):
+        """Añade un item a la key provista. Si la key no existiere, se crea una nueva con ese item."""
+
+        if key in self._inner_dict:
+            self._inner_dict[key].append(item)
+        elif key not in self._inner_dict:
+            self._inner_dict[key] = [item]
+
+    def add_item(self, item, *keys):
+        """Añade un item a todas las keys provistas."""
+
+        for key in keys:
+            self.add(key, item)
+
+    def get(self, key: str):
+        """Devuelve los items de una key o un error si la key no existe."""
+
+        if key in self._inner_dict:
+            return self._inner_dict[key]
+        else:
+            raise KeyError(f"key '{key}' is invalid")
+
+    def intersect(self, key1, key2):
+        """Devuelve los items que pertenezcan simultáneamente a key1 y key2"""
+
+        items = set(self._inner_dict[key1]+self._inner_dict[key2])
+        return list(items)
+
+    def create_key(self, key):
+        """Crea una lista nueva bajo key si la key no está ya presente"""
+
+        if key not in self._inner_dict:
+            self._inner_dict[key] = []
+
+    def remove_item(self, item):
+        """Remueve el item de todas las keys del grupo"""
+
+        for key in self._inner_dict:
+            if item in self._inner_dict[key]:
+                idx = self._inner_dict[key].index(item)
+                del self._inner_dict[key][idx]
+
+    def remove_key(self, key: str):
+        """Remueve keys. Items pertenecientes a otras keys no se ven afectados."""
+
+        if key in self._inner_dict:
+            del self._inner_dict[key]
+        else:
+            raise KeyError(f"key '{key}' is invalid")
+
+
+class ParentedTaggedGroup(TaggedGroup):
+    """Funciona igual que TaggedGroup, pero tinene una referencia a su parent."""
+
+    def __init__(self, parent):
+        self.parent = parent
+        super().__init__()
+
+
 Mob_Group = MobGroup()
 Item_Group = ItemGroup()
 Prop_Group = ItemGroup()
 Deleted_Items = DeletedItems()
 Light_Group = LightGroup()
+Tagged_Items = TaggedGroup()
 
-__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group"]
+__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group", "Tagged_Items"]
