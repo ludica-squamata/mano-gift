@@ -5,9 +5,9 @@ from engine.globs.event_dispatcher import EventDispatcher
 
 
 def init_game(event):
-    data = {"mapa": "new",
-            "entrada": "center",
-            "tiempo": [0, 0, 0],
+    data = {"mapa": "Prueba",
+            "entrada": "centre",
+            "tiempo": [0, 13, 0],
             "focus": "heroe"}
 
     if 'savegame' in event.data:

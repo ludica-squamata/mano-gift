@@ -18,7 +18,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if not GameState.get2(f"dialog.{meta['about']}.disabled"):
+        if GameState.get2(f"dialog.{meta['about']}.disabled"):
             allow = False
 
         if meta['class'] != 'scripted':
@@ -196,7 +196,7 @@ class Dialogo(Discurso):
 
         if "flags" in condiciones:
             for flag in condiciones['flags']:
-                supress = supress or flag not in GameState
+                supress = supress or flag not in GameState.flags()
 
         return supress
 
@@ -391,7 +391,7 @@ class Monologo(Discurso):
             'abajo': lambda: self.direccionar_texto('abajo')})
 
         self.frontend.set_loc_img(self.locutor)
-        self.frontend.set_text('No tengo nada más que hablar contigo')  # hardcoded for test
+        self.frontend.set_text(str(self.locutor.id))  # hardcoded for test
         self.emit_sound_event(self.locutor)
 
     def direccionar_texto(self, direccion):

@@ -33,7 +33,7 @@ class MobGroup:
             else:
                 raise IndexError
         else:
-            return self.__missing__(key)
+            return None
 
     def __delitem__(self, key):
         if key in self._group:
@@ -63,9 +63,6 @@ class MobGroup:
             if item.id in self._group:
                 return True
         return False
-
-    def __missing__(self, key):
-        return key
 
     def get_existing(self, mobs):
         flagged = []

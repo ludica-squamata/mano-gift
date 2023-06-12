@@ -53,10 +53,9 @@ class Stage:
 
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
+            ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, requested=[mob_req, 'props'])
-        self.chunks.add(chunk)
+            ChunkMap(self, chunk_name, offx, offy, mob, requested=[mob_req, 'props'])
 
         if 'props' in self.data:
             self.load_unique_props(self.data)
@@ -98,14 +97,15 @@ class Stage:
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada,
                                                               'use_csv': True})  # hightlighted new key.
         ruta = path.join(Config.savedir, 'mobs.csv')
-        with open(ruta, 'wt', newline='') as csvfile:
+        with open(ruta, 'w', newline='') as csvfile:
             # this is not quite good yet, because it doesn't save the mobs from other stages (those that were already
             # explored), but it is a start.
-            fieldnames = ['name', 'x', 'y']
+            fieldnames = ['name', 'x', 'y', 'id', 'stage', 'chunk']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
             for chunk in self.chunks.sprs():
                 for mob in chunk.properties.get_sprites_from_layer(2):
-                    row = {'name': mob.nombre, 'x': mob.rel_x, 'y': mob.rel_y}
+                    row = {'name': mob.nombre, 'x': mob.rel_x, 'y': mob.rel_y, 'id': mob.id,
+                           'stage': self.nombre, 'chunk': str(chunk.adress)}
                     writer.writerow(row)
 
     def load_unique_props(self, all_data: dict):
@@ -266,6 +266,7 @@ class ChunkMap(AzoeBaseSprite):
             self.mask = mask.Mask(rect.size)
 
         super().__init__(parent, nombre, image, rect)
+        self.parent.chunks.add(self)
 
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
@@ -409,6 +410,9 @@ class ChunkAdress:
         return self.x, self.y + 1
 
     def __str__(self):
+        return f'{self.x},{self.y}'
+
+    def __repr__(self):
         return f'{self.parent.nombre} @{self.x}, {self.y}'
 
     def __bool__(self):

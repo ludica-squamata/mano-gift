@@ -2,28 +2,28 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviortrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import GameState
-from engine.globs.game_groups import Mob_Group
 
 
 class HasSetLocation(Leaf):
     def process(self):
         e = self.get_entity()
         # get the location set by another entity
-        loc = GameState.get2(e.nombre)
+        loc = GameState.find(prefix=f'{e.nombre}.goto')
 
         if loc:
-            nodo = Nodo(*loc, 32)
+            prefix = f'{e.nombre}.goto.'
+            x, y = loc[0].strip(prefix).strip('[]').split(',')
+            nodo = Nodo(int(x), int(y), 32)
             self.tree.set_context('punto_final', nodo)
             # reset the flag to prevent infinite loop
-            GameState.del2(e.nombre)
+            GameState.del2(loc[0])
             return Success
         else:
             return Failure
 
 
 def exit_event(event):
-    mob = Mob_Group[event.data['mob']]
-    mob.Ai.set_context('go to', event.data['pos'])
+    GameState.set2(f"{event.data['mob']}.goto.{event.data['pos']}")
 
 
 EventDispatcher.register(exit_event, "Exit")

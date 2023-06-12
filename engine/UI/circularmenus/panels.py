@@ -40,7 +40,7 @@ class ObjectsCircularMenu(PanelCircularMenu):
 class ThemesCircularMenu(PanelCircularMenu):
     def __init__(self, parent):
         temas = GameState.find('tema.')
-        lista = [item[5:].title() for item in temas if temas[item]]
+        lista = [item[5:].title() for item in temas]
 
         super().__init__(parent, 'Themes', lista)
 

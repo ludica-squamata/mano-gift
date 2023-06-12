@@ -39,12 +39,13 @@ class EngineData:
 
     @classmethod
     def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False, use_csv=False):
-        from engine.mapa import Stage
+        from engine.mapa import Stage, loader
         if stage not in cls.mapas or is_new_game:
             cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs, use_csv=use_csv)
         else:
             cls.mapas[stage].ubicar_en_entrada(mob, entrada)
 
+        chunk = None
         if mob is not None:
             adress = cls.mapas[stage].entradas[entrada]
             chunk = cls.mapas[stage].get_chunk_by_adress(adress)
@@ -52,21 +53,30 @@ class EngineData:
             mob.set_parent_map(chunk)
 
         for entry in cls.transient_mobs:
-            mob = Mob_Group[entry['id']]
-            from_stage = entry['from']
-            if from_stage in cls.mapas:
-                cls.mapas[from_stage].search_and_delete(mob)
+            tr_mob = Mob_Group[entry['id']]
+            if tr_mob is None and entry['to'] == stage:
+                pos = cls.mapas[stage].entradas[entry['pos']]
+                all_data = {'mobs': {entry['mob']: [entry['pos']]},
+                            'entradas': {entry['pos']: {'pos': pos}}, 'refs': {}}
+                tr_mob = loader.load_mobs(chunk, all_data)[0][0]
+
+            if entry['from'] in cls.mapas:
+                cls.mapas[entry['from']].search_and_delete(tr_mob)
                 entry['flagged'] = True
 
             if entry['to'] == stage:
-                x, y = cls.mapas[stage].posicion_entrada(entry['pos']) if type(entry['pos']) is str else entry['pos']
-                dx, dy = mob.direcciones[mob.direccion]
+                type_entrada = type(entry['pos'])  # shortcut
+                x, y = cls.mapas[stage].posicion_entrada(entry['pos']) if type_entrada is str else entry['pos']
+                dx, dy = tr_mob.direcciones[tr_mob.direccion]
                 dx *= 32
                 dy *= 32
-                mob.ubicar_en_mapa(x + dx, y + dy)
-                if type(mob) is not str:
-                    cls.mapas[stage].mapa.add_property(mob, 2)
-                    mob.set_parent_map(cls.mapas[stage].mapa)
+                tr_mob.ubicar_en_mapa(x + dx, y + dy)
+                if type(tr_mob) is not str:
+                    adress = cls.mapas[stage].entradas[entry['pos']]
+                    chunk = cls.mapas[stage].get_chunk_by_adress(adress)
+                    chunk.add_property(tr_mob, 2)
+                    tr_mob.set_parent_map(chunk)
+                    tr_mob.id = entry['id']
 
         return cls.mapas[stage]
 
@@ -83,9 +93,6 @@ class EngineData:
         mapa_actual.del_property(mob)
         stage = evento.data['target_stage']
         entrada = evento.data['target_entrada']
-        for entry in cls.transient_mobs:
-            transit_mob = Mob_Group[entry['id']]
-            entry['pos'] = transit_mob.x, transit_mob.y
 
         if Renderer.camara.is_focus(mob):
             EventDispatcher.trigger('EndDialog', cls, {})
@@ -152,36 +159,20 @@ class EngineData:
         stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
         SeasonalYear.propagate()
 
-        focus = Mob_Group[data['focus']]
-        if type(focus) is str:
-            if not stage.exists_within_my_chunks(focus, 'mobs'):
-                mapa = stage.get_chunk_by_adress([0, 0])
-                datos = {'mobs': {focus: [data['entrada']]}, 'focus': True}
-                datos.update({'entradas': stage.data['entradas']})
-                datos.update({'refs': {focus: ModData.fd_player + focus + '.json'}})
-                focus, grupo = load_mobs(mapa, datos)[0]
+        # focus = Mob_Group[data['focus']]
+        # if focus is None:
+        if not stage.exists_within_my_chunks(data['focus'], 'mobs'):
+            mapa = stage.get_chunk_by_adress([0, 0])
+            datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}
+            datos.update({'entradas': stage.data['entradas']})
+            datos.update({'refs': {data['focus']: ModData.fd_player + data['focus'] + '.json'}})
+            focus, grupo = load_mobs(mapa, datos)[0]
 
-                mapa.add_property(focus, grupo)
-            else:
-                focus = stage.get_entitiy_from_my_chunks(focus)
-
-        # for entry in cls.transient_mobs:
-        #     mob = Mob_Group[entry['id']]
-        #     if entry['to'] == stage.nombre:
-        #         x, y = cls.mapas[stage].posicion_entrada(entry['pos'])
-        #         datos = {'mobs': {entry['mob']: [[x, y]]}}
-        #         datos.update({'entradas': stage.data['entradas']})
-        #         item, grupo = load_mobs(datos)[0]
-        #
-        #         obj = stage.mapa.add_property(item, grupo)
-        #         obj.set_parent_map(stage.mapa)
-        #
-        #     else:
-        #         cls.mapas[entry['from']].search_and_delete(mob)
-        #         entry['flagged'] = True
+            mapa.add_property(focus, grupo)
+        else:
+            focus = stage.get_entitiy_from_my_chunks(data['focus'])
 
         Renderer.set_focus(focus)
-        # cls.check_focus_position(focus, stage, data['entrada'])
         focus.character_name = data['focus']
         Sun.update()
 
@@ -190,19 +181,10 @@ class EngineData:
         # transient NPCS porque el focus pasa por otro lado.
         transient = []
         for entry in cls.transient_mobs:
-            entry.update({'mob': str(entry['mob'])})
+            entry.update({'mob': str(entry['name'])})
             transient.append(entry)
 
         EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
-
-    # @classmethod
-    # def check_focus_position(cls, focus, mapa, entrada):
-    #     fx, fy = focus.x, focus.y
-    #     ex, ey = mapa.data['entradas'][entrada]['pos']
-    #     if fx != ex or fy != ey:
-    #         texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco '
-    #         texto += f'en el chunk ({fx},{fy}) sea la  misma que la posición de la entrada \n({ex},{ey}).'
-    #         salir(texto)
 
     @classmethod
     def compound_save_data(cls, event):

@@ -110,7 +110,7 @@ def load_mobs(parent, alldata: dict):
 def load_mob_csv(parent, all_data):
     loaded_mobs = []
     with open(path.join(Config.savedir, 'mobs.csv')) as cvsfile:
-        reader = csv.DictReader(cvsfile, fieldnames=['name', 'x', 'y'], delimiter=';')
+        reader = csv.DictReader(cvsfile, fieldnames=['name', 'x', 'y', 'id'], delimiter=';')
         for row in reader:
             name = row['name']
             x = int(row['x'])
@@ -127,12 +127,14 @@ def load_mob_csv(parent, all_data):
             elif path.exists(ModData.fd_player + name + '.json'):
                 data = abrir_json(ModData.fd_player + name + '.json')
 
+            data['id'] = row['id']
             if NamedNPCs.npcs_with_ids is not None:
                 ids, names = NamedNPCs.npcs_with_ids
                 if data['nombre'] in names:
                     idx = names.index(data['nombre'])
-                    data['id'] = ids[idx]
-                    del names[idx], ids[idx]
+                    if data.get('id', None) is None:
+                        data['id'] = ids[idx]
+                        del names[idx], ids[idx]
 
             try:
                 mob = Mob(parent, x, y, data, focus=all_data.get('focus', False))
