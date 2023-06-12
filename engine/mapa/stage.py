@@ -2,11 +2,13 @@ from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun,
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
 from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc import abrir_json, cargar_imagen
+from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
 from pygame import mask
 from math import ceil
+from os import path
+import csv
 
 
 class Stage:
@@ -20,7 +22,7 @@ class Stage:
     atardece = None
     anochece = None
 
-    def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None):
+    def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None, use_csv=False):
         NamedNPCs.npcs_with_ids = npcs_with_id
         self.parent = parent  # a Stage's parent is always EngineData
         self.chunks = ChunkGroup()
@@ -47,11 +49,13 @@ class Stage:
             self.current_latitude = 30
         self.current_longitude = self.data.get('longitude', 30)
 
+        mob_req = 'mobs' if use_csv is False else 'csv'
+
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=['mobs', 'props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, requested=['mobs', 'props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, mob, requested=[mob_req, 'props'])
         self.chunks.add(chunk)
 
         if 'props' in self.data:
@@ -91,7 +95,18 @@ class Stage:
                               self.amanece: 'amanece', self.mediodia: 'mediodía'})
 
     def save_map(self, event):
-        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
+        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada,
+                                                              'use_csv': True})  # hightlighted new key.
+        ruta = path.join(Config.savedir, 'mobs.csv')
+        with open(ruta, 'wt', newline='') as csvfile:
+            # this is not quite good yet, because it doesn't save the mobs from other stages (those that were already
+            # explored), but it is a start.
+            fieldnames = ['name', 'x', 'y']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+            for chunk in self.chunks.sprs():
+                for mob in chunk.properties.get_sprites_from_layer(2):
+                    row = {'name': mob.nombre, 'x': mob.rel_x, 'y': mob.rel_y}
+                    writer.writerow(row)
 
     def load_unique_props(self, all_data: dict):
         """Carga los props que se hallen definidos en el archivo json del stage.
@@ -255,9 +270,9 @@ class ChunkMap(AzoeBaseSprite):
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
         data['entradas'] = self.parent.data['entradas']
-        if any([len(data[req]) > 0 for req in requested]):
-            for item, grupo in load_something(self, data, requested):
-                self.add_property(item, grupo)
+        # if any([len(data[req]) > 0 for req in requested]):
+        for item, grupo in load_something(self, data, requested):
+            self.add_property(item, grupo)
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 

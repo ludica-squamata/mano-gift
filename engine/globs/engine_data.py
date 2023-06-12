@@ -1,4 +1,4 @@
-from engine.misc import abrir_json, guardar_json, salir_handler, salir, Config
+from engine.misc import abrir_json, guardar_json, salir_handler, Config
 from .constantes import CAPA_OVERLAYS_MENUS
 from .event_dispatcher import EventDispatcher, AzoeEvent
 from .game_groups import Mob_Group
@@ -38,10 +38,10 @@ class EngineData:
         )
 
     @classmethod
-    def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False):
+    def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False, use_csv=False):
         from engine.mapa import Stage
         if stage not in cls.mapas or is_new_game:
-            cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs)
+            cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs, use_csv=use_csv)
         else:
             cls.mapas[stage].ubicar_en_entrada(mob, entrada)
 
@@ -136,6 +136,7 @@ class EngineData:
     def cargar_juego(cls, event):
         from engine.mapa.loader import load_mobs
         data = event.data
+        use_csv = data.get('use_csv', False)
         cls.acceso_menues.clear()
 
         map_data = abrir_json(ModData.mapas + data['mapa'] + '.stage.json')
@@ -148,7 +149,7 @@ class EngineData:
         names = [e['name'] for e in cls.transient_mobs]
         named_npcs = [ids, names]
 
-        stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True)
+        stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
         SeasonalYear.propagate()
 
         focus = Mob_Group[data['focus']]
@@ -180,7 +181,7 @@ class EngineData:
         #         entry['flagged'] = True
 
         Renderer.set_focus(focus)
-        cls.check_focus_position(focus, stage, data['entrada'])
+        # cls.check_focus_position(focus, stage, data['entrada'])
         focus.character_name = data['focus']
         Sun.update()
 
@@ -194,14 +195,14 @@ class EngineData:
 
         EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
 
-    @classmethod
-    def check_focus_position(cls, focus, mapa, entrada):
-        fx, fy = focus.x, focus.y
-        ex, ey = mapa.data['entradas'][entrada]['pos']
-        if fx != ex or fy != ey:
-            texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco '
-            texto += f'en el chunk ({fx},{fy}) sea la  misma que la posición de la entrada \n({ex},{ey}).'
-            salir(texto)
+    # @classmethod
+    # def check_focus_position(cls, focus, mapa, entrada):
+    #     fx, fy = focus.x, focus.y
+    #     ex, ey = mapa.data['entradas'][entrada]['pos']
+    #     if fx != ex or fy != ey:
+    #         texto = 'Error\nEl foco de la cámara no está en el centro. Verificar que la posición inicial\ndel foco '
+    #         texto += f'en el chunk ({fx},{fy}) sea la  misma que la posición de la entrada \n({ex},{ey}).'
+    #         salir(texto)
 
     @classmethod
     def compound_save_data(cls, event):

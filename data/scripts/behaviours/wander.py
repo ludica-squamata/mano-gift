@@ -58,7 +58,7 @@ class GetRoute(Leaf):
         if (e.x / 32).is_integer():
             pi_x = e.x
         else:
-            pi_x = round((e.x / 32) * 32)
+            pi_x = round((e.x / 32)) * 32
             pre_x = e.x
 
         if (e.y / 32).is_integer():
@@ -72,11 +72,11 @@ class GetRoute(Leaf):
         post_x, post_y = None, None
         pd_x, pd_y = None, None
         if not (pd.x / 32).is_integer():
-            pd_x = round((pd.x / 32) * 32)
+            pd_x = round((pd.x / 32)) * 32
             post_x = pd.x
 
         if not (pd.y / 32).is_integer():
-            pd_y = round((pd.y / 32) * 32)
+            pd_y = round((pd.y / 32)) * 32
             post_y = pd.y
 
         if pd_x is not None or pd_y is not None:

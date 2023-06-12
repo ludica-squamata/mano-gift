@@ -65,7 +65,7 @@ class GameState:
     # dependiendo de la implementación del guardado
     @classmethod
     def load(cls, event):
-        variables = event.data.get('savegame', {}).get('variables', [])
+        variables = event.data.get('savegame', {}).get('flags', [])
         cls._string_list = variables if variables is not None else []
 
     @classmethod

@@ -300,7 +300,7 @@ class TaggedGroup:
     def intersect(self, key1, key2):
         """Devuelve los items que pertenezcan simultáneamente a key1 y key2"""
 
-        items = set(self._inner_dict[key1]+self._inner_dict[key2])
+        items = set(self._inner_dict.get(key1, []) + self._inner_dict.get(key2, []))
         return list(items)
 
     def create_key(self, key):
