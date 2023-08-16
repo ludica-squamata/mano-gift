@@ -210,7 +210,7 @@ class ShadowSprite(AzoeSprite):
         nh = h + d
 
         if arg == 'NE':
-            pxarray = PixelArray(Surface((nw, h), 0, surface))
+            pxarray = PixelArray(Surface((nw, h), SRCALPHA, surface))
             for y in range(h):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
@@ -218,7 +218,7 @@ class ShadowSprite(AzoeSprite):
                         pxarray[x + dd, y] = COLOR_SOMBRA
 
         if arg == 'NO':
-            pxarray = PixelArray(Surface((nw, h), 0, surface))
+            pxarray = PixelArray(Surface((nw, h), SRCALPHA, surface))
             for y in range(h):
                 dd = floor(d * (y / h))
                 for x in range(w):
@@ -226,7 +226,7 @@ class ShadowSprite(AzoeSprite):
                         pxarray[x + dd, y] = COLOR_SOMBRA
 
         if arg == 'SE':
-            pxarray = PixelArray(Surface((nw, nh), 0, surface))
+            pxarray = PixelArray(Surface((nw, nh), SRCALPHA, surface))
             for y in range(h - 3):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
@@ -236,7 +236,7 @@ class ShadowSprite(AzoeSprite):
                         pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'SO':
-            pxarray = PixelArray(Surface((nw, nh), 0, surface))
+            pxarray = PixelArray(Surface((nw, nh), SRCALPHA, surface))
             for y in range(h - 5):
                 dd = floor(d * (y / h))
                 for x in range(w):
@@ -246,7 +246,7 @@ class ShadowSprite(AzoeSprite):
                         pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'S':
-            pxarray = PixelArray(Surface((w, h), 0, surface))
+            pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
             for x in range(w):
                 for y in range(h - 1):
                     if _mask.get_at((x, y)):
@@ -256,14 +256,14 @@ class ShadowSprite(AzoeSprite):
                             pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'N':
-            pxarray = PixelArray(Surface((w, h), 0, surface))
+            pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
             for y in range(h):
                 for x in range(w):
                     if _mask.get_at((x, y)):
                         pxarray[x, y] = COLOR_SOMBRA
 
         if arg == 'E':
-            pxarray = PixelArray(Surface((w, h), 0, surface))
+            pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
             for x in range(w):
                 for y in range(h):
                     if _mask.get_at((x, y)):
@@ -272,7 +272,7 @@ class ShadowSprite(AzoeSprite):
                         pxarray[ax, ay] = COLOR_SOMBRA
 
         if arg == 'O':
-            pxarray = PixelArray(Surface((w, h), 0, surface))
+            pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
             for x in range(w):
                 for y in range(h):
                     if _mask.get_at((x, y)):
@@ -285,7 +285,7 @@ class ShadowSprite(AzoeSprite):
     @staticmethod
     def dark_overlay(surface, start=0, stop=0):
         w, h = surface.get_size()
-        pxarray = PixelArray(Surface((w, h), 0, surface))
+        pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
         _mask = mask.from_surface(surface)
 
         if stop == 0:
