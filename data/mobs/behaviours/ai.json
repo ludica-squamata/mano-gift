@@ -19,7 +19,8 @@
         "GoToBed",
         "IsItNightTime",
         "IsInBed",
-        "DoNothing"
+        "DoNothing",
+        "WhereAreOthers"
       ]
     },
     "special": {}
@@ -39,18 +40,20 @@
                 "11": {"name": "IsInBed"},
               "12": {"name": "GoToBed"},
             "13": {"name": "GetRandomDir"},
-          "14": {"name": "Sequence","children": [15,19,20]},
+          "14": {"name": "Sequence","children": [15,19,22]},
             "15": {"name": "Sequence", "children": [16,17,18]},
               "16": {"name": "Wait"},
               "17": {"name": "LookAround"},
               "18": {"name": "KeepLooking"},
-            "19": {"name": "GetRoute"},
-            "20": {"name": "UntilFail","child": 21},
-              "21": {"name": "Sequence","children": [22,24,25,26]},
-                "22": {"name": "Inverter","child": 23},
-                  "23": {"name": "IsTalking"},
-                "24": {"name": "NextPosition"},
-                "25": {"name": "ReachExit"},
-                "26": {"name": "Move"}
+            "19": {"name": "Sequence","children": [20,21]},
+              "20": {"name": "WhereAreOthers"},
+              "21": {"name": "GetRoute"},
+            "22": {"name": "UntilFail","child": 23},
+              "23": {"name": "Sequence","children": [24,26,27,28]},
+                "24": {"name": "Inverter","child": 25},
+                  "25": {"name": "IsTalking"},
+                "26": {"name": "NextPosition"},
+                "27": {"name": "ReachExit"},
+                "28": {"name": "Move"}
     }
 }
