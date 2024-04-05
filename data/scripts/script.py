@@ -5,8 +5,8 @@ from engine.globs.event_dispatcher import EventDispatcher
 
 
 def init_game(event):
-    data = {"mapa": "Prueba",
-            "entrada": "centre",
+    data = {"mapa": "isla",
+            "entrada": "center",
             "tiempo": [0, 13, 0],
             "focus": "heroe"}
 

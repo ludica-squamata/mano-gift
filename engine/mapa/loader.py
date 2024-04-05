@@ -5,7 +5,7 @@ from engine.scenery import new_prop
 from engine.mobs import Mob
 from .salida import Salida
 from random import randint
-from os import path
+from os import path, getcwd
 import csv
 
 
@@ -25,7 +25,7 @@ def load_something(parent, alldata: dict, requested: str):
             for mob in load_mobs(parent, alldata):
                 loaded.append((mob, GRUPO_MOBS))
 
-        if 'props' in requested:
+        if 'props' in requested and 'props' in alldata:
             for prop in load_props(parent, alldata):
                 Prop_Group.add(prop[0].nombre, prop[0])
                 loaded.append((prop, prop[0].grupo))
@@ -147,6 +147,31 @@ def load_mob_csv(parent, all_data):
     return loaded_mobs
 
 
+def load_chunks_csv(csv_file):
+    """Creates the json-dicts for each chunk from a csv file. These dicts are incomplete since they lack
+    references to mobs or props, but due to the nature of dicts, such info could be added later.
+    """
+    with open(path.join(getcwd(), 'data', 'maps', csv_file)) as cvsfile:
+        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'der', 'izq',
+                                                     'fondo', 'colisiones'], delimiter=';')
+        chunks_data = {}
+        for row in reader:
+            chunk_data = {
+                'fondo': row['fondo'],
+                'colisiones': None if row['colisiones'] == 'null' else row['colisiones'],
+                'limites': {
+                    'sup': None if row['sup'] == 'null' else row['sup'],
+                    'inf': None if row['inf'] == 'null' else row['inf'],
+                    'izq': None if row['izq'] == 'null' else row['izq'],
+                    'der': None if row['der'] == 'null' else row['der']
+                },
+                "adress": [int(row['adress'][1:3]), int(row['adress'][4:6])]
+            }
+            chunks_data[row['id']] = chunk_data
+
+    return chunks_data
+
+
 def cargar_salidas(parent, alldata):
     salidas = []
     img = Surface((800, 800), SRCALPHA)
@@ -176,7 +201,8 @@ def cargar_salidas(parent, alldata):
     # permanece unset.
     mask = mask_module.from_surface(img)
 
-    chunk.set_salidas(salidas, mask, img)
+    if chunk is not None:
+        chunk.set_salidas(salidas, mask, img)
     # salidas: la lista de salidas, igual que siempre.
     # mask: máscara de colisiones de salidas.
     # img: imagen de colores codificados

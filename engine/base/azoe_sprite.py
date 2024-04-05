@@ -38,7 +38,7 @@ class AzoeSprite(sprite.Sprite):
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
 
         if center:
-            self.rect = self.image.get_rect(center=(ANCHO//2, ALTO//2))
+            self.rect = self.image.get_rect(center=(ANCHO // 2, ALTO // 2))
         elif imagen is not None:
             self.rect = self.image.get_rect(center=(x, y))
         else:
@@ -75,16 +75,16 @@ class AzoeSprite(sprite.Sprite):
 
         if self.rel_x + dx < 0:
             self.rel_x = 800
-        elif self.rel_x > 800:
-            self.rel_x = 0
+        elif self.rel_x + dx > 800:
+            self.rel_x = dx
         else:
             self.rel_x += dx
 
         if self.rel_y + dy < 0:
             self.rel_y = 800
-            self.z = 800-32  # aunque no estoy seguro de esto
+            self.z = 800 - 32  # aunque no estoy seguro de esto
         elif self.rel_y + dy > 800:
-            self.rel_y = 0
+            self.rel_y = dy
             self.z = 32
         else:
             self.rel_y += dy

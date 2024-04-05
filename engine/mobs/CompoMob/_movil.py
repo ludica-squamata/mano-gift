@@ -31,10 +31,10 @@ class Movil(Caracterizado):
         col_mapa = False  # colision contra las cajas de colision del propio mapa
 
         if self.solido:
-            if Camara.current_map.mask.overlap(self.mask, (self.x + dx, self.y)) is not None:
+            if Camara.current_map.mask.overlap(self.mask, (self.rel_x + dx, self.rel_y)) is not None:
                 col_mapa = True
 
-            if Camara.current_map.mask.overlap(self.mask, (self.x, self.y + dy)) is not None:
+            if Camara.current_map.mask.overlap(self.mask, (self.rel_x, self.rel_y + dy)) is not None:
                 col_mapa = True
 
             for spr in Tagged_Items.intersect('movibles', 'solido'):

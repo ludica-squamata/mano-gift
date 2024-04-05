@@ -1,6 +1,6 @@
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
+from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
-from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
@@ -41,6 +41,14 @@ class Stage:
             adress = tuple(special_chunk_data['adress'])
             self.special_adresses[adress] = [special_chunk_key, special_chunk_data]
 
+        self.chunks_csv = {}
+        if 'chunks_csv' in self.data:
+            self.chunks_csv = load_chunks_csv(self.data['chunks_csv'])
+            self.chunks_csv[chunk_name].update({
+                'mobs': {"hero": [[dx, dy]]},
+                'refs': {},
+            })
+
         self.id = ModData.generate_id()
 
         if ModData.use_latitude and 'latitude' in self.data:
@@ -53,6 +61,9 @@ class Stage:
 
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
+            ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
+        elif chunk_name in self.chunks_csv:
+            singleton = self.chunks_csv[chunk_name]
             ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
         else:
             ChunkMap(self, chunk_name, offx, offy, mob, requested=[mob_req, 'props'])
@@ -240,10 +251,12 @@ class ChunkMap(AzoeBaseSprite):
         self.limites = data['limites']
         if adress is not None:
             self.adress = ChunkAdress(self, *adress)
+        elif 'adress' in data:
+            self.adress = ChunkAdress(self, *data['adress'])
         else:
             self.adress = ChunkAdress(self, 0, 0)
 
-        if 'hero' in data['mobs']:
+        if 'hero' in data.get('mobs', {}):
             name = Mob_Group.character_name
             data['mobs'][name] = data['mobs'].pop('hero')
             data['refs'][name] = ModData.fd_player + name + '.json'
@@ -251,7 +264,7 @@ class ChunkMap(AzoeBaseSprite):
             if trnsnt_mb is not None and name == trnsnt_mb.character_name:
                 del data['mobs'][trnsnt_mb.character_name]
 
-        if len(data['mobs']):
+        if len(data.get('mobs', {})):
             for mob in Mob_Group.get_existing(data['mobs']):
                 del data['mobs'][mob]
 
@@ -354,21 +367,26 @@ class ChunkMap(AzoeBaseSprite):
         dx = x - w if ady == 'izq' else x + w if ady == 'der' else x
 
         ax, ay = self.translate(ady)
-        if type(self.limites[self.translate(ady)]) is str:
+        adress = ax, ay
+        if type(self.limites[adress]) is str:
             entradas = self.parent.data['entradas']
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos,
                                 requested=['props'], adress=(ax, ay))
                 self.parent.set_special_adress(ax, ay, mapa)
+            elif self.limites[adress] in self.parent.chunks_csv:
+                name = self.limites[adress]
+                data = self.parent.chunks_csv[name]
+                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data, requested=[])
             else:
-                mapa = ChunkMap(self.parent, self.limites[self.translate(ady)], dx, dy, entradas,
+                mapa = ChunkMap(self.parent, self.limites[adress], dx, dy, entradas,
                                 requested=['props'], adress=(ax, ay))
 
-            self.limites[self.translate(ady)] = mapa
+            self.limites[adress] = mapa
             self.parent.chunks.add(mapa)
         else:
-            mapa: ChunkMap = self.limites[self.translate(ady)]
+            mapa: ChunkMap = self.limites[adress]
             mapa.ubicar(dx, dy)
 
         return mapa
