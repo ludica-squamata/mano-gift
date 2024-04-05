@@ -21,7 +21,8 @@ class Agarrable(Escenografia):
         item = self.return_item()
         if entity.tipo == 'Mob':
             entity.inventario.agregar(item)
-            EventDispatcher.trigger('DeleteItem', 'Mob', {'obj': self})
+            # removes the prop from the map, but not the item from the world.
+            EventDispatcher.trigger('DeleteItem', 'Prop', {'obj': self})
 
         if "dialog" in self.data:
             ref = self.data['dialog']

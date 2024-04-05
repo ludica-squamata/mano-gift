@@ -1,0 +1,17 @@
+{
+  "nombre": "Manzana",
+  "tipo": "agarrable",
+  "subtipo": "consumible",
+  "peso": 1,
+  "volumen": 1,
+  "image": "props/Manzana-10.png",
+  "propiedades": [
+    "stackable","sin_sombra"
+  ],
+  "efecto": {
+    "des": "Restaura tu salud al máximo.",
+    "stat": "Salud",
+    "mod": 100,
+    "method": "percentage"
+  }
+}

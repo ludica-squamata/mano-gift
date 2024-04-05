@@ -3,6 +3,7 @@ from engine.misc import salir, abrir_json
 from engine.globs.tiempo import Tiempo
 from importlib import import_module
 from datetime import datetime
+from random import randint
 
 
 class ModData:
@@ -150,8 +151,9 @@ class ModData:
 
     @staticmethod
     def generate_id():
+        r = randint(0, 99999)
         now = ''.join([char for char in str(datetime.now()) if char not in [' ', '.', ':', '-']])
-        now = now[0:-5] + '-' + now[-5:]
+        now = now[0:-5] + '-' + str(r).rjust(5, '0')
         return now
 
     @classmethod

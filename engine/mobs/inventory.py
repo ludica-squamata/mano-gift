@@ -8,14 +8,14 @@ class Inventory:
         self._by_type = {'consumible': [], 'equipable': []}
 
     def __contains__(self, item):
-        if type(item) == str:
+        if type(item) is str:
             # item es el nombre de un item
             for _item in self._contenido:
                 if _item.nombre == item:
                     return True
             return False
 
-        elif type(item) == int:
+        elif type(item) is int:
             # item es el ID de un item
             for _item in self._contenido:
                 if _item.ID == item:
@@ -70,8 +70,8 @@ class Inventory:
         self._peso_max = nuevopesomax
 
     def agregar(self, item):
-        assert self._volumen_actual + item.volumen <= self._volumen_max, 'El item es demasiado grande'
-        assert self._peso_actual + item.peso <= self._peso_max, 'No puedes cargar más peso del que llevas.'
+        # assert self._volumen_actual + item.volumen <= self._volumen_max, 'El item es demasiado grande'
+        # assert self._peso_actual + item.peso <= self._peso_max, 'No puedes cargar más peso del que llevas.'
         self._peso_actual += item.peso
         self._volumen_actual += item.volumen
         self._contenido.append(item)

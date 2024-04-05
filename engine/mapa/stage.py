@@ -69,7 +69,8 @@ class Stage:
 
         EventDispatcher.register_many(
             (self.cargar_timestamps, 'UpdateTime'),
-            (self.save_map, 'Save')
+            (self.save_map, 'Save'),
+            (self.del_interactive, 'DeleteItem', 'MobDeath')
         )
 
         self.points_of_interest = {}
@@ -200,6 +201,19 @@ class Stage:
             return adress
         else:
             return chunk
+
+    def del_interactive(self, event):
+        obj = event.data['obj']
+        if hasattr(obj, 'sombra') and obj.sombra is not None:
+            self.del_property(obj.sombra)
+        self.del_property(obj)
+
+    def del_property(self, obj):
+        if obj in self.properties:
+            self.properties.remove(obj)
+        if obj in self.interactives:
+            self.interactives.remove(obj)
+        Renderer.camara.remove_obj(obj)
 
 
 class ChunkMap(AzoeBaseSprite):

@@ -132,11 +132,12 @@ class ItemGroup:
     _indexes = []
     _lenght = 0
 
-    def __init__(self):
+    def __init__(self, name):
         self._group = {}
         self._indexes = []
         self._layers = {}
         self._lenght = 0
+        self.name = name
 
         EventDispatcher.register(self.delete_item, 'DeleteItem')
 
@@ -162,7 +163,7 @@ class ItemGroup:
             else:
                 raise IndexError()
 
-        elif type(key) == str:
+        elif type(key) is str:
             if key in self._group:
                 return self._group[key][0]
 
@@ -179,10 +180,15 @@ class ItemGroup:
         elif hasattr(key, "nombre"):
             if key.nombre in self._group:
                 if len(self._group[key.nombre]) > 1:
-                    del self._group[key.nombre][self._group[key.nombre].index(key)]
+                    item = [i for i in self._group[key.nombre] if i.id == key.id]
+                    if len(item):
+                        item = item[0]
+                        idx = self._group[key.nombre].index(item)
+                        del self._group[key.nombre][idx]
+                        self._indexes.remove(key.nombre)
                 else:
                     del self._group[key.nombre]
-                self._indexes.remove(key.nombre)
+                    self._indexes.remove(key.nombre)
 
         else:
             raise TypeError()
@@ -201,7 +207,7 @@ class ItemGroup:
         return self._lenght
 
     def __add__(self, other):
-        new = ItemGroup()
+        new = ItemGroup('combined')
         for item in self:
             new[item.nombre] = item
         for item in other:
@@ -226,11 +232,15 @@ class ItemGroup:
         self._layers[layer].clear()
 
     def delete_item(self, event):
-        obj = event.data['obj']
-        del self[obj]
+        if event.origin == self.name:
+            obj = event.data['obj']
+            del self[obj]
 
     def contents(self):
         return [self._group[key][0] for key in self._group]
+
+    def __repr__(self):
+        return f'ItemGroup {self.name}'
 
 
 class DeletedItems(ItemGroup):
@@ -335,9 +345,9 @@ class ParentedTaggedGroup(TaggedGroup):
 
 
 Mob_Group = MobGroup()
-Item_Group = ItemGroup()
-Prop_Group = ItemGroup()
-Deleted_Items = DeletedItems()
+Item_Group = ItemGroup('Item')
+Prop_Group = ItemGroup('Prop')
+Deleted_Items = DeletedItems('Deleted')
 Light_Group = LightGroup()
 Tagged_Items = TaggedGroup()
 

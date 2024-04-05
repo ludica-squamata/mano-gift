@@ -46,7 +46,10 @@ class Escenografia(ShadowSprite, EventListener):
         self.add_listeners()  # carga de event listeners
 
     def __repr__(self):
-        return "<%s sprite(%s)>" % (self.__class__.__name__, self.nombre)
+        c = self.__class__.__name__
+        n = self.nombre
+        i = self.id
+        return f'Prop {c} ({n}, id:{i})'
 
     def show_description(self):
         PropDescription(self)
