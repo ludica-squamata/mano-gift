@@ -45,6 +45,7 @@ class GetRoute(Leaf):
         mapa = self.tree.get_context('mapa')
         prox = self.tree.get_context('next')
         pd = self.tree.get_context('punto_final')
+        others = self.tree.get_context('others')
 
         class Point:
             x = 0
@@ -83,7 +84,7 @@ class GetRoute(Leaf):
             pd = Nodo(pd_x, pd_y, 32)
             self.tree.set_context('punto_final', pd)
 
-        ruta = a_star(pi, pd, mapa)
+        ruta = a_star(pi, pd, mapa, others)
         if pre_x is not None or pre_y is not None:
             if pre_x is None:
                 pre_x = pi_x
@@ -147,7 +148,6 @@ class GetMap(Leaf):
         e = self.get_entity()
         cuadros = e.parent.mask
         self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
-
         self.tree.set_context('mapa', cuadros)
         self.tree.set_context('next', 1)
         return Success

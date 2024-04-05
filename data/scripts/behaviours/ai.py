@@ -77,4 +77,24 @@ class IsInBed(Leaf):
 
 class DoNothing(Leaf):
     def process(self):
+        e = self.get_entity()
+        mobs = [mob for mob in e.parent.properties.get_sprites_from_layer(2) if mob != e]
+        self.tree.set_context('others', mobs)
+        return Success
+
+
+class WhereAreOthers(Leaf):
+    def process(self):
+        e = self.get_entity()
+        mobs = [entity for entity in e.perceived['seen'] if entity.tipo == "Mob" and entity != e]
+        mob_routes = {}
+        for mob in mobs:
+            mob_id = mob.id
+            if mob.AI_type == "Autonomous":
+                tree = mob.AI
+                ruta = tree.get_context('camino')
+                mob_routes[mob_id] = ruta
+
+        self.tree.set_context('other_routes', mob_routes)
+
         return Success

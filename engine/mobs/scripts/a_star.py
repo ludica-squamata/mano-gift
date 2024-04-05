@@ -3,7 +3,7 @@ from math import sqrt
 from pygame import mask
 
 
-def a_star(inicio, destino, mapa, heuristica='euclidean'):
+def a_star(inicio, destino, mapa, others, heuristica='euclidean'):
     cerrada = []  # The set of nodes already evaluated.
     abierta = [inicio]  # The set of tentative nodes to be evaluated, initially containing the start node
     camino = {}  # The map of navigated nodes.
@@ -20,7 +20,7 @@ def a_star(inicio, destino, mapa, heuristica='euclidean'):
 
         cerrada.append(actual)
 
-        vecinos = mirar_vecinos(actual, 32, mapa)
+        vecinos = mirar_vecinos(actual, 32, mapa, others)
         for vecino in vecinos:
             punt_g_tentativa = actual.g + vecino.g
             if vecino not in cerrada or punt_g_tentativa < vecino.g:
@@ -38,15 +38,19 @@ def heuristica_estimada(node, goal, method):
         return int(sqrt((node.x - goal.x) ** 2 + (node.y - goal.y) ** 2))
 
 
-def mirar_vecinos(nodo, size, mascara):
+def mirar_vecinos(nodo, size, mascara, others):
     cuadros = []
     test = mask.Mask((size, size))
     test.fill()
     direcciones = ((0, -1), (1, 0), (0, 1), (-1, 0))
+    mascara_actual = mascara.copy()
+    for other in others:
+        mascara_actual.draw(other.mask, other.rect.topleft)
+
     for dx, dy in direcciones:
         x, y = nodo.x + (dx * size), nodo.y + (dy * size)
         vecino = Nodo(x, y, size)
-        if not mascara.overlap(test, (x, y)):
+        if not mascara_actual.overlap(test, (x, y)):
             cuadros.append(vecino)
 
     return cuadros
