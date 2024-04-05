@@ -1,5 +1,5 @@
-from engine.globs import GRUPO_MOVIBLES, GRUPO_MOBS, Item_Group
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs import GRUPO_MOBS, Tagged_Items
 from engine.scenery.props import Movible
 from engine.globs.renderer import Camara
 from ._caracterizado import Caracterizado
@@ -37,14 +37,13 @@ class Movil(Caracterizado):
             if Camara.current_map.mask.overlap(self.mask, (self.x, self.y + dy)) is not None:
                 col_mapa = True
 
-            for spr in Item_Group.get_from_layer(GRUPO_MOVIBLES):
+            for spr in Tagged_Items.intersect('movibles', 'solido'):
                 if self.colisiona(spr, dx, dy):
                     if spr.solido:
+                        col_props = True
                         if isinstance(spr, Movible):
-                            if not spr.mover(dx, dy):
-                                col_props = True
-                        else:
-                            col_props = True
+                            if spr.mover(dx, dy):
+                                col_props = False
 
             for spr in Camara.current_map.properties.get_sprites_from_layer(GRUPO_MOBS):
                 if spr.solido and self is not spr:

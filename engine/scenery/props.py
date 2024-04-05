@@ -1,4 +1,4 @@
-from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo
+from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo, Tagged_Items
 from engine.misc.resources import abrir_json, cargar_imagen
 from .bases import Escenografia
 from pygame import Rect
@@ -53,18 +53,19 @@ class Movible(Escenografia):
         super().__init__(parent, x, y, z=z, data=data)
         self.grupo = GRUPO_MOVIBLES
         Item_Group.add(self.nombre, self, self.grupo)
+        Tagged_Items.add_item(self, 'movibles')
 
     def action(self, *args, **kwargs):
         pass
 
     def mover(self, dx, dy):
         col_mapa = False
-        # detectar colision contra otros props fijos, como la casa
-        # if self.parent.mask.overlap(self.mask, (self.mapRect.x + dx, self.mapRect.y)) is not None:
-        #     col_mapa = True
-        #
-        # if self.parent.mask.overlap(self.mask, (self.mapRect.x, self.mapRect.y + dy)) is not None:
-        #     col_mapa = True
+        # detectar colision contra las cajas de colision del propio mapa
+        if self.parent.mask.overlap(self.mask, (self.rel_x + dx, self.rel_y)) is not None:
+            col_mapa = True
+
+        if self.parent.mask.overlap(self.mask, (self.rel_x, self.rel_y + dy)) is not None:
+            col_mapa = True
 
         if not col_mapa:
             self.reubicar(dx, dy)
@@ -80,6 +81,7 @@ class Trepable(Escenografia):
     def __init__(self, parent, x, y, z, data):
         super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'trepar'
+        Tagged_Items.add_item(self, 'trepables')
 
     def action(self, entity):
         # acá debería iniciar una animación del mob trepando.
@@ -97,6 +99,7 @@ class Operable(Escenografia):
         self.estados = {}
         self.enabled = data.get('enabled', True)
         self.grupo = GRUPO_OPERABLES
+        Tagged_Items.add_item(self, 'operables')
 
         images = {}
         for estado in data['operable']:
@@ -141,6 +144,7 @@ class Destruible(Escenografia):
     def __init__(self, parent, x, y, z, data):
         super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'romper'
+        Tagged_Items.add_item(self, 'destruibles')
 
 
 class EstructuraCompuesta(Escenografia):
@@ -148,29 +152,32 @@ class EstructuraCompuesta(Escenografia):
         self.x, self.y = x, y
         self.w, self.h = data['width'], data['height']
         self.rect = Rect(self.x, self.y, self.w, self.h)
-        self.props = self.build_props(data, x, y)
+        self.proyectaSombra = data.get('proyecta_sombra', False)
+        self.props = self.build_props(parent, data, x, y)
 
         super().__init__(parent, x, y, data=data, rect=self.rect)
-        self.proyectaSombra = data.get('proyecta_sombra', False)
 
-    def build_props(self, data, dx, dy):
+    def build_props(self, parent, data, dx, dy):
         from engine.scenery import new_prop
         props = []
         for nombre in data['componentes']:
             ruta = data['referencias'][nombre]
             imagen = None
-            propdata = {}
+            propdata = {'propiedades': []}
             for x, y, z in data['componentes'][nombre]:
                 if type(ruta) is dict:
                     propdata = ruta.copy()
 
                 elif ruta.endswith('.json'):
-                    propdata = abrir_json(ruta)
+                    propdata = abrir_json(ModData.items + ruta)
 
                 elif ruta.endswith('.png'):
                     imagen = ruta
 
-                prop = new_prop(self.parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
+                if not self.proyectaSombra:
+                    propdata['propiedades'].append('sin_sombra')
+
+                prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
                 props.append(prop)
 
         return props

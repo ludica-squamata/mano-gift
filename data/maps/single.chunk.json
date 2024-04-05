@@ -30,6 +30,12 @@
         464,
         464
       ]
+    ],
+    "casa_con_puerta": [
+      [
+        540,
+        520
+      ]
     ]
   },
   "mobs": {
@@ -41,7 +47,7 @@
   "refs": {
     "arbol": "props/arbol_escalado.png",
     "crate": "crate.json",
-    "casa_cerrada": "casa_cerrada.json",
+    "casa_con_puerta": "casa_con_puerta.json",
     "armor": "armor.json"
   }
 }

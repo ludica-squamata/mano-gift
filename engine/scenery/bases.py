@@ -1,7 +1,7 @@
 from engine.base import ShadowSprite, EventListener, AzoeSprite
 from engine.UI.prop_description import PropDescription
 from engine.mapa.light_source import LightSource
-from engine.globs import GRUPO_ITEMS
+from engine.globs import GRUPO_ITEMS, Tagged_Items
 
 
 class Escenografia(ShadowSprite, EventListener):
@@ -32,10 +32,16 @@ class Escenografia(ShadowSprite, EventListener):
         self.nombre = data.get('nombre', nombre)
         self.solido = 'solido' in data.get('propiedades', [])
         self.proyectaSombra = 'sin_sombra' not in data.get('propiedades', [])
+        keys = []
+        if self.solido:
+            keys.append('solido')
+        if not self.proyectaSombra:
+            keys.append('sin_sombra')
+        if len(keys):
+            Tagged_Items.add_item(self, *keys)
         if data.get('proyecta_luz', False):
             self.luz = LightSource(self, self.nombre, data, x, y)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
-        self.face = data.get('cara', 'front')
 
         self.add_listeners()  # carga de event listeners
 

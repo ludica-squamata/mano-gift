@@ -6,14 +6,14 @@
       [0,0,0]
     ],
     "puerta_cerrada": [
-      [14,66,1]
+      [72,128,1]
     ]
   },
   "referencias": {
-    "casa_cerrada": "props/casa.png",
+    "casa_cerrada": "props/casa_corregida.png",
     "puerta_cerrada": "puerta.json"
   },
   "width": 128,
   "height": 164,
-  "proyecta_sombra": true
+  "proyecta_sombra": false
 }
