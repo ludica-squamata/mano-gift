@@ -1,7 +1,9 @@
 from engine.base import ShadowSprite, EventListener, AzoeSprite
+from engine.globs import GRUPO_ITEMS, Tagged_Items, ModData
 from engine.UI.prop_description import PropDescription
 from engine.mapa.light_source import LightSource
-from engine.globs import GRUPO_ITEMS, Tagged_Items
+from engine.misc import cargar_imagen
+from os.path import join
 
 
 class Escenografia(ShadowSprite, EventListener):
@@ -26,7 +28,10 @@ class Escenografia(ShadowSprite, EventListener):
         """
 
         if imagen is None and data is not None:
-            imagen = data.get('image')
+            if 'imagenes' in data:
+                imagen = data['imagenes']['prop']
+            else:
+                imagen = data.get('image')
         super().__init__(parent, imagen=imagen, rect=rect, x=x, y=y, dz=z)
         self.data = data
         self.nombre = data.get('nombre', nombre)
@@ -62,23 +67,29 @@ class Escenografia(ShadowSprite, EventListener):
 
 class Item(AzoeSprite):
     stackable = False
+    subtipo = None
+    # solo los items equipables tienen un subtipo distinto de None,
+    # pero esto les permite ser comparados con otros tipos de item.
 
-    def __init__(self, parent, nombre, imagen, data):
+    def __init__(self, parent, nombre, data):
         self.nombre = nombre
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data['efecto']['des']
         self.stackable = 'stackable' in data['propiedades']
+        imagen = cargar_imagen(join(ModData.graphs, data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)
 
     def __eq__(self, other):
-        if other.__class__ == self.__class__ and self.id == other.id:
-            return True
-        else:
-            return False
+        # __eq__() ya no pregunta por el ID porque el ID hace único a cada item.
+        test_1 = other.nombre == self.nombre
+        test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
+        test_3 = self.subtipo == other.subtipo
+        tests = test_1, test_2, test_3
+        return all(tests)
 
     def __ne__(self, other):
-        if other.__class__ != self.__class__:
+        if other.nombre != self.nombre:
             return True
         elif self.id != other.id:
             return True

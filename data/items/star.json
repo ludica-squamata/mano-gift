@@ -4,7 +4,10 @@
   "subtipo": "consumible",
   "peso": 2,
   "volumen": 0,
-  "image": "props/star.png",
+  "imagenes": {
+    "prop": "props/star.png",
+    "item": "props/star2.png"
+  },
   "propiedades": ["sin_sombra"],
   "dialog": "star",
   "efecto": {

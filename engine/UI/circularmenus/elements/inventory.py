@@ -22,15 +22,16 @@ class InventoryElement(LetterElement):
 
     def _create_icon_stack(self, w, h, count, entity):
         image, _rect = self._crear_base(w, h)
+
+        iconrect = self.item.image.get_rect(center=_rect.center)
+        image.blit(self.item.image, iconrect)
+
         if count:
             fuente = font.Font('engine/libs/Verdana.ttf', 12)
             cant = entity.inventario.cantidad(self.item)
             render = fuente.render(str(cant), True, TEXT_FG)
-            renderect = render.get_rect(bottom=_rect.bottom + 1, right=_rect.right - 1)
+            renderect = render.get_rect(bottom=_rect.bottom - 1, right=_rect.right - 1)
             image.blit(render, renderect)
-
-        iconrect = self.item.image.get_rect(center=_rect.center)
-        image.blit(self.item.image, iconrect)
 
         return image
 

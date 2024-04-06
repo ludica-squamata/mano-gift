@@ -5,7 +5,10 @@
   "peso": 1,
   "volumen": 1,
   "dialog": "banana",
-  "image": "props/banana.png",
+  "imagenes": {
+    "prop": "props/banana.png",
+    "item": "props/banana2.png"
+  },
   "propiedades": [
     "stackable","sin_sombra"
   ],

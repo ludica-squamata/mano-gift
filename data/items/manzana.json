@@ -3,8 +3,12 @@
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
-  "volumen": 1,
-  "image": "props/Manzana-10.png",
+  "volumen": 0.0075
+,
+  "imagenes": {
+    "prop": "props/Manzana-10.png",
+    "item": "props/Manzana-24.png"
+  },
   "propiedades": [
     "stackable","sin_sombra"
   ],

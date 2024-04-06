@@ -52,4 +52,4 @@ def new_item(parent, nombre, ruta):
     elif subtipo == 'pocion':
         item = Pocion
 
-    return item(parent, nombre, data['image'], data)
+    return item(parent, nombre, data)

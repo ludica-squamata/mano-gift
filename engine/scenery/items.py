@@ -3,16 +3,16 @@ from .bases import Item
 
 
 class Equipable(Item):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
         self.tipo = 'equipable'
         self.subtipo = data['subtipo']
         self.espacio = data['efecto']['equipo']
 
 
 class Consumible(Item):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
         self.tipo = 'consumible'
         self.data = data
 
@@ -44,27 +44,27 @@ class Consumible(Item):
 
 
 class Colocable(Item):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
         self.subtipo = 'colocable'
 
 
 class Armadura(Equipable):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
         self.proteccion = data['efecto']['proteccion']
 
 
 class Arma(Equipable):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
 
 
 class Accesorio(Equipable):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
 
 
 class Pocion(Consumible):
-    def __init__(self, parent, nombre, imagen, data):
-        super().__init__(parent, nombre, imagen, data)
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)

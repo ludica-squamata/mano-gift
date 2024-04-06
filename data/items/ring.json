@@ -4,7 +4,10 @@
   "subtipo": "accesorio",
   "peso": 1,
   "volumen": 0,
-  "image": "props/anillo.png",
+  "imagenes": {
+    "prop": "props/anillo.png",
+    "item": "props/anillo esmeralda-24.png"
+  },
   "propiedades": [],
   "efecto": {
     "des": "Tiene engarzado una esmeralda.",
