@@ -18,7 +18,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if not GameState.get2(f"dialog.{meta['about']}.disabled"):
+        if GameState.get2(f"dialog.{meta['about']}.disabled"):
             allow = False
 
         if meta['class'] != 'scripted':

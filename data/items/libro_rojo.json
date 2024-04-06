@@ -1,0 +1,14 @@
+{
+  "nombre": "Libro Rojo",
+  "tipo": "agarrable",
+  "subtipo": null,
+  "peso": 0,
+  "volumen": 0,
+  "imagenes": {
+    "prop": "props/libro rojo-prop.png",
+    "item": "props/libro rojo-item.png"
+  },
+  "propiedades": [
+    "sin_sombra"
+  ]
+}

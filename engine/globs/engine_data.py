@@ -211,7 +211,7 @@ class EngineData:
 
     @classmethod
     def pop_menu(cls, event=None):
-        from engine.UI.menues import default_menus
+        from engine.UI.menues import default_menus, trading_menus
 
         kwargs = {}
         if event is None and not len(cls.acceso_menues):
@@ -235,6 +235,8 @@ class EngineData:
             name = 'Menu' + titulo
             if name in ModData.custommenus:
                 menu = ModData.custommenus[name](cls, **kwargs)
+            elif name in trading_menus:
+                menu = trading_menus[name](cls, **kwargs)
             elif name in default_menus:
                 menu = default_menus[name](cls, **kwargs)
             else:

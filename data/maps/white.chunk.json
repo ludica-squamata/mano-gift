@@ -2,7 +2,10 @@
   "fondo": "maps/fondos/pasto.png",
   "colisiones": null,
   "props": {},
-  "mobs": {"aristocrat": [[192, 202], [160, 192], [192, 160]]},
+  "mobs": {
+    "aristocrat": [[192, 202], [160, 192], [192, 160]],
+    "Shopkeeper": [[64,64]]
+  },
   "limites": {
     "sup": "black",
     "inf": "black",

@@ -7,6 +7,7 @@ from .menu import Menu
 from .model import MenuModel
 from .name import MenuName
 from .ability import MenuAbility
+from .compraventa import MenuBuy, MenuSell
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
@@ -36,9 +37,16 @@ inital_menus = [
     'MenuOpciones',
 ]
 
+# Menúes de compraventa (issue #53)
+trading_menus = {
+    "MenuComprar": MenuBuy,
+    "MenuVender": MenuSell
+}
+
 __all__ = [
     'Menu',
     "default_menus",
     'pause_menus',
-    'inital_menus'
+    'inital_menus',
+    "trading_menus"
 ]

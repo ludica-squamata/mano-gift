@@ -1,0 +1,56 @@
+{
+  "head": {
+    "class": "scripted",
+    "conditional_tags": {},
+    "style": "",
+    "locutors": [
+      "Shopkeeper",
+      "heroe"
+    ],
+    "name": "Trading",
+    "about": "trading",
+    "icon": null,
+    "keywords": [],
+    "events": {
+      "Flag": {
+        "value": false
+      },
+      "TriggerBuyScreen": {},
+      "TriggerSellScreen": {}
+    }
+  },
+  "body": {
+    "0": {
+      "type": "node",
+      "leads": [
+        1,
+        2,
+        3
+      ],
+      "from": "Shopkeeper",
+      "to": "heroe",
+      "event": "Flag",
+      "txt": "Buenos días. ¿Qué quiere hacer?"
+    },
+    "1": {
+      "type": "leaf",
+      "from": "heroe",
+      "to": "Shopkeeper",
+      "event": "TriggerBuyScreen",
+      "txt": "Comprar"
+    },
+    "2": {
+      "type": "leaf",
+      "from": "heroe",
+      "to": "Shopkeeper",
+      "event": "TriggerSellScreen",
+      "txt": "Vender"
+    },
+    "3": {
+      "type": "leaf",
+      "from": "heroe",
+      "to": "Shopkeeper",
+      "txt": "Nada"
+    }
+  }
+}
