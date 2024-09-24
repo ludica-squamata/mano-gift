@@ -156,6 +156,7 @@ def load_chunks_csv(csv_file):
                                                      'fondo', 'colisiones'], delimiter=';')
         chunks_data = {}
         for row in reader:
+            ad_x, ad_y = row['adress'].strip("[]").split(',')
             chunk_data = {
                 'fondo': row['fondo'],
                 'colisiones': None if row['colisiones'] == 'null' else row['colisiones'],
@@ -165,7 +166,7 @@ def load_chunks_csv(csv_file):
                     'izq': None if row['izq'] == 'null' else row['izq'],
                     'der': None if row['der'] == 'null' else row['der']
                 },
-                "adress": [int(row['adress'][1:3]), int(row['adress'][4:6])]
+                "adress": [int(ad_x), int(ad_y)]
             }
             chunks_data[row['id']] = chunk_data
 
