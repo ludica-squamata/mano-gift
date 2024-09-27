@@ -101,6 +101,11 @@ class BehaviourTree:
     def __repr__(self):
         return 'BehaviourTree'
 
+    def trigger_node(self, idx):
+        """Excecutes the node given by its index if such index falls within the lenght of the tree."""
+        if 0 <= idx <= len(self.nodes):
+            self.nodes[idx].process()
+
     def load_script_information(self, head_data):
         for script in head_data:
             ruta = ModData.pkg_scripts.replace('.', '/') + '/' + script

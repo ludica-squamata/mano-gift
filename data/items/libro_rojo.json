@@ -10,5 +10,10 @@
   },
   "propiedades": [
     "sin_sombra"
-  ]
+  ],
+  "trading": {
+    "sell_price": 1,
+    "buy_prince": 1,
+    "coin_symbol": "$"
+  }
 }

@@ -17,7 +17,8 @@ class Title(AzoeBaseSprite):
         super().__init__(parent, nombre, image, image.get_rect())
 
     def center(self, rect):
-        self.rect.center = (rect.centerx, 210)
+        y = self.parent.rect.bottom + 12
+        self.rect.center = (rect.centerx, y)
 
     def update(self, *args):
         self.center(self.parent.rect)

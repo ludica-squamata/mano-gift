@@ -9,8 +9,7 @@ class QuickCircularMenu(RenderedCircularMenu):
     first = 0
 
     def __init__(self):
-        self.entity = Mob_Group.get_controlled_mob()
-        self.e = self.entity
+        self.e = Mob_Group.get_controlled_mob()
         self.nombre = 'Quick'
 
         if ModData.QMC is None:

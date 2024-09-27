@@ -15,5 +15,10 @@
     "equipo": "anillo",
     "mod": 2,
     "method": "incremental"
+  },
+  "trading": {
+    "sell_price": 1,
+    "buy_prince": 1,
+    "coin_symbol": "$"
   }
 }

@@ -66,7 +66,7 @@ class Discurso(EventAware):
 
     @staticmethod
     def emit_sound_event(locutor):
-        """Este método es un shortcut para el post del SoundEvent.
+        """Este metodo es un shortcut para el post del SoundEvent.
         Pertence a Discurso, y no a Dialogo, porque el héroe también
         escucha el Monólogo del npc."""
 
@@ -87,7 +87,9 @@ class Dialogo(Discurso):
     SelMode = False
     sel = 0
     next = 0
-    write_flag = True  # flags the conversation so it wouldn't be repeated
+    write_flag = True  # flags the conversation so it wouldn't be repeated.
+
+    paused = False # if True, the dialog is paused, meaning it won't continue until is unpaused.
 
     def __init__(self, arbol, *locutores):
         super().__init__()
@@ -96,11 +98,11 @@ class Dialogo(Discurso):
         self.tags_condicionales = head['conditional_tags']
         self.about = head['about']
 
-        self.dialogo = ArboldeDialogo(arbol['body'])
+        self.arbol = ArboldeDialogo(self, arbol['body'])
         self.objects = head.get('panels', {}).get('objects', {})
         self.themes = head.get('panels', {}).get('themes', {})
 
-        self.dialogo.process_events(head['events'])
+        self.arbol.process_events(head['events'])
 
         self.locutores = {}
         for loc in locutores:
@@ -132,40 +134,45 @@ class Dialogo(Discurso):
         })
 
         self.hablar()
+        # EventDispatcher.register(self.toggle_pause, "ReactivateDialog")
+
+    def __repr__(self):
+        return 'Diálogo'
 
     def hablar_en_panel(self):
         panel = self.panels[self.panel_idx]
-        if panel is not self.frontend:
-            # No hace falta crear un elif entero para discriminar entre los grupos.
-            # Es cuestión de relacionar un grupo con su panel correspondiente.
-            if panel is self.objects_panel:
-                action = self.objects
-                # "action" es un nombre provisorio, no sé realmente que nombre ponerle.
-            else:
-                action = self.themes
-
-            if len(action):
-                if panel.menu.actual.nombre in action:
-                    # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
-                    # de manera que realmente se verifique que se está mostrando ESE item en particular.
-
-                    idx = action[panel.menu.actual.nombre]
-                    # si el elemento seleccionado coincide con el nombre indicado en head,
-                    # entonces el dialogo salta a ese numero de índice.
+        if not self.paused:
+            if panel is not self.frontend:
+                # No hace falta crear un elif entero para discriminar entre los grupos.
+                # Es cuestión de relacionar un grupo con su panel correspondiente.
+                if panel is self.objects_panel:
+                    action = self.objects
+                    # "action" es un nombre provisorio, no sé realmente que nombre ponerle.
                 else:
-                    # de otro modo se cae al nodo indicado por default.
-                    idx = action['default']
+                    action = self.themes
 
-                self.dialogo.set_chosen(idx)
-                # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
-                # porque nuestra acción fue mostrar el ítem.
-                self.switch_panel(panel=self.frontend)
-                # hablar() no se ejecuta si el item mostrado o tema mencionado no tienen efecto.
-                # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
-                # se menciona un tema que no tiene sentido para el NPC.
+                if len(action):
+                    if panel.menu.actual.nombre in action:
+                        # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
+                        # de manera que realmente se verifique que se está mostrando ESE item en particular.
+
+                        idx = action[panel.menu.actual.nombre]
+                        # si el elemento seleccionado coincide con el nombre indicado en head,
+                        # entonces el dialogo salta a ese numero de índice.
+                    else:
+                        # de otro modo se cae al nodo indicado por default.
+                        idx = action['default']
+
+                    self.arbol.set_chosen(idx)
+                    # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
+                    # porque nuestra acción fue mostrar el ítem.
+                    self.switch_panel(panel=self.frontend)
+                    # hablar() no se ejecuta si el item mostrado o tema mencionado no tienen efecto.
+                    # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
+                    # se menciona un tema que no tiene sentido para el NPC.
+                    self.hablar()
+            else:
                 self.hablar()
-        else:
-            self.hablar()
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -201,7 +208,7 @@ class Dialogo(Discurso):
         return supress
 
     def hablar(self):
-        actual = self.dialogo.update()
+        actual = self.arbol.update()
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event is not None:
                 self.sel.post_event()
@@ -209,7 +216,7 @@ class Dialogo(Discurso):
                 loc = self.locutores[self.sel.emisor]
                 rec = self.locutores[self.sel.receptor]
                 loc.enviar_item(self.sel.item, rec)
-            self.dialogo.set_chosen(self.next)
+            self.arbol.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
             self.emit_sound_event(self.locutores[actual.emisor])
@@ -242,7 +249,7 @@ class Dialogo(Discurso):
                     # si nos quedamos sin elementos con requisitos, caemos al default.
                     choice = default
 
-                self.dialogo.set_chosen(choice)
+                self.arbol.set_chosen(choice)
                 if choice.event is not None:
                     choice.post_event()
 
@@ -342,7 +349,7 @@ class Dialogo(Discurso):
             mob.hablando = False
         if self.SelMode:
             self.frontend.exit_sel_mode()
-        self.dialogo = None
+        self.arbol = None
         for panel in [self.objects_panel, self.themes_panel]:
             if panel.menu is not None:
                 panel.menu.salir()
@@ -371,6 +378,14 @@ class Dialogo(Discurso):
     def update(self, sel):
         self.sel = sel
         self.next = self.sel.leads
+
+    def toggle_pause(self):
+        if self.registered :
+            self.deregister()
+            self.paused = True
+        else:
+            self.register()
+            self.paused = False
 
 
 class Monologo(Discurso):

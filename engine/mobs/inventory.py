@@ -65,6 +65,9 @@ class Inventory:
     def cantidad(self, item):
         return self._contenido.count(item)
 
+    def contenido(self):
+        return self._contenido
+
     def actualizar_maximos(self, nuevopesomax, nuevovolmax):
         self._volumen_max = nuevovolmax
         self._peso_max = nuevopesomax
