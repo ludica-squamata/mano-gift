@@ -68,6 +68,7 @@ class Escenografia(ShadowSprite, EventListener):
 class Item(AzoeSprite):
     stackable = False
     subtipo = None
+
     # solo los items equipables tienen un subtipo distinto de None,
     # pero esto les permite ser comparados con otros tipos de item.
 
@@ -75,7 +76,7 @@ class Item(AzoeSprite):
         self.nombre = nombre
         self.peso = data['peso']
         self.volumen = data['volumen']
-        self.efecto_des = data['efecto']['des']
+        self.efecto_des = data.get('efecto', {}).get('des', '')
         self.stackable = 'stackable' in data['propiedades']
         imagen = cargar_imagen(join(ModData.graphs, data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)
@@ -95,6 +96,9 @@ class Item(AzoeSprite):
             return True
         else:
             return False
+
+    def __hash__(self):
+        return hash(self.nombre + str(self.volumen) + str(self.peso) + self.tipo)
 
     def __repr__(self):
         return self.nombre + ' (' + self.tipo + ')'

@@ -12,12 +12,19 @@
     "icon": null,
     "keywords": [],
     "events": {
-      "Flag": {
-        "value": false
-      },
+      "Flag": {"value": false},
       "TriggerBuyScreen": {"participants": ["Shopkeeper", "heroe"]},
       "TriggerSellScreen": {"participants": ["Shopkeeper", "heroe"]},
       "TradeItem": {}
+    },
+    "trading":{
+      "Shopkeeper": {
+        "Manzana": 10,
+        "Star": 10,
+        "Libro Rojo": 1,
+        "Banana": 10,
+        "Ring": 1
+      }
     }
   },
   "body": {
@@ -39,7 +46,7 @@
     },
     "4":{
       "type": "node", "leads":[6, 7], "from": "Shopkeeper", "to": "heroe",
-      "txt": "El precio de ese item es {coin}{prince}. ¿Quieres comprarlo?"
+      "txt": "El precio de ese item es {coin}{price}. ¿Quieres comprarlo?"
     },
     "5":{
       "type": "node", "leads":[6, 7], "from": "Shopkeeper", "to": "heroe",

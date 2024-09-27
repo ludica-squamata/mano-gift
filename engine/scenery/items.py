@@ -2,7 +2,20 @@ from engine.globs.event_dispatcher import EventDispatcher
 from .bases import Item
 
 
-class Equipable(Item):
+class Tradeable(Item):
+    price_sell = 0
+    price_buy = 0
+    coin = None
+
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
+        if "trading" in data:
+            self.price_sell = data['trading']['sell_price']
+            self.price_buy = data['trading']['buy_price']
+            self.coin = data['trading']['coin_symbol']
+
+
+class Equipable(Tradeable):
     def __init__(self, parent, nombre, data):
         super().__init__(parent, nombre, data)
         self.tipo = 'equipable'
@@ -10,7 +23,7 @@ class Equipable(Item):
         self.espacio = data['efecto']['equipo']
 
 
-class Consumible(Item):
+class Consumible(Tradeable):
     def __init__(self, parent, nombre, data):
         super().__init__(parent, nombre, data)
         self.tipo = 'consumible'
@@ -41,6 +54,13 @@ class Consumible(Item):
         m, s, v, f, h = 'mob', 'stat', 'value', 'factor', 'method'
         EventDispatcher.trigger('UsedItem', self.nombre, {m: mob, s: stat, v: valor, f: mod, h: method})
         return mob.inventario.remover(self)
+
+
+class Utilizable(Tradeable):
+    def __init__(self, parent, nombre, data):
+        super().__init__(parent, nombre, data)
+        self.tipo = "utilizable"
+        self.subtipo = "libro"
 
 
 class Colocable(Item):

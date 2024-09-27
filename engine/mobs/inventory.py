@@ -26,7 +26,7 @@ class Inventory:
             return item in self._contenido
 
     def __getitem__(self, item):
-        # no entiendo porqué escribí así este método.
+        # no entiendo porqué escribí así este metodo.
         if type(item) is str:
             for _item in self._contenido:
                 if _item.nombre == item:
@@ -67,6 +67,9 @@ class Inventory:
 
     def contenido(self):
         return self._contenido
+
+    def uniques(self):
+        return list(set(self._contenido))
 
     def actualizar_maximos(self, nuevopesomax, nuevovolmax):
         self._volumen_max = nuevovolmax

@@ -4,6 +4,7 @@ from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.misc.resources import abrir_json
+from os.path import exists
 
 
 class Discurso(EventAware):
@@ -60,7 +61,18 @@ class Discurso(EventAware):
             node = file['body'][s_idx]
             if "item" in node:
                 item_name = node['item']
-                node['item'] = ModData.items + item_name + '.json'
+                ruta = ModData.items + item_name + '.json'
+                if exists(ruta):
+                    node['item'] = ruta
+        if "trading" in file['head']:
+            for trader in file['head']['trading']:
+                for key in file['head']['trading'][trader]:
+                    item_name = key.lower().replace(" ","_")
+                    ruta = ModData.items + item_name + '.json'
+                    if exists(ruta):
+                        file['head']['trading'][trader][key] = {
+                            "cant": file['head']['trading'][trader][key],
+                            "ruta": ModData.items + item_name + '.json'}
 
         return file
 
@@ -101,6 +113,7 @@ class Dialogo(Discurso):
         self.arbol = ArboldeDialogo(self, arbol['body'])
         self.objects = head.get('panels', {}).get('objects', {})
         self.themes = head.get('panels', {}).get('themes', {})
+        self.trading = head.get('trading', None)
 
         self.arbol.process_events(head['events'])
 
@@ -203,7 +216,7 @@ class Dialogo(Discurso):
 
         if "flags" in condiciones:
             for flag in condiciones['flags']:
-                supress = supress or flag not in GameState
+                supress = supress or not (GameState.__contains__(flag))
 
         return supress
 

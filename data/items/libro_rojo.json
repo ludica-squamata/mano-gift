@@ -1,7 +1,7 @@
 {
   "nombre": "Libro Rojo",
   "tipo": "agarrable",
-  "subtipo": null,
+  "subtipo": "utilizable",
   "peso": 0,
   "volumen": 0,
   "imagenes": {
@@ -13,7 +13,7 @@
   ],
   "trading": {
     "sell_price": 1,
-    "buy_prince": 1,
+    "buy_price": 1,
     "coin_symbol": "$"
   }
 }

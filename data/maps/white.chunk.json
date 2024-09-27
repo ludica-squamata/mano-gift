@@ -4,7 +4,8 @@
   "props": {},
   "mobs": {
     "aristocrat": [[192, 202], [160, 192], [192, 160]],
-    "Shopkeeper": [[64,64]]
+    "Shopkeeper": [[64,64]],
+    "Commoner": [[96,0]]
   },
   "limites": {
     "sup": "black",

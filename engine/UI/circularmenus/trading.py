@@ -1,11 +1,13 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import TradeableElement
-from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import Mob_Group
+
 
 class TradingCircularMenu(RenderedCircularMenu):
     first = 0
     traders = None
+
     def __init__(self, parent, cascadas):
         self.set_idxs(cascadas)
         self.parent = parent
@@ -27,10 +29,11 @@ class TradingCircularMenu(RenderedCircularMenu):
     def set_idxs(self, cascadas):
         for n in cascadas:
             cascada = cascadas[n]
-            for element in cascada:  # aunque me gustaria ponerlo en un onliner.
-                element.index = cascada.index(element)  # esto soluciona el tema de recordar la posición del item.
+            for element in cascada:
+                index = cascada.index(element)  # esto soluciona el tema de recordar la posición del item.
+                element.index = index  # aunque me gustaria ponerlo en un onliner.
 
-            if self.first <= len(cascada)-1:
+            if self.first <= len(cascada) - 1:
                 for idx, opt in enumerate([cascada[self.first]] + cascada[self.first + 1:] + cascada[:self.first]):
                     opt.idx = idx
             else:
@@ -40,23 +43,32 @@ class TradingCircularMenu(RenderedCircularMenu):
 
 class BuyingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
+        from engine.scenery import new_item
         self.fill_participantes(participants)
-        buyable = [self.traders[name].inventario.contenido() for name in self.traders if name != 'heroe'][0]
+        trading = parent.parent.parent.trading
+        buyable, cantidades = [], []
+        for trader in self.traders:
+            if trader in trading:
+                for key in trading[trader]:
+                    buyable.append(new_item(self, key, trading[trader][key]['ruta']))
+                    cantidades.append(trading[trader][key]['cant'])
+
         cascadas = {
-            'inicial':[
-                [TradeableElement(self, item) for item in buyable]
-            ]
+            'inicial': [TradeableElement(self, 'buy', buyable[i], cantidades[i]) for i in range(len(buyable))]
         }
         super().__init__(parent, cascadas)
+
 
 class SellingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
         self.fill_participantes(participants)
-        sellable = [self.traders[name].inventario.contenido() for name in self.traders if name == 'heroe'][0]
+        sellable = self.traders['heroe'].inventario.uniques()
+        cantidades = [self.traders['heroe'].inventario.cantidad(item) for item in sellable]
         cascadas = {
-            'inicial': [TradeableElement(self, item) for item in sellable]
+            'inicial': [TradeableElement(self, "sell", sellable[i], cantidades[i]) for i in range(len(sellable))]
         }
         super().__init__(parent, cascadas)
+
 
 def trigger_trading_menu(event):
     menu = None
@@ -70,8 +82,10 @@ def trigger_trading_menu(event):
     dialogo.frontend.hide()
     menu(event.origin, event.data['participants'])
 
+
 class Trade:
     pass
+
 
 #
 # def engage_dialog(event):
@@ -80,6 +94,5 @@ class Trade:
 #             EventDispatcher.trigger('ReactivateDialog', 'KEY', {})
 
 
-
-EventDispatcher.register(trigger_trading_menu, "TriggerBuyScreen","TriggerSellScreen")
+EventDispatcher.register(trigger_trading_menu, "TriggerBuyScreen", "TriggerSellScreen")
 # EventDispatcher.register(engage_dialog, "Key")
