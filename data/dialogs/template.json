@@ -8,7 +8,20 @@
     "about": "",
     "icon": "",
     "keywords": [],
-    "events": {}
+    "events": {},
+    "panels": {
+      "objects": {
+        "default": "N/A"
+      },
+      "themes": {
+        "default": "N/A"
+      }
+    },
+    "trading": {
+      "<Vendor>": {
+        "<item>": "<price>"
+      }
+    }
   },
   "body": {
     "0": {
@@ -19,6 +32,15 @@
       "txt": ""
     },
     "1": {
+      "type": "node",
+      "leads": [
+        1
+      ],
+      "from": "",
+      "to": "",
+      "txt": ""
+    },
+    "2": {
       "type": "leaf",
       "from": "",
       "to": "",

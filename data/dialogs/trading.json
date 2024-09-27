@@ -17,7 +17,15 @@
       "TriggerSellScreen": {"participants": ["Shopkeeper", "heroe"]},
       "TradeItem": {}
     },
-    "trading":{
+    "panels": {
+      "objects": {
+        "default": 8
+      },
+      "themes": {
+        "default": 8
+      }
+    },
+    "trading": {
       "Shopkeeper": {
         "Manzana": 10,
         "Star": 10,
@@ -59,6 +67,10 @@
     "7":{
       "type": "leaf", "from": "heroe", "to": "Shopkeeper", "event": "Flag",
       "txt": "No"
+    },
+    "8": {
+      "type": "leaf", "from": "Shopkeeper", "to": "heroe",
+      "txt": "No sé que es eso."
     }
   }
 }

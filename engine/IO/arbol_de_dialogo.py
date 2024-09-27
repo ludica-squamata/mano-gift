@@ -187,6 +187,19 @@ class ArboldeDialogo:
         for elemento in self._elementos:
             if elemento.event is not None:
                 name = elemento.event
+                if "mob" in events[name]:
+                    # acá procesamos la keyword.
+                    if events[name]['mob'] == '<locutor>':
+                        # Locutor es el que habla
+                        mob = elemento.emisor
+                    elif events[name]['mob'] == '<interlocutor>':
+                        # Interlocutor es el que escucha.
+                        mob = elemento.receptor
+                    else:
+                        # Si la key no es una keyword asumimos que es el nombre.
+                        mob = events[name]['mob']
+                    # y reasignamos ese nombre.
+                    events[name]['mob'] = mob
                 elemento.create_event(name, events[name])
 
     def __repr__(self):

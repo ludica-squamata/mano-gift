@@ -1,6 +1,6 @@
 {
   "head": {
-    "class": "",
+    "class": "scripted",
     "conditional_tags": {},
     "style": "",
     "locutors": [
@@ -12,7 +12,7 @@
     "keywords": [],
     "events": {
       "Exit": {
-        "mob": "commoner",
+        "mob": "<locutor>",
         "pos": [
           608,
           608

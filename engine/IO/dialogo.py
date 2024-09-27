@@ -67,7 +67,7 @@ class Discurso(EventAware):
         if "trading" in file['head']:
             for trader in file['head']['trading']:
                 for key in file['head']['trading'][trader]:
-                    item_name = key.lower().replace(" ","_")
+                    item_name = key.lower().replace(" ", "_")
                     ruta = ModData.items + item_name + '.json'
                     if exists(ruta):
                         file['head']['trading'][trader][key] = {
@@ -101,7 +101,7 @@ class Dialogo(Discurso):
     next = 0
     write_flag = True  # flags the conversation so it wouldn't be repeated.
 
-    paused = False # if True, the dialog is paused, meaning it won't continue until is unpaused.
+    paused = False  # if True, the dialog is paused, meaning it won't continue until is unpaused.
 
     def __init__(self, arbol, *locutores):
         super().__init__()
@@ -115,11 +115,11 @@ class Dialogo(Discurso):
         self.themes = head.get('panels', {}).get('themes', {})
         self.trading = head.get('trading', None)
 
-        self.arbol.process_events(head['events'])
-
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
+
+        self.arbol.process_events(head['events'])
 
         self.objects_panel = DialogObjectsPanel(self)
         self.themes_panel = DialogThemesPanel(self)
@@ -184,6 +184,9 @@ class Dialogo(Discurso):
                     # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
                     # se menciona un tema que no tiene sentido para el NPC.
                     self.hablar()
+                else:
+                    print('acá')  # esta debería ser la respuesta por default si se muestra un objeto
+                    # o se menciona un tema que el NPC no tiene scripteado.
             else:
                 self.hablar()
 
@@ -393,7 +396,7 @@ class Dialogo(Discurso):
         self.next = self.sel.leads
 
     def toggle_pause(self):
-        if self.registered :
+        if self.registered:
             self.deregister()
             self.paused = True
         else:
