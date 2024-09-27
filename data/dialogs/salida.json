@@ -13,10 +13,7 @@
     "events": {
       "Exit": {
         "mob": "<locutor>",
-        "pos": [
-          608,
-          608
-        ]
+        "pos": "bed"
       }
     }
   },

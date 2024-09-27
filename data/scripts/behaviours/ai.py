@@ -2,7 +2,6 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviortrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import GameState
-from engine.globs.game_groups import Mob_Group
 
 
 class HasSetLocation(Leaf):
@@ -22,8 +21,8 @@ class HasSetLocation(Leaf):
 
 
 def exit_event(event):
-    mob = Mob_Group[event.data['mob']]
-    mob.Ai.set_context('go to', event.data['pos'])
+    mob = event.data['mob']
+    mob.AI.set_context('go to', event.data['pos'])
 
 
 EventDispatcher.register(exit_event, "Exit")

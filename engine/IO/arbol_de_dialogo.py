@@ -191,15 +191,24 @@ class ArboldeDialogo:
                     # acá procesamos la keyword.
                     if events[name]['mob'] == '<locutor>':
                         # Locutor es el que habla
-                        mob = elemento.emisor
+                        mob = self.parent.locutores[elemento.emisor]
                     elif events[name]['mob'] == '<interlocutor>':
                         # Interlocutor es el que escucha.
-                        mob = elemento.receptor
+                        mob = self.parent.locutores[elemento.receptor]
                     else:
                         # Si la key no es una keyword asumimos que es el nombre.
                         mob = events[name]['mob']
                     # y reasignamos ese nombre.
                     events[name]['mob'] = mob
+
+                if "pos" in events[name]:
+                    # de forma similar, podemos reemplazar las keys en el evento
+                    chunk = elemento.parent.parent.locutores[elemento.emisor].parent
+                    stage = chunk.parent  # nesting 120%
+                    if events[name]['pos'] in stage.points_of_interest[chunk.nombre]:
+                        # con los puntos de interés para la IA.
+                        events[name]['pos'] = stage.points_of_interest[chunk.nombre][events[name]['pos']]
+
                 elemento.create_event(name, events[name])
 
     def __repr__(self):
