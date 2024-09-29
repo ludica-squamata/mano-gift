@@ -19,7 +19,7 @@ class MenuModel(Menu):
 
         parts_of = {
             'his': {
-                'heads': ModData.graphs+'mobs/imagenes/heads_heroe.png',
+                'heads': ModData.graphs + 'mobs/imagenes/heads_heroe.png',
                 'body': ModData.graphs + 'mobs/imagenes/heroe_idle_walk_body.png'},
             'her': {
                 'heads': ModData.graphs + 'mobs/imagenes/heads_commoner.png',

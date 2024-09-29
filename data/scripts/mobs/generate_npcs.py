@@ -1,4 +1,4 @@
-from random import choice
+from engine.libs import choice
 from os import path, getcwd, listdir
 from engine.misc import abrir_json
 

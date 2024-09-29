@@ -2,9 +2,9 @@ from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
 from engine.globs import ModData, GRUPO_MOBS, Prop_Group
 from engine.misc import abrir_json, cargar_imagen
 from engine.scenery import new_prop
+from engine.libs import randint
 from engine.mobs import Mob
 from .salida import Salida
-from random import randint
 
 
 class NamedNPCs:
