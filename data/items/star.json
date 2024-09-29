@@ -6,7 +6,8 @@
   "volumen": 0,
   "imagenes": {
     "prop": "props/star.png",
-    "item": "props/star2.png"
+    "item": "props/star2.png",
+    "high": null
   },
   "propiedades": ["sin_sombra"],
   "dialog": "star",

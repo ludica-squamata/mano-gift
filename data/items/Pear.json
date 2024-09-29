@@ -1,14 +1,12 @@
 {
-  "nombre": "Manzana",
+  "nombre": "Pera",
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
-  "volumen": 0.0075
-,
+  "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/Manzana-10.png",
-    "item": "props/Manzana-24.png",
-    "high": null
+    "prop": "props/pera-32.png",
+    "item": "props/pera-32.png"
   },
   "propiedades": [
     "stackable","sin_sombra"

@@ -59,3 +59,6 @@ class ColocableInventoryElement(InventoryElement):
         self.img_sel = self._create_icon_stack(33, 33, True, self.parent.entity)
         self.image = self.img_sel
         Camara.add_real(prop)
+
+        self.parent.overwritten = True
+        self.parent.salir()

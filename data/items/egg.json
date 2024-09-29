@@ -1,14 +1,13 @@
 {
-  "nombre": "Manzana",
+  "nombre": "Egg",
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
-  "volumen": 0.0075
-,
+  "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/Manzana-10.png",
-    "item": "props/Manzana-24.png",
-    "high": null
+    "prop": "props/egg_10.png",
+    "item": "props/egg_32.png",
+    "high": "props/egg_128.png"
   },
   "propiedades": [
     "stackable","sin_sombra"
