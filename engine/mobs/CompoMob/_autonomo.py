@@ -12,6 +12,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     paused = False
     AI_type = ''  # 'Controllable' or  'Autonomous'
 
+    pause_overridden = False
+
     def __init__(self, parent, data, **kwargs):
         ai_name = data['AI']
 
@@ -22,7 +24,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         super().__init__(parent, data, **kwargs)
 
     def toggle_pause_state(self, event):
-        self.paused = event.data['value']
+        if not self.pause_overridden:
+            self.paused = event.data['value']
 
     def create_ai(self, name):
         if name == 'controllable':

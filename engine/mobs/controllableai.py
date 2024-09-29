@@ -49,6 +49,10 @@ class ControllableAI(EventAware):
         #     # 800 porque es el tamaño de un chunk. Este valor podría ser configurable.
         #     self.entity.mapa_actual.parent.set_coordinates(direccion)
 
+    def register(self):
+        if not self.entity.pause_overridden:
+            super().register()
+
     def set_action(self):
         self.entity.touch()
         self.accion = True
@@ -66,7 +70,7 @@ class ControllableAI(EventAware):
             sprites = set(preception['touched'] + preception['felt'] + preception['close'])
             # a set because it filters repeated units.
             ex, ey = self.entity.rect.center
-            close = [[q, sqrt((q.rect.x-ex)**2+(q.rect.y-ey)**2)] for q in sprites]
+            close = [[q, sqrt((q.rect.x - ex) ** 2 + (q.rect.y - ey) ** 2)] for q in sprites]
             sprite = None
             if len(close):
                 distances = [i[1] for i in close]

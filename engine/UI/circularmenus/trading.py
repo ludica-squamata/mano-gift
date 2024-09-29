@@ -1,4 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs.event_aware import EventAware
 from .rendered import RenderedCircularMenu
 from .elements import TradeableElement
 from engine.globs import Mob_Group
@@ -7,6 +8,7 @@ from engine.globs import Mob_Group
 class TradingCircularMenu(RenderedCircularMenu):
     first = 0
     traders = None
+    trade = None
 
     def __init__(self, parent, cascadas):
         self.set_idxs(cascadas)
@@ -20,10 +22,15 @@ class TradingCircularMenu(RenderedCircularMenu):
                 mob = Mob_Group.get_controlled_mob()
                 mob.detener_movimiento()
                 mob.AI.deregister()
+                mob.paused = True
+                mob.pause_overridden = True
             else:
                 mob = Mob_Group.get_named(name)[0]
                 mob.hablando = True
+                mob.paused = True
                 mob.AI.trigger_node(25)
+                mob.pause_overridden = True
+
             self.traders[name] = mob
 
     def set_idxs(self, cascadas):
@@ -39,6 +46,10 @@ class TradingCircularMenu(RenderedCircularMenu):
             else:
                 for idx, opt in enumerate(cascada):
                     opt.idx = idx
+
+    def salir(self):
+        self.trade.engage()
+        super().salir()
 
 
 class BuyingCM(TradingCircularMenu):
@@ -56,6 +67,7 @@ class BuyingCM(TradingCircularMenu):
         cascadas = {
             'inicial': [TradeableElement(self, 'buy', buyable[i], cantidades[i]) for i in range(len(buyable))]
         }
+        self.trade = Trade(self)
         super().__init__(parent, cascadas)
 
 
@@ -67,6 +79,7 @@ class SellingCM(TradingCircularMenu):
         cascadas = {
             'inicial': [TradeableElement(self, "sell", sellable[i], cantidades[i]) for i in range(len(sellable))]
         }
+        self.trade = Trade(self)
         super().__init__(parent, cascadas)
 
 
@@ -83,16 +96,46 @@ def trigger_trading_menu(event):
     menu(event.origin, event.data['participants'])
 
 
-class Trade:
-    pass
+class Trade(EventAware):
+    engaged = False
 
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
 
-#
-# def engage_dialog(event):
-#     if event.data['nom'] == 'accion' and event.data['type'] == 'tap':
-#         if "ReactivateDialog" in EventDispatcher.get_registered():
-#             EventDispatcher.trigger('ReactivateDialog', 'KEY', {})
+        self.functions['tap'].update({'accion': self.re_engage_dialog})
+        EventDispatcher.register(self.concrete_trade, "Trade")
+
+    def engage(self):
+        for trader in self.parent.traders.values():
+            trader.pause = True
+            trader.hablando = True
+            trader.pause_overriden = True
+            if hasattr(trader.AI, 'deregister'):
+                trader.AI.deregister()
+
+        self.engaged = True
+
+    def disengage(self):
+        for trader in self.parent.traders.values():
+            trader.pause = False
+            trader.pause_overridden = False
+            trader.hablando = False
+            if hasattr(trader.AI, 'register'):
+                trader.AI.register()
+
+        EventDispatcher.trigger('TogglePause', self, {'value': False})
+        self.engaged = False
+
+    def re_engage_dialog(self):
+        if self.engaged:
+            EventDispatcher.trigger('ReactivateDialog', self, {'value': True})
+            self.engaged = False
+
+    def concrete_trade(self, event):
+        self.disengage()
+        self.deregister()
+        print(self, event)
 
 
 EventDispatcher.register(trigger_trading_menu, "TriggerBuyScreen", "TriggerSellScreen")
-# EventDispatcher.register(engage_dialog, "Key")

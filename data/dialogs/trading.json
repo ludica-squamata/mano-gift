@@ -15,7 +15,7 @@
       "Flag": {"value": false},
       "TriggerBuyScreen": {"participants": ["Shopkeeper", "heroe"]},
       "TriggerSellScreen": {"participants": ["Shopkeeper", "heroe"]},
-      "TradeItem": {}
+      "Trade": {}
     },
     "panels": {
       "objects": {
@@ -61,11 +61,11 @@
       "txt": "Puedo pagarte {coin}{price} por ese item. ¿Quieres vendérmelo?"
     },
     "6":{
-      "type": "leaf", "from": "heroe", "to": "Shopkeeper", "event": "TradeItem",
+      "type": "leaf", "from": "heroe", "to": "Shopkeeper", "event": "Trade",
       "txt": "Sí"
     },
     "7":{
-      "type": "leaf", "from": "heroe", "to": "Shopkeeper", "event": "Flag",
+      "type": "leaf", "from": "heroe", "to": "Shopkeeper",
       "txt": "No"
     },
     "8": {

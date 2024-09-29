@@ -147,7 +147,7 @@ class Dialogo(Discurso):
         })
 
         self.hablar()
-        # EventDispatcher.register(self.toggle_pause, "ReactivateDialog")
+        EventDispatcher.register(self.toggle_pause, "ReactivateDialog")
 
     def __repr__(self):
         return 'Diálogo'
@@ -395,13 +395,14 @@ class Dialogo(Discurso):
         self.sel = sel
         self.next = self.sel.leads
 
-    def toggle_pause(self):
+    def toggle_pause(self, event=None):
         if self.registered:
             self.deregister()
             self.paused = True
-        else:
+        elif not self.registered or event.data['value'] == True:
             self.register()
             self.paused = False
+            self.hablar()
 
 
 class Monologo(Discurso):

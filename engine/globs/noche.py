@@ -54,7 +54,7 @@ class Noche(AzoeBaseSprite):
                     for y in range(h):
                         color = light.image.unmap_rgb(px_li[x, y])
                         if color != COLOR_IGNORADO:
-                            pxarray[x+lx, y+ly] = color
+                            pxarray[x + lx, y + ly] = color
 
             image = pxarray.make_surface()
             self.images[Sun.alpha] = image
