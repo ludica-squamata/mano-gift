@@ -66,7 +66,7 @@ class ControllableAI(EventAware):
             sprites = set(preception['touched'] + preception['felt'] + preception['close'])
             # a set because it filters repeated units.
             ex, ey = self.entity.rect.center
-            close = [[q, sqrt((q.rect.x-ex)**2+(q.rect.y-ey)**2)] for q in sprites]
+            close = [[q, sqrt((q.rect.x - ex) ** 2 + (q.rect.y - ey) ** 2)] for q in sprites]
             sprite = None
             if len(close):
                 distances = [i[1] for i in close]

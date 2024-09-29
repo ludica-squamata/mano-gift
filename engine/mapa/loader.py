@@ -2,9 +2,9 @@ from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
 from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs import ModData, GRUPO_MOBS, Prop_Group
 from engine.scenery import new_prop
+from engine.libs import randint
 from engine.mobs import Mob
 from .salida import Salida
-from random import randint
 from os import path, getcwd
 import csv
 
