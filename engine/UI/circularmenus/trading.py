@@ -10,6 +10,8 @@ class TradingCircularMenu(RenderedCircularMenu):
     traders = None
     trade = None
 
+    name = ''
+
     def __init__(self, parent, cascadas):
         self.set_idxs(cascadas)
         self.parent = parent
@@ -51,10 +53,14 @@ class TradingCircularMenu(RenderedCircularMenu):
         self.trade.engage()
         super().salir()
 
+    def __repr__(self):
+        return self.name
+
 
 class BuyingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
         from engine.scenery import new_item
+        self.name = 'Buying CM'
         self.fill_participantes(participants)
         trading = parent.parent.parent.trading
         buyable, cantidades = [], []
@@ -73,6 +79,7 @@ class BuyingCM(TradingCircularMenu):
 
 class SellingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
+        self.name = 'Selling CM'
         self.fill_participantes(participants)
         sellable = self.traders['heroe'].inventario.uniques()
         cantidades = [self.traders['heroe'].inventario.cantidad(item) for item in sellable]
@@ -135,7 +142,11 @@ class Trade(EventAware):
     def concrete_trade(self, event):
         self.disengage()
         self.deregister()
-        print(self, event)
+        if event.data['value'] is True:
+            print(self)
+
+    def __repr__(self):
+        return "Trade"
 
 
 EventDispatcher.register(trigger_trading_menu, "TriggerBuyScreen", "TriggerSellScreen")
