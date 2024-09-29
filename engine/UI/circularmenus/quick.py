@@ -2,6 +2,7 @@ from engine.globs import ModData, Mob_Group, Game_State
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import LetterElement, CommandElement, InventoryElement, DialogTopicElement
+from .elements import ColocableInventoryElement as Colocable_IE
 
 
 class QuickCircularMenu(RenderedCircularMenu):
@@ -20,16 +21,18 @@ class QuickCircularMenu(RenderedCircularMenu):
                     CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
                     LetterElement(self, 'Consumibles', 'C'),
                     LetterElement(self, 'Equipables', 'E'),
-                    LetterElement(self, 'Temas', 'T')
+                    LetterElement(self, 'Temas', 'T'),
+                    LetterElement(self, 'Colocar', 'P')
                 ],
                 'Consumibles': [InventoryElement(self, item) for item in self.e.inventario.get_by_type('consumible')],
                 'Equipables': [InventoryElement(self, item) for item in self.e.inventario.get_by_type('equipable')],
+                'Colocar': [Colocable_IE(self, item) for item in self.e.inventario.uniques2() if item.is_colocable]
             }
         else:
             commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]
             cascades = [LetterElement(self, *data) for data in ModData.QMC if 'csc' in data]
             cascadas = {
-                'inicial': [i for i in commands]+[i for i in cascades]
+                'inicial': [i for i in commands] + [i for i in cascades]
             }
 
         temas = Game_State.find('tema.')
@@ -43,7 +46,7 @@ class QuickCircularMenu(RenderedCircularMenu):
             for element in cascada:  # aunque me gustaria ponerlo en un onliner.
                 element.index = cascada.index(element)  # esto soluciona el tema de recordar la posición del item.
 
-            if self.first <= len(cascada)-1:
+            if self.first <= len(cascada) - 1:
                 for idx, opt in enumerate([cascada[self.first]] + cascada[self.first + 1:] + cascada[:self.first]):
                     opt.idx = idx
             else:

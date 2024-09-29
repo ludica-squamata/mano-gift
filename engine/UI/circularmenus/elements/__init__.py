@@ -1,6 +1,6 @@
 from .letter import LetterElement
 from .dialog_elems import BranchElement, DialogObjectElement, DialogThemeElement, DialogTopicElement
-from .inventory import InventoryElement
+from .inventory import InventoryElement, ColocableInventoryElement
 from .command import CommandElement
 from .title import Title
 
@@ -11,5 +11,6 @@ __all__ = ['LetterElement',
            'InventoryElement',
            'DialogTopicElement',
            'CommandElement',
-           'Title'
+           'Title',
+           'ColocableInventoryElement'
            ]

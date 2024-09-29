@@ -6,7 +6,7 @@
   "volumen": 0,
   "imagenes": {
     "prop": "props/anillo.png",
-    "item": "props/anillo esmeralda-24.png"
+    "item": "props/anillo.png"
   },
   "propiedades": [],
   "efecto": {
