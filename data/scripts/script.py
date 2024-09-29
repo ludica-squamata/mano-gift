@@ -1,6 +1,6 @@
 # script.py
 from importlib import import_module
-from engine.globs import GameState, ModData, Mob_Group
+from engine.globs import Game_State, ModData, Mob_Group
 from engine.globs.event_dispatcher import EventDispatcher
 
 
@@ -32,7 +32,7 @@ EventDispatcher.register(init_game, 'NewGame')
 def about(event):
     who = event.data['who']
     if who.nombre == Mob_Group.character_name:
-        GameState.set2(f"dialog.{event.data['about']}.enabled")
+        Game_State.set2(f"dialog.{event.data['about']}.enabled")
 
 
 EventDispatcher.register(about, 'TookItem')

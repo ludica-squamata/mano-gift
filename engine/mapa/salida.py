@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs.game_state import GameState
+from engine.globs.game_state import Game_State
 from engine.globs.renderer import Renderer
 from pygame import Mask, Surface
 from engine.base import AzoeSprite
@@ -40,7 +40,7 @@ class Salida:
                 'target_entrada': self.entrada}
 
         EventDispatcher.trigger('SetMap', 'Salida', data)
-        GameState.set2(self.flag_name)
+        Game_State.set2(self.flag_name)
 
     def __repr__(self):
         return self.nombre

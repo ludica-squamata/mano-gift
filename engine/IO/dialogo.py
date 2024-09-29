@@ -1,4 +1,4 @@
-﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, GameState, ModData, Mob_Group
+﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, Game_State, ModData, Mob_Group
 from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
 from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
@@ -18,7 +18,7 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if not GameState.get2(f"dialog.{meta['about']}.disabled"):
+        if not Game_State.get2(f"dialog.{meta['about']}.disabled"):
             allow = False
 
         if meta['class'] != 'scripted':
@@ -323,7 +323,7 @@ class Dialogo(Discurso):
             self.frontend.set_text(nodo.texto, omitir_tags=omitir_tags)
 
         for exp in nodo.expressions:
-            GameState.set2('tema.' + exp + '.enabled')
+            Game_State.set2('tema.' + exp + '.enabled')
 
     def direccionar_texto(self, direccion):
         if direccion == 'arriba':
@@ -348,7 +348,7 @@ class Dialogo(Discurso):
                 panel.menu.salir()
 
         if self.write_flag:
-            GameState.set2(f'dialog.{self.about}.disabled')
+            Game_State.set2(f'dialog.{self.about}.disabled')
 
         super().cerrar()
 
