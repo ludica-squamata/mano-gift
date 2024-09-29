@@ -104,7 +104,7 @@ class Sight(AzoeBaseSprite):
             x, y = self.rect.x - obj.x, self.rect.y - obj.y
             ox, oy = obj.x, obj.y
             sx, sy = self.parent.x, self.parent.y
-            distance = round(sqrt(abs(oy - sy)**2 + abs(ox - sx)**2))
+            distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
             if obj.mask.overlap(self.mask, (x, y)):
                 self.parent.perceived['seen'].append(obj)
             if distance < 64:
@@ -126,7 +126,7 @@ class Hearing(AzoeBaseSprite):
             # the mob will always hear itself.
 
         if distance != 0:  # prevents a weird crash.
-            if event.data['intensity'] * 1/distance**2 > 1E-12:
+            if event.data['intensity'] * 1 / distance ** 2 > 1E-12:
                 # inverse-square law: the intensity of a sound decreses with distance;
                 # weak sounds produced far away from the mob won't be heard by it.
                 # 1E-12 W/m**2 is the Threshold of human hearing.

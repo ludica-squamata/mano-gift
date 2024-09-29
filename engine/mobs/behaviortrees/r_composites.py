@@ -1,4 +1,4 @@
-from random import choice, randint
+from engine.libs import choice, randint
 from .composites import *
 from .status import *
 

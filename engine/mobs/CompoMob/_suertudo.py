@@ -1,5 +1,5 @@
 from ._caracterizado import Caracterizado
-from random import randint
+from engine.libs import randint
 
 
 class Suertudo(Caracterizado):

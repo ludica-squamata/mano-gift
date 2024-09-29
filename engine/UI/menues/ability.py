@@ -6,7 +6,7 @@ from engine.globs.azoe_group import AzoeGroup
 from pygame import font, draw, Surface
 from pygame.sprite import LayeredUpdates
 from ..widgets import BaseWidget, Boton
-from random import choice
+from engine.libs import choice
 from .menu import Menu
 
 memoria = {}
@@ -177,9 +177,9 @@ class Counter(BaseWidget):
         image.fill(CANVAS_BG)
         rect.midleft = x, y
         self.w, self.h = w, h
-        self.boton_mas = Boton(self, self.char + '+', 1, self.incrementar, [rect.right-25, 0], texto='+')
+        self.boton_mas = Boton(self, self.char + '+', 1, self.incrementar, [rect.right - 25, 0], texto='+')
         self.boton_mas.rect.centery = rect.centery
-        self.boton_menos = Boton(self, self.char + '-', 1, self.decrementar, [rect.left-70, 0], texto='-')
+        self.boton_menos = Boton(self, self.char + '-', 1, self.decrementar, [rect.left - 70, 0], texto='-')
         self.boton_menos.rect.centery = rect.centery
         self.botones = LayeredUpdates(self.boton_mas, self.boton_menos)
 

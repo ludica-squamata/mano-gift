@@ -28,7 +28,7 @@ class QuickCircularMenu(RenderedCircularMenu):
             commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]
             cascades = [LetterElement(self, *data) for data in ModData.QMC if 'csc' in data]
             cascadas = {
-                'inicial': [i for i in commands]+[i for i in cascades]
+                'inicial': [i for i in commands] + [i for i in cascades]
             }
 
         temas = Game_State.find('tema.')
@@ -42,7 +42,7 @@ class QuickCircularMenu(RenderedCircularMenu):
             for element in cascada:  # aunque me gustaria ponerlo en un onliner.
                 element.index = cascada.index(element)  # esto soluciona el tema de recordar la posición del item.
 
-            if self.first <= len(cascada)-1:
+            if self.first <= len(cascada) - 1:
                 for idx, opt in enumerate([cascada[self.first]] + cascada[self.first + 1:] + cascada[:self.first]):
                     opt.idx = idx
             else:
