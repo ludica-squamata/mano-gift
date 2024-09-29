@@ -189,6 +189,7 @@ class ArboldeDialogo:
             if elemento.event is not None:
                 name = elemento.event
                 event = {"name": name, "data": elemento.event_data}
+                event['data'].update(events[name])
                 if "mob" in events[name]:
                     # acá procesamos la keyword.
                     if events[name]['mob'] == '<locutor>':
@@ -201,7 +202,7 @@ class ArboldeDialogo:
                         # Si la key no es una keyword asumimos que es el nombre.
                         mob = events[name]['mob']
 
-                    event['mob'] = mob  # y reasignamos ese nombre.
+                    event['data']['mob'] = mob  # y reasignamos ese nombre.
 
                 if "pos" in events[name]:
                     # de forma similar, podemos reemplazar las keys en el evento
@@ -209,9 +210,8 @@ class ArboldeDialogo:
                     stage = chunk.parent  # nesting 120%
                     if events[name]['pos'] in stage.points_of_interest[chunk.nombre]:
                         # con los puntos de interés para la IA.
-                        event['pos'] = stage.points_of_interest[chunk.nombre][events[name]['pos']]
+                        event['data']['pos'] = stage.points_of_interest[chunk.nombre][events[name]['pos']]
 
-                event['data'].update(events[name])
                 elemento.create_event(event['name'], event['data'])
 
     def __repr__(self):
