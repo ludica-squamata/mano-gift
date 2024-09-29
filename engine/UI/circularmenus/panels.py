@@ -1,6 +1,6 @@
 from .rendered import RenderedCircularMenu
 from .elements import DialogObjectElement, DialogThemeElement
-from engine.globs import Mob_Group, GameState
+from engine.globs import Mob_Group, Game_State
 
 
 class PanelCircularMenu(RenderedCircularMenu):
@@ -39,13 +39,13 @@ class ObjectsCircularMenu(PanelCircularMenu):
 
 class ThemesCircularMenu(PanelCircularMenu):
     def __init__(self, parent):
-        temas = GameState.find('tema.')
-        lista = [item[5:].title() for item in temas]
+        temas = Game_State.find('tema.')
+        lista = [item[5:].title() for item in temas if temas[item]]
 
         super().__init__(parent, 'Themes', lista)
 
     def update_cascades(self):
-        temas = GameState.find('tema.')
+        temas = Game_State.find('tema.')
         lista = [item[5:].title() for item in temas if temas[item]]
         cascadas = {
             'inicial': [DialogThemeElement(self, i, item) for i, item in enumerate(lista)]

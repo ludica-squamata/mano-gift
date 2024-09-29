@@ -1,4 +1,4 @@
-from engine.globs import ModData, Mob_Group, GameState
+from engine.globs import ModData, Mob_Group, Game_State
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import LetterElement, CommandElement, InventoryElement, DialogTopicElement
@@ -32,7 +32,7 @@ class QuickCircularMenu(RenderedCircularMenu):
                 'inicial': [i for i in commands]+[i for i in cascades]
             }
 
-        temas = GameState.find('tema.')
+        temas = Game_State.find('tema.')
         lista = [item[5:].title() for item in temas if temas[item]]
         cascadas.update({
             "Temas": [DialogTopicElement(self, i, t) for i, t in enumerate(lista)]

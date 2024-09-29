@@ -1,6 +1,6 @@
 from .event_dispatcher import EventDispatcher
 from .game_groups import Mob_Group, Prop_Group
-from .game_state import GameState
+from .game_state import Game_State
 
 
 class Sun:
@@ -40,7 +40,7 @@ class Sun:
             cls.aclarar = True
             EventDispatcher.trigger('ShadowFade', 'Sun', {'do_fade': True, 'inverted': True})
             EventDispatcher.trigger('NightFall', 'Night', {'value': False})
-            GameState.del2('NightTime')
+            Game_State.del2('NightTime')
         elif alarm == 'mediodía':
             cls.light = cls.lights[1]  # overhead light.
             cls.aclarar = False
@@ -53,7 +53,7 @@ class Sun:
             cls.oscurecer = True
             EventDispatcher.trigger('ShadowFade', 'Sun', {'do_fade': False, 'inverted': False})
             EventDispatcher.trigger('NightFall', 'Night', {'value': True})
-            GameState.set2('NightTime')
+            Game_State.set2('NightTime')
             cls.light = None
 
         cls.current_light = cls.light

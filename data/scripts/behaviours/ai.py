@@ -1,14 +1,15 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviortrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
-from engine.globs.game_state import GameState
+from engine.globs.game_state import Game_State
+from engine.globs.game_groups import Mob_Group
 
 
 class HasSetLocation(Leaf):
     def process(self):
         e = self.get_entity()
         # get the location set by another entity
-        loc = GameState.find(prefix=f'{e.nombre}.goto')
+        loc = Game_State.find(prefix=f'{e.nombre}.goto')
 
         if loc:
             prefix = f'{e.nombre}.goto.'
@@ -16,14 +17,14 @@ class HasSetLocation(Leaf):
             nodo = Nodo(int(x), int(y), 32)
             self.tree.set_context('punto_final', nodo)
             # reset the flag to prevent infinite loop
-            GameState.del2(loc[0])
+            Game_State.del2(loc[0])
             return Success
         else:
             return Failure
 
 
 def exit_event(event):
-    GameState.set2(f"{event.data['mob']}.goto.{event.data['pos']}")
+    Game_State.set2(f"{event.data['mob']}.goto.{event.data['pos']}")
 
 
 EventDispatcher.register(exit_event, "Exit")
@@ -41,7 +42,7 @@ class ReachExit(Leaf):
 
 class IsItNightTime(Leaf):
     def process(self):
-        if GameState.get2('NightTime'):
+        if Game_State.get2('NightTime'):
             return Success
         else:
             return Failure
