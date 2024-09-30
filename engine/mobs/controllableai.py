@@ -58,6 +58,13 @@ class ControllableAI(EventAware):
         QuickCircularMenu()
         self.deregister()
 
+    def unload(self):
+        event1 = AzoeEvent('TogglePause', 'EngineData', {'value': False})
+        event2 = AzoeEvent('TogglePause', 'EngineData', {'value': True})
+
+        EventDispatcher.deregister(self.register, event1)
+        EventDispatcher.deregister(self.deregister, event2)
+
     def update(self):
         self.entity.update_sombra()
         if self.accion:

@@ -119,3 +119,6 @@ class AzoeSprite(sprite.Sprite):
             return self.images[n]
         else:
             return self.image
+
+    def unload(self):
+        pass
