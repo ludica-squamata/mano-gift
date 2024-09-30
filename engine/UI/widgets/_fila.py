@@ -16,7 +16,7 @@ class Fila(BaseWidget):
     cantidad = 0
 
     def __init__(self, parent, item, w, x, y, h=0, tag=None, justification=0):
-        self.entity = Mob_Group.get_controlled_mob()
+
         self.item = item
         self.w = w
         self.h = h
@@ -26,6 +26,7 @@ class Fila(BaseWidget):
         elif hasattr(self.item, 'texto'):
             self.set_text(item.texto, w, justification)
         else:
+            self.entity = Mob_Group.get_controlled_mob()
             self.stack = self.item.stackable
             self.tag_init = '<' + tag + '>'
             self.tag_end = '</' + tag + '>'

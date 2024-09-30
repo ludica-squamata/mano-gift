@@ -88,15 +88,13 @@ class MobGroup:
             mob = self[key]
             mob.unload()
             mob.AI.unload()
+            mob.parent.del_property(mob)
+            mob.parent.parent.del_property(mob)
         self._group.clear()
         self._indexes.clear()
 
     def get_controlled_mob(self):
-        # creo que esto se podría hacer con un oneliner
-        for mob_id in self._group:
-            mob = self._group[mob_id]
-            if mob.AI_type == 'Controllable':
-                return mob
+        return [self._group[mob_id] for mob_id in self._group if self._group[mob_id].AI_type == 'Controllable'][0]
 
     def get_named(self, name):
         """Return a sorted list of mobs that have that name for the purposes of iteration.
@@ -235,6 +233,16 @@ class ItemGroup:
 
     def contents(self):
         return [self._group[key][0] for key in self._group]
+
+    def clear(self):
+        for key in self._indexes:
+            items = self._group[key]
+            for item in items:
+                item.parent.del_property(item)
+                item.parent.parent.del_property(item)
+        self._indexes.clear()
+        self._group.clear()
+        self._lenght = 0
 
 
 class DeletedItems(ItemGroup):

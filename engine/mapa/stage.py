@@ -22,10 +22,11 @@ class Stage:
 
     def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None):
         NamedNPCs.npcs_with_ids = npcs_with_id
+        self.id = ModData.generate_id()
         self.parent = parent  # a Stage's parent is always EngineData
         self.chunks = ChunkGroup()
         self.interactives = []
-        self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
+        self.properties = AzoeGroup('Stage ' + nombre + ' Properties', self.id)
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
         dx, dy = self.data['entradas'][entrada]['pos']
@@ -38,8 +39,6 @@ class Stage:
             special_chunk_data = self.data['chunks'][special_chunk_key]
             adress = tuple(special_chunk_data['adress'])
             self.special_adresses[adress] = [special_chunk_key, special_chunk_data]
-
-        self.id = ModData.generate_id()
 
         if ModData.use_latitude and 'latitude' in self.data:
             self.current_latitude = self.data['latitude']
@@ -63,6 +62,7 @@ class Stage:
             adress = entradas[key]['adress']
             self.entradas[key] = tuple(adress)
 
+        Renderer.update()
         cargar_salidas(self, self.data['salidas'])
 
         self.entrada = entrada
@@ -118,6 +118,22 @@ class Stage:
         self.properties.add(obj, layer=_layer)
         if add_interactive:
             self.interactives.append(obj)
+
+    def del_property(self, obj):
+        if obj in self.properties:
+            self.properties.remove(obj)
+        if obj in self.interactives:
+            self.interactives.remove(obj)
+        Renderer.camara.remove_obj(obj)
+
+    def delete_everything(self):
+        sprites = self.properties.sprites()
+        for sprite in sprites:
+            self.properties.remove(sprite)
+        self.properties.empty()
+        for chunk in self.chunks.sprs():
+            chunk.delete_everything()
+        self.chunks.clear()
 
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
@@ -215,7 +231,8 @@ class ChunkMap(AzoeBaseSprite):
     imagen_salidas = None
 
     def __init__(self, parent, nombre, off_x, off_y, trnsnt_mb=None, data=False, requested=None, adress=None):
-        self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
+        self.id = ModData.generate_id()
+        self.properties = AzoeGroup('Chunk ' + nombre + ' properties', self.id)
         self.interactives = []
 
         if not data:
@@ -253,7 +270,6 @@ class ChunkMap(AzoeBaseSprite):
         super().__init__(parent, nombre, image, rect)
 
         self.cargar_limites(data.get('limites', self.limites))
-        self.id = ModData.generate_id()
         data['entradas'] = self.parent.data['entradas']
         if any([len(data[req]) > 0 for req in requested]):
             for item, grupo in load_something(self, data, requested):
@@ -265,6 +281,11 @@ class ChunkMap(AzoeBaseSprite):
         self.salidas = sld
         self.imagen_salidas = img
         self.mask_salidas = masc
+
+    def unset_salidas(self):
+        self.salidas.clear()
+        self.imagen_salidas = None
+        self.mask_salidas = None
 
     @property
     def mascara_salidas(self):
@@ -291,6 +312,17 @@ class ChunkMap(AzoeBaseSprite):
         if obj in self.interactives:
             self.interactives.remove(obj)
         Renderer.camara.remove_obj(obj)
+
+    def delete_everything(self):
+        sprites = self.properties.sprites()
+        for sprite in sprites:
+            self.properties.remove(sprite)
+        self.properties.empty()
+
+        if self.salidas is not None:
+            for salida in self.salidas:
+                Renderer.camara.remove_obj(salida.sprite)
+            self.unset_salidas()
 
     def get_property(self, name):
         for obj in self.properties.sprs():
@@ -358,7 +390,7 @@ class ChunkMap(AzoeBaseSprite):
         return mapa
 
     def __repr__(self):
-        return "ChunkMap " + self.nombre
+        return f"ChunkMap {self.nombre} ({self.id.split('-')[1]})"
 
     def __bool__(self):
         return True
