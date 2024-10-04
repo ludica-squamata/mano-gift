@@ -1,4 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs import Item_Group
 from .bases import Item
 
 
@@ -21,6 +22,7 @@ class Equipable(Tradeable):
         self.tipo = 'equipable'
         self.subtipo = data['subtipo']
         self.espacio = data['efecto']['equipo']
+        Item_Group.add(self.nombre, self, self.tipo)
 
 
 class Consumible(Tradeable):
@@ -28,6 +30,7 @@ class Consumible(Tradeable):
         super().__init__(parent, nombre, data)
         self.tipo = 'consumible'
         self.data = data
+        Item_Group.add(self.nombre, self, self.tipo)
 
     def usar(self, mob):
         stat = self.data.get('efecto', {}).get('stat', '')
@@ -61,6 +64,7 @@ class Utilizable(Tradeable):
         super().__init__(parent, nombre, data)
         self.tipo = "utilizable"
         self.subtipo = "libro"
+        Item_Group.add(self.nombre, self, self.tipo)
 
 
 class Colocable(Item):

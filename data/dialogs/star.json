@@ -1,13 +1,14 @@
 {
   "head": {
-    "class": "",
+    "class": "scripted",
     "conditional_tags": {},
     "style": "",
     "locutors": ["heroe","commoner"],
     "about": "star",
     "icon": "S",
     "keywords": [],
-    "events": {}
+    "events": {},
+    "reqs": {"has": {"who": "heroe","what": "Estrella"}}
   },
   "body": {
     "0": {
@@ -19,7 +20,7 @@
       "txt": "No, es mía."
     },
     "2": {
-      "type": "branch", "leads": 3,"from": "heroe", "to": "commoner", "item": "Estrella",
+      "type": "branch", "leads": 3,"from": "heroe", "to": "commoner", "item": "star",
       "reqs": {"objects": ["Estrella"]},
       "txt": "Aquí tienes."
     },

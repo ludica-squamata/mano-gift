@@ -1,4 +1,4 @@
-﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, Game_State, ModData, Mob_Group
+﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, Game_State, ModData, Mob_Group, Item_Group, Prop_Group
 from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
 from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
@@ -26,6 +26,47 @@ class Discurso(EventAware):
         if meta['class'] != 'scripted':
             allow = False
 
+        if "reqs" in meta:
+            for how in meta['reqs']:
+                who, what, where, when, why = [None] * 5
+                if 'who' in meta['reqs'][how]:
+                    who = Mob_Group[meta['reqs'][how]['who']]  # locutor was preprocessed.
+                if 'what' in meta['reqs'][how]:
+                    what = Item_Group[meta['reqs'][how]['what']]  # por default, "what" es un item.
+                    if type(what) is str:  # __missing__()
+                        what = Prop_Group[meta['reqs']][how]['what']  # "what" es un Prop.
+                    # 'what' también puede preguntar por un atributo del personaje, como el carisma o inteligencia
+                    # 'what' también puede ser un tipo de personaje, onda un guardia o el rey. "who" is "what"?
+                if 'when' in meta['reqs'][how]:
+                    pass  # 'what' debe ser un evento, o quizás una flag, o conocimiento del mundo.
+                if 'where' in meta['reqs'][how]:
+                    pass  # Puede ser que "what" sea un prop, en este caso. Pregunta por un lugar/mapa.
+                if 'why' in meta['reqs'][how]:
+                    pass  # para completar el set, pero la verdad no sé que preguntaría.
+
+                if how == 'has':  # pregunta si el item what existe en el inventario de who.
+                    if not what in who.inventario:
+                        allow = False
+                elif how == "hasn't":  # pregunta si el item what no existe en el inventario de who.
+                    if what in who.inventario:
+                        allow = False
+                elif how == 'many':
+                    pass  # multiple items in hero's inventory
+                elif how == 'much':
+                    pass  # how much money does the hero have?
+                elif how == 'has talked to':
+                    pass  # has the hero talked to this npc? 'when'? 'what' did they talked 'about'?
+                elif how == 'faction relation':
+                    pass  # {“which”:<faction>, “level”:<level>}
+                elif how == 'knows':
+                    pass  # is 'what' in 'who's world knowledge?
+                elif how == 'knows not':
+                    pass  # isn't 'what' in 'who's world knowledge?
+                elif how == 'is':
+                    pass  # el requisito pregunta si "what" is the case
+                elif how == "insn't":
+                    pass  # or not.
+
         return allow
 
     @classmethod
@@ -40,6 +81,7 @@ class Discurso(EventAware):
     @staticmethod
     def preprocess_locutor(file):
         hero_name = Mob_Group.character_name
+        hero = Mob_Group.get_controlled_mob()
         if 'heroe' in file['head']['locutors']:
             idx = file['head']['locutors'].index('heroe')
             file['head']['locutors'][idx] = hero_name
@@ -54,6 +96,12 @@ class Discurso(EventAware):
 
                 if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
                     node['reqs']['loc'] = hero_name
+
+            if 'reqs' in file['head']:
+                for req_key in file['head']['reqs']:
+                    if "who" in file['head']['reqs'][req_key] and  file['head']['reqs'][req_key]['who'] == 'heroe':
+                        file['head']['reqs'][req_key]['who'] = hero.id
+
         return file
 
     @staticmethod

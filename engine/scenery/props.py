@@ -1,4 +1,4 @@
-from engine.globs import Item_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo, Tagged_Items
+from engine.globs import Prop_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo, Tagged_Items
 from engine.misc.resources import abrir_json, cargar_imagen
 from .bases import Escenografia
 from pygame import Rect
@@ -15,7 +15,7 @@ class Agarrable(Escenografia):
         super().__init__(parent, x, y, z=z, data=data)
         self.subtipo = data['subtipo']
         self.grupo = GRUPO_AGARRABLES
-        Item_Group.add(self.nombre, self, self.grupo)
+        Prop_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
         item = self.return_item()
@@ -53,7 +53,7 @@ class Movible(Escenografia):
     def __init__(self, parent, x, y, z, data):
         super().__init__(parent, x, y, z=z, data=data)
         self.grupo = GRUPO_MOVIBLES
-        Item_Group.add(self.nombre, self, self.grupo)
+        Prop_Group.add(self.nombre, self, self.grupo)
         Tagged_Items.add_item(self, 'movibles')
 
     def action(self, *args, **kwargs):
@@ -123,7 +123,7 @@ class Operable(Escenografia):
                     self.estados[idx].update({attr: estado[attr]})
 
         super().__init__(parent, x, y, z=z, imagen=self.estados[0]['image'], data=data)
-        Item_Group.add(self.nombre, self, self.grupo)
+        Prop_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
         if entity.tipo == 'Mob' and self.enabled:
