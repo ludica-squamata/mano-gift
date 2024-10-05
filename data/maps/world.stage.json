@@ -2,18 +2,13 @@
   "entradas": {
     "center": {
       "chunk": "0",
-      "pos": [
-        400,
-        400
-      ],
-      "adress": [
-        5,
-        5
-      ]
+      "pos": [400,400],
+      "adress": [5,5]
     }
   },
   "salidas": [],
-  "chunks_csv":"world.chunks.csv",
+  "chunks_csv": "world.chunks.csv",
+  "props_csv": "world.props.csv",
   "puntos_de_interes_para_la_IA": [],
   "ambiente": "exterior",
   "latitude": 30,

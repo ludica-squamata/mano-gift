@@ -1,0 +1,19 @@
+{
+  "tipo": "estructura_compuesta",
+  "nombre": "Montaña",
+  "componentes": {
+    "base": [
+      [0,0,-1000]
+    ],
+    "pico": [
+      [0,0,0]
+    ]
+  },
+  "referencias": {
+    "base": "props/base_de_montaña.png",
+    "pico": "props/pico_de_montaña.png"
+  },
+  "width": 768,
+  "height": 666,
+  "proyecta_sombra": false
+}

@@ -1,0 +1,19 @@
+{
+  "tipo": "estructura_compuesta",
+  "nombre": "Montaña alta",
+  "componentes": {
+    "base": [
+      [0,0,-1000]
+    ],
+    "pico": [
+      [0,0,0]
+    ]
+  },
+  "referencias": {
+    "base": "props/base de montaña alta.png",
+    "pico": "props/pico de montaña alta.png"
+  },
+  "width": 804,
+  "height": 902,
+  "proyecta_sombra": false
+}

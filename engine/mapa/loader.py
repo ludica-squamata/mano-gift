@@ -173,6 +173,26 @@ def load_chunks_csv(csv_file):
     return chunks_data
 
 
+def load_props_csv(csv_file):
+    with open(path.join(getcwd(), 'data', 'maps', csv_file), encoding='utf-8') as cvsfile:
+        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'pos', "ruta"], delimiter=';')
+
+        data = {}
+        for row in reader:
+            ad_x, ad_y = row['adress'].strip("[]").split(',')
+            x, y = row['pos'].strip("[]").split(',')
+            ruta = row['ruta']
+            nombre = ruta[6:-7]
+
+            data[(int(ad_x), int(ad_y))] = {
+                'pos': (int(x), int(y)),
+                'nombre': nombre,
+                'imagen': ruta  # because it points to a .png file.
+            }
+
+        return data
+
+
 def cargar_salidas(parent, alldata):
     salidas = []
     img = Surface((800, 800), SRCALPHA)

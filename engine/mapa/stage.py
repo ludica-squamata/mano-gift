@@ -1,5 +1,5 @@
+from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv, load_props_csv
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
-from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen, Config
@@ -48,6 +48,8 @@ class Stage:
                 'mobs': {"hero": [[dx, dy]]},
                 'refs': {},
             })
+        if "props_csv" in self.data:
+            self.props_csv = load_props_csv(self.data['props_csv'])
 
         self.id = ModData.generate_id()
 
@@ -281,6 +283,15 @@ class ChunkMap(AzoeBaseSprite):
         super().__init__(parent, nombre, image, rect)
         self.parent.chunks.add(self)
 
+        if tuple(self.adress) in self.parent.props_csv:
+            datos = self.parent.props_csv[tuple(self.adress)]
+            if not 'props' in data:
+                data['props'] = {datos['nombre']: [datos['pos']]}
+                data['refs'] = {datos['nombre']: datos['imagen']}
+            else:
+                data['props'].update({datos['nombre']: [datos['pos']]})
+                data['refs'].update({datos['nombre']: datos['imagen']})
+
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
         data['entradas'] = self.parent.data['entradas']
@@ -378,7 +389,7 @@ class ChunkMap(AzoeBaseSprite):
             elif self.limites[adress] in self.parent.chunks_csv:
                 name = self.limites[adress]
                 data = self.parent.chunks_csv[name]
-                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data, requested=[])
+                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data, requested=['props'])
             else:
                 mapa = ChunkMap(self.parent, self.limites[adress], dx, dy, entradas,
                                 requested=['props'], adress=(ax, ay))
@@ -435,3 +446,11 @@ class ChunkAdress:
 
     def __bool__(self):
         return False
+
+    def __getitem__(self, item):
+        if type(item) is int:
+            if item == 0:
+                return self.x
+            elif item == 1:
+                return self.y
+            raise StopIteration()

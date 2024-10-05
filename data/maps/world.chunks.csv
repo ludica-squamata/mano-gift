@@ -133,9 +133,9 @@
 [24,2];96;60;132;97;95;maps/fondos/world/grass-tile.png;null
 [25,2];97;61;133;98;96;maps/fondos/world/tile-097.png;null
 [26,2];98;62;134;99;97;maps/fondos/world/tile-098.png;null
-[27,2];99;63;135;100;98;maps/fondos/world/tgrass-tile;null
+[27,2];99;63;135;100;98;maps/fondos/world/grass-tile.png;null
 [28,2];100;64;136;101;99;maps/fondos/world/tile-100.png;null
-[29,2];101;65;137;102;100;maps/fondos/world/tile-101.png;null
+[29,2];101;65;137;102;100;maps/fondos/world/grass-tile.png;null
 [30,2];102;66;138;103;101;maps/fondos/world/tile-102.png;null
 [31,2];103;67;139;104;102;maps/fondos/world/tile-103.png;null
 [32,2];104;68;140;105;103;maps/fondos/world/water-tile.png;null
@@ -146,8 +146,8 @@
 [1,3];109;73;145;110;108;maps/fondos/world/water-tile.png;null
 [2,3];110;74;146;111;109;maps/fondos/world/tile-110.png;null
 [3,3];111;75;147;112;110;maps/fondos/world/grass-tile.png;null
-[4,3];112;76;148;113;111;maps/fondos/world/tile-112.png;null
-[5,3];113;77;149;114;112;maps/fondos/world/tile-113.png;null
+[4,3];112;76;148;113;111;maps/fondos/world/grass-tile.png;null
+[5,3];113;77;149;114;112;maps/fondos/world/grass-tile.png;null
 [6,3];114;78;150;115;113;maps/fondos/world/grass-tile.png;null
 [7,3];115;79;151;116;114;maps/fondos/world/grass-tile.png;null
 [8,3];116;80;152;117;115;maps/fondos/world/grass-tile.png;null
@@ -162,17 +162,17 @@
 [17,3];125;89;161;126;124;maps/fondos/world/tile-125.png;null
 [18,3];126;90;162;127;125;maps/fondos/world/grass-tile.png;null
 [19,3];127;91;163;128;126;maps/fondos/world/grass-tile.png;null
-[20,3];128;92;164;129;127;maps/fondos/world/tile-128.png;null
-[21,3];129;93;165;130;128;maps/fondos/world/tile-129.png;null
-[22,3];130;94;166;131;129;maps/fondos/world/water-tile.png;null
-[23,3];131;95;167;132;130;maps/fondos/world/water-tile.png;null
-[24,3];132;96;168;133;131;maps/fondos/world/water-tile.png;null
-[25,3];133;97;169;134;132;maps/fondos/world/water-tile.png;null
-[26,3];134;98;170;135;133;maps/fondos/world/water-tile.png;null
-[27,3];135;99;171;136;134;maps/fondos/world/water-tile.png;null
-[28,3];136;100;172;137;135;maps/fondos/world/water-tile.png;null
-[29,3];137;101;173;138;136;maps/fondos/world/water-tile.png;null
-[30,3];138;102;174;139;137;maps/fondos/world/water-tile.png;null
+[20,3];128;92;164;129;127;maps/fondos/world/grass-tile.png;null
+[21,3];129;93;165;130;128;maps/fondos/world/grass-tile.png;null
+[22,3];130;94;166;131;129;maps/fondos/world/grass-tile.png;null
+[23,3];131;95;167;132;130;maps/fondos/world/grass-tile.png;null
+[24,3];132;96;168;133;131;maps/fondos/world/grass-tile.png;null
+[25,3];133;97;169;134;132;maps/fondos/world/grass-tile.png;null
+[26,3];134;98;170;135;133;maps/fondos/world/grass-tile.png;null
+[27,3];135;99;171;136;134;maps/fondos/world/grass-tile.png;null
+[28,3];136;100;172;137;135;maps/fondos/world/grass-tile.png;null
+[29,3];137;101;173;138;136;maps/fondos/world/grass-tile.png;null
+[30,3];138;102;174;139;137;maps/fondos/world/grass-tile.png;null
 [31,3];139;103;175;140;138;maps/fondos/world/tile-139.png;null
 [32,3];140;104;176;141;139;maps/fondos/world/water-tile.png;null
 [33,3];141;105;177;142;140;maps/fondos/world/water-tile.png;null
@@ -182,8 +182,8 @@
 [1,4];145;109;181;146;144;maps/fondos/world/water-tile.png;null
 [2,4];146;110;182;147;145;maps/fondos/world/tile-146.png;null
 [3,4];147;111;183;148;146;maps/fondos/world/grass-tile.png;null
-[4,4];148;112;184;149;147;maps/fondos/world/tile-148.png;null
-[5,4];149;113;185;150;148;maps/fondos/world/tile-149.png;null
+[4,4];148;112;184;149;147;maps/fondos/world/grass-tile.png;null
+[5,4];149;113;185;150;148;maps/fondos/world/grass-tile.png;null
 [6,4];150;114;186;151;149;maps/fondos/world/grass-tile.png;null
 [7,4];151;115;187;152;150;maps/fondos/world/grass-tile.png;null
 [8,4];152;116;188;153;151;maps/fondos/world/grass-tile.png;null
@@ -196,17 +196,17 @@
 [15,4];159;123;195;160;158;maps/fondos/world/water-tile.png;null
 [16,4];160;124;196;161;159;maps/fondos/world/tile-160.png;null
 [17,4];161;125;197;162;160;maps/fondos/world/tile-161.png;null
-[18,4];162;126;198;163;161;maps/fondos/world/tile-162.png;null
-[19,4];163;127;199;164;162;maps/fondos/world/tile-163.png;null
-[20,4];164;128;200;165;163;maps/fondos/world/tile-164.png;null
-[21,4];165;129;201;166;164;maps/fondos/world/tile-165.png;null
-[22,4];166;130;202;167;165;maps/fondos/world/tile-166.png;null
-[23,4];167;131;203;168;166;maps/fondos/world/tile-167.png;null
+[18,4];162;126;198;163;161;maps/fondos/world/grass-tile.png;null
+[19,4];163;127;199;164;162;maps/fondos/world/grass-tile.png;null
+[20,4];164;128;200;165;163;maps/fondos/world/grass-tile.png;null
+[21,4];165;129;201;166;164;maps/fondos/world/grass-tile.png;null
+[22,4];166;130;202;167;165;maps/fondos/world/grass-tile.png;null
+[23,4];167;131;203;168;166;maps/fondos/world/grass-tile.png;null
 [24,4];168;132;204;169;167;maps/fondos/world/grass-tile.png;null
-[25,4];169;133;205;170;168;maps/fondos/world/tile-169.png;null
-[26,4];170;134;206;171;169;maps/fondos/world/tile-170.png;null
+[25,4];169;133;205;170;168;maps/fondos/world/grass-tile.png;null
+[26,4];170;134;206;171;169;maps/fondos/world/grass-tile.png;null
 [27,4];171;135;207;172;170;maps/fondos/world/grass-tile.png;null
-[28,4];172;136;208;173;171;maps/fondos/world/tile-172.png;null
+[28,4];172;136;208;173;171;maps/fondos/world/grass-tile.png;null
 [29,4];173;137;209;174;172;maps/fondos/world/grass-tile.png;null
 [30,4];174;138;210;175;173;maps/fondos/world/grass-tile.png;null
 [31,4];175;139;211;176;174;maps/fondos/world/tile-175.png;null
@@ -218,8 +218,8 @@
 [1,5];181;145;217;182;180;maps/fondos/world/water-tile.png;null
 [2,5];182;146;218;183;181;maps/fondos/world/tile-182.png;null
 [3,5];183;147;219;184;182;maps/fondos/world/grass-tile.png;null
-[4,5];184;148;220;185;183;maps/fondos/world/tile-184.png;null
-[5,5];185;149;221;186;184;maps/fondos/world/tile-185.png;null
+[4,5];184;148;220;185;183;maps/fondos/world/grass-tile.png;null
+[5,5];185;149;221;186;184;maps/fondos/world/grass-tile.png;null
 [6,5];186;150;222;187;185;maps/fondos/world/grass-tile.png;null
 [7,5];187;151;223;188;186;maps/fondos/world/grass-tile.png;null
 [8,5];188;152;224;189;187;maps/fondos/world/grass-tile.png;null
@@ -232,18 +232,18 @@
 [15,5];195;159;231;196;194;maps/fondos/world/water-tile.png;null
 [16,5];196;160;232;197;195;maps/fondos/world/tile-196.png;null
 [17,5];197;161;233;198;196;maps/fondos/world/grass-tile.png;null
-[18,5];198;162;234;199;197;maps/fondos/world/tile-198.png;null
-[19,5];199;163;235;200;198;maps/fondos/world/tile-199.png;null
-[20,5];200;164;236;201;199;maps/fondos/world/tile-200.png;null
-[21,5];201;165;237;202;200;maps/fondos/world/tile-201.png;null
-[22,5];202;166;238;203;201;maps/fondos/world/tile-202.png;null
-[23,5];203;167;239;204;202;maps/fondos/world/tile-203.png;null
-[24,5];204;168;240;205;203;maps/fondos/world/tile-204.png;null
-[25,5];205;169;241;206;204;maps/fondos/world/tile-205.png;null
-[26,5];206;170;242;207;205;maps/fondos/world/tile-206.png;null
-[27,5];207;171;243;208;206;maps/fondos/world/tile-207.png;null
-[28,5];208;172;244;209;207;maps/fondos/world/tile-208.png;null
-[29,5];209;173;245;210;208;maps/fondos/world/tile-209.png;null
+[18,5];198;162;234;199;197;maps/fondos/world/grass-tile.png;null
+[19,5];199;163;235;200;198;maps/fondos/world/grass-tile.png;null
+[20,5];200;164;236;201;199;maps/fondos/world/grass-tile.png;null
+[21,5];201;165;237;202;200;maps/fondos/world/grass-tile.png;null
+[22,5];202;166;238;203;201;maps/fondos/world/grass-tile.png;null
+[23,5];203;167;239;204;202;maps/fondos/world/grass-tile.png;null
+[24,5];204;168;240;205;203;maps/fondos/world/grass-tile.png;null
+[25,5];205;169;241;206;204;maps/fondos/world/grass-tile.png;null
+[26,5];206;170;242;207;205;maps/fondos/world/grass-tile.png;null
+[27,5];207;171;243;208;206;maps/fondos/world/grass-tile.png;null
+[28,5];208;172;244;209;207;maps/fondos/world/grass-tile.png;null
+[29,5];209;173;245;210;208;maps/fondos/world/grass-tile.png;null
 [30,5];210;174;246;211;209;maps/fondos/world/grass-tile.png;null
 [31,5];211;175;247;212;210;maps/fondos/world/tile-211.png;null
 [32,5];212;176;248;213;211;maps/fondos/world/water-tile.png;null
@@ -254,8 +254,8 @@
 [1,6];217;181;253;218;216;maps/fondos/world/tile-217.png;null
 [2,6];218;182;254;219;217;maps/fondos/world/tile-218.png;null
 [3,6];219;183;255;220;218;maps/fondos/world/grass-tile.png;null
-[4,6];220;184;256;221;219;maps/fondos/world/tile-220.png;null
-[5,6];221;185;257;222;220;maps/fondos/world/tile-221.png;null
+[4,6];220;184;256;221;219;maps/fondos/world/grass-tile.png;null
+[5,6];221;185;257;222;220;maps/fondos/world/grass-tile.png;null
 [6,6];222;186;258;223;221;maps/fondos/world/grass-tile.png;null
 [7,6];223;187;259;224;222;maps/fondos/world/grass-tile.png;null
 [8,6];224;188;260;225;223;maps/fondos/world/grass-tile.png;null
@@ -272,9 +272,9 @@
 [19,6];235;199;271;236;234;maps/fondos/world/grass-tile.png;null
 [20,6];236;200;272;237;235;maps/fondos/world/grass-tile.png;null
 [21,6];237;201;273;238;236;maps/fondos/world/grass-tile.png;null
-[22,6];238;202;274;239;237;maps/fondos/world/tile-238.png;null
-[23,6];239;203;275;240;238;maps/fondos/world/tile-239.png;null
-[24,6];240;204;276;241;239;maps/fondos/world/tile-240.png;null
+[22,6];238;202;274;239;237;maps/fondos/world/grass-tile.png;null
+[23,6];239;203;275;240;238;maps/fondos/world/grass-tile.png;null
+[24,6];240;204;276;241;239;maps/fondos/world/grass-tile.png;null
 [25,6];241;205;277;242;240;maps/fondos/world/grass-tile.png;null
 [26,6];242;206;278;243;241;maps/fondos/world/grass-tile.png;null
 [27,6];243;207;279;244;242;maps/fondos/world/grass-tile.png;null
@@ -290,8 +290,8 @@
 [1,7];253;217;289;254;252;maps/fondos/world/tile-253.png;null
 [2,7];254;218;290;255;253;maps/fondos/world/grass-tile.png;null
 [3,7];255;219;291;256;254;maps/fondos/world/grass-tile.png;null
-[4,7];256;220;292;257;255;maps/fondos/world/tile-256.png;null
-[5,7];257;221;293;258;256;maps/fondos/world/tile-257.png;null
+[4,7];256;220;292;257;255;maps/fondos/world/grass-tile.png;null
+[5,7];257;221;293;258;256;maps/fondos/world/grass-tile.png;null
 [6,7];258;222;294;259;257;maps/fondos/world/grass-tile.png;null
 [7,7];259;223;295;260;258;maps/fondos/world/grass-tile.png;null
 [8,7];260;224;296;261;259;maps/fondos/world/grass-tile.png;null
@@ -326,9 +326,9 @@
 [1,8];289;253;325;290;288;maps/fondos/world/tile-289.png;null
 [2,8];290;254;326;291;289;maps/fondos/world/tile-290.png;null
 [3,8];291;255;327;292;290;maps/fondos/world/grass-tile.png;null
-[4,8];292;256;328;293;291;maps/fondos/world/tile-292.png;null
-[5,8];293;257;329;294;292;maps/fondos/world/tile-293.png;null
-[6,8];294;258;330;295;293;maps/fondos/world/tile-294.png;null
+[4,8];292;256;328;293;291;maps/fondos/world/grass-tile.png;null
+[5,8];293;257;329;294;292;maps/fondos/world/grass-tile.png;null
+[6,8];294;258;330;295;293;maps/fondos/world/grass-tile.png;null
 [7,8];295;259;331;296;294;maps/fondos/world/grass-tile.png;null
 [8,8];296;260;332;297;295;maps/fondos/world/grass-tile.png;null
 [9,8];297;261;333;298;296;maps/fondos/world/tile-297.png;null
@@ -362,9 +362,9 @@
 [1,9];325;289;361;326;324;maps/fondos/world/water-tile.png;null
 [2,9];326;290;362;327;325;maps/fondos/world/tile-326.png;null
 [3,9];327;291;363;328;326;maps/fondos/world/grass-tile.png;null
-[4,9];328;292;364;329;327;maps/fondos/world/tile-328.png;null
-[5,9];329;293;365;330;328;maps/fondos/world/tile-329.png;null
-[6,9];330;294;366;331;329;maps/fondos/world/tile-330.png;null
+[4,9];328;292;364;329;327;maps/fondos/world/grass-tile.png;null
+[5,9];329;293;365;330;328;maps/fondos/world/grass-tile.png;null
+[6,9];330;294;366;331;329;maps/fondos/world/grass-tile.png;null
 [7,9];331;295;367;332;330;maps/fondos/world/grass-tile.png;null
 [8,9];332;296;368;333;331;maps/fondos/world/grass-tile.png;null
 [9,9];333;297;369;334;332;maps/fondos/world/tile-333.png;null
@@ -399,8 +399,8 @@
 [2,10];362;326;398;363;361;maps/fondos/world/tile-362.png;null
 [3,10];363;327;399;364;362;maps/fondos/world/grass-tile.png;null
 [4,10];364;328;400;365;363;maps/fondos/world/grass-tile.png;null
-[5,10];365;329;401;366;364;maps/fondos/world/tile-365.png;null
-[6,10];366;330;402;367;365;maps/fondos/world/tile-366.png;null
+[5,10];365;329;401;366;364;maps/fondos/world/grass-tile.png;null
+[6,10];366;330;402;367;365;maps/fondos/world/grass-tile.png;null
 [7,10];367;331;403;368;366;maps/fondos/world/grass-tile.png;null
 [8,10];368;332;404;369;367;maps/fondos/world/grass-tile.png;null
 [9,10];369;333;405;370;368;maps/fondos/world/grass-tile.png;null
@@ -434,8 +434,8 @@
 [1,11];397;361;433;398;396;maps/fondos/world/water-tile.png;null
 [2,11];398;362;434;399;397;maps/fondos/world/tile-398.png;null
 [3,11];399;363;435;400;398;maps/fondos/world/grass-tile.png;null
-[4,11];400;364;436;401;399;maps/fondos/world/tile-400.png;null
-[5,11];401;365;437;402;400;maps/fondos/world/tile-401.png;null
+[4,11];400;364;436;401;399;maps/fondos/world/grass-tile.png;null
+[5,11];401;365;437;402;400;maps/fondos/world/grass-tile.png;null
 [6,11];402;366;438;403;401;maps/fondos/world/grass-tile.png;null
 [7,11];403;367;439;404;402;maps/fondos/world/grass-tile.png;null
 [8,11];404;368;440;405;403;maps/fondos/world/grass-tile.png;null
@@ -446,22 +446,22 @@
 [13,11];409;373;445;410;408;maps/fondos/world/tile-409.png;null
 [14,11];410;374;446;411;409;maps/fondos/world/tile-410.png;null
 [15,11];411;375;447;412;410;maps/fondos/world/tile-411.png;null
-[16,11];412;376;448;413;411;maps/fondos/world/tile-412.png;null
-[17,11];413;377;449;414;412;maps/fondos/world/grass-tile.png;null
-[18,11];414;378;450;415;413;maps/fondos/world/grass-tile.png;null
-[19,11];415;379;451;416;414;maps/fondos/world/grass-tile.png;null
-[20,11];416;380;452;417;415;maps/fondos/world/grass-tile.png;null
-[21,11];417;381;453;418;416;maps/fondos/world/grass-tile.png;null
-[22,11];418;382;454;419;417;maps/fondos/world/grass-tile.png;null
-[23,11];419;383;455;420;418;maps/fondos/world/grass-tile.png;null
-[24,11];420;384;456;421;419;maps/fondos/world/grass-tile.png;null
-[25,11];421;385;457;422;420;maps/fondos/world/grass-tile.png;null
-[26,11];422;386;458;423;421;maps/fondos/world/grass-tile.png;null
-[27,11];423;387;459;424;422;maps/fondos/world/grass-tile.png;null
-[28,11];424;388;460;425;423;maps/fondos/world/grass-tile.png;null
-[29,11];425;389;461;426;424;maps/fondos/world/grass-tile.png;null
-[30,11];426;390;462;427;425;maps/fondos/world/grass-tile.png;null
-[31,11];427;391;463;428;426;maps/fondos/world/grass-tile.png;null
+[16,11];412;376;448;413;411;maps/fondos/world/grass-tile 2.png;null
+[17,11];413;377;449;414;412;maps/fondos/world/grass-tile 2.png;null
+[18,11];414;378;450;415;413;maps/fondos/world/grass-tile 2.png;null
+[19,11];415;379;451;416;414;maps/fondos/world/grass-tile 2.png;null
+[20,11];416;380;452;417;415;maps/fondos/world/grass-tile 2.png;null
+[21,11];417;381;453;418;416;maps/fondos/world/grass-tile 2.png;null
+[22,11];418;382;454;419;417;maps/fondos/world/grass-tile 2.png;null
+[23,11];419;383;455;420;418;maps/fondos/world/grass-tile 2.png;null
+[24,11];420;384;456;421;419;maps/fondos/world/grass-tile 2.png;null
+[25,11];421;385;457;422;420;maps/fondos/world/grass-tile 2.png;null
+[26,11];422;386;458;423;421;maps/fondos/world/grass-tile 2.png;null
+[27,11];423;387;459;424;422;maps/fondos/world/grass-tile 2.png;null
+[28,11];424;388;460;425;423;maps/fondos/world/grass-tile 2.png;null
+[29,11];425;389;461;426;424;maps/fondos/world/grass-tile 2.png;null
+[30,11];426;390;462;427;425;maps/fondos/world/grass-tile 2.png;null
+[31,11];427;391;463;428;426;maps/fondos/world/grass-tile 2.png;null
 [32,11];428;392;464;429;427;maps/fondos/world/tile-428.png;null
 [33,11];429;393;465;430;428;maps/fondos/world/tile-429.png;null
 [34,11];430;394;466;431;429;maps/fondos/world/tile-430.png;null
@@ -470,9 +470,9 @@
 [1,12];433;397;469;434;432;maps/fondos/world/water-tile.png;null
 [2,12];434;398;470;435;433;maps/fondos/world/tile-434.png;null
 [3,12];435;399;471;436;434;maps/fondos/world/grass-tile.png;null
-[4,12];436;400;472;437;435;maps/fondos/world/tile-436.png;null
-[5,12];437;401;473;438;436;maps/fondos/world/tile-437.png;null
-[6,12];438;402;474;439;437;maps/fondos/world/tile-438.png;null
+[4,12];436;400;472;437;435;maps/fondos/world/grass-tile.png;null
+[5,12];437;401;473;438;436;maps/fondos/world/grass-tile.png;null
+[6,12];438;402;474;439;437;maps/fondos/world/grass-tile.png;null
 [7,12];439;403;475;440;438;maps/fondos/world/grass-tile.png;null
 [8,12];440;404;476;441;439;maps/fondos/world/grass-tile.png;null
 [9,12];441;405;477;442;440;maps/fondos/world/tile-441.png;null
@@ -481,24 +481,24 @@
 [12,12];444;408;480;445;443;maps/fondos/world/water-tile.png;null
 [13,12];445;409;481;446;444;maps/fondos/world/tile-445.png;null
 [14,12];446;410;482;447;445;maps/fondos/world/tile-446.png;null
-[15,12];447;411;483;448;446;maps/fondos/world/tile-447.png;null
-[16,12];448;412;484;449;447;maps/fondos/world/tile-448.png;null
-[17,12];449;413;485;450;448;maps/fondos/world/tile-449.png;null
-[18,12];450;414;486;451;449;maps/fondos/world/tile-450.png;null
-[19,12];451;415;487;452;450;maps/fondos/world/grass-tile.png;null
-[20,12];452;416;488;453;451;maps/fondos/world/grass-tile.png;null
-[21,12];453;417;489;454;452;maps/fondos/world/grass-tile.png;null
-[22,12];454;418;490;455;453;maps/fondos/world/grass-tile.png;null
-[23,12];455;419;491;456;454;maps/fondos/world/grass-tile.png;null
-[24,12];456;420;492;457;455;maps/fondos/world/grass-tile.png;null
-[25,12];457;421;493;458;456;maps/fondos/world/grass-tile.png;null
-[26,12];458;422;494;459;457;maps/fondos/world/grass-tile.png;null
-[27,12];459;423;495;460;458;maps/fondos/world/grass-tile.png;null
-[28,12];460;424;496;461;459;maps/fondos/world/grass-tile.png;null
-[29,12];461;425;497;462;460;maps/fondos/world/grass-tile.png;null
-[30,12];462;426;498;463;461;maps/fondos/world/grass-tile.png;null
-[31,12];463;427;499;464;462;maps/fondos/world/grass-tile.png;null
-[32,12];464;428;500;465;463;maps/fondos/world/grass-tile.png;null
+[15,12];447;411;483;448;446;maps/fondos/world/grass-tile 2.png;null
+[16,12];448;412;484;449;447;maps/fondos/world/grass-tile 2.png;null
+[17,12];449;413;485;450;448;maps/fondos/world/grass-tile 2.png;null
+[18,12];450;414;486;451;449;maps/fondos/world/grass-tile 2.png;null
+[19,12];451;415;487;452;450;maps/fondos/world/grass-tile 2.png;null
+[20,12];452;416;488;453;451;maps/fondos/world/grass-tile 2.png;null
+[21,12];453;417;489;454;452;maps/fondos/world/grass-tile 2.png;null
+[22,12];454;418;490;455;453;maps/fondos/world/grass-tile 2.png;null
+[23,12];455;419;491;456;454;maps/fondos/world/grass-tile 2.png;null
+[24,12];456;420;492;457;455;maps/fondos/world/grass-tile 2.png;null
+[25,12];457;421;493;458;456;maps/fondos/world/grass-tile 2.png;null
+[26,12];458;422;494;459;457;maps/fondos/world/grass-tile 2.png;null
+[27,12];459;423;495;460;458;maps/fondos/world/grass-tile 2.png;null
+[28,12];460;424;496;461;459;maps/fondos/world/grass-tile 2.png;null
+[29,12];461;425;497;462;460;maps/fondos/world/grass-tile 2.png;null
+[30,12];462;426;498;463;461;maps/fondos/world/grass-tile 2.png;null
+[31,12];463;427;499;464;462;maps/fondos/world/grass-tile 2.png;null
+[32,12];464;428;500;465;463;maps/fondos/world/grass-tile 2.png;null
 [33,12];465;429;501;466;464;maps/fondos/world/tile-465.png;null
 [34,12];466;430;502;467;465;maps/fondos/world/tile-466.png;null
 [35,12];467;431;503;432;466;maps/fondos/world/water-tile.png;null
@@ -507,9 +507,9 @@
 [2,13];470;434;506;471;469;maps/fondos/world/tile-470.png;null
 [3,13];471;435;507;472;470;maps/fondos/world/tile-471.png;null
 [4,13];472;436;508;473;471;maps/fondos/world/grass-tile.png;null
-[5,13];473;437;509;474;472;maps/fondos/world/tile-473.png;null
-[6,13];474;438;510;475;473;maps/fondos/world/tile-474.png;null
-[7,13];475;439;511;476;474;maps/fondos/world/tile-475.png;null
+[5,13];473;437;509;474;472;maps/fondos/world/grass-tile.png;null
+[6,13];474;438;510;475;473;maps/fondos/world/grass-tile.png;null
+[7,13];475;439;511;476;474;maps/fondos/world/grass-tile.png;null
 [8,13];476;440;512;477;475;maps/fondos/world/grass-tile.png;null
 [9,13];477;441;513;478;476;maps/fondos/world/tile-477.png;null
 [10,13];478;442;514;479;477;maps/fondos/world/water-tile.png;null
@@ -517,24 +517,24 @@
 [12,13];480;444;516;481;479;maps/fondos/world/water-tile.png;null
 [13,13];481;445;517;482;480;maps/fondos/world/water-tile.png;null
 [14,13];482;446;518;483;481;maps/fondos/world/tile-482.png;null
-[15,13];483;447;519;484;482;maps/fondos/world/grass-tile.png;null
-[16,13];484;448;520;485;483;maps/fondos/world/grass-tile.png;null
-[17,13];485;449;521;486;484;maps/fondos/world/tile-485.png;null
-[18,13];486;450;522;487;485;maps/fondos/world/tile-486.png;null
-[19,13];487;451;523;488;486;maps/fondos/world/tile-487.png;null
-[20,13];488;452;524;489;487;maps/fondos/world/tile-488.png;null
-[21,13];489;453;525;490;488;maps/fondos/world/grass-tile.png;null
-[22,13];490;454;526;491;489;maps/fondos/world/grass-tile.png;null
-[23,13];491;455;527;492;490;maps/fondos/world/tile-491.png;null
-[24,13];492;456;528;493;491;maps/fondos/world/grass-tile.png;null
-[25,13];493;457;529;494;492;maps/fondos/world/tile-493.png;null
-[26,13];494;458;530;495;493;maps/fondos/world/tile-494.png;null
-[27,13];495;459;531;496;494;maps/fondos/world/tile-495.png;null
-[28,13];496;460;532;497;495;maps/fondos/world/tile-496.png;null
-[29,13];497;461;533;498;496;maps/fondos/world/tile-497.png;null
-[30,13];498;462;534;499;497;maps/fondos/world/tile-498.png;null
-[31,13];499;463;535;500;498;maps/fondos/world/tile-499.png;null
-[32,13];500;464;536;501;499;maps/fondos/world/tile-500.png;null
+[15,13];483;447;519;484;482;maps/fondos/world/grass-tile 2.png;null
+[16,13];484;448;520;485;483;maps/fondos/world/grass-tile 2.png;null
+[17,13];485;449;521;486;484;maps/fondos/world/grass-tile 2.png;null
+[18,13];486;450;522;487;485;maps/fondos/world/grass-tile 2.png;null
+[19,13];487;451;523;488;486;maps/fondos/world/grass-tile 2.png;null
+[20,13];488;452;524;489;487;maps/fondos/world/grass-tile 2.png;null
+[21,13];489;453;525;490;488;maps/fondos/world/grass-tile 2.png;null
+[22,13];490;454;526;491;489;maps/fondos/world/grass-tile 2.png;null
+[23,13];491;455;527;492;490;maps/fondos/world/grass-tile 2.png;null
+[24,13];492;456;528;493;491;maps/fondos/world/grass-tile 2.png;null
+[25,13];493;457;529;494;492;maps/fondos/world/grass-tile 2.png;null
+[26,13];494;458;530;495;493;maps/fondos/world/grass-tile 2.png;null
+[27,13];495;459;531;496;494;maps/fondos/world/grass-tile 2.png;null
+[28,13];496;460;532;497;495;maps/fondos/world/grass-tile 2.png;null
+[29,13];497;461;533;498;496;maps/fondos/world/grass-tile 2.png;null
+[30,13];498;462;534;499;497;maps/fondos/world/grass-tile 2.png;null
+[31,13];499;463;535;500;498;maps/fondos/world/grass-tile 2.png;null
+[32,13];500;464;536;501;499;maps/fondos/world/grass-tile 2.png;null
 [33,13];501;465;537;502;500;maps/fondos/world/tile-501.png;null
 [34,13];502;466;538;503;501;maps/fondos/world/tile-502.png;null
 [35,13];503;467;539;468;502;maps/fondos/world/water-tile.png;null
@@ -553,24 +553,24 @@
 [12,14];516;480;552;517;515;maps/fondos/world/water-tile.png;null
 [13,14];517;481;553;518;516;maps/fondos/world/tile-517.png;null
 [14,14];518;482;554;519;517;maps/fondos/world/tile-518.png;null
-[15,14];519;483;555;520;518;maps/fondos/world/grass-tile.png;null
-[16,14];520;484;556;521;519;maps/fondos/world/grass-tile.png;null
-[17,14];521;485;557;522;520;maps/fondos/world/grass-tile.png;null
-[18,14];522;486;558;523;521;maps/fondos/world/grass-tile.png;null
-[19,14];523;487;559;524;522;maps/fondos/world/tile-523.png;null
-[20,14];524;488;560;525;523;maps/fondos/world/tile-524.png;null
-[21,14];525;489;561;526;524;maps/fondos/world/tile-525.png;null
-[22,14];526;490;562;527;525;maps/fondos/world/tile-526.png;null
-[23,14];527;491;563;528;526;maps/fondos/world/tile-527.png;null
-[24,14];528;492;564;529;527;maps/fondos/world/tile-528.png;null
-[25,14];529;493;565;530;528;maps/fondos/world/tile-529.png;null
-[26,14];530;494;566;531;529;maps/fondos/world/tile-530.png;null
-[27,14];531;495;567;532;530;maps/fondos/world/tile-531.png;null
-[28,14];532;496;568;533;531;maps/fondos/world/tile-532.png;null
-[29,14];533;497;569;534;532;maps/fondos/world/tile-533.png;null
-[30,14];534;498;570;535;533;maps/fondos/world/tile-534.png;null
-[31,14];535;499;571;536;534;maps/fondos/world/tile-535.png;null
-[32,14];536;500;572;537;535;maps/fondos/world/grass-tile.png;null
+[15,14];519;483;555;520;518;maps/fondos/world/grass-tile 2.png;null
+[16,14];520;484;556;521;519;maps/fondos/world/grass-tile 2.png;null
+[17,14];521;485;557;522;520;maps/fondos/world/grass-tile 2.png;null
+[18,14];522;486;558;523;521;maps/fondos/world/grass-tile 2.png;null
+[19,14];523;487;559;524;522;maps/fondos/world/grass-tile 2.png;null
+[20,14];524;488;560;525;523;maps/fondos/world/grass-tile 2.png;null
+[21,14];525;489;561;526;524;maps/fondos/world/grass-tile 2.png;null
+[22,14];526;490;562;527;525;maps/fondos/world/grass-tile 2.png;null
+[23,14];527;491;563;528;526;maps/fondos/world/grass-tile 2.png;null
+[24,14];528;492;564;529;527;maps/fondos/world/grass-tile 2.png;null
+[25,14];529;493;565;530;528;maps/fondos/world/grass-tile 2.png;null
+[26,14];530;494;566;531;529;maps/fondos/world/grass-tile 2.png;null
+[27,14];531;495;567;532;530;maps/fondos/world/grass-tile 2.png;null
+[28,14];532;496;568;533;531;maps/fondos/world/grass-tile 2.png;null
+[29,14];533;497;569;534;532;maps/fondos/world/grass-tile 2.png;null
+[30,14];534;498;570;535;533;maps/fondos/world/grass-tile 2.png;null
+[31,14];535;499;571;536;534;maps/fondos/world/grass-tile 2.png;null
+[32,14];536;500;572;537;535;maps/fondos/world/grass-tile 2.png;null
 [33,14];537;501;573;538;536;maps/fondos/world/tile-537.png;null
 [34,14];538;502;574;539;537;maps/fondos/world/water-tile.png;null
 [35,14];539;503;575;504;538;maps/fondos/world/water-tile.png;null
@@ -590,23 +590,23 @@
 [13,15];553;517;589;554;552;maps/fondos/world/tile-553.png;null
 [14,15];554;518;590;555;553;maps/fondos/world/tile-554.png;null
 [15,15];555;519;591;556;554;maps/fondos/world/tile-555.png;null
-[16,15];556;520;592;557;555;maps/fondos/world/grass-tile.png;null
-[17,15];557;521;593;558;556;maps/fondos/world/grass-tile.png;null
-[18,15];558;522;594;559;557;maps/fondos/world/grass-tile.png;null
-[19,15];559;523;595;560;558;maps/fondos/world/grass-tile.png;null
-[20,15];560;524;596;561;559;maps/fondos/world/grass-tile.png;null
-[21,15];561;525;597;562;560;maps/fondos/world/tile-561.png;null
-[22,15];562;526;598;563;561;maps/fondos/world/tile-562.png;null
-[23,15];563;527;599;564;562;maps/fondos/world/tile-563.png;null
-[24,15];564;528;600;565;563;maps/fondos/world/tile-564.png;null
-[25,15];565;529;601;566;564;maps/fondos/world/tile-565.png;null
-[26,15];566;530;602;567;565;maps/fondos/world/tile-566.png;null
-[27,15];567;531;603;568;566;maps/fondos/world/tile-567.png;null
-[28,15];568;532;604;569;567;maps/fondos/world/tile-568.png;null
-[29,15];569;533;605;570;568;maps/fondos/world/tile-569.png;null
-[30,15];570;534;606;571;569;maps/fondos/world/grass-tile.png;null
-[31,15];571;535;607;572;570;maps/fondos/world/grass-tile.png;null
-[32,15];572;536;608;573;571;maps/fondos/world/grass-tile.png;null
+[16,15];556;520;592;557;555;maps/fondos/world/grass-tile 2.png;null
+[17,15];557;521;593;558;556;maps/fondos/world/grass-tile 2.png;null
+[18,15];558;522;594;559;557;maps/fondos/world/grass-tile 2.png;null
+[19,15];559;523;595;560;558;maps/fondos/world/grass-tile 2.png;null
+[20,15];560;524;596;561;559;maps/fondos/world/grass-tile 2.png;null
+[21,15];561;525;597;562;560;maps/fondos/world/grass-tile 2.png;null
+[22,15];562;526;598;563;561;maps/fondos/world/grass-tile 2.png;null
+[23,15];563;527;599;564;562;maps/fondos/world/grass-tile 2.png;null
+[24,15];564;528;600;565;563;maps/fondos/world/grass-tile 2.png;null
+[25,15];565;529;601;566;564;maps/fondos/world/grass-tile 2.png;null
+[26,15];566;530;602;567;565;maps/fondos/world/grass-tile 2.png;null
+[27,15];567;531;603;568;566;maps/fondos/world/grass-tile 2.png;null
+[28,15];568;532;604;569;567;maps/fondos/world/grass-tile 2.png;null
+[29,15];569;533;605;570;568;maps/fondos/world/grass-tile 2.png;null
+[30,15];570;534;606;571;569;maps/fondos/world/grass-tile 2.png;null
+[31,15];571;535;607;572;570;maps/fondos/world/grass-tile 2.png;null
+[32,15];572;536;608;573;571;maps/fondos/world/grass-tile 2.png;null
 [33,15];573;537;609;574;572;maps/fondos/world/tile-573.png;null
 [34,15];574;538;610;575;573;maps/fondos/world/water-tile.png;null
 [35,15];575;539;611;540;574;maps/fondos/world/water-tile.png;null
@@ -630,17 +630,17 @@
 [17,16];593;557;629;594;592;maps/fondos/world/tile-593.png;null
 [18,16];594;558;630;595;593;maps/fondos/world/tile-594.png;null
 [19,16];595;559;631;596;594;maps/fondos/world/tile-595.png;null
-[20,16];596;560;632;597;595;maps/fondos/world/grass-tile.png;null
-[21,16];597;561;633;598;596;maps/fondos/world/grass-tile.png;null
+[20,16];596;560;632;597;595;maps/fondos/world/grass-tile 2.png;null
+[21,16];597;561;633;598;596;maps/fondos/world/grass-tile 2.png;null
 [22,16];598;562;634;599;597;maps/fondos/world/tile-598.png;null
 [23,16];599;563;635;600;598;maps/fondos/world/tile-599.png;null
-[24,16];600;564;636;601;599;maps/fondos/world/grass-tile.png;null
-[25,16];601;565;637;602;600;maps/fondos/world/grass-tile.png;null
-[26,16];602;566;638;603;601;maps/fondos/world/grass-tile.png;null
+[24,16];600;564;636;601;599;maps/fondos/world/grass-tile 2.png;null
+[25,16];601;565;637;602;600;maps/fondos/world/grass-tile 2.png;null
+[26,16];602;566;638;603;601;maps/fondos/world/grass-tile 2.png;null
 [27,16];603;567;639;604;602;maps/fondos/world/tile-603.png;null
 [28,16];604;568;640;605;603;maps/fondos/world/tile-604.png;null
-[29,16];605;569;641;606;604;maps/fondos/world/grass-tile.png;null
-[30,16];606;570;642;607;605;maps/fondos/world/grass-tile.png;null
+[29,16];605;569;641;606;604;maps/fondos/world/grass-tile 2.png;null
+[30,16];606;570;642;607;605;maps/fondos/world/grass-tile 2.png;null
 [31,16];607;571;643;608;606;maps/fondos/world/tile-607.png;null
 [32,16];608;572;644;609;607;maps/fondos/world/tile-608.png;null
 [33,16];609;573;645;610;608;maps/fondos/world/tile-609.png;null
