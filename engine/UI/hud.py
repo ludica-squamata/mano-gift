@@ -110,14 +110,17 @@ class CharacterName(Sprite):
         EventDispatcher.register(self.toggle, "TogglePause")
         self.show()
 
-    def generate(self, fg_color):
+    @staticmethod
+    def generate(fg_color):
         outline = []
         fuente = font.Font('engine/libs/Verdanab.ttf', 16)
-        width, height = fuente.size(self.text)
-        width += 2 * len(self.text)
+        focus = Mob_Group.get_controlled_mob()
+        text = focus.character_name
+        width, height = fuente.size(text)
+        width += 2 * len(text)
         canvas = Surface((width, height), SRCALPHA)
 
-        for character in self.text:
+        for character in text:
             fondo = fuente.render(character, True, TEXT_FG)
             frente = fuente.render(character, True, fg_color)
             w, h = fuente.size(character)
@@ -141,9 +144,12 @@ class CharacterName(Sprite):
         self.image = self.generate(bg_color)
 
     def show(self):
+        if self.image is None:
+            self.image = self.generate([255, 255, 255])
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
 
     def hide(self):
+        self.image = None
         Renderer.del_overlay(self)
 
     def toggle(self, event):
@@ -237,7 +243,7 @@ class FloatingNumber(Sprite):
     def update(self):
         self.timer += 1
         self.rect.centery -= 1
-        self.image.set_alpha(255-self.timer*20)
+        self.image.set_alpha(255 - self.timer * 20)
         if self.image.get_alpha() == 0:
             self.timer = 0
             Renderer.del_overlay(self)

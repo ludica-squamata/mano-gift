@@ -85,6 +85,7 @@ class MenuPausa(Menu):
     def reset(self, **kwargs):
         """Reseta el presionado de todos los botones, y deja seleccionado el que haya sido elegido anteriormente."""
         self.on_reset()
+        self.entity = Mob_Group.get_controlled_mob()
         self.update_charname_display()
 
     def update(self):

@@ -84,6 +84,10 @@ class MobGroup:
         return [self._group[key] for key in self._group]
 
     def clear(self):
+        for key in self._indexes:
+            mob = self[key]
+            mob.unload()
+            mob.AI.unload()
         self._group.clear()
         self._indexes.clear()
 
