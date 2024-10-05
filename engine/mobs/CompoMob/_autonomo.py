@@ -24,6 +24,10 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     def toggle_pause_state(self, event):
         self.paused = event.data['value']
 
+    def unload(self):
+        super().unload()
+        EventDispatcher.deregister(self.toggle_pause_state, 'TogglePause')
+
     def create_ai(self, name):
         if name == 'controllable':
             self.AI_type = 'Controllable'

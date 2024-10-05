@@ -101,6 +101,10 @@ class BehaviourTree:
     def __repr__(self):
         return 'BehaviourTree'
 
+    def unload(self):
+        # this is just a hook that does nothing. Don't delete it.
+        pass
+
     def load_script_information(self, head_data):
         for script in head_data:
             ruta = ModData.pkg_scripts.replace('.', '/') + '/' + script
