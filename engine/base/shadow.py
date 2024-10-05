@@ -61,6 +61,9 @@ class ShadowSprite(AzoeSprite):
         EventDispatcher.register(self.set_fading, 'ShadowFade', 'MinuteFlag')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
+    def unload(self):
+        EventDispatcher.deregister(self.set_fading, 'ShadowFade', 'MinuteFlag')
+
     def set_fading(self, event):
         if event.tipo == 'ShadowFade':
             self.is_fading = event.data['do_fade']

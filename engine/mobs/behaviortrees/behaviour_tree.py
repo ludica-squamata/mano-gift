@@ -101,6 +101,10 @@ class BehaviourTree:
     def __repr__(self):
         return 'BehaviourTree'
 
+    def unload(self):
+        # this is just a hook that does nothing. Don't delete it.
+        pass
+
     def trigger_node(self, idx):
         """Excecutes the node given by its index if such index falls within the lenght of the tree."""
         if 0 <= idx <= len(self.nodes):
