@@ -50,6 +50,8 @@ class Stage:
             })
         if "props_csv" in self.data:
             self.props_csv = load_props_csv(self.data['props_csv'])
+        else:
+            self.props_csv = {}
 
         self.id = ModData.generate_id()
 
@@ -79,7 +81,7 @@ class Stage:
             adress = entradas[key]['adress']
             self.entradas[key] = tuple(adress)
 
-        cargar_salidas(self, self.data['salidas'])
+        self.salidas = self.data['salidas']
 
         self.entrada = entrada
 
@@ -292,6 +294,10 @@ class ChunkMap(AzoeBaseSprite):
                 data['props'].update({datos['nombre']: [datos['pos']]})
                 data['refs'].update({datos['nombre']: datos['imagen']})
 
+        for i, salida in enumerate(self.parent.data['salidas']):
+            if salida['chunk_adress'] == self.adress:
+                self.set_salidas(*cargar_salidas(self, i, salida))
+
         self.cargar_limites(data.get('limites', self.limites))
         self.id = ModData.generate_id()
         data['entradas'] = self.parent.data['entradas']
@@ -445,6 +451,13 @@ class ChunkAdress:
         return f'{self.parent.nombre} @{self.x}, {self.y}'
 
     def __bool__(self):
+        return False
+
+    def __eq__(self, other):
+        if len(other) == 2:
+            a = self.x == other[0]
+            b = self.y == other[1]
+            return all([a, b])
         return False
 
     def __getitem__(self, item):

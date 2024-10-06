@@ -3,10 +3,299 @@
     "center": {
       "chunk": "0",
       "pos": [400,400],
-      "adress": [5,5]
+      "adress": [0,0]
     }
   },
-  "salidas": [],
+  "salidas": [
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [0,0],
+      "nombre": "Norte #0","entrada": "648","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [1,0],
+      "nombre": "Norte #1","entrada": "649","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [2,0],
+      "nombre": "Norte #2","entrada": "650","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [3,0],
+      "nombre": "Norte #3","entrada": "651","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [4,0],
+      "nombre": "Norte #4","entrada": "652","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [5,0],
+      "nombre": "Norte #5","entrada": "653","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [6,0],
+      "nombre": "Norte #6","entrada": "654","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [7,0],
+      "nombre": "Norte #7","entrada": "655","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [8,0],
+      "nombre": "Norte #8","entrada": "656","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [9,0],
+      "nombre": "Norte #9","entrada": "657","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [10,0],
+      "nombre": "Norte #10","entrada": "658","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [11,0],
+      "nombre": "Norte #11","entrada": "659","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [12,0],
+      "nombre": "Norte #12","entrada": "660","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [13,0],
+      "nombre": "Norte #13","entrada": "661","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [14,0],
+      "nombre": "Norte #14","entrada": "662","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [15,0],
+      "nombre": "Norte #15","entrada": "663","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [16,0],
+      "nombre": "Norte #16","entrada": "664","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [17,0],
+      "nombre": "Norte #17","entrada": "665","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [18,0],
+      "nombre": "Norte #18","entrada": "666","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [19,0],
+      "nombre": "Norte #19","entrada": "667","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [20,0],
+      "nombre": "Norte #20","entrada": "668","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [21,0],
+      "nombre": "Norte #21","entrada": "669","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [22,0],
+      "nombre": "Norte #22","entrada": "670","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [23,0],
+      "nombre": "Norte #23","entrada": "671","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [24,0],
+      "nombre": "Norte #24","entrada": "672","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [25,0],
+      "nombre": "Norte #25","entrada": "673","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [26,0],
+      "nombre": "Norte #26","entrada": "674","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [27,0],
+      "nombre": "Norte #27","entrada": "675","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [28,0],
+      "nombre": "Norte #28","entrada": "676","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [29,0],
+      "nombre": "Norte #29","entrada": "677","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [30,0],
+      "nombre": "Norte #30","entrada": "678","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [31,0],
+      "nombre": "Norte #31","entrada": "679","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [32,0],
+      "nombre": "Norte #32","entrada": "680","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [33,0],
+      "nombre": "Norte #33","entrada": "681","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [34,0],
+      "nombre": "Norte #34","entrada": "682","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,50,800,32],"chunk_adress": [35,0],
+      "nombre": "Norte #35","entrada": "683","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [0,17],
+      "nombre": "Sur #0","entrada": "701","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [1,17],
+      "nombre": "Sur #1","entrada": "700","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [2,17],
+      "nombre": "Sur #2","entrada": "699","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [3,17],
+      "nombre": "Sur #3","entrada": "698","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [4,17],
+      "nombre": "Sur #4","entrada": "697","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [5,17],
+      "nombre": "Sur #5","entrada": "696","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [6,17],
+      "nombre": "Sur #6","entrada": "695","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [7,17],
+      "nombre": "Sur #7","entrada": "694","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [8,17],
+      "nombre": "Sur #8","entrada": "693","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [9,17],
+      "nombre": "Sur #9","entrada": "692","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [10,17],
+      "nombre": "Sur #10","entrada": "691","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [11,17],
+      "nombre": "Sur #11","entrada": "690","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [12,17],
+      "nombre": "Sur #12","entrada": "689","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [13,17],
+      "nombre": "Sur #13","entrada": "688","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [14,17],
+      "nombre": "Sur #14","entrada": "687","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [15,17],
+      "nombre": "Sur #15","entrada": "686","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [16,17],
+      "nombre": "Sur #16","entrada": "685","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [17,17],
+      "nombre": "Sur #17","entrada": "684","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [18,17],
+      "nombre": "Sur #18","entrada": "702","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [19,17],
+      "nombre": "Sur #19","entrada": "703","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [20,17],
+      "nombre": "Sur #20","entrada": "704","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [21,17],
+      "nombre": "Sur #21","entrada": "705","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [22,17],
+      "nombre": "Sur #22","entrada": "706","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [23,17],
+      "nombre": "Sur #23","entrada": "707","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [24,17],
+      "nombre": "Sur #24","entrada": "708","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [25,17],
+      "nombre": "Sur #25","entrada": "709","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [26,17],
+      "nombre": "Sur #26","entrada": "710","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [27,17],
+      "nombre": "Sur #27","entrada": "711","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [28,17],
+      "nombre": "Sur #28","entrada": "712","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [29,17],
+      "nombre": "Sur #29","entrada": "713","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [30,17],
+      "nombre": "Sur #30","entrada": "714","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [31,17],
+      "nombre": "Sur #31","entrada": "715","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [32,17],
+      "nombre": "Sur #32","entrada": "716","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [33,17],
+      "nombre": "Sur #33","entrada": "717","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [34,17],
+      "nombre": "Sur #34","entrada": "718","direcciones": []
+    },
+    {
+      "stage": "anti-world","rect": [0,750,800,32],"chunk_adress": [35,17],
+      "nombre": "Sur #35","entrada": "719","direcciones": []
+    }
+  ],
   "chunks_csv": "world.chunks.csv",
   "props_csv": "world.props.csv",
   "puntos_de_interes_para_la_IA": [],

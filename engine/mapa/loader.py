@@ -193,37 +193,34 @@ def load_props_csv(csv_file):
         return data
 
 
-def cargar_salidas(parent, alldata):
+def cargar_salidas(parent, i, datos):
     salidas = []
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
-    chunk = None
-    for i, datos in enumerate(alldata):
-        nombre = datos['nombre']
-        stage = datos['stage']
-        rect = Rect(datos['rect'])
-        chunk = parent.get_chunk_by_adress(datos['chunk_adress'])
-        entrada = datos['entrada']
-        direcciones = datos['direcciones']
-        id = ModData.generate_id()
 
-        r, g, b, a = randint(0, 255), i % 255, i // 255, 255
-        # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
-        # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
-        color = Color(r, g, b, a)
-        salidas.append(Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color))
+    nombre = datos['nombre']
+    stage = datos['stage']
+    rect = Rect(datos['rect'])
+    entrada = datos['entrada']
+    direcciones = datos['direcciones']
+    id = ModData.generate_id()
 
-        # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
-        # después se usará b*255+g para devolver el index.
-        img.fill((r, g, b, a), rect)
+    r, g, b, a = randint(0, 255), i % 255, i // 255, 255
+    # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
+    # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
+    color = Color(r, g, b, a)
+    salidas.append(Salida(nombre, id, stage, rect, parent, entrada, direcciones, color))
+
+    # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
+    # después se usará b*255+g para devolver el index.
+    img.fill((r, g, b, a), rect)
 
     # la mascara se usa para la detección de colisiones.
     # las partes no pintadas tienen un alpha = 0, por lo que la mascara en esos lugares
     # permanece unset.
     mask = mask_module.from_surface(img)
 
-    if chunk is not None:
-        chunk.set_salidas(salidas, mask, img)
+    return salidas, mask, img
     # salidas: la lista de salidas, igual que siempre.
     # mask: máscara de colisiones de salidas.
     # img: imagen de colores codificados
