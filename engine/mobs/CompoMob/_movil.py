@@ -54,6 +54,9 @@ class Movil(Caracterizado):
         if overlap is not None:
             r, g, b, a = Camara.current_map.imagen_salidas.get_at(overlap)
             Camara.current_map.salidas[b * 255 + g].trigger(self)
+        if self.parent.mascara_salidas.overlap(self.mask, (self.rel_x + dx, self.rel_y + dy)) is not None:
+            r, g, b, a = self.parent.imagen_salidas.get_at((self.rel_x + dx, self.rel_y + dy))
+            self.parent.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])
 

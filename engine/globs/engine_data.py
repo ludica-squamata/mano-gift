@@ -1,7 +1,7 @@
 from engine.misc import abrir_json, guardar_json, salir_handler, Config
 from .constantes import CAPA_OVERLAYS_MENUS
 from .event_dispatcher import EventDispatcher, AzoeEvent
-from .game_groups import Mob_Group
+from .game_groups import Mob_Group, Prop_Group
 from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
@@ -99,6 +99,8 @@ class EngineData:
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
             x, y = mapa.posicion_entrada(entrada)
+            adress = mapa.entradas[entrada]
+            Renderer.camara.current_map = mapa.chunks[adress]
             Renderer.camara.focus.ubicar_en_mapa(x, y)
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
@@ -137,6 +139,7 @@ class EngineData:
         cls.save_data.update(data)
         cls.transient_mobs = data.get('transient', [])
         Mob_Group.clear()
+        Prop_Group.clear()
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': data})
 
     @classmethod
@@ -156,6 +159,9 @@ class EngineData:
         names = [e['name'] for e in cls.transient_mobs]
         named_npcs = [ids, names]
 
+        if data['mapa'] in cls.mapas:
+            cls.mapas[data['mapa']].delete_everything()
+            cls.mapas.clear()
         stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
         SeasonalYear.propagate()
 
