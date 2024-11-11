@@ -194,7 +194,7 @@ def load_props_csv(csv_file):
 
 
 def cargar_salidas(parent, i, datos):
-    salidas = []
+    salidas = {}
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
 
@@ -209,7 +209,7 @@ def cargar_salidas(parent, i, datos):
     # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
     # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
     color = Color(r, g, b, a)
-    salidas.append(Salida(nombre, id, stage, rect, parent, entrada, direcciones, color))
+    salidas[b * 255 + g] = Salida(nombre, id, stage, rect, parent, entrada, direcciones, color)
 
     # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
     # después se usará b*255+g para devolver el index.
