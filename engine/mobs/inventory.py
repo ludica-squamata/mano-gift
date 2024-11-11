@@ -5,7 +5,7 @@ class Inventory:
         self._volumen_actual = 0
         self._peso_actual = 0
         self._contenido = []
-        self._by_type = {'consumible': [], 'equipable': []}
+        self._by_type = {'consumible': [], 'equipable': [], "utilizable": []}
 
     def __contains__(self, item):
         if type(item) is str:

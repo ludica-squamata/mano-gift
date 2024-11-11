@@ -1,5 +1,5 @@
 from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
-from engine.mobs.behaviortrees import Leaf, Success, Failure, Running
+from engine.mobs.behaviourtrees import Leaf, Success, Failure, Running
 from random import randrange, choice
 from engine.misc import ReversibleDict
 

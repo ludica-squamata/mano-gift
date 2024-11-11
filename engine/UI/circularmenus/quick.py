@@ -9,20 +9,23 @@ class QuickCircularMenu(RenderedCircularMenu):
     first = 0
 
     def __init__(self):
-        self.e = Mob_Group.get_controlled_mob()
+        self.entity = Mob_Group.get_controlled_mob()
+        e = self.entity  # local shortcut
         self.nombre = 'Quick'
 
         if ModData.QMC is None:
             cascadas = {
                 'inicial': [
-                    CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': self.e.cambiar_estado}),
+                    CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': e.cambiar_estado}),
                     CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
                     LetterElement(self, 'Consumibles', 'C'),
                     LetterElement(self, 'Equipables', 'E'),
+                    LetterElement(self, "Utilizables", "U"),
                     LetterElement(self, 'Temas', 'T')
                 ],
-                'Consumibles': [InventoryElement(self, item) for item in self.e.inventario.get_by_type('consumible')],
-                'Equipables': [InventoryElement(self, item) for item in self.e.inventario.get_by_type('equipable')],
+                'Consumibles': [InventoryElement(self, item) for item in e.inventario.get_by_type('consumible')],
+                'Equipables': [InventoryElement(self, item) for item in e.inventario.get_by_type('equipable')],
+                'Utilizables': [InventoryElement(self, item) for item in e.inventario.get_by_type('utilizable')],
             }
         else:
             commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]

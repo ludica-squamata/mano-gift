@@ -74,6 +74,7 @@ class Item(AzoeSprite):
 
     def __init__(self, parent, nombre, data):
         self.nombre = nombre
+        self.data = data
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data.get('efecto', {}).get('des', '')

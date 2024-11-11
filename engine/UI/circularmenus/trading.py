@@ -143,7 +143,20 @@ class Trade(EventAware):
         self.disengage()
         self.deregister()
         if event.data['value'] is True:
-            print(self)
+            buyer, seller = None, None
+            if type(self.parent) is BuyingCM:
+                # BuyingCM > Nodo > Arbol > Dialogo.locutores[Nodo.emisor]
+                buyer = self.parent.parent.parent.parent.locutores[self.parent.parent.emisor]
+                seller = self.parent.parent.parent.parent.locutores[self.parent.parent.receptor]
+            elif type(self.parent) is SellingCM:
+                buyer = self.parent.parent.parent.parent.locutores[self.parent.parent.receptor]
+                seller = self.parent.parent.parent.parent.locutores[self.parent.parent.emisor]
+
+            item = self.parent.actual.item
+            value = item.price_buy if type(self.parent) is BuyingCM else item.price_sell
+
+            buyer.recibir_item(item)
+            seller.recibir_dinero(value)
 
     def __repr__(self):
         return "Trade"

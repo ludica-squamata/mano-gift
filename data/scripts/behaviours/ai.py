@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.mobs.behaviortrees import Leaf, Failure, Success
+from engine.mobs.behaviourtrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import Game_State
 

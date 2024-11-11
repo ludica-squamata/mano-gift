@@ -32,9 +32,10 @@ class Discurso(EventAware):
                 if 'who' in meta['reqs'][how]:
                     who = Mob_Group[meta['reqs'][how]['who']]  # locutor was preprocessed.
                 if 'what' in meta['reqs'][how]:
-                    what = Item_Group[meta['reqs'][how]['what']]  # por default, "what" es un item.
-                    if type(what) is str:  # __missing__()
-                        what = Prop_Group[meta['reqs']][how]['what']  # "what" es un Prop.
+                    if meta['reqs'][how]['what'] in Item_Group:
+                        what = Item_Group[meta['reqs'][how]['what']]  # por default, "what" es un item.
+                    else:  # __missing__()
+                        what = Prop_Group[meta['reqs'][how]['what']]  # "what" es un Prop.
                     # 'what' también puede preguntar por un atributo del personaje, como el carisma o inteligencia
                     # 'what' también puede ser un tipo de personaje, onda un guardia o el rey. "who" is "what"?
                 if 'when' in meta['reqs'][how]:
@@ -99,7 +100,7 @@ class Discurso(EventAware):
 
             if 'reqs' in file['head']:
                 for req_key in file['head']['reqs']:
-                    if "who" in file['head']['reqs'][req_key] and  file['head']['reqs'][req_key]['who'] == 'heroe':
+                    if "who" in file['head']['reqs'][req_key] and file['head']['reqs'][req_key]['who'] == 'heroe':
                         file['head']['reqs'][req_key]['who'] = hero.id
 
         return file
@@ -440,7 +441,8 @@ class Dialogo(Discurso):
     def set_flag(self, event):
         self.write_flag = event.data['value']
 
-    def update(self, sel):
+    def actualizar(self, sel):
+        # traduje el nombre para individualizar la función. PyCharm entiende cualquier cosa si no.
         self.sel = sel
         self.next = self.sel.leads
 

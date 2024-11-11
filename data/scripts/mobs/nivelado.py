@@ -1,4 +1,3 @@
-
 def nivel(mob):
     proto_nivel = 0
     for char in mob.get_chars():

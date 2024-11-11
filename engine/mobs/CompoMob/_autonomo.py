@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.mobs.behaviortrees import BehaviourTree
+from engine.mobs.behaviourtrees import BehaviourTree
 from engine.misc.resources import abrir_json
 from engine.mobs import ControllableAI
 from engine.globs import ModData
