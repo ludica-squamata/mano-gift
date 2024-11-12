@@ -54,8 +54,6 @@ class Stage:
         else:
             self.props_csv = {}
 
-        self.id = ModData.generate_id()
-
         if ModData.use_latitude and 'latitude' in self.data:
             self.current_latitude = self.data['latitude']
         else:
@@ -76,15 +74,10 @@ class Stage:
         if 'props' in self.data:
             self.load_unique_props(self.data)
 
-        entradas = self.data['entradas']
         self.entradas = {}
-        for key in entradas:
-            adress = entradas[key]['adress']
+        for key in self.data['entradas']:
+            adress = self.data['entradas'][key]['adress']
             self.entradas[key] = tuple(adress)
-
-        Renderer.update()
-        cargar_salidas(self, self.data['salidas'])
-        self.salidas = self.data['salidas']
 
         self.entrada = entrada
 
@@ -118,12 +111,12 @@ class Stage:
         with open(ruta, 'w', newline='') as csvfile:
             # this is not quite good yet, because it doesn't save the mobs from other stages (those that were already
             # explored), but it is a start.
-            fieldnames = ['name', 'x', 'y', 'id', 'stage', 'chunk']
+            fieldnames = ['name', 'x', 'y', 'id', 'chunk', 'adress']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
             for chunk in self.chunks.sprs():
                 for mob in chunk.properties.get_sprites_from_layer(2):
                     row = {'name': mob.nombre, 'x': mob.rel_x, 'y': mob.rel_y, 'id': mob.id,
-                           'stage': self.nombre, 'chunk': str(chunk.adress)}
+                           'chunk': chunk.nombre, 'adress': str(chunk.adress)}
                     writer.writerow(row)
 
     def load_unique_props(self, all_data: dict):
@@ -287,6 +280,12 @@ class ChunkMap(AzoeBaseSprite):
             data['focus'] = name
             if trnsnt_mb is not None and name == trnsnt_mb.character_name:
                 del data['mobs'][trnsnt_mb.character_name]
+
+        if 'csv' in requested:
+            # otherwise the Engine doesn't know who is the focus, and the Camera gets unfocused.
+            name = Mob_Group.character_name
+            # though, this might be on purpose (AzoeRTS)
+            data['focus'] = name
 
         if len(data.get('mobs', {})):
             for mob in Mob_Group.get_existing(data['mobs']):

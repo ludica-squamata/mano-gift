@@ -165,9 +165,8 @@ class EngineData:
         stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
         SeasonalYear.propagate()
 
-        # focus = Mob_Group[data['focus']]
-        # if focus is None:
-        if not stage.exists_within_my_chunks(data['focus'], 'mobs'):
+        focus = stage.get_entitiy_from_my_chunks(data['focus'])
+        if focus is None and not stage.exists_within_my_chunks(data['focus'], 'mobs'):
             mapa = stage.get_chunk_by_adress([0, 0])
             datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}
             datos.update({'entradas': stage.data['entradas']})
@@ -175,8 +174,6 @@ class EngineData:
             focus, grupo = load_mobs(mapa, datos)[0]
 
             mapa.add_property(focus, grupo)
-        else:
-            focus = stage.get_entitiy_from_my_chunks(data['focus'])
 
         Renderer.set_focus(focus)
         focus.character_name = data['focus']

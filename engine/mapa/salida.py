@@ -39,7 +39,7 @@ class Salida:
                 'target_chunk': self.chunk,
                 'target_entrada': self.entrada}
 
-        if mob.body_direction in self.direcciones:
+        if mob.body_direction in self.direcciones or not len(self.direcciones):
             EventDispatcher.trigger('SetMap', 'Salida', data)
             Game_State.set2(self.flag_name)
 
