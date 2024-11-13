@@ -1,10 +1,12 @@
 from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
+from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs import ModData, GRUPO_MOBS, Prop_Group
-from engine.misc import abrir_json, cargar_imagen
 from engine.scenery import new_prop
 from engine.libs import randint
 from engine.mobs import Mob
 from .salida import Salida
+from os import path, getcwd
+import csv
 
 
 class NamedNPCs:
@@ -23,10 +25,14 @@ def load_something(parent, alldata: dict, requested: str):
             for mob in load_mobs(parent, alldata):
                 loaded.append((mob, GRUPO_MOBS))
 
-        if 'props' in requested:
+        if 'props' in requested and 'props' in alldata:
             for prop in load_props(parent, alldata):
                 Prop_Group.add(prop[0].nombre, prop[0])
                 loaded.append((prop, prop[0].grupo))
+
+        if 'csv' in requested:
+            for mob in load_mob_csv(parent, alldata):
+                loaded.append((mob, GRUPO_MOBS))
 
         return loaded
 
@@ -101,38 +107,121 @@ def load_mobs(parent, alldata: dict):
     return loaded_mobs
 
 
-def cargar_salidas(parent, alldata):
-    salidas = []
+def load_mob_csv(parent, all_data):
+    loaded_mobs = []
+    with open(path.join(Config.savedir, 'mobs.csv')) as cvsfile:
+        reader = csv.DictReader(cvsfile, fieldnames=['name', 'x', 'y', 'id'], delimiter=';')
+        for row in reader:
+            name = row['name']
+            x = int(row['x'])
+            y = int(row['y'])
+            if name in all_data['refs']:
+                data = abrir_json(all_data['refs'][name])
+
+            elif path.exists(ModData.mobs + name + '.json'):
+                data = abrir_json(ModData.mobs + name + '.json')
+
+            elif name in ModData.character_generator:
+                data = ModData.character_generator[name]()
+
+            elif path.exists(ModData.fd_player + name + '.json'):
+                data = abrir_json(ModData.fd_player + name + '.json')
+
+            data['id'] = row['id']
+            if NamedNPCs.npcs_with_ids is not None:
+                ids, names = NamedNPCs.npcs_with_ids
+                if data['nombre'] in names:
+                    idx = names.index(data['nombre'])
+                    if data.get('id', None) is None:
+                        data['id'] = ids[idx]
+                        del names[idx], ids[idx]
+
+            try:
+                mob = Mob(parent, x, y, data, focus=all_data.get('focus', False))
+                loaded_mobs.append((mob, GRUPO_MOBS))
+            except KeyError:
+                # the hero might not be in the chunk, creating a error while he is being loaded. This try/except clause
+                # catches the exception because the hero is added to the map from the outside.
+                pass
+
+    return loaded_mobs
+
+
+def load_chunks_csv(csv_file):
+    """Creates the json-dicts for each chunk from a csv file. These dicts are incomplete since they lack
+    references to mobs or props, but due to the nature of dicts, such info could be added later.
+    """
+    with open(path.join(getcwd(), 'data', 'maps', csv_file)) as cvsfile:
+        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'der', 'izq',
+                                                     'fondo', 'colisiones'], delimiter=';')
+        chunks_data = {}
+        for row in reader:
+            ad_x, ad_y = row['adress'].strip("[]").split(',')
+            chunk_data = {
+                'fondo': row['fondo'],
+                'colisiones': None if row['colisiones'] == 'null' else row['colisiones'],
+                'limites': {
+                    'sup': None if row['sup'] == 'null' else row['sup'],
+                    'inf': None if row['inf'] == 'null' else row['inf'],
+                    'izq': None if row['izq'] == 'null' else row['izq'],
+                    'der': None if row['der'] == 'null' else row['der']
+                },
+                "adress": [int(ad_x), int(ad_y)]
+            }
+            chunks_data[row['id']] = chunk_data
+
+    return chunks_data
+
+
+def load_props_csv(csv_file):
+    with open(path.join(getcwd(), 'data', 'maps', csv_file), encoding='utf-8') as cvsfile:
+        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'pos', "ruta"], delimiter=';')
+
+        data = {}
+        for row in reader:
+            ad_x, ad_y = row['adress'].strip("[]").split(',')
+            x, y = row['pos'].strip("[]").split(',')
+            ruta = row['ruta']
+            nombre = ruta[6:-7]
+
+            data[(int(ad_x), int(ad_y))] = {
+                'pos': (int(x), int(y)),
+                'nombre': nombre,
+                'imagen': ruta  # because it points to a .png file.
+            }
+
+        return data
+
+
+def cargar_salidas(chunk, i, datos):
+    salidas = {}
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
-    chunk = None
-    for i, datos in enumerate(alldata):
-        nombre = datos['nombre']
-        stage = datos['stage']
-        prop = None
-        if 'prop' in datos:
-            prop = Prop_Group[datos['prop'].capitalize()]
-            rect = Rect(0, 0, *prop.rect.size)
-            rect.center = prop.rect.bottomright
-        else:
-            rect = Rect(datos['rect'])
-        chunk = parent.get_chunk_by_adress(datos['chunk_adress'])
-        entrada = datos['entrada']
-        direcciones = datos['direcciones']
-        id = ModData.generate_id()
 
-        r, g, b, a = randint(0, 255), i % 255, i // 255, 255
-        # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
-        # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
-        color = Color(r, g, b, a)
-        salida = Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color)
-        salidas.append(salida)
-        if prop is not None:
-            prop.salida = salida
+    nombre = datos['nombre']
+    stage = datos['stage']
+    prop = None
+    if 'prop' in datos:
+        prop = Prop_Group[datos['prop'].capitalize()]
+        rect = Rect(0, 0, *prop.rect.size)
+        rect.center = prop.rect.bottomright
+    else:
+        rect = Rect(datos['rect'])
+    entrada = datos['entrada']
+    direcciones = datos['direcciones']
+    id = ModData.generate_id()
+    r, g, b, a = randint(0, 255), i % 255, i // 255, 255
+    # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
+    # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
+    color = Color(r, g, b, a)
+    salida = Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color)
+    salidas[b * 255 + g] = salida
+    if prop is not None:
+        prop.salida = salida
 
-        # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
-        # después se usará b*255+g para devolver el index.
-        img.fill((r, g, b, a), rect)
+    # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
+    # después se usará b*255+g para devolver el index.
+    img.fill((r, g, b, a), rect)
 
     # la mascara se usa para la detección de colisiones.
     # las partes no pintadas tienen un alpha = 0, por lo que la mascara en esos lugares

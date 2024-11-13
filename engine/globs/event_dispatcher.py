@@ -65,13 +65,14 @@ class EventDispatcher:
     def process(cls):
         """
         El método llamado antes del update del renderer para hacer dispatching
-        del frame. Para performande puede estar limitado a ejecutar una cantidad de
-        dispatchs por frame, usando yield o algo asi
+        del frame. Para performance solo dispara los eventos generados en este frame.
+        Subsiguientes eventos se processan en subsiguientes frames.
         :return:None
         """
-        _cola = cls._cola
+        _cola = cls._cola.copy()
         while len(_cola) > 0:
             evento = _cola.popleft()
+            cls._cola.remove(evento)
             if evento in cls._oyentes:
                 for listener in cls._oyentes[evento]:
                     listener()

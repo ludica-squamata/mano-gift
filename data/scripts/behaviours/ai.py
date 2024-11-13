@@ -3,7 +3,6 @@ from engine.mobs.behaviourtrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import Game_State
 
-
 class HasSetLocation(Leaf):
     def process(self):
         e = self.get_entity()
@@ -23,6 +22,7 @@ class HasSetLocation(Leaf):
 def exit_event(event):
     mob = event.data['mob']
     mob.AI.set_context('go to', event.data['pos'])
+    Game_State.set2(f"{event.data['mob']}.goto.{event.data['pos']}")
 
 
 EventDispatcher.register(exit_event, "Exit")

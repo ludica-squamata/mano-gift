@@ -5,9 +5,11 @@ from pygame import Rect
 class AzoeGroup(LayeredUpdates):
     _spritelist = None
 
-    def __init__(self, name, *sprites, **kwargs):
+    def __init__(self, name, idx=None, *sprites, **kwargs):
         self.name = name
+        self.id = idx
         self.collition_rect = Rect(0, 0, 1, 1)
+
         super().__init__(*sprites, **kwargs)
 
     def __repr__(self):
@@ -74,3 +76,8 @@ class ChunkGroup:
 
     def sprs(self):
         return self._list
+
+    def clear(self):
+        self._group.clear()
+        self.lenght = 0
+        self._list.clear()

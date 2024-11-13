@@ -474,7 +474,7 @@ class Monologo(Discurso):
             'abajo': lambda: self.direccionar_texto('abajo')})
 
         self.frontend.set_loc_img(self.locutor)
-        self.frontend.set_text('No tengo nada más que hablar contigo')  # hardcoded for test
+        self.frontend.set_text(str(self.locutor.id))  # hardcoded for test
         self.emit_sound_event(self.locutor)
 
     def direccionar_texto(self, direccion):

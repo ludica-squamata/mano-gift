@@ -15,7 +15,7 @@
     {
       "stage": "worldmap",
       "rect": [368,2,32,32],
-      "chunk_adress": [0, 0],
+      "chunk_adress": [0,0],
       "nombre": "exit_to_worldmap",
       "entrada": "access",
       "direcciones": []
@@ -51,21 +51,22 @@
         "instances":[[32,32]]
     }
   },
-  "chunks":{
-    "special":{
-      "fondo":"maps/fondos/pasto.png",
-      "colisiones":null,
+  "chunks": {
+    "special": {
+      "fondo": "maps/fondos/pasto.png",
+      "colisiones": null,
       "props": {
-        "light_post":[[400, 400]]
+        "light_post": [[400,400]]
       },
       "mobs": {},
-      "limites":{
+      "limites": {
         "sup": "white",
         "inf": "white",
         "izq": "white",
-        "der": "white"},
+        "der": "white"
+      },
       "adress": [0,-15],
-      "refs":{}
+      "refs": {}
     }
   },
   "puntos_de_interes_para_la_IA": [
