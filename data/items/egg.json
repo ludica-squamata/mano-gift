@@ -1,13 +1,13 @@
 {
-  "nombre": "Banana",
+  "nombre": "Egg",
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
-  "volumen": 1,
-  "dialog": "banana",
+  "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/banana2.png",
-    "item": "props/banana2.png"
+    "prop": "props/egg_10.png",
+    "item": "props/egg_32.png",
+    "high": "props/egg_128.png"
   },
   "propiedades": [
     "stackable","sin_sombra"
@@ -17,10 +17,5 @@
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"
-  },
-  "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
   }
 }

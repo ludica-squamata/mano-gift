@@ -2,6 +2,7 @@ from engine.globs import ModData, Mob_Group, Game_State
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import LetterElement, CommandElement, InventoryElement, DialogTopicElement
+from .elements import ColocableInventoryElement as Colocable_IE
 
 
 class QuickCircularMenu(RenderedCircularMenu):
@@ -21,11 +22,13 @@ class QuickCircularMenu(RenderedCircularMenu):
                     LetterElement(self, 'Consumibles', 'C'),
                     LetterElement(self, 'Equipables', 'E'),
                     LetterElement(self, "Utilizables", "U"),
-                    LetterElement(self, 'Temas', 'T')
+                    LetterElement(self, 'Temas', 'T'),
+                    LetterElement(self, 'Colocar', 'P')
                 ],
                 'Consumibles': [InventoryElement(self, item) for item in e.inventario.get_by_type('consumible')],
                 'Equipables': [InventoryElement(self, item) for item in e.inventario.get_by_type('equipable')],
                 'Utilizables': [InventoryElement(self, item) for item in e.inventario.get_by_type('utilizable')],
+                'Colocar': [Colocable_IE(self, item) for item in e.inventario.uniques2() if item.is_colocable]
             }
         else:
             commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]

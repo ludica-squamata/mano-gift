@@ -68,9 +68,45 @@ class Utilizable(Tradeable):
 
 
 class Colocable(Item):
-    def __init__(self, parent, nombre, data):
+    def __init__(self, parent, entity, nombre, data, item):
         super().__init__(parent, nombre, data)
-        self.subtipo = 'colocable'
+        self.tipo = 'colocable'
+        self.entity = entity
+        self.item = item
+
+    def action(self):
+        from .new_prop import new_prop
+        x, y, z = self._get_placement_position()
+        prop = new_prop(self.parent, x, y, z, self.nombre, self.data)
+        self.entity.inventario.remover(self.item)
+        self.entity.parent.parent.place_placeable_props(prop)
+        return prop
+
+    def _get_placement_position(self):
+        """Establece las coordinadas donde aparecerá el prop relativas al mob que lo colocó.
+
+        Aún no funciona completamente bien."""
+
+        x, y, z = 0, 0, 0
+        w, h = self.rect.size
+        if self.entity.body_direction == 'abajo':
+            x = self.entity.rel_x
+            y = self.entity.rel_y + h // 2
+            z = self.entity.rect.bottom + h // 2
+        elif self.entity.body_direction == 'arriba':
+            x = self.entity.rel_x
+            y = self.entity.rel_y - h // 2
+            z = self.entity.rect.top + h // 2
+        elif self.entity.body_direction == 'izquierda':
+            x = self.entity.rect.left + w // 2
+            y = self.entity.rel_y
+            z = self.entity.rect.centery
+        elif self.entity.body_direction == 'derecha':
+            x = self.entity.rel_x + w // 2
+            y = self.entity.rel_y
+            z = self.entity.rect.centery
+
+        return x, y, z
 
 
 class Armadura(Equipable):

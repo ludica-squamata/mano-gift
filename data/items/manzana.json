@@ -7,7 +7,8 @@
 ,
   "imagenes": {
     "prop": "props/Manzana-10.png",
-    "item": "props/Manzana-24.png"
+    "item": "props/Manzana-24.png",
+    "high": null
   },
   "propiedades": [
     "stackable","sin_sombra"

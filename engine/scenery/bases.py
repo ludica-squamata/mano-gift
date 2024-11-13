@@ -72,6 +72,8 @@ class Item(AzoeSprite):
     # solo los items equipables tienen un subtipo distinto de None,
     # pero esto les permite ser comparados con otros tipos de item.
 
+    is_colocable = False  # en principio.
+
     def __init__(self, parent, nombre, data):
         self.nombre = nombre
         self.data = data
@@ -79,15 +81,23 @@ class Item(AzoeSprite):
         self.volumen = data['volumen']
         self.efecto_des = data.get('efecto', {}).get('des', '')
         self.stackable = 'stackable' in data['propiedades']
-        imagen = cargar_imagen(join(ModData.graphs, data['imagenes']['item']))
+        self.data = data
+        self.peso = self.data['peso']
+        self.volumen = self.data['volumen']
+        self.efecto_des = self.data['efecto']['des']
+        self.stackable = 'stackable' in self.data['propiedades']
+        imagen = cargar_imagen(join(ModData.graphs, self.data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)
 
     def __eq__(self, other):
         # __eq__() ya no pregunta por el ID porque el ID hace único a cada item.
         test_1 = other.nombre == self.nombre
-        test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
-        test_3 = self.subtipo == other.subtipo
-        tests = test_1, test_2, test_3
+        # test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
+        # if hasattr(self, 'subtipo') and hasattr(other, 'subtipo'):
+        #     test_3 = self.subtipo == other.subtipo
+        # else:
+        #     test_3 = False
+        tests = [test_1]  #, test_2, test_3
         return all(tests)
 
     def __ne__(self, other):

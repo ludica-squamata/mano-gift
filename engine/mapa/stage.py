@@ -138,6 +138,10 @@ class Stage:
                 for item, grupo in load_something(chunk, data, 'props'):
                     self.add_property(item, grupo)
 
+    def place_placeable_props(self, prop):
+        grupo = prop.grupo
+        self.add_property(prop, grupo)
+
     def add_property(self, obj, _layer):
         add_interactive = False
         if type(obj) is tuple:

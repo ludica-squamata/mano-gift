@@ -1,8 +1,8 @@
 from engine.globs import Prop_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo, Tagged_Items
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc.resources import abrir_json, cargar_imagen
 from .bases import Escenografia
 from pygame import Rect
-from .items import *
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'EstructuraCompuesta', 'Escenografia']
 
@@ -18,7 +18,9 @@ class Agarrable(Escenografia):
         Prop_Group.add(self.nombre, self, self.grupo)
 
     def action(self, entity):
-        item = self.return_item()
+        from .new_prop import new_item
+        item = new_item(self.parent, self.nombre, self.data)
+        item.is_colocable = True  # si fue agarrable en algún momento, es por lo tanto también colocable.
         if entity.tipo == 'Mob':
             entity.inventario.agregar(item)
             # removes the prop from the map, but not the item from the world.
@@ -31,21 +33,6 @@ class Agarrable(Escenografia):
                                                          'when': Tiempo.clock.timestamp(),
                                                          'about': ref})
 
-    def return_item(self):
-        args = self.parent, self.nombre, self.data
-        if self.subtipo == 'consumible':
-            return Consumible(*args)
-        elif self.subtipo == 'equipable':
-            return Equipable(*args)
-        elif self.subtipo == 'armadura':
-            return Armadura(*args)
-        elif self.subtipo == 'arma':
-            return Arma(*args)
-        elif self.subtipo == 'accesorio':
-            return Accesorio(*args)
-        elif self.subtipo == 'pocion':
-            return Pocion(*args)
-
 
 class Movible(Escenografia):
     accionable = False
@@ -55,9 +42,6 @@ class Movible(Escenografia):
         self.grupo = GRUPO_MOVIBLES
         Prop_Group.add(self.nombre, self, self.grupo)
         Tagged_Items.add_item(self, 'movibles')
-
-    def action(self, *args, **kwargs):
-        pass
 
     def mover(self, dx, dy):
         col_mapa = False
@@ -101,6 +85,11 @@ class Operable(Escenografia):
         self.enabled = data.get('enabled', True)
         self.grupo = GRUPO_OPERABLES
         Tagged_Items.add_item(self, 'operables')
+        if 'AI' in data:
+            # issue #109, item 5. Los props operables deberían tener un árbol de comportamiento como los mobs.
+            self.AI = abrir_json(ModData.mobs + 'behaviours/' + data['AI'] + '.json')
+            # probablemente no esté en mobs/behaviours junto a las AIs de los mobs, sino en una carpeta separada.
+            # pero eso requería crear una nueva propiedad de ModData...
 
         images = {}
         for estado in data['operable']:

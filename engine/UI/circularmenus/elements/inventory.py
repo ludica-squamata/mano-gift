@@ -1,4 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs.renderer import Camara
 from .descriptive_area import DescriptiveArea
 from .letter import LetterElement
 from engine.globs import TEXT_FG
@@ -46,3 +47,18 @@ class InventoryElement(LetterElement):
             self.parent.overwritten = True
             self.parent.salir()
             EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo', "select": self.item.espacio})
+
+
+class ColocableInventoryElement(InventoryElement):
+    def command(self):
+        from engine.scenery.items import Colocable
+        chunk = self.parent.entity.parent
+        item_prop = Colocable(chunk, self.parent.entity, self.item.nombre, self.item.data, self.item)
+        prop = item_prop.action()
+
+        self.img_sel = self._create_icon_stack(33, 33, True, self.parent.entity)
+        self.image = self.img_sel
+        Camara.add_real(prop)
+
+        self.parent.overwritten = True
+        self.parent.salir()

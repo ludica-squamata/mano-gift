@@ -1,13 +1,12 @@
 {
-  "nombre": "Banana",
+  "nombre": "Pera",
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
-  "volumen": 1,
-  "dialog": "banana",
+  "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/banana2.png",
-    "item": "props/banana2.png"
+    "prop": "props/pera-32.png",
+    "item": "props/pera-32.png"
   },
   "propiedades": [
     "stackable","sin_sombra"
@@ -17,10 +16,5 @@
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"
-  },
-  "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
   }
 }
