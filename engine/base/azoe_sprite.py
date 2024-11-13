@@ -1,6 +1,8 @@
 from engine.globs import ModData, ANCHO, ALTO
+from engine.globs.renderer import Camara
 from pygame import sprite, mask, Surface
 from engine.misc import cargar_imagen
+from math import isclose
 
 
 class AzoeSprite(sprite.Sprite):
@@ -20,6 +22,8 @@ class AzoeSprite(sprite.Sprite):
     # their parent
     chunk_adresses = None
     is_damageable = False
+
+    _last_map = None
 
     def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
@@ -55,7 +59,7 @@ class AzoeSprite(sprite.Sprite):
             self.x = x
             self.y = y
             self.rel_x = x
-            self.rel_y = y
+            self.rel_y = y + 18
 
         if z:
             self.z = z
@@ -73,6 +77,15 @@ class AzoeSprite(sprite.Sprite):
         self.x += dx
         self.y += dy
 
+        if self._last_map is None:
+            # esta clásula solo se ejecuta una vez porque en el init no hay un mapa cargado aún.
+            self._last_map = Camara.current_map
+        elif self._last_map != Camara.current_map:
+            # esta otra se ejecuta en el paso de un chunk al otro.
+            self._last_map = Camara.current_map
+            self.rel_y = self._rel(self.rel_y, dy)
+            self.rel_x = self._rel(self.rel_x, dx)
+
         if self.rel_x + dx < 0:
             self.rel_x = 800
         elif self.rel_x + dx > 800:
@@ -89,6 +102,21 @@ class AzoeSprite(sprite.Sprite):
         else:
             self.rel_y += dy
             self.z += dy
+
+    @staticmethod
+    def _rel(rel, delta):
+        """Ajusta self.rel_x o self.rel_y para no repetir código."""
+        # el orden del if/elif es importante, aunque parezca redundante a primera vista.
+        if rel + delta > 800:
+            rel = 0
+        elif rel + delta < 0:
+            rel = 800
+        elif isclose(rel + delta, 1, rel_tol=0.5, abs_tol=7):
+            rel = 0
+        else:
+            rel = 800
+
+        return rel
 
     def set_parent_map(self, chunk):
         self.parent = chunk

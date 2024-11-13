@@ -50,10 +50,10 @@ class Movil(Caracterizado):
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
-        overlap = self.parent.mascara_salidas.overlap(self.mask, (self.rel_x + dx, self.rel_y + dy))
+        overlap = Camara.current_map.mascara_salidas.overlap(self.mask, (self.x + dx, self.y + dy))
         if overlap is not None:
-            r, g, b, a = self.parent.imagen_salidas.get_at(overlap)
-            self.parent.salidas[b * 255 + g].trigger(self)
+            r, g, b, a = Camara.current_map.imagen_salidas.get_at(overlap)
+            Camara.current_map.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])
 

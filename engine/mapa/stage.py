@@ -237,11 +237,7 @@ class Stage:
                 return obj
 
     def get_chunk_by_adress(self, adress):
-        chunk = self.chunks[tuple(adress)]
-        if chunk is None:
-            return adress
-        else:
-            return chunk
+        return self.chunks[tuple(adress)]
 
 
 class ChunkMap(AzoeBaseSprite):
