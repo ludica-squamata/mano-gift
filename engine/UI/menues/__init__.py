@@ -40,5 +40,5 @@ __all__ = [
     'Menu',
     "default_menus",
     'pause_menus',
-    'inital_menus'
+    'inital_menus',
 ]

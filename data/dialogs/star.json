@@ -7,28 +7,29 @@
     "about": "star",
     "icon": "S",
     "keywords": [],
-    "events": {}
+    "events": {},
+    "reqs": {"has": {"who": "heroe","what": "Estrella"}}
   },
   "body": {
     "0": {
-      "type": "node", "leads": [1, 2], "from": "commoner", "to": "heroe",
+      "type": "node","leads": [1,2],"from": "commoner","to": "heroe",
       "txt": "Hey! tenés la estrella! Me la das?"
     },
     "1": {
-      "type": "leaf", "from": "heroe", "to": "commoner",
+      "type": "leaf","from": "heroe","to": "commoner",
       "txt": "No, es mía."
     },
     "2": {
-      "type": "branch", "leads": 3,"from": "heroe", "to": "commoner", "item": "Estrella",
+      "type": "branch","leads": 3,"from": "heroe","to": "commoner","item": "star",
       "reqs": {"objects": ["Estrella"]},
       "txt": "Aquí tienes."
     },
     "3": {
-      "type": "node", "leads": 4, "from": "commoner", "to": "heroe",
+      "type": "node","leads": 4,"from": "commoner","to": "heroe",
       "txt": "Oh, muchas gracias, héroe!"
     },
     "4": {
-      "type": "leaf", "from": "commoner", "to": "heroe", "item": "ring",
+      "type": "leaf","from": "commoner","to": "heroe","item": "ring",
       "txt": "Ten, esto es para tí."
     }
   }

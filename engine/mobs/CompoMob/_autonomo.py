@@ -1,5 +1,5 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.mobs.behaviortrees import BehaviourTree
+from engine.mobs.behaviourtrees import BehaviourTree
 from engine.misc.resources import abrir_json
 from engine.mobs import ControllableAI
 from engine.globs import ModData
@@ -12,6 +12,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     paused = False
     AI_type = ''  # 'Controllable' or  'Autonomous'
 
+    pause_overridden = False
+
     def __init__(self, parent, data, **kwargs):
         ai_name = data['AI']
 
@@ -22,7 +24,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         super().__init__(parent, data, **kwargs)
 
     def toggle_pause_state(self, event):
-        self.paused = event.data['value']
+        if not self.pause_overridden:
+            self.paused = event.data['value']
 
     def unload(self):
         super().unload()

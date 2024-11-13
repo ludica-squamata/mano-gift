@@ -45,6 +45,10 @@ tags = {
         'fuente': font.Font('engine/libs/Verdana.ttf', 16),
         'fg': (255, 255, 255)}),
 
+    'sn': Tag('sn', {
+        'fuente': font.Font('engine/libs/Verdana.ttf', 12),
+        'fg': (0, 0, 0)}),
+
 }
 
 

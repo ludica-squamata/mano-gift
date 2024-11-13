@@ -1,4 +1,4 @@
-from engine.mobs.behaviortrees import Leaf, Success, Failure
+from engine.mobs.behaviourtrees import Leaf, Success, Failure
 from engine.globs import Mob_Group
 
 

@@ -17,5 +17,10 @@
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"
+  },
+  "trading": {
+    "sell_price": 1,
+    "buy_price": 1,
+    "coin_symbol": "$"
   }
 }

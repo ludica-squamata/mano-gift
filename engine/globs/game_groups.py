@@ -251,7 +251,6 @@ class ItemGroup:
         self._group.clear()
         self._lenght = 0
 
-
 class DeletedItems(ItemGroup):
     def delete_item(self, event):
         obj = event.data['obj']

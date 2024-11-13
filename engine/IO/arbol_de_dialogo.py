@@ -19,7 +19,8 @@ class Elemento:
 
     item = None
 
-    def __init__(self, indice, data):
+    def __init__(self, parent, indice, data):
+        self.parent = parent
         self.leads = None
         self.indice = indice
 
@@ -31,6 +32,7 @@ class Elemento:
         self.leads = data.get('leads', None)
         self.reqs = data.get('reqs', None)
         self.event = data.get('event', None)
+        self.event_data = data.get('e_data', {})
         self.pre = data.get('pre', 0)
         self.item = data.get('item', None)  # the filename.
 
@@ -94,7 +96,6 @@ class Elemento:
             return True
 
     def __next__(self):
-        # estaba escrito en el Árbol como un método estático.
         return self.leads
 
 
@@ -106,7 +107,8 @@ class BranchArray:
     flaged = []
     item = None
 
-    def __init__(self, node, elementos):
+    def __init__(self, parent, node, elementos):
+        self.parent = parent
         self.array = []
         for idx in node.leads:
             self.array.append(elementos[idx])
@@ -149,21 +151,68 @@ class BranchArray:
 class ArboldeDialogo:
     _future = 0
 
-    def __init__(self, datos):
-        self._elementos = [Elemento(idx, data) for idx, data in datos.items()]
+    def __init__(self, parent, datos):
+        self.parent = parent
+        self._elementos = [Elemento(self, idx, data) for idx, data in datos.items()]
 
         for obj in self._elementos:
             if obj.tipo != 'leaf':
                 if not obj.hasLeads:
                     obj.leads = self._elementos[obj.leads]
                 else:
-                    obj.leads = BranchArray(obj, self._elementos)
+                    obj.leads = BranchArray(self, obj, self._elementos)
 
-    def process_events(self, events):
+    def __getitem__(self, item):
+        if type(item) is Elemento:
+            if item in self._elementos:
+                return item
+        elif type(item) is int:
+            if 0 <= item <= len(self._elementos):
+                return self._elementos[item]
+        else:
+            raise TypeError("type(item) must be Elemento or int")
+
+    def __setitem__(self, key, value):
+        element = None
+        if type(key) is int:
+            if 0 <= key <= len(self._elementos):
+                element = self._elementos[key]
+        elif type(key) is Elemento:
+            element = key
+        else:
+            raise TypeError("type(item) must be Elemento or int")
+
+        element.texto = value
+
+    def process_events(self, events: dict):
         for elemento in self._elementos:
             if elemento.event is not None:
                 name = elemento.event
-                elemento.create_event(name, events[name])
+                event = {"name": name, "data": elemento.event_data}
+                event['data'].update(events[name])
+                if "mob" in events[name]:
+                    # acá procesamos la keyword.
+                    if events[name]['mob'] == '<locutor>':
+                        # Locutor es el que habla
+                        mob = self.parent.locutores[elemento.emisor]
+                    elif events[name]['mob'] == '<interlocutor>':
+                        # Interlocutor es el que escucha.
+                        mob = self.parent.locutores[elemento.receptor]
+                    else:
+                        # Si la key no es una keyword asumimos que es el nombre.
+                        mob = events[name]['mob']
+
+                    event['data']['mob'] = mob  # y reasignamos ese nombre.
+
+                if "pos" in events[name]:
+                    # de forma similar, podemos reemplazar las keys en el evento
+                    chunk = elemento.parent.parent.locutores[elemento.emisor].parent
+                    stage = chunk.parent  # nesting 120%
+                    if events[name]['pos'] in stage.points_of_interest[chunk.nombre]:
+                        # con los puntos de interés para la IA.
+                        event['data']['pos'] = stage.points_of_interest[chunk.nombre][events[name]['pos']]
+
+                elemento.create_event(event['name'], event['data'])
 
     def __repr__(self):
         return '_Arbol de Dialogo (' + str(len(self._elementos)) + ' elementos)'

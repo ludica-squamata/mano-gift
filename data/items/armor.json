@@ -12,5 +12,10 @@
     "des": "Es un peto de hierro.",
     "equipo": "peto",
     "proteccion": 2
+  },
+  "trading": {
+    "sell_price": 1,
+    "buy_price": 1,
+    "coin_symbol": "$"
   }
 }

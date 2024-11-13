@@ -22,13 +22,16 @@ class LetterElement(BaseElement):
 
         self.rect_uns = self.img_uns.get_rect()
         self.rect_sel = self.img_sel.get_rect()
+        self.w = self.rect_uns.w
 
         if self.check_placement():
             self.image = self.img_sel
             self.rect = self.rect_sel
+            self.w = self.rect_sel.w
         else:
             self.image = self.img_uns
             self.rect = self.rect_uns
+            self.w = self.rect_uns.w
 
         if do_title:
             self.title = Title(self, nombre)

@@ -1,0 +1,19 @@
+{
+  "nombre": "Libro Rojo",
+  "tipo": "agarrable",
+  "subtipo": "utilizable",
+  "peso": 0,
+  "volumen": 0,
+  "imagenes": {
+    "prop": "props/libro rojo-prop.png",
+    "item": "props/libro rojo-item.png"
+  },
+  "propiedades": [
+    "sin_sombra"
+  ],
+  "trading": {
+    "sell_price": 1,
+    "buy_price": 1,
+    "coin_symbol": "$"
+  }
+}

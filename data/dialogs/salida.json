@@ -12,11 +12,8 @@
     "keywords": [],
     "events": {
       "Exit": {
-        "mob": "commoner",
-        "pos": [
-          608,
-          608
-        ]
+        "mob": "<locutor>",
+        "pos": "bed"
       }
     }
   },

@@ -57,5 +57,7 @@ def new_item(parent, nombre, ruta_or_data):
         item = Accesorio
     elif subtipo == 'pocion':
         item = Pocion
+    elif subtipo == 'utilizable':
+        item = Utilizable
 
     return item(parent, nombre, data)

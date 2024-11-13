@@ -1,9 +1,10 @@
-﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, Game_State, ModData, Mob_Group
+﻿from engine.globs import CAPA_OVERLAYS_DIALOGOS, Game_State, ModData, Mob_Group, Item_Group, Prop_Group
 from engine.UI import DialogInterface, DialogObjectsPanel, DialogThemesPanel
 from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.misc.resources import abrir_json
+from os.path import exists
 
 
 class Discurso(EventAware):
@@ -18,11 +19,54 @@ class Discurso(EventAware):
                 allow = not allow
                 break
 
-        if not Game_State.get2(f"dialog.{meta['about']}.disabled"):
+        if Game_State.get2(f"dialog.{meta['about']}.disabled"):
+            # is the dialog flag disabled? not present means "no", present means "yes".
             allow = False
 
         if meta['class'] != 'scripted':
             allow = False
+
+        if "reqs" in meta:
+            for how in meta['reqs']:
+                who, what, where, when, why = [None] * 5
+                if 'who' in meta['reqs'][how]:
+                    who = Mob_Group[meta['reqs'][how]['who']]  # locutor was preprocessed.
+                if 'what' in meta['reqs'][how]:
+                    if meta['reqs'][how]['what'] in Item_Group:
+                        what = Item_Group[meta['reqs'][how]['what']]  # por default, "what" es un item.
+                    else:  # __missing__()
+                        what = Prop_Group[meta['reqs'][how]['what']]  # "what" es un Prop.
+                    # 'what' también puede preguntar por un atributo del personaje, como el carisma o inteligencia
+                    # 'what' también puede ser un tipo de personaje, onda un guardia o el rey. "who" is "what"?
+                if 'when' in meta['reqs'][how]:
+                    pass  # 'what' debe ser un evento, o quizás una flag, o conocimiento del mundo.
+                if 'where' in meta['reqs'][how]:
+                    pass  # Puede ser que "what" sea un prop, en este caso. Pregunta por un lugar/mapa.
+                if 'why' in meta['reqs'][how]:
+                    pass  # para completar el set, pero la verdad no sé que preguntaría.
+
+                if how == 'has':  # pregunta si el item what existe en el inventario de who.
+                    if not what in who.inventario:
+                        allow = False
+                elif how == "hasn't":  # pregunta si el item what no existe en el inventario de who.
+                    if what in who.inventario:
+                        allow = False
+                elif how == 'many':
+                    pass  # multiple items in hero's inventory
+                elif how == 'much':
+                    pass  # how much money does the hero have?
+                elif how == 'has talked to':
+                    pass  # has the hero talked to this npc? 'when'? 'what' did they talked 'about'?
+                elif how == 'faction relation':
+                    pass  # {“which”:<faction>, “level”:<level>}
+                elif how == 'knows':
+                    pass  # is 'what' in 'who's world knowledge?
+                elif how == 'knows not':
+                    pass  # isn't 'what' in 'who's world knowledge?
+                elif how == 'is':
+                    pass  # el requisito pregunta si "what" is the case
+                elif how == "insn't":
+                    pass  # or not.
 
         return allow
 
@@ -38,6 +82,7 @@ class Discurso(EventAware):
     @staticmethod
     def preprocess_locutor(file):
         hero_name = Mob_Group.character_name
+        hero = Mob_Group.get_controlled_mob()
         if 'heroe' in file['head']['locutors']:
             idx = file['head']['locutors'].index('heroe')
             file['head']['locutors'][idx] = hero_name
@@ -52,6 +97,12 @@ class Discurso(EventAware):
 
                 if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
                     node['reqs']['loc'] = hero_name
+
+            if 'reqs' in file['head']:
+                for req_key in file['head']['reqs']:
+                    if "who" in file['head']['reqs'][req_key] and file['head']['reqs'][req_key]['who'] == 'heroe':
+                        file['head']['reqs'][req_key]['who'] = hero.id
+
         return file
 
     @staticmethod
@@ -60,13 +111,24 @@ class Discurso(EventAware):
             node = file['body'][s_idx]
             if "item" in node:
                 item_name = node['item']
-                node['item'] = ModData.items + item_name + '.json'
+                ruta = ModData.items + item_name + '.json'
+                if exists(ruta):
+                    node['item'] = ruta
+        if "trading" in file['head']:
+            for trader in file['head']['trading']:
+                for key in file['head']['trading'][trader]:
+                    item_name = key.lower().replace(" ", "_")
+                    ruta = ModData.items + item_name + '.json'
+                    if exists(ruta):
+                        file['head']['trading'][trader][key] = {
+                            "cant": file['head']['trading'][trader][key],
+                            "ruta": ModData.items + item_name + '.json'}
 
         return file
 
     @staticmethod
     def emit_sound_event(locutor):
-        """Este método es un shortcut para el post del SoundEvent.
+        """Este metodo es un shortcut para el post del SoundEvent.
         Pertence a Discurso, y no a Dialogo, porque el héroe también
         escucha el Monólogo del npc."""
 
@@ -87,7 +149,9 @@ class Dialogo(Discurso):
     SelMode = False
     sel = 0
     next = 0
-    write_flag = True  # flags the conversation so it wouldn't be repeated
+    write_flag = True  # flags the conversation so it wouldn't be repeated.
+
+    paused = False  # if True, the dialog is paused, meaning it won't continue until is unpaused.
 
     def __init__(self, arbol, *locutores):
         super().__init__()
@@ -96,15 +160,16 @@ class Dialogo(Discurso):
         self.tags_condicionales = head['conditional_tags']
         self.about = head['about']
 
-        self.dialogo = ArboldeDialogo(arbol['body'])
+        self.arbol = ArboldeDialogo(self, arbol['body'])
         self.objects = head.get('panels', {}).get('objects', {})
         self.themes = head.get('panels', {}).get('themes', {})
-
-        self.dialogo.process_events(head['events'])
+        self.trading = head.get('trading', None)
 
         self.locutores = {}
         for loc in locutores:
             self.locutores[loc.nombre] = loc
+
+        self.arbol.process_events(head['events'])
 
         self.objects_panel = DialogObjectsPanel(self)
         self.themes_panel = DialogThemesPanel(self)
@@ -132,40 +197,48 @@ class Dialogo(Discurso):
         })
 
         self.hablar()
+        EventDispatcher.register(self.toggle_pause, "ReactivateDialog")
+
+    def __repr__(self):
+        return 'Diálogo'
 
     def hablar_en_panel(self):
         panel = self.panels[self.panel_idx]
-        if panel is not self.frontend:
-            # No hace falta crear un elif entero para discriminar entre los grupos.
-            # Es cuestión de relacionar un grupo con su panel correspondiente.
-            if panel is self.objects_panel:
-                action = self.objects
-                # "action" es un nombre provisorio, no sé realmente que nombre ponerle.
-            else:
-                action = self.themes
-
-            if len(action):
-                if panel.menu.actual.nombre in action:
-                    # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
-                    # de manera que realmente se verifique que se está mostrando ESE item en particular.
-
-                    idx = action[panel.menu.actual.nombre]
-                    # si el elemento seleccionado coincide con el nombre indicado en head,
-                    # entonces el dialogo salta a ese numero de índice.
+        if not self.paused:
+            if panel is not self.frontend:
+                # No hace falta crear un elif entero para discriminar entre los grupos.
+                # Es cuestión de relacionar un grupo con su panel correspondiente.
+                if panel is self.objects_panel:
+                    action = self.objects
+                    # "action" es un nombre provisorio, no sé realmente que nombre ponerle.
                 else:
-                    # de otro modo se cae al nodo indicado por default.
-                    idx = action['default']
+                    action = self.themes
 
-                self.dialogo.set_chosen(idx)
-                # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
-                # porque nuestra acción fue mostrar el ítem.
-                self.switch_panel(panel=self.frontend)
-                # hablar() no se ejecuta si el item mostrado o tema mencionado no tienen efecto.
-                # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
-                # se menciona un tema que no tiene sentido para el NPC.
+                if len(action):
+                    if panel.menu.actual.nombre in action:
+                        # aunque aquí se está comparando por nombre, podría hacerse de manera que compare por identidad,
+                        # de manera que realmente se verifique que se está mostrando ESE item en particular.
+
+                        idx = action[panel.menu.actual.nombre]
+                        # si el elemento seleccionado coincide con el nombre indicado en head,
+                        # entonces el dialogo salta a ese numero de índice.
+                    else:
+                        # de otro modo se cae al nodo indicado por default.
+                        idx = action['default']
+
+                    self.arbol.set_chosen(idx)
+                    # cambiamos la vista al panel de dialogo automáticamente luego de la selección,
+                    # porque nuestra acción fue mostrar el ítem.
+                    self.switch_panel(panel=self.frontend)
+                    # hablar() no se ejecuta si el item mostrado o tema mencionado no tienen efecto.
+                    # aunque todos los diálogos tendrían que tener algún nodo por default si se muestra un objeto o
+                    # se menciona un tema que no tiene sentido para el NPC.
+                    self.hablar()
+                else:
+                    print('acá')  # esta debería ser la respuesta por default si se muestra un objeto
+                    # o se menciona un tema que el NPC no tiene scripteado.
+            else:
                 self.hablar()
-        else:
-            self.hablar()
 
     @staticmethod
     def supress_element(condiciones, locutor):
@@ -201,7 +274,7 @@ class Dialogo(Discurso):
         return supress
 
     def hablar(self):
-        actual = self.dialogo.update()
+        actual = self.arbol.update()
         if self.SelMode and self.frontend.has_stopped():
             if self.sel.event is not None:
                 self.sel.post_event()
@@ -209,7 +282,7 @@ class Dialogo(Discurso):
                 loc = self.locutores[self.sel.emisor]
                 rec = self.locutores[self.sel.receptor]
                 loc.enviar_item(self.sel.item, rec)
-            self.dialogo.set_chosen(self.next)
+            self.arbol.set_chosen(self.next)
             self.SelMode = False
             self.frontend.exit_sel_mode()
             self.emit_sound_event(self.locutores[actual.emisor])
@@ -242,7 +315,7 @@ class Dialogo(Discurso):
                     # si nos quedamos sin elementos con requisitos, caemos al default.
                     choice = default
 
-                self.dialogo.set_chosen(choice)
+                self.arbol.set_chosen(choice)
                 if choice.event is not None:
                     choice.post_event()
 
@@ -342,7 +415,7 @@ class Dialogo(Discurso):
             mob.hablando = False
         if self.SelMode:
             self.frontend.exit_sel_mode()
-        self.dialogo = None
+        self.arbol = None
         for panel in [self.objects_panel, self.themes_panel]:
             if panel.menu is not None:
                 panel.menu.salir()
@@ -368,9 +441,19 @@ class Dialogo(Discurso):
     def set_flag(self, event):
         self.write_flag = event.data['value']
 
-    def update(self, sel):
+    def actualizar(self, sel):
+        # traduje el nombre para individualizar la función. PyCharm entiende cualquier cosa si no.
         self.sel = sel
         self.next = self.sel.leads
+
+    def toggle_pause(self, event=None):
+        if self.registered:
+            self.deregister()
+            self.paused = True
+        elif not self.registered or event.data['value'] == True:
+            self.register()
+            self.paused = False
+            self.hablar()
 
 
 class Monologo(Discurso):

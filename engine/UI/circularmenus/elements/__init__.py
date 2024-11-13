@@ -3,6 +3,7 @@ from .dialog_elems import BranchElement, DialogObjectElement, DialogThemeElement
 from .inventory import InventoryElement, ColocableInventoryElement
 from .command import CommandElement
 from .title import Title
+from .tradeable_element import TradeableElement
 
 __all__ = ['LetterElement',
            'BranchElement',
@@ -12,5 +13,6 @@ __all__ = ['LetterElement',
            'DialogTopicElement',
            'CommandElement',
            'Title',
-           'ColocableInventoryElement'
+           'ColocableInventoryElement',
+           'TradeableElement'
            ]

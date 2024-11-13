@@ -49,6 +49,10 @@ class ControllableAI(EventAware):
         #     # 800 porque es el tamaño de un chunk. Este valor podría ser configurable.
         #     self.entity.mapa_actual.parent.set_coordinates(direccion)
 
+    def register(self):
+        if not self.entity.pause_overridden:
+            super().register()
+
     def set_action(self):
         self.entity.touch()
         self.accion = True

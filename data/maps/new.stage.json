@@ -49,6 +49,10 @@
     "Huevo": {
       "chunk": [0,0],
       "instances": [[128,64]]
+    },
+    "Star": {
+      "chunk": [0,0],
+      "instances": [[32,32]]
     }
   },
   "chunks": {
@@ -69,6 +73,12 @@
       "refs": {}
     }
   },
+  "puntos_de_interes_para_la_IA": [
+    {
+      "chunk": "white",
+      "point": {"name": "bed","node": [608,608,32]}
+    }
+  ],
   "refs": {
     "arbol": "props/arbol escalado 2.png",
     "Huevo": "egg.json"

@@ -1,0 +1,76 @@
+{
+  "head": {
+    "class": "scripted",
+    "conditional_tags": {},
+    "style": "",
+    "locutors": [
+      "Shopkeeper",
+      "heroe"
+    ],
+    "name": "Trading",
+    "about": "trading",
+    "icon": null,
+    "keywords": [],
+    "events": {
+      "Flag": {"value": false},
+      "TriggerBuyScreen": {"participants": ["Shopkeeper","heroe"]},
+      "TriggerSellScreen": {"participants": ["Shopkeeper","heroe"]},
+      "Trade": {}
+    },
+    "panels": {
+      "objects": {
+        "default": 8
+      },
+      "themes": {
+        "default": 8
+      }
+    },
+    "trading": {
+      "Shopkeeper": {
+        "Manzana": 10,
+        "Star": 10,
+        "Libro Rojo": 1,
+        "Banana": 10,
+        "Ring": 1
+      }
+    }
+  },
+  "body": {
+    "0": {
+      "type": "node","leads": [1,2,3],"from": "Shopkeeper","to": "heroe","event": "Flag",
+      "txt": "Buenos días. ¿Qué quiere hacer?"
+    },
+    "1": {
+      "type": "node","leads": 4,"from": "heroe","to": "Shopkeeper","event": "TriggerBuyScreen",
+      "txt": "Comprar"
+    },
+    "2": {
+      "type": "node","leads": 5,"from": "heroe","to": "Shopkeeper","event": "TriggerSellScreen",
+      "txt": "Vender"
+    },
+    "3": {
+      "type": "leaf","from": "heroe","to": "Shopkeeper",
+      "txt": "Nada"
+    },
+    "4": {
+      "type": "node","leads": [6,7],"from": "Shopkeeper","to": "heroe",
+      "txt": "El precio de ese item es {coin}{price}. ¿Quieres comprarlo?"
+    },
+    "5": {
+      "type": "node","leads": [6,7],"from": "Shopkeeper","to": "heroe",
+      "txt": "Puedo pagarte {coin}{price} por ese item. ¿Quieres vendérmelo?"
+    },
+    "6": {
+      "type": "leaf","from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": true},
+      "txt": "Sí"
+    },
+    "7": {
+      "type": "leaf","from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": false},
+      "txt": "No"
+    },
+    "8": {
+      "type": "leaf","from": "Shopkeeper","to": "heroe",
+      "txt": "No sé que es eso."
+    }
+  }
+}

@@ -193,7 +193,7 @@ def load_props_csv(csv_file):
         return data
 
 
-def cargar_salidas(parent, i, datos):
+def cargar_salidas(chunk, i, datos):
     salidas = {}
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
@@ -215,11 +215,16 @@ def cargar_salidas(parent, i, datos):
 
     nombre = datos['nombre']
     stage = datos['stage']
-    rect = Rect(datos['rect'])
+    prop = None
+    if 'prop' in datos:
+        prop = Prop_Group[datos['prop'].capitalize()]
+        rect = Rect(0, 0, *prop.rect.size)
+        rect.center = prop.rect.bottomright
+    else:
+        rect = Rect(datos['rect'])
     entrada = datos['entrada']
     direcciones = datos['direcciones']
     id = ModData.generate_id()
-
     r, g, b, a = randint(0, 255), i % 255, i // 255, 255
     # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
     # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
@@ -233,6 +238,10 @@ def cargar_salidas(parent, i, datos):
     salidas.append(salida)
     if prop is not None:
         prop.salida = salida
+    salida = Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color)
+    salidas[b * 255 + g] = salida
+    if prop is not None:
+        prop.salida = salida
 
     # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
     # después se usará b*255+g para devolver el index.
@@ -243,7 +252,7 @@ def cargar_salidas(parent, i, datos):
     # permanece unset.
     mask = mask_module.from_surface(img)
 
-    return salidas, mask, img
+    chunk.set_salidas(salidas, mask, img)
     # salidas: la lista de salidas, igual que siempre.
     # mask: máscara de colisiones de salidas.
     # img: imagen de colores codificados

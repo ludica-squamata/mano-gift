@@ -65,11 +65,14 @@ class Equipado(Caracterizado):
         self.inventario.agregar(item)
 
     def enviar_item(self, item_data, entity):
-        item_name = item_data.split('/')[-1][:-5]
-        if item_name in self.inventario:
-            item = self.inventario[item_name]
+        if type(item_data) is str:
+            item_name = item_data.split('/')[-1][:-5]
+            if item_name in self.inventario:
+                item = self.inventario[item_name]
+            else:
+                item = new_item(entity, item_name, item_data)
         else:
-            item = new_item(entity, item_name, item_data)
+            item = item_data
         if item in self.inventario:  # NPCs create items from scratch
             self.inventario.remover(item)
         entity.recibir_item(item)
