@@ -71,12 +71,16 @@ class Camara:
         return cls.focus.stage
 
     @classmethod
-    def clear(cls):
+    def clear(cls, event=None):
         cls.real.empty()
         cls.visible.empty()
         cls.bgs.empty()
         cls.bgs_rect = None
         cls.nchs.empty()
+        if event is None:
+            cls.current_map = None
+            cls.focus = None
+            Renderer.use_focus = False
 
     @classmethod
     def detectar_mapas_adyacentes(cls):
@@ -232,7 +236,7 @@ class Renderer:
         elif layer:
             cls.overlays.remove_sprites_of_layer(layer)
         else:
-            cls.camara.clear()
+            cls.camara.clear(event)
 
     @classmethod
     def add_overlay(cls, obj, _layer):

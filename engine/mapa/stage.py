@@ -1,12 +1,14 @@
+from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv, load_props_csv
 from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
-from .loader import load_something, cargar_salidas, NamedNPCs
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.misc import abrir_json, cargar_imagen
+from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
 from pygame import mask
 from math import ceil
+from os import path
+import csv
 
 
 class Stage:
@@ -20,12 +22,13 @@ class Stage:
     atardece = None
     anochece = None
 
-    def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None):
+    def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None, use_csv=False):
         NamedNPCs.npcs_with_ids = npcs_with_id
+        self.id = ModData.generate_id()
         self.parent = parent  # a Stage's parent is always EngineData
         self.chunks = ChunkGroup()
         self.interactives = []
-        self.properties = AzoeGroup('Stage ' + nombre + ' Properties')
+        self.properties = AzoeGroup('Stage ' + nombre + ' Properties', self.id)
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
         dx, dy = self.data['entradas'][entrada]['pos']
@@ -39,7 +42,17 @@ class Stage:
             adress = tuple(special_chunk_data['adress'])
             self.special_adresses[adress] = [special_chunk_key, special_chunk_data]
 
-        self.id = ModData.generate_id()
+        self.chunks_csv = {}
+        if 'chunks_csv' in self.data:
+            self.chunks_csv = load_chunks_csv(self.data['chunks_csv'])
+            self.chunks_csv[chunk_name].update({
+                'mobs': {"hero": [[dx, dy]]},
+                'refs': {},
+            })
+        if "props_csv" in self.data:
+            self.props_csv = load_props_csv(self.data['props_csv'])
+        else:
+            self.props_csv = {}
 
         if ModData.use_latitude and 'latitude' in self.data:
             self.current_latitude = self.data['latitude']
@@ -47,23 +60,24 @@ class Stage:
             self.current_latitude = 30
         self.current_longitude = self.data.get('longitude', 30)
 
+        mob_req = 'mobs' if use_csv is False else 'csv'
+
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=['mobs', 'props'])
+            ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
+        elif chunk_name in self.chunks_csv:
+            singleton = self.chunks_csv[chunk_name]
+            ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, requested=['mobs', 'props'])
-        self.chunks.add(chunk)
+            ChunkMap(self, chunk_name, offx, offy, mob, requested=[mob_req, 'props'])
 
         if 'props' in self.data:
             self.load_unique_props(self.data)
 
-        entradas = self.data['entradas']
         self.entradas = {}
-        for key in entradas:
-            adress = entradas[key]['adress']
+        for key in self.data['entradas']:
+            adress = self.data['entradas'][key]['adress']
             self.entradas[key] = tuple(adress)
-
-        cargar_salidas(self, self.data['salidas'])
 
         self.entrada = entrada
 
@@ -92,7 +106,19 @@ class Stage:
                               self.amanece: 'amanece', self.mediodia: 'mediodía'})
 
     def save_map(self, event):
-        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada})
+        EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada,
+                                                              'use_csv': True})  # hightlighted new key.
+        ruta = path.join(Config.savedir, 'mobs.csv')
+        with open(ruta, 'w', newline='') as csvfile:
+            # this is not quite good yet, because it doesn't save the mobs from other stages (those that were already
+            # explored), but it is a start.
+            fieldnames = ['name', 'x', 'y', 'id', 'chunk', 'adress']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+            for chunk in self.chunks.sprs():
+                for mob in chunk.properties.get_sprites_from_layer(2):
+                    row = {'name': mob.nombre, 'x': mob.rel_x, 'y': mob.rel_y, 'id': mob.id,
+                           'chunk': chunk.nombre, 'adress': str(chunk.adress)}
+                    writer.writerow(row)
 
     def load_unique_props(self, all_data: dict):
         """Carga los props que se hallen definidos en el archivo json del stage.
@@ -123,6 +149,22 @@ class Stage:
         self.properties.add(obj, layer=_layer)
         if add_interactive:
             self.interactives.append(obj)
+
+    def del_property(self, obj):
+        if obj in self.properties:
+            self.properties.remove(obj)
+        if obj in self.interactives:
+            self.interactives.remove(obj)
+        Renderer.camara.remove_obj(obj)
+
+    def delete_everything(self):
+        sprites = self.properties.sprites()
+        for sprite in sprites:
+            self.properties.remove(sprite)
+        self.properties.empty()
+        for chunk in self.chunks.sprs():
+            chunk.delete_everything()
+        self.chunks.clear()
 
     def posicion_entrada(self, entrada):
         return self.data['entradas'][entrada]['pos']
@@ -200,11 +242,7 @@ class Stage:
                 return obj
 
     def get_chunk_by_adress(self, adress):
-        chunk = self.chunks[tuple(adress)]
-        if chunk is None:
-            return adress
-        else:
-            return chunk
+        return self.chunks[tuple(adress)]
 
     def del_interactive(self, event):
         obj = event.data['obj']
@@ -233,7 +271,8 @@ class ChunkMap(AzoeBaseSprite):
     imagen_salidas = None
 
     def __init__(self, parent, nombre, off_x, off_y, trnsnt_mb=None, data=False, requested=None, adress=None):
-        self.properties = AzoeGroup('Chunk ' + nombre + ' properties')
+        self.id = ModData.generate_id()
+        self.properties = AzoeGroup('Chunk ' + nombre + ' properties', self.id)
         self.interactives = []
 
         if not data:
@@ -243,10 +282,12 @@ class ChunkMap(AzoeBaseSprite):
         self.limites = data['limites']
         if adress is not None:
             self.adress = ChunkAdress(self, *adress)
+        elif 'adress' in data:
+            self.adress = ChunkAdress(self, *data['adress'])
         else:
             self.adress = ChunkAdress(self, 0, 0)
 
-        if 'hero' in data['mobs']:
+        if 'hero' in data.get('mobs', {}):
             name = Mob_Group.character_name
             data['mobs'][name] = data['mobs'].pop('hero')
             data['refs'][name] = ModData.fd_player + name + '.json'
@@ -254,7 +295,13 @@ class ChunkMap(AzoeBaseSprite):
             if trnsnt_mb is not None and name == trnsnt_mb.character_name:
                 del data['mobs'][trnsnt_mb.character_name]
 
-        if len(data['mobs']):
+        if 'csv' in requested:
+            # otherwise the Engine doesn't know who is the focus, and the Camera gets unfocused.
+            name = Mob_Group.character_name
+            # though, this might be on purpose (AzoeRTS)
+            data['focus'] = name
+
+        if len(data.get('mobs', {})):
             for mob in Mob_Group.get_existing(data['mobs']):
                 del data['mobs'][mob]
 
@@ -269,13 +316,26 @@ class ChunkMap(AzoeBaseSprite):
             self.mask = mask.Mask(rect.size)
 
         super().__init__(parent, nombre, image, rect)
+        self.parent.chunks.add(self)
+
+        if tuple(self.adress) in self.parent.props_csv:
+            datos = self.parent.props_csv[tuple(self.adress)]
+            if not 'props' in data:
+                data['props'] = {datos['nombre']: [datos['pos']]}
+                data['refs'] = {datos['nombre']: datos['imagen']}
+            else:
+                data['props'].update({datos['nombre']: [datos['pos']]})
+                data['refs'].update({datos['nombre']: datos['imagen']})
+
+        for i, salida in enumerate(self.parent.data['salidas']):
+            if salida['chunk_adress'] == self.adress:
+                self.set_salidas(*cargar_salidas(self, i, salida))
 
         self.cargar_limites(data.get('limites', self.limites))
-        self.id = ModData.generate_id()
         data['entradas'] = self.parent.data['entradas']
-        if any([len(data[req]) > 0 for req in requested]):
-            for item, grupo in load_something(self, data, requested):
-                self.add_property(item, grupo)
+        # if any([len(data[req]) > 0 for req in requested]):
+        for item, grupo in load_something(self, data, requested):
+            self.add_property(item, grupo)
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
@@ -283,6 +343,11 @@ class ChunkMap(AzoeBaseSprite):
         self.salidas = sld
         self.imagen_salidas = img
         self.mask_salidas = masc
+
+    def unset_salidas(self):
+        self.salidas.clear()
+        self.imagen_salidas = None
+        self.mask_salidas = None
 
     @property
     def mascara_salidas(self):
@@ -309,6 +374,17 @@ class ChunkMap(AzoeBaseSprite):
         if obj in self.interactives:
             self.interactives.remove(obj)
         Renderer.camara.remove_obj(obj)
+
+    def delete_everything(self):
+        sprites = self.properties.sprites()
+        for sprite in sprites:
+            self.properties.remove(sprite)
+        self.properties.empty()
+
+        if self.salidas is not None:
+            for salida in self.salidas:
+                Renderer.camara.remove_obj(salida.sprite)
+            self.unset_salidas()
 
     def get_property(self, name):
         for obj in self.properties.sprs():
@@ -356,27 +432,32 @@ class ChunkMap(AzoeBaseSprite):
         dx = x - w if ady == 'izq' else x + w if ady == 'der' else x
 
         ax, ay = self.translate(ady)
-        if type(self.limites[self.translate(ady)]) is str:
+        adress = ax, ay
+        if type(self.limites[adress]) is str:
             entradas = self.parent.data['entradas']
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos,
                                 requested=['props'], adress=(ax, ay))
                 self.parent.set_special_adress(ax, ay, mapa)
+            elif self.limites[adress] in self.parent.chunks_csv:
+                name = self.limites[adress]
+                data = self.parent.chunks_csv[name]
+                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data, requested=['props'])
             else:
-                mapa = ChunkMap(self.parent, self.limites[self.translate(ady)], dx, dy, entradas,
+                mapa = ChunkMap(self.parent, self.limites[adress], dx, dy, entradas,
                                 requested=['props'], adress=(ax, ay))
 
-            self.limites[self.translate(ady)] = mapa
+            self.limites[adress] = mapa
             self.parent.chunks.add(mapa)
         else:
-            mapa: ChunkMap = self.limites[self.translate(ady)]
+            mapa: ChunkMap = self.limites[adress]
             mapa.ubicar(dx, dy)
 
         return mapa
 
     def __repr__(self):
-        return "ChunkMap " + self.nombre
+        return f"ChunkMap {self.nombre} ({self.id.split('-')[1]})"
 
     def __bool__(self):
         return True
@@ -412,7 +493,25 @@ class ChunkAdress:
         return self.x, self.y + 1
 
     def __str__(self):
+        return f'{self.x},{self.y}'
+
+    def __repr__(self):
         return f'{self.parent.nombre} @{self.x}, {self.y}'
 
     def __bool__(self):
         return False
+
+    def __eq__(self, other):
+        if len(other) == 2:
+            a = self.x == other[0]
+            b = self.y == other[1]
+            return all([a, b])
+        return False
+
+    def __getitem__(self, item):
+        if type(item) is int:
+            if item == 0:
+                return self.x
+            elif item == 1:
+                return self.y
+            raise StopIteration()

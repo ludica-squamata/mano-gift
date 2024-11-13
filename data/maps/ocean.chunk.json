@@ -1,0 +1,13 @@
+{
+  "fondo": "maps/fondos/ocean.png",
+  "colisiones": null,
+  "props": {},
+  "mobs": {},
+  "limites": {
+    "izq": "ocean",
+    "der": "ocean",
+    "inf": "ocean",
+    "sup": "ocean"
+  },
+  "refs": {}
+}

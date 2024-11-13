@@ -1,0 +1,377 @@
+{
+  "entradas": {
+    "center": {
+      "chunk": "0",
+      "pos": [400,400],
+      "adress": [0,0]
+    },
+    "17": {"chunk": "17","pos": [400,400],"adress": [17,0]},
+    "16": {"chunk": "16","pos": [400,400],"adress": [16,0]},
+    "15": {"chunk": "15","pos": [400,400],"adress": [15,0]},
+    "14": {"chunk": "14","pos": [400,400],"adress": [14,0]},
+    "13": {"chunk": "13","pos": [400,400],"adress": [13,0]},
+    "12": {"chunk": "12","pos": [400,400],"adress": [12,0]},
+    "11": {"chunk": "11","pos": [400,400],"adress": [11,0]},
+    "10": {"chunk": "10","pos": [400,400],"adress": [10,0]},
+    "9": {"chunk": "9","pos": [400,400],"adress": [9,0]},
+    "8": {"chunk": "8","pos": [400,400],"adress": [8,0]},
+    "7": {"chunk": "7","pos": [400,400],"adress": [7,0]},
+    "6": {"chunk": "6","pos": [400,400],"adress": [6,0]},
+    "5": {"chunk": "5","pos": [400,400],"adress": [5,0]},
+    "4": {"chunk": "4","pos": [400,400],"adress": [4,0]},
+    "3": {"chunk": "3","pos": [400,400],"adress": [3,0]},
+    "2": {"chunk": "2","pos": [400,400],"adress": [2,0]},
+    "1": {"chunk": "1","pos": [400,400],"adress": [1,0]},
+    "0": {"chunk": "0","pos": [400,400],"adress": [0,0]},
+    "35": {"chunk": "35","pos": [400,400],"adress": [35,0]},
+    "34": {"chunk": "34","pos": [400,400],"adress": [34,0]},
+    "33": {"chunk": "33","pos": [400,400],"adress": [33,0]},
+    "32": {"chunk": "32","pos": [400,400],"adress": [32,0]},
+    "31": {"chunk": "31","pos": [400,400],"adress": [31,0]},
+    "30": {"chunk": "30","pos": [400,400],"adress": [30,0]},
+    "29": {"chunk": "29","pos": [400,400],"adress": [29,0]},
+    "28": {"chunk": "28","pos": [400,400],"adress": [28,0]},
+    "27": {"chunk": "27","pos": [400,400],"adress": [27,0]},
+    "26": {"chunk": "26","pos": [400,400],"adress": [26,0]},
+    "25": {"chunk": "25","pos": [400,400],"adress": [25,0]},
+    "24": {"chunk": "24","pos": [400,400],"adress": [24,0]},
+    "23": {"chunk": "23","pos": [400,400],"adress": [23,0]},
+    "22": {"chunk": "22","pos": [400,400],"adress": [22,0]},
+    "21": {"chunk": "21","pos": [400,400],"adress": [21,0]},
+    "20": {"chunk": "20","pos": [400,400],"adress": [20,0]},
+    "19": {"chunk": "19","pos": [400,400],"adress": [19,0]},
+    "18": {"chunk": "18","pos": [400,400],"adress": [18,0]},
+    "629": {"chunk": "629","pos": [400,400],"adress": [17,17]},
+    "628": {"chunk": "628","pos": [400,400],"adress": [16,17]},
+    "627": {"chunk": "627","pos": [400,400],"adress": [15,17]},
+    "626": {"chunk": "626","pos": [400,400],"adress": [14,17]},
+    "625": {"chunk": "625","pos": [400,400],"adress": [13,17]},
+    "624": {"chunk": "624","pos": [400,400],"adress": [12,17]},
+    "623": {"chunk": "623","pos": [400,400],"adress": [11,17]},
+    "622": {"chunk": "622","pos": [400,400],"adress": [10,17]},
+    "621": {"chunk": "621","pos": [400,400],"adress": [9,17]},
+    "620": {"chunk": "620","pos": [400,400],"adress": [8,17]},
+    "619": {"chunk": "619","pos": [400,400],"adress": [7,17]},
+    "618": {"chunk": "618","pos": [400,400],"adress": [6,17]},
+    "617": {"chunk": "617","pos": [400,400],"adress": [5,17]},
+    "616": {"chunk": "616","pos": [400,400],"adress": [4,17]},
+    "615": {"chunk": "615","pos": [400,400],"adress": [3,17]},
+    "614": {"chunk": "614","pos": [400,400],"adress": [2,17]},
+    "613": {"chunk": "613","pos": [400,400],"adress": [1,17]},
+    "612": {"chunk": "612","pos": [400,400],"adress": [0,17]},
+    "647": {"chunk": "647","pos": [400,400],"adress": [35,17]},
+    "646": {"chunk": "646","pos": [400,400],"adress": [34,17]},
+    "645": {"chunk": "645","pos": [400,400],"adress": [33,17]},
+    "644": {"chunk": "644","pos": [400,400],"adress": [32,17]},
+    "643": {"chunk": "643","pos": [400,400],"adress": [31,17]},
+    "642": {"chunk": "642","pos": [400,400],"adress": [30,17]},
+    "641": {"chunk": "641","pos": [400,400],"adress": [29,17]},
+    "640": {"chunk": "640","pos": [400,400],"adress": [28,17]},
+    "639": {"chunk": "639","pos": [400,400],"adress": [27,17]},
+    "638": {"chunk": "638","pos": [400,400],"adress": [26,17]},
+    "637": {"chunk": "637","pos": [400,400],"adress": [25,17]},
+    "636": {"chunk": "636","pos": [400,400],"adress": [24,17]},
+    "635": {"chunk": "635","pos": [400,400],"adress": [23,17]},
+    "634": {"chunk": "634","pos": [400,400],"adress": [22,17]},
+    "633": {"chunk": "633","pos": [400,400],"adress": [21,17]},
+    "632": {"chunk": "632","pos": [400,400],"adress": [20,17]},
+    "631": {"chunk": "631","pos": [400,400],"adress": [19,17]},
+    "630": {"chunk": "630","pos": [400,400],"adress": [18,17]}
+  },
+  "salidas": [
+    {
+      "stage": "anti-world","chunk_adress": [0,0],"nombre": "Norte #0",
+      "entrada": "000'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [1,0],"nombre": "Norte #1",
+      "entrada": "001'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [2,0],"nombre": "Norte #2",
+      "entrada": "002'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [3,0],"nombre": "Norte #3",
+      "entrada": "003'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [4,0],"nombre": "Norte #4",
+      "entrada": "004'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [5,0],"nombre": "Norte #5",
+      "entrada": "005'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [6,0],"nombre": "Norte #6",
+      "entrada": "006'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [7,0],"nombre": "Norte #7",
+      "entrada": "007'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [8,0],"nombre": "Norte #8",
+      "entrada": "008'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [9,0],"nombre": "Norte #9",
+      "entrada": "009'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [10,0],"nombre": "Norte #10",
+      "entrada": "010'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [11,0],"nombre": "Norte #11",
+      "entrada": "011'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [12,0],"nombre": "Norte #12",
+      "entrada": "012'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [13,0],"nombre": "Norte #13",
+      "entrada": "013'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [14,0],"nombre": "Norte #14",
+      "entrada": "014'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [15,0],"nombre": "Norte #15",
+      "entrada": "015'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [16,0],"nombre": "Norte #16",
+      "entrada": "016'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [17,0],"nombre": "Norte #17",
+      "entrada": "017'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [18,0],"nombre": "Norte #18",
+      "entrada": "018'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [19,0],"nombre": "Norte #19",
+      "entrada": "019'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [20,0],"nombre": "Norte #20",
+      "entrada": "020'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [21,0],"nombre": "Norte #21",
+      "entrada": "021'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [22,0],"nombre": "Norte #22",
+      "entrada": "022'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [23,0],"nombre": "Norte #23",
+      "entrada": "023'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [24,0],"nombre": "Norte #24",
+      "entrada": "024'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [25,0],"nombre": "Norte #25",
+      "entrada": "025'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [26,0],"nombre": "Norte #26",
+      "entrada": "026'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [27,0],"nombre": "Norte #27",
+      "entrada": "027'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [28,0],"nombre": "Norte #28",
+      "entrada": "028'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [29,0],"nombre": "Norte #29",
+      "entrada": "029'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [30,0],"nombre": "Norte #30",
+      "entrada": "030'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [31,0],"nombre": "Norte #31",
+      "entrada": "031'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [32,0],"nombre": "Norte #32",
+      "entrada": "032'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [33,0],"nombre": "Norte #33",
+      "entrada": "033'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [34,0],"nombre": "Norte #34",
+      "entrada": "034'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [35,0],"nombre": "Norte #35",
+      "entrada": "035'","direcciones": ["arriba"],"rect": [0,50,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [0,17],"nombre": "Sur #0",
+      "entrada": "612'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [1,17],"nombre": "Sur #1",
+      "entrada": "613'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [2,17],"nombre": "Sur #2",
+      "entrada": "614'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [3,17],"nombre": "Sur #3",
+      "entrada": "615'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [4,17],"nombre": "Sur #4",
+      "entrada": "616'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [5,17],"nombre": "Sur #5",
+      "entrada": "617'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [6,17],"nombre": "Sur #6",
+      "entrada": "618'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [7,17],"nombre": "Sur #7",
+      "entrada": "619'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [8,17],"nombre": "Sur #8",
+      "entrada": "620'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [9,17],"nombre": "Sur #9",
+      "entrada": "621'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [10,17],"nombre": "Sur #10",
+      "entrada": "622'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [11,17],"nombre": "Sur #11",
+      "entrada": "623'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [12,17],"nombre": "Sur #12",
+      "entrada": "624'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [13,17],"nombre": "Sur #13",
+      "entrada": "625'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [14,17],"nombre": "Sur #14",
+      "entrada": "626'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [15,17],"nombre": "Sur #15",
+      "entrada": "627'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [16,17],"nombre": "Sur #16",
+      "entrada": "628'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [17,17],"nombre": "Sur #17",
+      "entrada": "629'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [18,17],"nombre": "Sur #18",
+      "entrada": "630'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [19,17],"nombre": "Sur #19",
+      "entrada": "631'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [20,17],"nombre": "Sur #20",
+      "entrada": "632'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [21,17],"nombre": "Sur #21",
+      "entrada": "633'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [22,17],"nombre": "Sur #22",
+      "entrada": "634'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [23,17],"nombre": "Sur #23",
+      "entrada": "635'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [24,17],"nombre": "Sur #24",
+      "entrada": "636'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [25,17],"nombre": "Sur #25",
+      "entrada": "637'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [26,17],"nombre": "Sur #26",
+      "entrada": "638'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [27,17],"nombre": "Sur #27",
+      "entrada": "639'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [28,17],"nombre": "Sur #28",
+      "entrada": "640'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [29,17],"nombre": "Sur #29",
+      "entrada": "641'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [30,17],"nombre": "Sur #30",
+      "entrada": "642'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [31,17],"nombre": "Sur #31",
+      "entrada": "643'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [32,17],"nombre": "Sur #32",
+      "entrada": "644'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [33,17],"nombre": "Sur #33",
+      "entrada": "645'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [34,17],"nombre": "Sur #34",
+      "entrada": "646'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    },
+    {
+      "stage": "anti-world","chunk_adress": [35,17],"nombre": "Sur #35",
+      "entrada": "647'","direcciones": ["abajo"],"rect": [0,750,800,32]
+    }
+  ],
+  "chunks_csv": "world.chunks.csv",
+  "props_csv": "world.props.csv",
+  "puntos_de_interes_para_la_IA": [],
+  "ambiente": "exterior",
+  "latitude": 30,
+  "longitude": 30
+}
