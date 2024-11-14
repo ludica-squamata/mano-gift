@@ -44,34 +44,36 @@ def load_props(parent, alldata: dict):
     loaded_props = []
     img = None
     for ref in pos:
+        data = None
         if ref in imgs:
             if imgs[ref].endswith('.json'):
                 data = abrir_json(ModData.items + alldata['refs'][ref])
             else:
                 img = cargar_imagen(ModData.graphs + imgs[ref])  # because it points to a .png file instead.
-                data = False
-        else:
-            # use ref as filename
+        elif path.exists(ModData.items + ref + '.json'):
+            # use ref as filename, if it exists.
             data = abrir_json(ModData.items + ref + '.json')
+        else:
+            img = None  # resets the image to None to prevent wrong item duplication.
 
         for item in pos[ref]:
-            if type(item) is str:
-                x, y = alldata['entradas'][item]['pos']
-            else:
-                x, y = item
+            x, y = alldata['entradas'][item]['pos'] if type(item) is str else item
+            is_interactive = False
 
-            if data:
+            if data is not None:
                 prop = new_prop(parent, x, y, data=data)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable
-            else:
+            elif img is not None:
                 prop = new_prop(parent, x, y, nombre=ref, img=img)
-                is_interactive = False
+            else:
+                print(f'Prop "{ref}" is invalid. Declare its path on the map "refs" to load.')
+                prop = None
 
             if type(prop) is list:
                 for p in prop:
                     is_interactive = p.accionable
                     loaded_props.append((p, is_interactive))
-            else:
+            elif prop is not None:
                 loaded_props.append((prop, is_interactive))
 
     return loaded_props

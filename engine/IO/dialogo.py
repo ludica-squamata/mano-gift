@@ -4,7 +4,7 @@ from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.misc.resources import abrir_json
-from os.path import exists
+from os import path, listdir
 
 
 class Discurso(EventAware):
@@ -112,17 +112,27 @@ class Discurso(EventAware):
             if "item" in node:
                 item_name = node['item']
                 ruta = ModData.items + item_name + '.json'
-                if exists(ruta):
+                if path.exists(ruta):
                     node['item'] = ruta
         if "trading" in file['head']:
             for trader in [name for name in file['head']['trading'] if name != 'default']:
                 for key in file['head']['trading'][trader]:
                     item_name = key.lower().replace(" ", "_")
                     ruta = ModData.items + item_name + '.json'
-                    if exists(ruta):
+                    if path.exists(ruta):
                         file['head']['trading'][trader][key] = {
                             "cant": file['head']['trading'][trader][key],
                             "ruta": ModData.items + item_name + '.json'}
+                    else:
+                        for item_file in listdir(ModData.items):
+                            ruta = path.join(ModData.items, item_file)
+                            item_data = abrir_json(ruta)
+                            if item_data.get('nombre', '') == key:
+                                file['head']['trading'][trader][key] = {
+                                    "cant": file['head']['trading'][trader][key],
+                                    'ruta': ruta
+                                }
+                                break
 
         return file
 
