@@ -170,3 +170,6 @@ class DialogInterface(BaseWidget):
 
         # dibujar el marco biselado.
         self.image.blit(self.marco, (0, 0))
+
+    def __repr__(self):
+        return f'DialogFrontend of {self.parent}'

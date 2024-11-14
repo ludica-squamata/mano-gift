@@ -84,7 +84,7 @@ class Item(AzoeSprite):
         self.data = data
         self.peso = self.data['peso']
         self.volumen = self.data['volumen']
-        self.efecto_des = self.data['efecto']['des']
+        self.efecto_des = self.data.get('efecto', {}).get('des', '')
         self.stackable = 'stackable' in self.data['propiedades']
         imagen = cargar_imagen(join(ModData.graphs, self.data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)

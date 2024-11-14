@@ -66,6 +66,7 @@ class Trepable(Escenografia):
     def __init__(self, parent, x, y, z, data):
         super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'trepar'
+        Prop_Group.add(self.nombre, self, self.grupo)
         Tagged_Items.add_item(self, 'trepables')
 
     def action(self, entity):
@@ -135,6 +136,7 @@ class Destruible(Escenografia):
         super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'romper'
         Tagged_Items.add_item(self, 'destruibles')
+        Prop_Group.add(self.nombre, self, self.grupo)
 
 
 class EstructuraCompuesta(Escenografia):
@@ -144,6 +146,7 @@ class EstructuraCompuesta(Escenografia):
         self.rect = Rect(self.x, self.y, self.w, self.h)
         self.proyectaSombra = data.get('proyecta_sombra', False)
         self.props = self.build_props(parent, data, x, y)
+        Prop_Group.add(self.nombre, self, self.grupo)
 
         super().__init__(parent, x, y, data=data, rect=self.rect)
 

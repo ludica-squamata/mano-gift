@@ -32,7 +32,8 @@
         "Libro Rojo": 1,
         "Banana": 10,
         "Ring": 1
-      }
+      },
+      "default": 9
     }
   },
   "body": {
@@ -49,7 +50,8 @@
       "txt": "Vender"
     },
     "3": {
-      "type": "leaf","from": "heroe","to": "Shopkeeper",
+      "type": "leaf","from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": false},
+      "#": "El evento Trade se dispara igual que 'No' para evitar un bucle continuo.",
       "txt": "Nada"
     },
     "4": {
@@ -71,6 +73,14 @@
     "8": {
       "type": "leaf","from": "Shopkeeper","to": "heroe",
       "txt": "No sé que es eso."
+    },
+    "9": {
+      "type": "node","leads": 10,"from": "Shopkeeper","to": "heroe",
+      "txt": "No puedo comprarte eso."
+    },
+    "10": {
+      "type": "node","leads": [1,2,3],"from": "Shopkeeper","to": "heroe",
+      "txt": "¿Qué se le ofrece?"
     }
   }
 }

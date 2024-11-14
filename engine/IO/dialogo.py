@@ -115,7 +115,7 @@ class Discurso(EventAware):
                 if exists(ruta):
                     node['item'] = ruta
         if "trading" in file['head']:
-            for trader in file['head']['trading']:
+            for trader in [name for name in file['head']['trading'] if name != 'default']:
                 for key in file['head']['trading'][trader]:
                     item_name = key.lower().replace(" ", "_")
                     ruta = ModData.items + item_name + '.json'
@@ -163,7 +163,9 @@ class Dialogo(Discurso):
         self.arbol = ArboldeDialogo(self, arbol['body'])
         self.objects = head.get('panels', {}).get('objects', {})
         self.themes = head.get('panels', {}).get('themes', {})
-        self.trading = head.get('trading', None)
+        self.trading = head.get('trading', {})
+        self.wont_buy = self.trading.get('default')
+        self.id = ModData.generate_id()
 
         self.locutores = {}
         for loc in locutores:
@@ -200,7 +202,7 @@ class Dialogo(Discurso):
         EventDispatcher.register(self.toggle_pause, "ReactivateDialog")
 
     def __repr__(self):
-        return 'Diálogo'
+        return f'Diálogo #{self.id.split('-')[1]}'
 
     def hablar_en_panel(self):
         panel = self.panels[self.panel_idx]
@@ -450,7 +452,7 @@ class Dialogo(Discurso):
         if self.registered:
             self.deregister()
             self.paused = True
-        elif not self.registered or event.data['value'] == True:
+        elif not self.registered and event.data['id'] == self.id:
             self.register()
             self.paused = False
             self.hablar()

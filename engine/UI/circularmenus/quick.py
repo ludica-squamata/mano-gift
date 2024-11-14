@@ -28,7 +28,7 @@ class QuickCircularMenu(RenderedCircularMenu):
                 'Consumibles': [InventoryElement(self, item) for item in e.inventario.get_by_type('consumible')],
                 'Equipables': [InventoryElement(self, item) for item in e.inventario.get_by_type('equipable')],
                 'Utilizables': [InventoryElement(self, item) for item in e.inventario.get_by_type('utilizable')],
-                'Colocar': [Colocable_IE(self, item) for item in e.inventario.uniques2() if item.is_colocable]
+                'Colocar': [Colocable_IE(self, item) for item in e.inventario.uniques() if item.is_colocable]
             }
         else:
             commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]

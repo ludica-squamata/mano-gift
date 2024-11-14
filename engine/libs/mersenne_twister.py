@@ -1,5 +1,6 @@
 from engine.misc import abrir_json
 from os import path, getcwd
+import random as py_random
 
 
 class Random:
@@ -126,9 +127,10 @@ class Random:
         return k - 1
 
 
-seed = abrir_json(path.join(getcwd(), 'engine.json'))['seed']
+set_seed = abrir_json(path.join(getcwd(), 'engine.json'))['seed']
 
-r = Random(seed)
+r = Random(set_seed)
+py_random.seed(set_seed)  # same seed for objects that use random.randrange, a function not provided by Mersenne Twister
 
 # method shortcuts
 random = r.random

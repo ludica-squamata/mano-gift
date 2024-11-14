@@ -128,15 +128,14 @@ class Trade(EventAware):
             trader.pause = False
             trader.pause_overridden = False
             trader.hablando = False
-            if hasattr(trader.AI, 'register'):
-                trader.AI.register()
 
         EventDispatcher.trigger('TogglePause', self, {'value': False})
         self.engaged = False
 
     def re_engage_dialog(self):
         if self.engaged:
-            EventDispatcher.trigger('ReactivateDialog', self, {'value': True})
+            dialog_id = self.parent.parent.parent.parent.id
+            EventDispatcher.trigger('ReactivateDialog', self, {'value': True, 'id': dialog_id})
             self.engaged = False
 
     def concrete_trade(self, event):

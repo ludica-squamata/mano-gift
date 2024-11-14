@@ -60,6 +60,10 @@ class Stage:
             self.current_latitude = 30
         self.current_longitude = self.data.get('longitude', 30)
 
+        self.unique_props = {}
+        if 'props' in self.data:
+            self.load_unique_props(self.data)
+
         mob_req = 'mobs' if use_csv is False else 'csv'
 
         if chunk_name in self.data.get('chunks', {}):
@@ -70,9 +74,6 @@ class Stage:
             ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
         else:
             ChunkMap(self, chunk_name, offx, offy, mob, requested=[mob_req, 'props'])
-
-        if 'props' in self.data:
-            self.load_unique_props(self.data)
 
         self.entradas = {}
         for key in self.data['entradas']:
@@ -128,15 +129,13 @@ class Stage:
         @param all_data: los datos del archivo json.
         """
         prop_data = all_data['props']
-        for key in prop_data:
-            chunk = self.get_chunk_by_adress(prop_data[key]['chunk'])
-            if chunk is not None:
-                data = {'props': {key: prop_data[key]['instances']}}
-                if key in all_data['refs']:
-                    # esto es para que Stage pueda tener props que son solo imágenes
-                    data.update({'refs': {key: all_data['refs'][key]}})
-                for item, grupo in load_something(chunk, data, 'props'):
-                    self.add_property(item, grupo)
+        for prop_name in prop_data:
+            adress = tuple(prop_data[prop_name]['chunk'])
+            if adress not in self.unique_props:
+                self.unique_props[adress] = {'props': {}, 'refs': {}}
+            self.unique_props[adress]['props'][prop_name] = prop_data[prop_name]['instances']
+            if prop_name in all_data['refs']:
+                self.unique_props[adress]['refs'][prop_name] = all_data['refs'][prop_name]
 
     def place_placeable_props(self, prop):
         grupo = prop.grupo
@@ -250,13 +249,6 @@ class Stage:
             self.del_property(obj.sombra)
         self.del_property(obj)
 
-    def del_property(self, obj):
-        if obj in self.properties:
-            self.properties.remove(obj)
-        if obj in self.interactives:
-            self.interactives.remove(obj)
-        Renderer.camara.remove_obj(obj)
-
 
 class ChunkMap(AzoeBaseSprite):
     tipo = 'chunk'
@@ -327,15 +319,19 @@ class ChunkMap(AzoeBaseSprite):
                 data['props'].update({datos['nombre']: [datos['pos']]})
                 data['refs'].update({datos['nombre']: datos['imagen']})
 
-        for i, salida in enumerate(self.parent.data['salidas']):
-            if salida['chunk_adress'] == self.adress:
-                self.set_salidas(*cargar_salidas(self, i, salida))
+        if tuple(self.adress) in self.parent.unique_props:
+            uniques = self.parent.unique_props[tuple(self.adress)]
+            data.update(uniques)
 
         self.cargar_limites(data.get('limites', self.limites))
         data['entradas'] = self.parent.data['entradas']
         # if any([len(data[req]) > 0 for req in requested]):
         for item, grupo in load_something(self, data, requested):
             self.add_property(item, grupo)
+
+        for i, salida in enumerate(self.parent.data['salidas']):
+            if salida['chunk_adress'] == self.adress:
+                self.set_salidas(*cargar_salidas(self, i, salida))
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 

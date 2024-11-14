@@ -5,11 +5,10 @@ from engine.libs import render_tagged_text
 
 
 class TradeableElement(LetterElement):
-    price = ''
 
     def __init__(self, parent, action, item, cantidad):
         self.item = item
-        self.price = action + '_price'
+        self.action = action
         self.cantidad = cantidad
         super().__init__(parent, item.nombre, item.image, do_title=True)
         self.description = DescriptiveArea(self, description=item.efecto_des)
@@ -24,18 +23,24 @@ class TradeableElement(LetterElement):
     def do_action(self):
         node = self.parent.parent
         arbol = node.parent
-
-        next_node = arbol[int(node.leads)]
-        coin = self.item.data['trading']['coin_symbol']
-        price = self.item.data['trading'][self.price]
-        text = next_node.texto
-        new_text = text.format(coin=coin, price=str(price))
-        arbol[int(node.leads)] = new_text
-
-        self.cantidad -= 1
-
         dialogo = arbol.parent
-        dialogo.mostrar_nodo(next_node)
+
+        coin = self.item.coin
+        if coin is not None:
+            next_node = arbol[int(node.leads)]
+            text = next_node.texto
+            price = self.item.price_sell if self.action == 'sell' else self.item.price_buy
+            new_text = text.format(coin=coin, price=str(price))
+            arbol[int(node.leads)] = new_text
+            # self.cantidad -= 1
+            dialogo.mostrar_nodo(next_node)
+        else:
+            # this clause covers un sellable items (like key items in other games)
+            # and outdated item.json that don't have the proper keys set.
+            next_node = arbol[dialogo.wont_buy]
+            arbol.set_actual(next_node)
+            dialogo.hablar()
+
         dialogo.frontend.show()
         dialogo.frontend.update()
         self.parent.salir()
