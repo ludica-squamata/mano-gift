@@ -57,10 +57,12 @@ class BaseElement(EventAware, AzoeBaseSprite):
         self.selected = False
 
     def do_action(self):
-        if self.command is None:
-            self.parent.foward()
-        elif self.check_placement():
-            self.command()
+        if self is self.parent.actual:
+            # this new check prevents unnecesary calls to parent.forward().
+            if self.command is None:
+                self.parent.forward()
+            elif self.check_placement():
+                self.command()
 
     def update(self):
         self.circular(self.delta)
@@ -140,7 +142,7 @@ class CircularMenu(EventAware):
             cuadro.delta = 0
         self.stopped = True
 
-    def foward(self):
+    def forward(self):
         if self.actual.nombre in self.cascadas and len(self.cascadas[self.actual.nombre]):
             self.cascadaActual = self.actual.nombre
             self.acceso_cascadas.append(self.cascadaActual)

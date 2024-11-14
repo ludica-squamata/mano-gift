@@ -1,7 +1,7 @@
 from engine.globs import ModData, Mob_Group, Game_State
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
-from .elements import LetterElement, CommandElement, InventoryElement, DialogTopicElement
+from .elements import CommandElement, InventoryElement, DialogTopicElement, LetterElement
 from .elements import ColocableInventoryElement as Colocable_IE
 
 
@@ -19,12 +19,14 @@ class QuickCircularMenu(RenderedCircularMenu):
                 'inicial': [
                     CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': e.cambiar_estado}),
                     CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
-                    LetterElement(self, 'Consumibles', 'C'),
-                    LetterElement(self, 'Equipables', 'E'),
-                    LetterElement(self, "Utilizables", "U"),
+                    LetterElement(self, "Items", "I"),
                     LetterElement(self, 'Temas', 'T'),
                     LetterElement(self, 'Colocar', 'P')
                 ],
+                "Items": [
+                    LetterElement(self, 'Consumibles', 'C'),
+                    LetterElement(self, 'Equipables', 'E'),
+                    LetterElement(self, "Utilizables", "U")],
                 'Consumibles': [InventoryElement(self, item) for item in e.inventario.get_by_type('consumible')],
                 'Equipables': [InventoryElement(self, item) for item in e.inventario.get_by_type('equipable')],
                 'Utilizables': [InventoryElement(self, item) for item in e.inventario.get_by_type('utilizable')],
