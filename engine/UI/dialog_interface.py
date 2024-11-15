@@ -133,10 +133,11 @@ class DialogInterface(BaseWidget):
         self.sel = 0
         self.text_rect.y = 3  # reset scrolling
 
-    def show(self):
+    def show(self, switch=True):
         self.active = True
         Renderer.add_overlay(self, CAPA_OVERLAYS_DIALOGOS)
-        self.menu.switch_cascades()
+        if switch:
+            self.menu.switch_cascades()
 
     def hide(self):
         self.active = False

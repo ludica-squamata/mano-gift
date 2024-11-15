@@ -1,4 +1,3 @@
-# from engine.globs.event_dispatcher import EventDispatcher
 from .letter import LetterElement
 from .descriptive_area import DescriptiveArea
 from engine.libs import render_tagged_text
@@ -41,8 +40,7 @@ class TradeableElement(LetterElement):
             arbol.set_actual(next_node)
             dialogo.hablar()
 
-        dialogo.frontend.show()
-        dialogo.frontend.update()
+        dialogo.frontend.show(False)
         self.parent.salir()
 
     def update(self):

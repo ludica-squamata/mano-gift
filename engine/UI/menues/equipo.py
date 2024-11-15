@@ -154,7 +154,6 @@ class MenuEquipo(Menu):
 
         return render
 
-    # noinspection PyUnresolvedReferences
     def select_one(self, direccion):
         self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
         """Desplaza la selección al espacio equipable actual, y lo resalta.
@@ -214,16 +213,20 @@ class MenuEquipo(Menu):
         fuenteb = font.Font('engine/libs/Verdanab.ttf', 14)
 
         d = [
-            {'nombre': 'Peso', 'data': item.peso},
-            {'nombre': 'Volumen', 'data': item.volumen},
-            {'nombre': 'Descripción', 'data': item.efecto_des}
+            {'nombre': 'Nombre', 'data': item.nombre, "column": 1, "row": 0},
+            {'nombre': 'Peso', 'data': item.peso, "column": 1, "row": 1},
+            {'nombre': 'Volumen', 'data': item.volumen, "column": 2, "row": 1},
+            {'nombre': 'Descripción', 'data': item.efecto_des, "column": 1, "row": 2}
         ]
-        for i, p in enumerate(d):
+        for p in d:
             key = fuenteb.render(str(p['nombre']), True, TEXT_FG, CANVAS_BG)
-            rect_key = key.get_rect(x=270, y=290 + i * 22)
+            x = 270 if p['column'] == 1 else 370
+            y = 290 + p['row'] * 22
+
+            rect_key = key.get_rect(topleft=(x, y))
 
             data = fuentea.render(': ' + str(p['data']), True, TEXT_FG, CANVAS_BG)
-            rect_data = data.get_rect(x=rect_key.right, y=290 + i * 22)
+            rect_data = data.get_rect(x=rect_key.right, y=y)
             self.canvas.blit(key, rect_key)
             self.canvas.blit(data, rect_data)
 
