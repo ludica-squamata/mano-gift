@@ -15,10 +15,11 @@ class Comerciante(Equipado):
         ruta = path.join(Config.savedir, 'trading_list.csv')
         if path.exists(ruta):
             with open(ruta, 'r') as csv_file:
-                for row in csv.DictReader(csv_file, ['trader', 'item', 'cant', "desde"], delimiter=";"):
+                reader = csv.DictReader(csv_file, ['trader', 'item', 'cant', "desde"], delimiter=";")
+                for row in [row for row in reader if row['trader'] == self.nombre]:
                     now = Tiempo.clock.timestamp()
                     timestamp = TimeStamp(*row['desde'].split(':')) if row['desde'] != 'inicio' else "inicio"
-                    if self.nombre == row['trader'] and (row['desde'] == 'inicio' or now >= timestamp):
+                    if row['desde'] == 'inicio' or now >= timestamp:
                         ruta = ModData.items + row['item'].lower().replace(" ", "_") + '.json'
                         if path.exists(ruta):
                             item = new_item(self, row['item'], ruta)
