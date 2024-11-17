@@ -12,8 +12,8 @@
     "heads": "mobs/imagenes/heads_commoner.png",
     "atk": null,
     "death": null,
-    "idle":"mobs/imagenes/commoner_idle_walk_body.png",
-    "diag_face":"mobs/imagenes/npc_face.png"
+    "idle": "mobs/imagenes/commoner_idle_walk_body.png",
+    "diag_face": "mobs/imagenes/npc_face.png"
   },
   "alpha": "mobs/colisiones/human_walk.png",
   "AI": "ai"

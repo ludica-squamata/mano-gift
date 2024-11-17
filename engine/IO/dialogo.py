@@ -4,7 +4,7 @@ from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.misc.resources import abrir_json
-from os import path, listdir
+from os import path
 
 
 class Discurso(EventAware):
@@ -114,25 +114,6 @@ class Discurso(EventAware):
                 ruta = ModData.items + item_name + '.json'
                 if path.exists(ruta):
                     node['item'] = ruta
-        if "trading" in file['head']:
-            for trader in [name for name in file['head']['trading'] if name != 'default']:
-                for key in file['head']['trading'][trader]:
-                    item_name = key.lower().replace(" ", "_")
-                    ruta = ModData.items + item_name + '.json'
-                    if path.exists(ruta):
-                        file['head']['trading'][trader][key] = {
-                            "cant": file['head']['trading'][trader][key],
-                            "ruta": ModData.items + item_name + '.json'}
-                    else:
-                        for item_file in listdir(ModData.items):
-                            ruta = path.join(ModData.items, item_file)
-                            item_data = abrir_json(ruta)
-                            if item_data.get('nombre', '') == key:
-                                file['head']['trading'][trader][key] = {
-                                    "cant": file['head']['trading'][trader][key],
-                                    'ruta': ruta
-                                }
-                                break
 
         return file
 
@@ -175,6 +156,7 @@ class Dialogo(Discurso):
         self.themes = head.get('panels', {}).get('themes', {})
         self.trading = head.get('trading', {})
         self.wont_buy = self.trading.get('default')
+        self.cant_sell = self.trading.get('failure')
         self.id = ModData.generate_id()
 
         self.locutores = {}

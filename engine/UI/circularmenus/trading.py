@@ -2,7 +2,9 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from .rendered import RenderedCircularMenu
 from .elements import TradeableElement
-from engine.globs import Mob_Group
+from engine.globs import Mob_Group, ModData, Tiempo
+from os import path
+import csv
 
 
 class TradingCircularMenu(RenderedCircularMenu):
@@ -27,7 +29,7 @@ class TradingCircularMenu(RenderedCircularMenu):
                 mob.paused = True
                 mob.pause_overridden = True
             else:
-                mob = Mob_Group.get_named(name)[0]
+                mob = Mob_Group.get_named(name)
                 mob.hablando = True
                 mob.paused = True
                 mob.AI.trigger_node(25)
@@ -59,25 +61,28 @@ class TradingCircularMenu(RenderedCircularMenu):
 
 class BuyingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
-        from engine.scenery import new_item
         self.name = 'Buying CM'
         self.fill_participantes(participants)
-        trading = parent.parent.parent.trading
-        buyable, cantidades = [], []
         for trader in self.traders:
-            if trader in trading:
-                for key in trading[trader]:
-                    buyable.append(new_item(self, key, trading[trader][key]['ruta']))
-                    cantidades.append(trading[trader][key]['cant'])
+            mob = Mob_Group.get_named(trader)
+            if mob is not None:
+                buyable = mob.inventario.uniques()
+                cantidades = [mob.inventario.cantidad(item) for item in buyable]
 
-        cascadas = {
-            'inicial': [TradeableElement(self, 'buy', buyable[i], cantidades[i]) for i in range(len(buyable))]
-        }
-        self.trade = Trade(self)
-        super().__init__(parent, cascadas)
+                cascadas = {
+                    'inicial': [TradeableElement(self, "buy", buyable[i], cantidades[i]) for i in range(len(buyable))]
+                }
+                self.trade = Trade(self)
+                super().__init__(parent, cascadas)
 
 
 class SellingCM(TradingCircularMenu):
+
+    @classmethod
+    def is_possible(cls):
+        mob = Mob_Group.get_controlled_mob()
+        return len(mob.inventario) > 0
+
     def __init__(self, parent, participants):
         self.name = 'Selling CM'
         self.fill_participantes(participants)
@@ -92,15 +97,24 @@ class SellingCM(TradingCircularMenu):
 
 def trigger_trading_menu(event):
     menu = None
+    possible = False
     if event.tipo == 'TriggerSellScreen':
         menu = SellingCM
+        possible = menu.is_possible()
     elif event.tipo == 'TriggerBuyScreen':
         menu = BuyingCM
+        possible = True
 
     dialogo = event.origin.parent.parent
-    dialogo.toggle_pause()
-    dialogo.frontend.hide()
-    menu(event.origin, event.data['participants'])
+    if possible:
+        dialogo.toggle_pause()
+        dialogo.frontend.hide()
+        menu(event.origin, event.data['participants'])
+    else:
+        arbol = dialogo.arbol
+        next_node = arbol[dialogo.cant_sell]
+        arbol.set_actual(next_node)
+        dialogo.hablar()
 
 
 class Trade(EventAware):
@@ -153,9 +167,33 @@ class Trade(EventAware):
 
             item = self.parent.actual.item
             value = item.price_buy if type(self.parent) is BuyingCM else item.price_sell
+            coin = item.coin
 
             buyer.recibir_item(item)
-            seller.recibir_dinero(value)
+            buyer.entregar_dinero(coin, value)
+            seller.vender_item(item)
+            seller.recibir_dinero(coin, value)
+
+            timestamp = Tiempo.clock.timestamp()
+
+            transactions = [
+                {'trader': buyer.nombre, 'item': item.nombre, 'delta': 1, 'tiempo': timestamp},
+                {'trader': seller.nombre, 'item': item.nombre, 'delta': -1, 'tiempo': timestamp}
+            ]
+            self.record_transaction(transactions)
+
+    @staticmethod
+    def record_transaction(transactions):
+        ruta = path.join(ModData.mobs, 'trading_list.csv')
+        with open(ruta, 'at', encoding='utf-8', newline='') as csv_file:
+            field_names = ['trader', 'item', 'cant', 'desde']
+            writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\r\n')
+            for transaction in transactions:
+                row = {
+                    'trader': transaction['trader'], 'item': transaction['item'],
+                    'cant': transaction['delta'], 'desde': transaction['tiempo']
+                }
+                writer.writerow(row)
 
     def __repr__(self):
         return "Trade"

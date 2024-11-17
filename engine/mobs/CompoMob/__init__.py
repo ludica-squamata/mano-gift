@@ -7,4 +7,4 @@ from ._autonomo import Autonomo
 from ._parlante import Parlante
 from ._combativo import Combativo
 from ._suertudo import Suertudo
-from .comerciante import Comerciante
+from ._comerciante import Comerciante

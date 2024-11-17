@@ -105,7 +105,8 @@ class MobGroup:
             named = [mob for mob in self.contents() if mob.nombre == name.nombre]
 
         named.sort(key=lambda o: o.nombre)
-        return named
+        if len(named):
+            return named[0]
 
     # Aunque estos tres métodos singularizan al héroe
     # no se me ocurre otra forma de arrastrar su nombre.
@@ -250,6 +251,7 @@ class ItemGroup:
         self._indexes.clear()
         self._group.clear()
         self._lenght = 0
+
 
 class DeletedItems(ItemGroup):
     def delete_item(self, event):

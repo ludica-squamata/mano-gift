@@ -1,6 +1,6 @@
 {
   "nombre": "Poste",
-  "tipo": "inerte",
+  "tipo": "escenografia",
   "peso": 10,
   "volumen": 4,
   "image": "props/poste_luz.png",

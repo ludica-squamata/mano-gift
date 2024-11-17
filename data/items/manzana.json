@@ -3,8 +3,7 @@
   "tipo": "agarrable",
   "subtipo": "consumible",
   "peso": 1,
-  "volumen": 0.0075
-,
+  "volumen": 0.0075,
   "imagenes": {
     "prop": "props/Manzana-10.png",
     "item": "props/Manzana-24.png",

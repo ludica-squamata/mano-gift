@@ -174,9 +174,9 @@ class TimeStamp:
             h = int(h - decimales)
             m = int(decimales * 60)
 
-        self._h = h
-        self._m = m
-        self._s = s
+        self._h = int(h)
+        self._m = int(m)
+        self._s = int(s)
 
     # read-only properties
     @property
@@ -199,16 +199,15 @@ class TimeStamp:
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
             s1 = self._h * 3600 + self._m * 60 + self._s
             s2 = other.h * 3600 + other.m * 60 + other.s
-            if s1 < s2:
-                return True
+            return s1 < s2
         return False
 
     def __le__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
             s1 = self._h * 3600 + self._m * 60 + self._s
             s2 = other.h * 3600 + other.m * 60 + other.s
-            if s1 <= s2:
-                return True
+            return s1 <= s2
+
         return False
 
     def __eq__(self, other):
@@ -228,16 +227,16 @@ class TimeStamp:
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
             s1 = self._h * 3600 + self._m * 60 + self._s
             s2 = other.h * 3600 + other.m * 60 + other.s
-            if s1 > s2:
-                return True
+            return s1 > s2
+
         return False
 
     def __ge__(self, other):
         if hasattr(other, '_h') and hasattr(other, '_m') and hasattr(other, '_s'):
             s1 = self._h * 3600 + self._m * 60 + self._s
             s2 = other.h * 3600 + other.m * 60 + other.s
-            if s1 >= s2:
-                return True
+            return s1 >= s2
+
         return False
 
     # operations, add, sub, mul
