@@ -1,12 +1,15 @@
-from engine.base import ShadowSprite, EventListener, AzoeSprite
 from engine.globs import GRUPO_ITEMS, Tagged_Items, ModData
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.prop_description import PropDescription
 from engine.mapa.light_source import LightSource
+from engine.base import ShadowSprite, AzoeSprite
 from engine.misc import cargar_imagen
+from importlib import import_module
 from os.path import join
+import types
 
 
-class Escenografia(ShadowSprite, EventListener):
+class Escenografia(ShadowSprite):
     accionable = False
     action = None
     tipo = 'Prop'
@@ -48,6 +51,7 @@ class Escenografia(ShadowSprite, EventListener):
             self.luz = LightSource(self, self.nombre, data, x, y)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
 
+        self.event_handlers = {}
         self.add_listeners()  # carga de event listeners
 
     def __repr__(self):
@@ -63,6 +67,33 @@ class Escenografia(ShadowSprite, EventListener):
         super().update(*args)
         if self.luz is not None:
             self.luz.update()
+
+    def add_listeners(self):
+        """
+        carga los listeners definido en el
+        :return:None
+        """
+        if self.data.get('script') and self.data.get('eventos'):
+            # cargar un archivo por ruta
+            ruta = join(ModData.fd_scripts, 'events', self.data['script'])
+            m = import_module(ruta, self.data['script'][:-3])
+
+            for event_name, func_name in self.data['eventos'].items():
+                if hasattr(m, func_name):
+                    # esto le asigna la instancia actual como self a la función,
+                    # así puede acceder a propiedades del sprite
+                    method = types.MethodType(getattr(m, func_name), self)
+                    self.event_handlers[event_name] = method
+                    EventDispatcher.register(method, event_name)
+
+    def remove_listeners(self):
+        """
+        quitar listeners, como parte de la limpieza de un sprite
+        :return:None
+        """
+        if self.event_handlers:
+            for event_name, f in self.event_handlers:
+                EventDispatcher.deregister(f, event_name)
 
 
 class Item(AzoeSprite):
@@ -97,7 +128,7 @@ class Item(AzoeSprite):
         #     test_3 = self.subtipo == other.subtipo
         # else:
         #     test_3 = False
-        tests = [test_1]  #, test_2, test_3
+        tests = [test_1]  # , test_2, test_3
         return all(tests)
 
     def __ne__(self, other):
