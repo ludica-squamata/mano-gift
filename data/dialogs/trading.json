@@ -51,11 +51,11 @@
     },
     "4": {
       "type": "node","leads": [6,7],"from": "Shopkeeper","to": "heroe",
-      "txt": "El precio de ese item es {coin}{price}. ¿Quieres comprarlo?"
+      "txt": "Esto te costará {coin}{price}. ¿Quieres comprar?"
     },
     "5": {
       "type": "node","leads": [6,7],"from": "Shopkeeper","to": "heroe",
-      "txt": "Puedo pagarte {coin}{price} por ese item. ¿Quieres vendérmelo?"
+      "txt": "Puedo pagarte {coin}{price} por esto. ¿estás seguro?"
     },
     "6": {
       "type": "leaf","from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": true},

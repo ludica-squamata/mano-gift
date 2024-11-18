@@ -7,6 +7,7 @@ from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
 from os import path, mkdir, getcwd
 from .sun import Sun
+from csv import DictWriter
 
 
 class EngineData:
@@ -19,6 +20,7 @@ class EngineData:
         'AI': 'controllable'
     }
     transient_mobs = []
+    _concreted_trades = []
 
     @classmethod
     def init(cls):
@@ -127,6 +129,7 @@ class EngineData:
         data = abrir_json(Config.savedir + '/' + name + '.json')
         data.update(event.data)
         guardar_json(Config.savedir + '/' + name + '.json', data)
+        cls.record_transactions()
 
     @classmethod
     def new_game(cls, char_name):
@@ -188,6 +191,23 @@ class EngineData:
             transient.append(entry)
 
         EventDispatcher.trigger(event.tipo + 'Data', 'Engine', {'transient': transient})
+
+    @classmethod
+    def extend_trades(cls, new):
+        cls._concreted_trades.extend(new)
+
+    @classmethod
+    def record_transactions(cls):
+        ruta = path.join(Config.savedir, 'trading_list.csv')
+        with open(ruta, 'at', encoding='utf-8', newline='') as csv_file:
+            field_names = ['trader', 'item', 'cant', 'desde']
+            writer = DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\r\n')
+            for transaction in cls._concreted_trades:
+                row = {
+                    'trader': transaction['trader'], 'item': transaction['item'],
+                    'cant': transaction['delta'], 'desde': transaction['tiempo']
+                }
+                writer.writerow(row)
 
     @classmethod
     def compound_save_data(cls, event):

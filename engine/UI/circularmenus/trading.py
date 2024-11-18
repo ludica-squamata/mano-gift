@@ -1,10 +1,8 @@
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs import Mob_Group, Tiempo, EngineData
 from engine.globs.event_aware import EventAware
 from .rendered import RenderedCircularMenu
 from .elements import TradeableElement
-from engine.globs import Mob_Group, ModData, Tiempo
-from os import path
-import csv
 
 
 class TradingCircularMenu(RenderedCircularMenu):
@@ -119,6 +117,7 @@ def trigger_trading_menu(event):
 
 class Trade(EventAware):
     engaged = False
+    delta = 0
 
     def __init__(self, parent):
         super().__init__()
@@ -152,6 +151,9 @@ class Trade(EventAware):
             EventDispatcher.trigger('ReactivateDialog', self, {'value': True, 'id': dialog_id})
             self.engaged = False
 
+    def set_delta(self, delta):
+        self.delta = delta
+
     def concrete_trade(self, event):
         self.disengage()
         self.deregister()
@@ -169,31 +171,20 @@ class Trade(EventAware):
             value = item.price_buy if type(self.parent) is BuyingCM else item.price_sell
             coin = item.coin
 
-            buyer.recibir_item(item)
+            for _ in range(self.delta):
+                buyer.recibir_item(item)
+                seller.vender_item(item)
+
             buyer.entregar_dinero(coin, value)
-            seller.vender_item(item)
             seller.recibir_dinero(coin, value)
 
             timestamp = Tiempo.clock.timestamp()
 
             transactions = [
-                {'trader': buyer.nombre, 'item': item.nombre, 'delta': 1, 'tiempo': timestamp},
-                {'trader': seller.nombre, 'item': item.nombre, 'delta': -1, 'tiempo': timestamp}
+                {'trader': buyer.nombre, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
+                {'trader': seller.nombre, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}
             ]
-            self.record_transaction(transactions)
-
-    @staticmethod
-    def record_transaction(transactions):
-        ruta = path.join(ModData.mobs, 'trading_list.csv')
-        with open(ruta, 'at', encoding='utf-8', newline='') as csv_file:
-            field_names = ['trader', 'item', 'cant', 'desde']
-            writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\r\n')
-            for transaction in transactions:
-                row = {
-                    'trader': transaction['trader'], 'item': transaction['item'],
-                    'cant': transaction['delta'], 'desde': transaction['tiempo']
-                }
-                writer.writerow(row)
+            EngineData.extend_trades(transactions)
 
     def __repr__(self):
         return "Trade"
