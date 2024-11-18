@@ -99,6 +99,7 @@ class ControllableAI(EventAware):
 
                     else:
                         sprite.show_description()
+                        self.entity.detener_movimiento()
                         self.deregister()
 
         self.accion = False
