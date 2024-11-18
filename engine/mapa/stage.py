@@ -329,9 +329,8 @@ class ChunkMap(AzoeBaseSprite):
         for item, grupo in load_something(self, data, requested):
             self.add_property(item, grupo)
 
-        for i, salida in enumerate(self.parent.data['salidas']):
-            if salida['chunk_adress'] == self.adress:
-                self.set_salidas(*cargar_salidas(self, i, salida))
+        salidas = [salida for salida in self.parent.data['salidas'] if salida['chunk_adress'] == self.adress]
+        self.set_salidas(*cargar_salidas(self, salidas))
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
 
@@ -348,9 +347,9 @@ class ChunkMap(AzoeBaseSprite):
     @property
     def mascara_salidas(self):
         if self.mask_salidas is None:
-            return mask.Mask(self.image.get_size())
-        else:
-            return self.mask_salidas
+            self.mask_salidas = mask.Mask(self.image.get_size())
+
+        return self.mask_salidas
 
     def ubicar(self, x, y):
         self.rect.x = x

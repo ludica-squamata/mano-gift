@@ -15,7 +15,7 @@ class Salida:
     sprite = None
     solido = False
 
-    def __init__(self, nombre, id, stage, rect, chunk, entrada, direcciones, color):
+    def __init__(self, nombre, id, stage, rect, chunk, entrada, direcciones, accion, color):
         self.nombre = self.tipo + '.' + nombre
         self.flag_name = self.nombre + '.triggered'
         self.x, self.y, w, h = rect
@@ -25,13 +25,14 @@ class Salida:
         self.direcciones = direcciones
         self.mask = Mask(rect.size)
         self.mask.fill()
+        self.action_trigger = accion
         self.id = id
         if 'pydevd' in sys.modules and bool(chunk):
             self.sprite = SpriteSalida(chunk, self.nombre, self.x, self.y, w, h, color)
             chunk.add_property(self.sprite, 10000)
             Renderer.camara.add_real(self.sprite)
 
-    def trigger(self, mob):
+    def trigger(self, mob, accion='caminar'):
         # este método, que antes era update(), toma los datos de la salida
         # y dispara el evento. Ya no se fija qué mob la pisa.
         data = {'mob': mob,
@@ -39,7 +40,14 @@ class Salida:
                 'target_chunk': self.chunk,
                 'target_entrada': self.entrada}
 
+        trigger = False
         if mob.body_direction in self.direcciones or not len(self.direcciones):
+            if self.action_trigger == "caminar" and mob.moviendose:
+                trigger = True
+            elif accion == self.action_trigger:
+                trigger = True
+
+        if trigger:
             EventDispatcher.trigger('SetMap', 'Salida', data)
             Game_State.set2(self.flag_name)
 

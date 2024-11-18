@@ -195,35 +195,39 @@ def load_props_csv(csv_file):
         return data
 
 
-def cargar_salidas(chunk, i, datos):
+def cargar_salidas(chunk, all_data):
     salidas = {}
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0
 
-    nombre = datos['nombre']
-    stage = datos['stage']
-    prop = None
-    if 'prop' in datos and datos['prop'] is not None:
-        prop = Prop_Group[datos['prop'].capitalize()]
-        rect = Rect(0, 0, *prop.rect.size)
-        rect.center = prop.rect.bottomright
-    else:
-        rect = Rect(datos['rect'])
-    entrada = datos['entrada']
-    direcciones = datos['direcciones']
-    id = ModData.generate_id()
-    r, g, b, a = randint(0, 255), i % 255, i // 255, 255
-    color = Color(r, g, b, a)
-    # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
-    # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
-    salida = Salida(nombre, id, stage, rect, chunk, entrada, direcciones, color)
-    if prop is not None:
-        prop.salida = salida
-    salidas[b * 255 + g] = salida
+    for i, datos in enumerate(all_data):
+        nombre = datos['nombre']
+        stage = datos['stage']
+        prop = None
+        if 'prop' in datos and datos['prop'] is not None:
+            prop = Prop_Group[datos['prop'].capitalize()]
+            accion = prop.accion
+            rect = Rect(0, 0, *prop.rect.size)
+            rect.center = prop.rect.bottomright
+        else:
+            accion = 'caminar'
+            rect = Rect(datos['rect'])
 
-    # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
-    # después se usará b*255+g para devolver el index.
-    img.fill((r, g, b, a), rect)
+        entrada = datos['entrada']
+        direcciones = datos['direcciones']
+        id = ModData.generate_id()
+        r, g, b, a = randint(0, 255), i % 255, i // 255, 255
+        color = Color(r, g, b, a)
+        # r ahora es randint para que cada salida tenga un color diferente en el debuggin.
+        # esto es posible porque R no tiene efecto a la hora de detectar la colisión.
+        salida = Salida(nombre, id, stage, rect, chunk, entrada, direcciones, accion, color)
+        if prop is not None:
+            prop.salida = salida
+        salidas[b * 255 + g] = salida
+
+        # pintamos el área de la salida con el color-código en GB. R y A permanecen en 255.
+        # después se usará b*255+g para devolver el index.
+        img.fill((r, g, b, a), rect)
 
     # la mascara se usa para la detección de colisiones.
     # las partes no pintadas tienen un alpha = 0, por lo que la mascara en esos lugares

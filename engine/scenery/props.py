@@ -72,7 +72,7 @@ class Trepable(Escenografia):
     def action(self, entity):
         # acá debería iniciar una animación del mob trepando.
         if self.salida is not None:
-            self.salida.trigger(entity)
+            self.salida.trigger(entity, self.accion)
 
 
 class Operable(Escenografia):

@@ -1,7 +1,8 @@
-from engine.misc.util import salir
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs.renderer import Renderer
 from engine.globs.azoe_group import AzoeBaseSprite
+from engine.globs.renderer import Renderer
+from engine.misc.util import salir
+from engine.globs import Mob_Group
 from pygame import Surface, font
 
 
@@ -28,7 +29,7 @@ class FadingScreen(AzoeBaseSprite):
 
 
 def gameover(evento):
-    if evento.data['obj'].nombre == 'heroe':
+    if evento.data['obj'].nombre == Mob_Group.get_controlled_mob().nombre:
         Renderer.add_overlay(FadingScreen(), 50)
 
 

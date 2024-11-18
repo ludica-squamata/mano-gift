@@ -83,25 +83,27 @@ class AzoeSprite(sprite.Sprite):
         elif self._last_map != Camara.current_map:
             # esta otra se ejecuta en el paso de un chunk al otro.
             self._last_map = Camara.current_map
-            self.rel_y = self._rel(self.rel_y, dy)
-            self.rel_x = self._rel(self.rel_x, dx)
+            if dx != 0:
+                self.rel_x = self._rel(self.rel_x, dx)
+            if dy != 0:
+                self.rel_y = self._rel(self.rel_y, dy)
+        #
+        # if self.rel_x + dx < 0:
+        #     self.rel_x = 800
+        # elif self.rel_x + dx > 800:
+        #     self.rel_x = dx
+        # else:
+        self.rel_x += dx
 
-        if self.rel_x + dx < 0:
-            self.rel_x = 800
-        elif self.rel_x + dx > 800:
-            self.rel_x = dx
-        else:
-            self.rel_x += dx
-
-        if self.rel_y + dy < 0:
-            self.rel_y = 800
-            self.z = 800 - 32  # aunque no estoy seguro de esto
-        elif self.rel_y + dy > 800:
-            self.rel_y = dy
-            self.z = 32
-        else:
-            self.rel_y += dy
-            self.z += dy
+        # if self.rel_y + dy < 0:
+        #     self.rel_y = 800
+        #     self.z = 800 - 32  # aunque no estoy seguro de esto
+        # elif self.rel_y + dy > 800:
+        #     self.rel_y = dy
+        #     self.z = 32
+        # else:
+        self.rel_y += dy
+        self.z += dy
 
     @staticmethod
     def _rel(rel, delta):
