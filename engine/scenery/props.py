@@ -26,6 +26,9 @@ class Agarrable(Escenografia):
             # removes the prop from the map, but not the item from the world.
             EventDispatcher.trigger('DeleteItem', 'Prop', {'obj': self})
 
+            # plays the pick up sound (WIP).
+            EventDispatcher.trigger('PlaySound', self, {'sound': 'pick up'})
+
         if "dialog" in self.data:
             ref = self.data['dialog']
             EventDispatcher.trigger('TookItem', 'Prop', {'who': entity,

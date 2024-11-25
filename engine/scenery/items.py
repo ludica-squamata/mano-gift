@@ -56,6 +56,7 @@ class Consumible(Tradeable):
 
         m, s, v, f, h = 'mob', 'stat', 'value', 'factor', 'method'
         EventDispatcher.trigger('UsedItem', self.nombre, {m: mob, s: stat, v: valor, f: mod, h: method})
+        EventDispatcher.trigger('PlaySound', self, {'sound': 'powerup'})
         return mob.inventario.remover(self)
 
 
