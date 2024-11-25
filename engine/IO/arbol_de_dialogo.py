@@ -208,7 +208,7 @@ class ArboldeDialogo:
                     # de forma similar, podemos reemplazar las keys en el evento
                     chunk = elemento.parent.parent.locutores[elemento.emisor].parent
                     stage = chunk.parent  # nesting 120%
-                    if events[name]['pos'] in stage.points_of_interest[chunk.nombre]:
+                    if events[name]['pos'] in stage.points_of_interest.get(chunk.nombre, {}):
                         # con los puntos de interés para la IA.
                         event['data']['pos'] = stage.points_of_interest[chunk.nombre][events[name]['pos']]
 

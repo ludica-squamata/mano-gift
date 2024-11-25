@@ -112,8 +112,8 @@ def load_mobs(parent, alldata: dict):
 def load_mob_csv(parent, all_data):
     loaded_mobs = []
     with open(path.join(Config.savedir, 'mobs.csv')) as cvsfile:
-        reader = csv.DictReader(cvsfile, fieldnames=['name', 'x', 'y', 'id'], delimiter=';')
-        for row in reader:
+        reader = csv.DictReader(cvsfile, fieldnames=['name', 'x', 'y', 'id', 'chunk_name'], delimiter=';')
+        for row in [row for row in reader if row['chunk_name'] == parent.nombre]:
             name = row['name']
             x = int(row['x'])
             y = int(row['y'])
