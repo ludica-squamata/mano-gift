@@ -4,6 +4,7 @@ from engine.libs.textrect import render_textrect
 from engine.misc.resources import cargar_imagen
 from engine.UI.widgets import EspacioEquipable
 from engine.globs.azoe_group import AzoeGroup
+from engine.IO import SoundManager
 from pygame import Rect, font
 from .menu import Menu
 
@@ -173,6 +174,7 @@ class MenuEquipo(Menu):
             espacio = self.espacios.get_sprite(i)
             if espacio.nombre == selected:
                 espacio.ser_elegido()
+                SoundManager.play_direct_sound('select')
                 self.current = espacio
                 self.cur_esp = i
                 break
@@ -218,6 +220,7 @@ class MenuEquipo(Menu):
             {'nombre': 'Volumen', 'data': item.volumen, "column": 2, "row": 1},
             {'nombre': 'Descripción', 'data': item.efecto_des, "column": 1, "row": 2}
         ]
+        self.canvas.fill(CANVAS_BG, [270, 290, 342, 165])  # clears the descriptive area
         for p in d:
             key = fuenteb.render(str(p['nombre']), True, TEXT_FG, CANVAS_BG)
             x = 270 if p['column'] == 1 else 370

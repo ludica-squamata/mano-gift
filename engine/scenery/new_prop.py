@@ -44,6 +44,7 @@ def new_item(parent, nombre, ruta_or_data):
         raise TypeError('Incorrect data')
 
     subtipo = data['subtipo']
+    actual_name = data.get('nombre', nombre)
     item = None
     if subtipo == 'consumible':
         item = Consumible
@@ -60,4 +61,4 @@ def new_item(parent, nombre, ruta_or_data):
     elif subtipo == 'utilizable':
         item = Utilizable
 
-    return item(parent, nombre, data)
+    return item(parent, actual_name, data)

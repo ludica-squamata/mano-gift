@@ -6,6 +6,7 @@ from engine.globs.event_aware import EventAware
 from engine.globs.azoe_group import AzoeGroup
 from engine.misc.config import Config as Cfg
 from pygame import Rect, font, Surface
+from engine.IO import SoundManager
 
 
 class Menu(EventAware, BaseWidget):
@@ -96,12 +97,14 @@ class Menu(EventAware, BaseWidget):
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()
+            SoundManager.play_direct_sound('press')
 
     def mantener_presion(self):
         self.current.mantener_presion()
 
     def liberar_presion(self):
         self.current.liberar_presion()
+        SoundManager.play_direct_sound('press')
 
     def reset(self, **kwargs):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
@@ -118,7 +121,7 @@ class Menu(EventAware, BaseWidget):
 
         self.active = True
 
-    def select_one(self, direccion):
+    def select_one(self, direccion, play_sound=True):
         self.deselect_all(self.botones)
         if len(self.botones) > 0:
             current = self.botones.get_spr(self.cur_btn)
@@ -131,6 +134,8 @@ class Menu(EventAware, BaseWidget):
                 boton = self.botones.get_spr(i)
                 if boton.nombre == selected:
                     boton.ser_elegido()
+                    if play_sound:
+                        SoundManager.play_direct_sound('select')
                     self.mover_cursor(boton)
                     break
 
@@ -146,7 +151,7 @@ class Menu(EventAware, BaseWidget):
             self.botones.add(boton)
 
         self.cur_btn = 0
-        self.select_one(0)
+        self.select_one(0, False)
         self.reset()
 
     def posicionar_cursor(self, i):

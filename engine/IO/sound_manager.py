@@ -8,7 +8,7 @@ class SoundManager:
 
     @classmethod
     def init(cls):
-        mixer_init()
+        mixer_init(channels=1)
         base_ruta = path.join(getcwd(), 'data', 'sounds')
         for file in listdir(base_ruta):
             if file.endswith('.wav'):
@@ -22,6 +22,11 @@ class SoundManager:
     def play_sound(cls, event):
         if event.data['sound'] in cls.sounds:
             cls.sounds[event.data['sound']].play()
+
+    @classmethod
+    def play_direct_sound(cls, sound_name):
+        if sound_name in cls.sounds:
+            cls.sounds[sound_name].play()
 
 
 SoundManager.init()
