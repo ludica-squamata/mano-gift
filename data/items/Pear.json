@@ -9,7 +9,7 @@
     "item": "props/pera-32.png"
   },
   "propiedades": [
-    "stackable","sin_sombra"
+    "stackable","sin_sombra","colocable"
   ],
   "efecto": {
     "des": "Restaura tu salud al máximo.",

@@ -9,7 +9,7 @@
     "item": "props/libro rojo-item.png"
   },
   "propiedades": [
-    "sin_sombra"
+    "sin_sombra","colocable"
   ],
   "trading": {
     "sell_price": 1,

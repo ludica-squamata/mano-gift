@@ -117,18 +117,19 @@ class Item(AzoeSprite):
         self.volumen = self.data['volumen']
         self.efecto_des = self.data.get('efecto', {}).get('des', '')
         self.stackable = 'stackable' in self.data['propiedades']
+        self.is_colocable = 'colocable' in self.data['propiedades']
         imagen = cargar_imagen(join(ModData.graphs, self.data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)
 
     def __eq__(self, other):
         # __eq__() ya no pregunta por el ID porque el ID hace único a cada item.
         test_1 = other.nombre == self.nombre
-        # test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
-        # if hasattr(self, 'subtipo') and hasattr(other, 'subtipo'):
-        #     test_3 = self.subtipo == other.subtipo
-        # else:
-        #     test_3 = False
-        tests = [test_1]  # , test_2, test_3
+        test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
+        if hasattr(self, 'subtipo') and hasattr(other, 'subtipo'):
+            test_3 = self.subtipo == other.subtipo
+        else:
+            test_3 = False
+        tests = [test_1], test_2, test_3
         return all(tests)
 
     def __ne__(self, other):
