@@ -129,7 +129,7 @@ class Item(AzoeSprite):
             test_3 = self.subtipo == other.subtipo
         else:
             test_3 = False
-        tests = [test_1], test_2, test_3
+        tests = [test_1, test_2, test_3]
         return all(tests)
 
     def __ne__(self, other):

@@ -6,14 +6,12 @@ from .elements import TradeableElement
 
 
 class TradingCircularMenu(RenderedCircularMenu):
-    first = 0
     traders = None
     trade = None
 
     name = ''
 
     def __init__(self, parent, cascadas):
-        self.set_idxs(cascadas)
         self.parent = parent
         super().__init__(cascadas)
 
@@ -34,20 +32,6 @@ class TradingCircularMenu(RenderedCircularMenu):
                 mob.pause_overridden = True
 
             self.traders[name] = mob
-
-    def set_idxs(self, cascadas):
-        for n in cascadas:
-            cascada = cascadas[n]
-            for element in cascada:
-                index = cascada.index(element)  # esto soluciona el tema de recordar la posición del item.
-                element.index = index  # aunque me gustaria ponerlo en un onliner.
-
-            if self.first <= len(cascada) - 1:
-                for idx, opt in enumerate([cascada[self.first]] + cascada[self.first + 1:] + cascada[:self.first]):
-                    opt.idx = idx
-            else:
-                for idx, opt in enumerate(cascada):
-                    opt.idx = idx
 
     def salir(self):
         self.trade.engage()

@@ -53,6 +53,10 @@
     "Star": {
       "chunk": [0,0],
       "instances": [[32,32]]
+    },
+    "Cofre": {
+      "chunk": [0,0],
+      "instances": [[0,64]]
     }
   },
   "chunks": {

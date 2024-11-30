@@ -62,3 +62,28 @@ class ColocableInventoryElement(InventoryElement):
 
         self.parent.overwritten = True
         self.parent.salir()
+
+
+class ContainedInventoryElement(InventoryElement):
+
+    def command(self):
+        entity = self.parent.parent.entity  # the mob who opened the container
+        item = self.item  # the item to be trasfered
+
+        # transfers the item
+        entity.inventario.agregar(item)
+        self.parent.parent.inventario.remover(item)
+
+        # updates the stack
+        value = self.parent.parent.inventario.cantidad(self.item)
+        self.img_sel = self._create_icon_stack(33, 33, True, self.parent.entity)
+        self.image = self.img_sel
+
+        # deletes the element if stack == 0
+        if value == 0:
+            self.parent.del_item_from_cascade(self.nombre, 'inicial')
+
+        # closes the menu if all stacks == 0
+        if len(self.parent.parent.inventario) == 0:
+            self.parent.salir()
+            entity.AI.register()
