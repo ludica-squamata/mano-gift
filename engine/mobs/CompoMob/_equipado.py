@@ -20,7 +20,7 @@ class Equipado(Caracterizado):
         if hasattr(item, 'proteccion'):
             self.dureza += item.proteccion
 
-        elif hasattr(item, 'method'):
+        elif hasattr(item, 'data'):
             stat = item.data.get('efecto', {}).get('stat', '')
             mod = item.data.get('efecto', {}).get('mod', '')
             method = item.data.get('efecto', {}).get('method', '')
