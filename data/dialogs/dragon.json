@@ -28,54 +28,46 @@
   },
   "body": {
     "0": {
-      "type": "node",
       "leads": 1,
       "from": "commoner",
       "to": "heroe",
       "txt": "¡Alto ahi!"
     },
     "1": {
-      "type": "node",
       "leads": 2,
       "from": "commoner",
       "to": "heroe",
       "txt": "No puedo dejar pasar a nadie, me ordenaron bloquear el acceso a la montaña por el <b>dragón</b>."
     },
     "2": {
-      "type": "leaf",
       "from": "heroe",
       "to": "commoner",
       "event": "Flag",
       "txt": "muchas gracias."
     },
     "3": {
-      "type": "node",
       "leads": 4,
       "from": "heroe",
       "to": "commoner",
       "txt": "Soy capitán de la guardia, vengo a investigar el asunto"
     },
     "4": {
-      "type": "leaf",
       "from": "commoner",
       "to": "heroe",
       "txt": "muy bonito, pero no puedo dejarlo pasar"
     },
     "5": {
-      "type": "leaf",
       "from": "commoner",
       "to": "heroe",
       "txt": "adelante mi capitán"
     },
     "6": {
-      "type": "node",
       "leads": 7,
       "from": "heroe",
       "to": "commoner",
       "txt": "en el pueblo me contaron que lo que ronda en la montaña es un dragon"
     },
     "7": {
-      "type": "leaf",
       "from": "commoner",
       "to": "heroe",
       "txt": "un dragon! Yo no me voy a quedar a que me coma! Ahhh!"

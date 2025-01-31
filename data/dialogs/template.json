@@ -25,23 +25,25 @@
   },
   "body": {
     "0": {
-      "type": "node",
       "leads": 1,
       "from": "",
       "to": "",
       "txt": ""
     },
     "1": {
-      "type": "node",
-      "leads": [
-        1
-      ],
+      "leads": [2,3],
       "from": "",
       "to": "",
       "txt": ""
     },
     "2": {
-      "type": "leaf",
+      "exclusive": [3,4],
+      "#": "leads might be exclusive if their name is exclusive, else they are just a branch.",
+      "from": "",
+      "to": "",
+      "txt": ""
+    },
+    "3": {
       "from": "",
       "to": "",
       "txt": ""

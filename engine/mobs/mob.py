@@ -6,7 +6,7 @@ from engine.base import ShadowSprite
 
 class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
     accionable = False
-    character_name = ''
+    character_name = ''  # issue-156: this is only for the hero and should be eliminated.
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
 
     def __init__(self, parent, x, y, data, focus=False):
@@ -43,7 +43,7 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
         self.heads = {'front': self.idle_walk_img,
                       'right': self.idle_left_img,
                       'left': self.idle_right_img}
-        self.nombre = data['nombre']
+        self.nombre = data['nombre']  # issue-156
         self.estado = 'idle'
         image = self.images['S' + self.direccion]
         mask = self.mascaras['S' + self.direccion]
@@ -51,9 +51,11 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
+        if 'ocupation' in data:
+            self['ocupation'] = data['ocupation']  # issue-156
 
     def __repr__(self):
-        return "Mob " + self.nombre
+        return "Mob"  # issue-156
 
     def __str__(self):
-        return self.nombre
+        return self.nombre  # issue-156

@@ -1,5 +1,6 @@
 {
-  "nombre": "Shopkeeper",
+  "nombre": "Thomas",
+  "ocupation": "shopkeeper",
   "atributos": {
     "Fuerza": 4,
     "Carisma": 7,
