@@ -33,9 +33,15 @@ def choose_a_body():
     pass
 
 
-def gen_chararcter():
+def choose_a_name(i):
+    available_names = ["Byron","William","Duke"]  # there are only 3 aristocrats in the map they appear
+    return f"Lord {available_names[i]}"
+
+
+def gen_character(i):
     d = {
-        "nombre": "aristocrat",
+        "nombre":choose_a_name(i),
+        "ocupation": "aristocrat",
         "atributos": generate_random_chars(),
         "imagenes": {
             "heads": choose_a_head(),
