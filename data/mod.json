@@ -35,17 +35,16 @@
   },
   "custom": {
     "attributes": [
-      {"name":"nivel", "script": "nivelado.py"}
+      {"name": "nivel","script": "nivelado.py"}
     ],
-    "world_properties":{
+    "world_properties": {
       "use_latitude": true,
       "year_lenght": 360,
       "month_lenght": 30,
       "week_lenght": 7
     },
-    "characters":{
-      "aristocrat": {"script": "generate_npcs.py", "name": "gen_chararcter"}
+    "characters": {
+      "aristocrat": {"script": "generate_npcs.py","name": "gen_chararcter"}
     }
-
   }
 }

@@ -1,5 +1,6 @@
 {
   "nombre": "girl",
+  "raza": "human",
   "atributos": {
     "Fuerza": 2,
     "Carisma": 5,

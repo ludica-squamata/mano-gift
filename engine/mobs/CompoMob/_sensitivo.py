@@ -122,15 +122,18 @@ class Hearing(AzoeBaseSprite):
             sx, sy = self.parent.x, self.parent.y
             distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
         else:
-            distance = 1
+            return
             # the mob will always hear itself.
 
         if distance != 0:  # prevents a weird crash.
-            if event.data['intensity'] * 1 / distance ** 2 > 1E-12:
+            intensity = event.data['intensity'] / distance ** 2
+            if intensity > 1E-12:
                 # inverse-square law: the intensity of a sound decreses with distance;
                 # weak sounds produced far away from the mob won't be heard by it.
                 # 1E-12 W/m**2 is the Threshold of human hearing.
-                self.parent.perceived['heard'].append(event)
+                event.data['intensity'] = round(intensity, 6)
+                self.parent.perceived['heard'].append(event.origin)
+                # print(event.origin, intensity)
         # aunque habría que ver si "podes" escuchar un sonido separándolo del background noise.
         # para que se pueda escuchar por encima del BgN, log(signal/noise) debe ser mayor que 0.
 

@@ -6,7 +6,7 @@ from ._movil import Movil
 
 class Parlante(Movil):
     interlocutor = None  # para que el mob sepa con quién está hablando, si lo está
-    hablante = True
+    # hablante = True
     hablando = False
 
     def hablar(self, sprite):
@@ -23,7 +23,7 @@ class Parlante(Movil):
         """
         :type sprite: engine.mobs.Mob
         """
-        if sprite.hablante:
+        if not sprite.dead:  # though, you might talk to ghosts...
             self.hablar(sprite)
             locutores = self, sprite
             file = Discurso.is_possible(*locutores)
@@ -32,5 +32,7 @@ class Parlante(Movil):
                 menu = DialogCircularMenu(*locutores)
                 dialogo.frontend.set_menu(menu)
 
-            else:
+            elif hasattr(sprite, 'diag_face'):
                 Monologo(sprite, self)
+            return True
+        return False

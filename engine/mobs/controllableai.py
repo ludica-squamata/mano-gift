@@ -89,8 +89,10 @@ class ControllableAI(EventAware):
                     self.entity.atacar(sprite)
 
                 elif sprite.tipo == 'Mob':
-                    self.entity.dialogar(sprite)
-                    self.deregister()
+                    if self.entity.dialogar(sprite):
+                        self.deregister()
+                    elif sprite.dead:
+                        pass  # open container
 
                 elif sprite.tipo == 'Prop' and sprite in preception['touched']:
                     if sprite.accionable and sprite.action is not None:

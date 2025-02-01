@@ -27,7 +27,7 @@ class TradingCircularMenu(RenderedCircularMenu):
                 mob.paused = True
                 mob.pause_overridden = True
             else:
-                mob = Mob_Group.get_named(name)
+                mob = Mob_Group.get_by_trait('nombre', name)
                 mob.hablando = True
                 mob.paused = True
                 mob.AI.trigger_node(25)
@@ -62,7 +62,7 @@ class BuyingCM(TradingCircularMenu):
         self.name = 'Buying CM'
         self.fill_participantes(participants)
         for trader in self.traders:
-            mob = Mob_Group.get_named(trader)
+            mob = Mob_Group.get_by_trait('nombre', trader)
             if mob is not None:
                 buyable = mob.inventario.uniques()
                 cantidades = [mob.inventario.cantidad(item) for item in buyable]

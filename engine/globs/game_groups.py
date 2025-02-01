@@ -13,7 +13,6 @@ class MobGroup:
         self._indexes = []
 
         EventDispatcher.register_many(
-            (self.delete_mob, 'MobDeath'),
             (self.register_name, "CharacterCreation", 'LoadGame')
         )
 
@@ -93,20 +92,22 @@ class MobGroup:
     def get_controlled_mob(self):
         return [self._group[mob_id] for mob_id in self._group if self._group[mob_id].AI_type == 'Controllable'][0]
 
-    def get_named(self, name):
+    def get_by_trait(self, key, value):
         """Return a sorted list of mobs that have that name for the purposes of iteration.
 
         This method may be expanded in the future to allow searching for mobs by other traits.
         """
 
-        if type(name) is str:
-            named = [mob for mob in self.contents() if mob.nombre == name]
-        else:
-            named = [mob for mob in self.contents() if mob.nombre == name.nombre]
+        # if type(key) is str:
+        listed = [mob for mob in self.contents() if mob[key] == value]
+        # else:
+        #     listed = [mob for mob in self.contents() if mob['nombre'] == name.nombre]
 
-        named.sort(key=lambda o: o.nombre)
-        if len(named):
-            return named[0]
+        listed.sort(key=lambda o: o.nombre)
+        if len(listed) == 1:
+            return listed[0]
+        elif len(listed):
+            return listed
 
     # Aunque estos tres métodos singularizan al héroe
     # no se me ocurre otra forma de arrastrar su nombre.

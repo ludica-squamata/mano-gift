@@ -36,6 +36,7 @@ def choose_a_body():
 def gen_chararcter():
     d = {
         "nombre": "aristocrat",
+        "raza": "human",
         "atributos": generate_random_chars(),
         "imagenes": {
             "heads": choose_a_head(),

@@ -1,5 +1,6 @@
 {
   "nombre": "Shopkeeper",
+  "raza": "human",
   "atributos": {
     "Fuerza": 4,
     "Carisma": 7,

@@ -1,0 +1,45 @@
+{
+  "head": {
+    "script": {
+      "behaviours/agressive": [
+        "ObtenerObjetivo",
+        "DoISeeIt",
+        "AtacarObjetivo",
+        "Abortar",
+        "ObtenerPosicion",
+        "DoIHearIt",
+        "TurnToTarget",
+        "StopIfCollide",
+        "Reset"
+      ],
+      "behaviours/wander": [
+        "GetMap",
+        "GetRandomDir",
+        "GetRoute",
+        "NextPosition",
+        "Move"
+      ]
+    },
+    "special": {}
+  },
+  "body": {
+    "0": {"name": "Repeater","child": 1},
+      "1": {"name": "Sequence","children": [2,3,8]},
+        "2": {"name": "ObtenerObjetivo"},
+        "3": {"name": "Selector","children": [4,5]},
+          "4": {"name": "DoISeeIt"},
+          "5": {"name": "Sequence","children": [6,7]},
+            "6": {"name": "DoIHearIt"},
+            "7": {"name": "TurnToTarget"},
+        "8": {"name": "Sequence","children": [9,10,11,12]},
+          "9": {"name": "GetMap"},
+          "10": {"name": "ObtenerPosicion"},
+          "11": {"name": "GetRoute"},
+          "12": {"name": "UntilFail","child": 13},
+            "13": {"name": "Sequence","children": [14,15]},
+              "14": {"name": "NextPosition"},
+              "15": {"name": "Selector","children": [16,17]},
+                "16": {"name": "StopIfCollide"},
+                "17": {"name": "Move"}
+    }
+}
