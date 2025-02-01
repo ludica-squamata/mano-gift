@@ -5,22 +5,23 @@ from pygame import mask
 
 def a_star(inicio, destino, mapa, others, heuristica='euclidean'):
     cerrada = []  # The set of nodes already evaluated.
-    abierta = [inicio]  # The set of tentative nodes to be evaluated, initially containing the start node
+    abierta = {inicio}  # The set of tentative nodes to be evaluated, initially containing the start node
     camino = {}  # The map of navigated nodes.
 
-    # inicio.g = 0  # Cost from start along best known path.
+    inicio.g = 0  # Cost from start along best known path.
     # Estimated total cost from start to goal through y.
     inicio.f = heuristica_estimada(inicio, destino, heuristica)
 
     while abierta:
-        abierta.sort(key=lambda nodo: nodo.f)
-        actual = abierta.pop(0)  # the node in openset having the lowest f_score[] value
+        actual = list(sorted(abierta, key=lambda nodo: nodo.f)).pop(0)
+        # the node in openset having the lowest f_score[] value
+        abierta.remove(actual)
         if actual == destino:
             return reconstruir_camino(camino, destino)
 
         cerrada.append(actual)
 
-        vecinos = mirar_vecinos(actual, 32, mapa, others)
+        vecinos = mirar_vecinos(actual, mapa, others)
         for vecino in vecinos:
             punt_g_tentativa = actual.g + vecino.g
             if vecino not in cerrada or punt_g_tentativa < vecino.g:
@@ -28,7 +29,7 @@ def a_star(inicio, destino, mapa, others, heuristica='euclidean'):
                 vecino.f = vecino.g + heuristica_estimada(vecino, destino, heuristica)
                 camino[vecino] = actual
                 if vecino not in abierta:
-                    abierta.append(vecino)
+                    abierta.add(vecino)
 
 
 def heuristica_estimada(node, goal, method):
@@ -38,9 +39,9 @@ def heuristica_estimada(node, goal, method):
         return int(sqrt((node.x - goal.x) ** 2 + (node.y - goal.y) ** 2))
 
 
-def mirar_vecinos(nodo, size, mascara, others):
+def mirar_vecinos(nodo, mascara, others):
     cuadros = []
-    test = mask.Mask((size, size))
+    test = mask.Mask((32, 32))
     test.fill()
     direcciones = ((0, -1), (1, 0), (0, 1), (-1, 0))
     mascara_actual = mascara.copy()
@@ -48,8 +49,8 @@ def mirar_vecinos(nodo, size, mascara, others):
         mascara_actual.draw(other.mask, other.rect.topleft)
 
     for dx, dy in direcciones:
-        x, y = nodo.x + (dx * size), nodo.y + (dy * size)
-        vecino = Nodo(x, y, size)
+        x, y = nodo.x + (dx * 32), nodo.y + (dy * 32)
+        vecino = Nodo(x, y, 32)
         if not mascara_actual.overlap(test, (x, y)):
             cuadros.append(vecino)
 

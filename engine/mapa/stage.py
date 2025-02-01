@@ -85,7 +85,7 @@ class Stage:
         EventDispatcher.register_many(
             (self.cargar_timestamps, 'UpdateTime'),
             (self.save_map, 'Save'),
-            (self.del_interactive, 'DeleteItem', 'MobDeath')
+            (self.del_interactive, 'DeleteItem')
         )
 
         self.points_of_interest = {}
@@ -332,7 +332,7 @@ class ChunkMap(AzoeBaseSprite):
         salidas = [salida for salida in self.parent.data['salidas'] if salida['chunk_adress'] == self.adress]
         self.set_salidas(*cargar_salidas(self, salidas))
 
-        EventDispatcher.register(self.del_interactive, 'DeleteItem', 'MobDeath')
+        EventDispatcher.register(self.del_interactive, 'DeleteItem')
 
     def set_salidas(self, sld, masc, img):
         self.salidas = sld

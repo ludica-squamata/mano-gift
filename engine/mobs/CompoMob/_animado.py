@@ -56,6 +56,24 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
         return dicc
 
+    @staticmethod
+    def cargar_anims(ruta_imgs, seq, alpha=False, request='front'):
+        assert request in ['left', 'right', 'front']
+        # the "request" parameter exists for compatibility with cargar_head_anims()
+
+        dicc = {}
+        spritesheet = split_spritesheet(ModData.graphs + ruta_imgs)
+        idx = -1
+        for L in seq:
+            for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
+                key = L + D
+                idx += 1
+                if not alpha:
+                    dicc[key] = spritesheet[idx]
+                else:
+                    dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
+        return dicc
+
     def animar_caminar(self):
         """cambia la orientación del sprite y controla parte de la animación"""
 

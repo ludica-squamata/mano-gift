@@ -40,8 +40,9 @@ def choose_a_name(i):
 
 def gen_character(i):
     d = {
-        "nombre":choose_a_name(i),
+        "nombre": choose_a_name(i),
         "ocupation": "aristocrat",
+        "raza": "human",
         "atributos": generate_random_chars(),
         "imagenes": {
             "heads": choose_a_head(),

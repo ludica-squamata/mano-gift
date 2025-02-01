@@ -1,6 +1,7 @@
 {
   "nombre": "Matheu",
   "ocupation": "commoner",
+  "raza": "human",
   "atributos": {
     "Fuerza": 4,
     "Carisma": 7,

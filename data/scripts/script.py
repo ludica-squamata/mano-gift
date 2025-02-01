@@ -36,3 +36,14 @@ def about(event):
 
 
 EventDispatcher.register(about, 'TookItem')
+
+
+def set_monsters_attitude(event):
+    if event.data['value'] is False:
+        monsters = [Mob_Group.get_by_trait('raza', 'blob')]
+        if len(monsters):
+            for monster in monsters:
+                monster.switch_behaviour('agressive')
+
+
+EventDispatcher.register(set_monsters_attitude, 'TogglePause')

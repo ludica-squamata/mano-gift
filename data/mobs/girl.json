@@ -1,6 +1,7 @@
 {
   "nombre": "Sophie",
   "ocupation": null,
+  "raza": "human",
   "atributos": {
     "Fuerza": 2,
     "Carisma": 5,
