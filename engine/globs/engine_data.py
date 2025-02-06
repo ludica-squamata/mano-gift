@@ -137,8 +137,14 @@ class EngineData:
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': {"focus": char_name}})
 
     @classmethod
-    def load_savefile(cls, filename):
-        data = abrir_json(Config.savedir + '/' + filename)
+    def load_savefile(cls, file):
+        if type(file) is str:
+            data = abrir_json(Config.savedir + '/' + file)
+        elif type(file) is dict:
+            data = file
+        else:
+            raise TypeError(f'"file" must be str or dict, not {type(file)}')
+
         cls.save_data.update(data)
         cls.transient_mobs = data.get('transient', [])
         Mob_Group.clear()
@@ -169,8 +175,9 @@ class EngineData:
         SeasonalYear.propagate()
 
         focus = stage.get_entitiy_from_my_chunks(data['focus'])
-        if focus is None and not stage.exists_within_my_chunks(data['focus'], 'mobs'):
-            mapa = stage.get_chunk_by_adress([0, 0])
+        if focus is None or not stage.exists_within_my_chunks(data['focus'], 'mobs'):
+            adress = map_data['entradas'][data['entrada']]['adress']
+            mapa = stage.get_chunk_by_adress(adress)
             datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}
             datos.update({'entradas': stage.data['entradas']})
             datos.update({'refs': {data['focus']: ModData.fd_player + data['focus'] + '.json'}})
@@ -179,7 +186,6 @@ class EngineData:
             mapa.add_property(focus, grupo)
 
         Renderer.set_focus(focus)
-        focus.character_name = data['focus']
         Sun.update()
 
     @classmethod

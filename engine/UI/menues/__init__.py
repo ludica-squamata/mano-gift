@@ -7,10 +7,12 @@ from .menu import Menu
 from .model import MenuModel
 from .name import MenuName
 from .ability import MenuAbility
+from .map_selector import MenuDebug
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
                  'MenuCargar': MenuCargar,
+                 'MenuDebug': MenuDebug,
                  'MenuPrincipal': MenuPrincipal,
                  'MenuOpciones': MenuOpciones,
                  'MenuNuevo': MenuModel,  # en realidad sería MenuModel,
@@ -34,6 +36,7 @@ inital_menus = [
     'MenuNuevo',
     'MenuCargar',
     'MenuOpciones',
+    'MenuDebug'
 ]
 
 __all__ = [

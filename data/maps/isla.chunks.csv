@@ -9,7 +9,7 @@
 [+2,+2];8;7;ocean;ocean;9;maps/fondos/isla-08.png;maps/colisiones/isla-08.png
 [+1,+2];9;20;ocean;8;10;maps/fondos/isla-09.png;maps/colisiones/isla-09.png
 [+0,+2];10;21;ocean;9;11;maps/fondos/isla-10.png;maps/colisiones/isla-10.png
-[-1.+2];11;22;ocean;10;12;maps/fondos/isla-11.png;maps/colisiones/isla-11.png
+[-1,+2];11;22;ocean;10;12;maps/fondos/isla-11.png;maps/colisiones/isla-11.png
 [-2,+2];12;13;ocean;11;ocean;maps/fondos/isla-12.png;maps/colisiones/isla-12.png
 [-2,+1];13;14;12;22;ocean;maps/fondos/isla-13.png;maps/colisiones/isla-13.png
 [-2,+0];14;15;13;23;ocean;maps/fondos/isla-14.png;maps/colisiones/isla-14.png

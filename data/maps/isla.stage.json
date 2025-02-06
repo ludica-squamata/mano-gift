@@ -13,7 +13,7 @@
     }
   },
   "salidas": [],
-  "chunks_csv":"isla.chunks.csv",
+  "chunks_csv": "isla.chunks.csv",
   "puntos_de_interes_para_la_IA": [],
   "ambiente": "exterior",
   "latitude": 30,
