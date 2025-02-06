@@ -8,8 +8,8 @@ class Tradeable(Item):
     price_buy = 0
     coin = None
 
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
         if "trading" in data:
             self.price_sell = data['trading']['sell_price']
             self.price_buy = data['trading']['buy_price']
@@ -17,8 +17,8 @@ class Tradeable(Item):
 
 
 class Equipable(Tradeable):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
         self.tipo = 'equipable'
         self.subtipo = data['subtipo']
         self.espacio = data['efecto']['equipo']
@@ -26,8 +26,8 @@ class Equipable(Tradeable):
 
 
 class Consumible(Tradeable):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
         self.tipo = 'consumible'
         self.data = data
         Item_Group.add(self.nombre, self, self.tipo)
@@ -60,16 +60,16 @@ class Consumible(Tradeable):
 
 
 class Utilizable(Tradeable):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
         self.tipo = "utilizable"
         self.subtipo = "libro"
         Item_Group.add(self.nombre, self, self.tipo)
 
 
 class Colocable(Item):
-    def __init__(self, parent, entity, nombre, data, item):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, entity, data, item):
+        super().__init__(parent, data)
         self.tipo = 'colocable'
         self.entity = entity
         self.item = item
@@ -110,21 +110,21 @@ class Colocable(Item):
 
 
 class Armadura(Equipable):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
         self.proteccion = data['efecto']['proteccion']
 
 
 class Arma(Equipable):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
 
 
 class Accesorio(Equipable):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)
 
 
 class Pocion(Consumible):
-    def __init__(self, parent, nombre, data):
-        super().__init__(parent, nombre, data)
+    def __init__(self, parent, data):
+        super().__init__(parent, data)

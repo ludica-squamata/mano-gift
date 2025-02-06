@@ -105,9 +105,9 @@ class Item(AzoeSprite):
 
     is_colocable = False  # en principio.
 
-    def __init__(self, parent, nombre, data):
-        self.nombre = nombre
+    def __init__(self, parent, data):
         self.data = data
+        self.nombre = data['nombre']
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data.get('efecto', {}).get('des', '')
@@ -141,7 +141,7 @@ class Item(AzoeSprite):
             return False
 
     def __hash__(self):
-        return hash(self.nombre + str(self.volumen) + str(self.peso) + self.tipo)
+        return hash((self.nombre, self.volumen, self.peso, self.tipo, self.id))
 
     def __repr__(self):
         return self.nombre + ' (' + self.tipo + ')'
