@@ -9,7 +9,7 @@
     "item": "props/anillo.png",
     "high": "props/anillo esmeralda-24.png"
   },
-  "propiedades": [],
+  "propiedades": ["colocable"],
   "efecto": {
     "des": "Tiene engarzado una esmeralda.",
     "stat": "Carisma",

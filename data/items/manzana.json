@@ -10,7 +10,7 @@
     "high": null
   },
   "propiedades": [
-    "stackable","sin_sombra"
+    "stackable","sin_sombra","colocable"
   ],
   "efecto": {
     "des": "Restaura tu salud al máximo.",

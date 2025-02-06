@@ -250,7 +250,7 @@ class MenuEquipo(Menu):
         item = self.current.item
         if espacio.accepts == item.espacio:
             espacio.ocupar(item)
-            self.entity.equipar_item(item, espacio.accepts)
+            self.entity.equipar_item(item, espacio.nombre)
             self.draw_space.fill(CANVAS_BG)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'

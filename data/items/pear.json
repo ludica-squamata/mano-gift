@@ -5,11 +5,11 @@
   "peso": 1,
   "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/pera-32.png",
-    "item": "props/pera-32.png"
+    "prop": "props/pera_32.png",
+    "item": "props/pera_32.png"
   },
   "propiedades": [
-    "stackable","sin_sombra"
+    "stackable","sin_sombra","colocable"
   ],
   "efecto": {
     "des": "Restaura tu salud al máximo.",

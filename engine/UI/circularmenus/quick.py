@@ -45,21 +45,6 @@ class QuickCircularMenu(RenderedCircularMenu):
             "Temas": [DialogTopicElement(self, i, t) for i, t in enumerate(lista)]
         })
 
-        for n in cascadas:
-            cascada = cascadas[n]
-            for element in cascada:  # aunque me gustaria ponerlo en un onliner.
-                element.index = cascada.index(element)  # esto soluciona el tema de recordar la posición del item.
-
-            if self.first <= len(cascada) - 1:
-                for idx, opt in enumerate([cascada[self.first]] + cascada[self.first + 1:] + cascada[:self.first]):
-                    opt.idx = idx
-            else:
-                for idx, opt in enumerate(cascada):
-                    opt.idx = idx
-
-        # La diferencia entre idx e index es sutil. Index el el número que corresponde al ID del item, que es asignado
-        # "al momento de su creación". idx por otra parte, indica la posición en pantalla que el item debe tomar.
-
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.back})
 
