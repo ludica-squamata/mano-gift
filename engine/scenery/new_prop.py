@@ -37,7 +37,7 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
         return prop
 
 
-def new_item(parent, nombre, ruta_or_data):
+def new_item(parent, ruta_or_data):
     if type(ruta_or_data) is str:  # ruta
         data = abrir_json(ruta_or_data)
     elif type(ruta_or_data) is dict:
@@ -62,4 +62,4 @@ def new_item(parent, nombre, ruta_or_data):
     elif subtipo == 'utilizable':
         item = Utilizable
 
-    return item(parent, nombre, data)
+    return item(parent, data)
