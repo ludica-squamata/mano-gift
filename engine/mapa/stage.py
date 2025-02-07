@@ -377,7 +377,7 @@ class ChunkMap(AzoeBaseSprite):
         self.properties.empty()
 
         if self.salidas is not None:
-            for salida in self.salidas:
+            for salida in self.salidas.values():
                 Renderer.camara.remove_obj(salida.sprite)
             self.unset_salidas()
 
@@ -456,6 +456,19 @@ class ChunkMap(AzoeBaseSprite):
 
     def __bool__(self):
         return True
+
+    def __eq__(self, other):
+        test_1 = self.id == other.id
+        test_2 = self.adress.center == other.adress.center
+        test_3 = self.nombre == other.nombre
+
+        return all([test_1, test_2, test_3])
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.nombre, self.id, self.adress.center))
 
 
 class ChunkAdress:

@@ -32,8 +32,13 @@ class Camara:
     def set_background(cls, spr):
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
-        cls.bgs.add(spr)
-        cls.nchs.add(spr.noche)
+
+        if not len(cls.bgs):
+            cls.current_map = spr
+
+        if spr not in cls.bgs:
+            cls.bgs.add(spr)
+            cls.nchs.add(spr.noche)
 
     @classmethod
     def add_real(cls, obj):
@@ -57,6 +62,8 @@ class Camara:
     @classmethod
     def set_focus(cls, spr):
         cls.focus = spr
+        if spr not in cls.real:
+            cls.add_real(spr)
 
     @classmethod
     def save_focus(cls, event):

@@ -75,292 +75,292 @@
   },
   "salidas": [
     {
-      "stage": "world","chunk_adress": [0,17],"nombre": "Norte #0",
-      "entrada": "17","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [0,18],"nombre": "Norte #0",
+      "entrada": "17","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [1,17],"nombre": "Norte #1",
-      "entrada": "16","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [1,18],"nombre": "Norte #1",
+      "entrada": "16","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [2,17],"nombre": "Norte #2",
-      "entrada": "15","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [2,18],"nombre": "Norte #2",
+      "entrada": "15","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [3,17],"nombre": "Norte #3",
-      "entrada": "14","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [3,18],"nombre": "Norte #3",
+      "entrada": "14","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [4,17],"nombre": "Norte #4",
-      "entrada": "13","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [4,18],"nombre": "Norte #4",
+      "entrada": "13","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [5,17],"nombre": "Norte #5",
-      "entrada": "12","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [5,18],"nombre": "Norte #5",
+      "entrada": "12","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [6,17],"nombre": "Norte #6",
-      "entrada": "11","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [6,18],"nombre": "Norte #6",
+      "entrada": "11","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [7,17],"nombre": "Norte #7",
-      "entrada": "10","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [7,18],"nombre": "Norte #7",
+      "entrada": "10","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [8,17],"nombre": "Norte #8",
-      "entrada": "9","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [8,18],"nombre": "Norte #8",
+      "entrada": "9","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [9,17],"nombre": "Norte #9",
-      "entrada": "8","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [9,18],"nombre": "Norte #9",
+      "entrada": "8","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [10,17],"nombre": "Norte #10",
-      "entrada": "7","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [10,18],"nombre": "Norte #10",
+      "entrada": "7","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [11,17],"nombre": "Norte #11",
-      "entrada": "6","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [11,18],"nombre": "Norte #11",
+      "entrada": "6","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [12,17],"nombre": "Norte #12",
-      "entrada": "5","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [12,18],"nombre": "Norte #12",
+      "entrada": "5","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [13,17],"nombre": "Norte #13",
-      "entrada": "4","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [13,18],"nombre": "Norte #13",
+      "entrada": "4","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [14,17],"nombre": "Norte #14",
-      "entrada": "3","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [14,18],"nombre": "Norte #14",
+      "entrada": "3","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [15,17],"nombre": "Norte #15",
-      "entrada": "2","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [15,18],"nombre": "Norte #15",
+      "entrada": "2","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [16,17],"nombre": "Norte #16",
-      "entrada": "1","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [16,18],"nombre": "Norte #16",
+      "entrada": "1","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [17,17],"nombre": "Norte #17",
-      "entrada": "0","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [17,18],"nombre": "Norte #17",
+      "entrada": "0","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [18,17],"nombre": "Norte #18",
-      "entrada": "35","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [18,18],"nombre": "Norte #18",
+      "entrada": "35","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [19,17],"nombre": "Norte #19",
-      "entrada": "34","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [19,18],"nombre": "Norte #19",
+      "entrada": "34","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [20,17],"nombre": "Norte #20",
-      "entrada": "33","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [20,18],"nombre": "Norte #20",
+      "entrada": "33","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [21,17],"nombre": "Norte #21",
-      "entrada": "32","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [21,18],"nombre": "Norte #21",
+      "entrada": "32","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [22,17],"nombre": "Norte #22",
-      "entrada": "31","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [22,18],"nombre": "Norte #22",
+      "entrada": "31","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [23,17],"nombre": "Norte #23",
-      "entrada": "30","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [23,18],"nombre": "Norte #23",
+      "entrada": "30","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [24,17],"nombre": "Norte #24",
-      "entrada": "29","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [24,18],"nombre": "Norte #24",
+      "entrada": "29","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [25,17],"nombre": "Norte #25",
-      "entrada": "28","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [25,18],"nombre": "Norte #25",
+      "entrada": "28","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [26,17],"nombre": "Norte #26",
-      "entrada": "27","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [26,18],"nombre": "Norte #26",
+      "entrada": "27","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [27,17],"nombre": "Norte #27",
-      "entrada": "26","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [27,18],"nombre": "Norte #27",
+      "entrada": "26","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [28,17],"nombre": "Norte #28",
-      "entrada": "25","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [28,18],"nombre": "Norte #28",
+      "entrada": "25","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [29,17],"nombre": "Norte #29",
-      "entrada": "24","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [29,18],"nombre": "Norte #29",
+      "entrada": "24","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [30,17],"nombre": "Norte #30",
-      "entrada": "23","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [30,18],"nombre": "Norte #30",
+      "entrada": "23","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [31,17],"nombre": "Norte #31",
-      "entrada": "22","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [31,18],"nombre": "Norte #31",
+      "entrada": "22","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [32,17],"nombre": "Norte #32",
-      "entrada": "21","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [32,18],"nombre": "Norte #32",
+      "entrada": "21","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [33,17],"nombre": "Norte #33",
-      "entrada": "20","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [33,18],"nombre": "Norte #33",
+      "entrada": "20","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [34,17],"nombre": "Norte #34",
-      "entrada": "19","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [34,18],"nombre": "Norte #34",
+      "entrada": "19","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [35,17],"nombre": "Norte #35",
-      "entrada": "18","rect": [0,750,800,32],"direcciones": ["abajo"]
+      "stage": "world","chunk_adress": [35,18],"nombre": "Norte #35",
+      "entrada": "18","rect": [0,400,800,32],"direcciones": ["abajo"]
     },
     {
-      "stage": "world","chunk_adress": [0,0],"nombre": "Sur #0",
-      "entrada": "629","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [0,-1],"nombre": "Sur #0",
+      "entrada": "629","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [1,0],"nombre": "Sur #1",
-      "entrada": "628","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [1,-1],"nombre": "Sur #1",
+      "entrada": "628","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [2,0],"nombre": "Sur #2",
-      "entrada": "627","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [2,-1],"nombre": "Sur #2",
+      "entrada": "627","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [3,0],"nombre": "Sur #3",
-      "entrada": "626","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [3,-1],"nombre": "Sur #3",
+      "entrada": "626","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [4,0],"nombre": "Sur #4",
-      "entrada": "625","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [4,-1],"nombre": "Sur #4",
+      "entrada": "625","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [5,0],"nombre": "Sur #5",
-      "entrada": "624","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [5,-1],"nombre": "Sur #5",
+      "entrada": "624","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [6,0],"nombre": "Sur #6",
-      "entrada": "623","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [6,-1],"nombre": "Sur #6",
+      "entrada": "623","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [7,0],"nombre": "Sur #7",
-      "entrada": "622","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [7,-1],"nombre": "Sur #7",
+      "entrada": "622","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [8,0],"nombre": "Sur #8",
-      "entrada": "621","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [8,-1],"nombre": "Sur #8",
+      "entrada": "621","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [9,0],"nombre": "Sur #9",
-      "entrada": "620","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [9,-1],"nombre": "Sur #9",
+      "entrada": "620","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [10,0],"nombre": "Sur #10",
-      "entrada": "619","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [10,-1],"nombre": "Sur #10",
+      "entrada": "619","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [11,0],"nombre": "Sur #11",
-      "entrada": "618","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [11,-1],"nombre": "Sur #11",
+      "entrada": "618","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [12,0],"nombre": "Sur #12",
-      "entrada": "617","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [12,-1],"nombre": "Sur #12",
+      "entrada": "617","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [13,0],"nombre": "Sur #13",
-      "entrada": "616","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [13,-1],"nombre": "Sur #13",
+      "entrada": "616","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [14,0],"nombre": "Sur #14",
-      "entrada": "615","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [14,-1],"nombre": "Sur #14",
+      "entrada": "615","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [15,0],"nombre": "Sur #15",
-      "entrada": "614","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [15,-1],"nombre": "Sur #15",
+      "entrada": "614","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [16,0],"nombre": "Sur #16",
-      "entrada": "613","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [16,-1],"nombre": "Sur #16",
+      "entrada": "613","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [17,0],"nombre": "Sur #17",
-      "entrada": "612","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [17,-1],"nombre": "Sur #17",
+      "entrada": "612","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [18,0],"nombre": "Sur #18",
-      "entrada": "647","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [18,-1],"nombre": "Sur #18",
+      "entrada": "647","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [19,0],"nombre": "Sur #19",
-      "entrada": "646","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [19,-1],"nombre": "Sur #19",
+      "entrada": "646","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [20,0],"nombre": "Sur #20",
-      "entrada": "645","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [20,-1],"nombre": "Sur #20",
+      "entrada": "645","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [21,0],"nombre": "Sur #21",
-      "entrada": "644","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [21,-1],"nombre": "Sur #21",
+      "entrada": "644","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [22,0],"nombre": "Sur #22",
-      "entrada": "643","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [22,-1],"nombre": "Sur #22",
+      "entrada": "643","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [23,0],"nombre": "Sur #23",
-      "entrada": "642","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [23,-1],"nombre": "Sur #23",
+      "entrada": "642","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [24,0],"nombre": "Sur #24",
-      "entrada": "641","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [24,-1],"nombre": "Sur #24",
+      "entrada": "641","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [25,0],"nombre": "Sur #25",
-      "entrada": "640","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [25,-1],"nombre": "Sur #25",
+      "entrada": "640","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [26,0],"nombre": "Sur #26",
-      "entrada": "639","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [26,-1],"nombre": "Sur #26",
+      "entrada": "639","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [27,0],"nombre": "Sur #27",
-      "entrada": "638","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [27,-1],"nombre": "Sur #27",
+      "entrada": "638","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [28,0],"nombre": "Sur #28",
-      "entrada": "637","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [28,-1],"nombre": "Sur #28",
+      "entrada": "637","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [29,0],"nombre": "Sur #29",
-      "entrada": "636","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [29,-1],"nombre": "Sur #29",
+      "entrada": "636","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [30,0],"nombre": "Sur #30",
-      "entrada": "635","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [30,-1],"nombre": "Sur #30",
+      "entrada": "635","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [31,0],"nombre": "Sur #31",
-      "entrada": "634","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [31,-1],"nombre": "Sur #31",
+      "entrada": "634","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [32,0],"nombre": "Sur #32",
-      "entrada": "633","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [32,-1],"nombre": "Sur #32",
+      "entrada": "633","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [33,0],"nombre": "Sur #33",
-      "entrada": "632","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [33,-1],"nombre": "Sur #33",
+      "entrada": "632","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [34,0],"nombre": "Sur #34",
-      "entrada": "631","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [34,-1],"nombre": "Sur #34",
+      "entrada": "631","rect": [0,400,800,32],"direcciones": ["arriba"]
     },
     {
-      "stage": "world","chunk_adress": [35,0],"nombre": "Sur #35",
-      "entrada": "630","rect": [0,50,800,32],"direcciones": ["arriba"]
+      "stage": "world","chunk_adress": [35,-1],"nombre": "Sur #35",
+      "entrada": "630","rect": [0,400,800,32],"direcciones": ["arriba"]
     }
   ],
   "chunks_csv": "anti-world.chunks.csv",

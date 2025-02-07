@@ -154,7 +154,7 @@ def load_chunks_csv(csv_file):
     references to mobs or props, but due to the nature of dicts, such info could be added later.
     """
     with open(path.join(getcwd(), 'data', 'maps', csv_file)) as cvsfile:
-        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'der', 'izq',
+        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'izq', 'der',
                                                      'fondo', 'colisiones'], delimiter=';')
         chunks_data = {}
         for row in reader:

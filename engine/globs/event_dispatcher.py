@@ -1,4 +1,6 @@
 ﻿from collections import deque
+from datetime import datetime
+from random import randint
 
 
 class EventDispatcher:
@@ -122,6 +124,10 @@ class AzoeEvent:
         self.origin = origin
         self.data = data
 
+        r = randint(0, 99999)
+        now = ''.join([char for char in str(datetime.now()) if char not in [' ', '.', ':', '-']])
+        self.id = now[0:-5] + '-' + str(r).rjust(5, '0')
+
     def __repr__(self):
         return 'AzoeEvent-' + str(self.tipo) + '(origin: ' + str(self.origin) + ', data: ' + str(self.data) + ')'
 
@@ -129,7 +135,7 @@ class AzoeEvent:
         return self.__repr__() == other.__repr__()
 
     def __hash__(self):
-        return hash(self.__repr__())
+        return hash((self.tipo, self.origin, self.id))
 
 
 if __name__ == '__main__':
