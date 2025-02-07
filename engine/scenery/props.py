@@ -22,7 +22,7 @@ class Agarrable(Escenografia):
 
     def action(self, entity):
         from .new_prop import new_item
-        item = new_item(self.parent, self.nombre, self.data)
+        item = new_item(self.parent, self.data)
         if entity.tipo == 'Mob':
             entity.inventario.agregar(item)
             # removes the prop from the map, but not the item from the world.
@@ -200,6 +200,6 @@ class Contenedor(Escenografia):
         for item_name in contenido:
             data = abrir_json(ModData.items + '/' + item_name + '.json')
             for _ in range(contenido[item_name]):
-                item = new_item(self, item_name, data)
+                item = new_item(self, data)
                 self.inventario.agregar(item)
 
