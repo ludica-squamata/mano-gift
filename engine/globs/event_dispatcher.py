@@ -135,7 +135,7 @@ class AzoeEvent:
         return self.__repr__() == other.__repr__()
 
     def __hash__(self):
-        return hash((self.tipo, self.origin, self.id))
+        return hash((self.tipo, self.origin))
 
 
 if __name__ == '__main__':
