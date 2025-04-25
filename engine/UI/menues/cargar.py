@@ -75,7 +75,7 @@ class MenuCargar(Menu):
         if self.opciones > 0:
             EngineData.load_savefile(self.archivos[self.sel] + '.json')
             self.deregister()
-            EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
+            EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Loading'})
 
     def eliminar(self):
         current = self.archivos[self.sel] + '.json'

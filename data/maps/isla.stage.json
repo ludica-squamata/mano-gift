@@ -15,6 +15,7 @@
   "salidas": [],
   "chunks_csv": "isla.chunks.csv",
   "puntos_de_interes_para_la_IA": [],
+  "world_stage": false,
   "ambiente": "exterior",
   "latitude": 30,
   "longitude": 30

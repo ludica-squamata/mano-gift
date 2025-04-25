@@ -1,12 +1,11 @@
 from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv, load_props_csv
-from engine.globs import Tiempo, TimeStamp, ModData, COLOR_COLISION, Noche, Sun, ANCHO, ALTO
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
+from engine.globs import ModData, COLOR_COLISION, Noche, ANCHO, ALTO
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
 from engine.globs import Mob_Group
 from pygame import mask
-from math import ceil
 from os import path
 import csv
 
@@ -35,6 +34,7 @@ class Stage:
         chunk_name = self.data['entradas'][entrada]['chunk']
         offx = self.offset_x - dx
         offy = self.offset_y - dy
+        self.world_stage = self.data.get("world_stage", False)
 
         self.special_adresses = {}
         for special_chunk_key in self.data.get('chunks', {}):
@@ -44,7 +44,10 @@ class Stage:
 
         self.chunks_csv = {}
         if 'chunks_csv' in self.data:
-            self.chunks_csv = load_chunks_csv(self.data['chunks_csv'])
+            if self.data['chunks_csv'] in ModData.preloaded_chunk_csv:
+                self.chunks_csv = ModData.preloaded_chunk_csv[self.data['chunks_csv']]
+            else:
+                self.chunks_csv = load_chunks_csv(self.data['chunks_csv'], silently=not self.world_stage)
             self.chunks_csv[chunk_name].update({
                 'mobs': {"hero": [[dx, dy]]},
                 'refs': {},
@@ -54,11 +57,11 @@ class Stage:
         else:
             self.props_csv = {}
 
-        if ModData.use_latitude and 'latitude' in self.data:
-            self.current_latitude = self.data['latitude']
-        else:
-            self.current_latitude = 30
-        self.current_longitude = self.data.get('longitude', 30)
+        # if ModData.use_latitude and 'latitude' in self.data:
+        #     self.current_latitude = self.data['latitude']
+        # else:
+        #     self.current_latitude = 30
+        # self.current_longitude = self.data.get('longitude', 30)
 
         self.unique_props = {}
         if 'props' in self.data:
@@ -83,7 +86,6 @@ class Stage:
         self.entrada = entrada
 
         EventDispatcher.register_many(
-            (self.cargar_timestamps, 'UpdateTime'),
             (self.save_map, 'Save'),
             (self.del_interactive, 'DeleteItem')
         )
@@ -94,17 +96,6 @@ class Stage:
             if chunk_name not in self.points_of_interest:
                 self.points_of_interest[chunk_name] = {}
             self.points_of_interest[chunk_name][datapoint['point']['name']] = datapoint['point']['node']
-
-    def cargar_timestamps(self, event):
-        horas_dia = event.data['new_daylenght']
-        offset = ceil(12 - (horas_dia / 2))
-        self.amanece = TimeStamp(offset + 1)
-        self.mediodia = TimeStamp(offset + (horas_dia / 2))
-        self.anochece = TimeStamp(offset + horas_dia)
-        self.atardece = TimeStamp((float(self.mediodia) + float(self.anochece) + 1) / 2)
-
-        Tiempo.update_alarms({self.atardece: 'atardece', self.anochece: 'anochece',
-                              self.amanece: 'amanece', self.mediodia: 'mediodía'})
 
     def save_map(self, event):
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', {'mapa': self.nombre, 'entrada': self.entrada,
@@ -183,23 +174,8 @@ class Stage:
                 self.chunks.add(new_mapa)
                 self.set_special_adress(ax, ay, new_mapa)
 
-    def set_coordinates(self, direccion):
-        if direccion == 'arriba':
-            self.current_latitude -= 1
-
-        elif direccion == 'abajo':
-            self.current_latitude += 1
-
-        elif direccion == 'derecha':
-            self.current_longitude += 1
-
-        elif direccion == 'izquierda':
-            self.current_longitude -= 1
-
-        Sun.set_latitude(self.current_latitude)
-
     def __repr__(self):
-        return "Stage " + self.nombre
+        return f"Stage {self.nombre} ({self.id})"
 
     def search_and_delete(self, item):
         folder = None
@@ -279,6 +255,8 @@ class ChunkMap(AzoeBaseSprite):
         else:
             self.adress = ChunkAdress(self, 0, 0)
 
+        self.latitude = data.get('latitude', None)
+
         if 'hero' in data.get('mobs', {}):
             name = Mob_Group.character_name
             data['mobs'][name] = data['mobs'].pop('hero')
@@ -297,12 +275,14 @@ class ChunkMap(AzoeBaseSprite):
             for mob in Mob_Group.get_existing(data['mobs']):
                 del data['mobs'][mob]
 
-        image = cargar_imagen(ModData.graphs + data['fondo'])
+        image = cargar_imagen(ModData.graphs + data['fondo']) if type(data['fondo']) is str else data['fondo']
+        # data['fondo'] might be preloaded
         rect = image.get_rect(topleft=(off_x, off_y))
         self.noche = Noche(self, rect)
 
         if data['colisiones'] is not None:
-            colisiones = cargar_imagen(ModData.graphs + data['colisiones'])
+            cols = 'colisiones'  # abreviatura
+            colisiones = cargar_imagen(ModData.graphs + data[cols]) if type(data[cols]) is str else data[cols]
             self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
         else:
             self.mask = mask.Mask(rect.size)
@@ -324,8 +304,10 @@ class ChunkMap(AzoeBaseSprite):
             data.update(uniques)
 
         self.cargar_limites(data.get('limites', self.limites))
-        data['entradas'] = self.parent.data['entradas']
-        # if any([len(data[req]) > 0 for req in requested]):
+        if self.nombre in self.parent.data['entradas']:
+            # a single chunk only needs to know the points of entry that lie within it, if any.
+            data['entradas'] = {self.nombre: self.parent.data['entradas'][self.nombre]}
+
         for item, grupo in load_something(self, data, requested):
             self.add_property(item, grupo)
 

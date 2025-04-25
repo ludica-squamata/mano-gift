@@ -354,12 +354,17 @@ class SeasonalYear:
     month_day = 0
 
     biomes = {  # los valores son la cantidad de horas de luz que puede tener un día.
-        "polar": {  # corresponde a latitudes entre 90º y 30º N/S
+        "polar": {  # corresponde a latitudes entre 90º y 70º N/S
             "summer": 24, "winter": 0, 'season_lenght': year_lenght // 2},
-        "equatorial": {  # corresponde a latitudes entre 30ºS y 30ºN
+        "equatorial": {  # corresponde a latitudes entre 20ºS y 20ºN
             "summer": 12, "winter": 12, 'season_lenght': year_lenght // 2},
-        "temperate": {  # corresponde a latitudes entre 30º y 90º N/S.
+        "temperate": {  # corresponde a latitudes entre 30º y 60º N/S.
             "spring": 12, "summer": 19, "fall": 12, "winter": 10, 'season_lenght': year_lenght // 4}
+    }
+    latitudes = {
+        'polar': [90, 70, -70, -90],
+        'equatorial': [20, -20],
+        'temperate': [60, 30, -30, -60]
     }
     season_cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
     month_cycler = None
@@ -414,11 +419,28 @@ class SeasonalYear:
     def set_day_duration(cls):
         if cls.season in cls.biomes[cls.biome]:
             cls.day_lenght = cls.biomes[cls.biome][cls.season]
+            cls.cargar_timestamps()
+
+    @classmethod
+    def set_latitude(cls, latitude):
+        biome = cls.biome
+        if 90 >= latitude >= 70 or -70 >= latitude >= -90:
+            biome = 'polar'
+        elif 20 >= latitude >= -20:
+            biome = 'equatorial'
+        elif 60 >= latitude >= 30 or -30 >= latitude >= -60:
+            biome = 'temperate'
+
+        if biome != cls.biome:
+            cls.biome = biome
+            cls.set_day_duration()
+            cls.propagate()
 
     @classmethod
     def propagate(cls):
         # Este trigger es para setear las timestamps en Stage.
-        EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght})
+        EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght,
+                                                               'timestamps': cls.cargar_timestamps()})
 
     @classmethod
     def cargar_timestamps(cls):

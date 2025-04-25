@@ -19,5 +19,6 @@
   ],
   "props": {},
   "ambiente": "exterior",
+  "world_stage": false,
   "latitude": 30
 }

@@ -3,7 +3,9 @@
   "colisiones": null,
   "props": {},
   "mobs": {
-    "Green": [[32,0]]
+    "Green": [[32,0]],
+    "Shopkeeper": [[64,64]],
+    "Commoner": [[96,0]]
   },
   "limites": {
     "sup": "black",

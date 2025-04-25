@@ -1,6 +1,7 @@
 from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
+from engine.globs import ModData, GRUPO_MOBS, Prop_Group, EngineData
 from engine.misc import abrir_json, cargar_imagen, Config
-from engine.globs import ModData, GRUPO_MOBS, Prop_Group
+from engine.globs. renderer import Renderer
 from engine.scenery import new_prop
 from engine.libs import randint
 from engine.mobs import Mob
@@ -149,33 +150,49 @@ def load_mob_csv(parent, all_data):
     return loaded_mobs
 
 
-def load_chunks_csv(csv_file):
+def load_chunks_csv(csv_file, silently=False):
     """Creates the json-dicts for each chunk from a csv file. These dicts are incomplete since they lack
     references to mobs or props, but due to the nature of dicts, such info could be added later.
     """
     with open(path.join(getcwd(), 'data', 'maps', csv_file)) as cvsfile:
         reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'izq', 'der',
-                                                     'fondo', 'colisiones'], delimiter=';')
+                                                     'fondo', 'colisiones', 'terrain', 'latitude'], delimiter=';')
         chunks_data = {}
-        for row in reader:
+        for i, row in enumerate(reader):
+
             ad_x, ad_y = row['adress'].strip("[]").split(',')
             chunk_data = {
-                'fondo': row['fondo'],
-                'colisiones': None if row['colisiones'] == 'null' else row['colisiones'],
                 'limites': {
                     'sup': None if row['sup'] == 'null' else row['sup'],
                     'inf': None if row['inf'] == 'null' else row['inf'],
                     'izq': None if row['izq'] == 'null' else row['izq'],
                     'der': None if row['der'] == 'null' else row['der']
                 },
-                "adress": [int(ad_x), int(ad_y)]
+                "adress": [int(ad_x), int(ad_y)],
+                "terrain": row['terrain'],
+                'latitude': int(row['latitude'])
             }
+            if not silently:
+                chunk_data.update({
+                    'fondo': cargar_imagen(ModData.graphs + row['fondo']),
+                    'colisiones': None if row['colisiones'] == 'null' else cargar_imagen(
+                        ModData.graphs + row['colisiones']),
+                })
+            else:
+                chunk_data.update({
+                    'fondo': row['fondo'],
+                    'colisiones': None if row['colisiones'] == 'null' else row['colisiones']
+                })
             chunks_data[row['id']] = chunk_data
 
+            EngineData.MENUS['loading'].actualizar(round(i / 720, 2))
+            Renderer.update()
+
+    ModData.preloaded_chunk_csv[csv_file] = chunks_data
     return chunks_data
 
 
-def load_props_csv(csv_file):
+def load_props_csv(csv_file, silently=True):
     with open(path.join(getcwd(), 'data', 'maps', csv_file), encoding='utf-8') as cvsfile:
         reader = csv.DictReader(cvsfile, fieldnames=['adress', 'pos', "ruta"], delimiter=';')
 
@@ -189,8 +206,15 @@ def load_props_csv(csv_file):
             data[(int(ad_x), int(ad_y))] = {
                 'pos': (int(x), int(y)),
                 'nombre': nombre,
-                'imagen': ruta  # because it points to a .png file.
             }
+            if not silently:
+                data.update({
+                    'imagen': cargar_imagen(ModData.graphs + ruta)
+                })
+            else:
+                data.update({
+                    'imagen': ruta  # because it points to a .png file.
+                })
 
         return data
 

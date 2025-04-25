@@ -160,10 +160,10 @@ class EngineData:
         cls.acceso_menues.clear()
 
         map_data = abrir_json(ModData.mapas + data['mapa'] + '.stage.json')
-        Sun.init(map_data['latitude'])
+        # Sun.init(map_data['latitude'])
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
-        Sun.set_mod(*SeasonalYear.cargar_timestamps())
+        # Sun.set_mod(*SeasonalYear.cargar_timestamps())
 
         ids = [e['id'] for e in cls.transient_mobs]
         names = [e['name'] for e in cls.transient_mobs]
@@ -176,7 +176,8 @@ class EngineData:
         SeasonalYear.propagate()
 
         focus = stage.get_entitiy_from_my_chunks(data['focus'])
-        if focus is None or not stage.exists_within_my_chunks(data['focus'], 'mobs'):
+        exists = stage.exists_within_my_chunks(data['focus'], 'mobs')
+        if focus is None or not exists:
             adress = map_data['entradas'][data['entrada']]['adress']
             mapa = stage.get_chunk_by_adress(adress)
             datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}

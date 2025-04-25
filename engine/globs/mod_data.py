@@ -29,6 +29,8 @@ class ModData:
 
     character_generator = None
 
+    preloaded_chunk_csv = {}
+
     @classmethod
     def init(cls, ini_data):
 

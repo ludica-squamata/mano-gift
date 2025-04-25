@@ -9,6 +9,7 @@ from .name import MenuName
 from .ability import MenuAbility
 from .status import MenuStatus
 from .map_selector import MenuDebug
+from .loading import LoadingMenu
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
@@ -19,7 +20,8 @@ default_menus = {'MenuPausa': MenuPausa,
                  'MenuNuevo': MenuModel,  # en realidad sería MenuModel,
                  'MenuName': MenuName,  # pero está así para que diga "nuevo" en Principal.
                  'MenuAbility': MenuAbility,  # No es el verdadero (y viejo) "MenuNuevo".
-                 'MenuStatus': MenuStatus
+                 'MenuStatus': MenuStatus,
+                 'MenuLoading': LoadingMenu
                  }
 
 # estructuras para los menues raiz Principal y Pausa.
