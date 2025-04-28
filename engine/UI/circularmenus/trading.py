@@ -20,13 +20,13 @@ class TradingCircularMenu(RenderedCircularMenu):
         for mob in participants:
             if mob['occupation'] == 'hero':
                 mob.detener_movimiento()
-                mob.AI.deregister()
+                mob['AI'].deregister()
                 mob.paused = True
                 mob.pause_overridden = True
             else:
                 mob.hablando = True
                 mob.paused = True
-                mob.AI.trigger_node(25)
+                mob['AI'].trigger_node(25)
                 mob.pause_overridden = True
 
             self.traders.append(mob)
@@ -114,8 +114,8 @@ class Trade(EventAware):
             trader.pause = True
             trader.hablando = True
             trader.pause_overriden = True
-            if hasattr(trader.AI, 'deregister'):
-                trader.AI.deregister()
+            if hasattr(trader['AI'], 'deregister'):
+                trader['AI'].deregister()
 
         self.engaged = True
 

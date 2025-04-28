@@ -86,4 +86,4 @@ class ContainedInventoryElement(InventoryElement):
         # closes the menu if all stacks == 0
         if len(self.parent.parent.inventario) == 0:
             self.parent.salir()
-            entity.AI.register()
+            entity['AI'].register()

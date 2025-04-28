@@ -1,5 +1,6 @@
 {
   "head": {
+    "name": "<str>",
     "script": {
       "module": [
         "<Functions>",

@@ -7,7 +7,6 @@ from . import Sensitivo, Animado
 
 
 class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
-    AI = None  # determina cómo se va a mover el mob
     paused = False
     AI_type = ''  # 'Controllable' or  'Autonomous'
 
@@ -15,12 +14,12 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     _trees = None
 
     def __init__(self, parent, data, **kwargs):
+        super().__init__(parent, data, **kwargs)
         ai_name = data['AI']
         self._trees = {ai_name: self.create_ai(ai_name)}
-        self.AI = self._trees[ai_name]
+        self['AI'] = self._trees[ai_name]
 
         EventDispatcher.register(self.toggle_pause_state, 'TogglePause')
-        super().__init__(parent, data, **kwargs)
 
     def toggle_pause_state(self, event):
         if not self.pause_overridden:
@@ -44,11 +43,11 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         tree_data = abrir_json(ModData.mobs + 'behaviours/' + name + '.json')
         if name not in self._trees:
             self._trees[name] = BehaviourTree(self, tree_data)
-        self.AI.reset()
-        self.AI = self._trees[name]
-        self.AI.update()
+        self["AI"].reset()
+        self["AI"] = self._trees[name]
+        self["AI"].update()
 
     def update(self, *args):
         if not self.paused and not self.dead:
-            self.AI.update()
+            self["AI"].update()
             super().update(*args)

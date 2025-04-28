@@ -27,6 +27,7 @@ class BehaviourTree:
         self.nodes = []
         self.shared_context = {}
         self._loaded_functions = {}
+        self.name = tree_data['head']['name']
 
         special = tree_data['head'].pop('special')
         self.load_script_information(tree_data['head'].pop('script'))
@@ -99,7 +100,7 @@ class BehaviourTree:
         self.to_check = [self.nodes[0]]
 
     def __repr__(self):
-        return 'BehaviourTree'
+        return f'BehaviourTree "{self.name}" of {self.entity}'
 
     def unload(self):
         # this is just a hook that does nothing. Don't delete it.
@@ -229,3 +230,7 @@ class BehaviourTree:
             self.node_set = False
         else:
             return self.status
+
+    def __eq__(self, other):
+        # it should be other.name, but "other" in this case is the string "name"
+        return self.name == other

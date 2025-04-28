@@ -9,6 +9,7 @@ class ControllableAI(EventAware):
 
     def __init__(self, entity):
         self.entity = entity
+        self.name = 'controllable'
         super().__init__()
         self.functions['tap'].update({
             'contextual': self.contextual_event_key,
@@ -113,3 +114,7 @@ class ControllableAI(EventAware):
 
     def __repr__(self):
         return 'Controllable AI ({})'.format(self.entity.nombre)
+
+    def __eq__(self, other):
+        # it should be other.name, but "other" in this case is the string "name"
+        return self.name == other

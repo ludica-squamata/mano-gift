@@ -109,7 +109,7 @@ class EngineData:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
             cls.transient_mobs.append(item)
             Renderer.camara.remove_obj(mob.sombra)
-            mob.AI.reset()
+            mob['AI'].reset()
 
     @classmethod
     def on_setkey(cls, event):

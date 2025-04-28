@@ -22,7 +22,7 @@ class HasSetLocation(Leaf):
 
 def exit_event(event):
     mob = event.data['mob']
-    mob.AI.set_context('go to', event.data['pos'])
+    mob['AI'].set_context('go to', event.data['pos'])
     Game_State.set2(f"{event.data['mob']}.goto.{event.data['pos']}")
 
 
@@ -91,7 +91,7 @@ class WhereAreOthers(Leaf):
         for mob in mobs:
             mob_id = mob.id
             if mob.AI_type == "Autonomous":
-                tree = mob.AI
+                tree = mob['AI']
                 ruta = tree.get_context('camino')
                 mob_routes[mob_id] = ruta
 
