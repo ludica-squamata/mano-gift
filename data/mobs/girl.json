@@ -1,5 +1,7 @@
 {
-  "nombre": "girl",
+  "nombre": "Sophie",
+  "ocupation": null,
+  "raza": "human",
   "atributos": {
     "Fuerza": 2,
     "Carisma": 5,
@@ -11,7 +13,7 @@
   "imagenes": {
     "idle": "mobs/imagenes/green_girl.png",
     "atk": null,
-    "death": null,
+    "death": "mobs/imagenes/dead human.png",
     "diag_face": "mobs/imagenes/npc_face.png"
   },
   "alpha": "mobs/colisiones/human_walk.png",

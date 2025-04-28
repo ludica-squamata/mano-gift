@@ -1,19 +1,19 @@
 {
   "nombre": "yellow",
+  "raza": "blob",
   "atributos": {
     "Fuerza": 2,
     "Carisma": 0,
     "Agilidad": 1,
-    "Resistencia": 2,
+    "Resistencia": 20,
     "Inteligencia": 0,
     "Percepción": 1
   },
   "imagenes": {
     "idle": "mobs/imagenes/yellow.png",
     "atk": "mobs/imagenes/yellow_atk.png",
-    "death": "mobs/imagenes/yellow_death.png",
-    "diag_face": null
+    "death": "mobs/imagenes/yellow_death.png"
   },
-  "alphas": "mobs/colisiones/monster_walk.png",
-  "AI": null
+  "alpha": "mobs/colisiones/monster_crawl.png",
+  "AI": "ai"
 }

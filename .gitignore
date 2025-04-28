@@ -7,4 +7,4 @@ __pycache__
 /data/grafs/maps/fondos/gris_8.png
 *.ai
 *.psd
-/data/grafs/_fuentes/
+/data/grafs/_fuentes/*.ai

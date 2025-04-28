@@ -31,8 +31,17 @@ EventDispatcher.register(init_game, 'NewGame')
 
 def about(event):
     who = event.data['who']
-    if who.nombre == Mob_Group.character_name:
+    if who.nombre == Mob_Group.get_by_trait('occupation', 'hero'):
         Game_State.set2(f"dialog.{event.data['about']}.enabled")
 
 
 EventDispatcher.register(about, 'TookItem')
+
+# def set_monsters_attitude(event):
+#     monsters = Mob_Group.get_by_trait('raza', 'blob')
+#     if monsters is not None:
+#         for monster in [monsters]:
+#             monster.AI.set_context('hates', 'Apple')
+#
+#
+# EventDispatcher.register(set_monsters_attitude, 'TookItem')

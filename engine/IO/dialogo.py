@@ -15,7 +15,7 @@ class Discurso(EventAware):
     def pre_init(cls, meta, *locutores):
         allow = True
         for loc in locutores:
-            if loc.nombre not in meta['locutors']:
+            if loc['nombre'] not in meta['locutors']:
                 allow = not allow
                 break
 
@@ -74,34 +74,46 @@ class Discurso(EventAware):
     def is_possible(cls, *locutores):
         for about in ModData.dialogs_by_topic:
             ruta = ModData.dialogs_by_topic[about]
-            file = cls.preprocess_locutor(abrir_json(ruta))
+            file = cls.preprocess_locutors(abrir_json(ruta))
             file = cls.process_items(file)
             if Discurso.pre_init(file['head'], *locutores):
                 return file
 
     @staticmethod
-    def preprocess_locutor(file):
-        hero_name = Mob_Group.character_name
-        hero = Mob_Group.get_controlled_mob()
-        if 'heroe' in file['head']['locutors']:
-            idx = file['head']['locutors'].index('heroe')
-            file['head']['locutors'][idx] = hero_name
+    def preprocess_locutors(file):
+        for idx, locutor in enumerate(file['head']['locutors']):
+            if locutor == 'heroe':
+                occupation = 'hero'
+            else:
+                occupation = locutor
+            mob = Mob_Group.get_by_trait('occupation', occupation)
+            if type(mob) is list:
+                mob = mob[0]
+            elif mob is None:
+                break
+            mob_name = mob['nombre']
+
+            file['head']['locutors'][idx] = mob_name
+            if 'trading' in file['head']:
+                file['head']['events']['TriggerBuyScreen']['participants'][idx] = mob
+                file['head']['events']['TriggerSellScreen']['participants'][idx] = mob
+                if occupation != 'hero':
+                    file['head']['trading']['traders'][0] = mob_name
 
             for s_idx in file['body']:
                 node = file['body'][s_idx]
-                if node['from'] == 'heroe':
-                    node['from'] = hero_name
-                # elif, because the hero wouldn't be talking to himself.
-                elif node['to'] == 'heroe':
-                    node['to'] = hero_name
+                if node['from'] == locutor:
+                    node['from'] = mob_name
+                elif node['to'] == locutor:
+                    node['to'] = mob_name
 
-                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == 'heroe':
-                    node['reqs']['loc'] = hero_name
+                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == locutor:
+                    node['reqs']['loc'] = mob_name
 
-            if 'reqs' in file['head']:
-                for req_key in file['head']['reqs']:
-                    if "who" in file['head']['reqs'][req_key] and file['head']['reqs'][req_key]['who'] == 'heroe':
-                        file['head']['reqs'][req_key]['who'] = hero.id
+                if 'reqs' in file['head']:
+                    for req_key in file['head']['reqs']:
+                        if "who" in file['head']['reqs'][req_key] and file['head']['reqs'][req_key]['who'] == locutor:
+                            file['head']['reqs'][req_key]['who'] = mob.id
 
         return file
 

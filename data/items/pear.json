@@ -1,0 +1,20 @@
+{
+  "nombre": "Pera",
+  "tipo": "agarrable",
+  "subtipo": "consumible",
+  "peso": 1,
+  "volumen": 0.0075,
+  "imagenes": {
+    "prop": "props/pera_32.png",
+    "item": "props/pera_32.png"
+  },
+  "propiedades": [
+    "stackable","sin_sombra","colocable"
+  ],
+  "efecto": {
+    "des": "No te dejes engañar por su color.",
+    "stat": "Salud",
+    "mod": 100,
+    "method": "percentage"
+  }
+}

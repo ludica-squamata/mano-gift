@@ -1,7 +1,7 @@
-from engine.globs import CAPA_OVERLAYS_HUD, FEATURE_SHOW_MINIBARS, FEATURE_FLOATING_NUMBERS
-from engine.globs import ANCHO, CUADRO, TEXT_FG, Mob_Group
+from engine.globs import CAPA_OVERLAYS_HUD, FEATURE_SHOW_MINIBARS, FEATURE_FLOATING_NUMBERS, FEATURE_MINIMAP
+from pygame import Surface, Rect, draw, SRCALPHA, font, PixelArray, Color
+from engine.globs import ANCHO, ALTO, CUADRO, TEXT_FG, Mob_Group, ModData
 from engine.globs.event_dispatcher import EventDispatcher
-from pygame import Surface, Rect, draw, SRCALPHA, font
 from engine.globs.renderer import Renderer
 from pygame.sprite import Sprite
 
@@ -104,7 +104,7 @@ class CharacterName(Sprite):
 
     def __init__(self, focus, x, y):
         super().__init__()
-        self.text = focus.character_name
+        self.text = focus['nombre']
         self.image = self.generate([255, 255, 255])
         self.rect = self.image.get_rect(topleft=(x, y))
         EventDispatcher.register(self.toggle, "TogglePause")
@@ -115,7 +115,7 @@ class CharacterName(Sprite):
         outline = []
         fuente = font.Font('engine/libs/Verdanab.ttf', 16)
         focus = Mob_Group.get_controlled_mob()
-        text = focus.character_name
+        text = focus['nombre']
         width, height = fuente.size(text)
         width += 2 * len(text)
         canvas = Surface((width, height), SRCALPHA)
@@ -270,9 +270,97 @@ class HUD:
             MiniBar()
         elif FEATURE_FLOATING_NUMBERS:
             FloatingNumber()
+        if FEATURE_MINIMAP:
+            Minimap()
 
         barra_vida.actualizar()
         barra_mana.actualizar()
 
 
 EventDispatcher.register(lambda e: HUD.init(), 'LoadGame')
+
+
+class Minimap(Sprite):
+    active = True
+    stage = None
+    created = False
+    icon = None
+
+    def __init__(self):
+        super().__init__()
+        self.image = Surface([0, 0])
+        self.rect = self.image.get_rect(bottom=ALTO, right=ANCHO)
+
+        Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+        self.map_array = {}
+
+    def get_map(self):
+        mapa_actual = Renderer.camara.current_map
+        if mapa_actual is not None:
+            if mapa_actual.parent.world_stage:
+                self.created = False
+                self.stage = mapa_actual.parent
+                if self.icon is None:
+                    self.icon = PlayerIcon(self, *self.rect.topleft)
+
+    def create(self):
+        if self.stage.data['chunks_csv'] in ModData.preloaded_chunk_csv:
+            datos = ModData.preloaded_chunk_csv[self.stage.data['chunks_csv']]
+        else:
+            from engine.mapa.loader import load_chunks_csv
+            datos = load_chunks_csv(self.stage.data['chunks_csv'], silently=True)
+
+        xes = max({datos[i]['adress'][0] for i in datos})
+        yes = max({datos[i]['adress'][1] for i in datos})
+        types = {tuple(datos[i]['adress']): {'terrain': datos[i]['terrain'], 'key': i} for i in datos}
+        image = Surface((xes * 4, (2 + yes) * 4))
+        image.fill('red')
+        px_array = PixelArray(image)
+        for y in range(-1, yes + 1):
+            for x in range(xes + 1):
+                terrain = types[x, y]['terrain']
+                px, py = x, y + 1
+                if terrain == 'snow':
+                    color = Color("#F0F0EC")
+                elif terrain == 'water':
+                    color = Color("#2389da")
+                elif terrain == 'beach':
+                    color = Color('#ffd966')
+                else:  # land
+                    color = Color('#679553')
+                px_array[px * 4:4 + px * 4, py * 4:4 + py * 4] = color
+                self.map_array[types[x, y]['key']] = Rect(px * 4, py * 4, 4, 4)
+
+        self.image = px_array.make_surface()
+        self.rect = self.image.get_rect(bottom=ALTO - 1, right=ANCHO - 1)
+        self.created = True
+
+    def update(self):
+        if self.stage is None:
+            self.get_map()
+        elif not self.created:
+            self.create()
+        else:
+            self.icon.locate(*self.rect.topleft)
+
+
+class PlayerIcon(Sprite):
+    active = True
+
+    def __init__(self, parent, x, y):
+        super().__init__()
+        self.parent = parent
+        self.image = Surface((4, 4))
+        self.image.fill('red')
+        self.rect = self.image.get_rect(topleft=(x, y))
+        Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
+
+    def locate(self, off_x, off_y):
+        nombre = Renderer.camara.current_map.parent.nombre
+        if "anti" in nombre:
+            key = Renderer.camara.current_map.nombre.strip("'")
+        else:
+            key = Renderer.camara.current_map.nombre
+
+        x, y = self.parent.map_array[key].topleft
+        self.rect.topleft = x + off_x, y + off_y

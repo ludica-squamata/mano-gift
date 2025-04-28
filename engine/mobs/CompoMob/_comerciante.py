@@ -22,11 +22,11 @@ class Comerciante(Equipado):
                     if row['desde'] == 'inicio' or now >= timestamp:
                         ruta = ModData.items + row['item'].lower().replace(" ", "_") + '.json'
                         if path.exists(ruta):
-                            item = new_item(self, row['item'], ruta)
+                            item = new_item(self, ruta)
                         else:
                             files = [abrir_json(path.join(ModData.items, file)) for file in listdir(ModData.items)]
                             item_file = [file for file in files if file.get('nombre', '') == row['item']]
-                            item = new_item(self, row['item'], item_file.pop()) if len(item_file) else None
+                            item = new_item(self, item_file.pop()) if len(item_file) else None
 
                         if item is not None:
                             cant = int(row['cant'])

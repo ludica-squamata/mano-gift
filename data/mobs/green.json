@@ -1,19 +1,19 @@
 {
   "nombre": "green",
+  "raza": "blob",
   "atributos": {
     "Fuerza": 1,
     "Carisma": 0,
-    "Agilidad": 1,
-    "Resistencia": 1,
+    "Agilidad": 10,
+    "Resistencia": 10,
     "Inteligencia": 0,
-    "Percepción": 1
+    "Percepción": 10
   },
   "imagenes": {
     "idle": "mobs/imagenes/green.png",
     "atk": "mobs/imagenes/green_atk.png",
-    "death": "mobs/imagenes/green_death.png",
-    "diag_face": null
+    "death": "mobs/imagenes/green_death.png"
   },
-  "alphas": "mobs/colisiones/monster_walk.png",
-  "AI": null
+  "alpha": "mobs/colisiones/monster_crawl.png",
+  "AI": "brain"
 }

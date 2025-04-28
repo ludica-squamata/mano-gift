@@ -1,10 +1,13 @@
-from engine.globs import Prop_Group, ModData, GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Tiempo, Tagged_Items
-from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs import Prop_Group, ModData, Tiempo, Tagged_Items, Mob_Group
+from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES
 from engine.misc.resources import abrir_json, cargar_imagen
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.UI.circularmenus import ContainerCircularMenu
 from .bases import Escenografia
 from pygame import Rect
 
-__all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible', 'EstructuraCompuesta', 'Escenografia']
+__all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
+           'EstructuraCompuesta', 'Escenografia', 'Contenedor']
 
 
 class Agarrable(Escenografia):
@@ -19,8 +22,7 @@ class Agarrable(Escenografia):
 
     def action(self, entity):
         from .new_prop import new_item
-        item = new_item(self.parent, self.nombre, self.data)
-        item.is_colocable = True  # si fue agarrable en algún momento, es por lo tanto también colocable.
+        item = new_item(self.parent, self.data)
         if entity.tipo == 'Mob':
             entity.inventario.agregar(item)
             # removes the prop from the map, but not the item from the world.
@@ -177,3 +179,30 @@ class EstructuraCompuesta(Escenografia):
                 props.append(prop)
 
         return props
+
+
+class Contenedor(Escenografia):
+    accionable = True
+    entity = None
+
+    def __init__(self, parent, x, y, z, data):
+        from engine.mobs.inventory import Inventory
+        super().__init__(parent, x, y, z, data=data)
+        self.inventario = Inventory()
+        self._fill(data['contenido'])
+        self.menu = None
+
+    def action(self, mob):
+        if mob is Mob_Group.get_controlled_mob():
+            self.entity = mob
+            mob.AI.deregister()
+            self.menu = ContainerCircularMenu(self)
+
+    def _fill(self, contenido):
+        from .new_prop import new_item
+        for item_name in contenido:
+            data = abrir_json(ModData.items + '/' + item_name + '.json')
+            for _ in range(contenido[item_name]):
+                item = new_item(self, data)
+                self.inventario.agregar(item)
+

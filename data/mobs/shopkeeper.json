@@ -1,5 +1,7 @@
 {
-  "nombre": "Shopkeeper",
+  "nombre": "Thomas",
+  "occupation": "shopkeeper",
+  "raza": "human",
   "atributos": {
     "Fuerza": 4,
     "Carisma": 7,
@@ -11,10 +13,10 @@
   "imagenes": {
     "heads": "mobs/imagenes/heads_commoner.png",
     "atk": null,
-    "death": null,
+    "death": "mobs/imagenes/dead human.png",
     "idle": "mobs/imagenes/commoner_idle_walk_body.png",
     "diag_face": "mobs/imagenes/npc_face.png"
   },
   "alpha": "mobs/colisiones/human_walk.png",
-  "AI": "ai"
+  "AI": "brain"
 }

@@ -2,7 +2,8 @@ from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Rect, draw, display, image, mouse, font, sprite, Surface, SCALED
 from engine.globs.azoe_group import AzoeGroup
 from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
-from .tiempo import Tiempo
+from .tiempo import Tiempo, SeasonalYear
+from .sun import Sun
 import sys
 import os
 
@@ -32,8 +33,13 @@ class Camara:
     def set_background(cls, spr):
         if cls.bgs_rect is None:
             cls.bgs_rect = spr.rect.copy()
-        cls.bgs.add(spr)
-        cls.nchs.add(spr.noche)
+
+        if not len(cls.bgs):
+            cls.set_current_map(spr)
+
+        if spr not in cls.bgs:
+            cls.bgs.add(spr)
+            cls.nchs.add(spr.noche)
 
     @classmethod
     def add_real(cls, obj):
@@ -57,6 +63,8 @@ class Camara:
     @classmethod
     def set_focus(cls, spr):
         cls.focus = spr
+        if spr not in cls.real:
+            cls.add_real(spr)
 
     @classmethod
     def save_focus(cls, event):
@@ -67,8 +75,11 @@ class Camara:
         return cls.focus == spr
 
     @classmethod
-    def get_current_map(cls):
-        return cls.focus.stage
+    def set_current_map(cls, spr):
+        cls.current_map = spr
+        if spr.latitude is not None:
+            SeasonalYear.set_latitude(spr.latitude)
+            Sun.set_latitude(spr.latitude)
 
     @classmethod
     def clear(cls, event=None):
@@ -88,7 +99,7 @@ class Camara:
         r = cls.rect.inflate(5, 5)
         map_at = cls.bgs.get_spr_at
         adyacent_map_key = ''
-        reference = None
+        reference: cls.current_map.__class__ = None
 
         # shortcuts
         if len(cls.bgs):
@@ -99,7 +110,7 @@ class Camara:
             map_at_left = map_at(r.midleft)
 
         if map_at_center is not None and cls.current_map is not map_at_center:
-            cls.current_map = map_at_center
+            cls.set_current_map(map_at_center)
 
         # check in ortogonal positions
         if map_at_top is None:

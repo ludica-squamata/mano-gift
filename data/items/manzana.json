@@ -10,10 +10,10 @@
     "high": null
   },
   "propiedades": [
-    "stackable","sin_sombra"
+    "stackable","sin_sombra","colocable"
   ],
   "efecto": {
-    "des": "Restaura tu salud al máximo.",
+    "des": "Deliciosa y brillante.",
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"

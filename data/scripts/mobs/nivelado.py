@@ -5,3 +5,4 @@ def nivel(mob):
     mob['Nivel'] = 1 + (proto_nivel - 50) // 6
     mob['Ataque'] += mob['Nivel']
     mob['Evasión'] += mob['Nivel']
+    mob['Experiencia'] = mob['Nivel'] * 1000

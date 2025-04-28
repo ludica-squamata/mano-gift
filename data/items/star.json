@@ -9,7 +9,7 @@
     "item": "props/star2.png",
     "high": null
   },
-  "propiedades": ["sin_sombra"],
+  "propiedades": ["sin_sombra","colocable"],
   "dialog": "star",
   "efecto": {
     "des": "Aumenta tu carisma en 2.",

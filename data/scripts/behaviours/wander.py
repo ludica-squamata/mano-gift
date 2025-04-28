@@ -1,7 +1,8 @@
 from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
 from engine.mobs.behaviourtrees import Leaf, Success, Failure, Running
-from random import randrange, choice
+from engine.globs.renderer import Camara
 from engine.misc import ReversibleDict
+from random import randrange, choice
 
 
 class IsTalking(Leaf):
@@ -47,14 +48,6 @@ class GetRoute(Leaf):
         pd = self.tree.get_context('punto_final')
         others = self.tree.get_context('others')
 
-        class Point:
-            x = 0
-            y = 0
-
-            def __init__(self, x, y):
-                self.x = x
-                self.y = y
-
         pre_x, pre_y = None, None
         if (e.x / 32).is_integer():
             pi_x = e.x
@@ -71,14 +64,17 @@ class GetRoute(Leaf):
         pi = Nodo(pi_x, pi_y, 32)
 
         post_x, post_y = None, None
-        pd_x, pd_y = None, None
         if not (pd.x / 32).is_integer():
             pd_x = round((pd.x / 32)) * 32
             post_x = pd.x
+        else:
+            pd_x = pd.x
 
         if not (pd.y / 32).is_integer():
             pd_y = round((pd.y / 32)) * 32
             post_y = pd.y
+        else:
+            pd_y = pd.y
 
         if pd_x is not None or pd_y is not None:
             pd = Nodo(pd_x, pd_y, 32)
@@ -90,7 +86,7 @@ class GetRoute(Leaf):
                 pre_x = pi_x
             if pre_y is None:
                 pre_y = pi_y
-            punto = Point(pre_x, pre_y)
+            punto = Nodo(pre_x, pre_y, 32)
             ruta.insert(0, punto)
 
         if post_x is not None or post_y is not None:
@@ -98,7 +94,7 @@ class GetRoute(Leaf):
                 post_x = pi_x
             if pre_y is None:
                 post_y = pi_y
-            punto = Point(post_x, post_y)
+            punto = Nodo(post_x, post_y, 32)
             ruta.append(punto)
 
         if ruta is None or len(ruta) == 1:
@@ -133,11 +129,13 @@ class Move(Leaf):
         pd = self.tree.get_context('punto_proximo')
         pi = Nodo(e.x, e.y, 32)
 
-        if pi != pd:
+        if abs(pi.distancia_a(pd)) >= 1:
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             if direccion != e.direccion:
                 e.cambiar_direccion(direccion)
+            self.tree.set_context('movement', e.direcciones[direccion])
             e.mover(*e.direcciones[direccion])
+            # e.animar_caminar()
             return Running
         else:
             return Success
@@ -145,12 +143,15 @@ class Move(Leaf):
 
 class GetMap(Leaf):
     def process(self):
-        e = self.get_entity()
-        cuadros = e.parent.mask
-        self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
-        self.tree.set_context('mapa', cuadros)
-        self.tree.set_context('next', 1)
-        return Success
+        if Camara.current_map is not None:
+            cuadros = Camara.current_map.mask
+            self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
+            self.tree.set_context('mapa', cuadros)
+            self.tree.set_context('next', 1)
+            self.tree.set_context('movement', [0, 0])
+            return Success
+        else:
+            return Failure
 
 
 class LookAround(Leaf):

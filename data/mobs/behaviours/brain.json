@@ -1,0 +1,22 @@
+{
+  "head": {
+    "script": {
+      "behaviours/brain": [
+        "BePassive",
+        "BeAgressive"
+      ]
+    },
+    "special": {
+      "Repeater": {
+        "ID": null,
+        "times": 0
+      }
+    }
+  },
+  "body": {
+    "0": {"name": "Repeater","child": 1},
+    "1": {"name": "Selector","children": [2,3]},
+    "2": {"name": "BePassive"},
+    "3": {"name": "BeAgressive"}
+  }
+}

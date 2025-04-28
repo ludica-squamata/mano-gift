@@ -1,19 +1,19 @@
 {
   "nombre": "red",
+  "raza": "blob",
   "atributos": {
     "Fuerza": 4,
     "Carisma": 0,
     "Agilidad": 1,
-    "Resistencia": 4,
+    "Resistencia": 40,
     "Inteligencia": 0,
     "Percepción": 1
   },
   "imagenes": {
     "idle": "mobs/imagenes/red.png",
     "atk": "mobs/imagenes/red_atk.png",
-    "death": "mobs/imagenes/red_death.png",
-    "diag_face": null
+    "death": "mobs/imagenes/red_death.png"
   },
-  "alpha": "mobs/colisiones/monster_walk.png",
-  "AI": null
+  "alpha": "mobs/colisiones/monster_crawl.png",
+  "AI": "ai"
 }

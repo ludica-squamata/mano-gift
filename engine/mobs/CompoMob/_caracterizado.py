@@ -30,6 +30,10 @@ class Caracterizado(AzoeSprite):
             # no sé si este generator está bien hecho. Soy nuevo en esto, pero me pareció que correspondía. 20/3/2021
             yield self._chars[attr]
 
+    def get_attr_names(self):
+        for attr in self.data['atributos']:
+            yield attr
+
     def __getitem__(self, item):
         if type(item) == int and 0 <= item < len(self._allchars):
             return self[self._allchars[item]]

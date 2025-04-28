@@ -22,6 +22,8 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
         prop = Destruible(parent, x, y, z, data)
     elif tipo == 'estructura_compuesta':
         prop = EstructuraCompuesta(parent, x, y, data).props
+    elif tipo == 'contenedor':
+        prop = Contenedor(parent, x, y, z, data)
     else:
         prop = Escenografia(parent, x, y, z=z, nombre=nombre, data=data, imagen=img)
 

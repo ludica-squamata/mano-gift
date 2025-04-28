@@ -4,9 +4,12 @@
   "subtipo": "armadura",
   "peso": 4,
   "volumen": 4,
-  "image": "props/armor.png",
+  "imagenes": {
+    "item": "props/armor.png",
+    "prop": "props/armor.png"
+  },
   "propiedades": [
-    "stackable","sin_sombra"
+    "stackable","sin_sombra","colocable"
   ],
   "efecto": {
     "des": "Es un peto de hierro.",

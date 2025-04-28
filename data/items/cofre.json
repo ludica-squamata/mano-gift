@@ -1,0 +1,18 @@
+{
+  "nombre": "Cofre",
+  "tipo": "contenedor",
+  "peso": 10,
+  "volumen": 4,
+  "imagenes": {
+    "prop": "props/cofre_cerrado_32.png"
+  },
+  "propiedades": [
+    "solido","sin_sombra"
+  ],
+  "contenido": {
+    "Manzana": 10,
+    "Banana": 10,
+    "Pear": 10,
+    "Egg": 10
+  }
+}

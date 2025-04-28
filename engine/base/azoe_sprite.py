@@ -87,6 +87,7 @@ class AzoeSprite(sprite.Sprite):
                 self.rel_x = self._rel(self.rel_x, dx)
             if dy != 0:
                 self.rel_y = self._rel(self.rel_y, dy)
+                self.z = self.rel_y + self.rect.h
         #
         # if self.rel_x + dx < 0:
         #     self.rel_x = 800
@@ -138,8 +139,8 @@ class AzoeSprite(sprite.Sprite):
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
-            x = self.rect.x + off_x - other.rect.x
-            y = self.rect.y + off_y - other.rect.y
+            x = self.rel_x + off_x - other.rel_x
+            y = self.rel_y + off_y - other.rel_y
             if other.mask.overlap(self.mask, (x, y)):
                 return True
         return False

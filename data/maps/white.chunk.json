@@ -1,9 +1,9 @@
 {
-  "fondo": "maps/fondos/pasto.png",
+  "fondo": "maps/fondos/cuadriculado.png",
   "colisiones": null,
   "props": {},
   "mobs": {
-    "aristocrat": [[192, 202], [160, 192], [192, 160]],
+    "Green": [[32,0]],
     "Shopkeeper": [[64,64]],
     "Commoner": [[96,0]]
   },

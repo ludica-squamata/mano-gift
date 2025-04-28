@@ -160,7 +160,7 @@ class Menu(EventAware, BaseWidget):
             self.sel = 0
 
         elif self.sel > self.opciones - 1:
-            self.sel = self.opciones-1
+            self.sel = self.opciones - 1
 
     def __repr__(self):
         return 'Menu_' + self.nombre + ' (en ' + str(len(self.groups())) + ' grupos)'

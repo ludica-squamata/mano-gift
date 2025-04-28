@@ -19,21 +19,18 @@
   },
   "body": {
     "0": {
-      "type": "node",
       "leads": 1,
       "from": "commoner",
       "to": "heroe",
       "txt": "¿Qué se te ofrece, heroe?"
     },
     "1": {
-      "type": "node",
       "leads": 2,
       "from": "heroe",
       "to": "commoner",
       "txt": "Necesito que vayas a tu casa para probar unas nuevas funcionalidades"
     },
     "2": {
-      "type": "leaf",
       "from": "commoner",
       "to": "heroe",
       "event": "Exit",

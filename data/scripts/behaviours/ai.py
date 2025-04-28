@@ -3,6 +3,7 @@ from engine.mobs.behaviourtrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import Game_State
 
+
 class HasSetLocation(Leaf):
     def process(self):
         e = self.get_entity()

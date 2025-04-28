@@ -11,24 +11,7 @@
       "adress": [0,-15]
     }
   },
-  "salidas": [
-    {
-      "stage": "worldmap",
-      "rect": [368,2,32,32],
-      "chunk_adress": [0,0],
-      "nombre": "exit_to_worldmap",
-      "entrada": "access",
-      "direcciones": []
-    },
-    {
-      "stage": "worldmap",
-      "prop": "Pozo",
-      "chunk_adress": [0,0],
-      "nombre": "prop_exit",
-      "entrada": "access",
-      "direcciones": []
-    }
-  ],
+  "salidas": [],
   "props": {
     "light_post": {
       "chunk": [0,0],
@@ -37,10 +20,6 @@
     "arbol": {
       "chunk": [0,0],
       "instances": [[100,100]]
-    },
-    "Pozo": {
-      "chunk": [0,0],
-      "instances": [[0,0]]
     },
     "Manzana": {
       "chunk": [0,0],
@@ -53,6 +32,10 @@
     "Star": {
       "chunk": [0,0],
       "instances": [[32,32]]
+    },
+    "Cofre": {
+      "chunk": [0,0],
+      "instances": [[64,64]]
     }
   },
   "chunks": {
@@ -84,6 +67,8 @@
     "Huevo": "egg.json"
   },
   "ambiente": "exterior",
+  "world_stage": false,
+  "zoom_level": "local",
   "latitude": 30,
   "longitude": 30
 }

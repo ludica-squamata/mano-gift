@@ -3,7 +3,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeGroup
 from engine.misc import Config
 from .menu import Menu
-import os
+import os, sys
 
 
 class MenuCargar(Menu):
@@ -75,7 +75,10 @@ class MenuCargar(Menu):
         if self.opciones > 0:
             EngineData.load_savefile(self.archivos[self.sel] + '.json')
             self.deregister()
-            EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
+            if 'pydevd' not in sys.modules:
+                EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Loading'})
+            else:
+                EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
 
     def eliminar(self):
         current = self.archivos[self.sel] + '.json'

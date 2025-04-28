@@ -97,12 +97,13 @@ class EngineData:
         entrada = evento.data['target_entrada']
 
         if Renderer.camara.is_focus(mob):
-            EventDispatcher.trigger('EndDialog', cls, {})
+            Renderer.camara.clear()
             mapa = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
             x, y = mapa.posicion_entrada(entrada)
             adress = mapa.entradas[entrada]
-            Renderer.camara.current_map = mapa.chunks[adress]
+            Renderer.camara.set_background(mapa.chunks[adress])
+            Renderer.set_focus(mob)
             Renderer.camara.focus.ubicar_en_mapa(x, y)
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
@@ -137,8 +138,14 @@ class EngineData:
         EventDispatcher.trigger('NewGame', 'engine', {'savegame': {"focus": char_name}})
 
     @classmethod
-    def load_savefile(cls, filename):
-        data = abrir_json(Config.savedir + '/' + filename)
+    def load_savefile(cls, file):
+        if type(file) is str:
+            data = abrir_json(Config.savedir + '/' + file)
+        elif type(file) is dict:
+            data = file
+        else:
+            raise TypeError(f'"file" must be str or dict, not {type(file)}')
+
         cls.save_data.update(data)
         cls.transient_mobs = data.get('transient', [])
         Mob_Group.clear()
@@ -153,10 +160,10 @@ class EngineData:
         cls.acceso_menues.clear()
 
         map_data = abrir_json(ModData.mapas + data['mapa'] + '.stage.json')
-        Sun.init(map_data['latitude'])
+        # Sun.init(map_data['latitude'])
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
-        Sun.set_mod(*SeasonalYear.cargar_timestamps())
+        # Sun.set_mod(*SeasonalYear.cargar_timestamps())
 
         ids = [e['id'] for e in cls.transient_mobs]
         names = [e['name'] for e in cls.transient_mobs]
@@ -169,8 +176,10 @@ class EngineData:
         SeasonalYear.propagate()
 
         focus = stage.get_entitiy_from_my_chunks(data['focus'])
-        if focus is None and not stage.exists_within_my_chunks(data['focus'], 'mobs'):
-            mapa = stage.get_chunk_by_adress([0, 0])
+        exists = stage.exists_within_my_chunks(data['focus'], 'mobs')
+        if focus is None or not exists:
+            adress = map_data['entradas'][data['entrada']]['adress']
+            mapa = stage.get_chunk_by_adress(adress)
             datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}
             datos.update({'entradas': stage.data['entradas']})
             datos.update({'refs': {data['focus']: ModData.fd_player + data['focus'] + '.json'}})
@@ -179,7 +188,6 @@ class EngineData:
             mapa.add_property(focus, grupo)
 
         Renderer.set_focus(focus)
-        focus.character_name = data['focus']
         Sun.update()
 
     @classmethod

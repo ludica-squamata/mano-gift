@@ -105,9 +105,9 @@ class Item(AzoeSprite):
 
     is_colocable = False  # en principio.
 
-    def __init__(self, parent, nombre, data):
-        self.nombre = nombre
+    def __init__(self, parent, data):
         self.data = data
+        self.nombre = data['nombre']
         self.peso = data['peso']
         self.volumen = data['volumen']
         self.efecto_des = data.get('efecto', {}).get('des', '')
@@ -117,30 +117,28 @@ class Item(AzoeSprite):
         self.volumen = self.data['volumen']
         self.efecto_des = self.data.get('efecto', {}).get('des', '')
         self.stackable = 'stackable' in self.data['propiedades']
+        self.is_colocable = 'colocable' in self.data['propiedades']
         imagen = cargar_imagen(join(ModData.graphs, self.data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)
 
     def __eq__(self, other):
         # __eq__() ya no pregunta por el ID porque el ID hace único a cada item.
         test_1 = other.nombre == self.nombre
-        # test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
-        # if hasattr(self, 'subtipo') and hasattr(other, 'subtipo'):
-        #     test_3 = self.subtipo == other.subtipo
-        # else:
-        #     test_3 = False
-        tests = [test_1]  # , test_2, test_3
+        test_2 = self.tipo == other.tipo  # esto es lo mismo que preguntar por self.__class__
+        if hasattr(self, 'subtipo') and hasattr(other, 'subtipo'):
+            test_3 = self.subtipo == other.subtipo
+        else:
+            test_3 = False
+        tests = [test_1, test_2, test_3]
         return all(tests)
 
     def __ne__(self, other):
-        if other.nombre != self.nombre:
-            return True
-        elif self.id != other.id:
-            return True
-        else:
-            return False
+        # 27/4/2025 simplified __ne__(). It no longer asks for ID for the same reason that __eq__() does not.
+        return not self.__eq__(other)
 
     def __hash__(self):
-        return hash(self.nombre + str(self.volumen) + str(self.peso) + self.tipo)
+        # 27/4/2025 __hash__() no longer hashes the object ID because that prevents stackability.
+        return hash((self.nombre, self.volumen, self.peso, self.tipo))
 
     def __repr__(self):
         return self.nombre + ' (' + self.tipo + ')'

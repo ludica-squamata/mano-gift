@@ -69,6 +69,11 @@ class ControllableAI(EventAware):
         EventDispatcher.deregister(self.register, event1)
         EventDispatcher.deregister(self.deregister, event2)
 
+    def reset(self):
+        """This is just a hook that does nothing.
+        It's here to prevent a crash with Behaviour Trees"""
+        pass
+
     def update(self):
         self.entity.update_sombra()
         if self.accion:
@@ -89,8 +94,10 @@ class ControllableAI(EventAware):
                     self.entity.atacar(sprite)
 
                 elif sprite.tipo == 'Mob':
-                    self.entity.dialogar(sprite)
-                    self.deregister()
+                    if self.entity.dialogar(sprite):
+                        self.deregister()
+                    elif sprite.dead:
+                        pass  # open container
 
                 elif sprite.tipo == 'Prop' and sprite in preception['touched']:
                     if sprite.accionable and sprite.action is not None:

@@ -6,8 +6,6 @@ class Elemento:
     """Class for the dialog tree elements."""
 
     nombre = ''
-    hasLeads = False
-    tipo = ''
     indice = None
     emisor = None  # el que habla
     receptor = None  # a quien le habla
@@ -24,20 +22,17 @@ class Elemento:
         self.leads = None
         self.indice = indice
 
-        self.tipo = data['type']
-        self.nombre = self.tipo.capitalize() + ' #' + str(self.indice)
+        self.nombre = 'Nodo #' + str(self.indice)
         self.texto = data['txt']
         self.emisor = data['from']
         self.receptor = data['to']
-        self.leads = data.get('leads', None)
+        self.leads = data['leads'] if 'leads' in data else data.get('exclusive', None)
+        self.is_exclusive = 'exclusive' in data  # required for the Exclusive Branch Array
         self.reqs = data.get('reqs', None)
         self.event = data.get('event', None)
         self.event_data = data.get('e_data', {})
         self.pre = data.get('pre', 0)
         self.item = data.get('item', None)  # the filename.
-
-        if type(self.leads) is list:
-            self.hasLeads = True
 
         self.tags = []
         self.expressions = []
@@ -51,8 +46,6 @@ class Elemento:
         else:
             # si es que son ilógicos...
             raise TypeError('Verificar las tags. No se permiten tags anidadas y los grupos deben estar cerrados')
-
-        del data
 
     def create_event(self, name, data):
         self.event = name, self, data
@@ -95,6 +88,9 @@ class Elemento:
         else:
             return True
 
+    def __hash__(self):
+        return hash((self.nombre, self.indice, self.emisor, self.receptor, self.texto, self.leads))
+
     def __next__(self):
         return self.leads
 
@@ -112,8 +108,8 @@ class BranchArray:
         self.array = []
         for idx in node.leads:
             self.array.append(elementos[idx])
-        if node.tipo == 'exclusive':
-            self.is_exclusive = True
+
+            self.is_exclusive = node.is_exclusive
 
         self.emisor = self.array[0].emisor
         self.item = self.array[0].item
@@ -156,10 +152,10 @@ class ArboldeDialogo:
         self._elementos = [Elemento(self, idx, data) for idx, data in datos.items()]
 
         for obj in self._elementos:
-            if obj.tipo != 'leaf':
-                if not obj.hasLeads:
+            if obj.leads is not None:  # Leaves have no leads=None
+                if type(obj.leads) is int:
                     obj.leads = self._elementos[obj.leads]
-                else:
+                elif type(obj.leads) is list:  # might be exclusive or not
                     obj.leads = BranchArray(self, obj, self._elementos)
 
     def __getitem__(self, item):
@@ -244,7 +240,7 @@ class ArboldeDialogo:
         if self._future is not False:  # last was leaf; close
             if not type(self._future) is BranchArray:
                 actual = self.get_actual()  # node or leaf
-                if actual.tipo != 'leaf':
+                if actual.leads is not None:  # node is not a Leaf
                     if not type(actual.leads) is BranchArray:
                         self._future = int(actual.leads.indice)
                     else:
