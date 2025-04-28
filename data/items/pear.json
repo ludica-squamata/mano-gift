@@ -12,7 +12,7 @@
     "stackable","sin_sombra","colocable"
   ],
   "efecto": {
-    "des": "Restaura tu salud al máximo.",
+    "des": "No te dejes engañar por su color.",
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"

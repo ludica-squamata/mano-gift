@@ -12,10 +12,6 @@ class MobGroup:
         self._group = {}
         self._indexes = []
 
-        EventDispatcher.register_many(
-            (self.register_name, "CharacterCreation", 'LoadGame')
-        )
-
     def __setitem__(self, key, value):
         if key not in self._group:
             self._group[key] = value
@@ -93,39 +89,14 @@ class MobGroup:
         return [self._group[mob_id] for mob_id in self._group if self._group[mob_id].AI_type == 'Controllable'][0]
 
     def get_by_trait(self, key, value):
-        """Return a sorted list of mobs that have that name for the purposes of iteration.
+        """Return a sorted (by name) list of mobs that have the desired trait for the purposes of iteration."""
 
-        This method may be expanded in the future to allow searching for mobs by other traits.
-        """
-
-        # if type(key) is str:
         listed = [mob for mob in self.contents() if mob[key] == value]
-        # else:
-        #     listed = [mob for mob in self.contents() if mob['nombre'] == name.nombre]
-
-        listed.sort(key=lambda o: o.nombre)
+        listed.sort(key=lambda o: o['nombre'])
         if len(listed) == 1:
             return listed[0]
         elif len(listed):
             return listed
-
-    # Aunque estos tres métodos singularizan al héroe
-    # no se me ocurre otra forma de arrastrar su nombre.
-    def register_name(self, event):
-        # posiblemente esto se puede hacer en menos líneas.
-        if 'nombre' in event.data:
-            self._name = event.data['nombre']
-        elif 'focus' in event.data:
-            self._name = event.data['focus']
-
-    @property
-    def character_name(self):
-        return self._name
-
-    # noinspection PyUnresolvedReferences
-    @character_name.deleter
-    def character_name(self):
-        self._name = ''
 
 
 class ItemGroup:

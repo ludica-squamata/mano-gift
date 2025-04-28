@@ -5,7 +5,7 @@ from engine.globs.azoe_group import AzoeGroup
 from engine.misc import Config, abrir_json
 from engine.UI.widgets import Fila
 from .menu import Menu
-import os
+import os, sys
 
 
 class MenuDebug(Menu):
@@ -45,7 +45,8 @@ class MenuDebug(Menu):
 
             EngineData.load_savefile(data)
             self.deregister()
-            EventDispatcher.trigger('EndDialog', self, {'layer': self.layer})
+            if 'debug' not in sys.argv:
+                EventDispatcher.trigger('OpenMenu', self.nombre, {'value': 'Loading'})
         else:
             EventDispatcher.trigger('QUIT', self, {'status': "There's not such player in savedir"})
 

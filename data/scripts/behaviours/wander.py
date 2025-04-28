@@ -129,13 +129,14 @@ class Move(Leaf):
         pd = self.tree.get_context('punto_proximo')
         pi = Nodo(e.x, e.y, 32)
 
-        if pi != pd:
+        if abs(pi.distancia_a(pd)) >= 1:
             direccion = determinar_direccion((pi.x, pi.y), (pd.x, pd.y))
             if direccion != e.direccion:
                 e.cambiar_direccion(direccion)
             self.tree.set_context('movement', e.direcciones[direccion])
             e.mover(*e.direcciones[direccion])
-            return Success
+            # e.animar_caminar()
+            return Running
         else:
             return Success
 

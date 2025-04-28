@@ -69,6 +69,11 @@ class ControllableAI(EventAware):
         EventDispatcher.deregister(self.register, event1)
         EventDispatcher.deregister(self.deregister, event2)
 
+    def reset(self):
+        """This is just a hook that does nothing.
+        It's here to prevent a crash with Behaviour Trees"""
+        pass
+
     def update(self):
         self.entity.update_sombra()
         if self.accion:

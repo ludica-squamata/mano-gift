@@ -77,8 +77,9 @@ class Camara:
     @classmethod
     def set_current_map(cls, spr):
         cls.current_map = spr
-        SeasonalYear.set_latitude(spr.latitude)
-        Sun.set_latitude(spr.latitude)
+        if spr.latitude is not None:
+            SeasonalYear.set_latitude(spr.latitude)
+            Sun.set_latitude(spr.latitude)
 
     @classmethod
     def clear(cls, event=None):

@@ -48,6 +48,6 @@ class MenuStatus(Menu):
         rect = Rect(0, r.bottom + 2, w, h + 1)
         rect.centerx = r.centerx
 
-        render = render_textrect(self.entity.character_name, fuente, rect, TEXT_FG, CANVAS_BG)
+        render = render_textrect(self.entity['nombre'], fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
         return r

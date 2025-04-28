@@ -17,7 +17,9 @@ class Sun:
     def init(cls, latitude):
         # noroeste, noreste, suroeste, sureste
         cls.set_latitude(latitude, 0, 6, 2, 4)
-        EventDispatcher.register(cls.set_by_event, 'ClockAlarm')
+        EventDispatcher.register_many(
+            [cls.set_lights_by_event, 'ClockAlarm'],
+            [cls.set_mod_by_event, 'UpdateTime'])
 
     @classmethod
     def set_latitude(cls, latitude, noroeste=0, noreste=6, suroeste=2, sureste=4):
@@ -29,7 +31,7 @@ class Sun:
             cls.lights = [noroeste, 8, noreste]  # esté al revés.
 
     @classmethod
-    def set_by_event(cls, event):
+    def set_lights_by_event(cls, event):
         alarm = event.data['time']
         cls.set_light(alarm)
 
@@ -59,6 +61,10 @@ class Sun:
         cls.current_light = cls.light
 
         cls.update()
+
+    @classmethod
+    def set_mod_by_event(cls, event):
+        cls.set_mod(*event.data['timestamps'])
 
     @classmethod
     def set_mod(cls, actual, amanece, mediodia, atardece, anochece):

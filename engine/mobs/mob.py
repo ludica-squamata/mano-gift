@@ -61,11 +61,11 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
-        if 'ocupation' in data:
-            self['ocupation'] = data['ocupation']  # issue-156
+        if 'occupation' in data:
+            self['occupation'] = data['occupation']  # issue-156
 
     def __repr__(self):
-        return "Mob"  # issue-156
+        return f"Mob {self['nombre']}"  # issue-156
 
     def __str__(self):
         return self.nombre  # issue-156

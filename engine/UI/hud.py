@@ -313,7 +313,7 @@ class Minimap(Sprite):
         xes = max({datos[i]['adress'][0] for i in datos})
         yes = max({datos[i]['adress'][1] for i in datos})
         types = {tuple(datos[i]['adress']): {'terrain': datos[i]['terrain'], 'key': i} for i in datos}
-        image = Surface((144, 80))
+        image = Surface((xes * 4, (2 + yes) * 4))
         image.fill('red')
         px_array = PixelArray(image)
         for y in range(-1, yes + 1):
@@ -356,8 +356,9 @@ class PlayerIcon(Sprite):
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
 
     def locate(self, off_x, off_y):
-        if Renderer.camara.current_map.parent.nombre == 'anti-world':
-            key = Renderer.camara.current_map.nombre.strip("'").lstrip("0")
+        nombre = Renderer.camara.current_map.parent.nombre
+        if "anti" in nombre:
+            key = Renderer.camara.current_map.nombre.strip("'")
         else:
             key = Renderer.camara.current_map.nombre
 

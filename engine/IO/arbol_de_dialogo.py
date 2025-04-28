@@ -47,8 +47,6 @@ class Elemento:
             # si es que son ilógicos...
             raise TypeError('Verificar las tags. No se permiten tags anidadas y los grupos deben estar cerrados')
 
-        del data
-
     def create_event(self, name, data):
         self.event = name, self, data
 
@@ -89,6 +87,9 @@ class Elemento:
             return False
         else:
             return True
+
+    def __hash__(self):
+        return hash((self.nombre, self.indice, self.emisor, self.receptor, self.texto, self.leads))
 
     def __next__(self):
         return self.leads
@@ -151,7 +152,7 @@ class ArboldeDialogo:
         self._elementos = [Elemento(self, idx, data) for idx, data in datos.items()]
 
         for obj in self._elementos:
-            if obj.leads is not None: # Leaves have no leads=None
+            if obj.leads is not None:  # Leaves have no leads=None
                 if type(obj.leads) is int:
                     obj.leads = self._elementos[obj.leads]
                 elif type(obj.leads) is list:  # might be exclusive or not

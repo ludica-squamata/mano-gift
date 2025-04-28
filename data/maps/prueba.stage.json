@@ -45,6 +45,7 @@
   ],
   "ambiente": "exterior",
   "world_stage": false,
+  "zoom_level": "local",
   "latitude": 30,
   "longitude": 30
 }

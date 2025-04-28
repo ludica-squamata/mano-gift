@@ -13,7 +13,7 @@
     "stackable","sin_sombra","colocable"
   ],
   "efecto": {
-    "des": "Restaura tu salud al máximo.",
+    "des": "Es muy dulce.",
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"

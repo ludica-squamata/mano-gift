@@ -18,31 +18,31 @@
   },
   "body": {
     "0": {
-      "leads": 1, "from": "heroe", "to": "commoner",
+      "leads": 1,"from": "heroe","to": "commoner",
       "txt": "¿qué <r>puedes</r> decirme acerca <b>de las bananas</b>?"
     },
     "1": {
-      "leads": 2, "from": "commoner", "to": "heroe",
+      "leads": 2,"from": "commoner","to": "heroe",
       "txt": "No mucho, solo que los monos se alimentan de ellas."
     },
     "2": {
-      "leads": 3, "from": "heroe", "to": "commoner",
+      "leads": 3,"from": "heroe","to": "commoner",
       "txt": "Nosotros los humanos también podemos"
     },
     "3": {
-      "leads": 4, "from": "heroe", "to": "commoner", "reqs": {"flags": ["dialog.banana.uno"]},
+      "leads": 4,"from": "heroe","to": "commoner","reqs": {"flags": ["dialog.banana.uno"]},
       "txt": "Este nodo tiene una flag como requisito, y si no se cumple, no se muestra"
     },
     "4": {
-      "leads": 5, "from": "commoner", "to": "heroe",
+      "leads": 5,"from": "commoner","to": "heroe",
       "txt": "Sí, pero es el alimento preferido de los monos"
     },
     "5": {
-      "leads": 6, "from": "heroe", "to": "commoner",
+      "leads": 6,"from": "heroe","to": "commoner",
       "txt": "¿Hay <b>monos</b> por aquí?"
     },
     "6": {
-      "from": "commoner", "to": "heroe",
+      "from": "commoner","to": "heroe",
       "txt": "No que yo sepa. Deberías <b>buscar más al</b> norte."
     }
   }

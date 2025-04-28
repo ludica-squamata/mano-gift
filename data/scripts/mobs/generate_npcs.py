@@ -34,14 +34,14 @@ def choose_a_body():
 
 
 def choose_a_name(i):
-    available_names = ["Byron","William","Duke"]  # there are only 3 aristocrats in the map they appear
+    available_names = ["Byron", "William", "Duke"]  # there are only 3 aristocrats in the map they appear
     return f"Lord {available_names[i]}"
 
 
 def gen_character(i):
     d = {
         "nombre": choose_a_name(i),
-        "ocupation": "aristocrat",
+        "occupation": "aristocrat",
         "raza": "human",
         "atributos": generate_random_chars(),
         "imagenes": {

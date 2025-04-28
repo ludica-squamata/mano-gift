@@ -108,3 +108,6 @@ class Nodo:
 
     def __hash__(self):
         return hash((self.x, self.y, self.s))
+
+    def distancia_a(self, other):
+        return heuristica_estimada(self, other, 'euclidean')

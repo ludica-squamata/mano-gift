@@ -13,7 +13,7 @@
     "stackable","sin_sombra","colocable"
   ],
   "efecto": {
-    "des": "Restaura tu salud al máximo.",
+    "des": "Parece haber sido puesto por una enorme gallina.",
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"

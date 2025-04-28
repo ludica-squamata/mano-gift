@@ -40,7 +40,7 @@ class Caracterizado(AzoeSprite):
         if item in self._chars:
             return self._chars[item]
         else:  # esto viene a ser __missing__(), pero como ese método es llamado por dict.__getitem__(),
-            return 2.5  # es más sencillo simplemente devolver lo que habría devuelto ese método.
+            return 1  # es más sencillo simplemente devolver lo que habría devuelto ese método.
 
     def __setitem__(self, key, value):
         self._chars[key] = value

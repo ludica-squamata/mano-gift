@@ -11,11 +11,11 @@ from .leaves import Leaf
 
 class BehaviourTree:
     # this is a container.
-    nodes = []
+    nodes = None
     tree_structure = None
     to_check = None
     node_set = False
-    shared_context = {}
+    shared_context = None
     status = None
     entity = None
 

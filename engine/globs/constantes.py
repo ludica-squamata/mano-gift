@@ -27,3 +27,4 @@ FEATURE_MENUS_ADICIONALES = False
 # features opcionales para transformar al engine
 FEATURE_SHOW_MINIBARS = False  # PyRTS
 FEATURE_FLOATING_NUMBERS = True
+FEATURE_MINIMAP = True

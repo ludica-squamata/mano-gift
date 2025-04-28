@@ -133,15 +133,12 @@ class Item(AzoeSprite):
         return all(tests)
 
     def __ne__(self, other):
-        if other.nombre != self.nombre:
-            return True
-        elif self.id != other.id:
-            return True
-        else:
-            return False
+        # 27/4/2025 simplified __ne__(). It no longer asks for ID for the same reason that __eq__() does not.
+        return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.nombre, self.volumen, self.peso, self.tipo, self.id))
+        # 27/4/2025 __hash__() no longer hashes the object ID because that prevents stackability.
+        return hash((self.nombre, self.volumen, self.peso, self.tipo))
 
     def __repr__(self):
         return self.nombre + ' (' + self.tipo + ')'

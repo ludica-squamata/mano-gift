@@ -5,7 +5,8 @@ from engine.mobs.scripts.a_star import Nodo, determinar_direccion
 
 class ObtenerObjetivo(Leaf):
     def process(self):
-        mob = Mob_Group.get_by_trait("nombre", 'Apple')
+        hated_mob_name = self.tree.get_context('hates')
+        mob = Mob_Group.get_by_trait("nombre", hated_mob_name)
         if mob is not None:
             self.tree.set_context('target', mob)
             # e = self.get_entity()
@@ -20,23 +21,32 @@ class DoISeeIt(Leaf):
     def process(self):
         e = self.get_entity()
         target = self.tree.get_context('target')
+        print(e.perceived)
         if target in e.perceived['seen']:
-            # print('objetivo a la vista')
+            print('objetivo a la vista')
             return Success
         else:
-            # print('objetivo perdido')
+            print('objetivo perdido')
             return Failure
+
 
 class DoIHearIt(Leaf):
     def process(self):
         e = self.get_entity()
         target = self.tree.get_context('target')
         if target in e.perceived['heard']:
-
+            print('I hear you')
             return Success
         else:
-            # print('target lost')
+            print('target lost')
             return Failure
+
+
+class SwichBehaviour(Leaf):
+    def process(self):
+        e = self.get_entity()
+        # e.switch_behaviour('ai')
+        return Success
 
 
 class TurnToTarget(Leaf):
@@ -53,17 +63,18 @@ class TurnToTarget(Leaf):
         else:
             return Failure  #?
 
+
 class StopIfCollide(Leaf):
     def process(self):
         entity = self.get_entity()
         target = self.tree.get_context('target')
         dx, dy = self.tree.get_context('movement')
-        print(dx, dy)
         if entity.colisiona(target, dx, dy):
             entity.detener_movimiento()
             return Success
         else:
             return Failure
+
 
 class AtacarObjetivo(Leaf):
     def process(self):
@@ -75,10 +86,12 @@ class Abortar(Leaf):
     def process(self):
         pass
 
+
 class Reset(Leaf):
     def process(self):
         self.parent.reset()
         return Success
+
 
 class ObtenerPosicion(Leaf):
     def process(self):

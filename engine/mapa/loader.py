@@ -1,13 +1,14 @@
 from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
 from engine.globs import ModData, GRUPO_MOBS, Prop_Group, EngineData
 from engine.misc import abrir_json, cargar_imagen, Config
-from engine.globs. renderer import Renderer
+from engine.globs.renderer import Renderer
 from engine.scenery import new_prop
 from engine.libs import randint
 from engine.mobs import Mob
 from .salida import Salida
 from os import path, getcwd
 import csv
+import sys
 
 
 class NamedNPCs:
@@ -158,6 +159,7 @@ def load_chunks_csv(csv_file, silently=False):
         reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'izq', 'der',
                                                      'fondo', 'colisiones', 'terrain', 'latitude'], delimiter=';')
         chunks_data = {}
+        silently = True if 'debug' not in sys.argv else silently
         for i, row in enumerate(reader):
 
             ad_x, ad_y = row['adress'].strip("[]").split(',')
@@ -185,8 +187,9 @@ def load_chunks_csv(csv_file, silently=False):
                 })
             chunks_data[row['id']] = chunk_data
 
-            EngineData.MENUS['loading'].actualizar(round(i / 720, 2))
-            Renderer.update()
+            if not silently:
+                EngineData.MENUS['loading'].actualizar(round(i / 756, 2))
+                Renderer.update()
 
     ModData.preloaded_chunk_csv[csv_file] = chunks_data
     return chunks_data

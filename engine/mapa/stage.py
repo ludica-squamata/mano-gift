@@ -16,10 +16,8 @@ class Stage:
     data = None
     offset_x = ANCHO // 2  # camara.rect.centerx
     offset_y = ALTO // 2  # camara.rect.centery
-    mediodia = None  # porque no siempre es a las 12 en punto.
-    amanece = None
-    atardece = None
-    anochece = None
+
+    zoom_level = ''  # Afecta el paso del tiempo. Los valores pueden ser "world", "interior" y "local" (default).
 
     def __init__(self, parent, nombre, mob, entrada, npcs_with_id=None, use_csv=False):
         NamedNPCs.npcs_with_ids = npcs_with_id
@@ -35,6 +33,7 @@ class Stage:
         offx = self.offset_x - dx
         offy = self.offset_y - dy
         self.world_stage = self.data.get("world_stage", False)
+        self.zoom_level = self.data.get('zoom_level', "local")
 
         self.special_adresses = {}
         for special_chunk_key in self.data.get('chunks', {}):
@@ -258,16 +257,16 @@ class ChunkMap(AzoeBaseSprite):
         self.latitude = data.get('latitude', None)
 
         if 'hero' in data.get('mobs', {}):
-            name = Mob_Group.character_name
+            name = Mob_Group.get_by_trait('occupation', 'hero')
             data['mobs'][name] = data['mobs'].pop('hero')
             data['refs'][name] = ModData.fd_player + name + '.json'
             data['focus'] = name
-            if trnsnt_mb is not None and name == trnsnt_mb.character_name:
-                del data['mobs'][trnsnt_mb.character_name]
+            if trnsnt_mb is not None and name == trnsnt_mb['nombre']:
+                del data['mobs'][trnsnt_mb['nombre']]
 
         if 'csv' in requested:
             # otherwise the Engine doesn't know who is the focus, and the Camera gets unfocused.
-            name = Mob_Group.character_name
+            name = Mob_Group.get_by_trait('occupation', 'hero')
             # though, this might be on purpose (AzoeRTS)
             data['focus'] = name
 

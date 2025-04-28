@@ -15,5 +15,5 @@
     "death": "mobs/imagenes/green_death.png"
   },
   "alpha": "mobs/colisiones/monster_crawl.png",
-  "AI": "ai"
+  "AI": "brain"
 }

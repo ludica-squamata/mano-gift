@@ -4,7 +4,7 @@
     "conditional_tags": {},
     "style": "",
     "locutors": [
-      "Shopkeeper",
+      "shopkeeper",
       "heroe"
     ],
     "name": "Trading",
@@ -13,8 +13,8 @@
     "keywords": [],
     "events": {
       "Flag": {"value": false},
-      "TriggerBuyScreen": {"participants": ["Shopkeeper","heroe"]},
-      "TriggerSellScreen": {"participants": ["Shopkeeper","heroe"]},
+      "TriggerBuyScreen": {"participants": ["shopkeeper","heroe"]},
+      "TriggerSellScreen": {"participants": ["shopkeeper","heroe"]},
       "Trade": {}
     },
     "panels": {
@@ -26,59 +26,59 @@
       }
     },
     "trading": {
-      "traders": ["Shopkeeper"],
+      "traders": ["shopkeeper"],
       "default": 9,
       "failure": 11
     }
   },
   "body": {
     "0": {
-      "leads": [1,2,3],"from": "Shopkeeper","to": "heroe","event": "Flag",
+      "leads": [1,2,3],"from": "shopkeeper","to": "heroe","event": "Flag",
       "txt": "Buenos días. ¿Qué quiere hacer?"
     },
     "1": {
-      "leads": 4,"from": "heroe","to": "Shopkeeper","event": "TriggerBuyScreen",
+      "leads": 4,"from": "heroe","to": "shopkeeper","event": "TriggerBuyScreen",
       "txt": "Comprar"
     },
     "2": {
-      "leads": 5,"from": "heroe","to": "Shopkeeper","event": "TriggerSellScreen",
+      "leads": 5,"from": "heroe","to": "shopkeeper","event": "TriggerSellScreen",
       "txt": "Vender"
     },
     "3": {
-      "from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": false},
+      "from": "heroe","to": "shopkeeper","event": "Trade","e_data": {"value": false},
       "#": "El evento Trade se dispara igual que 'No' para evitar un bucle continuo.",
       "txt": "Nada"
     },
     "4": {
-      "leads": [6,7],"from": "Shopkeeper","to": "heroe",
+      "leads": [6,7],"from": "shopkeeper","to": "heroe",
       "txt": "Esto te costará {coin}{price}. ¿Quieres comprar?"
     },
     "5": {
-      "leads": [6,7],"from": "Shopkeeper","to": "heroe",
+      "leads": [6,7],"from": "shopkeeper","to": "heroe",
       "txt": "Puedo pagarte {coin}{price} por esto. ¿estás seguro?"
     },
     "6": {
-      "from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": true},
+      "from": "heroe","to": "shopkeeper","event": "Trade","e_data": {"value": true},
       "txt": "Sí"
     },
     "7": {
-      "from": "heroe","to": "Shopkeeper","event": "Trade","e_data": {"value": false},
+      "from": "heroe","to": "shopkeeper","event": "Trade","e_data": {"value": false},
       "txt": "No"
     },
     "8": {
-      "from": "Shopkeeper","to": "heroe",
+      "from": "shopkeeper","to": "heroe",
       "txt": "No sé que es eso."
     },
     "9": {
-      "leads": 10,"from": "Shopkeeper","to": "heroe",
+      "leads": 10,"from": "shopkeeper","to": "heroe",
       "txt": "No puedo comprarte eso."
     },
     "10": {
-      "leads": [1,2,3],"from": "Shopkeeper","to": "heroe",
+      "leads": [1,2,3],"from": "shopkeeper","to": "heroe",
       "txt": "¿Qué se le ofrece?"
     },
     "11": {
-      "from": "Shopkeeper", "to": "heroe",
+      "from": "shopkeeper", "to": "heroe",
       "txt": "No tienes nada que venderme."
     }
   }

@@ -34,5 +34,6 @@ class Parlante(Movil):
 
             elif hasattr(sprite, 'diag_face'):
                 Monologo(sprite, self)
+            else:
+                return False
             return True
-        return False

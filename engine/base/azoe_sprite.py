@@ -87,6 +87,7 @@ class AzoeSprite(sprite.Sprite):
                 self.rel_x = self._rel(self.rel_x, dx)
             if dy != 0:
                 self.rel_y = self._rel(self.rel_y, dy)
+                self.z = self.rel_y + self.rect.h
         #
         # if self.rel_x + dx < 0:
         #     self.rel_x = 800

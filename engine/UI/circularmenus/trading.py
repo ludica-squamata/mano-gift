@@ -16,22 +16,20 @@ class TradingCircularMenu(RenderedCircularMenu):
         super().__init__(cascadas)
 
     def fill_participantes(self, participants):
-        self.traders = {}
-        for name in participants:
-            if name == 'heroe':
-                mob = Mob_Group.get_controlled_mob()
+        self.traders = []
+        for mob in participants:
+            if mob['occupation'] == 'hero':
                 mob.detener_movimiento()
                 mob.AI.deregister()
                 mob.paused = True
                 mob.pause_overridden = True
             else:
-                mob = Mob_Group.get_by_trait('nombre', name)
                 mob.hablando = True
                 mob.paused = True
                 mob.AI.trigger_node(25)
                 mob.pause_overridden = True
 
-            self.traders[name] = mob
+            self.traders.append(mob)
 
     def salir(self):
         self.trade.engage()
@@ -45,17 +43,17 @@ class BuyingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
         self.name = 'Buying CM'
         self.fill_participantes(participants)
-        for trader in self.traders:
-            mob = Mob_Group.get_by_trait('nombre', trader)
-            if mob is not None:
-                buyable = mob.inventario.uniques()
-                cantidades = [mob.inventario.cantidad(item) for item in buyable]
 
-                cascadas = {
-                    'inicial': [TradeableElement(self, "buy", buyable[i], cantidades[i]) for i in range(len(buyable))]
-                }
-                self.trade = Trade(self)
-                super().__init__(parent, cascadas)
+        mob = [trader for trader in self.traders if trader['occupation'] != 'hero'][0]
+
+        buyable = mob.inventario.uniques()
+        cantidades = [mob.inventario.cantidad(item) for item in buyable]
+
+        cascadas = {
+            'inicial': [TradeableElement(self, "buy", buyable[i], cantidades[i]) for i in range(len(buyable))]
+        }
+        self.trade = Trade(self)
+        super().__init__(parent, cascadas)
 
 
 class SellingCM(TradingCircularMenu):
@@ -68,8 +66,9 @@ class SellingCM(TradingCircularMenu):
     def __init__(self, parent, participants):
         self.name = 'Selling CM'
         self.fill_participantes(participants)
-        sellable = self.traders['heroe'].inventario.uniques()
-        cantidades = [self.traders['heroe'].inventario.cantidad(item) for item in sellable]
+        seller = [trader for trader in self.traders if trader['occupation'] == 'hero'][0]
+        sellable = seller.inventario.uniques()
+        cantidades = [seller.inventario.cantidad(item) for item in sellable]
         cascadas = {
             'inicial': [TradeableElement(self, "sell", sellable[i], cantidades[i]) for i in range(len(sellable))]
         }
@@ -111,7 +110,7 @@ class Trade(EventAware):
         EventDispatcher.register(self.concrete_trade, "Trade")
 
     def engage(self):
-        for trader in self.parent.traders.values():
+        for trader in self.parent.traders:
             trader.pause = True
             trader.hablando = True
             trader.pause_overriden = True
@@ -121,7 +120,7 @@ class Trade(EventAware):
         self.engaged = True
 
     def disengage(self):
-        for trader in self.parent.traders.values():
+        for trader in self.parent.traders:
             trader.pause = False
             trader.pause_overridden = False
             trader.hablando = False
