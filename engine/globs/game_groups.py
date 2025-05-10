@@ -86,7 +86,8 @@ class MobGroup:
         self._indexes.clear()
 
     def get_controlled_mob(self):
-        return [self._group[mob_id] for mob_id in self._group if self._group[mob_id].AI_type == 'Controllable'][0]
+        # now it is just a shortcut.
+        return self.get_by_trait('AI', 'controllable')
 
     def get_by_trait(self, key, value):
         """Return a sorted (by name) list of mobs that have the desired trait for the purposes of iteration."""

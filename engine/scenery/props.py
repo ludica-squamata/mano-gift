@@ -195,7 +195,7 @@ class Contenedor(Escenografia):
     def action(self, mob):
         if mob is Mob_Group.get_controlled_mob():
             self.entity = mob
-            mob.AI.deregister()
+            mob['AI'].deregister()
             self.menu = ContainerCircularMenu(self)
 
     def _fill(self, contenido):
