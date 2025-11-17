@@ -13,6 +13,7 @@ class Escenografia(ShadowSprite):
     accionable = False
     action = None
     tipo = 'Prop'
+    prop_type = None
     grupo = GRUPO_ITEMS
     luz = None
 

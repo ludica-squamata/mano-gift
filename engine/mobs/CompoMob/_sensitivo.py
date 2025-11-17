@@ -25,6 +25,8 @@ class Sight(AzoeBaseSprite):
         ancho = round(largo * round(tan(radians(40)), 2))
         megasurf = Surface((ancho * 2, largo))
         draw.polygon(megasurf, (0, 0, 255), [[0, 0], [ancho, largo], [ancho * 2, 0]])
+        draw.circle(megasurf, (0, 0, 255), [ancho, largo], largo)
+
         megasurf.set_colorkey((0, 0, 0))
 
         return megasurf
@@ -154,6 +156,9 @@ class Touch(AzoeBaseSprite):
             if self.rect.colliderect(obj.rect):
                 if not passive:
                     self.parent.perceived['touched'].append(obj)
+                    if obj.accionable:
+                        # should Movible Props have an action?
+                        obj.action(self.parent)
                 else:
                     self.parent.perceived['felt'].append(obj)
 
