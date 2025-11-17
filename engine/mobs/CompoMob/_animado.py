@@ -1,3 +1,4 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import Tiempo, COLOR_COLISION, ModData
 from engine.misc.resources import split_spritesheet
 from ._movil import Movil
@@ -87,6 +88,10 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 else:
                     self.step = 'R'
 
+        if self['AI'].name != 'controllable':
+            EventDispatcher.trigger('SoundEvent', self,
+                                    {'type': 'movement', 'intensity': 1, 'sound': 'walking_on_grass'})
+
         key = self.step + self.direccion
         self.image = self.imagen_n(key)
 
@@ -158,6 +163,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     def accion(self):
         if self.estado == 'cmb':
+            EventDispatcher.trigger('PlaySound', self, {'sound': 'miss'})
             self.atacando = True
 
     def cambiar_estado(self):

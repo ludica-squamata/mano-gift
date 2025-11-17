@@ -1,6 +1,7 @@
 from pygame import Surface, draw, mask as mask_module, transform
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeBaseSprite
+from engine.IO.sound_manager import SoundManager
 from ._caracterizado import Caracterizado
 from engine.globs.renderer import Camara
 from math import tan, radians, sqrt
@@ -118,24 +119,57 @@ class Hearing(AzoeBaseSprite):
 
     def listener(self, event):
         if event.origin is not self.parent:
-            ox, oy = event.origin.x, event.origin.y
-            sx, sy = self.parent.x, self.parent.y
-            distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
+            ox, oy = event.origin.rect.x, event.origin.rect.y
+            sx, sy = self.parent.rect.x, self.parent.rect.y
+            distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2)) / 32
         else:
             return
             # the mob will always hear itself.
 
         if distance != 0:  # prevents a weird crash.
-            intensity = event.data['intensity'] / distance ** 2
+            intensity = round(event.data['intensity'] / distance ** 2, 2)
             if intensity > 1E-12:
                 # inverse-square law: the intensity of a sound decreses with distance;
                 # weak sounds produced far away from the mob won't be heard by it.
                 # 1E-12 W/m**2 is the Threshold of human hearing.
-                event.data['intensity'] = round(intensity, 6)
                 self.parent.perceived['heard'].append(event.origin)
+                if event.data['intensity'] > 0 and self.parent['AI'].name == 'controllable':
+                    SoundManager.play_sound_direct(event.data['sound'], intensity)
+                    # print(self.parent, event.origin, intensity, channel)
+
+                # EventDispatcher.trigger('PlaySound', self, {
+                #     'sound': event.data['sound'],
+                #     "volume": event.data['intensity']})
                 # print(event.origin, intensity)
         # aunque habría que ver si "podes" escuchar un sonido separándolo del background noise.
         # para que se pueda escuchar por encima del BgN, log(signal/noise) debe ser mayor que 0.
+
+    def determinar_direccion_sonido(self, origin):
+        px, py = self.parent.rect.center
+        ox, oy = origin.rect.center
+
+        dx = px - ox
+        dy = py - oy
+        # if dy != 0:
+        #     angulo = (atan(dx / dy))
+        # elif dx >= 0:
+        #     angulo = 0
+        # else:
+        #     angulo = -90
+        # print(dx, dy, round(degrees(angulo) + pi, 2))
+
+        if abs(dx) > abs(dy):
+            if dx > 0:
+                direccion = 'izquierda'
+            else:
+                direccion = 'derecha'
+        else:
+            if dy > 0:
+                direccion = 'arriba'
+            else:
+                direccion = 'abajo'
+
+        return direccion
 
 
 class Touch(AzoeBaseSprite):

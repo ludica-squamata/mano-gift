@@ -3,7 +3,7 @@ from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, Config
 from engine.globs import Tiempo, ModData
 from pygame import init as py_init
-from engine.IO import taphold
+from engine.IO import taphold, SoundManager
 from platform import system
 
 if system() == 'Linux':
@@ -19,4 +19,5 @@ while True:
     Tiempo.update(60)
     EventDispatcher.process()
     taphold.get_events()
+    SoundManager.update()
     Renderer.update()

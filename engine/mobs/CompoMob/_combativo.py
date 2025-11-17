@@ -16,6 +16,7 @@ class Combativo(Animado, Suertudo, Equipado):
                                  "stat": "Salud",
                                  "factor": -damage}
                                 )
+        EventDispatcher.trigger('PlaySound', self, {'sound': 'hurt'})
 
         if self['Salud'] <= 0:
             if self.death_img is not None:
@@ -38,3 +39,4 @@ class Combativo(Animado, Suertudo, Equipado):
                 sprite.hurt(self['DañoCC'])
             else:
                 EventDispatcher.trigger('MissedAttack', self.tipo, {'mob': sprite})
+                EventDispatcher.trigger('PlaySound', self, {'sound': 'miss'})

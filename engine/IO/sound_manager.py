@@ -1,5 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from pygame.mixer import Sound, init as mixer_init
+import pygame.mixer
 from os import path, listdir, getcwd
 
 
@@ -8,7 +9,8 @@ class SoundManager:
 
     @classmethod
     def init(cls):
-        mixer_init(channels=1)
+        mixer_init(channels=2)
+        pygame.mixer.set_num_channels(1)
         base_ruta = path.join(getcwd(), 'data', 'sounds')
         for file in listdir(base_ruta):
             if file.endswith('.wav'):
@@ -16,17 +18,26 @@ class SoundManager:
                 sound = Sound(ruta)
                 cls.sounds[file.rstrip('.wav')] = sound
 
-        EventDispatcher.register(cls.play_sound, 'PlaySound')
+        EventDispatcher.register(cls.play_sound_event, 'PlaySound')
 
     @classmethod
-    def play_sound(cls, event):
+    def play_sound_event(cls, event):
         if event.data['sound'] in cls.sounds:
-            cls.sounds[event.data['sound']].play()
+            sound = cls.sounds[event.data['sound']]
+            volume = float(event.data.get('volume', 1.0))
+            sound.set_volume(volume)
+            sound.play()
 
     @classmethod
-    def play_direct_sound(cls, sound_name):
+    def play_sound_direct(cls, sound_name, volume=1.0):
         if sound_name in cls.sounds:
-            cls.sounds[sound_name].play()
+            sound = cls.sounds[sound_name]
+            sound.set_volume(volume)
+            sound.play()
+
+    @classmethod
+    def update(cls):
+        pass
 
 
 SoundManager.init()

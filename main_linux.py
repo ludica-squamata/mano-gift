@@ -2,13 +2,14 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from engine.misc import abrir_json, Config
 from engine.globs import Tiempo, ModData
-from pygame import init as py_init
+from pygame import init as py_init, mixer
 from engine.IO import taphold
 from platform import system
 
 if system() == 'Windows':
     raise OSError('Unsupported Platform, use linux')
 
+mixer.pre_init(allowedchanges=-1)
 py_init()
 ModData.init(abrir_json("engine.json"))
 Renderer.init(ModData.data['nombre'], ModData.graphs + ModData.data['icono'])

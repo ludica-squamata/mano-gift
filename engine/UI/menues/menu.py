@@ -97,14 +97,14 @@ class Menu(EventAware, BaseWidget):
     def press_button(self):
         if len(self.botones) > 0:
             self.current.ser_presionado()
-            SoundManager.play_direct_sound('press')
+            SoundManager.play_sound_direct('press')
 
     def mantener_presion(self):
         self.current.mantener_presion()
 
     def liberar_presion(self):
         self.current.liberar_presion()
-        SoundManager.play_direct_sound('press')
+        SoundManager.play_sound_direct('press')
 
     def reset(self, **kwargs):
         """Resetea el estado de la ventana. Esta función es solo un hook."""
@@ -135,7 +135,7 @@ class Menu(EventAware, BaseWidget):
                 if boton.nombre == selected:
                     boton.ser_elegido()
                     if play_sound:
-                        SoundManager.play_direct_sound('select')
+                        SoundManager.play_sound_direct('select')
                     self.mover_cursor(boton)
                     break
 
