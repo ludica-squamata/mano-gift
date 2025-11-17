@@ -1,11 +1,13 @@
 from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
 from engine.globs.event_aware import EventAware
 from engine.UI.circularmenus.quick import QuickCircularMenu
+from engine.UI.circularmenus import LootingCircularMenu
 from math import sqrt
 
 
 class ControllableAI(EventAware):
     accion = None
+    target = None
 
     def __init__(self, entity):
         self.entity = entity
@@ -34,7 +36,8 @@ class ControllableAI(EventAware):
 
         EventDispatcher.register_many(
             (self.register, AzoeEvent('TogglePause', 'EngineData', {'value': False})),
-            (self.deregister, AzoeEvent('TogglePause', 'EngineData', {'value': True}))
+            (self.deregister, AzoeEvent('TogglePause', 'EngineData', {'value': True})),
+            (self.deregister_event, 'Deregister'), (self.register_event, 'Register')
         )
 
     def mover(self, direccion):
@@ -48,6 +51,14 @@ class ControllableAI(EventAware):
         # if self.entity.mapRect.y % 800 == 0 or self.entity.mapRect.x % 800 == 0:
         #     # 800 porque es el tamaño de un chunk. Este valor podría ser configurable.
         #     self.entity.mapa_actual.parent.set_coordinates(direccion)
+
+    def deregister_event(self, event):
+        if event.data['mob'] == self.entity:
+            self.deregister()
+
+    def register_event(self, event):
+        if event.data['mob'] == self.entity:
+            self.register()
 
     def register(self):
         if not self.entity.pause_overridden:
@@ -74,38 +85,36 @@ class ControllableAI(EventAware):
         It's here to prevent a crash with Behaviour Trees"""
         pass
 
+    def set_target(self, sprite):
+        self.target = sprite
+
     def update(self):
         self.entity.update_sombra()
         if self.accion:
             self.entity.accion()
-            preception = self.entity.perceived
-            sprites = set(preception['touched'] + preception['felt'] + preception['close'])
-            # a set because it filters repeated units.
-            ex, ey = self.entity.rect.center
-            close = [[q, sqrt((q.rect.x - ex) ** 2 + (q.rect.y - ey) ** 2)] for q in sprites]
-            sprite = None
-            if len(close):
-                distances = [i[1] for i in close]
-                mobs = [i[0] for i in close]
-                dist_idx = distances.index(min(distances))
-                sprite = mobs[dist_idx]
-            if sprite is not None:
+            # preception = self.entity.perceived
+            # sprites = set(preception['touched'] + preception['felt'] + preception['close'])
+            # # a set because it filters repeated units.
+            # ex, ey = self.entity.rect.center
+            # close = [[q, sqrt((q.rect.x - ex) ** 2 + (q.rect.y - ey) ** 2)] for q in sprites]
+            # sprite = None
+            # if len(close):
+            #     distances = [i[1] for i in close]
+            #     mobs = [i[0] for i in close]
+            #     dist_idx = distances.index(min(distances))
+            #     sprite = mobs[dist_idx]
+            if self.target is not None:
                 if self.entity.estado == 'cmb':
-                    self.entity.atacar(sprite)
+                    self.entity.atacar(self.target)
 
-                elif sprite.tipo == 'Mob':
-                    if self.entity.dialogar(sprite):
+                elif self.target.tipo == 'Mob':
+                    if self.entity.dialogar(self.target):
                         self.deregister()
-                    elif sprite.dead:
-                        pass  # open container
-
-                elif sprite.tipo == 'Prop' and sprite in preception['touched']:
-                    if sprite.accionable and sprite.action is not None:
-                        # should Movible Props have an action?
-                        sprite.action(self.entity)
+                    elif self.target.dead:
+                        LootingCircularMenu(self, self.target)
 
                     else:
-                        sprite.show_description()
+                        self.target.show_description()
                         self.entity.detener_movimiento()
                         self.deregister()
 

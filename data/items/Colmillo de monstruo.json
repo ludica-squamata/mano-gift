@@ -1,0 +1,17 @@
+{
+  "nombre": "Colmillo de monstruo",
+  "tipo": "agarrable",
+  "subtipo": "utilizable",
+  "peso": 0,
+  "volumen": 0,
+  "imagenes": {
+    "prop": "props/colmillo de monstruo.png",
+    "item": "props/colmillo de monstruo.png"
+  },
+  "propiedades": ["sin_sombra"],
+  "trading": {
+    "sell_price": 1,
+    "buy_price": 1,
+    "coin_symbol": "$"
+  }
+}

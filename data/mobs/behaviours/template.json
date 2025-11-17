@@ -1,7 +1,8 @@
 {
   "head": {
+    "name": "",
     "script": {
-      "module": [
+      "<module>": [
         "<Functions>",
         "<SubClasses>"
       ]

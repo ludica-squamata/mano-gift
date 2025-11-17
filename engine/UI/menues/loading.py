@@ -18,6 +18,7 @@ class LoadingMenu(Menu):
     def toggle(self, event):
         if event.data['value']:
             EventDispatcher.trigger('EndDialog', self.nombre, {'layer': CAPA_OVERLAYS_MENUS})
+            EventDispatcher.deregister(self.toggle, "TogglePause")
 
     def actualizar(self, dx):
         paint_rect = Rect([0, 0, int(dx * 300), 32])

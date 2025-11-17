@@ -52,8 +52,7 @@ class InventoryElement(LetterElement):
 class ColocableInventoryElement(InventoryElement):
     def command(self):
         from engine.scenery.items import Colocable
-        chunk = self.parent.entity.parent
-        item_prop = Colocable(chunk, self.parent.entity, self.item.nombre, self.item.data, self.item)
+        item_prop = Colocable(self.parent.entity, self.item.nombre, self.item.data, self.item)
         prop = item_prop.action()
 
         self.img_sel = self._create_icon_stack(33, 33, True, self.parent.entity)
@@ -86,4 +85,4 @@ class ContainedInventoryElement(InventoryElement):
         # closes the menu if all stacks == 0
         if len(self.parent.parent.inventario) == 0:
             self.parent.salir()
-            entity.AI.register()
+            EventDispatcher.trigger('Register', self, {'mob': entity})

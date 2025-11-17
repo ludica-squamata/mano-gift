@@ -1,0 +1,17 @@
+{
+  "nombre": "Montón de baba verde",
+  "tipo": "agarrable",
+  "subtipo": "utilizable",
+  "peso": 0,
+  "volumen": 0,
+  "imagenes": {
+    "prop": "props/montón de baba verde.png",
+    "item": "props/montón de baba verde.png"
+  },
+  "propiedades": ["sin_sombra"],
+  "trading": {
+    "sell_price": 1,
+    "buy_price": 1,
+    "coin_symbol": "$"
+  }
+}

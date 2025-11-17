@@ -1,0 +1,25 @@
+{
+  "nombre": "Ojo de monstruo",
+  "tipo": "agarrable",
+  "subtipo": "utilizable",
+  "peso": 0,
+  "volumen": 0,
+  "imagenes": {
+    "prop": "props/ojo de monstruo.png",
+    "item": "props/ojo de monstruo.png",
+    "high": null
+  },
+  "propiedades": ["sin_sombra"],
+  "dialog": "ojo",
+  "efecto": {
+    "des": "Es un ojo monstruoso",
+    "stat": "Carisma",
+    "mod": 2,
+    "method": "incremental"
+  },
+  "trading": {
+    "sell_price": 1,
+    "buy_price": 1,
+    "coin_symbol": "$"
+  }
+}

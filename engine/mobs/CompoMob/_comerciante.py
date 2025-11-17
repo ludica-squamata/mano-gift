@@ -14,7 +14,7 @@ class Comerciante(Equipado):
 
         ruta = path.join(Config.savedir, 'trading_list.csv')
         if path.exists(ruta):
-            with open(ruta, 'r') as csv_file:
+            with open(ruta, 'r', encoding='utf-8') as csv_file:
                 reader = csv.DictReader(csv_file, ['trader', 'item', 'cant', "desde"], delimiter=";")
                 for row in [row for row in reader if row['trader'] == self.nombre]:
                     now = Tiempo.clock.timestamp()
