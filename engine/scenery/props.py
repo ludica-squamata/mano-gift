@@ -178,7 +178,7 @@ class EstructuraCompuesta(Escenografia):
         return props
 
 
-class Contenedor(Escenografia):
+class Contenedor(Operable):
     accionable = True
     entity = None
 
@@ -190,10 +190,14 @@ class Contenedor(Escenografia):
         self.menu = None
 
     def action(self, mob):
+        super().operar()
         if mob is Mob_Group.get_controlled_mob():
             self.entity = mob
             mob.AI.deregister()
             self.menu = ContainerCircularMenu(self)
+
+    def close(self):
+        self.operar(estado=0)
 
     def _fill(self, contenido):
         from .new_prop import new_item
