@@ -86,7 +86,7 @@ class MobGroup:
         self._indexes.clear()
 
     def get_controlled_mob(self):
-        return [self._group[mob_id] for mob_id in self._group if self._group[mob_id].AI.name == 'hero'][0]
+        return [self._group[mob_id] for mob_id in self._group if self._group[mob_id]["AI"].name == 'hero'][0]
         # now it is just a shortcut.
         # return self.get_by_trait('AI', 'controllable')
 

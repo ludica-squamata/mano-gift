@@ -90,10 +90,9 @@ class WhereAreOthers(Leaf):
         mob_routes = {}
         for mob in mobs:
             mob_id = mob.id
-            if mob.AI_type == "Autonomous":
-                tree = mob['AI']
-                ruta = tree.get_context('camino')
-                mob_routes[mob_id] = ruta
+            tree = mob['AI']
+            ruta = tree.get_context('camino')
+            mob_routes[mob_id] = ruta
 
         self.tree.set_context('other_routes', mob_routes)
 

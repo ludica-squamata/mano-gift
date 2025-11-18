@@ -35,6 +35,7 @@ class UpdateAI(Leaf):
         else:
             return Failure
 
+
 class IsHeSeeingAProp(Leaf):
     def process(self):
         entity = self.get_entity()
