@@ -84,9 +84,9 @@ class ProgressBar(Sprite):
     def toggle(self, event):
         if event.data['value']:
             self.hide()
-            self.event_trigger()
         else:
             self.show()
+            EventDispatcher.register(self.toggle, "TogglePause")
 
     def set_focus(self, focus):
         self.focus = focus
@@ -96,6 +96,10 @@ class ProgressBar(Sprite):
         self.image.fill(self.colorAct, self._actual())
         if self.do_subdivision:
             self._subdividir()
+
+    def force_hide(self):
+        self.hide()
+        EventDispatcher.deregister(self.toggle, "TogglePause")
 
 
 class CharacterName(Sprite):

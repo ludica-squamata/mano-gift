@@ -1,6 +1,6 @@
-# from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import TEXT_FG, CANVAS_BG, Mob_Group
 from engine.libs import render_textrect
+from pygame.sprite import LayeredUpdates
 from pygame import Rect, font
 from ..hud import ProgressBar
 from .menu import Menu
@@ -13,6 +13,7 @@ class MenuStatus(Menu):
         super().__init__(parent, 'status', 'Status')
         self.entity = Mob_Group.get_controlled_mob()
         rect = self.update_charname_display()
+        self.properties = LayeredUpdates()
 
         fuente_1 = font.Font('engine/libs/Verdanab.ttf', 14)
         fuente_2 = font.Font('engine/libs/Verdana.ttf', 14)
@@ -35,6 +36,7 @@ class MenuStatus(Menu):
         for i, stat in enumerate(stats):
             bar = ProgressBar(self.entity[stat], stat.removesuffix('Max'), stats[stat], CANVAS_BG, rect.right,
                               rect.y + i * 35 + 6, 200, 32, self.entity)
+            self.properties.add(bar)
 
             if i == 0:
                 bar.set_variable(divisiones=5)
@@ -51,3 +53,8 @@ class MenuStatus(Menu):
         render = render_textrect(self.entity['nombre'], fuente, rect, TEXT_FG, CANVAS_BG)
         self.canvas.blit(render, rect)
         return r
+
+    def cancelar(self):
+        super().cancelar()
+        for sprite in self.properties.sprites():
+            sprite.force_hide()
