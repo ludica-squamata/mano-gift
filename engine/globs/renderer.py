@@ -77,6 +77,7 @@ class Camara:
     @classmethod
     def set_current_map(cls, spr):
         cls.current_map = spr
+        cls.focus.change_last_map(spr)
         if spr.latitude is not None:
             SeasonalYear.set_latitude(spr.latitude)
             Sun.set_latitude(spr.latitude)

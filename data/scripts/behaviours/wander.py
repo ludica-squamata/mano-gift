@@ -2,7 +2,7 @@ from engine.mobs.scripts.a_star import a_star, determinar_direccion, Nodo
 from engine.mobs.behaviourtrees import Leaf, Success, Failure, Running
 from engine.globs.renderer import Camara
 from engine.misc import ReversibleDict
-from random import randrange, choice
+from random import randint, choice
 
 
 class IsTalking(Leaf):
@@ -29,11 +29,11 @@ class Wait(Leaf):
 
 class GetRandomDir(Leaf):
     def process(self):
-        e = self.get_entity()
-        w, h = e.parent.mask.get_size()
+        # e = self.get_entity()
+        # w, h = e.parent.mask.get_size()
 
-        x = randrange(32, w, 32)
-        y = randrange(32, h, 32)
+        x = randint(32, 32 * 25)
+        y = randint(32, 32 * 25)
 
         nodo = Nodo(x, y, 32)
         self.tree.set_context('punto_final', nodo)

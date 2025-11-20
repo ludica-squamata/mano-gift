@@ -1,13 +1,13 @@
 from engine.misc import abrir_json, guardar_json, salir_handler, Config
 from .constantes import CAPA_OVERLAYS_MENUS
 from .event_dispatcher import EventDispatcher, AzoeEvent
-from .game_groups import Mob_Group, Prop_Group
+from .game_groups import Mob_Group, Prop_Group, MobCSV
 from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
 from os import path, mkdir, getcwd
 from .sun import Sun
-from csv import DictWriter
+from csv import DictWriter, DictReader
 
 
 class EngineData:
@@ -17,7 +17,7 @@ class EngineData:
     setKey = False
     save_data = {}
     character = {
-        'AI': 'controllable'
+        'AI': 'hero'
     }
     transient_mobs = []
     _concreted_trades = []
@@ -146,6 +146,15 @@ class EngineData:
         else:
             raise TypeError(f'"file" must be str or dict, not {type(file)}')
 
+        ruta = path.join(Config.savedir, 'mobs.csv')
+        if path.exists(ruta):
+            fieldnames = ['name', 'x', 'y', 'id', 'chunk', 'adress']
+            with open(ruta, 'r', newline='') as csvfile:
+                reader = DictReader(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+                for row in reader:
+                    name = row['name']
+                    MobCSV[name] = row
+
         cls.save_data.update(data)
         cls.transient_mobs = data.get('transient', [])
         Mob_Group.clear()
@@ -155,11 +164,10 @@ class EngineData:
     @classmethod
     def cargar_juego(cls, event):
         from engine.mapa.loader import load_mobs
-        data = event.data
+        data = event.data['savegame'] if 'savegame' in event.data else event.data
         use_csv = data.get('use_csv', False)
         cls.acceso_menues.clear()
 
-        map_data = abrir_json(ModData.mapas + data['mapa'] + '.stage.json')
         # Sun.init(map_data['latitude'])
         if not Tiempo.clock.is_real():
             Tiempo.set_time(*data['tiempo'])
@@ -169,15 +177,24 @@ class EngineData:
         names = [e['name'] for e in cls.transient_mobs]
         named_npcs = [ids, names]
 
-        if data['mapa'] in cls.mapas:
+        if 'mapa' in data and data['mapa'] in cls.mapas:
             cls.mapas[data['mapa']].delete_everything()
             cls.mapas.clear()
-        stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
+
+        if 'info' not in data:  # old savegame format
+            stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
+        elif 'info' in data:  # new savegame format
+            nombre = data['info'].pop('stage')
+            stage = cls.setear_mapa(nombre, data['info'], named_npcs, is_new_game=True, use_csv=use_csv)
+        else:
+            raise NotImplementedError('savefile format is invalid')
+
         SeasonalYear.propagate()
 
         focus = stage.get_entitiy_from_my_chunks(data['focus'])
         exists = stage.exists_within_my_chunks(data['focus'], 'mobs')
-        if focus is None or not exists:
+        map_data = stage.data.copy()
+        if focus is None and not exists:
             adress = map_data['entradas'][data['entrada']]['adress']
             mapa = stage.get_chunk_by_adress(adress)
             datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}

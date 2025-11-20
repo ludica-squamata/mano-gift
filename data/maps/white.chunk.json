@@ -4,8 +4,8 @@
   "props": {},
   "mobs": {
     "Green": [[32,0]],
-    "Shopkeeper": [[64,64]],
-    "Commoner": [[96,0]]
+    "Shopkeeper": [[64,128]],
+    "Commoner": [[96,96]]
   },
   "limites": {
     "sup": "black",

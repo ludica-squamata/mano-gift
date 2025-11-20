@@ -2,11 +2,11 @@ from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
 from engine.globs import ModData, GRUPO_MOBS, Prop_Group, EngineData
 from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
+from os import path, getcwd, listdir
 from engine.scenery import new_prop
 from engine.libs import randint
 from engine.mobs import Mob
 from .salida import Salida
-from os import path, getcwd
 import csv
 import sys
 
@@ -83,7 +83,7 @@ def load_props(parent, alldata: dict):
 
 def load_mobs(parent, alldata: dict):
     loaded_mobs = []
-    for name in alldata['mobs']:
+    for name in alldata.get('mobs', []):
         pos = alldata['mobs'][name]
         for i, item in enumerate(pos):
             if type(item) is str:
@@ -113,40 +113,54 @@ def load_mobs(parent, alldata: dict):
 
 def load_mob_csv(parent, all_data):
     loaded_mobs = []
-    with open(path.join(Config.savedir, 'mobs.csv')) as cvsfile:
-        reader = csv.DictReader(cvsfile, fieldnames=['name', 'x', 'y', 'id', 'chunk_name'], delimiter=';')
-        for row in [row for row in reader if row['chunk_name'] == parent.nombre]:
-            name = row['name']
-            x = int(row['x'])
-            y = int(row['y'])
-            if name in all_data['refs']:
-                data = abrir_json(all_data['refs'][name])
+    if path.exists(path.join(Config.savedir, 'mobs.csv')):
+        ruta = path.join(Config.savedir, 'mobs.csv')
+        fieldnames = ['name', 'x', 'y', 'id', 'chunk_name', 'adress']
+        with open(ruta) as cvsfile:
+            reader = csv.DictReader(cvsfile, fieldnames=fieldnames, delimiter=';')
+            filname_list = [filename[:-5] for filename in listdir(ModData.mobs) if filename.endswith('.json')]
+            name_list = [abrir_json(ModData.mobs + filename + '.json')['nombre'] for filename in filname_list]
 
-            elif path.exists(ModData.mobs + name + '.json'):
-                data = abrir_json(ModData.mobs + name + '.json')
+            for row in [row for row in reader if row['chunk_name'] == parent.nombre]:
+                name = row['name']
+                x, y = int(row['x']), int(row['y'])
+                a, b = row['adress'].split(',')
+                adress = (int(a), int(b))
+                if tuple(parent.adress) == adress:
+                    if 'refs' in all_data and name in all_data['refs']:
+                        data = abrir_json(all_data['refs'][name])
 
-            elif name in ModData.character_generator:
-                data = ModData.character_generator[name]()
+                    elif path.exists(ModData.mobs + name + '.json'):
+                        data = abrir_json(ModData.mobs + name + '.json')
 
-            elif path.exists(ModData.fd_player + name + '.json'):
-                data = abrir_json(ModData.fd_player + name + '.json')
+                    elif name in name_list:
+                        filname = filname_list[name_list.index(name)]
+                        data = abrir_json(ModData.mobs + filname + '.json')
 
-            data['id'] = row['id']
-            if NamedNPCs.npcs_with_ids is not None:
-                ids, names = NamedNPCs.npcs_with_ids
-                if data['nombre'] in names:
-                    idx = names.index(data['nombre'])
-                    if data.get('id', None) is None:
-                        data['id'] = ids[idx]
-                        del names[idx], ids[idx]
+                    elif name in ModData.character_generator:
+                        data = ModData.character_generator[name]()
 
-            try:
-                mob = Mob(parent, x, y, data, focus=all_data.get('focus', False))
-                loaded_mobs.append((mob, GRUPO_MOBS))
-            except KeyError:
-                # the hero might not be in the chunk, creating a error while he is being loaded. This try/except clause
-                # catches the exception because the hero is added to the map from the outside.
-                pass
+                    elif path.exists(ModData.fd_player + name + '.json'):
+                        data = abrir_json(ModData.fd_player + name + '.json')
+                        all_data['focus'] = name
+
+                    data['id'] = row['id']
+                    if NamedNPCs.npcs_with_ids is not None:
+                        ids, names = NamedNPCs.npcs_with_ids
+                        if data['nombre'] in names:
+                            idx = names.index(data['nombre'])
+                            if data.get('id', None) is None:
+                                data['id'] = ids[idx]
+                                del names[idx], ids[idx]
+
+                    try:
+                        mob = Mob(parent, x, y, data, focus=all_data.get('focus', False))
+                        loaded_mobs.append((mob, GRUPO_MOBS))
+                    except KeyError:
+                        # the hero might not be in the chunk, creating a error while he is being loaded.
+                        # This try/except clause catches the exception because the hero is added
+                        # to the map from the outside.
+                        pass
 
     return loaded_mobs
 

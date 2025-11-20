@@ -111,10 +111,11 @@ class ControllableAI(EventAware):
                 elif self.target.tipo == 'Mob':
                     if self.entity.dialogar(self.target):
                         self.deregister()
-                    elif self.target.dead:
+                    elif self.target.dead and len(self.target.inventario):
+                        self.deregister()
                         LootingCircularMenu(self, self.target)
 
-                    else:
+                    elif hasattr(self.target, 'show_description'):
                         self.target.show_description()
                         self.entity.detener_movimiento()
                         self.deregister()

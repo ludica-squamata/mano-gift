@@ -16,7 +16,6 @@ class LootingCircularMenu(RenderedCircularMenu):
             "inicial": [LooteableElement(self, lootable[i], cantidades[i]) for i in range(len(lootable))]
         }
 
-        parent.deregister()
         super().__init__(cascadas)
 
 

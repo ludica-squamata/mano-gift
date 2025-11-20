@@ -334,5 +334,6 @@ Prop_Group = ItemGroup('Prop')
 Deleted_Items = DeletedItems('Deleted')
 Light_Group = LightGroup()
 Tagged_Items = TaggedGroup()
+MobCSV = {}
 
-__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group", "Tagged_Items"]
+__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group", "Tagged_Items", "MobCSV"]
