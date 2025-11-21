@@ -32,8 +32,8 @@ class GetRandomDir(Leaf):
         # e = self.get_entity()
         # w, h = e.parent.mask.get_size()
 
-        x = randint(32, 32 * 25)
-        y = randint(32, 32 * 25)
+        x = randint(64, 32 * 25)
+        y = randint(64, 32 * 25)
 
         nodo = Nodo(x, y, 32)
         self.tree.set_context('punto_final', nodo)
@@ -81,6 +81,9 @@ class GetRoute(Leaf):
             self.tree.set_context('punto_final', pd)
 
         ruta = a_star(pi, pd, mapa, others)
+        if ruta is None:
+            return Failure
+
         if pre_x is not None or pre_y is not None:
             if pre_x is None:
                 pre_x = pi_x
@@ -97,7 +100,7 @@ class GetRoute(Leaf):
             punto = Nodo(post_x, post_y, 32)
             ruta.append(punto)
 
-        if ruta is None or len(ruta) == 1:
+        if len(ruta) == 1:
             return Failure
 
         self.tree.set_context('camino', ruta)

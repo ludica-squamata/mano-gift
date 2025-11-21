@@ -74,6 +74,10 @@ class ChunkGroup:
             adress = chunk.adress.center
             self[adress] = chunk
 
+    def remove(self, spr):
+        adress = spr.adress.center
+        del self[adress]
+
     def sprs(self):
         return self._list
 

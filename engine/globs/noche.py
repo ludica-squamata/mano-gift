@@ -70,14 +70,15 @@ class Noche(AzoeBaseSprite):
         self.image.fill((0, 0, 0, Sun.alpha))
 
     def update(self):
-        self.rect.topleft = self.parent.rect.topleft
-        if len(self.lights):
-            self.draw_lights()
-        else:
-            self.set_transparency()
+        if hasattr(self.parent,'rect'):
+            self.rect.topleft = self.parent.rect.topleft
+            if len(self.lights):
+                self.draw_lights()
+            else:
+                self.set_transparency()
 
-        EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
-        Sun.update()
+            EventDispatcher.trigger("LightLevel", "Noche", {"level": 230 - Sun.alpha})
+            Sun.update()
 
     def __repr__(self):
         return f'Nightblock of {self.parent}'

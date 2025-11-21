@@ -6,11 +6,11 @@ from .tiempo import Tiempo, SeasonalYear
 from .sun import Sun
 import sys
 import os
+from gc import get_referrers
 
 
 class Camara:
     focus = None  # objeto que la camara sigue.
-    bgs_rect = None  # el rect colectivo de los fondos
     bgs = AzoeGroup('bgs')  # el grupo de todos los fondos cargados    
     visible = AzoeGroup('visible')  # objetos que se ven (incluye sombras)
     real = AzoeGroup('real')  # objetos reales del mundo (no incluye sombras)
@@ -25,21 +25,61 @@ class Camara:
 
     current_map = None
 
+    cam_x = 0  # offset global del mundo en pantalla
+    cam_y = 0
+    last_focus_x = None
+    last_focus_y = None
+
     @classmethod
     def init(cls):
         EventDispatcher.register(cls.save_focus, 'Save')
 
     @classmethod
     def set_background(cls, spr):
-        if cls.bgs_rect is None:
-            cls.bgs_rect = spr.rect.copy()
-
         if not len(cls.bgs):
             cls.set_current_map(spr)
 
         if spr not in cls.bgs:
             cls.bgs.add(spr)
-            cls.nchs.add(spr.noche)
+            if spr.noche is not None:
+                cls.nchs.add(spr.noche)
+            return True
+        return False
+
+    @classmethod
+    def unset_backgrounds(cls):
+        flagged = []
+
+        #center
+        a = cls.current_map.adress
+
+        #ortogonal
+        if a is not None:
+            l = a.left
+            r = a.right
+            t = a.top
+            b = a.bottom
+
+            # diagonal
+            tr = a.topright
+            tl = a.topleft
+            bl = a.bottomleft
+            br = a.bottomright
+
+            for spr in cls.bgs:
+                if spr.adress is not None:
+                    if spr.adress not in [a, l, r, t, b, tr, tl, bl, br] and spr not in flagged:
+                        flagged.append(spr)
+
+        for spr in flagged:
+            print("====", spr)
+            spr.on_delete()
+            for ref in get_referrers(spr):
+                print(ref)
+            # cls.bgs.remove(spr)
+            #
+
+        # print(len(cls.bgs))
 
     @classmethod
     def add_real(cls, obj):
@@ -65,6 +105,8 @@ class Camara:
         cls.focus = spr
         if spr not in cls.real:
             cls.add_real(spr)
+        cls.last_focus_x = (ANCHO // 2) - 16
+        cls.last_focus_y = (ALTO // 2) - 16
 
     @classmethod
     def save_focus(cls, event):
@@ -77,7 +119,9 @@ class Camara:
     @classmethod
     def set_current_map(cls, spr):
         cls.current_map = spr
-        cls.focus.change_last_map(spr)
+        if cls.focus is not None:
+            cls.focus.change_last_map(spr)
+        # cls.unset_backgrounds()
         if spr.latitude is not None:
             SeasonalYear.set_latitude(spr.latitude)
             Sun.set_latitude(spr.latitude)
@@ -87,7 +131,6 @@ class Camara:
         cls.real.empty()
         cls.visible.empty()
         cls.bgs.empty()
-        cls.bgs_rect = None
         cls.nchs.empty()
         if event is None:
             cls.current_map = None
@@ -97,7 +140,7 @@ class Camara:
     @classmethod
     def detectar_mapas_adyacentes(cls):
         map_at_center, map_at_bottom, map_at_right, map_at_top, map_at_left = [None] * 5
-        r = cls.rect.inflate(5, 5)
+        r = cls.rect.inflate(-1, -1)
         map_at = cls.bgs.get_spr_at
         adyacent_map_key = ''
         reference: cls.current_map.__class__ = None
@@ -158,16 +201,14 @@ class Camara:
 
         if adyacent_map_key != '' and reference is not None:
             new_map = reference.checkear_adyacencia(adyacent_map_key)
-        else:
-            new_map = cls.focus.parent
 
-        if new_map is not False and new_map is not map_at_center:
-            cls.set_background(new_map)
-            for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
-                if obj not in cls.real:
-                    cls.add_real(obj)
-                if hasattr(obj, 'luz') and obj.luz is not None:
-                    cls.add_real(obj.luz)
+            if new_map is not False and new_map is not map_at_center:
+                cls.set_background(new_map)
+                for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
+                    if obj not in cls.real:
+                        cls.add_real(obj)
+                    if hasattr(obj, 'luz') and obj.luz is not None:
+                        cls.add_real(obj.luz)
 
     @classmethod
     def update_sprites_layer(cls):
@@ -176,15 +217,26 @@ class Camara:
 
     @classmethod
     def pan(cls):
-        dx = cls.focus.rect.x - cls.focus.x - cls.focus.parent.rect.x
-        dy = cls.focus.rect.y - cls.focus.y - cls.focus.parent.rect.y
+        # Movimiento real del héroe en coordenadas del mundo
+        dx = cls.focus.x - cls.last_focus_x
+        dy = cls.focus.y - cls.last_focus_y
 
+        # Actualizar referencia
+        cls.last_focus_x = cls.focus.x
+        cls.last_focus_y = cls.focus.y
+
+        # La cámara mueve el mundo en dirección opuesta
+        cls.cam_x -= dx
+        cls.cam_y -= dy
+
+        # Actualizar posición de todos los chunks visibles
         for spr in cls.bgs.sprs():
-            spr.rect.move_ip(dx, dy)
+            spr.rect.move_ip(-dx, -dy)
 
+        # Actualizar posición de todos los sprites reales
         for spr in cls.real.sprs():
-            x = spr.parent.rect.x + spr.x
-            y = spr.parent.rect.y + spr.y
+            x = spr.x + cls.cam_x  # spr.x = coordenada absoluta del mundo
+            y = spr.y + cls.cam_y
             spr.ubicar(x, y)
 
     @classmethod

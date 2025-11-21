@@ -93,8 +93,14 @@ def load_mobs(parent, alldata: dict):
 
             if name in alldata['refs']:
                 data = abrir_json(alldata['refs'][name])
+
             elif name in ModData.character_generator:
                 data = ModData.character_generator[name](i)
+
+            elif path.exists(ModData.fd_player + name + '.json'):
+                data = abrir_json(ModData.fd_player + name + '.json')
+                alldata['focus'] = name
+
             else:
                 data = abrir_json(ModData.mobs + name + '.json')
 

@@ -77,6 +77,11 @@ class Stage:
 
         mob_req = 'mobs' if use_csv is False else 'csv'
 
+        self.entradas = {}
+        for key in self.data['entradas']:
+            adress = self.data['entradas'][key]['adress']
+            self.entradas[key] = tuple(adress)
+
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
             chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
@@ -84,15 +89,11 @@ class Stage:
             singleton = self.chunks_csv[chunk_name]
             chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
         else:
-            chunk = ChunkMap(self, chunk_name, offx, offy, trnsnt_mb=mob,
+            chunk = ChunkMap(self, chunk_name, 0, 0, trnsnt_mb=mob,
                              requested=[mob_req, 'props'], adress=chunk_adress)
             chunk.houses_focus = True
         self.chunks.add(chunk)
-
-        self.entradas = {}
-        for key in self.data['entradas']:
-            adress = self.data['entradas'][key]['adress']
-            self.entradas[key] = tuple(adress)
+        Renderer.camara.set_background(chunk)
 
         EventDispatcher.register_many(
             (self.save_map, 'Save'),
@@ -274,6 +275,8 @@ class ChunkMap(AzoeBaseSprite):
 
     houses_focus = False
 
+    limites_old = None
+
     def __init__(self, parent, nombre, off_x=0, off_y=0, trnsnt_mb=None, data=False, requested=None, adress=None):
         self.id = ModData.generate_id()
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties', self.id)
@@ -284,12 +287,14 @@ class ChunkMap(AzoeBaseSprite):
 
         self.datos = data.copy()
         self.limites = data['limites']
+        self.limites_old = data['limites'].copy()
         if adress is not None:
             self.adress = ChunkAdress(self, *adress)
         elif 'adress' in data:
             self.adress = ChunkAdress(self, *data['adress'])
         else:
             self.adress = ChunkAdress(self, 0, 0)
+        self.adress_center = str(self.adress.center)
 
         self.latitude = data.get('latitude', None)
 
@@ -342,9 +347,11 @@ class ChunkMap(AzoeBaseSprite):
             data.update(uniques)
 
         self.cargar_limites(data.get('limites', self.limites))
-        if self.nombre in self.parent.data['entradas']:
-            # a single chunk only needs to know the points of entry that lie within it, if any.
-            data['entradas'] = {self.nombre: self.parent.data['entradas'][self.nombre]}
+        data['entradas'] = {}
+        for entrada in self.parent.data['entradas']:
+            if self.parent.data['entradas'][entrada]['chunk'] == self.nombre:
+                # a single chunk only needs to know the points of entry that lie within it, if any.
+                data['entradas'].update({entrada: self.parent.data['entradas'][entrada]})
 
         for item, grupo in load_something(self, data, requested):
             self.add_property(item, grupo)
@@ -381,6 +388,7 @@ class ChunkMap(AzoeBaseSprite):
             obj, add_interactive = obj
         if obj not in self.properties:
             self.properties.add(obj, layer=_layer)
+            Renderer.camara.add_real(obj)
         if add_interactive and obj not in self.interactives:
             self.interactives.append(obj)
 
@@ -480,14 +488,14 @@ class ChunkMap(AzoeBaseSprite):
         return mapa
 
     def __repr__(self):
-        return f"ChunkMap {self.nombre} ({self.id.split('-')[1]})"
+        return f"ChunkMap {self.nombre} ({self.id.split('-')[1]}) @{self.adress.center}"
 
     def __bool__(self):
         return True
 
     def __eq__(self, other):
         test_1 = self.id == other.id
-        test_2 = self.adress.center == other.adress.center
+        test_2 = self.adress_center == other.adress_center
         test_3 = self.nombre == other.nombre
 
         return all([test_1, test_2, test_3])
@@ -496,7 +504,24 @@ class ChunkMap(AzoeBaseSprite):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.nombre, self.id, self.adress.center))
+        return hash((self.nombre, self.id))
+
+    def on_delete(self):
+        self.parent.chunks.remove(self)
+        self.datos = None
+        self.limites = self.limites_old.copy()
+        self.noche.parent = None
+        self.adress.parent = None
+        self.kill()
+        for mob in Mob_Group:
+            if mob.parent is self:
+                mob.parent = None
+        for spr in self.parent.properties.sprs():
+            spr.parent = None
+            if spr._last_map is not None and spr.last_map == self:
+                spr._last_map = None
+            self.del_property(spr, rem_renderer=True)
+        self.properties.empty()
 
 
 class ChunkAdress:
@@ -528,8 +553,24 @@ class ChunkAdress:
     def bottom(self):
         return self.x, self.y + 1
 
+    @property
+    def topleft(self):
+        return self.x - 1, self.y - 1
+
+    @property
+    def bottomleft(self):
+        return self.x - 1, self.y + 1
+
+    @property
+    def topright(self):
+        return self.x + 1, self.y - 1
+
+    @property
+    def bottomright(self):
+        return self.x + 1, self.y + 1
+
     def __str__(self):
-        return f'{self.x},{self.y}'
+        return f'Adress {self.x},{self.y}'
 
     def __repr__(self):
         return f'{self.parent.nombre} @{self.x}, {self.y}'
@@ -543,6 +584,9 @@ class ChunkAdress:
             b = self.y == other[1]
             return all([a, b])
         return False
+
+    def __len__(self):
+        return 2
 
     def __getitem__(self, item):
         if type(item) is int:

@@ -19,7 +19,7 @@ class AzoeSprite(sprite.Sprite):
     direcciones = {'arriba': [0, -1], 'abajo': [0, 1], 'izquierda': [-1, 0], 'derecha': [1, 0], 'ninguna': [0, 0]}
     direccion = 'abajo'
     parent = None  # might be a map, in case of real objects, but things like widgets have their macro structure set as
-    # their parent
+    # their parent # elimination pending: mobs can change parents so this is invalid.
     chunk_adresses = None
     is_damageable = False
 
@@ -87,9 +87,9 @@ class AzoeSprite(sprite.Sprite):
         self.rel_y = self.y % 800  # ahora funciona con perfección matemática.
         self.z = self.rel_y + 16
 
-    def set_parent_map(self, chunk):
-        self.parent = chunk
-        self.chunk_adresses[chunk.parent.nombre] = chunk.adress.center
+    # def set_parent_map(self, chunk):
+    #     self.parent = chunk
+    #     self.chunk_adresses[chunk.parent.nombre] = chunk.adress.center
 
     @property
     def last_map(self):

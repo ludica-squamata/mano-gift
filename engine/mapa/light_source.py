@@ -32,9 +32,8 @@ class LightSource(Sprite):
         self.origin_rect.bottom = y + self.origen[1]
         self.z = self.rect.bottom
 
-        # self.x y self.y son importantes para el Renderer. No tocar (28/11/2022)
-        self.x = -self.rect.w // 2 + self.origen[0]
-        self.y = -self.rect.h // 2 + self.origen[1]
+        self.rel_x = self.x = self.origin_rect.centerx
+        self.rel_y = self.y = self.origin_rect.centery
 
         draw.circle(self.image, (255, 255, 225, 0), (self.rect.w // 2, self.rect.h // 2), radius)
         EventDispatcher.register(self.switch, 'LightLevel')
@@ -44,13 +43,14 @@ class LightSource(Sprite):
         Light_Group.add(self.parent.parent.id, self)
 
     def switch(self, event):
-        noche = self.parent.parent.noche
-        if event.data['level'] < 100 and not self.encendido:
-            self.encendido = True
-            noche.set_light(self)
-        elif event.data['level'] > 200:
-            self.encendido = False
-            noche.unset_light(self)
+        if hasattr(self.parent.parent, 'noche'):
+            noche = self.parent.parent.noche
+            if event.data['level'] < 100 and not self.encendido:
+                self.encendido = True
+                noche.set_light(self)
+            elif event.data['level'] > 200:
+                self.encendido = False
+                noche.unset_light(self)
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:

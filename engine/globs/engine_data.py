@@ -52,7 +52,7 @@ class EngineData:
             adress = cls.mapas[stage].entradas[entrada]
             chunk = cls.mapas[stage].get_chunk_by_adress(adress)
             chunk.add_property(mob, 2)
-            mob.set_parent_map(chunk)
+            # mob.set_parent_map(chunk)
 
         for entry in cls.transient_mobs:
             tr_mob = Mob_Group[entry['id']]
