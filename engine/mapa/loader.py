@@ -94,6 +94,9 @@ def load_mobs(parent, alldata: dict):
             else:
                 x, y = item
 
+            x += parent.world_x
+            y += parent.world_y
+
             if name in alldata['refs']:
                 data = abrir_json(alldata['refs'][name])
 
