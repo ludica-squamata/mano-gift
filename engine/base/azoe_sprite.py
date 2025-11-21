@@ -66,7 +66,7 @@ class AzoeSprite(sprite.Sprite):
         if z:
             self.z = z
         else:
-            self.z = self.y + self.rect.h  # bottom
+            self.z = self.rel_y + self.rect.h  # bottom
 
         self.z += dz
 

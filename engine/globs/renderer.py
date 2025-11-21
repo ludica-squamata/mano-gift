@@ -72,14 +72,9 @@ class Camara:
                         flagged.append(spr)
 
         for spr in flagged:
-            print("====", spr)
             spr.on_delete()
-            for ref in get_referrers(spr):
-                print(ref)
-            # cls.bgs.remove(spr)
-            #
+            cls.bgs.remove(spr)
 
-        # print(len(cls.bgs))
 
     @classmethod
     def add_real(cls, obj):
@@ -121,7 +116,7 @@ class Camara:
         cls.current_map = spr
         if cls.focus is not None:
             cls.focus.change_last_map(spr)
-        # cls.unset_backgrounds()
+        cls.unset_backgrounds()
         if spr.latitude is not None:
             SeasonalYear.set_latitude(spr.latitude)
             Sun.set_latitude(spr.latitude)

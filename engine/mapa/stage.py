@@ -298,6 +298,9 @@ class ChunkMap(AzoeBaseSprite):
 
         self.latitude = data.get('latitude', None)
 
+        self.world_x = self.adress.x * 800
+        self.world_y = self.adress.y * 800
+
         # these two only work if the hero has been already loaded in another map.
         if 'hero' in data.get('mobs', {}):
             name = Mob_Group.get_by_trait('occupation', 'hero')
@@ -510,12 +513,15 @@ class ChunkMap(AzoeBaseSprite):
         self.parent.chunks.remove(self)
         self.datos = None
         self.limites = self.limites_old.copy()
+        self.cargar_limites(self.limites)
         self.noche.parent = None
         self.adress.parent = None
         self.kill()
         for mob in Mob_Group:
-            if mob.parent is self:
-                mob.parent = None
+            if Mob_Group.get_by_trait('occupation', 'hero') is not mob:
+                if mob.parent is self:
+                    mob.parent = None
+                    mob.paused = True
         for spr in self.parent.properties.sprs():
             spr.parent = None
             if spr._last_map is not None and spr.last_map == self:

@@ -62,6 +62,9 @@ def load_props(parent, alldata: dict):
             x, y = alldata['entradas'][item]['pos'] if type(item) is str else item
             is_interactive = False
 
+            x += parent.world_x
+            y += parent.world_y
+
             if data is not None:
                 prop = new_prop(parent, x, y, data=data)
                 is_interactive = hasattr(prop, 'accionable') and prop.accionable

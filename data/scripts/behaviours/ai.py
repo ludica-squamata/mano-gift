@@ -2,6 +2,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviourtrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import Game_State
+from engine import Mob_Group
 
 
 class HasSetLocation(Leaf):
@@ -78,7 +79,7 @@ class IsInBed(Leaf):
 class DoNothing(Leaf):
     def process(self):
         e = self.get_entity()
-        mobs = [mob for mob in e.parent.properties.get_sprites_from_layer(2) if mob != e]
+        mobs = [mob for mob in Mob_Group if mob != e]
         self.tree.set_context('others', mobs)
         return Success
 
