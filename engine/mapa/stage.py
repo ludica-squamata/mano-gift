@@ -28,11 +28,12 @@ class Stage:
         self.properties = AzoeGroup('Stage ' + nombre + ' Properties', self.id)
         self.nombre = nombre
         self.data = abrir_json(ModData.mapas + nombre + '.stage.json')
+        self.size = self.data['size']
         dx, dy = 0, 0
-        chunk_adress = None
         if type(info) == str:
             dx, dy = self.data['entradas'][info]['pos']
             chunk_name = self.data['entradas'][info]['chunk']
+            chunk_adress = self.data['entradas'][info]['adress']
         elif type(info) == dict:
             chunk_name = info['chunk']
             chunk_adress = info['adress']
@@ -75,24 +76,27 @@ class Stage:
         if 'props' in self.data:
             self.load_unique_props(self.data)
 
+        self.entradas = {}
+        for key in self.data['entradas']:
+            adress = self.data['entradas'][key]['adress']
+            self.entradas[key] = tuple(adress)
+
         mob_req = 'mobs' if use_csv is False else 'csv'
 
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton,
+                             requested=[mob_req, 'props'], adress=chunk_adress)
         elif chunk_name in self.chunks_csv:
             singleton = self.chunks_csv[chunk_name]
-            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton, requested=[mob_req, 'props'])
+            chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton,
+                             requested=[mob_req, 'props'], adress=singleton['adress'])
         else:
             chunk = ChunkMap(self, chunk_name, offx, offy, trnsnt_mb=mob,
                              requested=[mob_req, 'props'], adress=chunk_adress)
             chunk.houses_focus = True
         self.chunks.add(chunk)
-
-        self.entradas = {}
-        for key in self.data['entradas']:
-            adress = self.data['entradas'][key]['adress']
-            self.entradas[key] = tuple(adress)
+        Renderer.camara.set_background(chunk)
 
         EventDispatcher.register_many(
             (self.save_map, 'Save'),
@@ -251,7 +255,17 @@ class Stage:
                 return obj
 
     def get_chunk_by_adress(self, adress):
-        return self.chunks[tuple(adress)]
+        for chunk in self.chunks.sprs():
+            if chunk.adress == adress:
+                return chunk
+        if len(self.chunks_csv):
+            for row in self.chunks_csv:
+                data = self.chunks_csv[row]
+                if list(adress) == list(data['adress']):
+                    chunk = ChunkMap(self, row, data=data, requested=['props', 'mobs'], adress=data['adress'])
+                    Renderer.camara.set_background(chunk)
+                    return chunk
+            return None
 
     def del_interactive(self, event):
         obj = event.data['obj']
@@ -328,6 +342,7 @@ class ChunkMap(AzoeBaseSprite):
 
         super().__init__(parent, nombre, image, rect)
 
+        self.adress.set_maxs()
         if tuple(self.adress) in self.parent.props_csv:
             datos = self.parent.props_csv[tuple(self.adress)]
             if not 'props' in data:
@@ -342,9 +357,11 @@ class ChunkMap(AzoeBaseSprite):
             data.update(uniques)
 
         self.cargar_limites(data.get('limites', self.limites))
-        if self.nombre in self.parent.data['entradas']:
-            # a single chunk only needs to know the points of entry that lie within it, if any.
-            data['entradas'] = {self.nombre: self.parent.data['entradas'][self.nombre]}
+        data['entradas'] = {}
+        for key in self.parent.data['entradas']:
+            datos = self.parent.data['entradas'][key]
+            if tuple(self.adress.center) == tuple(datos['adress']):
+                data['entradas'].update({key: datos})
 
         for item, grupo in load_something(self, data, requested):
             self.add_property(item, grupo)
@@ -381,6 +398,7 @@ class ChunkMap(AzoeBaseSprite):
             obj, add_interactive = obj
         if obj not in self.properties:
             self.properties.add(obj, layer=_layer)
+            Renderer.camara.add_real(obj)
         if add_interactive and obj not in self.interactives:
             self.interactives.append(obj)
 
@@ -438,13 +456,13 @@ class ChunkMap(AzoeBaseSprite):
             value = self.limites[key]
             mapa = self.parent.chunks[adress]
             if mapa is not None:
-                self.limites[adress] = mapa
+                self.limites[key] = mapa
             else:
                 del self.limites[key]
-                self.limites[adress] = value
+                self.limites[key] = value
 
     def checkear_adyacencia(self, clave: str):
-        type_adyacente = type(self.limites.get(self.translate(clave), False))
+        type_adyacente = type(self.limites.get(clave))
         if type_adyacente is str or type_adyacente is ChunkMap:
             return self.cargar_mapa_adyacente(clave)
         else:
@@ -456,25 +474,26 @@ class ChunkMap(AzoeBaseSprite):
         dx = x - w if ady == 'izq' else x + w if ady == 'der' else x
 
         ax, ay = self.translate(ady)
-        adress = ax, ay
-        if type(self.limites[adress]) is str:
+
+        if type(self.limites[ady]) is str:
             entradas = self.parent.data['entradas']
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos,
                                 requested=['csv', 'props'], adress=(ax, ay))
                 self.parent.set_special_adress(ax, ay, mapa)
-            elif self.limites[adress] in self.parent.chunks_csv:
-                name = self.limites[adress]
+            elif self.limites[ady] in self.parent.chunks_csv:
+                name = self.limites[ady]
                 data = self.parent.chunks_csv[name]
-                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data, requested=['csv', 'props'])
+                mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data,
+                                requested=['csv', 'props'], adress=data['adress'])
             else:
-                mapa = ChunkMap(self.parent, self.limites[adress], dx, dy, requested=['csv', 'props'], adress=(ax, ay))
+                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, requested=['csv', 'props'], adress=(ax, ay))
 
-            self.limites[adress] = mapa
+            self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
         else:
-            mapa: ChunkMap = self.limites[adress]
+            mapa: ChunkMap = self.limites[ady]
             mapa.ubicar(dx, dy)
 
         return mapa
@@ -503,10 +522,17 @@ class ChunkAdress:
     x = 0
     y = 0
 
+    min_x, max_x, min_y, max_y = 0, None, 0, None
+
     def __init__(self, parent, x, y):
         self.parent = parent
         self.x = x
         self.y = y
+
+    def set_maxs(self):
+        if self.parent.parent.size is not None:
+            self.max_x = self.parent.parent.size[0]
+            self.max_y = self.parent.parent.size[1]
 
     @property
     def center(self):
@@ -514,19 +540,31 @@ class ChunkAdress:
 
     @property
     def left(self):
-        return self.x - 1, self.y
+        x = self.x - 1
+        if self.parent.parent.size is not None and x < self.min_x:
+            x = self.max_x
+        return x, self.y
 
     @property
     def right(self):
-        return self.x + 1, self.y
+        x = self.x + 1
+        if self.parent.parent.size is not None and x > self.max_x:
+            x = self.min_x
+        return x, self.y
 
     @property
     def top(self):
-        return self.x, self.y - 1
+        y = self.y - 1
+        if self.parent.parent.size is not None and y < self.min_y:
+            y = self.max_y
+        return self.x, y
 
     @property
     def bottom(self):
-        return self.x, self.y + 1
+        y = self.y + 1
+        if self.parent.parent.size is not None and y > self.max_y:
+            y = self.min_y
+        return self.x, y
 
     def __str__(self):
         return f'{self.x},{self.y}'

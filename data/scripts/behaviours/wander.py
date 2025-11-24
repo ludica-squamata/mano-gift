@@ -47,7 +47,7 @@ class GetRoute(Leaf):
         prox = self.tree.get_context('next')
         pd = self.tree.get_context('punto_final')
         others = self.tree.get_context('others')
-
+        others = others if others is not False else []
         pre_x, pre_y = None, None
         if (e.x / 32).is_integer():
             pi_x = e.x
@@ -81,6 +81,8 @@ class GetRoute(Leaf):
             self.tree.set_context('punto_final', pd)
 
         ruta = a_star(pi, pd, mapa, others)
+        if ruta is None or len(ruta) == 1:
+            return Failure
         if pre_x is not None or pre_y is not None:
             if pre_x is None:
                 pre_x = pi_x
@@ -135,7 +137,6 @@ class Move(Leaf):
                 e.cambiar_direccion(direccion)
             self.tree.set_context('movement', e.direcciones[direccion])
             e.mover(*e.direcciones[direccion])
-            # e.animar_caminar()
             return Running
         else:
             return Success

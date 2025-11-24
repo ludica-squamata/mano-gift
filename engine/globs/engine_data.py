@@ -90,7 +90,7 @@ class EngineData:
 
     @classmethod
     def on_cambiarmapa(cls, evento):
-        mapa_actual = Renderer.camara.focus.parent
+        mapa_actual = evento.data['from_chunk']
         mob = evento.data['mob']
         mapa_actual.del_property(mob)
         stage = evento.data['target_stage']
@@ -98,11 +98,12 @@ class EngineData:
 
         if Renderer.camara.is_focus(mob):
             Renderer.camara.clear()
-            mapa = cls.setear_mapa(stage, entrada, mob=mob)
+            new_stage = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
-            x, y = mapa.posicion_entrada(entrada)
-            adress = mapa.entradas[entrada]
-            Renderer.camara.set_background(mapa.chunks[adress])
+            x, y = new_stage.posicion_entrada(entrada)
+            adress = new_stage.entradas[entrada]
+            chunk = new_stage.get_chunk_by_adress(adress)
+            Renderer.camara.set_background(chunk)
             Renderer.set_focus(mob)
             Renderer.camara.focus.ubicar_en_mapa(x, y)
         else:

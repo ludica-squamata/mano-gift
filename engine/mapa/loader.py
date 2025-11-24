@@ -95,6 +95,9 @@ def load_mobs(parent, alldata: dict):
                 data = abrir_json(alldata['refs'][name])
             elif name in ModData.character_generator:
                 data = ModData.character_generator[name](i)
+            elif path.exists(ModData.fd_player + name + '.json'):
+                data = abrir_json(ModData.fd_player + name + '.json')
+                alldata['focus'] = name
             else:
                 data = abrir_json(ModData.mobs + name + '.json')
 
@@ -186,7 +189,7 @@ def load_chunks_csv(csv_file, silently=False):
                 },
                 "adress": [int(ad_x), int(ad_y)],
                 "terrain": row['terrain'],
-                'latitude': int(row['latitude'])
+                'latitude': int(row['latitude']) if row['latitude'] is not None else None
             }
             if not silently:
                 chunk_data.update({

@@ -14,7 +14,7 @@ class MenuDebug(Menu):
 
     def __init__(self, parent):
         self.mapas = []
-        super().__init__(parent, 'debug', titulo="Mano-Gift: Selector de Escenas")
+        super().__init__(parent, 'debug', titulo="Mano-Gift: Selector de Mapas")
 
         self.functions.update({
             'tap': {
@@ -42,6 +42,7 @@ class MenuDebug(Menu):
             mapa = self.mapas[selected.item]
             data['entrada'] = choice(mapa['entradas'])
             data['use_csv'] = 'chunks_csv' in mapa or 'mobs_csv' in mapa
+            data['tiempo'] = [0, 13, 0]
 
             EngineData.load_savefile(data)
             self.deregister()

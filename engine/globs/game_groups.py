@@ -235,6 +235,7 @@ class DeletedItems(ItemGroup):
 
 class LightGroup:
     _lights = None
+    _lenght = 0
     """A group for lights that belong to a certain map"""
 
     def __init__(self):
@@ -245,6 +246,7 @@ class LightGroup:
             self._lights[map_id] = []
         if light not in self._lights[map_id]:
             self._lights[map_id].append(light)
+        self._lenght += 1
 
     def remove(self, light):
         for map_id in self._lights:
@@ -256,6 +258,9 @@ class LightGroup:
             return self._lights[map_id]
         else:
             return []
+
+    def __len__(self):
+        return self._lenght
 
 
 class TaggedGroup:
