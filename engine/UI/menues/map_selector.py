@@ -38,9 +38,12 @@ class MenuDebug(Menu):
         ruta = os.path.join(Config.savedir, player_name + '.json')
         if os.path.exists(ruta):
             data = abrir_json(ruta)
-            data['mapa'] = selected.item
+            data['info']['stage'] = selected.item
             mapa = self.mapas[selected.item]
-            data['entrada'] = choice(mapa['entradas'])
+            entrada = choice(mapa['entradas'])
+            data['entrada'] = entrada
+            data['info']['chunk'] = mapa['entradas'][entrada]['chunk']
+            data['info']['adress'] = mapa['entradas'][entrada]['adress']
             data['use_csv'] = 'chunks_csv' in mapa or 'mobs_csv' in mapa
             data['tiempo'] = [0, 13, 0]
 
