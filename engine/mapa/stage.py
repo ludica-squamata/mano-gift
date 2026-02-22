@@ -1,4 +1,4 @@
-from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv, load_props_csv
+from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv, load_props_csv, load_points_of_interest
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
 from engine.globs import ModData, COLOR_COLISION, Noche, ANCHO, ALTO
 from engine.globs.event_dispatcher import EventDispatcher
@@ -89,8 +89,9 @@ class Stage:
                              requested=[mob_req, 'props'], adress=chunk_adress)
         elif chunk_name in self.chunks_csv:
             singleton = self.chunks_csv[chunk_name]
+            chunk_adress = singleton['adress']
             chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton,
-                             requested=[mob_req, 'props'], adress=singleton['adress'])
+                             requested=[mob_req, 'props'], adress=chunk_adress)
         else:
             chunk = ChunkMap(self, chunk_name, offx, offy, trnsnt_mb=mob,
                              requested=[mob_req, 'props'], adress=chunk_adress)
@@ -103,12 +104,7 @@ class Stage:
             (self.del_interactive, 'DeleteItem')
         )
 
-        self.points_of_interest = {}
-        for datapoint in self.data.get('puntos_de_interes_para_la_IA', {}):
-            chunk_name = datapoint['chunk']
-            if chunk_name not in self.points_of_interest:
-                self.points_of_interest[chunk_name] = {}
-            self.points_of_interest[chunk_name][datapoint['point']['name']] = datapoint['point']['node']
+        self.points_of_interest = load_points_of_interest(self, self.data)
 
     def save_map(self, event):
         # abreviaturas

@@ -53,8 +53,13 @@ class IsItNightTime(Leaf):
 class IsThereABed(Leaf):
     def process(self):
         e = self.get_entity()
-        if 'bed' in e.last_map.parent.points_of_interest.get(e.parent.nombre, {}):
-            self.tree.set_context('bed', e.parent.parent.points_of_interest[e.parent.nombre]['bed'])
+        points_of_interest = e.last_map.parent.points_of_interest.get(tuple(e.last_map.adress), None)
+        point = []
+        if points_of_interest is not None:
+            point = [point for point in points_of_interest[e.last_map.adress] if point.name == 'bed']
+
+        if len(point):
+            self.tree.set_context('bed', point[0].nodo)
             # print(f"{e.nombre}: 'phew! there is a bed. I'm going to sleep.")
             return Success
         else:

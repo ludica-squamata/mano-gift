@@ -39,7 +39,7 @@
   ],
   "puntos_de_interes_para_la_IA": [
     {
-    "chunk": "single",
+    "adress": [0,0],
     "point":{"name": "bed", "node": [608, 608, 32]}
     }
   ],

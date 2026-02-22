@@ -270,10 +270,10 @@ class EngineData:
             elif name in default_menus:
                 menu = default_menus[name](cls, **kwargs)
             else:
-                raise NotImplementedError('El menu "{}" no existe'.format(titulo))
+                raise NotImplementedError(f'El menu "{titulo}" no existe')
         else:
             menu = cls.MENUS[titulo]
-            menu.reset(*kwargs)
+            menu.reset(**kwargs)
 
         menu.register()
         EventDispatcher.trigger('TogglePause', 'Modos', {'value': True})

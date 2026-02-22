@@ -1,13 +1,18 @@
-from pygame import Surface, draw, mask as mask_module, transform
+from pygame import Surface, draw, mask as mask_module, transform, SRCALPHA
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeBaseSprite
+from engine.globs.constantes import DEBUG_VISION
+from engine.libs.mersenne_twister import randint
+from engine.base.azoe_sprite import AzoeSprite
+from engine.globs.renderer import Renderer
 from ._caracterizado import Caracterizado
 from engine.globs.renderer import Camara
 from math import tan, radians, sqrt
+import sys
 
 
 class Sight(AzoeBaseSprite):
-    ultima_direccion = ''
+    ultima_direccion = 'abajo'
     mask = None
 
     # la mascara se crea al rotarse, por eso no está en el init.
@@ -16,48 +21,54 @@ class Sight(AzoeBaseSprite):
         image = self._create(lenght)
         rect = image.get_rect()
         super().__init__(parent, 'vision', image, rect)
+        self.sprite = SightSprite(self.parent, image, 0, 0)
+        if DEBUG_VISION is True and 'pydevd' in sys.modules:
+            if self.sprite not in Renderer.camara.real.sprites():
+                Renderer.camara.add_real(self.sprite)
+        self.rotate(self._translate())
 
     @staticmethod
     def _create(largo):
         """Crea el triangulo de la visión (fg azul, bg transparente).
         Devuelve un surface."""
-
+        color = randint(0, 255), randint(0, 255), randint(0, 255)
         ancho = round(largo * round(tan(radians(40)), 2))
-        megasurf = Surface((ancho * 2, largo))
-        draw.polygon(megasurf, (0, 0, 255), [[0, 0], [ancho, largo], [ancho * 2, 0]])
-        draw.circle(megasurf, (0, 0, 255), [ancho, largo], largo)
-
-        megasurf.set_colorkey((0, 0, 0))
+        megasurf = Surface((ancho * 2, largo), SRCALPHA)
+        draw.polygon(megasurf, color, [[0, 0], [ancho, largo], [ancho * 2, 0]])
 
         return megasurf
 
     def rotate(self, direccion):
         """Gira el triangulo de la visión.
-
-        Devuelve el surface del triangulo rotado, y la posicion en x e y"""
-        tx, ty, tw, th = self.parent.x, self.parent.y, self.parent.rect.w, self.parent.rect.h
+        Reestablece los puntos x, y del origen del triángulo, aunque esto solo se utiliza en el debugging."""
         if direccion == 'abajo':
             surf = transform.flip(self.image, False, True)
-            w, h = surf.get_size()
-            y = ty + th
-            x = tx + (tw / 2) - w / 2
+            self.sprite.image = surf
+            rect = self.sprite.image.get_rect(midtop=[16, 16])
+            self.sprite.x = rect.x
+            self.sprite.y = rect.y
+
         elif direccion == 'derecha':
             surf = transform.rotate(self.image, -90.0)
-            w, h = surf.get_size()
-            x = tx + tw
-            y = ty + (th / 2) - h / 2
+            self.sprite.image = surf
+            rect = self.sprite.image.get_rect(midleft=[16, 16])
+            self.sprite.x = rect.x
+            self.sprite.y = rect.y
+
         elif direccion == 'izquierda':
             surf = transform.rotate(self.image, +90.0)
-            w, h = surf.get_size()
-            x = tx - w
-            y = ty + (th / 2) - h / 2
+            self.sprite.image = surf
+            rect = self.sprite.image.get_rect(midright=[16, 16])
+            self.sprite.x = rect.x
+            self.sprite.y = rect.y
+
         else:  # direccion == 'arriba'
             surf = self.image.copy()
-            w, h = surf.get_size()
-            y = ty - h
-            x = tx + (tw / 2) - w / 2
+            self.sprite.image = surf
+            rect = self.sprite.image.get_rect(midbottom=[16, 16])
+            self.sprite.x = rect.x
+            self.sprite.y = rect.y
 
-        self.rect.topleft = int(x), int(y)
         self.mask = mask_module.from_surface(surf)
 
     def _translate(self):
@@ -92,18 +103,21 @@ class Sight(AzoeBaseSprite):
         """Realiza detecciones con la visión del mob"""
 
         direccion = self._translate()
-        self.rotate(direccion)
+        if direccion != self.ultima_direccion:
+            self.ultima_direccion = direccion
+            self.rotate(direccion)
 
         lista = []
         if Camara.current_map is not None:
-            lista = Camara.current_map.properties.sprs() + Camara.current_map.parent.properties.sprs()
+            lista = Camara.current_map.properties.sprs()
+            lista.extend(Camara.current_map.parent.points_of_interest.get(tuple(Camara.current_map.adress), []))
 
         if self.parent in lista:
             idx = lista.index(self.parent)
         else:
             idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
-            x, y = self.rect.x - obj.x, self.rect.y - obj.y
+            x, y = self.parent.x - obj.x, self.parent.y - obj.y
             ox, oy = obj.x, obj.y
             sx, sy = self.parent.x, self.parent.y
             distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
@@ -183,3 +197,10 @@ class Sensitivo(Caracterizado):
             self.perceived[sense].clear()
         self.vista()
         self.tacto()
+
+
+class SightSprite(AzoeSprite):
+    """Una clase muy sencilla que tan solo representa la visión de los mobs para propósitos de debugging."""
+
+    def __repr__(self):
+        return f'Sight of {self.parent.nombre}'

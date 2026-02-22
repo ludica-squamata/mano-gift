@@ -58,8 +58,8 @@
   },
   "puntos_de_interes_para_la_IA": [
     {
-      "chunk": "white",
-      "point": {"name": "bed","node": [608,608,32]}
+      "adress": [0,0],
+      "point": {"name": "bed","node": [620,610,32]}
     }
   ],
   "refs": {

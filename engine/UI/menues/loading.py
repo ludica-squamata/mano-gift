@@ -24,3 +24,6 @@ class LoadingMenu(Menu):
         paint_rect = Rect([0, 0, int(dx * 300), 32])
         self.progress.fill([255, 0, 0], paint_rect)
         self.canvas.blit(self.progress, self.progress_rect)
+
+    def cancelar(self):
+        pass

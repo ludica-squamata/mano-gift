@@ -43,7 +43,7 @@ class IsHeSeeingAProp(Leaf):
         sprites = set(preception['seen'])
         perceived_props = []
         for sprite in sprites:
-            if sprite.tipo == 'Prop':
+            if sprite.tipo == 'Prop' or sprite.tipo == 'nodo':
                 perceived_props.append(sprite)
 
         if len(perceived_props) > 0:
@@ -75,8 +75,18 @@ class IsPropOperable(Leaf):
 
 class IsPropScenery(Leaf):
     def process(self):
-        interactive = ["Agarrable", "Operable"]
+        interactive = ["Agarrable", "Operable", "None"]
         props = [prop for prop in self.tree.get_context('perceived_props') if prop.prop_type not in interactive]
+        if len(props) > 0:
+            self.tree.set_context('perceived_props', props)
+            return Success
+        else:
+            return Failure
+
+
+class IsPropNodo(Leaf):
+    def process(self):
+        props = [prop for prop in self.tree.get_context('perceived_props') if prop.tipo == "nodo"]
         if len(props) > 0:
             self.tree.set_context('perceived_props', props)
             return Success

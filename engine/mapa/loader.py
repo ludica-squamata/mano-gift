@@ -1,6 +1,7 @@
 from pygame import mask as mask_module, Surface, SRCALPHA, Rect, Color
 from engine.globs import ModData, GRUPO_MOBS, Prop_Group, EngineData
 from engine.misc import abrir_json, cargar_imagen, Config
+from .point_of_interest import PointOfInterest
 from engine.globs.renderer import Renderer
 from os import path, getcwd, listdir
 from engine.scenery import new_prop
@@ -282,3 +283,17 @@ def cargar_salidas(chunk, all_data):
     # salidas: la lista de salidas, igual que siempre.
     # mask: máscara de colisiones de salidas.
     # img: imagen de colores codificados
+
+
+def load_points_of_interest(parent, alldata):
+    points_of_interest = {}
+    for datapoint in alldata.get('puntos_de_interes_para_la_IA', {}):
+        if tuple(datapoint['adress']) not in points_of_interest:
+            points_of_interest[tuple(datapoint['adress'])] = []
+
+        chunk = parent.get_chunk_by_adress(tuple(datapoint['adress']))
+        point = PointOfInterest(chunk, datapoint['point'])
+        Renderer.camara.add_real(point)
+        points_of_interest[tuple(datapoint['adress'])].append(point)
+
+    return points_of_interest

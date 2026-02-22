@@ -115,10 +115,10 @@ class ControllableAI(EventAware):
                         self.deregister()
                         LootingCircularMenu(self, self.target)
 
-                    elif hasattr(self.target, 'show_description'):
-                        self.target.show_description()
-                        self.entity.detener_movimiento()
-                        self.deregister()
+                elif hasattr(self.target, 'show_description'):
+                    self.target.show_description()
+                    self.entity.detener_movimiento()
+                    self.deregister()
 
         self.accion = False
 

@@ -29,9 +29,6 @@ class Wait(Leaf):
 
 class GetRandomDir(Leaf):
     def process(self):
-        # e = self.get_entity()
-        # w, h = e.parent.mask.get_size()
-
         x = randint(32, 32 * 25)
         y = randint(32, 32 * 25)
 
