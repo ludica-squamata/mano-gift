@@ -8,6 +8,7 @@ class LootingCircularMenu(RenderedCircularMenu):
     def __init__(self, parent, mob):
         self.name = "looting"
         self.parent = parent
+        self.mob = mob
 
         lootable = mob.inventario.uniques()
         cantidades = [mob.inventario.cantidad(item) for item in lootable]
@@ -22,21 +23,15 @@ class LootingCircularMenu(RenderedCircularMenu):
 class LooteableElement(LetterElement):
     def __init__(self, parent, item, cantidad):
         self.item = item
-        # self.action = action
         self.cantidad = cantidad
-        self.cantidad_inicial = cantidad
         super().__init__(parent, item.nombre, item.image.copy(), do_title=True)
         self.description = DescriptiveArea(self, description=item.efecto_des)
 
-        # self.functions['hold'].update({
-        #     'accion': self.increment
-        # })
-        # self.functions['release'].update({
-        #     'accion': self.confirm
-        # })
+        self.functions['tap'].update({
+            'accion': self.extirpar
+        })
 
-        # self.register()
-        self.ticks = 0
+        self.register()
 
     def mostrar_cantidad(self):
         img_cant = render_tagged_text("<sn>" + str(self.cantidad) + "</sn>", self.w, justification=2)
@@ -47,6 +42,18 @@ class LooteableElement(LetterElement):
 
         self.img_sel = imagen
         self.image = self.img_sel
+
+    def extirpar(self):
+        if self.parent.last_on_spot is self:
+            item = self.parent.mob.inventario[self.item.nombre]
+            self.parent.mob.inventario.remover(item)
+            self.parent.parent.entity.inventario.agregar(item)
+            self.cantidad -= 1
+            if self.cantidad <= 0:
+                self.deregister()
+                self.parent.del_item_from_cascade(self.item.nombre, 'inicial')
+            if len(self.parent.cascadas['inicial']) == 0:
+                self.parent.salir()
 
     def update(self):
         super().update()

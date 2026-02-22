@@ -31,7 +31,7 @@ class Sight(AzoeBaseSprite):
     def _create(largo):
         """Crea el triangulo de la visión (fg azul, bg transparente).
         Devuelve un surface."""
-        color = randint(0, 255), randint(0, 255), randint(0, 255)
+        color = randint(0, 255), randint(0, 255), randint(0, 255), 128
         ancho = round(largo * round(tan(radians(40)), 2))
         megasurf = Surface((ancho * 2, largo), SRCALPHA)
         draw.polygon(megasurf, color, [[0, 0], [ancho, largo], [ancho * 2, 0]])
@@ -202,5 +202,13 @@ class Sensitivo(Caracterizado):
 class SightSprite(AzoeSprite):
     """Una clase muy sencilla que tan solo representa la visión de los mobs para propósitos de debugging."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        EventDispatcher.register(self.supress, 'MobDeath')
+
     def __repr__(self):
         return f'Sight of {self.parent.nombre}'
+
+    def supress(self, event):
+        if event.data['obj'] == self.parent:
+            self.kill()
