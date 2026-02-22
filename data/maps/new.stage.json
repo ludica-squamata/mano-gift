@@ -23,7 +23,7 @@
     },
     "Manzana": {
       "chunk": [0,0],
-      "instances": [[64,64],[48,128],[100,420],[384,64]]
+      "instances": [[64,192],[48,128],[100,420],[384,64]]
     },
     "Huevo": {
       "chunk": [0,0],
@@ -58,8 +58,8 @@
   },
   "puntos_de_interes_para_la_IA": [
     {
-      "chunk": "white",
-      "point": {"name": "bed","node": [608,608,32]}
+      "adress": [0,0],
+      "point": {"name": "bed","node": [620,610,32]}
     }
   ],
   "refs": {
@@ -70,5 +70,6 @@
   "world_stage": false,
   "zoom_level": "local",
   "latitude": 30,
-  "longitude": 30
+  "longitude": 30,
+  "size": null
 }

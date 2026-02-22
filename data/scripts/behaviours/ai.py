@@ -2,6 +2,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviourtrees import Leaf, Failure, Success
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.game_state import Game_State
+from engine import Mob_Group
 
 
 class HasSetLocation(Leaf):
@@ -32,9 +33,11 @@ EventDispatcher.register(exit_event, "Exit")
 class ReachExit(Leaf):
     def process(self):
         e = self.get_entity()
-        if e.parent.mascara_salidas.overlap(e.mask, (e.x, e.y)) is not None:
-            r, g, b, a = e.parent.imagen_salidas.get_at((e.x, e.y))
-            e.parent.salidas[b * 255 + g].trigger(e)
+        if e.last_map is not None:
+            mapa = e.last_map
+            if mapa.mascara_salidas.overlap(e.mask, (e.rel_x, e.rel_y)) is not None:
+                r, g, b, a = e.parent.imagen_salidas.get_at((e.rel_x, e.rel_y))
+                e.parent.salidas[b * 255 + g].trigger(e)
 
         return Success
 
@@ -50,8 +53,13 @@ class IsItNightTime(Leaf):
 class IsThereABed(Leaf):
     def process(self):
         e = self.get_entity()
-        if 'bed' in e.parent.parent.points_of_interest.get(e.parent.nombre, {}):
-            self.tree.set_context('bed', e.parent.parent.points_of_interest[e.parent.nombre]['bed'])
+        points_of_interest = e.last_map.parent.points_of_interest.get(tuple(e.last_map.adress), None)
+        point = []
+        if points_of_interest is not None:
+            point = [point for point in points_of_interest[e.last_map.adress] if point.name == 'bed']
+
+        if len(point):
+            self.tree.set_context('bed', point[0].nodo)
             # print(f"{e.nombre}: 'phew! there is a bed. I'm going to sleep.")
             return Success
         else:
@@ -78,7 +86,7 @@ class IsInBed(Leaf):
 class DoNothing(Leaf):
     def process(self):
         e = self.get_entity()
-        mobs = [mob for mob in e.parent.properties.get_sprites_from_layer(2) if mob != e]
+        mobs = [mob for mob in Mob_Group if mob != e]
         self.tree.set_context('others', mobs)
         return Success
 
@@ -90,10 +98,9 @@ class WhereAreOthers(Leaf):
         mob_routes = {}
         for mob in mobs:
             mob_id = mob.id
-            if mob.AI_type == "Autonomous":
-                tree = mob['AI']
-                ruta = tree.get_context('camino')
-                mob_routes[mob_id] = ruta
+            tree = mob['AI']
+            ruta = tree.get_context('camino')
+            mob_routes[mob_id] = ruta
 
         self.tree.set_context('other_routes', mob_routes)
 

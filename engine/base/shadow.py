@@ -364,8 +364,9 @@ class ShadowSprite(AzoeSprite):
             self._luces[idx] = 0
 
     def detect_light_collition(self, dx, dy):
-        for spr in Light_Group.list(self.parent.id) + Light_Group.list(self.parent.parent.id):
-            spr.colisiona(self, dx, dy)
+        if len(Light_Group) and self.last_map is not None:
+            for spr in Light_Group.list(self.last_map.id) + Light_Group.list(self.last_map.parent.id):
+                spr.colisiona(self, dx, dy)
 
     def update_sombra(self):
         """

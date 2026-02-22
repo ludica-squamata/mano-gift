@@ -1,6 +1,6 @@
 {
   "head": {
-    "name": "ai",
+    "name": "Ai",
     "script": {
       "behaviours/wander": [
         "GetMap",

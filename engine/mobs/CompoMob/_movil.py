@@ -29,11 +29,11 @@ class Movil(Caracterizado):
         col_props = False  # colision contra los props
         col_mapa = False  # colision contra las cajas de colision del propio mapa
 
-        if self.solido:
-            if Camara.current_map.mask.overlap(self.mask, (self.rel_x + dx, self.rel_y)) is not None:
+        if self.solido and self.last_map is not None:
+            if self.last_map.mask.overlap(self.mask, (self.rel_x + dx, self.rel_y)) is not None:
                 col_mapa = True
 
-            if Camara.current_map.mask.overlap(self.mask, (self.rel_x, self.rel_y + dy)) is not None:
+            if self.last_map.mask.overlap(self.mask, (self.rel_x, self.rel_y + dy)) is not None:
                 col_mapa = True
 
             for spr in Tagged_Items.intersect('movibles', 'solido'):
@@ -44,15 +44,16 @@ class Movil(Caracterizado):
                             if spr.mover(dx, dy):
                                 col_props = False
 
-            for spr in Camara.current_map.properties.get_sprites_from_layer(GRUPO_MOBS):
+            for spr in self.last_map.properties.get_sprites_from_layer(GRUPO_MOBS):
                 if spr.solido and self is not spr:
                     if self.colisiona(spr, dx, dy):
                         col_mobs = True
 
-        overlap = Camara.current_map.mascara_salidas.overlap(self.mask, (self.rel_x + dx, self.rel_y + dy))
-        if overlap is not None:
-            r, g, b, a = Camara.current_map.imagen_salidas.get_at(overlap)
-            Camara.current_map.salidas[b * 255 + g].trigger(self)
+        if self.last_map is not None:
+            overlap = self.last_map.mascara_salidas.overlap(self.mask, (self.rel_x + dx, self.rel_y + dy))
+            if overlap is not None:
+                r, g, b, a = self.last_map.imagen_salidas.get_at(overlap)
+                self.last_map.salidas[b * 255 + g].trigger(self)
 
         return any([col_mobs, col_props, col_mapa])
 

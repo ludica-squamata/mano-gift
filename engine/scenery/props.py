@@ -14,6 +14,7 @@ class Agarrable(Escenografia):
     accionable = True
 
     def __init__(self, parent, x, y, z, data):
+        self.prop_type = 'Agarrable'
         data.setdefault('proyecta_sombra', False)
         super().__init__(parent, x, y, z=z, data=data)
         self.subtipo = data['subtipo']
@@ -43,6 +44,7 @@ class Movible(Escenografia):
     accionable = False
 
     def __init__(self, parent, x, y, z, data):
+        self.prop_type = 'Movible'
         super().__init__(parent, x, y, z=z, data=data)
         self.grupo = GRUPO_MOVIBLES
         Prop_Group.add(self.nombre, self, self.grupo)
@@ -69,6 +71,7 @@ class Trepable(Escenografia):
     salida = None
 
     def __init__(self, parent, x, y, z, data):
+        self.prop_type = 'Trepable'
         super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'trepar'
         Prop_Group.add(self.nombre, self, self.grupo)
@@ -87,6 +90,7 @@ class Operable(Escenografia):
     accionable = True
 
     def __init__(self, parent, x, y, z, data):
+        self.prop_type = 'Operable'
         self.estados = {}
         self.enabled = data.get('enabled', True)
         self.grupo = GRUPO_OPERABLES
@@ -138,6 +142,7 @@ class Operable(Escenografia):
 
 class Destruible(Escenografia):
     def __init__(self, parent, x, y, z, data):
+        self.prop_type = 'Destruible'
         super().__init__(parent, x, y, z=z, data=data)
         self.accion = 'romper'
         Tagged_Items.add_item(self, 'destruibles')
@@ -146,6 +151,7 @@ class Destruible(Escenografia):
 
 class EstructuraCompuesta(Escenografia):
     def __init__(self, parent, x, y, data):
+        self.prop_type = 'EstructuraCompuesta'
         self.x, self.y = x, y
         self.w, self.h = data['width'], data['height']
         self.rect = Rect(self.x, self.y, self.w, self.h)
@@ -181,11 +187,12 @@ class EstructuraCompuesta(Escenografia):
         return props
 
 
-class Contenedor(Escenografia):
+class Contenedor(Operable):
     accionable = True
     entity = None
 
     def __init__(self, parent, x, y, z, data):
+        self.prop_type = 'Contenedor'
         from engine.mobs.inventory import Inventory
         super().__init__(parent, x, y, z, data=data)
         self.inventario = Inventory()
@@ -193,10 +200,15 @@ class Contenedor(Escenografia):
         self.menu = None
 
     def action(self, mob):
+        super().operar()
         if mob is Mob_Group.get_controlled_mob():
-            self.entity = mob
-            mob['AI'].deregister()
-            self.menu = ContainerCircularMenu(self)
+            if len(self.inventario):
+                self.entity = mob
+                EventDispatcher.trigger('Deregister', self, {'mob': mob})
+                self.menu = ContainerCircularMenu(self)
+
+    def close(self):
+        self.operar(estado=0)
 
     def _fill(self, contenido):
         from .new_prop import new_item

@@ -5,13 +5,15 @@ from engine.globs.event_dispatcher import EventDispatcher
 
 
 def init_game(event):
-    data = {"mapa": "new",
-            "entrada": "center",
-            "tiempo": [0, 13, 0],
-            "focus": "heroe"}
-
-    if 'savegame' in event.data:
+    if len(event.data['savegame']) == 1:
+        data = {"mapa": "new",
+                "entrada": "center",
+                "tiempo": [0, 13, 0],
+                "focus": "heroe"}
         data.update(event.data['savegame'])
+
+    else:
+        data = event.data
 
     EventDispatcher.trigger('LoadGame', 'Script', data)
 

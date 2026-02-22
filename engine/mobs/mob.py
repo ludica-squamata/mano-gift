@@ -6,7 +6,6 @@ from engine.base import ShadowSprite
 
 class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
     accionable = False
-    character_name = ''  # issue-156: this is only for the hero and should be eliminated.
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
     race = None  # for now, "human" or "blob". This tag allow the engine to select a mob by it's "class".
 
@@ -51,7 +50,7 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
         self.heads = {'front': self.idle_walk_img,
                       'right': self.idle_left_img,
                       'left': self.idle_right_img}
-        self.nombre = data['nombre']  # issue-156
+        self.nombre = data['nombre']
         self.estado = 'idle'
         image = self.images['S' + self.direccion]
         mask = self.mascaras['S' + self.direccion]
@@ -62,10 +61,10 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
         if 'occupation' in data:
-            self['occupation'] = data['occupation']  # issue-156
+            self['occupation'] = data['occupation']
 
     def __repr__(self):
-        return f"Mob {self['nombre']}"  # issue-156
+        return f"Mob {self['nombre']}"
 
     def __str__(self):
-        return self.nombre  # issue-156
+        return self.nombre

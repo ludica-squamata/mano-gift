@@ -10,6 +10,7 @@ from .ability import MenuAbility
 from .status import MenuStatus
 from .map_selector import MenuDebug
 from .loading import LoadingMenu
+from sys import modules
 
 default_menus = {'MenuPausa': MenuPausa,
                  'MenuEquipo': MenuEquipo,
@@ -40,9 +41,10 @@ pause_menus = [
 inital_menus = [
     'MenuNuevo',
     'MenuCargar',
-    'MenuOpciones',
-    'MenuDebug'
-]
+    'MenuOpciones']
+
+if 'pydevd' in modules:
+    inital_menus.append('MenuDebug')
 
 __all__ = [
     'Menu',

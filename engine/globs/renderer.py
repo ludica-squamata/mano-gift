@@ -10,7 +10,6 @@ import os
 
 class Camara:
     focus = None  # objeto que la camara sigue.
-    bgs_rect = None  # el rect colectivo de los fondos
     bgs = AzoeGroup('bgs')  # el grupo de todos los fondos cargados    
     visible = AzoeGroup('visible')  # objetos que se ven (incluye sombras)
     real = AzoeGroup('real')  # objetos reales del mundo (no incluye sombras)
@@ -31,9 +30,6 @@ class Camara:
 
     @classmethod
     def set_background(cls, spr):
-        if cls.bgs_rect is None:
-            cls.bgs_rect = spr.rect.copy()
-
         if not len(cls.bgs):
             cls.set_current_map(spr)
 
@@ -77,6 +73,8 @@ class Camara:
     @classmethod
     def set_current_map(cls, spr):
         cls.current_map = spr
+        if cls.focus is not None:
+            cls.focus.change_last_map(spr)
         if spr.latitude is not None:
             SeasonalYear.set_latitude(spr.latitude)
             Sun.set_latitude(spr.latitude)
@@ -96,6 +94,7 @@ class Camara:
     @classmethod
     def detectar_mapas_adyacentes(cls):
         map_at_center, map_at_bottom, map_at_right, map_at_top, map_at_left = [None] * 5
+        map_at_tl, map_at_tr, map_at_bl, map_at_br = [None] * 4
         r = cls.rect.inflate(5, 5)
         map_at = cls.bgs.get_spr_at
         adyacent_map_key = ''
@@ -109,64 +108,128 @@ class Camara:
             map_at_top = map_at(r.midtop)
             map_at_left = map_at(r.midleft)
 
+            map_at_tl = map_at(r.topleft)
+            map_at_tr = map_at(r.topright)
+            map_at_bl = map_at(r.bottomleft)
+            map_at_br = map_at(r.bottomright)
+
         if map_at_center is not None and cls.current_map is not map_at_center:
             cls.set_current_map(map_at_center)
+        # check ortogonal positions
+        if map_at_top is None and adyacent_map_key == '':
+            if map_at_center:
+                reference = map_at_center
+                adyacent_map_key = 'sup'
+            elif map_at_tl:
+                reference = map_at_tl
+                adyacent_map_key = 'izq'
+            elif map_at_tr:
+                reference = map_at_tr
+                adyacent_map_key = 'der'
 
-        # check in ortogonal positions
-        if map_at_top is None:
-            adyacent_map_key = 'sup'
-        elif map_at_bottom is None:
-            adyacent_map_key = 'inf'
-        elif map_at_left is None:
-            adyacent_map_key = 'izq'
-        elif map_at_right is None:
-            adyacent_map_key = 'der'
+        if map_at_left is None and adyacent_map_key == '':
+            if map_at_center:
+                reference = map_at_center
+                adyacent_map_key = 'izq'
+            elif map_at_tl:
+                reference = map_at_tl
+                adyacent_map_key = 'inf'
+            elif map_at_bl:
+                reference = map_at_bl
+                adyacent_map_key = 'sup'
 
-        if adyacent_map_key == '':
-            # check in diagonal positions
-            if not map_at(r.topleft):
-                if map_at_top:
-                    reference = map_at_top
-                    adyacent_map_key = 'izq'
-                elif map_at_left:
-                    reference = map_at_left
-                    adyacent_map_key = 'sup'
-            elif not map_at(r.topright):
-                if map_at_top:
-                    reference = map_at_top
-                    adyacent_map_key = 'der'
-                elif map_at_right:
-                    reference = map_at_right
-                    adyacent_map_key = 'sup'
-            elif not map_at(r.bottomleft):
-                if map_at_bottom:
-                    reference = map_at_bottom
-                    adyacent_map_key = 'izq'
-                elif map_at_left:
-                    reference = map_at_left
-                    adyacent_map_key = 'inf'
-            elif not map_at(r.bottomright):
-                if map_at_bottom:
-                    reference = map_at_bottom
-                    adyacent_map_key = 'der'
-                elif map_at_right:
-                    reference = map_at_right
-                    adyacent_map_key = 'inf'
-        else:
-            reference = map_at_center
+        if map_at_right is None and adyacent_map_key == '':
+            if map_at_center:
+                reference = map_at_center
+                adyacent_map_key = 'der'
+            elif map_at_tr:
+                reference = map_at_tr
+                adyacent_map_key = 'inf'
+            elif map_at_br:
+                reference = map_at_br
+                adyacent_map_key = 'sup'
+        if map_at_bottom is None and adyacent_map_key == '':
+            if map_at_center:
+                reference = map_at_center
+                adyacent_map_key = 'inf'
+        if map_at_center is None and adyacent_map_key == '':
+            if map_at_top:
+                reference = map_at_top
+                adyacent_map_key = 'inf'
+            elif map_at_left:
+                reference = map_at_left
+                adyacent_map_key = 'der'
+            elif map_at_right:
+                reference = map_at_right
+                adyacent_map_key = 'izq'
+            elif map_at_bottom:
+                reference = map_at_bottom
+                adyacent_map_key = 'sup'
+
+        #### check in diagonal positions
+        if map_at_tl is None and adyacent_map_key == '':
+            if map_at_tr:
+                reference = map_at_tr
+                adyacent_map_key = 'izq'
+            elif map_at_bl:
+                reference = map_at_bl
+                adyacent_map_key = 'sup'
+            elif map_at_top:
+                reference = map_at_top
+                adyacent_map_key = 'izq'
+            elif map_at_left:
+                reference = map_at_left
+                adyacent_map_key = 'sup'
+        if map_at_tr is None and adyacent_map_key == '':
+            if map_at_tl:
+                reference = map_at_tl
+                adyacent_map_key = 'der'
+            elif map_at_br:
+                reference = map_at_br
+                adyacent_map_key = 'sup'
+            elif map_at_right:
+                reference = map_at_right
+                adyacent_map_key = 'sup'
+            elif map_at_top:
+                reference = map_at_top
+                adyacent_map_key = 'der'
+        if map_at_bl is None and adyacent_map_key == '':
+            if map_at_br:
+                reference = map_at_br
+                adyacent_map_key = 'izq'
+            elif map_at_tl:
+                reference = map_at_tl
+                adyacent_map_key = 'inf'
+            elif map_at_bottom:
+                reference = map_at_bottom
+                adyacent_map_key = 'der'
+            elif map_at_left:
+                reference = map_at_left
+                adyacent_map_key = 'inf'
+        if map_at_br is None and adyacent_map_key == '':
+            if map_at_right:
+                reference = map_at_right
+                adyacent_map_key = 'inf'
+            if map_at_tr:
+                reference = map_at_tr
+                adyacent_map_key = 'inf'
+            elif map_at_bl:
+                reference = map_at_bl
+                adyacent_map_key = 'der'
+            elif map_at_bottom:
+                reference = map_at_bottom
+                adyacent_map_key = 'izq'
 
         if adyacent_map_key != '' and reference is not None:
             new_map = reference.checkear_adyacencia(adyacent_map_key)
-        else:
-            new_map = cls.focus.parent
 
-        if new_map is not False and new_map is not map_at_center:
-            cls.set_background(new_map)
-            for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
-                if obj not in cls.real:
-                    cls.add_real(obj)
-                if hasattr(obj, 'luz') and obj.luz is not None:
-                    cls.add_real(obj.luz)
+            if new_map is not False and new_map is not map_at_center:
+                cls.set_background(new_map)
+                for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
+                    if obj not in cls.real:
+                        cls.add_real(obj)
+                    if hasattr(obj, 'luz') and obj.luz is not None:
+                        cls.add_real(obj.luz)
 
     @classmethod
     def update_sprites_layer(cls):

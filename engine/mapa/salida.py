@@ -18,7 +18,6 @@ class Salida:
     def __init__(self, nombre, id, stage, rect, chunk, entrada, direcciones, accion, color):
         self.nombre = self.tipo + '.' + nombre
         self.flag_name = self.nombre + '.triggered'
-        self.x, self.y, w, h = rect
         self.chunk = chunk  # The chunk where the Exit is on, or it's adress if it is not loaded yet.
         self.target_stage = stage
         self.entrada = entrada  # string, nombre de la entrada en dest con la cual conecta
@@ -28,16 +27,15 @@ class Salida:
         self.action_trigger = accion
         self.id = id
         if 'pydevd' in sys.modules and bool(chunk):
-            self.sprite = SpriteSalida(chunk, self.nombre, self.x, self.y, w, h, color)
+            self.sprite = SpriteSalida(chunk, self.nombre, *rect, color)
             chunk.add_property(self.sprite, 10000)
-            Renderer.camara.add_real(self.sprite)
 
     def trigger(self, mob, accion='caminar'):
         # este método, que antes era update(), toma los datos de la salida
         # y dispara el evento. Ya no se fija qué mob la pisa.
         data = {'mob': mob,
                 'target_stage': self.target_stage,
-                'target_chunk': self.chunk,
+                'from_chunk': self.chunk,
                 'target_entrada': self.entrada}
 
         trigger = False

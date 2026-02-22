@@ -1,6 +1,6 @@
 {
   "head": {
-    "name": "brain",
+    "name": "Brain",
     "script": {
       "behaviours/brain": [
         "BePassive",

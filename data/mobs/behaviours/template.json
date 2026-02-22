@@ -2,7 +2,7 @@
   "head": {
     "name": "<str>",
     "script": {
-      "module": [
+      "<module>": [
         "<Functions>",
         "<SubClasses>"
       ]

@@ -1,6 +1,6 @@
 from engine.globs import ModData, ANCHO, ALTO
+from pygame import sprite, mask, Surface, Rect
 from engine.globs.renderer import Camara
-from pygame import sprite, mask, Surface
 from engine.misc import cargar_imagen
 from math import isclose
 
@@ -24,6 +24,8 @@ class AzoeSprite(sprite.Sprite):
     is_damageable = False
 
     _last_map = None
+
+    rel_x, rel_y = 0, 0
 
     def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
@@ -58,8 +60,8 @@ class AzoeSprite(sprite.Sprite):
         if hasattr(self.parent, 'adress'):
             self.x = x
             self.y = y
-            self.rel_x = x
-            self.rel_y = y + 18
+            self.rel_x = x % 800
+            self.rel_y = y % 800
 
         if z:
             self.z = z
@@ -80,50 +82,24 @@ class AzoeSprite(sprite.Sprite):
         if self._last_map is None:
             # esta clásula solo se ejecuta una vez porque en el init no hay un mapa cargado aún.
             self._last_map = Camara.current_map
-        elif self._last_map != Camara.current_map:
-            # esta otra se ejecuta en el paso de un chunk al otro.
-            self._last_map = Camara.current_map
-            if dx != 0:
-                self.rel_x = self._rel(self.rel_x, dx)
-            if dy != 0:
-                self.rel_y = self._rel(self.rel_y, dy)
-                self.z = self.rel_y + self.rect.h
-        #
-        # if self.rel_x + dx < 0:
-        #     self.rel_x = 800
-        # elif self.rel_x + dx > 800:
-        #     self.rel_x = dx
-        # else:
-        self.rel_x += dx
 
-        # if self.rel_y + dy < 0:
-        #     self.rel_y = 800
-        #     self.z = 800 - 32  # aunque no estoy seguro de esto
-        # elif self.rel_y + dy > 800:
-        #     self.rel_y = dy
-        #     self.z = 32
-        # else:
-        self.rel_y += dy
-        self.z += dy
-
-    @staticmethod
-    def _rel(rel, delta):
-        """Ajusta self.rel_x o self.rel_y para no repetir código."""
-        # el orden del if/elif es importante, aunque parezca redundante a primera vista.
-        if rel + delta > 800:
-            rel = 0
-        elif rel + delta < 0:
-            rel = 800
-        elif isclose(rel + delta, 1, rel_tol=0.5, abs_tol=7):
-            rel = 0
-        else:
-            rel = 800
-
-        return rel
+        self.rel_x = self.x % 800  # Después de tanto trabajo, era cuestión de usar módulo de x e y, y voilà,
+        self.rel_y = self.y % 800  # ahora funciona con perfección matemática.
+        self.z = self.rel_y + 16
 
     def set_parent_map(self, chunk):
         self.parent = chunk
         self.chunk_adresses[chunk.parent.nombre] = chunk.adress.center
+
+    @property
+    def last_map(self):
+        return self._last_map
+
+    def change_last_map(self, new):
+        if self._last_map is not None:
+            self._last_map.del_property(self, rem_renderer=False)
+        self._last_map = new
+        self._last_map.add_property(self, 2)
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
@@ -134,8 +110,8 @@ class AzoeSprite(sprite.Sprite):
         self.x = x
         self.y = y
         self.z = self.y + self.rect.h  # bottom
-        self.rel_x = x
-        self.rel_y = y
+        self.rel_x = x % 800
+        self.rel_y = y % 800
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:

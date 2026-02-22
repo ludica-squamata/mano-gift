@@ -84,9 +84,10 @@ class ProgressBar(Sprite):
     def toggle(self, event):
         if event.data['value']:
             self.hide()
-            self.event_trigger()
+            # self.event_trigger()
         else:
             self.show()
+            EventDispatcher.register(self.toggle, "TogglePause")
 
     def set_focus(self, focus):
         self.focus = focus
@@ -96,6 +97,10 @@ class ProgressBar(Sprite):
         self.image.fill(self.colorAct, self._actual())
         if self.do_subdivision:
             self._subdividir()
+
+    def force_hide(self):
+        self.hide()
+        EventDispatcher.deregister(self.toggle, "TogglePause")
 
 
 class CharacterName(Sprite):
@@ -313,13 +318,13 @@ class Minimap(Sprite):
         xes = max({datos[i]['adress'][0] for i in datos})
         yes = max({datos[i]['adress'][1] for i in datos})
         types = {tuple(datos[i]['adress']): {'terrain': datos[i]['terrain'], 'key': i} for i in datos}
-        image = Surface((xes * 4, (2 + yes) * 4))
+        image = Surface(((1 + xes) * 4, (1 + yes) * 4))
         image.fill('red')
         px_array = PixelArray(image)
-        for y in range(-1, yes + 1):
+        for y in range(yes + 1):
             for x in range(xes + 1):
                 terrain = types[x, y]['terrain']
-                px, py = x, y + 1
+                px, py = x, y
                 if terrain == 'snow':
                     color = Color("#F0F0EC")
                 elif terrain == 'water':
@@ -332,7 +337,7 @@ class Minimap(Sprite):
                 self.map_array[types[x, y]['key']] = Rect(px * 4, py * 4, 4, 4)
 
         self.image = px_array.make_surface()
-        self.rect = self.image.get_rect(bottom=ALTO - 1, right=ANCHO - 1)
+        self.rect = self.image.get_rect(bottom=ALTO, right=ANCHO)
         self.created = True
 
     def update(self):

@@ -1,0 +1,53 @@
+{
+  "head": {
+    "name": "hero",
+    "script": {
+      "behaviours/hero": [
+        "UpdateAI",
+        "SetBaseAI",
+        "IsBaseAISet",
+        "ClearContext",
+        "IsHeSeeingAProp",
+        "IsPropAgarrable",
+        "IsPropOperable",
+        "IsPropScenery",
+        "IsHeSeeingaMob",
+        "IsHeInCombatPosition",
+        "HasSomethingToSay",
+        "IsTargetClose",
+        "SetTarget",
+        "IsPropNodo"
+      ]
+    },
+    "special": {}
+  },
+  "body": {
+    "0": {"name": "Repeater","child": 1},
+    "1": {"name": "Parallel", "children": [2,3]},
+      "2": {"name": "UpdateAI"},
+      "3": {"name": "Sequence","children": [4,9]},
+        "4": {"name": "UntilFail","child": 5},
+          "5": {"name": "Sequence","children": [6,8]},
+            "6": {"name": "Inverter", "child": 7},
+              "7":{"name": "IsBaseAISet"},
+            "8":{"name": "SetBaseAI"},
+        "9": {"name": "Sequence","children": [10,11,24]},
+          "10": {"name": "ClearContext"},
+          "11": {"name": "Selector","children": [12,19]},
+            "12": {"name": "Sequence","children": [13,14]},
+              "13": {"name": "IsHeSeeingAProp"},
+              "14": {"name": "Selector","children": [15,16,17,18]},
+                "15": {"name": "IsPropAgarrable"},
+                "16": {"name": "IsPropOperable"},
+                "17": {"name": "IsPropScenery"},
+                "18": {"name": "IsPropNodo"},
+            "19": {"name": "Sequence","children": [20,21]},
+              "20": {"name": "IsHeSeeingaMob"},
+              "21": {"name": "Selector","children": [22,23]},
+                "22": {"name": "IsHeInCombatPosition"},
+                "23": {"name": "HasSomethingToSay"},
+          "24": {"name": "Sequence","children": [25,26]},
+            "25": {"name": "IsTargetClose"},
+            "26": {"name": "SetTarget"}
+  }
+}

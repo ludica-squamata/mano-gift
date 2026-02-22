@@ -174,7 +174,7 @@ class BehaviourTree:
                     self.nodes[idx].child = node
 
     def set_to_check(self, *nodes):
-        if self.node_set is False:
+        if not self.node_set:
             self.to_check = [*nodes]
             self.node_set = True
 
@@ -200,7 +200,7 @@ class BehaviourTree:
 
     def preserve_keys(self, *keys):
         """
-        This method erases all keys from the shared conext, except those which are preserved.
+        This method erases all keys from the shared context, except those which are preserved.
         """
         preserved = {}
         for key in keys:

@@ -86,8 +86,9 @@ class MobGroup:
         self._indexes.clear()
 
     def get_controlled_mob(self):
+        return [self._group[mob_id] for mob_id in self._group if self._group[mob_id]["AI"].name == 'hero'][0]
         # now it is just a shortcut.
-        return self.get_by_trait('AI', 'controllable')
+        # return self.get_by_trait('AI', 'controllable')
 
     def get_by_trait(self, key, value):
         """Return a sorted (by name) list of mobs that have the desired trait for the purposes of iteration."""
@@ -234,6 +235,7 @@ class DeletedItems(ItemGroup):
 
 class LightGroup:
     _lights = None
+    _lenght = 0
     """A group for lights that belong to a certain map"""
 
     def __init__(self):
@@ -244,6 +246,7 @@ class LightGroup:
             self._lights[map_id] = []
         if light not in self._lights[map_id]:
             self._lights[map_id].append(light)
+        self._lenght += 1
 
     def remove(self, light):
         for map_id in self._lights:
@@ -255,6 +258,9 @@ class LightGroup:
             return self._lights[map_id]
         else:
             return []
+
+    def __len__(self):
+        return self._lenght
 
 
 class TaggedGroup:
@@ -333,5 +339,6 @@ Prop_Group = ItemGroup('Prop')
 Deleted_Items = DeletedItems('Deleted')
 Light_Group = LightGroup()
 Tagged_Items = TaggedGroup()
+MobCSV = {}
 
-__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group", "Tagged_Items"]
+__all__ = ["Mob_Group", "Item_Group", "Prop_Group", "Deleted_Items", "Light_Group", "Tagged_Items", "MobCSV"]

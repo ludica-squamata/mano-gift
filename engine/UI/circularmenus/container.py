@@ -17,3 +17,7 @@ class ContainerCircularMenu(RenderedCircularMenu):
         super().__init__(cascadas)
 
         self.functions['tap'].update({'contextual': self.salir})
+
+    def salir(self):
+        super().salir()
+        self.parent.close()

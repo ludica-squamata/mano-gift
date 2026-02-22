@@ -1,14 +1,12 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviourtrees import BehaviourTree
 from engine.misc.resources import abrir_json
-from engine.mobs import ControllableAI
 from engine.globs import ModData
 from . import Sensitivo, Animado
 
 
 class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
     paused = False
-    AI_type = ''  # 'Controllable' or  'Autonomous'
 
     pause_overridden = False
     _trees = None
@@ -30,14 +28,8 @@ class Autonomo(Sensitivo, Animado):  # tiene que poder ver para ser autónomo
         EventDispatcher.deregister(self.toggle_pause_state, 'TogglePause')
 
     def create_ai(self, name):
-        if name == 'controllable':
-            self.AI_type = 'Controllable'
-            return ControllableAI(self)
-
-        else:
-            self.AI_type = 'Autonomous'
-            tree_data = abrir_json(ModData.mobs + 'behaviours/' + name + '.json')
-            return BehaviourTree(self, tree_data)
+        tree_data = abrir_json(ModData.mobs + 'behaviours/' + name + '.json')
+        return BehaviourTree(self, tree_data)
 
     def switch_behaviour(self, name):
         tree_data = abrir_json(ModData.mobs + 'behaviours/' + name + '.json')
