@@ -12,6 +12,8 @@ class InventoryElement(LetterElement):
     description = None
     idx = 0
 
+    timer = 0
+
     def __init__(self, parent, item):
 
         self.item = item
@@ -48,6 +50,18 @@ class InventoryElement(LetterElement):
             self.parent.salir()
             EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo', "select": self.item.espacio})
 
+    def do_hold_action(self):
+        if self.item.tipo == 'utilizable':
+            self.parent.entity.set_reading_position()
+            self.parent.entity.open_book(self.item)
+            EventDispatcher.trigger('EndDialog', self, {'layer': self.parent.layer})
+            self.timer += 1
+
+    def do_release_action(self):
+        self.parent.entity.read(self.item, self.timer // 60)
+        self.timer = 0
+        self.parent.overwritten = True
+        self.parent.salir()
 
 class ColocableInventoryElement(InventoryElement):
     def command(self):

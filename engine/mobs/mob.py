@@ -1,10 +1,10 @@
 from engine.misc import cargar_imagen, split_spritesheet, cargar_head_anims
-from .CompoMob import Combativo, Autonomo, Parlante, Comerciante
+from .CompoMob import Combativo, Autonomo, Parlante, Comerciante, Lector
 from engine.globs import Mob_Group, ModData
 from engine.base import ShadowSprite
 
 
-class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
+class Mob(Combativo, Autonomo, Parlante, Comerciante, Lector, ShadowSprite):
     accionable = False
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
     race = None  # for now, "human" or "blob". This tag allow the engine to select a mob by it's "class".
@@ -24,7 +24,7 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
             if imgs[key] is not None and heads is not None:  # este framento es para los mobs con cabeza.
                 method = cargar_head_anims
                 params = [heads, g + imgs[key], dirs if key != 'atk' else atk]
-            elif heads is None:  # este otro es para los mobs que no diferencian su cueerpo de su cabeza.
+            elif heads is None:  # este otro es para los mobs que no diferencian su cuerpo de su cabeza.
                 method = self.cargar_anims
                 params = imgs[key], dirs if key != 'atk' else atk
             if method is not None and len(params):

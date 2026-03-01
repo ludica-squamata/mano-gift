@@ -39,6 +39,8 @@ class Animado(Movil):  # necesita Movil para tener dirección
     timer_rotacion = 0
     cuentapasos = 0
 
+    reading_anims = None
+
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.timer_animacion = 0
@@ -155,6 +157,10 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 self.atacando = False
                 self.images = self.cmb_walk_img
                 self.image = self.images['S' + self.direccion]
+
+    def set_reading_position(self):
+        direccion = self.body_direction
+        self.image = self.reading_anims[direccion]
 
     def accion(self):
         if self.estado == 'cmb':

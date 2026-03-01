@@ -46,10 +46,10 @@ class Discurso(EventAware):
                     pass  # para completar el set, pero la verdad no sé que preguntaría.
 
                 if how == 'has':  # pregunta si el item what existe en el inventario de who.
-                    if not what in who.inventario:
+                    if who is not None and not what in who.inventario:
                         allow = False
                 elif how == "hasn't":  # pregunta si el item what no existe en el inventario de who.
-                    if what in who.inventario:
+                    if who is not None and what in who.inventario:
                         allow = False
                 elif how == 'many':
                     pass  # multiple items in hero's inventory

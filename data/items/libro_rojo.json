@@ -1,7 +1,7 @@
 {
   "nombre": "Libro Rojo",
   "tipo": "agarrable",
-  "subtipo": "utilizable",
+  "subtipo": "libro",
   "peso": 0,
   "volumen": 0,
   "imagenes": {
