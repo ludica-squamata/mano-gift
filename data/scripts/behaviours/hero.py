@@ -22,7 +22,10 @@ class SetBaseAI(Leaf):
 
 class ClearContext(Leaf):
     def process(self):
-        # self.tree.erase_keys('perceived_props', "perceived_mobs", "close")
+        e = self.get_entity()
+        # print('context cleared')
+        self.tree.erase_keys('perceived_props', "perceived_mobs", "close")
+        e.target = None
         return Success
 
 

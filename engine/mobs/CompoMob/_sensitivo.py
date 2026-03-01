@@ -1,5 +1,6 @@
 from pygame import Surface, draw, mask as mask_module, transform, SRCALPHA
 from engine.globs.event_dispatcher import EventDispatcher
+from pygame.sprite import spritecollide, collide_mask
 from engine.globs.azoe_group import AzoeBaseSprite
 from engine.globs.constantes import DEBUG_VISION
 from engine.libs.mersenne_twister import randint
@@ -13,24 +14,20 @@ import sys
 
 class Sight(AzoeBaseSprite):
     ultima_direccion = 'abajo'
-    mask = None
-
-    # la mascara se crea al rotarse, por eso no está en el init.
 
     def __init__(self, parent, lenght):
         image = self._create(lenght)
         rect = image.get_rect()
         super().__init__(parent, 'vision', image, rect)
-        self.sprite = SightSprite(self.parent, image, 0, 0)
+        self.field = SightSprite(self.parent, image, 0, 0)
         if DEBUG_VISION is True and 'pydevd' in sys.modules:
-            if self.sprite not in Renderer.camara.real.sprites():
-                Renderer.camara.add_real(self.sprite)
-        self.rotate(self._translate())
+            if self.field not in Renderer.camara.real.sprites():
+                Renderer.camara.add_real(self.field)
+        self.field.transform(self.translate())
 
     @staticmethod
     def _create(largo):
-        """Crea el triangulo de la visión (fg azul, bg transparente).
-        Devuelve un surface."""
+        """Crea el triangulo de la visión. Devuelve un Surface."""
         color = randint(0, 255), randint(0, 255), randint(0, 255), 128
         ancho = round(largo * round(tan(radians(40)), 2))
         megasurf = Surface((ancho * 2, largo), SRCALPHA)
@@ -38,40 +35,7 @@ class Sight(AzoeBaseSprite):
 
         return megasurf
 
-    def rotate(self, direccion):
-        """Gira el triangulo de la visión.
-        Reestablece los puntos x, y del origen del triángulo, aunque esto solo se utiliza en el debugging."""
-        if direccion == 'abajo':
-            surf = transform.flip(self.image, False, True)
-            self.sprite.image = surf
-            rect = self.sprite.image.get_rect(midtop=[16, 16])
-            self.sprite.x = rect.x
-            self.sprite.y = rect.y
-
-        elif direccion == 'derecha':
-            surf = transform.rotate(self.image, -90.0)
-            self.sprite.image = surf
-            rect = self.sprite.image.get_rect(midleft=[16, 16])
-            self.sprite.x = rect.x
-            self.sprite.y = rect.y
-
-        elif direccion == 'izquierda':
-            surf = transform.rotate(self.image, +90.0)
-            self.sprite.image = surf
-            rect = self.sprite.image.get_rect(midright=[16, 16])
-            self.sprite.x = rect.x
-            self.sprite.y = rect.y
-
-        else:  # direccion == 'arriba'
-            surf = self.image.copy()
-            self.sprite.image = surf
-            rect = self.sprite.image.get_rect(midbottom=[16, 16])
-            self.sprite.x = rect.x
-            self.sprite.y = rect.y
-
-        self.mask = mask_module.from_surface(surf)
-
-    def _translate(self):
+    def translate(self):
         orientacion = self.parent.head_direction
         direccion = self.parent.body_direction
         sight_direction = None
@@ -79,7 +43,7 @@ class Sight(AzoeBaseSprite):
             sight_direction = direccion
         elif orientacion == 'left':
             if direccion == 'abajo':
-                sight_direction = 'iquierda'
+                sight_direction = 'izquierda'
             elif direccion == 'arriba':
                 sight_direction = 'derecha'
             elif direccion == 'izquierda':
@@ -101,11 +65,11 @@ class Sight(AzoeBaseSprite):
 
     def __call__(self):
         """Realiza detecciones con la visión del mob"""
-
-        direccion = self._translate()
+        self.field.update()
+        direccion = self.translate()
         if direccion != self.ultima_direccion:
             self.ultima_direccion = direccion
-            self.rotate(direccion)
+            self.field.transform(direccion)
 
         lista = []
         if Camara.current_map is not None:
@@ -117,11 +81,9 @@ class Sight(AzoeBaseSprite):
         else:
             idx = 0
         for obj in lista[0:idx] + lista[idx + 1:]:
-            x, y = self.parent.x - obj.x, self.parent.y - obj.y
-            ox, oy = obj.x, obj.y
             sx, sy = self.parent.x, self.parent.y
-            distance = round(sqrt(abs(oy - sy) ** 2 + abs(ox - sx) ** 2))
-            if obj.mask.overlap(self.mask, (x, y)):
+            distance = round(sqrt(abs(obj.y - sy) ** 2 + abs(obj.x - sx) ** 2))
+            if self.field.collide(obj):
                 self.parent.perceived['seen'].append(obj)
             if distance < 64:
                 self.parent.perceived['close'].append(obj)
@@ -200,15 +162,88 @@ class Sensitivo(Caracterizado):
 
 
 class SightSprite(AzoeSprite):
-    """Una clase muy sencilla que tan solo representa la visión de los mobs para propósitos de debugging."""
+    """The mobs' field of view. Transforms on it's own when the mob rotates its head."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         EventDispatcher.register(self.supress, 'MobDeath')
+        self.imagenes = {'arriba': self.image.copy()}
+        self.mascaras = {'arriba': mask_module.from_surface(self.image.copy())}
+        self.rects = {'arriba': self.image.get_rect(midbottom=[16, 16])}
+        self.x = self.rects['arriba'].x
+        self.y = self.rects['arriba'].y
 
     def __repr__(self):
         return f'Sight of {self.parent.nombre}'
 
+    def collide(self, entity):
+        """Detects whenever entities fall within the field of vision."""
+        x = entity.rect.x - self.rect.x
+        y = entity.rect.y - self.rect.y
+        # this line uses the direct call instead of the self.mask property to make sure it is the correct mask.
+        if self.mascaras[self.parent.vista.translate()].overlap(entity.mask, [x, y]):
+            return entity
+
+    def transform(self, direccion):
+        """Sets the image, mask and rect of the field of vision given the mob's direction"""
+        if direccion == 'arriba':
+            self.image = self.imagenes['arriba']
+            self.mask = self.mascaras['arriba']
+            rect = self.rects['arriba']
+
+        elif direccion == 'abajo':
+            if direccion not in self.imagenes:
+                self.imagenes['abajo'] = transform.flip(self.imagenes['arriba'].copy(), False, True)
+            self.image = self.imagenes['abajo']
+
+            if direccion not in self.mascaras:
+                self.mascaras['abajo'] = mask_module.from_surface(self.imagenes['abajo'])
+            self.mask = self.mascaras['abajo']
+
+            if direccion not in self.rects:
+                self.rects['abajo'] = self.image.get_rect(midtop=[16, 16])
+            rect = self.rects['abajo']
+
+        elif direccion == 'izquierda':
+            if direccion not in self.imagenes:
+                self.imagenes['izquierda'] = transform.rotate(self.imagenes['arriba'].copy(), +90.0)
+            self.image = self.imagenes['izquierda']
+
+            if direccion not in self.mascaras:
+                self.mascaras['izquierda'] = mask_module.from_surface(self.imagenes['izquierda'])
+            self.mask = self.mascaras['izquierda']
+
+            if direccion not in self.rects:
+                self.rects['izquierda'] = self.image.get_rect(midright=[16, 16])
+            rect = self.rects['izquierda']
+
+        elif direccion == 'derecha':
+            if direccion not in self.imagenes:
+                self.imagenes['derecha'] = transform.rotate(self.imagenes['arriba'].copy(), -90.0)
+            self.image = self.imagenes['derecha']
+
+            if direccion not in self.mascaras:
+                self.mascaras['derecha'] = mask_module.from_surface(self.imagenes['derecha'])
+            self.mask = self.mascaras['derecha']
+
+            if direccion not in self.rects:
+                self.rects['derecha'] = self.image.get_rect(midleft=[16, 16])
+            rect = self.rects['derecha']
+
+        else:
+            raise AttributeError()
+
+        self.x = rect.x
+        self.y = rect.y
+
     def supress(self, event):
+        """Deletes the cone of vision when the mob dies."""
         if event.data['obj'] == self.parent:
             self.kill()
+
+    def update(self, *args, **kwargs):
+        if not self.alive():  # alive means "added to the renderer"
+            # this does the same as Renderer.camara.pan()
+            x = self.parent.rect.x + self.x
+            y = self.parent.rect.y + self.y
+            self.ubicar(x, y)
