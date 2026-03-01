@@ -26,7 +26,7 @@ class ProgressBar(Sprite):
 
         self.colorAct = color_actual
         self.colorFnd = color_fondo
-        self.maximo = maximo
+        self.maximo = max(maximo, 1)
         self.actual = maximo
         self.tracked_stat = stat
         self.divisiones = 1
