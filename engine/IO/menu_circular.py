@@ -71,7 +71,7 @@ class BaseElement(EventAware, AzoeBaseSprite):
                 self.command()
 
     def do_hold_action(self):
-        raise NotImplementedError
+        return NotImplemented
 
     def do_release_action(self):
         return NotImplemented

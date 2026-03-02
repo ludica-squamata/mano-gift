@@ -15,5 +15,13 @@
     "sell_price": 1,
     "buy_price": 1,
     "coin_symbol": "$"
+  },
+  "book": {
+    "words": 12000,
+    "difficulty": 4,
+    "technicality": 2,
+    "quality": 30,
+    "integrity": 100,
+    "reading_mode": "linear"
   }
 }

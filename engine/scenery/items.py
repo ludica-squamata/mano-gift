@@ -63,7 +63,6 @@ class Utilizable(Tradeable):
     def __init__(self, parent, data):
         super().__init__(parent, data)
         self.tipo = "utilizable"
-        self.subtipo = "libro"
         Item_Group.add(self.nombre, self, self.tipo)
 
 
@@ -73,15 +72,15 @@ class Libro(Utilizable):
     difficulty = 0  # 0–100
     technicality = 0  # 0–100
     quality = 0  # calidad del libro 0–100
+    subtipo = "libro"
 
-    def __init__(self, parent, data, words=12000, difficulty=40, technicality=30, quality=75):
-        # los valores por defaulta mantienen los números originales
-        self.words = data.get('words', 12000)
-        self.difficulty = data.get('difficulty', 40)  # 0–100
-        self.technicality = data.get('technicality', 30)  # 0–100
-        self.quality = data.get('quality', 30)  # 0–100
-        self.integrity = data.get('integrity', 100)  # 0–100
-        self.reading_mode = "linear"  # linear or reference
+    def __init__(self, parent, data):
+        self.words = data['book']['words']
+        self.difficulty = data['book']['difficulty']  # 0–100
+        self.technicality = data['book']['technicality']  # 0–100
+        self.quality = data['book']['quality']  # 0–100
+        self.integrity = data['book']['integrity']  # 0–100
+        self.reading_mode = data['book']['reading_mode']  # linear or reference
         super().__init__(parent, data)
 
         # event triggers
