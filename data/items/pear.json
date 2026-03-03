@@ -5,8 +5,8 @@
   "peso": 1,
   "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/pera_32.png",
-    "item": "props/pera_32.png"
+    "prop": "items/pera_32.png",
+    "item": "items/pera_32.png"
   },
   "propiedades": [
     "stackable","sin_sombra","colocable"
