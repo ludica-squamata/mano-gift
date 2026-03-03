@@ -16,6 +16,7 @@ class ModData:
     mapas = ''
     mobs = ''
     items = ''
+    props = ''
     fd_scripts = ''
     pkg_scripts = ''
     fd_player = ''
@@ -54,6 +55,7 @@ class ModData:
             cls.mapas = root + data['folders']['mapas'] + '/'
             cls.mobs = root + data['folders']['mobs'] + '/'
             cls.items = root + data['folders']['items'] + '/'
+            cls.props = root + data['folders']['props'] + '/'
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
             cls.fd_player = root + data['folders']['player'] + '/'
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])

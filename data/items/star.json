@@ -5,8 +5,8 @@
   "peso": 2,
   "volumen": 0,
   "imagenes": {
-    "prop": "props/star.png",
-    "item": "props/star2.png",
+    "prop": "items/star.png",
+    "item": "items/star2.png",
     "high": null
   },
   "propiedades": ["sin_sombra","colocable"],

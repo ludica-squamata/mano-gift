@@ -5,8 +5,8 @@
   "peso": 1,
   "volumen": 0.0075,
   "imagenes": {
-    "prop": "props/Manzana-10.png",
-    "item": "props/Manzana-24.png",
+    "prop": "items/Manzana-10.png",
+    "item": "items/Manzana-24.png",
     "high": null
   },
   "propiedades": [

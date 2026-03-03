@@ -5,8 +5,8 @@
   "peso": 4,
   "volumen": 4,
   "imagenes": {
-    "item": "props/armor.png",
-    "prop": "props/armor.png"
+    "item": "items/armor.png",
+    "prop": "items/armor.png"
   },
   "propiedades": [
     "stackable","sin_sombra","colocable"

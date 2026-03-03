@@ -101,9 +101,6 @@ class Item(AzoeSprite):
     stackable = False
     subtipo = None
 
-    # solo los items equipables tienen un subtipo distinto de None,
-    # pero esto les permite ser comparados con otros tipos de item.
-
     is_colocable = False  # en principio.
 
     def __init__(self, parent, data):

@@ -5,8 +5,8 @@
   "peso": 0,
   "volumen": 0,
   "imagenes": {
-    "prop": "props/colmillo de monstruo.png",
-    "item": "props/colmillo de monstruo.png"
+    "prop": "items/colmillo de monstruo.png",
+    "item": "items/colmillo de monstruo.png"
   },
   "propiedades": ["sin_sombra"],
   "trading": {

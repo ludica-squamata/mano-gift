@@ -5,9 +5,9 @@
   "peso": 1,
   "volumen": 0,
   "imagenes": {
-    "prop": "props/anillo.png",
-    "item": "props/anillo.png",
-    "high": "props/anillo esmeralda-24.png"
+    "prop": "items/anillo.png",
+    "item": "items/anillo.png",
+    "high": "items/anillo esmeralda-24.png"
   },
   "propiedades": ["colocable"],
   "efecto": {
