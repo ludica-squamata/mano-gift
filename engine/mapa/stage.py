@@ -97,7 +97,6 @@ class Stage:
                              requested=[mob_req, 'props'], adress=chunk_adress)
             chunk.houses_focus = True
         self.chunks.add(chunk)
-        Renderer.camara.set_background(chunk)
 
         EventDispatcher.register_many(
             (self.save_map, 'Save'),
@@ -109,17 +108,12 @@ class Stage:
     def save_map(self, event):
         # abreviaturas
         sprs = self.chunks.sprs
-        ent = self.entradas
-
         chunk = [chunk for chunk in sprs() if chunk.houses_focus][0]  # some chunk houses the focus for sure
-        keys = [key for key in ent if ent[key] == tuple(chunk.adress)]  # search for chunks with entradas
 
-        if not len(keys):
-            data = {'info': {'stage': self.nombre, 'adress': tuple(chunk.adress), 'chunk': chunk.nombre},
-                    'use_csv': True}
-        else:
-            entrada = [key for key in self.entradas if self.entradas[key] == tuple(chunk.adress)]
-            data = {'mapa': self.nombre, 'entrada': entrada, 'use_csv': True}
+        data = {'info': {'stage': self.nombre, 'adress': tuple(chunk.adress), 'chunk': chunk.nombre}, 'use_csv': True}
+        # else:
+        # entrada = [key for key in self.entradas if self.entradas[key] == tuple(chunk.adress)]
+        # data = {'mapa': self.nombre, 'entrada': entrada, 'use_csv': True}
 
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', data)
 
@@ -128,7 +122,7 @@ class Stage:
         with open(ruta, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
             for mob in Mob_Group.contents():
-                chunk = mob.last_map
+                chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress([0, 0])
                 if mob.nombre in MobCSV:
                     row = MobCSV[mob.nombre]
 
@@ -252,14 +246,14 @@ class Stage:
 
     def get_chunk_by_adress(self, adress):
         for chunk in self.chunks.sprs():
-            if chunk.adress == adress:
+            if tuple(chunk.adress) == adress:
                 return chunk
         if len(self.chunks_csv):
             for row in self.chunks_csv:
                 data = self.chunks_csv[row]
                 if list(adress) == list(data['adress']):
                     chunk = ChunkMap(self, row, data=data, requested=['props', 'mobs'], adress=data['adress'])
-                    Renderer.camara.set_background(chunk)
+                    self.chunks.add(chunk)
                     return chunk
             return None
 
@@ -363,7 +357,8 @@ class ChunkMap(AzoeBaseSprite):
             self.add_property(item, grupo)
 
         salidas = [salida for salida in self.parent.data['salidas'] if salida['chunk_adress'] == self.adress]
-        self.set_salidas(*cargar_salidas(self, salidas))
+        if len(salidas):
+            self.set_salidas(*cargar_salidas(self, salidas))
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem')
 
