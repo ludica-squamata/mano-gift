@@ -8,3 +8,4 @@ from ._parlante import Parlante
 from ._combativo import Combativo
 from ._suertudo import Suertudo
 from ._comerciante import Comerciante
+from ._aventajado import Aventajado

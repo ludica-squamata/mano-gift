@@ -1,0 +1,33 @@
+id;name;domain;type;hab_req;char_req;affinity_requirements;resource_requirements;impact;notes
+1;Golpe Potenciado;Combat;active;null;Fuerza>=3;null;null;null;Mejora dańo físico
+2;Esquiva Instintiva;Combat;passive;null;Agilidad>=3;null;null;null;Aumenta evasión
+3;Aguante Prolongado;Combat;passive;null;Resistencia>=3;null;null;null;Reduce fatiga
+4;Anticipación;Combat;passive;2;Percepcion>=4;null;null;null;Reduce sorpresa
+5;Cazador de Monstruos;Combat;passive;1|3;null;null;null;null;Bonus vs entidades grandes
+6;Ejecutar Bestias;Combat;active;4|5;Fuerza>=5;null;null;local;Permite rematar entidades míticas
+7;Sensibilidad al Mana;Magic;passive;null;Inteligencia>=3;Any>=0,3;null;null;Detecta flujo mágico
+8;Canalización Básica;Magic;active;7;Inteligencia>=4;null;null;null;Permite lanzar magia simple
+9;Ignición;Magic;active;8;null;Rojo>=0,4;null;local;Magia de fuego básica
+10;Criomancia;Magic;active;8;null;Azul>=0,4;null;local;Magia de hielo
+11;Geomancia;Magic;active;8;null;Verde>=0,4;null;local;Manipulación de tierra
+12;Electrofonia;Magic;active;8;null;Amarillo>=0,4;null;local;Rayo y sonido
+13;Aeromancia;Magic;active;8;null;Cian>=0,4;null;local;Viento y presión
+14;Manipulación del Vacío;Magic;active;8;null;Magenta>=0,4;null;local;Distorsión espacial
+15;Umbramancia;Magic;active;8;null;Negro>=0,4;null;local;Sombras y silencio
+16;Fotomancia;Magic;active;8;null;Blanco>=0,4;null;local;Luz y energía solar
+17;Síntesis Elemental;Magic;passive;8;Inteligencia>=6;Multi>=0,5;null;null;Combina dos colores
+18;Alteración Climática;Magic;active;10&12&13;Inteligencia>=7;Multi>=0,6;null;regional;Impacta clima regional
+19;Alteración Climática;Magic;active;17;Inteligencia>=9;Multi>=0,6;null;regional;Impacta clima regional
+20;Presencia;Dominion;passive;null;Carisma>=4;null;null;null;Aumenta influencia social
+21;Lectura Emocional;Dominion;passive;20;Percepcion>=5;null;null;null;Detecta estados mentales
+22;Manipulación Psíquica;Dominion;active;21;Inteligencia>=6;null;null;local;Influencia mental directa
+23;Dominio Mental;Dominion;active;22;null;Magenta>=0,5;null;local;Control cognitivo avanzado
+24;Subyugar Entidades;Dominion;active;23;Resistencia>=5;null;null;local;Permite domar entidades mayores
+25;Conocimiento Técnico;Zeon;passive;null;Inteligencia>=4;null;null;null;Permite comprender tecnología
+26;Manipulación Zeon;Zeon;active;25;null;null;AccesoZeon;local;Usa energía Zeon
+27;Tolerancia al Vacío;Zeon;passive;26;Resistencia>=4;null;null;null;Reduce dańo por Zeon
+28;Armamento Zeon;Zeon;active;27;Fuerza>=3;null;CristalZeon;local;Armas energizadas
+29;Reactor de Compresión;Zeon;active;28;Inteligencia>=7;null;Infraestructura;local;Produce Zeon refinado
+30;Supresión de Mana Local;Zeon;active;29;null;null;AltaCompresion;local;Anula magia en área
+31;Anulación Regional;Zeon;active;30;null;null;RedZeon;regional;Colapso mágico regional
+32;Hibridación Forzada;Hybrid;active;17|29;Inteligencia>=8;Multi>=0,6;AltaCompresion;local;Interacción experimental Mana-Zeon
