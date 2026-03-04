@@ -18,7 +18,6 @@
         200
       ]
     ],
-
     "armor": [
       [
         254,
@@ -46,8 +45,10 @@
   },
   "refs": {
     "arbol": "props/arbol_escalado.png",
-    "crate": "crate.json",
-    "casa_con_puerta": "casa_con_puerta.json",
-    "armor": "armor.json"
+    "crate": "props/crate.json",
+    "casa_con_puerta": "props/casa_con_puerta.json",
+    "armor": "items/armor.json",
+    "banana": "items/banana.json",
+    "star": "items/star.json"
   }
 }

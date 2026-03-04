@@ -50,12 +50,12 @@ def load_props(parent, alldata: dict):
         data = None
         if ref in imgs:
             if imgs[ref].endswith('.json'):
-                data = abrir_json(ModData.items + alldata['refs'][ref])
+                data = abrir_json(ModData.mod_folder + alldata['refs'][ref])
             else:
                 img = cargar_imagen(ModData.graphs + imgs[ref])  # because it points to a .png file instead.
-        elif path.exists(ModData.items + ref + '.json'):
+        elif path.exists(ModData.mod_folder + ref + '.json'):
             # use ref as filename, if it exists.
-            data = abrir_json(ModData.items + ref + '.json')
+            data = abrir_json(ModData.mod_folder + ref + '.json')
         else:
             img = None  # resets the image to None to prevent wrong item duplication.
 
@@ -248,6 +248,7 @@ def cargar_salidas(chunk, all_data):
     for i, datos in enumerate(all_data):
         nombre = datos['nombre']
         stage = datos['stage']
+        accion = datos.get('accion', 'caminar')
         prop = None
         if 'prop' in datos and datos['prop'] is not None:
             prop = Prop_Group[datos['prop'].capitalize()]
@@ -255,7 +256,6 @@ def cargar_salidas(chunk, all_data):
             rect = Rect(0, 0, *prop.rect.size)
             rect.center = prop.rect.bottomright
         else:
-            accion = 'caminar'
             rect = Rect(datos['rect'])
 
         entrada = datos['entrada']
