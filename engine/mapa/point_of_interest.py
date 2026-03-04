@@ -16,7 +16,7 @@ class PointOfInterest(AzoeSprite):
 
     @staticmethod
     def _create():
-        fuente = font.SysFont('Verdanab', 30)
+        fuente = font.Font('engine/libs/Verdanab.ttf', 30)
         render = fuente.render('!', True, (255, 215, 0))
         return render
 

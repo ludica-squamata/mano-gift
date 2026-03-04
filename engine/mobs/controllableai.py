@@ -115,7 +115,7 @@ class ControllableAI(EventAware):
                         self.deregister()
                         LootingCircularMenu(self, self.target)
 
-                elif hasattr(self.target, 'show_description'):
+                elif hasattr(self.target, 'show_description') and self.target.accionable is False:
                     self.target.show_description()
                     self.entity.detener_movimiento()
                     self.deregister()
@@ -123,7 +123,7 @@ class ControllableAI(EventAware):
         self.accion = False
 
     def __repr__(self):
-        return 'Controllable AI ({})'.format(self.entity.nombre)
+        return f'Controllable AI ({self.entity.nombre})'
 
     def __eq__(self, other):
         # it should be other.name, but "other" in this case is the string "name"

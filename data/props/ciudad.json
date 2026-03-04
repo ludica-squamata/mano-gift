@@ -1,0 +1,19 @@
+{
+  "tipo": "estructura_compuesta",
+  "nombre": "ciudad",
+  "componentes": {
+    "imagen": [
+      [0,0,1]
+    ],
+    "colisiones": [
+      [16,16,0]
+    ]
+  },
+  "referencias": {
+    "imagen": "props/ciudad.png",
+    "colisiones": "props/ciudad_colisiones.png"
+  },
+  "width": 608,
+  "height": 619,
+  "proyecta_sombra": false
+}

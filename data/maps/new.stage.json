@@ -64,7 +64,11 @@
   ],
   "refs": {
     "arbol": "props/arbol escalado 2.png",
-    "Huevo": "egg.json"
+    "light_post": "props/light_post.json",
+    "Huevo": "items/egg.json",
+    "Star": "items/star.json",
+    "Manzana": "items/manzana.json",
+    "Cofre": "props/cofre.json"
   },
   "ambiente": "exterior",
   "world_stage": false,

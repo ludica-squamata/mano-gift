@@ -39,9 +39,12 @@ class Camara:
 
     @classmethod
     def add_real(cls, obj):
-        cls.real.add(obj)
+        if obj not in cls.real.sprs():
+            cls.real.add(obj)
         if obj not in cls.visible:
             cls.visible.add(obj, layer=obj.z)
+        else:
+            cls.update_sprites_layer()
 
     @classmethod
     def add_visible(cls, obj):

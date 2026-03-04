@@ -101,9 +101,6 @@ class Item(AzoeSprite):
     stackable = False
     subtipo = None
 
-    # solo los items equipables tienen un subtipo distinto de None,
-    # pero esto les permite ser comparados con otros tipos de item.
-
     is_colocable = False  # en principio.
 
     def __init__(self, parent, data):
@@ -111,12 +108,11 @@ class Item(AzoeSprite):
         self.nombre = data['nombre']
         self.peso = data['peso']
         self.volumen = data['volumen']
-        self.efecto_des = data.get('efecto', {}).get('des', '')
+        self.efecto_des = data.get('des', '')
         self.stackable = 'stackable' in data['propiedades']
         self.data = data
         self.peso = self.data['peso']
         self.volumen = self.data['volumen']
-        self.efecto_des = self.data.get('efecto', {}).get('des', '')
         self.stackable = 'stackable' in self.data['propiedades']
         self.is_colocable = 'colocable' in self.data['propiedades']
         imagen = cargar_imagen(join(ModData.graphs, self.data['imagenes']['item']))
