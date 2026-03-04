@@ -1,10 +1,11 @@
 from engine.globs import Prop_Group, ModData, Tiempo, Tagged_Items, Mob_Group
-from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES
+from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, COLOR_COLISION
 from engine.misc.resources import abrir_json, cargar_imagen
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.circularmenus import ContainerCircularMenu
+from pygame import Rect, mask as mask_module
 from .bases import Escenografia
-from pygame import Rect
+
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
            'EstructuraCompuesta', 'Escenografia', 'Contenedor']
@@ -147,6 +148,8 @@ class Destruible(Escenografia):
 
 
 class EstructuraCompuesta(Escenografia):
+    accionable = True
+
     def __init__(self, parent, x, y, data):
         self.prop_type = 'EstructuraCompuesta'
         self.x, self.y = x, y
@@ -155,6 +158,7 @@ class EstructuraCompuesta(Escenografia):
         self.proyectaSombra = data.get('proyecta_sombra', False)
         self.props = self.build_props(parent, data, x, y)
         Prop_Group.add(self.nombre, self, self.grupo)
+        self.accion = 'entrar'
 
         super().__init__(parent, x, y, data=data, rect=self.rect)
 
@@ -175,13 +179,25 @@ class EstructuraCompuesta(Escenografia):
                 elif ruta.endswith('.png'):
                     imagen = ruta
 
-                if not self.proyectaSombra:
+                if nombre == 'colisiones':
+                    ruta = ModData.graphs + imagen
+                    self.mask = mask_module.from_threshold(cargar_imagen(ruta), COLOR_COLISION, [1, 1, 1, 255])
+                    parent.mask.draw(self.mask, [x, y])
+                    imagen = None
+
+                elif not self.proyectaSombra:
                     propdata['propiedades'].append('sin_sombra')
 
-                prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
-                props.append(prop)
+                if imagen is not None:
+                    prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
+                    props.append(prop)
 
         return props
+
+    def action(self, entity):
+        # acá debería iniciar una animación del mob trepando.
+        if self.salida is not None:
+            self.salida.trigger(entity, self.accion)
 
 
 class Contenedor(Operable):

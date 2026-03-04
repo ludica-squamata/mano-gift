@@ -511,7 +511,7 @@
 [6,14];510;474;546;509;511;maps/fondos/grass-tile.png;null;land;-40
 [7,14];511;475;547;510;512;maps/fondos/grass-tile.png;null;land;-40
 [8,14];512;476;548;511;513;maps/fondos/grass-tile.png;null;land;-40
-[9,14];513;477;549;512;514;maps/fondos/grass-tile.png;null;land;-40
+[9,14];513;477;549;512;514;maps/fondos/grass-tile-monticulo_alto.png;maps/colisiones/world/grass-tile-monticulo.png;land;-40
 [10,14];514;478;550;513;515;maps/fondos/grass-tile.png;null;land;-40
 [11,14];515;479;551;514;516;maps/fondos/new-world/480.png;null;beach;-40
 [12,14];516;480;552;515;517;maps/fondos/water-tile.png;null;water;-40
