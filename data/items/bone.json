@@ -1,0 +1,14 @@
+{
+  "nombre": "Hueso humano",
+  "peso": "17 kg",
+  "volumen": "285 cm^3",
+  "des": "Perteneció a un adulto humano.",
+  "imagenes": {
+    "prop": null,
+    "item": "props/bone.png",
+    "high": "props/bone.png"
+  },
+  "propiedades": [
+    "stackable","sin_sombra"
+  ]
+}
