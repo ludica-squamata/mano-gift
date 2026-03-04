@@ -21,6 +21,7 @@ class MenuDebug(Menu):
                 'accion': self.elegir_mapa,
                 'arriba': lambda: self.elegir_opcion('arriba'),
                 'abajo': lambda: self.elegir_opcion('abajo'),
+                'contextual': self.cancelar,
             },
             'hold': {
                 'arriba': lambda: self.elegir_opcion('arriba'),
@@ -38,7 +39,10 @@ class MenuDebug(Menu):
         ruta = os.path.join(Config.savedir, player_name + '.json')
         if os.path.exists(ruta):
             data = abrir_json(ruta)
-            data['info']['stage'] = selected.item
+            if 'info' not in data:
+                data['info'] = {'stage': selected.item, "chunk": "", "adress": ""}
+            else:
+                data['info']['stage'] = selected.item
             mapa = self.mapas[selected.item]
             entrada = choice(mapa['entradas'])
             data['entrada'] = entrada

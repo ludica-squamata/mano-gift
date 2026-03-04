@@ -4,15 +4,15 @@
   "subtipo": "consumible",
   "peso": 2,
   "volumen": 0,
+  "des": "Aumenta tu carisma en 2.",
   "imagenes": {
-    "prop": "props/star.png",
-    "item": "props/star2.png",
+    "prop": "items/star.png",
+    "item": "items/star2.png",
     "high": null
   },
   "propiedades": ["sin_sombra","colocable"],
   "dialog": "star",
   "efecto": {
-    "des": "Aumenta tu carisma en 2.",
     "stat": "Carisma",
     "mod": 2,
     "method": "incremental"

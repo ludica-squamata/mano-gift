@@ -4,14 +4,14 @@
   "subtipo": "accesorio",
   "peso": 1,
   "volumen": 0,
+  "des": "Tiene engarzado una esmeralda.",
   "imagenes": {
-    "prop": "props/anillo.png",
-    "item": "props/anillo.png",
-    "high": "props/anillo esmeralda-24.png"
+    "prop": "items/anillo.png",
+    "item": "items/anillo.png",
+    "high": "items/anillo esmeralda-24.png"
   },
   "propiedades": ["colocable"],
   "efecto": {
-    "des": "Tiene engarzado una esmeralda.",
     "stat": "Carisma",
     "equipo": "anillo",
     "mod": 2,

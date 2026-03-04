@@ -51,7 +51,6 @@ class EngineData:
         if mob is not None:
             adress = cls.mapas[stage].entradas[entrada]
             chunk = cls.mapas[stage].get_chunk_by_adress(adress)
-            chunk.add_property(mob, 2)
             mob.set_parent_map(chunk)
 
         for entry in cls.transient_mobs:
@@ -98,13 +97,13 @@ class EngineData:
 
         if Renderer.camara.is_focus(mob):
             Renderer.camara.clear()
+            Renderer.set_focus(mob)
             new_stage = cls.setear_mapa(stage, entrada, mob=mob)
             SeasonalYear.propagate()
             x, y = new_stage.posicion_entrada(entrada)
             adress = new_stage.entradas[entrada]
             chunk = new_stage.get_chunk_by_adress(adress)
             Renderer.camara.set_background(chunk)
-            Renderer.set_focus(mob)
             Renderer.camara.focus.ubicar_en_mapa(x, y)
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
@@ -190,20 +189,24 @@ class EngineData:
         else:
             raise NotImplementedError('savefile format is invalid')
 
+        adress = stage.entradas[data['entrada']]
+        chunk = stage.get_chunk_by_adress(adress)
+        Renderer.camara.set_background(chunk)
+
         SeasonalYear.propagate()
 
         focus = stage.get_entitiy_from_my_chunks(data['focus'])
         exists = stage.exists_within_my_chunks(data['focus'], 'mobs')
-        map_data = stage.data.copy()
+        # map_data = stage.data.copy()
         if focus is None and not exists:
-            adress = map_data['entradas'][data['entrada']]['adress']
-            mapa = stage.get_chunk_by_adress(adress)
+            # adress = map_data['entradas'][data['entrada']]['adress']
+            # # mapa = stage.get_chunk_by_adress(adress)
             datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}
             datos.update({'entradas': stage.data['entradas']})
             datos.update({'refs': {data['focus']: ModData.fd_player + data['focus'] + '.json'}})
-            focus, grupo = load_mobs(mapa, datos)[0]
+            focus, grupo = load_mobs(chunk, datos)[0]
 
-            mapa.add_property(focus, grupo)
+            chunk.add_property(focus, grupo)
 
         Renderer.set_focus(focus)
         Sun.update()

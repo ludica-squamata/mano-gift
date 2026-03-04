@@ -56,6 +56,8 @@ class Salida:
 class SpriteSalida(AzoeSprite):
     """Intented only for debugging"""
 
+    accionable = False
+
     def __init__(self, parent, nombre, x, y, w, h, color):
         img = Surface((w, h))
         img.fill(color)

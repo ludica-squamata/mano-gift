@@ -361,10 +361,23 @@
     {
       "stage": "anti-new-world","rect": [0,400,800,32],"direcciones": ["abajo"],
       "chunk_adress": [35,20],"nombre": "Sur-#35","entrada": "684'"
+    },
+    {
+      "stage": null,"rect": [294,560,60,64],"accion": "enter","entrada": null,
+      "chunk_adress": [10,14],"nombre": "entrada_ciudad","direcciones": []
     }
   ],
-  "chunks_csv": "new-world.chunks2.csv",
+  "chunks_csv": "new-world.chunks.csv",
   "puntos_de_interes_para_la_IA": [],
+  "props": {
+    "ciudad": {
+      "chunk": [10,14],
+      "instances": [[16,16]]
+    }
+  },
+  "refs": {
+    "ciudad": "props/ciudad.json"
+  },
   "ambiente": "exterior",
   "world_stage": true,
   "zoom_level": "world",

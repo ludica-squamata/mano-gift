@@ -5,8 +5,8 @@
   "peso": 0,
   "volumen": 0,
   "imagenes": {
-    "prop": "props/ojo de monstruo.png",
-    "item": "props/ojo de monstruo.png",
+    "prop": "items/ojo de monstruo.png",
+    "item": "items/ojo de monstruo.png",
     "high": null
   },
   "propiedades": ["sin_sombra"],

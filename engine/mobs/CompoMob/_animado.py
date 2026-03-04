@@ -1,7 +1,9 @@
 from engine.globs import Tiempo, COLOR_COLISION, ModData
 from engine.misc.resources import split_spritesheet
+from pygame import mask, Surface, SRCALPHA
 from ._movil import Movil
-from pygame import mask
+from os.path import join
+from os import listdir
 
 
 class Animado(Movil):  # necesita Movil para tener dirección
@@ -45,6 +47,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
         super().__init__(parent, *args, **kwargs)
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6
+        self.blinking_eyes = {'front': {}, 'right': {}, 'left': {}}
 
     @staticmethod
     def cargar_alpha(ruta_imgs: str, seq: list):
@@ -93,7 +96,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
         self.image = self.imagen_n(key)
 
     def animate_standing_position(self):
-        """It rotates the body to align it with the head at the same direction"""
+        """Rotates the body to align it with the head at the same direction"""
         orientacion = None
         self.timer_rotacion += 1
         if self.timer_rotacion % 120 == 0 and self.head_direction != 'front':
@@ -276,6 +279,53 @@ class Animado(Movil):  # necesita Movil para tener dirección
         self.head_direction = head_direction
         self.images = self.heads[self.head_direction]  # front, left or right
 
+    def animar_parpadeo(self, command: str):
+        """command might be squint; blink, or open"""
+        full_command, direccion = '',''
+        if self.head_direction == 'front':
+            if self.body_direction == 'abajo':
+                full_command = f'front_{command}'
+                direccion = 'front'
+            elif self.body_direction == 'izquierda':
+                full_command = f'left_{command}'
+                direccion = 'left'
+            elif self.body_direction == 'derecha':
+                full_command = f'right_{command}'
+                direccion = 'right'
+
+        if len(direccion):
+            if full_command in self.blinking_eyes[direccion]:
+                image = self.blinking_eyes[direccion][full_command]
+                self.image.blit(image, [0, 0])
+
+    def cargar_parpadeo(self):
+        front_names = ['front_open', 'left_squint', 'left_blink', 'right_squint', 'right_blink', 'front_blink']
+        front_index = [0, 1, 2, 3, 7, 11]
+        right_names = ['right_open', 'right_squint', 'right_blink']
+        right_index = [4, 5, 6]
+        left_names = ['left_open', 'left_squint', 'left_blink']
+        left_index = [8, 9, 10]
+        template = self.data['imagenes']['idle'].lstrip('/mobs/imagenes').rstrip('idle_walk_body.png')
+        spritesheet = None
+        for file in listdir(join(ModData.graphs, 'mobs', 'imagenes')):
+            if 'blinking' in file and template in file:
+                ruta = join(ModData.graphs, 'mobs', 'imagenes', file)
+                spritesheet = split_spritesheet(ruta)
+                break
+        if spritesheet is not None:
+            for i, key in enumerate(front_names):
+                self.blinking_eyes['front'][key] = spritesheet[front_index[i]]
+
+            squint = Surface([32, 32], SRCALPHA)
+            squint.blit(spritesheet[1].subsurface(0, 0, 16, 32), [1, 0])
+            squint.blit(spritesheet[3].subsurface(16, 0, 16, 32), [17, 0])
+            self.blinking_eyes['front']['front_squint'] = squint
+
+            for i, key in enumerate(right_names):
+                self.blinking_eyes['right'][key] = spritesheet[right_index[i]]
+            for i, key in enumerate(left_names):
+                self.blinking_eyes['left'][key] = spritesheet[left_index[i]]
+
     def cambiar_direccion(self, direccion=None):
         super().cambiar_direccion(direccion)
         self.body_direction = direccion
@@ -296,6 +346,13 @@ class Animado(Movil):  # necesita Movil para tener dirección
             self.animate_walking_head_orientation()
         else:
             self.animate_standing_position()
+        if self.timer_rotacion == 240:
+            self.animar_parpadeo('squint')
+        elif self.timer_rotacion == 320:
+            self.animar_parpadeo('blink')
+        elif self.timer_rotacion == 420:
+            self.animar_parpadeo('open')
+            self.timer_rotacion = 0
 
     def detener_movimiento(self):
         super().detener_movimiento()

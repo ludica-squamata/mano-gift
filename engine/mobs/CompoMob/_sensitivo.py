@@ -20,10 +20,13 @@ class Sight(AzoeBaseSprite):
         rect = image.get_rect()
         super().__init__(parent, 'vision', image, rect)
         self.field = SightSprite(self.parent, image, 0, 0)
+        self.add_field_to_render()
+        self.field.transform(self.translate())
+
+    def add_field_to_render(self):
         if DEBUG_VISION is True and 'pydevd' in sys.modules:
             if self.field not in Renderer.camara.real.sprites():
                 Renderer.camara.add_real(self.field)
-        self.field.transform(self.translate())
 
     @staticmethod
     def _create(largo):
@@ -65,6 +68,7 @@ class Sight(AzoeBaseSprite):
 
     def __call__(self):
         """Realiza detecciones con la visión del mob"""
+        self.add_field_to_render()
         self.field.update()
         direccion = self.translate()
         if direccion != self.ultima_direccion:

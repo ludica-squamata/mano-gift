@@ -57,12 +57,14 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, Lector, ShadowSprite):
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
         self['raza'] = data.get('raza', 'human')
+
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
             Mob_Group[self.id] = self
         if 'occupation' in data:
             self['occupation'] = data['occupation']
-
+        if self['raza'] == 'human':
+            self.cargar_parpadeo()
     def __repr__(self):
         return f"Mob {self['nombre']}"
 

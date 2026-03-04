@@ -5,8 +5,8 @@
   "peso": 0,
   "volumen": 0,
   "imagenes": {
-    "prop": "props/montón de baba verde.png",
-    "item": "props/montón de baba verde.png"
+    "prop": "items/montón de baba verde.png",
+    "item": "items/montón de baba verde.png"
   },
   "propiedades": ["sin_sombra"],
   "trading": {

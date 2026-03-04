@@ -4,9 +4,10 @@
   "subtipo": "libro",
   "peso": 0,
   "volumen": 0,
+  "des": "Esta escrito en lenguaje desconocido.",
   "imagenes": {
-    "prop": "props/libro rojo-prop.png",
-    "item": "props/libro rojo-item.png"
+    "prop": "items/libro rojo-prop.png",
+    "item": "items/libro rojo-item.png"
   },
   "propiedades": [
     "sin_sombra","colocable"
