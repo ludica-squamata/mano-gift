@@ -4,6 +4,7 @@
   "subtipo": "utilizable",
   "peso": 0,
   "volumen": 0,
+  "des": "Esta escrito en lenguaje desconocido.",
   "imagenes": {
     "prop": "items/libro rojo-prop.png",
     "item": "items/libro rojo-item.png"

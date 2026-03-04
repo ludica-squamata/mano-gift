@@ -4,6 +4,7 @@
   "subtipo": "consumible",
   "peso": 1,
   "volumen": 0.0075,
+  "des": "Parece haber sido puesto por una enorme gallina.",
   "imagenes": {
     "prop": "items/egg_10.png",
     "item": "items/egg_32.png",
@@ -13,7 +14,6 @@
     "stackable","sin_sombra","colocable"
   ],
   "efecto": {
-    "des": "Parece haber sido puesto por una enorme gallina.",
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"

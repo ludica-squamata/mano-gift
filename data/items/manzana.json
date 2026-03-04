@@ -4,6 +4,7 @@
   "subtipo": "consumible",
   "peso": 1,
   "volumen": 0.0075,
+  "des": "Deliciosa y brillante.",
   "imagenes": {
     "prop": "items/Manzana-10.png",
     "item": "items/Manzana-24.png",
@@ -13,7 +14,6 @@
     "stackable","sin_sombra","colocable"
   ],
   "efecto": {
-    "des": "Deliciosa y brillante.",
     "stat": "Salud",
     "mod": 100,
     "method": "percentage"
