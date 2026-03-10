@@ -107,8 +107,10 @@ class Discurso(EventAware):
                 elif node['to'] == locutor:
                     node['to'] = mob_name
 
-                if 'reqs' in node and 'loc' in node['reqs'] and node['reqs']['loc'] == locutor:
-                    node['reqs']['loc'] = mob_name
+                if 'reqs' in node:
+                    for i, req in enumerate(node['reqs']):
+                        if 'loc' in req and req['loc'] == locutor:
+                            node['reqs'][i]['loc'] = mob_name
 
                 if 'reqs' in file['head']:
                     for req_key in file['head']['reqs']:
@@ -155,6 +157,8 @@ class Dialogo(Discurso):
     write_flag = True  # flags the conversation so it wouldn't be repeated.
 
     paused = False  # if True, the dialog is paused, meaning it won't continue until is unpaused.
+
+    trade = None
 
     def __init__(self, arbol, *locutores):
         super().__init__()
@@ -246,36 +250,62 @@ class Dialogo(Discurso):
             else:
                 self.hablar()
 
-    @staticmethod
-    def supress_element(condiciones, locutor):
+    def supress_element(self, condiciones, locutor):
         supress = False
+        for condicion in condiciones:
+            if "attrs" in condicion:
+                for attr in condicion['attrs']:
+                    loc_attr = locutor[attr]
+                    operador, target = condicion['attrs'][attr]
+                    if operador == "<":
+                        supress = not loc_attr < target
+                    elif operador == ">":
+                        supress = not loc_attr > target
+                    elif operador == "=":
+                        supress = not loc_attr == target
+                    elif operador == "<=":
+                        supress = not loc_attr <= target
+                    elif operador == ">=":
+                        supress = not loc_attr >= target
+                    elif operador == '!=':
+                        supress = not loc_attr != target
+                    else:
+                        raise ValueError("El operador '" + operador + "' es inválido")
 
-        if "attrs" in condiciones:
-            for attr in condiciones['attrs']:
-                loc_attr = locutor[attr]
-                operador, target = condiciones['attrs'][attr]
-                if operador == "<":
-                    supress = not loc_attr < target
-                elif operador == ">":
-                    supress = not loc_attr > target
-                elif operador == "=":
-                    supress = not loc_attr == target
-                elif operador == "<=":
-                    supress = not loc_attr <= target
-                elif operador == ">=":
-                    supress = not loc_attr >= target
-                elif operador == '!=':
-                    supress = not loc_attr != target
-                else:
-                    raise ValueError("El operador '" + operador + "' es inválido")
+            if "objects" in condicion:
+                for obj in condicion['objects']:
+                    supress = supress or obj not in locutor.inventario
 
-        if "objects" in condiciones:
-            for obj in condiciones['objects']:
-                supress = supress or obj not in locutor.inventario
+            if "flags" in condicion:
+                for flag in condicion['flags']:
+                    supress = supress or flag not in Game_State
 
-        if "flags" in condiciones:
-            for flag in condiciones['flags']:
-                supress = supress or flag not in Game_State
+            if "comparison" in condicion:
+                comp = condicion['comparison']
+                if comp == ">":
+                    pass
+                elif comp == ">=":
+                    pass
+                elif comp == "<=":
+                    pass
+                elif comp == '==':
+                    pass
+                elif comp == '!=':
+                    pass
+                elif comp == "<":
+
+                    if locutor.nombre == condicion['loc']:
+                        left = getattr(locutor, condicion['left'])["$"]
+                        right = 1
+                        if self.trade.name == "Selling CM":
+                            right = self.trade.last_on_spot.item.data['trading']['buy_price']
+                        elif self.trade.name == "Buying CM":
+                            right = self.trade.last_on_spot.item.data['trading']['sell_price']
+                        supress = not left < right
+
+            if "op" in condicion:
+                op = f'{condicion['op'].title()}ing CM'
+                supress = not self.trade.name == op
 
         return supress
 
@@ -288,7 +318,11 @@ class Dialogo(Discurso):
                 loc = self.locutores[self.sel.emisor]
                 rec = self.locutores[self.sel.receptor]
                 loc.enviar_item(self.sel.item, rec)
-            self.arbol.set_chosen(self.next)
+            if self.next.is_exclusive:
+                self.arbol._future = self.next
+            else:
+                self.arbol.set_chosen(self.next)
+
             self.SelMode = False
             self.frontend.exit_sel_mode()
             self.emit_sound_event(self.locutores[actual.emisor])
@@ -296,6 +330,7 @@ class Dialogo(Discurso):
 
         elif type(actual) is BranchArray:
             if actual.is_exclusive:
+                # EventDispatcher.process()
                 choices = actual.array.copy()
                 default = None
                 for i, choice in enumerate(choices):
@@ -308,7 +343,8 @@ class Dialogo(Discurso):
                 # podría hacerse con list comprehension, pero queda demasiado larga la linea.
                 for choice in choices:
                     reqs = choice.reqs
-                    sujeto = self.locutores[reqs['loc']]
+                    sujeto = [x for x in [req.get('loc', '') for req in reqs] if x][0]
+                    sujeto = self.locutores[sujeto]
                     # vamos eliminando todos los que tengan requisitos incumplidos
                     if not self.supress_element(reqs, sujeto):
                         filtered.append(choice)
@@ -321,6 +357,7 @@ class Dialogo(Discurso):
                     # si nos quedamos sin elementos con requisitos, caemos al default.
                     choice = default
 
+                choice.reqs = None
                 self.arbol.set_chosen(choice)
                 if choice.event is not None:
                     choice.post_event()
@@ -333,7 +370,7 @@ class Dialogo(Discurso):
                 self.hablar()
                 self.emit_sound_event(self.locutores[actual.emisor])
 
-            elif self.SelMode is False:
+            elif not self.SelMode:
                 loc = self.locutores[actual.emisor]
 
                 for nodo in actual:
@@ -425,6 +462,7 @@ class Dialogo(Discurso):
         for panel in [self.objects_panel, self.themes_panel]:
             if panel.menu is not None:
                 panel.menu.salir()
+        EventDispatcher.trigger('Ending Dialog', self, {'value': True})
 
         if self.write_flag:
             Game_State.set2(f'dialog.{self.about}.disabled')

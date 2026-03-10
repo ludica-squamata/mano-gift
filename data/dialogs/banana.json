@@ -30,7 +30,7 @@
       "txt": "Nosotros los humanos también podemos"
     },
     "3": {
-      "leads": 4,"from": "heroe","to": "commoner","reqs": {"flags": ["dialog.banana.uno"]},
+      "leads": 4,"from": "heroe","to": "commoner","reqs": [{"flags": ["dialog.banana.uno"]}],
       "txt": "Este nodo tiene una flag como requisito, y si no se cumple, no se muestra"
     },
     "4": {
