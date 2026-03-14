@@ -57,6 +57,7 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, ShadowSprite):
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
         self['raza'] = data.get('raza', 'human')
+        self['hashed'] = data.get('hashed')  # hash value de todas las características menos el nombre.
 
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
