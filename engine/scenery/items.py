@@ -63,8 +63,34 @@ class Utilizable(Tradeable):
     def __init__(self, parent, data):
         super().__init__(parent, data)
         self.tipo = "utilizable"
-        self.subtipo = "libro"
         Item_Group.add(self.nombre, self, self.tipo)
+
+
+class Libro(Utilizable):
+    # inicialización
+    words = 0  # aribitary
+    difficulty = 0  # 0–100
+    technicality = 0  # 0–100
+    quality = 0  # calidad del libro 0–100
+    subtipo = "libro"
+
+    def __init__(self, parent, data):
+        self.words = data['book']['words']
+        self.difficulty = data['book']['difficulty']  # 0–100
+        self.technicality = data['book']['technicality']  # 0–100
+        self.quality = data['book']['quality']  # 0–100
+        self.integrity = data['book']['integrity']  # 0–100
+        self.reading_mode = data['book']['reading_mode']  # linear or reference
+        super().__init__(parent, data)
+
+        # event triggers
+        self.on_open = []
+        self.on_read_tick = []
+        self.on_finish = []
+
+    def integrity_loss_per_minute(self):
+        loss = 0.01
+        self.integrity = max(0, self.integrity - loss)
 
 
 class Colocable(Item):
