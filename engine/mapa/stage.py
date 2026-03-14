@@ -505,15 +505,16 @@ class ChunkMap(AzoeBaseSprite):
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos,
-                                requested=['csv', 'props'], adress=(ax, ay))
+                                requested=['csv', 'mobs', 'props'], adress=(ax, ay))
                 self.parent.set_special_adress(ax, ay, mapa)
             elif self.limites[ady] in self.parent.chunks_csv:
                 name = self.limites[ady]
                 data = self.parent.chunks_csv[name]
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data,
-                                requested=['csv', 'props'], adress=data['adress'])
+                                requested=['csv', 'mobs', 'props'], adress=data['adress'])
             else:
-                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, requested=['csv', 'props'], adress=(ax, ay))
+                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy,
+                                requested=['csv', 'mobs', 'props'], adress=(ax, ay))
 
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)
