@@ -1,0 +1,7 @@
+{
+  "nombre": "Árbol Escalado",
+  "tipo": "transisional",
+  "spritesheet": "props/arbol escalado estaciones.png",
+  "propiedades": [],
+  "colisión": [32,110,32,32]
+}

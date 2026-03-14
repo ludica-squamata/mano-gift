@@ -1,0 +1,7 @@
+{
+  "inventario_inicial": {
+    "GreenBlob": {"Monton de baba verde": 1,"Colmillo de monstruo": 5,"Ojo de Monstruo": 1},
+    "Shopkeeper": {"Manzana": 10,"Pera": 10,"Banana": 10,"Libro rojo": 1,"Dinero": 10}
+  },
+  "items_iniciales": {"Libro rojo": 1}
+}

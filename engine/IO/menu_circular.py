@@ -21,6 +21,12 @@ class BaseElement(EventAware, AzoeBaseSprite):
         self.functions['tap'].update({
             'accion': self.do_action
         })
+        self.functions['hold'].update({
+            'accion': self.do_hold_action
+        })
+        self.functions['release'].update({
+            'accion': self.do_release_action
+        })
         self.deregister()
 
     def __repr__(self):
@@ -63,6 +69,12 @@ class BaseElement(EventAware, AzoeBaseSprite):
                 self.parent.forward()
             elif self.check_placement():
                 self.command()
+
+    def do_hold_action(self):
+        return NotImplemented
+
+    def do_release_action(self):
+        return NotImplemented
 
     def update(self):
         self.circular(self.delta)

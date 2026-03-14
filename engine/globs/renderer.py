@@ -1,5 +1,5 @@
+from pygame import Rect, draw, display, image, mouse, font, sprite, Surface, SCALED, mask as mask_module, BLEND_RGBA_MIN
 from engine.globs.event_dispatcher import EventDispatcher
-from pygame import Rect, draw, display, image, mouse, font, sprite, Surface, SCALED
 from engine.globs.azoe_group import AzoeGroup
 from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
 from .tiempo import Tiempo, SeasonalYear
@@ -79,6 +79,7 @@ class Camara:
         if cls.focus is not None:
             cls.focus.change_last_map(spr)
         if spr.latitude is not None:
+            Sun.init(spr.latitude)
             SeasonalYear.set_latitude(spr.latitude)
             Sun.set_latitude(spr.latitude)
 
@@ -265,9 +266,56 @@ class Camara:
 
     @classmethod
     def draw(cls, fondo):
-        ret = cls.bgs.draw(fondo)
-        ret += cls.visible.draw(fondo)
-        ret += cls.nchs.draw(fondo)
+        ret = []
+        for bg in cls.bgs.sprs():
+            if cls.rect.colliderect(bg.rect):
+                ret += fondo.blit(bg.image, bg.rect)
+
+        shadow_mask = mask_module.Mask(fondo.get_size())
+        real_sprites = []
+        shadows = []
+
+        for spr in cls.visible.sprs():
+            if cls.rect.colliderect(spr.rect):
+                if spr.tipo == "sombra":
+                    shadow_mask.draw(spr.mask, spr.rect.topleft)
+                    shadows.append(spr)
+                else:
+                    real_sprites.append(spr)
+
+        if shadows:
+            shadow_surface = shadow_mask.to_surface(
+                setcolor=(0, 0, 0, 150),
+                unsetcolor=(0, 0, 0, 0)
+            )
+            fondo.blit(shadow_surface, (0, 0))
+
+        for spr in real_sprites:
+            if hasattr(spr, "exit_overlay"):
+                spr.exit_overlay()
+            for shadow in shadows:
+                if shadow.parent is spr:
+                    continue
+
+                off = (
+                    spr.rect.x - shadow.rect.x,
+                    spr.rect.y - shadow.rect.y
+                )
+                area = shadow.mask.overlap_area(spr.mask, off)
+                if spr.z < shadow.z and area >= spr.mask.count() and not spr.in_shadows and spr.can_overlay:
+                    spr.in_shadows = True
+                    break
+
+            if spr.can_overlay:
+                if spr.in_shadows:
+                    spr.add_overlay()
+
+            ret += fondo.blit(spr.image, spr.rect)
+
+        for nch in cls.nchs.sprs():
+            if cls.rect.colliderect(nch.rect):
+                ret += fondo.blit(nch.image, nch.rect)
+
         if 'pydevd' in sys.modules:
             draw.line(fondo, (0, 100, 255), (cls.rect.centerx, 0), (cls.rect.centerx, cls.h))
             draw.line(fondo, (0, 100, 255), (0, cls.rect.centery), (cls.w, cls.rect.centery))

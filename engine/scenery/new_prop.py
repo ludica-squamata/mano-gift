@@ -24,6 +24,8 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
         prop = EstructuraCompuesta(parent, x, y, data).props
     elif tipo == 'contenedor':
         prop = Contenedor(parent, x, y, z, data)
+    elif tipo == 'transisional':
+        prop = Transicional(parent, x, y, data)
     else:
         prop = Escenografia(parent, x, y, z=z, nombre=nombre, data=data, imagen=img)
 
@@ -60,6 +62,8 @@ def new_item(parent, ruta_or_data):
         item = Accesorio
     elif subtipo == 'pocion':
         item = Pocion
+    elif subtipo == 'libro':
+        item = Libro
     elif subtipo == 'utilizable':
         item = Utilizable
 

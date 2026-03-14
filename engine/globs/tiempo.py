@@ -359,14 +359,14 @@ class SeasonalYear:
         "equatorial": {  # corresponde a latitudes entre 20ºS y 20ºN
             "summer": 12, "winter": 12, 'season_lenght': year_lenght // 2},
         "temperate": {  # corresponde a latitudes entre 30º y 60º N/S.
-            "spring": 12, "summer": 19, "fall": 12, "winter": 10, 'season_lenght': year_lenght // 4}
+            "spring": 12, "summer": 19, "autumn": 12, "winter": 10, 'season_lenght': year_lenght // 4}
     }
     latitudes = {
         'polar': [90, 70, -70, -90],
         'equatorial': [20, -20],
         'temperate': [60, 30, -30, -60]
     }
-    season_cycler = cycle(['summer', 'fall', 'winter', 'spring'])  # itertools.cycle
+    season_cycler = cycle(['summer', 'autumn', 'winter', 'spring'])  # itertools.cycle
     month_cycler = None
 
     @classmethod
@@ -440,7 +440,8 @@ class SeasonalYear:
     def propagate(cls):
         # Este trigger es para setear las timestamps en Stage.
         EventDispatcher.trigger('UpdateTime', 'SeasonalYear', {'new_daylenght': cls.day_lenght,
-                                                               'timestamps': cls.cargar_timestamps()})
+                                                               'timestamps': cls.cargar_timestamps(),
+                                                               'current_season': cls.season})
 
     @classmethod
     def cargar_timestamps(cls):

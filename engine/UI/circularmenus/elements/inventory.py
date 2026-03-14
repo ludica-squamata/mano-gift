@@ -12,6 +12,8 @@ class InventoryElement(LetterElement):
     description = None
     idx = 0
 
+    timer = 0
+
     def __init__(self, parent, item):
 
         self.item = item
@@ -48,6 +50,26 @@ class InventoryElement(LetterElement):
             self.parent.salir()
             EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo', "select": self.item.espacio})
 
+    def do_hold_action(self):
+        if self.item.subtipo == 'libro':
+            self.parent.entity.set_reading_position()
+            self.parent.entity.open_book(self.item)
+            EventDispatcher.trigger('EndDialog', self, {'layer': self.parent.layer})
+            self.timer += 1
+
+    def do_release_action(self):
+        delta_minutes = self.timer // 60
+        if self.item.reading_mode == 'linear':
+            self.parent.entity.read(self.item, delta_minutes)
+        elif self.item.reading_mode == 'reference':
+            self.parent.entity.consult(self.item, delta_minutes)
+        else:
+            raise AttributeError(f'Book {self.item.nombre} has an invalid reading mode ({self.item.reading_mode})')
+
+        self.timer = 0
+        self.parent.overwritten = True
+        self.parent.salir()
+
 
 class ColocableInventoryElement(InventoryElement):
     def command(self):
@@ -67,7 +89,7 @@ class ContainedInventoryElement(InventoryElement):
 
     def command(self):
         entity = self.parent.parent.entity  # the mob who opened the container
-        item = self.item  # the item to be trasfered
+        item = self.item  # the item to be transfered
 
         # transfers the item
         entity.inventario.agregar(item)

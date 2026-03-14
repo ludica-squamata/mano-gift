@@ -1,0 +1,60 @@
+#include spanish_morphemes.rul
+#include english_morphemes.rul
+
+//
+// Nombres de personas
+//
+
+// Género opcional, afecta la terminación del nombre
+GENDER => masculine
+       => feminine
+
+// Nombres
+FIRST  => {ROOT}{MID}{END_MASC} [50%]
+       => {ROOT}{MID}{END_FEM} [50%]
+
+END_MASC => o
+          => n
+          => r
+          => l
+
+END_FEM  => a
+          => i
+          => e
+
+// Probabilidades de nombres compuestos
+PERSON => {FIRST} {LAST}
+        => {FIRST} {FIRST} {LAST} [10%]
+        => {FIRST} {FIRST} {LAST} {LAST} [10%]
+        => {FIRST} [1%]
+
+// Apellidos
+PREFIX => de
+      => del
+      => de la
+      => van
+      => von
+      => vun
+      => di
+      => du
+
+SURNAMEEND => son
+           => ez
+           => er
+           => man
+           => ton
+           => ford
+           => sen
+           => ros
+           => rez
+           => les
+           => dias
+           => rios
+           => valle
+           => berg
+           => mont
+           => stone
+           => wood
+
+LAST => {PREFIX} {ROOT}{SURNAMEEND}
+     => {ROOT}{SURNAMEEND}

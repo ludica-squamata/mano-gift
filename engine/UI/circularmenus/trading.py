@@ -90,7 +90,7 @@ def trigger_trading_menu(event):
     if possible:
         dialogo.toggle_pause()
         dialogo.frontend.hide()
-        menu(event.origin, event.data['participants'])
+        dialogo.trade = menu(event.origin, event.data['participants'])
     else:
         arbol = dialogo.arbol
         next_node = arbol[dialogo.cant_sell]
@@ -108,6 +108,7 @@ class Trade(EventAware):
 
         self.functions['tap'].update({'accion': self.re_engage_dialog})
         EventDispatcher.register(self.concrete_trade, "Trade")
+        EventDispatcher.register(self.disengage_event, "Ending Dialog")
 
     def engage(self):
         for trader in self.parent.traders:
@@ -137,9 +138,13 @@ class Trade(EventAware):
     def set_delta(self, delta):
         self.delta = delta
 
+    def disengage_event(self, event=None):
+        if event is None or event.data['value']:
+            self.disengage()
+            self.deregister()
+
     def concrete_trade(self, event):
-        self.disengage()
-        self.deregister()
+        dialogo = self.parent.parent.parent.parent
         if event.data['value'] is True:
             buyer, seller = None, None
             if type(self.parent) is BuyingCM:
@@ -153,21 +158,21 @@ class Trade(EventAware):
             item = self.parent.actual.item
             value = item.price_buy if type(self.parent) is BuyingCM else item.price_sell
             coin = item.coin
+            dialogo.frontend.exit_sel_mode()
+            if buyer.entregar_dinero(coin, value):
+                for _ in range(self.delta):
+                    buyer.recibir_item(item)
+                    seller.vender_item(item)
+                seller.recibir_dinero(coin, value)
+                timestamp = Tiempo.clock.timestamp()
 
-            for _ in range(self.delta):
-                buyer.recibir_item(item)
-                seller.vender_item(item)
+                transactions = [
+                    {'trader': buyer.nombre, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
+                    {'trader': seller.nombre, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}]
+                EngineData.extend_trades(transactions)
 
-            buyer.entregar_dinero(coin, value)
-            seller.recibir_dinero(coin, value)
-
-            timestamp = Tiempo.clock.timestamp()
-
-            transactions = [
-                {'trader': buyer.nombre, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
-                {'trader': seller.nombre, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}
-            ]
-            EngineData.extend_trades(transactions)
+            else:
+                dialogo.frontend.show(switch=False)
 
     def __repr__(self):
         return "Trade"

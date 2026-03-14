@@ -287,7 +287,12 @@ class ChunkMap(AzoeBaseSprite):
             data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
 
         self.datos = data.copy()
-        self.limites = data['limites']
+        limites: dict = data.get('limites', None)
+        if limites is None:
+            self.limites = self.generate_checkerboard_rules(parent.data['pattern'])[nombre]
+        else:
+            self.limites = limites
+
         if adress is not None:
             self.adress = ChunkAdress(self, *adress)
         elif 'adress' in data:
@@ -295,7 +300,7 @@ class ChunkMap(AzoeBaseSprite):
         else:
             self.adress = ChunkAdress(self, 0, 0)
 
-        self.latitude = data.get('latitude', None)
+        self.latitude = data.get('latitude', self.adress.y)
 
         # these two only work if the hero has been already loaded in another map.
         if 'hero' in data.get('mobs', {}):
@@ -452,6 +457,35 @@ class ChunkMap(AzoeBaseSprite):
                 del self.limites[key]
                 self.limites[key] = value
 
+    @staticmethod
+    def generate_checkerboard_rules(pattern):
+        """
+        pattern: list of chunk names
+        returns: dict {chunk: {up,down,left,right}}
+        """
+
+        n = len(pattern)
+
+        a = n // 2  # horizontal shift
+        b = 1  # vertical shift
+
+        rules = {}
+
+        for i, chunk in enumerate(pattern):
+            up = pattern[(i + b) % n]
+            down = pattern[(i - b) % n]
+            left = pattern[(i + a) % n]
+            right = pattern[(i - a) % n]
+
+            rules[chunk] = {
+                "sup": up,
+                "inf": down,
+                "izq": left,
+                "der": right
+            }
+
+        return rules
+
     def checkear_adyacencia(self, clave: str):
         type_adyacente = type(self.limites.get(clave))
         if type_adyacente is str or type_adyacente is ChunkMap:
@@ -471,15 +505,16 @@ class ChunkMap(AzoeBaseSprite):
             if self.parent.is_this_adress_special(ax, ay):
                 name, datos = self.parent.get_special_adress_at(ax, ay)
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=datos,
-                                requested=['csv', 'props'], adress=(ax, ay))
+                                requested=['csv', 'mobs', 'props'], adress=(ax, ay))
                 self.parent.set_special_adress(ax, ay, mapa)
             elif self.limites[ady] in self.parent.chunks_csv:
                 name = self.limites[ady]
                 data = self.parent.chunks_csv[name]
                 mapa = ChunkMap(self.parent, name, dx, dy, entradas, data=data,
-                                requested=['csv', 'props'], adress=data['adress'])
+                                requested=['csv', 'mobs', 'props'], adress=data['adress'])
             else:
-                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy, requested=['csv', 'props'], adress=(ax, ay))
+                mapa = ChunkMap(self.parent, self.limites[ady], dx, dy,
+                                requested=['csv', 'mobs', 'props'], adress=(ax, ay))
 
             self.limites[ady] = mapa
             self.parent.chunks.add(mapa)

@@ -1,17 +1,7 @@
 {
-  "fondo": "maps/fondos/cuadriculado.png",
+  "fondo": "maps/fondos/pasto.png",
   "colisiones": null,
   "props": {},
-  "mobs": {
-    "Green": [[32,0]],
-    "Shopkeeper": [[64,128]],
-    "Commoner": [[96,96]]
-  },
-  "limites": {
-    "sup": "black",
-    "inf": "black",
-    "izq": "black",
-    "der": "black"
-  },
+  "mobs": {},
   "refs": {}
 }

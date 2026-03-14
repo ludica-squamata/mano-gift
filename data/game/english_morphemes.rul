@@ -1,0 +1,59 @@
+//
+// English morphemes for names
+//
+
+ROOT => Al
+    => Ben
+    => Cal
+    => Dan
+    => Ed
+    => Eli
+    => Gal
+    => Gil
+    => Hal
+    => Jon
+    => Kel
+    => Luc
+    => Mal
+    => Mar
+    => Nor
+    => Ron
+    => Sal
+    => Val
+    => Ver
+
+MID => a
+    => e
+    => i
+    => o
+    => u
+    => ai
+    => ei
+    => ia
+    => io
+    => er
+    => or
+    => ur
+    => an
+    => en
+    => in
+    => on
+
+END => a
+    => e
+    => i
+    => o
+    => n
+    => l
+    => r
+    => s
+    => en
+    => on
+    => er
+    => al
+    => el
+    => io
+    => ia
+    => es
+    => os
+    => us

@@ -53,10 +53,12 @@ class IsItNightTime(Leaf):
 class IsThereABed(Leaf):
     def process(self):
         e = self.get_entity()
+        if e.last_map is None:
+            return Failure
         points_of_interest = e.last_map.parent.points_of_interest.get(tuple(e.last_map.adress), None)
         point = []
         if points_of_interest is not None:
-            point = [point for point in points_of_interest[e.last_map.adress] if point.name == 'bed']
+            point = [point for point in points_of_interest if point.name == 'bed']
 
         if len(point):
             self.tree.set_context('bed', point[0].nodo)
@@ -70,7 +72,7 @@ class IsThereABed(Leaf):
 class GoToBed(Leaf):
     def process(self):
         bed = self.tree.get_context('bed')
-        self.tree.set_context('punto_final', Nodo(*bed))
+        self.tree.set_context('punto_final', bed)
         self.tree.set_context('in_bed', True)
         return Success
 

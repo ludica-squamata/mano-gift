@@ -9,7 +9,8 @@
     "items": "items",
     "props": "props",
     "scripts": "scripts",
-    "player": "mobs/player"
+    "player": "mobs/player",
+    "game": "game"
   },
   "caracteristicas": {
     "Fuerza": [

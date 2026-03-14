@@ -58,7 +58,7 @@
       "txt": "Puedo pagarte {coin}{price} por esto. ¿estás seguro?"
     },
     "6": {
-      "from": "heroe","to": "shopkeeper","event": "Trade","e_data": {"value": true},
+      "from": "heroe", "exclusive": [12, 13, 14],"to": "shopkeeper","event": "Trade","e_data": {"value": true},
       "txt": "Sí"
     },
     "7": {
@@ -80,6 +80,20 @@
     "11": {
       "from": "shopkeeper", "to": "heroe",
       "txt": "No tienes nada que venderme."
-    }
+    },
+    "12": {"from": "shopkeeper", "to": "heroe", "leads": 15, "reqs": [{"loc": "heroe","left": "wallet","comparison": "<"},{"op": "buy"}],
+      "txt": "No te alcanza el dinero."
+    },
+    "13": {"from": "shopkeeper", "to": "heroe", "leads": 15, "reqs": [{"loc": "shopkeeper","left": "wallet","comparison": "<"},{"op": "sell"}],
+      "txt": "No me alcanza el dinero."
+    },
+    "14": {"from": "shopkeeper", "to": "heroe",
+      "#": "es importante que el diálogo tenga donde caer al finalizar el intercambio",
+      "txt": "Muchas gracias."
+    },
+    "15": {"from": "shopkeeper", "to": "heroe",
+      "#": "Sea negativo o afirmativo.",
+      "txt": "Lo siento mucho."}
+
   }
 }

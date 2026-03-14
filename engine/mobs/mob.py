@@ -1,10 +1,10 @@
+from .CompoMob import Combativo, Autonomo, Parlante, Comerciante, Lector, Aventajado
 from engine.misc import cargar_imagen, split_spritesheet, cargar_head_anims
-from .CompoMob import Combativo, Autonomo, Parlante, Comerciante
 from engine.globs import Mob_Group, ModData
 from engine.base import ShadowSprite
 
 
-class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
+class Mob(Combativo, Autonomo, Parlante, Aventajado,Comerciante, Lector, ShadowSprite):
     accionable = False
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
     race = None  # for now, "human" or "blob". This tag allow the engine to select a mob by it's "class".
@@ -21,10 +21,10 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
         heads = g + imgs.pop('heads') if 'heads' in imgs else None
         for key in imgs:
             method, params = None, []
-            if imgs[key] is not None and heads is not None:  # este framento es para los mobs con cabeza.
+            if imgs[key] is not None and heads is not None:  # este fragmento es para los mobs con cabeza.
                 method = cargar_head_anims
                 params = [heads, g + imgs[key], dirs if key != 'atk' else atk]
-            elif heads is None:  # este otro es para los mobs que no diferencian su cueerpo de su cabeza.
+            elif heads is None:  # este otro es para los mobs que no diferencian su cuerpo de su cabeza.
                 method = self.cargar_anims
                 params = imgs[key], dirs if key != 'atk' else atk
             if method is not None and len(params):
@@ -52,11 +52,12 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
                       'left': self.idle_right_img}
         self.nombre = data['nombre']
         self.estado = 'idle'
-        image = self.images['S' + self.direccion]
+        image = self.images['S' + self.direccion]['light']
         mask = self.mascaras['S' + self.direccion]
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
         self['raza'] = data.get('raza', 'human')
+        self['hashed'] = data.get('hashed')  # hash value de todas las características menos el nombre.
 
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
         if self.id not in Mob_Group:
@@ -65,6 +66,7 @@ class Mob(Combativo, Autonomo, Parlante, Comerciante, ShadowSprite):
             self['occupation'] = data['occupation']
         if self['raza'] == 'human':
             self.cargar_parpadeo()
+
     def __repr__(self):
         return f"Mob {self['nombre']}"
 

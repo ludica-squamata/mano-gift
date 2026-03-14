@@ -21,7 +21,7 @@
     },
     "2": {
       "leads": 3,"from": "heroe","to": "commoner","item": "star",
-      "reqs": {"objects": ["Estrella"]},
+      "reqs": [{"objects": ["Estrella"]}],
       "txt": "Aquí tienes."
     },
     "3": {

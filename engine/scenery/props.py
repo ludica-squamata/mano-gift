@@ -1,14 +1,14 @@
 from engine.globs import Prop_Group, ModData, Tiempo, Tagged_Items, Mob_Group
 from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, COLOR_COLISION
-from engine.misc.resources import abrir_json, cargar_imagen
+from engine.misc.resources import abrir_json, cargar_imagen, split_spritesheet
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.circularmenus import ContainerCircularMenu
 from pygame import Rect, mask as mask_module
 from .bases import Escenografia
-
+from itertools import cycle
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
-           'EstructuraCompuesta', 'Escenografia', 'Contenedor']
+           'EstructuraCompuesta', 'Escenografia', 'Contenedor', 'Transicional']
 
 
 class Agarrable(Escenografia):
@@ -234,3 +234,99 @@ class Contenedor(Operable):
                 item = new_item(self, data)
                 self.inventario.agregar(item)
 
+
+class Transicional(Escenografia):
+    imgs_summer = None
+    imgs_autumn = None
+    imgs_winter = None
+    imgs_spring = None
+
+    current_season = 'summer'
+
+    wind_strength = 0
+    timer_animacion = 0
+    frame_animacion = 0
+
+    current_cyler = None
+
+    summer_cycler = None
+    autumn_cycler = None
+    winter_cycler = None
+    spring_cycler = None
+
+    enabled = True
+
+    def __init__(self, parent, x, y, data):
+        self.prop_type = 'Transisional'
+        self.x, self.y = x, y
+        self.frame_animacion = 1000 / 20
+        self.proyectaSombra = data.get('proyecta_sombra', False)
+        image = self.create(data['spritesheet'])
+        self.colisiones(parent, *data['colisión'])
+        super().__init__(parent, x, y, data=data, imagen=image)
+        Prop_Group.add(self.nombre, self, self.grupo)
+        EventDispatcher.register(self.set_season_images, 'UpdateTime')
+
+    def create(self, image_dir):
+        spritesheet = split_spritesheet(ModData.graphs + image_dir, 113, 136)
+        self.imgs_summer = spritesheet[0], spritesheet[4], spritesheet[8]
+        self.imgs_autumn = spritesheet[1], spritesheet[5], spritesheet[9]
+        self.imgs_winter = spritesheet[2], spritesheet[6], spritesheet[10]
+        self.imgs_spring = spritesheet[3], spritesheet[7], spritesheet[11]
+        self.summer_cycler = cycle(self.imgs_summer)
+        self.autumn_cycler = cycle(self.imgs_autumn)
+        self.winter_cycler = cycle(self.imgs_winter)
+        self.spring_cycler = cycle(self.imgs_spring)
+
+        # set the cyclers to the start of the seasons
+        next(self.summer_cycler)
+        next(self.autumn_cycler)
+        next(self.winter_cycler)
+        next(self.spring_cycler)
+
+        self.current_cyler = self.summer_cycler
+
+        return spritesheet[0]
+
+    def colisiones(self, parent, x, y, w, h):
+        mask = mask_module.Mask([w, h])
+        mask.fill()
+        parent.mask.draw(mask, [x + self.x, y + self.y])
+
+    def enable(self):
+        self.enabled = True
+
+    def disable(self):
+        self.enabled = False
+
+    def set_season_images(self, event):
+        current_season = event.data['current_season']
+        if current_season != self.current_season:
+            self.current_season = current_season
+            if self.current_season == 'summer':
+                self.current_cyler = self.summer_cycler
+                next(self.spring_cycler)  # resets the previous season's cycler
+            elif self.current_season == 'autumn':
+                self.current_cyler = self.autumn_cycler
+                next(self.summer_cycler)
+            elif self.current_season == 'winter':
+                self.current_cyler = self.winter_cycler
+                next(self.autumn_cycler)
+            elif self.current_season == 'spring':
+                self.current_cyler = self.spring_cycler
+                next(self.winter_cycler)
+
+            self.image = next(self.current_cyler)
+
+    def set_animation_framerate(self, value: int):
+        self.frame_animacion = 1000 / value
+
+    def animate(self):
+        self.timer_animacion += 1
+        if self.timer_animacion >= self.frame_animacion and self.enabled:
+            self.timer_animacion = 0
+            self.image = next(self.current_cyler)
+
+    def update(self, *args):
+        super().update(*args)
+        self.animate()

@@ -11,6 +11,7 @@ class ControllableAI(EventAware):
 
     def __init__(self, entity):
         self.entity = entity
+        self.entity['occupation'] = "hero"
         self.name = 'controllable'
         super().__init__()
         self.functions['tap'].update({

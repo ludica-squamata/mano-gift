@@ -2,6 +2,7 @@ from ._animado import Animado
 from ._suertudo import Suertudo
 from ._equipado import Equipado
 from engine.globs.event_dispatcher import EventDispatcher
+from engine.libs.mersenne_twister import random
 
 
 class Combativo(Animado, Suertudo, Equipado):
@@ -31,9 +32,9 @@ class Combativo(Animado, Suertudo, Equipado):
             x, y = self.direcciones[self.direccion]
 
             x, y = x * self['Retroceso'], y * self['Retroceso']
-            a, b = self.luck(), sprite.luck()
+            prob = self.chance(self['Ataque'], sprite['Evasión'])
 
-            if self['Ataque'] + a >= sprite['Evasión'] + b:
+            if random() < prob:
                 EventDispatcher.trigger('AttackSuccess', self.tipo, {'victim': sprite, 'attaker': self})
                 sprite.reubicar(x, y)
                 sprite.hurt(self['DañoCC'])

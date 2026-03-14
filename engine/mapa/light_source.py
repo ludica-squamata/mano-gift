@@ -12,6 +12,8 @@ class LightSource(Sprite):
     # por ejemplo para un poste con iluminacion en la punta? por defecto center
 
     encendido = False  # apaguen esas luces!
+    tipo = 'ligth source'
+    can_overlay = False
 
     # animacion???
 
