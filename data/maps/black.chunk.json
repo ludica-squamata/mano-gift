@@ -3,11 +3,5 @@
   "colisiones": null,
   "props": {},
   "mobs": {},
-  "limites": {
-    "sup": "white",
-    "inf": "white",
-    "izq": "white",
-    "der": "white"
-  },
   "refs": {}
 }

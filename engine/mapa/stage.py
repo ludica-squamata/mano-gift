@@ -287,7 +287,12 @@ class ChunkMap(AzoeBaseSprite):
             data = abrir_json(ModData.mapas + nombre + '.' + self.tipo + '.json')
 
         self.datos = data.copy()
-        self.limites = data['limites']
+        limites: dict = data.get('limites', None)
+        if limites is None:
+            self.limites = self.generate_checkerboard_rules(parent.data['pattern'])[nombre]
+        else:
+            self.limites = limites
+
         if adress is not None:
             self.adress = ChunkAdress(self, *adress)
         elif 'adress' in data:
@@ -295,7 +300,7 @@ class ChunkMap(AzoeBaseSprite):
         else:
             self.adress = ChunkAdress(self, 0, 0)
 
-        self.latitude = data.get('latitude', None)
+        self.latitude = data.get('latitude', self.adress.y)
 
         # these two only work if the hero has been already loaded in another map.
         if 'hero' in data.get('mobs', {}):
@@ -451,6 +456,35 @@ class ChunkMap(AzoeBaseSprite):
             else:
                 del self.limites[key]
                 self.limites[key] = value
+
+    @staticmethod
+    def generate_checkerboard_rules(pattern):
+        """
+        pattern: list of chunk names
+        returns: dict {chunk: {up,down,left,right}}
+        """
+
+        n = len(pattern)
+
+        a = n // 2  # horizontal shift
+        b = 1  # vertical shift
+
+        rules = {}
+
+        for i, chunk in enumerate(pattern):
+            up = pattern[(i + b) % n]
+            down = pattern[(i - b) % n]
+            left = pattern[(i + a) % n]
+            right = pattern[(i - a) % n]
+
+            rules[chunk] = {
+                "sup": up,
+                "inf": down,
+                "izq": left,
+                "der": right
+            }
+
+        return rules
 
     def checkear_adyacencia(self, clave: str):
         type_adyacente = type(self.limites.get(clave))

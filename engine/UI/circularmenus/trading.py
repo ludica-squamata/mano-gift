@@ -145,7 +145,6 @@ class Trade(EventAware):
 
     def concrete_trade(self, event):
         dialogo = self.parent.parent.parent.parent
-        dialogo.frontend.hide()
         if event.data['value'] is True:
             buyer, seller = None, None
             if type(self.parent) is BuyingCM:
@@ -172,7 +171,6 @@ class Trade(EventAware):
                     {'trader': seller.nombre, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}]
                 EngineData.extend_trades(transactions)
 
-                dialogo.cerrar()
             else:
                 dialogo.frontend.show(switch=False)
 
