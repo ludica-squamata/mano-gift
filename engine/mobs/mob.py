@@ -52,7 +52,7 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, ShadowSprite):
                       'left': self.idle_right_img}
         self.nombre = data['nombre']
         self.estado = 'idle'
-        image = self.images['S' + self.direccion]
+        image = self.images['S' + self.direccion]['light']
         mask = self.mascaras['S' + self.direccion]
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()

@@ -1,5 +1,6 @@
-from .event_dispatcher import EventDispatcher
 from .game_groups import Mob_Group, Prop_Group
+from .event_dispatcher import EventDispatcher
+from .tiempo import Tiempo, SeasonalYear
 from .game_state import Game_State
 
 
@@ -20,6 +21,7 @@ class Sun:
         EventDispatcher.register_many(
             [cls.set_lights_by_event, 'ClockAlarm'],
             [cls.set_mod_by_event, 'UpdateTime'])
+        cls.set_mod(*SeasonalYear.cargar_timestamps())
 
     @classmethod
     def set_latitude(cls, latitude, noroeste=0, noreste=6, suroeste=2, sureste=4):

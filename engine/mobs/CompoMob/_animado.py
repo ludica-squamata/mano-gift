@@ -1,5 +1,5 @@
+from engine.misc.resources import split_spritesheet, dark_overlay
 from engine.globs import Tiempo, COLOR_COLISION, ModData
-from engine.misc.resources import split_spritesheet
 from pygame import mask, Surface, SRCALPHA
 from ._movil import Movil
 from os.path import join
@@ -72,9 +72,13 @@ class Animado(Movil):  # necesita Movil para tener dirección
         for L in seq:
             for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
                 key = L + D
+                dicc[key] = {'light': None, 'dark': None}
                 idx += 1
                 if not alpha:
-                    dicc[key] = spritesheet[idx]
+                    image = spritesheet[idx]
+                    dark = dark_overlay(image)
+                    dicc[key]['light'] = image
+                    dicc[key]['dark'] = dark
                 else:
                     dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
         return dicc
@@ -93,7 +97,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
                     self.step = 'R'
 
         key = self.step + self.direccion
-        self.image = self.imagen_n(key)
+        self.image = self.imagen_n(key)[self.iluminacion]
 
     def animate_standing_position(self):
         """Rotates the body to align it with the head at the same direction"""
@@ -145,7 +149,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
         # construir la animación
         frames, alphas = [], []
         for L in ['A', 'B', 'C']:
-            frames.append(self.cmb_atk_img[L + self.direccion])
+            frames.append(self.cmb_atk_img[L + self.direccion][self.iluminacion])
 
         # iniciar la animación
         self.atk_counter += 1
@@ -159,7 +163,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 self.atk_img_index = 0
                 self.atacando = False
                 self.images = self.cmb_walk_img
-                self.image = self.images['S' + self.direccion]
+                self.image = self.images['S' + self.direccion][self.iluminacion]
 
     def accion(self):
         if self.estado == 'cmb':
@@ -277,7 +281,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     def animar_parpadeo(self, command: str):
         """command might be squint; blink, or open"""
-        full_command, direccion = '',''
+        full_command, direccion = '', ''
         if self.head_direction == 'front':
             if self.body_direction == 'abajo':
                 full_command = f'front_{command}'
@@ -326,7 +330,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
         super().cambiar_direccion(direccion)
         self.body_direction = direccion
         if not self.moviendose:
-            self.image = self.images['S' + self.direccion]
+            self.image = self.images['S' + self.direccion][self.iluminacion]
             self.step = 'S'
 
     def cambiar_direccion2(self, orientacion):
@@ -355,4 +359,4 @@ class Animado(Movil):  # necesita Movil para tener dirección
         self.cuentapasos = 0
         self.step = 'S'
         key = 'S' + self.direccion
-        self.image = self.imagen_n(key)
+        self.image = self.imagen_n(key)[self.iluminacion]

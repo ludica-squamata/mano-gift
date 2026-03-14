@@ -50,6 +50,8 @@ class ShadowSprite(AzoeSprite):
     is_fading = None
     fade_shadow = None
 
+    in_shadows = False
+
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, **kwargs)
         self._sombras = [0] * 9  # la nueva luz y sombra
@@ -58,6 +60,9 @@ class ShadowSprite(AzoeSprite):
         self._prevLuces = [0] * 9  # distinguir una lista de 0s de otra
         self.sombra = None
         self.registerd_shadows = {}
+        self.dark_overlays = {}
+        self.no_overlays = {}
+        self.can_overlay = True
         EventDispatcher.register(self.set_fading, 'ShadowFade', 'MinuteFlag')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
 
@@ -81,10 +86,28 @@ class ShadowSprite(AzoeSprite):
                 if self.alpha == 0 or self.alpha == 150:
                     self.is_fading = False
 
+    def add_overlay(self):
+        step = self.step if hasattr(self, 'step') else 'S'
+        key = step + self.direccion
+
+        if self.image is not self.images[key]['dark']:
+            self.image = self.images[key]['dark']
+            self.in_shadows = True
+        # if self.image in self.no_overlays:
+        #     self.image = self.dark_overlays[self.image]
+
+    def exit_overlay(self):
+        self.in_shadows = False
+        # if self.image in self.no_overlays:
+        #     self.image = self.no_overlays[self.image]
+
     def add_shadow(self):
         Renderer.camara.remove_obj(self.sombra)
-        if self.image not in self.registerd_shadows:
-            self.registerd_shadows[self.image] = {}
+        try:
+            if self.image not in self.registerd_shadows:
+                self.registerd_shadows[self.image] = {}
+        except TypeError:
+            pass
 
         idx = self._sombras.index(1)
         if idx not in self.registerd_shadows[self.image]:
@@ -122,14 +145,14 @@ class ShadowSprite(AzoeSprite):
         if self._sombras[4]:
             img = self.orientar_sombra(surface, "SO")
             t_surface.blit(img, (3, h_2 - 6))
-            t_surface.blit(self.dark_overlay(surface), (centerx, 0))
+            # t_surface.blit(self.dark_overlay(surface), (centerx, 0))
             _draw = mask.from_surface(t_surface, 100)
             ensombrece = True
             mascara.draw(_draw, (0, 0))
         if self._sombras[2]:
             img = self.orientar_sombra(surface, "SE")
             t_surface.blit(img, (centerx, h_2 - 4))
-            t_surface.blit(self.dark_overlay(surface), (centerx, 0))
+            # t_surface.blit(self.dark_overlay(surface), (centerx, 0))
             _draw = mask.from_surface(t_surface, 100)
             ensombrece = True
             mascara.draw(_draw, (0, 0))
@@ -182,7 +205,7 @@ class ShadowSprite(AzoeSprite):
             r = img.get_rect(centerx=w // 2, y=h - 3)
             t_surface = Surface((w, h * 2), SRCALPHA)
             t_surface.blit(img, r)
-            t_surface.blit(self.dark_overlay(surface), (0, 0))
+            # t_surface.blit(self.dark_overlay(surface), (0, 0))
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
             ensombrece = True
@@ -282,22 +305,6 @@ class ShadowSprite(AzoeSprite):
                         n = (x * h + y)
                         ax, ay = n // h, n % h
                         pxarray[ax, ay] = COLOR_SOMBRA
-
-        return pxarray.make_surface().convert_alpha()
-
-    @staticmethod
-    def dark_overlay(surface, start=0, stop=0):
-        w, h = surface.get_size()
-        pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
-        _mask = mask.from_surface(surface)
-
-        if stop == 0:
-            stop = w
-
-        for y in range(h):
-            for x in range(start, stop):
-                if _mask.get_at((x, y)):
-                    pxarray[x, y] = COLOR_SOMBRA
 
         return pxarray.make_surface().convert_alpha()
 

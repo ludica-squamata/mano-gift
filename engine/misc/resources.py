@@ -1,4 +1,4 @@
-from pygame import image, Rect, Surface, SRCALPHA
+from pygame import image, Rect, Surface, SRCALPHA, PixelArray, mask, Color, BLEND_RGBA_MULT
 import json
 
 __all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json', 'combine_mob_spritesheets',
@@ -50,25 +50,42 @@ def combine_mob_spritesheets(head_file, body_file, w=32, h=32):
     return sprites
 
 
-def cargar_anims2(frames: list, seq: list):
-    dicc = {}
+def cargar_anims2(frames: list, seq: list, dicc=None, illumin='light'):
+    dicc = {} if dicc is None else dicc
     idx = -1
     for L in seq:
         for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
             key = L + D
+            if key not in dicc:
+                dicc[key] = {}
             idx += 1
-            dicc[key] = frames[idx]
+            dicc[key][illumin] = frames[idx]
 
     return dicc
 
 
 def cargar_head_anims(ruta_heads, ruta_body, seq, request='front'):
     dicc = {}
-    sprites = combine_mob_spritesheets(ruta_heads, ruta_body)
-    dicc['front'] = sprites[0:12]  # las 12 imagenes que venimos usando hasta ahora. mirando al frente
-    dicc['left'] = sprites[12:24]  # nuevas imagenes con el mob mirando a izquierda
-    dicc['right'] = sprites[24:36]  # y a derecha.
-    return cargar_anims2(dicc[request], seq)
+    final = {}
+    dark_sprites = []
+    _sprites = combine_mob_spritesheets(ruta_heads, ruta_body)
+    sprites: list = None
+    for ilumin in ['light', 'dark']:
+        if ilumin == 'light':
+            sprites = _sprites.copy()
+
+        elif ilumin == 'dark':
+            for sprite in _sprites:
+                dark_sprites.append(dark_overlay(sprite))
+            sprites = dark_sprites.copy()
+
+        dicc['front'] = sprites[0:12]  # las 12 imagenes que venimos usando hasta ahora. mirando al frente
+        dicc['left'] = sprites[12:24]  # nuevas imagenes con el mob mirando a izquierda
+        dicc['right'] = sprites[24:36]  # y a derecha.
+
+        final = cargar_anims2(dicc[request], seq, dicc=final, illumin=ilumin)
+
+    return final
 
 
 def abrir_json(ruta, encoding='utf-8'):
@@ -95,3 +112,14 @@ def guardar_json(ruta, datos, encoding='utf-8'):
     """
     with open(ruta, 'w', encoding=encoding) as file:
         json.dump(datos, file, sort_keys=True, indent=2, separators=(', ', ': '), ensure_ascii=False)
+
+
+def dark_overlay(surface: Surface, factor=180):
+    copia = surface.copy()
+
+    dark = Surface(surface.get_size(), SRCALPHA)
+    dark.fill((factor, factor, factor, 255))
+
+    copia.blit(dark, (0, 0), special_flags=BLEND_RGBA_MULT)
+
+    return copia
