@@ -21,10 +21,10 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, ShadowSprite):
         heads = g + imgs.pop('heads') if 'heads' in imgs else None
         for key in imgs:
             method, params = None, []
-            if imgs[key] is not None and heads is not None:  # este framento es para los mobs con cabeza.
+            if imgs[key] is not None and heads is not None:  # este fragmento es para los mobs con cabeza.
                 method = cargar_head_anims
                 params = [heads, g + imgs[key], dirs if key != 'atk' else atk]
-            elif heads is None:  # este otro es para los mobs que no diferencian su cueerpo de su cabeza.
+            elif heads is None:  # este otro es para los mobs que no diferencian su cuerpo de su cabeza.
                 method = self.cargar_anims
                 params = imgs[key], dirs if key != 'atk' else atk
             if method is not None and len(params):
@@ -65,6 +65,7 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, ShadowSprite):
             self['occupation'] = data['occupation']
         if self['raza'] == 'human':
             self.cargar_parpadeo()
+
     def __repr__(self):
         return f"Mob {self['nombre']}"
 

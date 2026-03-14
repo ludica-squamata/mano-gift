@@ -1,19 +1,10 @@
 {
-  "nombre": "blue",
-  "raza": "blob",
-  "atributos": {
-    "Fuerza": 3,
-    "Carisma": 0,
-    "Agilidad": 1,
-    "Resistencia": 30,
-    "Inteligencia": 0,
-    "Percepción": 1
-  },
   "imagenes": {
     "idle": "mobs/imagenes/blue.png",
     "atk": "mobs/imagenes/blue_atk.png",
     "death": "mobs/imagenes/blue_death.png"
   },
   "alpha": "mobs/colisiones/monster_crawl.png",
+  "gender": null,
   "AI": "ai"
 }

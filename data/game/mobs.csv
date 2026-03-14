@@ -1,0 +1,8 @@
+mob;name;raza;occupation;fuerza;agilidad;resistencia;carisma;inteligencia;percepción
+green;GreenBlob;blob;monster;13;13;14;0;0;10
+commoner;null;human;commoner;4;8;20;7;5;6
+commoner;null;human;shopkeeper;4;6;20;7;5;8
+girl;null;human;null;2;4;20;10;8;6
+red;RedBlob;blob;monster;4;3;40;0;0;3
+yellow;YelloBlob;blob;monster;2;8;32;0;0;8
+blue;BlueBlob;blob;monster;12;4;30;0;0;4

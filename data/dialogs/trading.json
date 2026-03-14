@@ -88,9 +88,12 @@
       "txt": "No me alcanza el dinero."
     },
     "14": {"from": "shopkeeper", "to": "heroe",
-    "txt": "Muchas gracias."
+      "#": "es importante que el diálogo tenga donde caer al finalizar el intercambio",
+      "txt": "Muchas gracias."
     },
-    "15": {"from": "shopkeeper", "to": "heroe", "txt": "Lo siento mucho."}
+    "15": {"from": "shopkeeper", "to": "heroe",
+      "#": "Sea negativo o afirmativo.",
+      "txt": "Lo siento mucho."}
 
   }
 }

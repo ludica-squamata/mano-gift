@@ -282,30 +282,30 @@ class Dialogo(Discurso):
 
             if "comparison" in condicion:
                 comp = condicion['comparison']
-                if comp == ">":
-                    pass
-                elif comp == ">=":
-                    pass
-                elif comp == "<=":
-                    pass
-                elif comp == '==':
-                    pass
-                elif comp == '!=':
-                    pass
-                elif comp == "<":
+                if locutor.nombre == condicion['loc']:
+                    left = getattr(locutor, condicion['left'])["$"]
+                    right = 1
+                    if self.trade.name == "Selling CM":
+                        right = self.trade.last_on_spot.item.data['trading']['buy_price']
+                    elif self.trade.name == "Buying CM":
+                        right = self.trade.last_on_spot.item.data['trading']['sell_price']
 
-                    if locutor.nombre == condicion['loc']:
-                        left = getattr(locutor, condicion['left'])["$"]
-                        right = 1
-                        if self.trade.name == "Selling CM":
-                            right = self.trade.last_on_spot.item.data['trading']['buy_price']
-                        elif self.trade.name == "Buying CM":
-                            right = self.trade.last_on_spot.item.data['trading']['sell_price']
-                        supress = not left < right
+                    if comp == ">":
+                        supress = supress or not left > right
+                    elif comp == ">=":
+                        supress = supress or not left >= right
+                    elif comp == "<=":
+                        supress = supress or not left <= right
+                    elif comp == '==':
+                        supress = supress or not left == right
+                    elif comp == '!=':
+                        supress = supress or not left != right
+                    elif comp == "<":
+                        supress = supress or not left < right
 
             if "op" in condicion:
                 op = f'{condicion['op'].title()}ing CM'
-                supress = not self.trade.name == op
+                supress = supress or not self.trade.name == op
 
         return supress
 
@@ -318,7 +318,7 @@ class Dialogo(Discurso):
                 loc = self.locutores[self.sel.emisor]
                 rec = self.locutores[self.sel.receptor]
                 loc.enviar_item(self.sel.item, rec)
-            if self.next.is_exclusive:
+            if self.next is not None and self.next.is_exclusive:
                 self.arbol._future = self.next
             else:
                 self.arbol.set_chosen(self.next)
@@ -431,6 +431,7 @@ class Dialogo(Discurso):
         :type omitir_tags: bool
         """
         self.frontend.borrar_todo()
+        self.frontend.show(switch=False)
         loc = self.locutores[nodo.emisor]
         self.frontend.set_loc_img(loc)
         if not omitir_tags:

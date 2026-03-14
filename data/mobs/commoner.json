@@ -1,15 +1,4 @@
 {
-  "nombre": "Matheu",
-  "occupation": "commoner",
-  "raza": "human",
-  "atributos": {
-    "Fuerza": 4,
-    "Carisma": 7,
-    "Agilidad": 8,
-    "Resistencia": 20,
-    "Inteligencia": 5,
-    "Percepción": 6
-  },
   "imagenes": {
     "heads": "mobs/imagenes/heads_commoner.png",
     "atk": null,
@@ -17,6 +6,7 @@
     "idle": "mobs/imagenes/commoner_idle_walk_body.png",
     "diag_face": "mobs/imagenes/npc_face.png"
   },
+  "gender": "masculine",
   "alpha": "mobs/colisiones/human_walk.png",
   "AI": "brain"
 }
