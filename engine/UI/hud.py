@@ -361,11 +361,14 @@ class PlayerIcon(Sprite):
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
 
     def locate(self, off_x, off_y):
-        nombre = Renderer.camara.current_map.parent.nombre
-        if "anti" in nombre:
-            key = Renderer.camara.current_map.nombre.strip("'")
-        else:
-            key = Renderer.camara.current_map.nombre
+        chunk = Renderer.camara.current_map
+        stage = chunk.parent
 
-        x, y = self.parent.map_array[key].topleft
-        self.rect.topleft = x + off_x, y + off_y
+        if stage.world_stage:
+            if "anti" in stage.nombre:
+                key = Renderer.camara.current_map.nombre.strip("'")
+            else:
+                key = Renderer.camara.current_map.nombre
+
+            x, y = self.parent.map_array[key].topleft
+            self.rect.topleft = x + off_x, y + off_y

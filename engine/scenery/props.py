@@ -1,14 +1,16 @@
-from engine.globs import Prop_Group, ModData, Tiempo, Tagged_Items, Mob_Group
 from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, COLOR_COLISION
 from engine.misc.resources import abrir_json, cargar_imagen, split_spritesheet
+from engine.globs import Prop_Group, ModData, Tiempo, Tagged_Items, Mob_Group
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.circularmenus import ContainerCircularMenu
+from engine.libs.mersenne_twister import choice
 from pygame import Rect, mask as mask_module
 from .bases import Escenografia
 from itertools import cycle
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
-           'EstructuraCompuesta', 'Escenografia', 'Contenedor', 'Transicional']
+           'EstructuraCompuesta', 'Escenografia', 'Contenedor', 'Transicional',
+           "Pueblo"]
 
 
 class Agarrable(Escenografia):
@@ -31,7 +33,8 @@ class Agarrable(Escenografia):
             EventDispatcher.trigger('DeleteItem', 'Prop', {'obj': self})
 
             # plays the pick up sound (WIP).
-            EventDispatcher.trigger('PlaySound', self, {'sound': 'pick up'})
+            sound = choice(['pick up 4', 'pick up g'])
+            EventDispatcher.trigger('PlaySound', self, {'sound': sound})
 
         if "dialog" in self.data:
             ref = self.data['dialog']
@@ -197,11 +200,6 @@ class EstructuraCompuesta(Escenografia):
 
         return props
 
-    def action(self, entity):
-        # acá debería iniciar una animación del mob trepando.
-        if self.salida is not None:
-            self.salida.trigger(entity, self.accion)
-
 
 class Contenedor(Operable):
     accionable = True
@@ -330,3 +328,23 @@ class Transicional(Escenografia):
     def update(self, *args):
         super().update(*args)
         self.animate()
+
+
+class Pueblo(Escenografia):
+    accionable = True
+
+    def __init__(self, parent, x, y, data):
+        imagen = cargar_imagen(ModData.graphs + data['imagen'])
+
+        colisiones = cargar_imagen(ModData.graphs + data["colisiones"])
+        mask = mask_module.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
+        parent.mask.draw(mask, [x, y])
+
+        nombre = data['nombre']
+        super().__init__(parent, x, y, nombre=nombre, imagen=imagen, data=data)
+        self.cargar_salida()
+
+    def cargar_salida(self):
+        from engine.mapa.loader import cargar_salidas
+        salida = self.data['salida']
+        self.parent.set_salidas(*cargar_salidas(self.parent, [salida]))

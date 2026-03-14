@@ -366,7 +366,7 @@
   "chunks_csv": "new-anti-world.chunks.csv",
   "puntos_de_interes_para_la_IA": [],
   "ambiente": "exterior",
-  "world_stage": false,
+  "world_stage": true,
   "zoom_level": "world",
   "size": [36,21]
 }

@@ -331,7 +331,7 @@ class ChunkMap(AzoeBaseSprite):
         if data['colisiones'] is not None:
             cols = 'colisiones'  # abreviatura
             colisiones = cargar_imagen(ModData.graphs + data[cols]) if type(data[cols]) is str else data[cols]
-            self.mask = mask.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
+            self.mask = mask.from_surface(colisiones)
         else:
             self.mask = mask.Mask(rect.size)
 
@@ -412,6 +412,12 @@ class ChunkMap(AzoeBaseSprite):
 
         if Renderer.camara.is_focus(obj):
             self.houses_focus = False
+
+    def reload_properties(self, exclude: list = None):
+        exclude = exclude if exclude is not None else []
+        for sprite in self.properties.sprs():
+            if sprite not in exclude:
+                Renderer.camara.add_real(sprite)
 
     def delete_everything(self):
         sprites = self.properties.sprites()

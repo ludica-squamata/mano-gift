@@ -104,7 +104,8 @@ class EngineData:
             adress = new_stage.entradas[entrada]
             chunk = new_stage.get_chunk_by_adress(adress)
             Renderer.camara.set_background(chunk)
-            Renderer.camara.focus.ubicar_en_mapa(x, y)
+            Renderer.camara.focus.ubicar_en_mapa(x, y, *chunk.rect.size)
+            chunk.reload_properties()
         else:
             item = {'name': mob.nombre, 'id': mob.id, 'pos': entrada, 'from': mapa_actual.parent.nombre, "to": stage}
             cls.transient_mobs.append(item)

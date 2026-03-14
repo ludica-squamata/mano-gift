@@ -284,7 +284,7 @@ def load_props_csv(csv_file, silently=True):
         return data
 
 
-def cargar_salidas(chunk, all_data):
+def cargar_salidas(chunk, all_data: list):
     salidas = {}
     img = Surface((800, 800), SRCALPHA)
     # la imagen de colisiones tiene SRCALPHA porque necesita tener alpha = 0

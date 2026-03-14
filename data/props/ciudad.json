@@ -1,19 +1,11 @@
 {
-  "tipo": "estructura_compuesta",
+  "tipo": "pueblo",
   "nombre": "ciudad",
-  "componentes": {
-    "imagen": [
-      [0,0,1]
-    ],
-    "colisiones": [
-      [16,16,0]
-    ]
+  "imagen": "props/ciudad.png",
+  "colisiones": "props/ciudad_colisiones.png",
+  "salida": {
+    "stage": "ciudad","rect": [294,560,60,64],"accion": "caminar","entrada": "inside",
+    "chunk_adress": [10,14],"nombre": "entrada_ciudad","direcciones": ["arriba"]
   },
-  "referencias": {
-    "imagen": "props/ciudad.png",
-    "colisiones": "props/ciudad_colisiones.png"
-  },
-  "width": 608,
-  "height": 619,
-  "proyecta_sombra": false
+  "propiedades": ["sin_sombra"]
 }

@@ -59,16 +59,17 @@ class InventoryElement(LetterElement):
 
     def do_release_action(self):
         delta_minutes = self.timer // 60
-        if self.item.reading_mode == 'linear':
-            self.parent.entity.read(self.item, delta_minutes)
-        elif self.item.reading_mode == 'reference':
-            self.parent.entity.consult(self.item, delta_minutes)
-        else:
-            raise AttributeError(f'Book {self.item.nombre} has an invalid reading mode ({self.item.reading_mode})')
+        if self.item.subtipo == 'libro':
+            if self.item.reading_mode == 'linear':
+                self.parent.entity.read(self.item, delta_minutes)
+            elif self.item.reading_mode == 'reference':
+                self.parent.entity.consult(self.item, delta_minutes)
+            else:
+                raise AttributeError(f'Book {self.item.nombre} has an invalid reading mode ({self.item.reading_mode})')
 
-        self.timer = 0
-        self.parent.overwritten = True
-        self.parent.salir()
+            self.timer = 0
+            self.parent.overwritten = True
+            self.parent.salir()
 
 
 class ColocableInventoryElement(InventoryElement):

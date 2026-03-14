@@ -71,7 +71,8 @@
     "681": {"adress": [32,19],"pos": [400,397],"chunk": "716"},
     "682": {"adress": [33,19],"pos": [400,397],"chunk": "717"},
     "683": {"adress": [34,19],"pos": [400,397],"chunk": "718"},
-    "684": {"adress": [35,19],"pos": [400,397],"chunk": "719"}
+    "684": {"adress": [35,19],"pos": [400,397],"chunk": "719"},
+    "ciudad": {"adress": [10,14],"pos": [294,700],"chunk": "514"}
   },
   "salidas": [
     {
@@ -361,10 +362,6 @@
     {
       "stage": "anti-new-world","rect": [0,400,800,32],"direcciones": ["abajo"],
       "chunk_adress": [35,20],"nombre": "Sur-#35","entrada": "684'"
-    },
-    {
-      "stage": null,"rect": [294,560,60,64],"accion": "enter","entrada": null,
-      "chunk_adress": [10,14],"nombre": "entrada_ciudad","direcciones": []
     }
   ],
   "chunks_csv": "new-world.chunks.csv",

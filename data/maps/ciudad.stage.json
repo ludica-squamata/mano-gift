@@ -1,0 +1,27 @@
+{
+  "entradas": {
+    "inside": {"chunk": "single","pos": [320,320],"adress": [0,0]}
+  },
+  "salidas": [
+    {
+      "stage": "new-world","rect": [294,560,60,64],"accion": "caminar","entrada": "ciudad",
+      "chunk_adress": [0,0],"nombre": "salida_ciudad","direcciones": ["abajo"]
+    }
+  ],
+  "chunks": {
+    "single": {
+      "fondo": "maps/fondos/ciudad.png",
+      "colisiones": "maps/colisiones/ciudad.png",
+      "props": {},
+      "mobs": {},
+      "adress": [0,0],
+      "refs": {},
+      "limites": {}
+    }
+  },
+  "puntos_de_interes_para_la_IA": [],
+  "ambiente": "exterior",
+  "world_stage": false,
+  "zoom_level": "local",
+  "size": [1,1]
+}

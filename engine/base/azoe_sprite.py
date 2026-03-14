@@ -86,8 +86,9 @@ class AzoeSprite(sprite.Sprite):
             # esta clásula solo se ejecuta una vez porque en el init no hay un mapa cargado aún.
             self._last_map = Camara.current_map
 
-        self.rel_x = self.x % 800  # Después de tanto trabajo, era cuestión de usar módulo de x e y, y voilà,
-        self.rel_y = self.y % 800  # ahora funciona con perfección matemática.
+        w, h = self._last_map.rect.size
+        self.rel_x = self.x % w  # Después de tanto trabajo, era cuestión de usar módulo de x e y, y voilà,
+        self.rel_y = self.y % h  # ahora funciona con perfección matemática.
         self.z = self.rel_y + 16
 
     def set_parent_map(self, chunk):
@@ -109,12 +110,12 @@ class AzoeSprite(sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def ubicar_en_mapa(self, x, y):
+    def ubicar_en_mapa(self, x, y, w=800, h=800):
         self.x = x
         self.y = y
         self.z = self.y + self.rect.h  # bottom
-        self.rel_x = x % 800
-        self.rel_y = y % 800
+        self.rel_x = x % w
+        self.rel_y = y % h
 
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:

@@ -2,6 +2,10 @@
   "fondo": "maps/fondos/pasto.png",
   "colisiones": null,
   "props": {},
-  "mobs": {},
+  "mobs": {
+    "Green": [[32,0]],
+    "Shopkeeper": [[64,128]],
+    "Commoner": [[96,96]]
+  },
   "refs": {}
 }

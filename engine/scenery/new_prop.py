@@ -26,6 +26,8 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
         prop = Contenedor(parent, x, y, z, data)
     elif tipo == 'transisional':
         prop = Transicional(parent, x, y, data)
+    elif tipo == 'pueblo':
+        prop = Pueblo(parent, x, y, data)
     else:
         prop = Escenografia(parent, x, y, z=z, nombre=nombre, data=data, imagen=img)
 
