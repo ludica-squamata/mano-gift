@@ -20,6 +20,7 @@ class ModData:
     fd_scripts = ''
     pkg_scripts = ''
     fd_player = ''
+    game_fd = ''
     custommenus = None
     custom_attr = None
     QMC = None
@@ -58,6 +59,7 @@ class ModData:
             cls.props = root + data['folders']['props'] + '/'
             cls.fd_scripts = root + data['folders']['scripts'] + '/'
             cls.fd_player = root + data['folders']['player'] + '/'
+            cls.game_fd = root + data['folders']['game']
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
             cls.class_dialogs_by_topic()
 

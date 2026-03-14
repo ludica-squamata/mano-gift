@@ -63,7 +63,7 @@
     }
   ],
   "refs": {
-    "arbol": "props/arbol escalado 2.png",
+    "arbol": "props/arbol.json",
     "light_post": "props/light_post.json",
     "Huevo": "items/egg.json",
     "Star": "items/star.json",
