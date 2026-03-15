@@ -2,6 +2,7 @@ from engine.misc.resources import split_spritesheet, dark_overlay
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs import Tiempo, COLOR_COLISION, ModData
 from pygame import mask, Surface, SRCALPHA
+from itertools import cycle
 from ._movil import Movil
 from os.path import join
 from os import listdir
@@ -13,6 +14,10 @@ class Animado(Movil):  # necesita Movil para tener dirección
     dead = False
 
     step = 'S'
+    steps = ['R', 'L']
+    stepping = False
+    step_timer = 0
+    step_cycler = None
     estado = ''  # idle, o cmb. Indica si puede atacar desde esta posición, o no.
 
     idle_walk_img = None  # imagenes normales, head front
@@ -44,12 +49,14 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     timer_blinking = 0
     reading_anims = None
+    is_reading = False
 
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6
         self.blinking_eyes = {'front': {}, 'right': {}, 'left': {}}
+        self.step_cycler = cycle(self.steps)
 
     @staticmethod
     def cargar_alpha(ruta_imgs: str, seq: list):
@@ -87,16 +94,13 @@ class Animado(Movil):  # necesita Movil para tener dirección
 
     def animar_caminar(self):
         """cambia la orientación del sprite y controla parte de la animación"""
-
+        self.stepping = False
         self.timer_animacion += Tiempo.FPS.get_time()
         if self.timer_animacion >= self.frame_animacion:
             self.timer_animacion = 0
             if self.direccion != 'ninguna':
                 self.cuentapasos += 1
-                if self.step == 'R':
-                    self.step = 'L'
-                else:
-                    self.step = 'R'
+                self.step = next(self.step_cycler)
 
         if self['AI'].name != 'controllable':
             EventDispatcher.trigger('SoundEvent', self,
@@ -174,6 +178,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
     def set_reading_position(self):
         direccion = self.body_direction
         self.image = self.reading_anims[direccion]
+        self.is_reading = True
 
     def accion(self):
         if self.estado == 'cmb':
@@ -345,25 +350,58 @@ class Animado(Movil):  # necesita Movil para tener dirección
             self.step = 'S'
 
     def cambiar_direccion2(self, orientacion):
-        self.rotar_cabeza(orientacion)
-        self.cambiar_direccion(self.body_direction)
+        tecla = self.body_direction
+        x, y = 0, 0
+        d = self['Velocidad']
+        if orientacion == 'left':
+            tecla = 'izquierda'
+            x, y = -d, 0
+        elif orientacion == 'right':
+            tecla = 'derecha'
+            x, y = d, 0
+        elif orientacion == 'back':
+            tecla = 'arriba'
+            x, y = 0, -d
+        elif orientacion == 'front':
+            tecla = 'abajo'
+            x, y = 0, d
+        if self.body_direction != tecla:
+            self.rotar_cabeza(orientacion)
+            self.cambiar_direccion(self.body_direction)
+
+        elif not self.moviendose:
+            self.stepping = True
+            self.cuentapasos += 1
+            self.image = self.images[next(self.step_cycler) + self.direccion][self.iluminacion]
+            self.reubicar(x, y)  # reubicar() y no mover() porque mover() dispara self.moviendose=True
 
     def update(self, *args):
         super().update(*args)
         if self.atacando:
             self.animar_ataque(5)
+
+        if self.stepping:
+            self.step_timer += 1
+            if self.step_timer == 30:
+                self.step_timer = 0
+                self.detener_movimiento()
+        else:
+            self.step_timer = 0
+
         if self.moviendose:
             self.animar_caminar()
             self.animate_walking_head_orientation()
         else:
             self.animate_standing_position()
-        if self.timer_rotacion == 240:
-            self.animar_parpadeo('squint')
-        elif self.timer_rotacion == 320:
-            self.animar_parpadeo('blink')
-        elif self.timer_rotacion == 420:
-            self.animar_parpadeo('open')
-            self.timer_rotacion = 0
+
+        if not self.is_reading and not self.stepping:
+            if self.timer_rotacion == 240:
+                self.animar_parpadeo('squint')
+            elif self.timer_rotacion == 320:
+                self.animar_parpadeo('blink')
+            elif self.timer_rotacion == 420:
+                self.animar_parpadeo('open')
+                self.timer_rotacion = 0
 
     def detener_movimiento(self):
         super().detener_movimiento()
@@ -371,3 +409,5 @@ class Animado(Movil):  # necesita Movil para tener dirección
         self.step = 'S'
         key = 'S' + self.direccion
         self.image = self.imagen_n(key)[self.iluminacion]
+        self.is_reading = False
+        self.stepping = False

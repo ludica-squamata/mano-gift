@@ -174,7 +174,7 @@ class MenuEquipo(Menu):
             espacio = self.espacios.get_sprite(i)
             if espacio.nombre == selected:
                 espacio.ser_elegido()
-                SoundManager.play_direct_sound('select')
+                SoundManager.play_sound_direct('select')
                 self.current = espacio
                 self.cur_esp = i
                 break

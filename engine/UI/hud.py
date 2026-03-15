@@ -365,10 +365,6 @@ class PlayerIcon(Sprite):
         stage = chunk.parent
 
         if stage.world_stage:
-            if "anti" in stage.nombre:
-                key = Renderer.camara.current_map.nombre.strip("'")
-            else:
-                key = Renderer.camara.current_map.nombre
-
+            key = Renderer.camara.current_map.nombre
             x, y = self.parent.map_array[key].topleft
             self.rect.topleft = x + off_x, y + off_y

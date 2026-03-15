@@ -3,6 +3,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs.mersenne_twister import choice
 from engine.globs.azoe_group import AzoeGroup
 from engine.misc import Config, abrir_json
+from engine.IO import SoundManager
 from engine.UI.widgets import Fila
 from .menu import Menu
 import os, sys
@@ -37,6 +38,7 @@ class MenuDebug(Menu):
         player_name = [name.rstrip('.json') for name in os.listdir(ModData.fd_player)][0]
         selected = [fila for fila in self.filas.sprs() if fila.isSelected][0]
         ruta = os.path.join(Config.savedir, player_name + '.json')
+        SoundManager.play_sound_direct('press')
         if os.path.exists(ruta):
             data = abrir_json(ruta)
             if 'info' not in data:
@@ -80,6 +82,7 @@ class MenuDebug(Menu):
         self.posicionar_cursor(i)
         elegido = self.filas.get_sprite(self.sel)
         elegido.ser_elegido()
+        SoundManager.play_sound_direct('select')
 
     @staticmethod
     def filtrar_mapas():
