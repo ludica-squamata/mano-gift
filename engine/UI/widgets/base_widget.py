@@ -1,6 +1,6 @@
 from engine.base import AzoeSprite
 from pygame import Surface, Rect, SRCALPHA, font
-from engine.globs.colores import CANVAS_BG, BISEL_BG, BISEL_FG, TEXT_FG
+from engine.globs.colores import Colores
 
 
 class BaseWidget(AzoeSprite):
@@ -27,13 +27,13 @@ class BaseWidget(AzoeSprite):
         canvas = Surface((ancho, alto))
 
         clip = Rect(0, 0, ancho, alto)
-        canvas.fill(BISEL_BG, rect=clip)
+        canvas.fill(Colores.BISEL_BG, rect=clip)
 
         clip = Rect(3, 3, ancho, alto)
-        canvas.fill(BISEL_FG, rect=clip)
+        canvas.fill(Colores.BISEL_FG, rect=clip)
 
         clip = Rect(3, 3, ancho - 7, alto - 7)
-        canvas.fill(CANVAS_BG, rect=clip)
+        canvas.fill(Colores.CANVAS_BG, rect=clip)
 
         return canvas
 
@@ -42,13 +42,13 @@ class BaseWidget(AzoeSprite):
         canvas = Surface((ancho, alto))
 
         clip = Rect(0, 0, ancho, alto)
-        canvas.fill(BISEL_FG, rect=clip)
+        canvas.fill(Colores.BISEL_FG, rect=clip)
 
         clip = Rect(3, 3, ancho, alto)
-        canvas.fill(BISEL_BG, rect=clip)
+        canvas.fill(Colores.BISEL_BG, rect=clip)
 
         clip = Rect(3, 3, ancho - 7, alto - 7)
-        canvas.fill(CANVAS_BG, rect=clip)
+        canvas.fill(Colores.CANVAS_BG, rect=clip)
 
         return canvas
 
@@ -57,10 +57,10 @@ class BaseWidget(AzoeSprite):
         marco = Surface([ancho, alto], SRCALPHA)
 
         clip = Rect(0, 0, ancho, alto)
-        marco.fill(BISEL_BG, rect=clip)
+        marco.fill(Colores.BISEL_BG, rect=clip)
 
         clip = Rect(3, 3, ancho, alto)
-        marco.fill(BISEL_FG, rect=clip)
+        marco.fill(Colores.BISEL_FG, rect=clip)
 
         clip = Rect(3, 3, ancho - 7, alto - 7)
         marco.fill((0, 0, 0, 0), clip)
@@ -75,8 +75,8 @@ class BaseWidget(AzoeSprite):
         fuente = font.Font('engine/libs/Verdana.ttf', 14)
         marco = self.create_sunken_canvas(ancho, alto)
         megacanvas = Surface((marco.get_width(), marco.get_height() + 17))
-        megacanvas.fill(CANVAS_BG)
-        texto = fuente.render(titulo, True, TEXT_FG, CANVAS_BG)
+        megacanvas.fill(Colores.CANVAS_BG)
+        texto = fuente.render(titulo, True, Colores.TEXT_FG, Colores.CANVAS_BG)
         megacanvas.blit(marco, (0, 17))
         megacanvas.blit(texto, (3, 7))
 

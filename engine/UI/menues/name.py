@@ -1,4 +1,4 @@
-from engine.globs import CANVAS_BG, TEXT_SEL, BISEL_BG, TEXT_FG
+from engine.globs import Colores
 from engine.globs.azoe_group import AzoeBaseSprite, AzoeGroup
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.widgets import BaseWidget, Boton
@@ -30,7 +30,7 @@ class MenuName(Menu):
         self.crear_teclas(6, 6)  # genera el teclado en pantalla
 
         # el espacio se añade por separado porque ' ' es el delimitador en self.crear_teclas
-        self.teclas.add(Character(self, ' ', CANVAS_BG, 6 + 14 * 32 + 6, 210 + 5 * 32))
+        self.teclas.add(Character(self, ' ', Colores.CANVAS_BG, 6 + 14 * 32 + 6, 210 + 5 * 32))
 
         # Cursor del teclado en pantalla
         self.cursor = Cursor(self, *self.teclas.get_sprite(0).rect.center)
@@ -68,7 +68,7 @@ class MenuName(Menu):
         s = "Escriba a continuación el nombre del personaje.\nPuede usar los caracteres provistos abajo"
         fuente = font.SysFont('Verdana', 14, italic=True)
         rect = Rect(10, 32, 600, 64)
-        render = render_textrect(s, fuente, rect, TEXT_FG, CANVAS_BG, justification=1)
+        render = render_textrect(s, fuente, rect, Colores.TEXT_FG, Colores.CANVAS_BG, justification=1)
         self.canvas.blit(render, rect)
 
     def crear_teclas(self, x, y):
@@ -82,9 +82,9 @@ class MenuName(Menu):
                 i += 1
                 # este bloque determina el color del fondo de la tecla, para un efecto cuadriculado
                 if dy % 2 != 0 and i % 2 != 0 or dy % 2 == 0 and i % 2 == 0:
-                    bg = CANVAS_BG
+                    bg = Colores.CANVAS_BG
                 else:
-                    bg = BISEL_BG
+                    bg = Colores.BISEL_BG
 
                 if t[i] != ' ':
                     char = Character(self, t[i], bg, mx + x + dx * 32, my + y + dy * 32)
@@ -102,7 +102,7 @@ class MenuName(Menu):
             espacio = self.lineas.get_sprite(self.lin_idx).rect
 
             fuente = font.SysFont('Verdana', 20)
-            image = fuente.render(key, True, (0, 0, 0), CANVAS_BG)
+            image = fuente.render(key, True, (0, 0, 0), Colores.CANVAS_BG)
             rect = image.get_rect()
             rect.bottom = espacio.top - 2
             rect.centerx = espacio.centerx
@@ -128,7 +128,7 @@ class MenuName(Menu):
         """Borra el caracter del espacio actualmente seleccionado"""
 
         if self.ltr_idx >= 0:
-            self.canvas.fill(CANVAS_BG, self.area_nombre)
+            self.canvas.fill(Colores.CANVAS_BG, self.area_nombre)
 
             spr = self.area_input.get_sprite(self.ltr_idx)
             self.area_input.remove(spr)
@@ -225,7 +225,7 @@ class Character(BaseWidget):
     def __init__(self, parent, char, bg, x, y):
 
         self.img_uns = self._crear_img(char, bg)
-        self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
+        self.img_sel = self.dibujar_seleccion(self.img_uns, Colores.TEXT_SEL)
 
         super().__init__(parent, imagen=self.img_uns)
         self.nombre = char

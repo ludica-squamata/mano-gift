@@ -1,6 +1,6 @@
 from engine.IO.menu_circular import BaseElement
 from pygame import Surface, SRCALPHA, font
-from engine.globs.colores import TEXT_FG, CANVAS_BG
+from engine.globs.colores import Colores
 from .title import Title
 
 
@@ -8,11 +8,14 @@ class LetterElement(BaseElement):
     title = None
     active = True
 
+    text_icon = None
+
     def __init__(self, parent, nombre, icono, do_title=True):
 
         super().__init__(parent, nombre)
 
         if type(icono) is str:
+            self.text_icon = icono
             self.img_uns = self._crear_icono_texto(icono, 21, 21)
             self.img_sel = self._crear_icono_texto(icono, 33, 33)
 
@@ -39,8 +42,8 @@ class LetterElement(BaseElement):
     @staticmethod
     def _crear_base(w, h):
         image = Surface((w, h), SRCALPHA)
-        image.fill(TEXT_FG)
-        gris = CANVAS_BG
+        image.fill(Colores.TEXT_FG)
+        gris = Colores.CANVAS_BG
         gris.a = 200
         image.fill(gris, (1, 1, w - 2, h - 2))
 
@@ -50,7 +53,7 @@ class LetterElement(BaseElement):
     def _crear_icono_texto(self, icono, w, h):
         fuente = font.Font('engine/libs/Verdanab.ttf', 15)
         image, _rect = self._crear_base(w, h)
-        render = fuente.render(icono, True, TEXT_FG)
+        render = fuente.render(icono, True, Colores.TEXT_FG)
         renderect = render.get_rect(center=_rect.center)
         image.blit(render, renderect)
         return image
@@ -61,3 +64,9 @@ class LetterElement(BaseElement):
         image.blit(icono, iconrect)
 
         return image
+
+    def recolor(self, event):
+        if event.data['name'] in ['TEXT_FG', 'CANVAS_BG']:
+            if type(self.text_icon) is not None:
+                self.img_uns = self._crear_icono_texto(self.text_icon, 21, 21)
+                self.img_sel = self._crear_icono_texto(self.text_icon, 33, 33)

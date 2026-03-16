@@ -1,7 +1,7 @@
 ﻿from engine.globs.event_dispatcher import EventDispatcher
 from pygame import draw, Surface, SRCALPHA, mask
 from engine.globs.renderer import Camara
-from engine.globs import COLOR_IGNORADO, Light_Group
+from engine.globs import Colores, Light_Group
 from pygame.sprite import Sprite
 
 
@@ -25,7 +25,7 @@ class LightSource(Sprite):
         self.nombre = nombre
         self.image = Surface((radius * 2, radius * 2), SRCALPHA)
         img = self.image.copy()
-        self.image.fill(COLOR_IGNORADO)
+        self.image.fill(Colores.COLOR_IGNORADO)
         self.rect = self.image.get_rect(center=self.parent.rect.midtop)
 
         # origin_rect es para la Noche

@@ -1,6 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc.resources import cargar_head_anims
-from engine.globs import Tiempo, CANVAS_BG, TEXT_FG, ModData
+from engine.globs import Tiempo, Colores, ModData
 from pygame import font, Rect
 from .menu import Menu
 from engine.libs import render_textrect
@@ -125,7 +125,7 @@ class MenuModel(Menu):
         s = 'Elige a continuación el modelo de tu personaje'
         fuente = font.SysFont('Verdana', 14, italic=True)
         rect = Rect(10, 32, 600, 64)
-        render = render_textrect(s, fuente, rect, TEXT_FG, CANVAS_BG, justification=1)
+        render = render_textrect(s, fuente, rect, Colores.TEXT_FG, Colores.CANVAS_BG, justification=1)
         self.canvas.blit(render, rect)
 
     def update(self):

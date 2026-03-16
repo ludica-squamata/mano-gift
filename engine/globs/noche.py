@@ -1,7 +1,7 @@
 from engine.globs.azoe_group import AzoeBaseSprite
 from pygame import Surface, PixelArray, SRCALPHA
 from .event_dispatcher import EventDispatcher
-from .colores import COLOR_IGNORADO
+from .colores import Colores
 from .sun import Sun
 
 
@@ -53,7 +53,7 @@ class Noche(AzoeBaseSprite):
                 for x in range(w):
                     for y in range(h):
                         color = light.image.unmap_rgb(px_li[x, y])
-                        if color != COLOR_IGNORADO:
+                        if color != Colores.COLOR_IGNORADO:
                             pxarray[x + lx, y + ly] = color
 
             image = pxarray.make_surface()

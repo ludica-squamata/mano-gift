@@ -1,5 +1,5 @@
-# from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import TEXT_FG, CANVAS_BG, Mob_Group
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs import Colores, Mob_Group
 from pygame.sprite import LayeredUpdates
 from engine.libs import render_textrect
 from pygame import Rect, font
@@ -24,10 +24,10 @@ class MenuStatus(Menu):
         for i, char in enumerate(chars):
             if char != '':
                 value = self.entity[char]
-                render_char = fuente_1.render(char, True, TEXT_FG, CANVAS_BG)
+                render_char = fuente_1.render(char, True, Colores.TEXT_FG, Colores.CANVAS_BG)
                 render_rect = render_char.get_rect(left=305, y=rect.y + i * 23)
 
-                render_value = render_textrect(str(value), fuente_2, Rect(0, 0, 32, 32), TEXT_FG, CANVAS_BG, 2)
+                render_value = render_textrect(str(value), fuente_2, Rect(0, 0, 32, 32), Colores.TEXT_FG, Colores.CANVAS_BG, 2)
                 value_rect = render_value.get_rect(left=render_rect.left + 100, y=rect.y + i * 23)
 
                 self.image.blit(render_char, render_rect)
@@ -35,7 +35,7 @@ class MenuStatus(Menu):
 
         stats = {'SaludMax': [200, 50, 50], 'ManaMax': [125, 0, 255], 'Experiencia': [0, 200, 100]}
         for i, stat in enumerate(stats):
-            bar = ProgressBar(self.entity[stat], stat.removesuffix('Max'), stats[stat], CANVAS_BG, rect.right,
+            bar = ProgressBar(self.entity[stat], stat.removesuffix('Max'), stats[stat], None, rect.right,
                               rect.y + i * 35 + 6, 200, 32, self.entity)
 
             self.properties.add(bar)
@@ -44,6 +44,8 @@ class MenuStatus(Menu):
             bar.actualizar()
             self.image.blit(bar.image, bar.rect)
 
+        EventDispatcher.register(self.recolor, 'AlterColor')
+
     def update_charname_display(self):
         r = self.canvas.blit(self.entity.diag_face[0], (6, 100))
         fuente = font.Font('engine/libs/Verdana.ttf', 22)
@@ -51,7 +53,7 @@ class MenuStatus(Menu):
         rect = Rect(0, r.bottom + 2, w, h + 1)
         rect.centerx = r.centerx
 
-        render = render_textrect(self.entity['nombre'], fuente, rect, TEXT_FG, CANVAS_BG)
+        render = render_textrect(self.entity['nombre'], fuente, rect, Colores.TEXT_FG, Colores.CANVAS_BG)
         self.canvas.blit(render, rect)
         return r
 
@@ -59,3 +61,7 @@ class MenuStatus(Menu):
         super().cancelar()
         for sprite in self.properties.sprites():
             sprite.force_hide()
+
+    def recolor(self, event):
+        if event.data['name'] in ['CANVAS_BG', 'TEXT_FG']:
+            pass

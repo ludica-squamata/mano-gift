@@ -1,6 +1,6 @@
 from engine.misc.resources import split_spritesheet, dark_overlay
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs import Tiempo, COLOR_COLISION, ModData
+from engine.globs import Tiempo, Colores, ModData
 from pygame import mask, Surface, SRCALPHA
 from itertools import cycle
 from ._movil import Movil
@@ -67,7 +67,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
             for D in ['abajo', 'arriba', 'izquierda', 'derecha']:
                 key = L + D
                 idx += 1
-                dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
+                dicc[key] = mask.from_threshold(spritesheet[idx], Colores.COLOR_COLISION, (1, 1, 1, 255))
         return dicc
 
     @staticmethod
@@ -89,7 +89,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
                     dicc[key]['light'] = image
                     dicc[key]['dark'] = dark
                 else:
-                    dicc[key] = mask.from_threshold(spritesheet[idx], COLOR_COLISION, (1, 1, 1, 255))
+                    dicc[key] = mask.from_threshold(spritesheet[idx], Colores.COLOR_COLISION, (1, 1, 1, 255))
         return dicc
 
     def animar_caminar(self):

@@ -1,4 +1,4 @@
-from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, CANVAS_BG, SCROLL_BG
+from engine.globs import ANCHO, ALTO, CAPA_OVERLAYS_DIALOGOS, Colores
 from engine.misc.tag_loader import load_tagarrayfile
 from engine.misc.resources import cargar_imagen
 from engine.libs import render_tagged_text
@@ -34,7 +34,7 @@ class DialogInterface(BaseWidget):
 
     def __init__(self, parent, custom_tags=''):
         image = Surface((int(ANCHO), int(ALTO / 5)))
-        image.fill(CANVAS_BG)
+        image.fill(Colores.CANVAS_BG)
 
         super().__init__(parent, imagen=image)
         if custom_tags != '':
@@ -128,7 +128,7 @@ class DialogInterface(BaseWidget):
             self.ticks = 0
 
     def borrar_todo(self):
-        self.image.fill(CANVAS_BG)
+        self.image.fill(Colores.CANVAS_BG)
         self.rendered_text = None
         self.sel = 0
         self.text_rect.y = 3  # reset scrolling
@@ -145,7 +145,7 @@ class DialogInterface(BaseWidget):
 
     def update(self):
         self.ticks += 1
-        self.image.fill(CANVAS_BG, self.erase_area)
+        self.image.fill(Colores.CANVAS_BG, self.erase_area)
         if self.loc_img is not None:
             self.timer_animacion += Tiempo.FPS.get_time()
             if self.timer_animacion >= self.frame_animacion:
@@ -167,7 +167,7 @@ class DialogInterface(BaseWidget):
             w, h = self.arrow_width, self.draw_space_rect.h + 3
 
             # pintar el area de la flecha, si es que hay más contenido que ver.
-            self.image.fill(SCROLL_BG, (x, y, w, h))
+            self.image.fill(Colores.SCROLL_BG, (x, y, w, h))
 
         # dibujar el marco biselado.
         self.image.blit(self.marco, (0, 0))

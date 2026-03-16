@@ -1,4 +1,4 @@
-from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, COLOR_COLISION
+from engine.globs import GRUPO_OPERABLES, GRUPO_AGARRABLES, GRUPO_MOVIBLES, Colores
 from engine.misc.resources import abrir_json, cargar_imagen, split_spritesheet
 from engine.globs import Prop_Group, ModData, Tiempo, Tagged_Items, Mob_Group
 from engine.globs.event_dispatcher import EventDispatcher
@@ -187,7 +187,7 @@ class EstructuraCompuesta(Escenografia):
 
                 if nombre == 'colisiones':
                     ruta = ModData.graphs + imagen
-                    self.mask = mask_module.from_threshold(cargar_imagen(ruta), COLOR_COLISION, [1, 1, 1, 255])
+                    self.mask = mask_module.from_threshold(cargar_imagen(ruta), Colores.COLOR_COLISION, [1, 1, 1, 255])
                     parent.mask.draw(self.mask, [x, y])
                     imagen = None
 
@@ -337,7 +337,7 @@ class Pueblo(Escenografia):
         imagen = cargar_imagen(ModData.graphs + data['imagen'])
 
         colisiones = cargar_imagen(ModData.graphs + data["colisiones"])
-        mask = mask_module.from_threshold(colisiones, COLOR_COLISION, (1, 1, 1, 255))
+        mask = mask_module.from_threshold(colisiones, Colores.COLOR_COLISION, (1, 1, 1, 255))
         parent.mask.draw(mask, [x, y])
 
         nombre = data['nombre']

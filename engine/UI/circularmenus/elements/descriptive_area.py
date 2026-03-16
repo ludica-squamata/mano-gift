@@ -1,6 +1,7 @@
-from engine.UI.widgets import BaseWidget
-from engine.globs import ANCHO, ALTO, CANVAS_BG
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.globs import ANCHO, ALTO, Colores
 from engine.libs import render_tagged_text
+from engine.UI.widgets import BaseWidget
 
 
 class DescriptiveArea(BaseWidget):
@@ -15,5 +16,14 @@ class DescriptiveArea(BaseWidget):
         super().__init__(parent, imagen=megacanvas)
 
         self.ubicar(0, ALTO - h)
-        render = render_tagged_text(description, w - 16, h - 14, CANVAS_BG)
+        self.des = description
+        render = render_tagged_text(description, w - 16, h - 14, Colores.CANVAS_BG)
         self.image.blit(render, (10, 8))
+
+        EventDispatcher.register(self.recolor, 'AlterColor')
+
+    def recolor(self, event):
+        if event.data['name'] in ['CANVAS_BG']:
+            render = render_tagged_text(self.des, ANCHO - 16, int(ALTO / 5) - 14, Colores.CANVAS_BG)
+            self.image.blit(render, (10, 8))
+

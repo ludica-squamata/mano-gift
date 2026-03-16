@@ -2,7 +2,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Camara
 from .descriptive_area import DescriptiveArea
 from .letter import LetterElement
-from engine.globs import TEXT_FG
+from engine.globs import Colores
 from pygame import font
 
 
@@ -32,7 +32,7 @@ class InventoryElement(LetterElement):
         if count:
             fuente = font.Font('engine/libs/Verdana.ttf', 12)
             cant = entity.inventario.cantidad(self.item)
-            render = fuente.render(str(cant), True, TEXT_FG)
+            render = fuente.render(str(cant), True, Colores.TEXT_FG)
             renderect = render.get_rect(bottom=_rect.bottom - 1, right=_rect.right - 1)
             image.blit(render, renderect)
 

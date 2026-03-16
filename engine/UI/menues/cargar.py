@@ -1,4 +1,4 @@
-from engine.globs import EngineData, ANCHO, ALTO, CANVAS_BG
+from engine.globs import EngineData, ANCHO, ALTO, Colores
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeGroup
 from engine.misc import Config
@@ -91,7 +91,7 @@ class MenuCargar(Menu):
             self.elegir_opcion(0)
 
     def update(self):
-        self.draw_space.fill(CANVAS_BG)
+        self.draw_space.fill(Colores.CANVAS_BG)
         self.filas.draw(self.draw_space)
         self.botones.update()
         self.botones.draw(self.canvas)

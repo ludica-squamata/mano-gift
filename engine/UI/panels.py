@@ -1,4 +1,4 @@
-from engine.globs import ANCHO, ALTO, CANVAS_BG, TEXT_FG, CAPA_OVERLAYS_DIALOGOS
+from engine.globs import ANCHO, ALTO, Colores, CAPA_OVERLAYS_DIALOGOS
 from engine.globs.renderer import Renderer
 from .widgets import BaseWidget
 from pygame import Surface, font
@@ -9,7 +9,7 @@ class BasePanel(BaseWidget):
 
     def __init__(self, parent, nombre):
         image = Surface((int(ANCHO), int(ALTO / 5)))
-        image.fill(CANVAS_BG)
+        image.fill(Colores.CANVAS_BG)
         self.f = font.SysFont('Verdana', 16)
         self.nombre = nombre
         super().__init__(parent, imagen=image)
@@ -25,9 +25,9 @@ class BasePanel(BaseWidget):
         Renderer.del_overlay(self)
 
     def update(self, *args):
-        self.image.fill(CANVAS_BG)
+        self.image.fill(Colores.CANVAS_BG)
         self.image.blit(self.marco, (0, 0))
-        self.image.blit(self.f.render(self.nombre, True, TEXT_FG, CANVAS_BG), (4, 3))
+        self.image.blit(self.f.render(self.nombre, True, Colores.TEXT_FG, Colores.CANVAS_BG), (4, 3))
 
 
 class DialogObjectsPanel(BasePanel):
@@ -56,7 +56,7 @@ class DialogObjectsPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mostrar {}>'.format(self.menu.actual.item.nombre), True, TEXT_FG, CANVAS_BG)
+            render = self.f.render('<mostrar {}>'.format(self.menu.actual.item.nombre), True, Colores.TEXT_FG, Colores.CANVAS_BG)
             self.image.blit(render, (3, 23))
 
 
@@ -87,5 +87,5 @@ class DialogThemesPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mencionar {}>'.format(self.menu.actual.item), True, TEXT_FG, CANVAS_BG)
+            render = self.f.render('<mencionar {}>'.format(self.menu.actual.item), True, Colores.TEXT_FG, Colores.CANVAS_BG)
             self.image.blit(render, (3, 23))

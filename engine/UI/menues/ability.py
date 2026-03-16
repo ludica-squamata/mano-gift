@@ -1,6 +1,6 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs.textrect import render_textrect
-from engine.globs import CANVAS_BG, TEXT_FG
+from engine.globs import Colores
 from engine.globs.mod_data import ModData
 from engine.globs.azoe_group import AzoeGroup
 from pygame import font, draw, Surface
@@ -26,7 +26,7 @@ class MenuAbility(Menu):
         self.properties = LayeredUpdates()
         fuente = font.SysFont('Verdana', 16, bold=True)
         for i, char in enumerate(chars):
-            render = fuente.render(char, True, TEXT_FG, CANVAS_BG)
+            render = fuente.render(char, True, Colores.TEXT_FG, Colores.CANVAS_BG)
             rect = render.get_rect(topleft=[6, 125 + i * 43])
             centery = rect.centery
             self.canvas.blit(render, rect)
@@ -160,7 +160,7 @@ class MenuAbility(Menu):
             self.fin.ser_deshabilitado()
         elif not self.fin.enabled:
             self.fin.ser_habilitado()
-        self.canvas.fill(CANVAS_BG, [6, 30, 470, 50])
+        self.canvas.fill(Colores.CANVAS_BG, [6, 30, 470, 50])
         self.properties.update()
         self.properties.draw(self.canvas)
 
@@ -174,7 +174,7 @@ class Counter(BaseWidget):
         self.fuente = font.SysFont('Verdana', 16)
         image = Surface((w, h))
         rect = image.get_rect()
-        image.fill(CANVAS_BG)
+        image.fill(Colores.CANVAS_BG)
         rect.midleft = x, y
         self.w, self.h = w, h
         self.boton_mas = Boton(self, self.char + '+', 1, self.incrementar, [rect.right - 25, 0], texto='+')
@@ -208,7 +208,7 @@ class Counter(BaseWidget):
 
     def render_value(self):
         string = '{:+}'.format(self.value)
-        render = render_textrect(string, self.fuente, self.rect, TEXT_FG, CANVAS_BG, 1)
+        render = render_textrect(string, self.fuente, self.rect, Colores.TEXT_FG, Colores.CANVAS_BG, 1)
         self.image.blit(render, (0, 0))
 
     def elegir(self, posicion):
@@ -233,7 +233,7 @@ class Counter(BaseWidget):
         self.boton_menos.ser_deselegido()
 
     def update(self):
-        draw.aaline(self.image, TEXT_FG, [0, self.h - 1], [self.w, self.h - 1])
+        draw.aaline(self.image, Colores.TEXT_FG, [0, self.h - 1], [self.w, self.h - 1])
         self.botones.update()
         self.botones.draw(self.parent.canvas)
 
@@ -248,7 +248,7 @@ class PuntosDisponibles(BaseWidget):
         self.f = font.SysFont('Verdana', 16)
         self.pos = x, y
         self.value = 50 if not len(memoria) else 0
-        image = self.f.render(self.t, True, TEXT_FG, CANVAS_BG)
+        image = self.f.render(self.t, True, Colores.TEXT_FG, Colores.CANVAS_BG)
         rect = image.get_rect(topleft=[x, y])
         super().__init__(parent, imagen=image, rect=rect, x=x, y=y)
         self.update_text()
@@ -271,5 +271,5 @@ class PuntosDisponibles(BaseWidget):
 
     def update(self):
         self.update_text()
-        self.image = self.f.render(self.t, True, TEXT_FG, CANVAS_BG)
+        self.image = self.f.render(self.t, True, Colores.TEXT_FG, Colores.CANVAS_BG)
         self.rect = self.image.get_rect(topleft=self.pos)

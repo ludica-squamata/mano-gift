@@ -1,6 +1,6 @@
 from pygame import Surface, Rect, draw
 from .base_widget import BaseWidget
-from engine.globs import CANVAS_BG, TEXT_SEL
+from engine.globs import Colores
 
 
 class EspacioEquipable(BaseWidget):
@@ -12,9 +12,9 @@ class EspacioEquipable(BaseWidget):
     def __init__(self, parent, nombre, item, direcciones, acepta, x, y):
         """Inicializa las variables de un espacio equipable."""
 
-        self.img_uns = self.crear_base(CANVAS_BG)
+        self.img_uns = self.crear_base(Colores.CANVAS_BG)
         super().__init__(parent, imagen=self.img_uns)
-        self.img_sel = self.dibujar_seleccion(self.img_uns, TEXT_SEL)
+        self.img_sel = self.dibujar_seleccion(self.img_uns, Colores.TEXT_SEL)
 
         self.draw_area = Surface((28, 28))
         self.draw_area.fill((153, 153, 153))
@@ -37,7 +37,7 @@ class EspacioEquipable(BaseWidget):
 
         rect = Rect(2, 2, 28, 28)
         base = Surface((32, 32))
-        base.fill((153, 153, 153), rect)
+        base.fill(Colores.SLOT_BG, rect)
 
         img.blit(base, (2, 2))
         return img
@@ -75,9 +75,16 @@ class EspacioEquipable(BaseWidget):
         """Restaura las imágenes del espacio a su version sin item."""
 
         self.item = None
-        self.draw_area.fill((153, 153, 153))
+        self.draw_area.fill(Colores.SLOT_BG)
         self.img_uns.blit(self.draw_area, self.draw_area_rect)
         self.img_sel.blit(self.draw_area, self.draw_area_rect)
 
     def __repr__(self):
         return 'Espacio ({},{})'.format(self.nombre, self.accepts)
+
+    def recolor(self, event):
+        if event.data['name'] in ['CANVAS_BG', 'TEXT_SEL', 'SLOT_BG']:
+            self.img_uns = self.crear_base(Colores.CANVAS_BG)
+            self.img_sel = self.dibujar_seleccion(self.img_uns, Colores.TEXT_SEL)
+            if self.item is not None:
+                self.ocupar(self.item)

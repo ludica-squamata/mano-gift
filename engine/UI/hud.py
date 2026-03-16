@@ -1,6 +1,6 @@
 from engine.globs import CAPA_OVERLAYS_HUD, FEATURE_SHOW_MINIBARS, FEATURE_FLOATING_NUMBERS, FEATURE_MINIMAP
 from pygame import Surface, Rect, draw, SRCALPHA, font, PixelArray, Color
-from engine.globs import ANCHO, ALTO, CUADRO, TEXT_FG, Mob_Group, ModData
+from engine.globs import ANCHO, ALTO, CUADRO, Colores, Mob_Group, ModData
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
 from pygame.sprite import Sprite
@@ -25,7 +25,7 @@ class ProgressBar(Sprite):
         super().__init__()
 
         self.colorAct = color_actual
-        self.colorFnd = color_fondo
+        self.colorFnd = color_fondo if color_fondo is not None else Colores.CANVAS_BG
         self.maximo = max(maximo, 1)
         self.actual = maximo
         self.tracked_stat = stat
@@ -110,13 +110,14 @@ class CharacterName(Sprite):
     def __init__(self, focus, x, y):
         super().__init__()
         self.text = focus['nombre']
-        self.image = self.generate([255, 255, 255])
+        self.image = self.generate()
         self.rect = self.image.get_rect(topleft=(x, y))
         EventDispatcher.register(self.toggle, "TogglePause")
+        EventDispatcher.register(self.recolor, 'AlterColor')
         self.show()
 
     @staticmethod
-    def generate(fg_color):
+    def generate():
         outline = []
         fuente = font.Font('engine/libs/Verdanab.ttf', 16)
         focus = Mob_Group.get_controlled_mob()
@@ -126,8 +127,8 @@ class CharacterName(Sprite):
         canvas = Surface((width, height), SRCALPHA)
 
         for character in text:
-            fondo = fuente.render(character, True, TEXT_FG)
-            frente = fuente.render(character, True, fg_color)
+            fondo = fuente.render(character, True, Colores.TEXT_FG)
+            frente = fuente.render(character, True, Colores.TEXT_SEL)
             w, h = fuente.size(character)
             img = Surface((w + 2, h + 2), SRCALPHA)
 
@@ -145,12 +146,9 @@ class CharacterName(Sprite):
 
         return canvas
 
-    def colorear(self, bg_color):
-        self.image = self.generate(bg_color)
-
     def show(self):
         if self.image is None:
-            self.image = self.generate([255, 255, 255])
+            self.image = self.generate()
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
 
     def hide(self):
@@ -162,6 +160,10 @@ class CharacterName(Sprite):
             self.hide()
         else:
             self.show()
+
+    def recolor(self, event):
+        if event.data['name'] in ['TEXT_FG']:
+            self.image = self.generate()
 
 
 class MiniBar(ProgressBar):

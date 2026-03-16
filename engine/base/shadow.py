@@ -1,4 +1,4 @@
-from engine.globs import FEATURE_SOMBRAS_DINAMICAS, COLOR_SOMBRA, Light_Group
+from engine.globs import FEATURE_SOMBRAS_DINAMICAS, Colores, Light_Group
 from pygame import mask, PixelArray, Surface, SRCALPHA, transform, draw
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.renderer import Renderer
@@ -215,7 +215,7 @@ class ShadowSprite(AzoeSprite):
             dh = 16 if h > 50 else 6  # aunque esto es chapuza para el árbol.
             # debería ser alguna medida relativa a las medidas del sprite. 28/11/2022
             r = img.get_rect(centerx=w, y=h - dh)
-            draw.ellipse(img, COLOR_SOMBRA, [0, 0, r.w, r.h])
+            draw.ellipse(img, Colores.COLOR_SOMBRA, [0, 0, r.w, r.h])
             t_surface.blit(img, r)
             _draw = mask.from_surface(t_surface, 100)
             mascara.draw(_draw, (0, 0))
@@ -241,7 +241,7 @@ class ShadowSprite(AzoeSprite):
                 dd = floor(d * (1 - (y / h)))
                 for x in range(w):
                     if _mask.get_at((x, y)):
-                        pxarray[x + dd, y] = COLOR_SOMBRA
+                        pxarray[x + dd, y] = Colores.COLOR_SOMBRA
 
         if arg == 'NO':
             pxarray = PixelArray(Surface((nw, h), SRCALPHA, surface))
@@ -249,7 +249,7 @@ class ShadowSprite(AzoeSprite):
                 dd = floor(d * (y / h))
                 for x in range(w):
                     if _mask.get_at((x, y)):
-                        pxarray[x + dd, y] = COLOR_SOMBRA
+                        pxarray[x + dd, y] = Colores.COLOR_SOMBRA
 
         if arg == 'SE':
             pxarray = PixelArray(Surface((nw, nh), SRCALPHA, surface))
@@ -259,7 +259,7 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         ax = x + dd - 1
                         ay = (nh - y) - 1
-                        pxarray[ax, ay] = COLOR_SOMBRA
+                        pxarray[ax, ay] = Colores.COLOR_SOMBRA
 
         if arg == 'SO':
             pxarray = PixelArray(Surface((nw, nh), SRCALPHA, surface))
@@ -269,7 +269,7 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         ax = x + dd - 1
                         ay = (nh - y) - 1
-                        pxarray[ax, ay] = COLOR_SOMBRA
+                        pxarray[ax, ay] = Colores.COLOR_SOMBRA
 
         if arg == 'S':
             pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
@@ -279,14 +279,14 @@ class ShadowSprite(AzoeSprite):
                         n = -(x * h + y + 2)
                         ax, ay = -n // h, n % h
                         if ax < w and ay < h:
-                            pxarray[ax, ay] = COLOR_SOMBRA
+                            pxarray[ax, ay] = Colores.COLOR_SOMBRA
 
         if arg == 'N':
             pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
             for y in range(h):
                 for x in range(w):
                     if _mask.get_at((x, y)):
-                        pxarray[x, y] = COLOR_SOMBRA
+                        pxarray[x, y] = Colores.COLOR_SOMBRA
 
         if arg == 'E':
             pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
@@ -295,7 +295,7 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         n = (x * w + y)
                         ax, ay = n // w, n % w
-                        pxarray[ax, ay] = COLOR_SOMBRA
+                        pxarray[ax, ay] = Colores.COLOR_SOMBRA
 
         if arg == 'O':
             pxarray = PixelArray(Surface((w, h), SRCALPHA, surface))
@@ -304,7 +304,7 @@ class ShadowSprite(AzoeSprite):
                     if _mask.get_at((x, y)):
                         n = (x * h + y)
                         ax, ay = n // h, n % h
-                        pxarray[ax, ay] = COLOR_SOMBRA
+                        pxarray[ax, ay] = Colores.COLOR_SOMBRA
 
         return pxarray.make_surface().convert_alpha()
 

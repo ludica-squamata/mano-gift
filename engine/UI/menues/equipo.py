@@ -1,4 +1,4 @@
-from engine.globs import CANVAS_BG, TEXT_FG, Mob_Group, ModData, EngineData
+from engine.globs import Colores, Mob_Group, ModData, EngineData
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.libs.textrect import render_textrect
 from engine.misc.resources import cargar_imagen
@@ -151,18 +151,18 @@ class MenuEquipo(Menu):
                 titulo = ' '.join(titulo)
 
         rect = Rect(-1, -1, w + 5, h + 1)
-        render = render_textrect(titulo.title(), fuente, rect, TEXT_FG, CANVAS_BG, just)
+        render = render_textrect(titulo.title(), fuente, rect, Colores.TEXT_FG, Colores.CANVAS_BG, just)
 
         return render
 
     def select_one(self, direccion):
-        self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
+        self.canvas.fill(Colores.CANVAS_BG, [270, 290, 345, 166])
         """Desplaza la selección al espacio equipable actual, y lo resalta.
         :param direccion: string
         """
 
         self.deselect_all(self.espacios)
-        self.draw_space.fill(CANVAS_BG)
+        self.draw_space.fill(Colores.CANVAS_BG)
         self.current = self.espacios.get_sprite(self.cur_esp)
         if direccion in self.current.direcciones:
             selected = self.current.direcciones[direccion]
@@ -220,15 +220,15 @@ class MenuEquipo(Menu):
             {'nombre': 'Volumen', 'data': item.volumen, "column": 2, "row": 1},
             {'nombre': 'Descripción', 'data': item.efecto_des, "column": 1, "row": 2}
         ]
-        self.canvas.fill(CANVAS_BG, [270, 290, 342, 165])  # clears the descriptive area
+        self.canvas.fill(Colores.CANVAS_BG, [270, 290, 342, 165])  # clears the descriptive area
         for p in d:
-            key = fuenteb.render(str(p['nombre']), True, TEXT_FG, CANVAS_BG)
+            key = fuenteb.render(str(p['nombre']), True, Colores.TEXT_FG, Colores.CANVAS_BG)
             x = 270 if p['column'] == 1 else 370
             y = 290 + p['row'] * 22
 
             rect_key = key.get_rect(topleft=(x, y))
 
-            data = fuentea.render(': ' + str(p['data']), True, TEXT_FG, CANVAS_BG)
+            data = fuentea.render(': ' + str(p['data']), True, Colores.TEXT_FG, Colores.CANVAS_BG)
             rect_data = data.get_rect(x=rect_key.right, y=y)
             self.canvas.blit(key, rect_key)
             self.canvas.blit(data, rect_data)
@@ -254,7 +254,7 @@ class MenuEquipo(Menu):
         if espacio.accepts == item.espacio:
             espacio.ocupar(item)
             self.entity.equipar_item(item, espacio.nombre)
-            self.draw_space.fill(CANVAS_BG)
+            self.draw_space.fill(Colores.CANVAS_BG)
             self.espacios.draw(self.canvas)
             self.foco = 'espacios'
             self.current = espacio
@@ -280,7 +280,7 @@ class MenuEquipo(Menu):
             for fila in self.filas.sprs():
                 fila.ser_deselegido()
             self.foco = 'espacios'
-            self.canvas.fill(CANVAS_BG, [270, 290, 345, 166])
+            self.canvas.fill(Colores.CANVAS_BG, [270, 290, 345, 166])
 
     def reset(self, **kwargs):
         self.deselect_all(self.espacios)
@@ -314,3 +314,6 @@ class MenuEquipo(Menu):
         self.filas.draw(self.draw_space)
         self.espacios.draw(self.canvas)
         self.canvas.blit(self.draw_space, self.draw_space_rect)
+
+    # def recolor(self, event):
+
