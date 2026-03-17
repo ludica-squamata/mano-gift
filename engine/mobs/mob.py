@@ -55,13 +55,14 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
         image = self.images['S' + self.direccion]['light']
         mask = self.mascaras['S' + self.direccion]
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
+        self.uuid = ModData.next_uuid()
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
-        self['raza'] = data.get('raza', 'human')
+        self['species'] = data.get('species', 'human')
         self['hashed'] = data.get('hashed')  # hash value de todas las características menos el nombre.
 
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
-        if self.id not in Mob_Group:
-            Mob_Group[self.id] = self
+        if self.uuid not in Mob_Group:
+            Mob_Group[self.uuid] = self
         if 'occupation' in data:
             self['occupation'] = data['occupation']
         if self['raza'] == 'human':

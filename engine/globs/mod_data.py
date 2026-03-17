@@ -1,9 +1,9 @@
 from os import getcwd as cwd, path, listdir
 from engine.misc import salir, abrir_json
+from random import randint, getrandbits
 from engine.globs.tiempo import Tiempo
 from importlib import import_module
 from datetime import datetime
-from random import randint
 
 
 class ModData:
@@ -161,6 +161,10 @@ class ModData:
         now = ''.join([char for char in str(datetime.now()) if char not in [' ', '.', ':', '-']])
         now = now[0:-5] + '-' + str(r).rjust(5, '0')
         return now
+
+    @classmethod
+    def next_uuid(cls):
+        return getrandbits(64)
 
     @classmethod
     def _find_mod_folder(cls, ini):

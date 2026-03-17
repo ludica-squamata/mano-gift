@@ -305,7 +305,7 @@ class Tiempo:
     @classmethod
     def get_time(cls):
         year = SeasonalYear.actual_year
-        return ':'.join([str(year), cls.dia, cls.clock.h, cls.clock.m, cls.clock.s])
+        return ':'.join([str(year), str(cls.dia), str(cls.clock.h), str(cls.clock.m), str(cls.clock.s)])
 
     @classmethod
     def save_time(cls, event):

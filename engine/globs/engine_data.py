@@ -164,7 +164,7 @@ class EngineData:
 
     @classmethod
     def cargar_juego(cls, event):
-        from engine.mapa.loader import load_mobs
+        from engine.mapa.loader import load_something
         data = event.data['savegame'] if 'savegame' in event.data else event.data
         cls.acceso_menues.clear()
 
@@ -205,7 +205,7 @@ class EngineData:
             datos = {'mobs': {data['focus']: [entrada]}, 'focus': True}
             datos.update({'entradas': stage.data['entradas']})
             datos.update({'refs': {data['focus']: ModData.fd_player + data['focus'] + '.json'}})
-            focus, grupo = load_mobs(chunk, datos)[0]
+            focus, grupo = load_something(chunk, datos, ['mobs', 'csv'])[0]
 
             chunk.add_property(focus, grupo)
 

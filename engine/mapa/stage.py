@@ -106,13 +106,13 @@ class Stage:
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', data)
 
         ruta = path.join(Config.savedir, 'mobs.csv')
-        fieldnames = ['name', 'x', 'y', 'id', 'chunk', 'adress']
+        fieldnames = ['uuid', 'x', 'y', 'chunk', 'adress']
         with open(ruta, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
             for mob in Mob_Group.contents():
                 chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress((0, 0))
-                if mob.nombre in MobCSV:
-                    row = MobCSV[mob.nombre]
+                if mob.uuid in MobCSV:
+                    row = MobCSV[mob.uuid]
 
                     row['x'] = str(mob.rel_x)
                     row['y'] = str(mob.rel_y)
@@ -120,9 +120,9 @@ class Stage:
                     row['adress'] = str(chunk.adress)
 
                 else:
-                    row = {'name': mob.nombre, 'x': mob.rel_x, 'y': mob.rel_y, 'id': mob.id,
+                    row = {'uuid': mob.uuid, 'x': mob.rel_x, 'y': mob.rel_y,
                            'chunk': chunk.nombre, 'adress': str(chunk.adress)}
-                    MobCSV[mob.nombre] = row
+                    MobCSV[mob.uuid] = row
 
                 writer.writerow(row)
 

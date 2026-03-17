@@ -8,8 +8,7 @@ from engine.scenery import new_prop
 from engine.libs import randint
 from engine.mobs import Mob
 from .salida import Salida
-import csv
-import sys
+import csv, sys
 
 
 class NamedNPCs:
@@ -28,14 +27,14 @@ def load_something(parent, alldata: dict, requested: str):
             for mob in load_mobs(parent, alldata):
                 loaded.append((mob, GRUPO_MOBS))
 
+        if 'csv' in requested:
+            mobs = [mob[0] for mob in loaded]
+            loaded = [(mob, GRUPO_MOBS) for mob in load_mob_csv(parent, mobs)]
+
         if 'props' in requested and 'props' in alldata:
             for prop in load_props(parent, alldata):
                 Prop_Group.add(prop[0].nombre, prop[0])
                 loaded.append((prop, prop[0].grupo))
-
-        if 'csv' in requested:
-            for mob in load_mob_csv(parent, alldata):
-                loaded.append((mob, GRUPO_MOBS))
 
         return loaded
 
@@ -85,27 +84,24 @@ def load_props(parent, alldata: dict):
 def load_mobs(parent, alldata: dict):
     loaded_mobs = []
     csv_file = list(csv.DictReader(open(path.join(ModData.game_fd, 'mobs.csv'), 'rt', encoding='utf-8'), delimiter=";"))
-    mobs_csv_by_name = {row['mob']: row for row in csv_file}
-    mobs_csv_by_occupation = {row['occupation']: row for row in csv_file}
 
+    mob = None
+    mob_values = None
     for name in alldata.get('mobs', []):
-        mob_data = None
-        mob = None
-        if name.lower() in mobs_csv_by_name:
-            mob_data = mobs_csv_by_name[name.lower()]
-        elif name.lower() in mobs_csv_by_occupation:
-            mob_data = mobs_csv_by_occupation[name.lower()]
+        mob_data = [[i, row] for i, row in enumerate(csv_file) if name.lower() in csv_file[i].values()]
+        if len(mob_data):
+            mob_data = mob_data[0][1]
+            mob_values = list(mob_data.values())
+        else:
+            mob_data = None
 
         hashed = None
         if mob_data is not None:
-            # instances = len(alldata['mobs'][name])
+            md = mob_data
             # Esto previene que los mobs se repitan aunque estén declarados en los datos de un chunk que sí se repite.
-            # aunque no es perfecto porque qué pasa si quiero poner 3 green blobs en un mismo chunk?
-            no_name = mob_data.copy()
-            del no_name['name']  # ignoramos el nombre porque siempre es diferente.
 
-            values = [int(no_name[v]) for v in sorted(no_name) if no_name[v].isnumeric()]  # características numéricas
-            values += [no_name[v] for v in sorted(no_name) if not no_name[v].isnumeric()]  # y las no numericas
+            values = [int(md[v]) for v in sorted(md) if md[v].isnumeric()]  # características numéricas
+            values += [md[v] for v in sorted(md) if not md[v].isnumeric()]  # y las no numericas
             hashed = hash(tuple(values))  # mobs con identicas caracteristicas tendrán el mismo hash value.
 
             mob_k = [k for k in Mob_Group if k['hashed'] == hashed]  # tomamos en cuenta este valor para no repetir
@@ -114,6 +110,7 @@ def load_mobs(parent, alldata: dict):
         if mob is None:
             pos = alldata['mobs'][name]
             for i, item in enumerate(pos):
+                data = None
                 if type(item) is str:
                     x, y = alldata['entradas'][item]['pos']
                 else:
@@ -126,8 +123,13 @@ def load_mobs(parent, alldata: dict):
                 elif path.exists(ModData.fd_player + name + '.json'):
                     data = abrir_json(ModData.fd_player + name + '.json')
                     alldata['focus'] = name
-                elif name.lower() in mobs_csv_by_occupation:
-                    data = abrir_json(ModData.mobs + mobs_csv_by_occupation[name.lower()]['mob'] + '.json')
+                elif path.exists(path.join(ModData.mobs, name.lower() + '.json')):
+                    data = abrir_json(ModData.mobs + name.lower() + '.json')
+                elif name.lower() in mob_values:
+                    if path.exists(path.join(ModData.mobs, mob_data['archetype'] + '.json')):
+                        data = abrir_json(path.join(ModData.mobs, mob_data['archetype'] + '.json'))
+                    elif path.exists(path.join(ModData.mobs, mob_data['occupation'] + '.json')):
+                        data = abrir_json(path.join(ModData.mobs, mob_data['occupation'] + '.json'))
                 else:
                     data = abrir_json(ModData.mobs + name + '.json')
 
@@ -138,80 +140,50 @@ def load_mobs(parent, alldata: dict):
                         data['id'] = ids[idx]
                         del names[idx], ids[idx]
 
-                if mob_data is not None and mob_data['name'] == 'null' and data['gender'] is not None:
+                if mob_data is not None and mob_data['class'] == 'unique':
                     generator = name_generator("PERSON", gender=data['gender'], just_name=True)
                     name = next(generator)  # aquí generamos un nombre para el mob.
                     mob_data['name'] = name
+                elif mob_data is not None:
+                    mob_data['occupation'] = None
+                    mob_data['name'] = mob_data['species'].replace('_', ' ').capitalize()
 
                 if mob_data is not None:
                     chars = [char for char in ModData.data['caracteristicas']]
                     data.update({'atributos': {char: int(mob_data[char.lower()]) for char in chars}})
                     data.update(
-                        {'occupation': mob_data['occupation'], 'raza': mob_data['raza'],
+                        {'occupation': mob_data['occupation'], 'species': mob_data['species'],
                          "nombre": mob_data['name'], "hashed": hashed})
                 else:
                     data['hashed'] = 0  # el héroe es el único con hashed == 0.
 
                 mob = Mob(parent, x, y, data, focus=alldata.get('focus', False))
-                loaded_mobs.append((mob, GRUPO_MOBS))
+                loaded_mobs.append(mob)
 
     return loaded_mobs
 
 
-def load_mob_csv(parent, all_data):
+def load_mob_csv(parent, loaded):
     loaded_mobs = []
-    csv_file = list(csv.DictReader(open(path.join(ModData.game_fd, 'mobs.csv'), 'rt', encoding='utf-8'), delimiter=";"))
-    mobs_csv_by_name = {row['mob']: row for row in csv_file}
     if path.exists(path.join(Config.savedir, 'mobs.csv')):
         ruta = path.join(Config.savedir, 'mobs.csv')
-        fieldnames = ['name', 'x', 'y', 'id', 'chunk_name', 'adress']
+        fieldnames = ['uuid', 'x', 'y', 'chunk_name', 'adress']
         with open(ruta) as csvfile:
             reader = list(csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=';'))
             if len(reader):
-                filname_list = [filename[:-5] for filename in listdir(ModData.mobs) if filename.endswith('.json')]
-                name_list = [mobs_csv_by_name[filename]['name'] for filename in filname_list]
-
                 for row in [row for row in reader if row['chunk_name'] == parent.nombre]:
-                    name = row['name']
+                    uuid = int(row['uuid'])
                     x, y = int(row['x']), int(row['y'])
                     a, b = row['adress'].split(',')
                     adress = (int(a), int(b))
-                    mob = [k for k in Mob_Group if k['nombre'] == name]
-                    if not len(mob):
+                    mob = [k for k in loaded if k.uuid == uuid]
+                    if len(mob):
+                        mob = mob[0]
                         if tuple(parent.adress) == adress:
-                            if 'refs' in all_data and name in all_data['refs']:
-                                data = abrir_json(all_data['refs'][name])
-
-                            elif path.exists(ModData.mobs + name + '.json'):
-                                data = abrir_json(ModData.mobs + name + '.json')
-
-                            elif name in name_list:
-                                filname = filname_list[name_list.index(name)]
-                                data = abrir_json(ModData.mobs + filname + '.json')
-
-                            elif name in ModData.character_generator:
-                                data = ModData.character_generator[name]()
-
-                            elif path.exists(ModData.fd_player + name + '.json'):
-                                data = abrir_json(ModData.fd_player + name + '.json')
-                                all_data['focus'] = name
-
-                            data['id'] = row['id']
-                            if NamedNPCs.npcs_with_ids is not None:
-                                ids, names = NamedNPCs.npcs_with_ids
-                                if name in names:
-                                    idx = names.index(data['nombre'])
-                                    data['id'] = ids[idx]
-                                    del names[idx], ids[idx]
-
-                            try:
-                                mob = Mob(parent, x, y, data, focus=all_data.get('focus', False))
-                                loaded_mobs.append((mob, GRUPO_MOBS))
-                            except KeyError:
-                                # the hero might not be in the chunk, creating a error while he is being loaded.
-                                # This try/except clause catches the exception because the hero is added
-                                # to the map from the outside.
-                                pass
+                            mob.ubicar_en_mapa(x, y)
+                            loaded_mobs.append(mob)
+    else:
+        loaded_mobs = loaded.copy()
 
     return loaded_mobs
 
