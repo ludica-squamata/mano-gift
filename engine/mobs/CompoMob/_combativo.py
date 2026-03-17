@@ -9,7 +9,7 @@ class Combativo(Animado, Suertudo, Equipado):
     is_damageable = True
 
     def hurt(self, damage):
-        damage -= self.dureza
+        damage -= self["dureza"]
         self['Salud'] -= damage
         EventDispatcher.trigger('MobWounded', self.tipo,
                                 {'mob': self,

@@ -272,6 +272,9 @@ class TimeStamp:
         return float(s / 3600)
 
     def __repr__(self):
+        return ':'.join([str(self._h), str(self._m).rjust(2, '0'), str(self._s).rjust(2, '0')])
+
+    def __str__(self):
         return ':'.join([str(self._h), str(self._m).rjust(2, '0')])
 
 
@@ -286,13 +289,14 @@ class Tiempo:
         cls.clock = Clock(real=is_real, minute_lenght=min_lenght)
 
     @classmethod
-    def set_time(cls, dia, hora, mins=0, segs=0):
-        cls.dia = dia
-        cls.clock.h = hora
-        cls.clock.m = mins
-        cls.clock.s = segs
+    def set_time(cls, timestamp: str):
+        year, dia, hora, mins, segs = timestamp.split(':')
+        cls.dia = int(dia)
+        cls.clock.h = int(hora)
+        cls.clock.m = int(mins)
+        cls.clock.s = int(segs)
 
-        SeasonalYear.init()
+        SeasonalYear.init(year)
 
     @classmethod
     def set_year(cls, year, month, week):
@@ -300,7 +304,8 @@ class Tiempo:
 
     @classmethod
     def get_time(cls):
-        return cls.dia, cls.clock.h, cls.clock.m, cls.clock.s
+        year = SeasonalYear.actual_year
+        return ':'.join([str(year), cls.dia, cls.clock.h, cls.clock.m, cls.clock.s])
 
     @classmethod
     def save_time(cls, event):
@@ -352,6 +357,7 @@ class SeasonalYear:
 
     week_day = 0
     month_day = 0
+    actual_year = 0  # the actual year, like 2026 or some other number
 
     biomes = {  # los valores son la cantidad de horas de luz que puede tener un día.
         "polar": {  # corresponde a latitudes entre 90º y 70º N/S
@@ -370,11 +376,12 @@ class SeasonalYear:
     month_cycler = None
 
     @classmethod
-    def init(cls):
+    def init(cls, current_year):
         cls.biome = 'temperate'
         cls.season = next(cls.season_cycler)
         cls.set_day_duration()
         cls.propagate()
+        cls.actual_year = current_year
 
         EventDispatcher.register(cls.cycle_time, 'DayFlag')
         if cls.month_cycler is None:  # cls.set_year() was not called.
@@ -405,6 +412,7 @@ class SeasonalYear:
 
         if number_of_days == cls.year_lenght:
             cls.season = next(cls.season_cycler)
+            cls.actual_year += 1
             Tiempo.reset_days()
 
         if number_of_days % cls.month_lenght == 0:

@@ -126,10 +126,10 @@ class Camara:
                 adyacent_map_key = 'sup'
             elif map_at_tl:
                 reference = map_at_tl
-                adyacent_map_key = 'izq'
+                adyacent_map_key = 'der'
             elif map_at_tr:
                 reference = map_at_tr
-                adyacent_map_key = 'der'
+                adyacent_map_key = 'izq'
 
         if map_at_left is None and adyacent_map_key == '':
             if map_at_center:

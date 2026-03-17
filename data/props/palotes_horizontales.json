@@ -332,7 +332,7 @@
     }
   },
   "referencias": {
-    "palotes": "data/items/palotes.json"
+    "palotes": "data/props/palotes.json"
   },
   "cara": "left",
   "width": 32,

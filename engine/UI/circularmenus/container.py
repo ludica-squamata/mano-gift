@@ -5,12 +5,12 @@ from .elements import ContainedInventoryElement
 class ContainerCircularMenu(RenderedCircularMenu):
     first = 0
 
-    def __init__(self, parent):
-        self.entity = parent
+    def __init__(self, parent, entity):
+        self.entity = entity
         self.parent = parent
         cascadas = {
             'inicial': [
-                ContainedInventoryElement(self, item) for item in parent.inventario.uniques()
+                ContainedInventoryElement(self, parent, item) for item in parent.inventario.uniques()
             ]
         }
 

@@ -1,5 +1,6 @@
 class Inventory:
-    def __init__(self, maxvol=None, maxpeso=None):
+    def __init__(self, parent, maxvol=None, maxpeso=None):
+        self.parent = parent
         self._volumen_max = maxvol
         self._peso_max = maxpeso
         self._volumen_actual = 0

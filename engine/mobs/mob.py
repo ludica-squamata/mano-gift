@@ -4,7 +4,7 @@ from engine.globs import Mob_Group, ModData
 from engine.base import ShadowSprite
 
 
-class Mob(Combativo, Autonomo, Parlante, Aventajado,Comerciante, Lector, ShadowSprite):
+class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, ShadowSprite):
     accionable = False
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
     race = None  # for now, "human" or "blob". This tag allow the engine to select a mob by it's "class".

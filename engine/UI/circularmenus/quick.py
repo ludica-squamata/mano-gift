@@ -2,7 +2,7 @@ from engine.globs import ModData, Mob_Group, Game_State
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import CommandElement, InventoryElement, DialogTopicElement, LetterElement
-from .elements import ColocableInventoryElement as Colocable_IE
+from .elements import ColocableInventoryElement
 
 
 class QuickCircularMenu(RenderedCircularMenu):
@@ -12,6 +12,7 @@ class QuickCircularMenu(RenderedCircularMenu):
     def __init__(self):
         self.entity = Mob_Group.get_controlled_mob()
         e = self.entity  # local shortcut
+        inv = e.inventario
         self.nombre = 'Quick'
 
         if ModData.QMC is None:
@@ -27,10 +28,10 @@ class QuickCircularMenu(RenderedCircularMenu):
                     LetterElement(self, 'Consumibles', 'C'),
                     LetterElement(self, 'Equipables', 'E'),
                     LetterElement(self, "Utilizables", "U")],
-                'Consumibles': [InventoryElement(self, item) for item in e.inventario.get_by_type('consumible')],
-                'Equipables': [InventoryElement(self, item) for item in e.inventario.get_by_type('equipable')],
-                'Utilizables': [InventoryElement(self, item) for item in e.inventario.get_by_type('utilizable')],
-                'Colocar': [Colocable_IE(self, item) for item in e.inventario.uniques() if item.is_colocable]
+                'Consumibles': [InventoryElement(self, e, item) for item in inv.get_by_type('consumible')],
+                'Equipables': [InventoryElement(self, e, item) for item in inv.get_by_type('equipable')],
+                'Utilizables': [InventoryElement(self, e, item) for item in inv.get_by_type('utilizable')],
+                'Colocar': [ColocableInventoryElement(self, e, item) for item in inv.uniques() if item.is_colocable]
             }
         else:
             commands = [CommandElement(self, data) for data in ModData.QMC if 'cmd' in data]

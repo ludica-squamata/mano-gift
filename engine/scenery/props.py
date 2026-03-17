@@ -209,17 +209,19 @@ class Contenedor(Operable):
         self.prop_type = 'Contenedor'
         from engine.mobs.inventory import Inventory
         super().__init__(parent, x, y, z, data=data)
-        self.inventario = Inventory()
+        self.inventario = Inventory(self)
         self._fill(data['contenido'])
         self.menu = None
 
     def action(self, mob):
         super().operar()
-        if mob is Mob_Group.get_controlled_mob():
-            if len(self.inventario):
-                self.entity = mob
+        if len(self.inventario):
+            self.entity = mob
+            if mob is Mob_Group.get_controlled_mob():
                 EventDispatcher.trigger('Deregister', self, {'mob': mob})
-                self.menu = ContainerCircularMenu(self)
+                self.menu = ContainerCircularMenu(self, mob)
+            else:
+                pass  # acá iria la interacción con mobs mediante AI.
 
     def close(self):
         self.operar(estado=0)

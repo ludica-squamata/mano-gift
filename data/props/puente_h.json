@@ -1,0 +1,23 @@
+{
+  "tipo": "estructura_compuesta",
+  "nombre": "Puente Horizontal",
+  "componentes": {
+    "puente_derecha": [
+      [0,0,0]
+    ],
+    "puente_centro": [
+      [130,0,1]
+    ],
+    "puente_izquierda": [
+      [417,0,0]
+    ]
+  },
+  "referencias": {
+    "puente_derecha": "props/puente_derecha.png",
+    "puente_centro": "props/puente_centro.png",
+    "puente_izquierda": "props/puente_izquierda.png"
+  },
+  "width": 547,
+  "height": 164,
+  "proyecta_sombra": false
+}

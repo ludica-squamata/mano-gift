@@ -1,10 +1,9 @@
 from .loader import load_something, cargar_salidas, NamedNPCs, load_chunks_csv, load_props_csv, load_points_of_interest
+from engine.globs import ModData, Noche, ANCHO, ALTO, Mob_Group, MobCSV, Tiempo
 from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
-from engine.globs import ModData, COLOR_COLISION, Noche, ANCHO, ALTO
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
-from engine.globs import Mob_Group, MobCSV
 from pygame import mask
 from os import path
 import csv
@@ -19,7 +18,7 @@ class Stage:
 
     zoom_level = ''  # Afecta el paso del tiempo. Los valores pueden ser "world", "interior" y "local" (default).
 
-    def __init__(self, parent, nombre, mob, info, npcs_with_id=None, use_csv=False):
+    def __init__(self, parent, nombre, mob, info, npcs_with_id=None):
         NamedNPCs.npcs_with_ids = npcs_with_id
         self.id = ModData.generate_id()
         self.parent = parent  # a Stage's parent is always EngineData
@@ -57,20 +56,11 @@ class Stage:
                 self.chunks_csv = ModData.preloaded_chunk_csv[self.data['chunks_csv']]
             else:
                 self.chunks_csv = load_chunks_csv(self.data['chunks_csv'], silently=not self.world_stage)
-            # self.chunks_csv[chunk_name].update({
-            #     'mobs': {"hero": [[dx, dy]]},
-            #     'refs': {},
-            # })
+
         if "props_csv" in self.data:
             self.props_csv = load_props_csv(self.data['props_csv'])
         else:
             self.props_csv = {}
-
-        # if ModData.use_latitude and 'latitude' in self.data:
-        #     self.current_latitude = self.data['latitude']
-        # else:
-        #     self.current_latitude = 30
-        # self.current_longitude = self.data.get('longitude', 30)
 
         self.unique_props = {}
         if 'props' in self.data:
@@ -81,20 +71,18 @@ class Stage:
             adress = self.data['entradas'][key]['adress']
             self.entradas[key] = tuple(adress)
 
-        mob_req = 'mobs' if use_csv is False else 'csv'
-
         if chunk_name in self.data.get('chunks', {}):
             singleton = self.data['chunks'][chunk_name]
             chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton,
-                             requested=[mob_req, 'props'], adress=chunk_adress)
+                             requested=['csv', 'mobs', 'props'], adress=chunk_adress)
         elif chunk_name in self.chunks_csv:
             singleton = self.chunks_csv[chunk_name]
             chunk_adress = singleton['adress']
             chunk = ChunkMap(self, chunk_name, offx, offy, mob, data=singleton,
-                             requested=[mob_req, 'props'], adress=chunk_adress)
+                             requested=['csv', 'mobs', 'props'], adress=chunk_adress)
         else:
             chunk = ChunkMap(self, chunk_name, offx, offy, trnsnt_mb=mob,
-                             requested=[mob_req, 'props'], adress=chunk_adress)
+                             requested=['csv', 'mobs', 'props'], adress=chunk_adress)
             chunk.houses_focus = True
         self.chunks.add(chunk)
 
@@ -122,7 +110,7 @@ class Stage:
         with open(ruta, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
             for mob in Mob_Group.contents():
-                chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress([0, 0])
+                chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress((0, 0))
                 if mob.nombre in MobCSV:
                     row = MobCSV[mob.nombre]
 

@@ -1,3 +1,4 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.inventory import Inventory
 from ._caracterizado import Caracterizado
 from engine.scenery import new_item
@@ -12,13 +13,13 @@ class Equipado(Caracterizado):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.inventario = Inventory(10, 10 + self['ModCarga'])
-        self.dureza = 0
+        self.inventario = Inventory(self, 10, 10 + self['ModCarga'])
+        self['dureza'] = 0
 
     def equipar_item(self, item, espacio):
         self.equipo[espacio] = item
         if hasattr(item, 'proteccion'):
-            self.dureza += item.proteccion
+            self['dureza'] += item.proteccion
 
         elif hasattr(item, 'data'):
             stat = item.data.get('efecto', {}).get('stat', '')
@@ -46,7 +47,7 @@ class Equipado(Caracterizado):
     def desequipar_item(self, item):
         self.equipo[item.espacio] = None
         if hasattr(item, 'proteccion'):
-            self.dureza -= item.proteccion
+            self['dureza'] -= item.proteccion
 
         elif hasattr(item, 'method'):
             stat = item.data.get('efecto', {}).get('stat', '')

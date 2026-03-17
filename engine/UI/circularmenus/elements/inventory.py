@@ -14,11 +14,11 @@ class InventoryElement(LetterElement):
 
     timer = 0
 
-    def __init__(self, parent, item):
+    def __init__(self, parent, entity, item):
 
         self.item = item
-        self.img_uns = self._create_icon_stack(21, 21, False, parent.entity)
-        self.img_sel = self._create_icon_stack(33, 33, True, parent.entity)
+        self.img_uns = self._create_icon_stack(21, 21, False, entity)
+        self.img_sel = self._create_icon_stack(33, 33, True, entity)
 
         super().__init__(parent, self.item.nombre, None)
         self.description = DescriptiveArea(self, item.efecto_des)
@@ -89,7 +89,7 @@ class ColocableInventoryElement(InventoryElement):
 class ContainedInventoryElement(InventoryElement):
 
     def command(self):
-        entity = self.parent.parent.entity  # the mob who opened the container
+        entity = self.parent.entity  # the mob who opened the container
         item = self.item  # the item to be transfered
 
         # transfers the item

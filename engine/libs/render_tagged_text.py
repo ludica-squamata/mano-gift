@@ -1,10 +1,12 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from pygame import Surface, Rect, SRCALPHA, font
+from engine.globs.colores import Colores
 
 
 class Tag:
     fuente = None
-    fg = 0, 0, 0
-    bg = 255, 255, 255
+    fg = Colores.TEXT_FG
+    bg = Colores.TEXT_SEL
     h = 0
     init = ''
     close = ''
@@ -24,11 +26,20 @@ class Tag:
         self.init = '<' + nombre + '>'
         self.close = '</' + nombre + '>'
 
+        EventDispatcher.register(self.recolor, 'AlterColor')
+
     def render(self, string):
         return self.fuente.render(string, 1, self.fg)
 
     def __repr__(self):
         return 'tag ' + self.init
+
+    def recolor(self, event):
+        if event.data['name'] in ['TEXT_FG', 'TEXT_SEL']:
+            if self.fg == (0, 0, 0) and event.data['name'] == 'TEXT_FG':
+                self.fg = event.data['color']
+            elif self.fg == (255, 255, 255) and event.data['name'] == 'TEXT_SEL':
+                self.fg = event.data['color']
 
 
 font.init()

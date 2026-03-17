@@ -40,10 +40,10 @@ class EngineData:
         )
 
     @classmethod
-    def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False, use_csv=False):
+    def setear_mapa(cls, stage, entrada, named_npcs=None, mob=None, is_new_game=False):
         from engine.mapa import Stage, loader
         if stage not in cls.mapas or is_new_game:
-            cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs, use_csv=use_csv)
+            cls.mapas[stage] = Stage(cls, stage, mob, entrada, named_npcs)
         else:
             cls.mapas[stage].ubicar_en_entrada(mob, entrada)
 
@@ -166,13 +166,10 @@ class EngineData:
     def cargar_juego(cls, event):
         from engine.mapa.loader import load_mobs
         data = event.data['savegame'] if 'savegame' in event.data else event.data
-        use_csv = data.get('use_csv', False)
         cls.acceso_menues.clear()
 
-        # Sun.init(map_data['latitude'])
         if not Tiempo.clock.is_real():
-            Tiempo.set_time(*data['tiempo'])
-        # Sun.set_mod(*SeasonalYear.cargar_timestamps())
+            Tiempo.set_time(data['tiempo'])
 
         ids = [e['id'] for e in cls.transient_mobs]
         names = [e['name'] for e in cls.transient_mobs]
@@ -182,27 +179,30 @@ class EngineData:
             cls.mapas[data['mapa']].delete_everything()
             cls.mapas.clear()
 
-        if 'info' not in data:  # old savegame format
-            stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True, use_csv=use_csv)
+        if 'info' not in data:  # old savegame format or newgame
+            stage = cls.setear_mapa(data['mapa'], data['entrada'], named_npcs, is_new_game=True)
         elif 'info' in data:  # new savegame format
             nombre = data['info'].pop('stage')
-            stage = cls.setear_mapa(nombre, data['info'], named_npcs, is_new_game=True, use_csv=use_csv)
+            stage = cls.setear_mapa(nombre, data['info'], named_npcs, is_new_game=True)
         else:
             raise NotImplementedError('savefile format is invalid')
 
-        adress = stage.entradas[data['entrada']]
+        if 'info' not in data:  # old savegame format
+            adress = stage.entradas[data['entrada']]
+        else:  # new savegame format
+            adress = tuple(data['info']['adress'])
         chunk = stage.get_chunk_by_adress(adress)
-        Renderer.camara.set_background(chunk)
+        if chunk is not None:
+            Renderer.camara.set_background(chunk)
 
         SeasonalYear.propagate()
 
         focus = stage.get_entitiy_from_my_chunks(data['focus'])
         exists = stage.exists_within_my_chunks(data['focus'], 'mobs')
-        # map_data = stage.data.copy()
         if focus is None and not exists:
-            # adress = map_data['entradas'][data['entrada']]['adress']
-            # # mapa = stage.get_chunk_by_adress(adress)
-            datos = {'mobs': {data['focus']: [data['entrada']]}, 'focus': True}
+            entradas = stage.data['entradas']
+            entrada = [name for name in entradas if entradas[name]['adress'] == list(adress)][0]
+            datos = {'mobs': {data['focus']: [entrada]}, 'focus': True}
             datos.update({'entradas': stage.data['entradas']})
             datos.update({'refs': {data['focus']: ModData.fd_player + data['focus'] + '.json'}})
             focus, grupo = load_mobs(chunk, datos)[0]
