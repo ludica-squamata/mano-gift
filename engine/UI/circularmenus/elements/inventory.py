@@ -90,15 +90,16 @@ class ContainedInventoryElement(InventoryElement):
 
     def command(self):
         entity = self.parent.entity  # the mob who opened the container
+        container = self.parent.parent
         item = self.item  # the item to be transfered
 
         # transfers the item
         entity.inventario.agregar(item)
-        self.parent.parent.inventario.remover(item)
+        container.inventario.remover(item)
 
         # updates the stack
-        value = self.parent.parent.inventario.cantidad(self.item)
-        self.img_sel = self._create_icon_stack(33, 33, True, self.parent.entity)
+        value = container.inventario.cantidad(self.item)
+        self.img_sel = self._create_icon_stack(33, 33, True, container)
         self.image = self.img_sel
 
         # deletes the element if stack == 0
@@ -106,7 +107,7 @@ class ContainedInventoryElement(InventoryElement):
             self.parent.del_item_from_cascade(self.nombre, 'inicial')
 
         # closes the menu if all stacks == 0
-        if len(self.parent.parent.inventario) == 0:
+        if len(container.inventario) == 0:
             self.parent.salir()
             EventDispatcher.trigger('Register', self, {'mob': entity})
             # entity['AI'].register()

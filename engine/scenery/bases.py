@@ -3,6 +3,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.UI.prop_description import PropDescription
 from engine.mapa.light_source import LightSource
 from engine.base import ShadowSprite, AzoeSprite
+from engine.globs.renderer import Camara
 from engine.misc import cargar_imagen
 from importlib import import_module
 from os.path import join
@@ -54,7 +55,7 @@ class Escenografia(ShadowSprite):
 
         self.event_handlers = {}
         self.add_listeners()  # carga de event listeners
-        self.uuid = ModData.next_uuid()
+        self.uuid = ModData.next_uuid('P')
 
     def __repr__(self):
         c = self.__class__.__name__
@@ -97,6 +98,13 @@ class Escenografia(ShadowSprite):
             for event_name, f in self.event_handlers:
                 EventDispatcher.deregister(f, event_name)
 
+    def on_elimination(self):
+        super().on_elimination()
+        if self.luz is not None:
+            Camara.remove_obj(self.luz)
+            self.luz.on_elimination()
+            self.luz = None
+
 
 class Item(AzoeSprite):
     stackable = False
@@ -118,7 +126,7 @@ class Item(AzoeSprite):
         self.is_colocable = 'colocable' in self.data['propiedades']
         imagen = cargar_imagen(join(ModData.graphs, self.data['imagenes']['item']))
         super().__init__(parent, imagen=imagen)
-        self.uuid = ModData.next_uuid()
+        self.uuid = ModData.next_uuid('I')
 
     def __eq__(self, other):
         # __eq__() ya no pregunta por el ID porque el ID hace único a cada item.

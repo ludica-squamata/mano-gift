@@ -30,6 +30,8 @@ class AzoeSprite(sprite.Sprite):
     can_overlay = False
     iluminacion = 'light'  # 'light' | 'dark'
 
+    uuid = None
+
     def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
         super().__init__()
@@ -73,10 +75,7 @@ class AzoeSprite(sprite.Sprite):
 
         self.z += dz
 
-        if id is None:
-            self.id = ModData.generate_id()
-        else:
-            self.id = id
+        self.id = id
 
     def reubicar(self, dx, dy):
         self.x += dx
@@ -103,7 +102,7 @@ class AzoeSprite(sprite.Sprite):
         if self._last_map is not None:
             self._last_map.del_property(self, rem_renderer=False)
         self._last_map = new
-        self._last_map.add_property(self, 2)
+        new.add_property(self, 2)
 
     def ubicar(self, x, y):
         """Coloca al sprite en pantalla"""
@@ -133,3 +132,6 @@ class AzoeSprite(sprite.Sprite):
 
     def unload(self):
         pass
+
+    def on_elimination(self):
+        self._last_map = None

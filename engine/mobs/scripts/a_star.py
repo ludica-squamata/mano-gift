@@ -4,7 +4,7 @@ from pygame import mask
 
 
 def a_star(inicio, destino, mapa, others, heuristica='euclidean'):
-    cerrada = []  # The set of nodes already evaluated.
+    cerrada = set()  # The set of nodes already evaluated.
     abierta = {inicio}  # The set of tentative nodes to be evaluated, initially containing the start node
     camino = {}  # The map of navigated nodes.
 
@@ -12,25 +12,40 @@ def a_star(inicio, destino, mapa, others, heuristica='euclidean'):
     # Estimated total cost from start to goal through y.
     inicio.f = heuristica_estimada(inicio, destino, heuristica)
 
+    w, h = mapa.get_size()
+    MAX_ITER = w * h
+    iteraciones = 0
+
     while abierta:
+        iteraciones += 1
+        if iteraciones > MAX_ITER:
+            raise RuntimeError
         actual = list(sorted(abierta, key=lambda nodo: nodo.f)).pop(0)
         # the node in openset having the lowest f_score[] value
         abierta.remove(actual)
         if actual == destino:
             return reconstruir_camino(camino, destino)
 
-        cerrada.append(actual)
+        cerrada.add(actual)
 
         vecinos = mirar_vecinos(actual, mapa, others)
         for vecino in vecinos:
-            punt_g_tentativa = actual.g + vecino.g
-            if vecino not in cerrada or punt_g_tentativa < vecino.g:
+            punt_g_tentativa = actual.g + costo_terreno(vecino)
+
+            if vecino in cerrada and punt_g_tentativa >= vecino.g:
+                continue
+
+            if vecino not in abierta or punt_g_tentativa < vecino.g:
+                camino[vecino] = actual
                 vecino.g = punt_g_tentativa
                 vecino.f = vecino.g + heuristica_estimada(vecino, destino, heuristica)
-                camino[vecino] = actual
+
                 if vecino not in abierta:
                     abierta.add(vecino)
 
+def costo_terreno(_):
+    # placeholder, acá iria el costo del terreno
+    return 1
 
 def heuristica_estimada(node, goal, method):
     if method == 'manhattan':

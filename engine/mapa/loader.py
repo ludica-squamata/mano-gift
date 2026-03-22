@@ -170,15 +170,29 @@ def load_mob_csv(parent, loaded):
         fieldnames = ['uuid', 'x', 'y', 'chunk_name', 'adress']
         with open(ruta) as csvfile:
             reader = list(csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=';'))
+            row_values = [list(row.values()) for row in reader]
+            _valid_mobs = [mob for mob in loaded if str(mob.uuid) in [row[0] for row in row_values]]
+            _invalid_mobs = [mob for mob in loaded if str(mob.uuid) not in [row[0] for row in row_values]]
+            if len(_invalid_mobs):
+                raise RuntimeError(f'the following uuids are invalid: {[i.uuid for i in _invalid_mobs]}')
             if len(reader):
                 for row in [row for row in reader if row['chunk_name'] == parent.nombre]:
-                    uuid = int(row['uuid'])
+                    uuid = row['uuid']
                     x, y = int(row['x']), int(row['y'])
                     a, b = row['adress'].split(',')
                     adress = (int(a), int(b))
-                    mob = [k for k in loaded if k.uuid == uuid]
+                    mob = [k for k in _valid_mobs if k.uuid == uuid]
                     if len(mob):
                         mob = mob[0]
+                        if tuple(parent.adress) == adress:
+                            mob.ubicar_en_mapa(x, y)
+                            loaded_mobs.append(mob)
+                            continue
+
+                    mob = [k for k in _invalid_mobs if k.uuid != uuid]
+                    if len(mob) and mob not in loaded_mobs:
+                        mob = mob[0]
+                        mob.uuid = uuid
                         if tuple(parent.adress) == adress:
                             mob.ubicar_en_mapa(x, y)
                             loaded_mobs.append(mob)
@@ -305,14 +319,9 @@ def cargar_salidas(chunk, all_data: list):
 
 
 def load_points_of_interest(parent, alldata):
-    points_of_interest = {}
+    points_of_interest = []
     for datapoint in alldata.get('puntos_de_interes_para_la_IA', {}):
-        if tuple(datapoint['adress']) not in points_of_interest:
-            points_of_interest[tuple(datapoint['adress'])] = []
-
-        chunk = parent.get_chunk_by_adress(tuple(datapoint['adress']))
-        point = PointOfInterest(chunk, datapoint['point'])
-        Renderer.camara.add_real(point)
-        points_of_interest[tuple(datapoint['adress'])].append(point)
+        if list(parent.adress.center) == datapoint['adress']:
+            points_of_interest.append(PointOfInterest(parent, datapoint['point']))
 
     return points_of_interest

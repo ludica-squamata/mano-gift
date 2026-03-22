@@ -21,7 +21,9 @@ class MenuStatus(Menu):
 
         chars = list(self.entity.get_attr_names()) + ['', 'SaludMax', 'ManaMax']
 
+        idx = 0
         for i, char in enumerate(chars):
+            idx = i
             if char != '':
                 value = self.entity[char]
                 render_char = fuente_1.render(char, True, Colores.TEXT_FG, Colores.CANVAS_BG)
@@ -32,6 +34,15 @@ class MenuStatus(Menu):
 
                 self.image.blit(render_char, render_rect)
                 self.image.blit(render_value, value_rect)
+
+        wallet_text = fuente_1.render("Dinero", True, Colores.TEXT_FG, Colores.CANVAS_BG)
+        rect_wallet = wallet_text.get_rect(left=305, y=rect.y + (idx + 2) * 23)
+
+        wallet_value = render_textrect(f'${self.entity.wallet['$']}', fuente_2, Rect(0, 0, 32, 32), Colores.TEXT_FG, Colores.CANVAS_BG, 2)
+        rect_value = wallet_value.get_rect(left=rect_wallet.left + 100, y=rect.y + (idx + 2) * 23)
+
+        self.image.blit(wallet_text, rect_wallet)
+        self.image.blit(wallet_value, rect_value)
 
         stats = {'SaludMax': [200, 50, 50], 'ManaMax': [125, 0, 255], 'Experiencia': [0, 200, 100]}
         for i, stat in enumerate(stats):

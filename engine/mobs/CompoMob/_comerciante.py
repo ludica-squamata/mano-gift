@@ -17,27 +17,32 @@ class Comerciante(Equipado):
 
         file_1 = abrir_json(ruta1)['inventario_inicial']
         reader_1 = []
+        named_trader = False
+        trader = None
         for trader in file_1:
             named_trader = None
             if trader.lower() == data['occupation']:
-                named_trader = data['nombre']
+                named_trader = self.uuid
+                break
             elif trader == data["nombre"]:
                 named_trader = trader
+                break
 
-            if named_trader is not None:
-                for item in file_1[trader]:
-                    entry = {'trader': named_trader, 'item': item, 'cant': file_1[trader][item], 'desde': "inicio"}
+        if named_trader is not None:
+            for item in file_1[trader]:
+                entry = {'uuid': named_trader, 'item': item, 'cant': file_1[trader][item], 'desde': "inicio"}
 
-                    reader_1.append(entry)
+                reader_1.append(entry)
 
         if not path.exists(ruta2):
             file_2 = open(ruta2, 'xt', encoding='utf-8', newline='\r\n')
         else:
             file_2 = open(ruta2, 'r', encoding='utf-8')
-        reader_2 = list(csv.DictReader(file_2, ['trader', 'item', 'cant', "desde"], delimiter=";"))
+        reader_2 = list(csv.DictReader(file_2, ['uuid', 'item', 'cant', "desde"], delimiter=";"))
         file_2.close()
         reader = reader_1 + reader_2
-        for row in [row for row in reader if row['trader'] == self.nombre]:
+        rows = [row for row in reader if row['uuid'] == self.uuid]
+        for row in rows:
             item = None
             now = Tiempo.clock.timestamp()
             timestamp = TimeStamp(*row['desde'].split(':')) if row['desde'] != 'inicio' else "inicio"
@@ -54,11 +59,19 @@ class Comerciante(Equipado):
 
                 if item is not None:
                     cant = int(row['cant'])
+
+                    if row['desde'] != 'inicio':
+                        value = item.price_buy if cant > 0 else item.price_sell
+                    else:
+                        value = 0
+
                     if cant > 0:
                         for copy in [item] * cant:
+                            self.wallet["$"] -= value
                             self.inventario.agregar(copy)
                     else:
                         for _ in range(abs(cant)):
+                            self.wallet["$"] += value
                             self.inventario.remover(item)
 
     def recibir_dinero(self, coin, value):

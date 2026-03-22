@@ -91,8 +91,6 @@ class Stage:
             (self.del_interactive, 'DeleteItem')
         )
 
-        self.points_of_interest = load_points_of_interest(self, self.data)
-
     def save_map(self, event):
         # abreviaturas
         sprs = self.chunks.sprs
@@ -266,6 +264,9 @@ class ChunkMap(AzoeBaseSprite):
 
     houses_focus = False
 
+    flagged = False
+    points_of_interest = None
+
     def __init__(self, parent, nombre, off_x=0, off_y=0, trnsnt_mb=None, data=False, requested=None, adress=None):
         self.id = ModData.generate_id()
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties', self.id)
@@ -325,6 +326,8 @@ class ChunkMap(AzoeBaseSprite):
 
         super().__init__(parent, nombre, image, rect)
 
+        self.points_of_interest = load_points_of_interest(self, self.parent.data)
+
         self.adress.set_maxs()
         if tuple(self.adress) in self.parent.props_csv:
             datos = self.parent.props_csv[tuple(self.adress)]
@@ -380,7 +383,7 @@ class ChunkMap(AzoeBaseSprite):
         add_interactive = False
         if type(obj) is tuple:
             obj, add_interactive = obj
-        if obj not in self.properties:
+        if obj not in self.properties.sprs():
             self.properties.add(obj, layer=_layer)
             Renderer.camara.add_real(obj)
         if add_interactive and obj not in self.interactives:
@@ -390,7 +393,7 @@ class ChunkMap(AzoeBaseSprite):
             self.houses_focus = True
 
     def del_property(self, obj, rem_renderer=True):
-        if obj in self.properties:
+        if obj in self.properties.sprs():
             self.properties.remove(obj)
         if obj in self.interactives:
             self.interactives.remove(obj)
@@ -410,11 +413,19 @@ class ChunkMap(AzoeBaseSprite):
     def delete_everything(self):
         sprites = self.properties.sprites()
         for sprite in sprites:
+            sprite.on_elimination()
             self.properties.remove(sprite)
+            Renderer.camara.remove_obj(sprite)
         self.properties.empty()
+        self.interactives.clear()
+
+        for point in self.points_of_interest:
+            point.on_elimination()
+        self.points_of_interest.clear()
 
         if self.salidas is not None:
             for salida in self.salidas.values():
+                salida.sprite.parent = None
                 Renderer.camara.remove_obj(salida.sprite)
             self.unset_salidas()
 
@@ -525,17 +536,34 @@ class ChunkMap(AzoeBaseSprite):
         return True
 
     def __eq__(self, other):
-        test_1 = self.id == other.id
-        test_2 = self.adress.center == other.adress.center
-        test_3 = self.nombre == other.nombre
+        if other.adress is not None:
+            test_1 = self.id == other.id
+            test_2 = self.adress.center == other.adress.center
+            test_3 = self.nombre == other.nombre
 
-        return all([test_1, test_2, test_3])
+            return all([test_1, test_2, test_3])
+        return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __hash__(self):
         return hash((self.nombre, self.id, self.adress.center))
+
+    # noinspection PyUnresolvedReferences
+    def on_elimination(self):
+        self.delete_everything()
+
+        for limite in ['sup', 'inf', 'izq', 'der']:
+            other = 'inf' if limite == 'sup' else 'sup' if limite == 'inf' else 'izq' if limite == 'der' else 'der'
+            if type(self.limites[limite]) is ChunkMap:
+                if self.limites[limite].limites[other] == self:
+                    self.limites[limite].limites[other] = self.nombre
+
+        self.adress = None
+        self.noche = None
+        self.parent = None
+        self.flagged = True
 
 
 class ChunkAdress:

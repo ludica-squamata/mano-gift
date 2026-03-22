@@ -1,9 +1,9 @@
 from os import getcwd as cwd, path, listdir
 from engine.misc import salir, abrir_json
-from random import randint, getrandbits
 from engine.globs.tiempo import Tiempo
 from importlib import import_module
 from datetime import datetime
+from random import randint
 
 
 class ModData:
@@ -62,6 +62,8 @@ class ModData:
             cls.game_fd = root + data['folders']['game']
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
             cls.class_dialogs_by_topic()
+
+            cls.counters = {'M': 0, 'I': 0, 'P': 0}  # M for mobs, I for Items, P for Props
 
             loaded = []
             cls.custommenus = {}
@@ -157,14 +159,17 @@ class ModData:
 
     @staticmethod
     def generate_id():
-        r = randint(0, 99999)
+        r = randint(0, 99999999)
         now = ''.join([char for char in str(datetime.now()) if char not in [' ', '.', ':', '-']])
         now = now[0:-5] + '-' + str(r).rjust(5, '0')
         return now
 
     @classmethod
-    def next_uuid(cls):
-        return getrandbits(64)
+    def next_uuid(cls, prefix: str, suffix_len: int = 3) -> str:
+        cls.counters[prefix] += 1
+        base = f"{prefix}{cls.counters[prefix]}"
+        # suffix = ''.join(py_random.choices(ascii_uppercase + digits, k=suffix_len))
+        return f"{base}"
 
     @classmethod
     def _find_mod_folder(cls, ini):

@@ -56,3 +56,7 @@ class Caracterizado(AzoeSprite):
         dx *= self['Velocidad']  # Nótese que 'Velocidad' es una propiedad que solo tiene el mob Controllable.
         dy *= self['Velocidad']  # Otros mobs no la tienen, y por eso usan el '1' que devuelve __getitem__()
         return dx, dy
+
+    def post_elimination(self):
+        self._chars.clear()
+        self._allchars = None

@@ -69,3 +69,7 @@ class LightSource(Sprite):
 
     def __repr__(self):
         return 'LightSource of ' + self.nombre + ' ' + str(self.parent.id)
+
+    def on_elimination(self):
+        self.parent = None
+        EventDispatcher.deregister(self.switch, 'LightLevel')

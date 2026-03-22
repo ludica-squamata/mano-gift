@@ -41,3 +41,6 @@ class Combativo(Animado, Suertudo, Equipado):
             else:
                 EventDispatcher.trigger('MissedAttack', self.tipo, {'mob': sprite})
                 EventDispatcher.trigger('PlaySound', self, {'sound': 'miss'})
+
+    def on_elimination(self):
+        super().on_elimination()

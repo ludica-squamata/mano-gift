@@ -149,11 +149,11 @@ class EngineData:
 
         ruta = path.join(Config.savedir, 'mobs.csv')
         if path.exists(ruta):
-            fieldnames = ['name', 'x', 'y', 'id', 'chunk', 'adress']
+            fieldnames = ['uuid', 'x', 'y', 'chunk', 'adress']
             with open(ruta, 'r', newline='') as csvfile:
                 reader = DictReader(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
                 for row in reader:
-                    name = row['name']
+                    name = row['uuid']
                     MobCSV[name] = row
 
         cls.save_data.update(data)

@@ -80,3 +80,9 @@ class Equipado(Caracterizado):
 
     def recibir_item(self, item):
         self.inventario.agregar(item)
+
+    def on_elimination(self):
+        super().on_elimination()
+        self.inventario.on_elimination()
+        self.inventario = None
+        self.equipo.clear()

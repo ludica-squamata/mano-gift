@@ -79,7 +79,7 @@ class Sight(AzoeBaseSprite):
         lista = []
         if Camara.current_map is not None:
             lista = Camara.current_map.properties.sprs()
-            lista.extend(Camara.current_map.parent.points_of_interest.get(tuple(Camara.current_map.adress), []))
+            lista.extend(Camara.current_map.points_of_interest)
 
         if self.parent in lista:
             idx = lista.index(self.parent)
@@ -92,6 +92,10 @@ class Sight(AzoeBaseSprite):
                 self.parent.perceived['seen'].append(obj)
             if distance < 64:
                 self.parent.perceived['close'].append(obj)
+
+    def on_elimination(self):
+        self.field.on_elimination()
+        self.field = None
 
 
 class Hearing(AzoeBaseSprite):
@@ -153,6 +157,9 @@ class Hearing(AzoeBaseSprite):
 
         return direccion
 
+    def on_elimination(self):
+        EventDispatcher.deregister(self.listener, 'SoundEvent')
+
 
 class Touch(AzoeBaseSprite):
     def __init__(self, parent):
@@ -198,6 +205,17 @@ class Sensitivo(Caracterizado):
         self.vista()
         self.tacto()
 
+    def on_elimination(self):
+        super().on_elimination()
+        self.vista.on_elimination()
+        self.oido.on_elimination()
+        self.perceived.clear()
+
+        self.vista = None
+        self.oido = None
+        self.touch = None
+        self.tacto = None
+
 
 class SightSprite(AzoeSprite):
     """The mobs' field of view. Transforms on it's own when the mob rotates its head."""
@@ -213,6 +231,15 @@ class SightSprite(AzoeSprite):
 
     def __repr__(self):
         return f'Sight of {self.parent.nombre}'
+
+    def on_elimination(self):
+        Renderer.camara.remove_obj(self)
+        self.imagenes.clear()
+        self.mascaras.clear()
+        self.rects.clear()
+        self.parent = None
+        self.image = None
+        EventDispatcher.deregister(self.supress, 'MobDeath')
 
     def collide(self, entity):
         """Detects whenever entities fall within the field of vision."""

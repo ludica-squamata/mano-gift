@@ -1,4 +1,5 @@
 from engine.mobs.scripts.a_star import Nodo
+from engine.globs.renderer import Camara
 from engine.base import AzoeSprite
 from pygame import mask, font
 
@@ -13,6 +14,7 @@ class PointOfInterest(AzoeSprite):
         self.nodo = Nodo(x, y, size)
         mascara = mask.Mask([size, size], fill=True)
         super().__init__(parent, imagen=self._create(), x=x, y=y, z=5000, alpha=mascara)
+        Camara.add_real(self)
 
     @staticmethod
     def _create():
@@ -25,3 +27,8 @@ class PointOfInterest(AzoeSprite):
 
     def __repr__(self):
         return f'PointOfInterest "{self.name}"'
+
+    def on_elimination(self):
+        super().on_elimination()
+        Camara.remove_obj(self)
+        self.parent = None

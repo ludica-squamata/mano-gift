@@ -106,6 +106,18 @@ class BehaviourTree:
         # this is just a hook that does nothing. Don't delete it.
         pass
 
+    def on_elimination(self):
+        for node in self.nodes:
+            node.on_elimination()
+        self.entity = None
+        self.nodes.clear()
+        self.status = None
+        self.name = ''
+        self.shared_context.clear()
+        self.to_check = None
+        self.tree_structure = None
+        self._loaded_functions.clear()
+
     def trigger_node(self, idx):
         """Excecutes the node given by its index if such index falls within the lenght of the tree."""
         if 0 <= idx <= len(self.nodes):

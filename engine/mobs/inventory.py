@@ -93,3 +93,10 @@ class Inventory:
             return self._contenido.count(item)
         else:
             return 0
+
+    def on_elimination(self):
+        self.parent = None
+        for item in self._contenido:
+            item.on_elimination()
+        self._contenido.clear()
+        self._by_type.clear()

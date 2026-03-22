@@ -3,6 +3,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.azoe_group import AzoeGroup
 from .constantes import ANCHO, ALTO, CAPA_OVERLAYS_DEBUG
 from .tiempo import Tiempo, SeasonalYear
+from engine.misc.util import euclidean
 from .sun import Sun
 import sys
 import os
@@ -227,7 +228,7 @@ class Camara:
         if adyacent_map_key != '' and reference is not None:
             new_map = reference.checkear_adyacencia(adyacent_map_key)
 
-            if new_map is not False and new_map is not map_at_center:
+            if new_map is not False and new_map is not map_at_center and not new_map.flagged:
                 cls.set_background(new_map)
                 for obj in new_map.properties.sprites() + new_map.parent.properties.sprites():
                     if obj not in cls.real:
@@ -244,6 +245,12 @@ class Camara:
     def pan(cls):
         dx = cls.focus.rect.x - cls.focus.x - cls.focus.parent.rect.x
         dy = cls.focus.rect.y - cls.focus.y - cls.focus.parent.rect.y
+
+        if cls.focus.parent not in cls.bgs.sprs():
+            cls.focus.set_parent_map(cls.current_map)
+            x, y = cls.focus.parent.rect.topleft
+            cls.focus.x = 304 - x - dx
+            cls.focus.y = 224 - y - dy
 
         for spr in cls.bgs.sprs():
             spr.rect.move_ip(dx, dy)
@@ -267,9 +274,22 @@ class Camara:
     @classmethod
     def draw(cls, fondo):
         ret = []
+
+        close, far = [], []
         for bg in cls.bgs.sprs():
-            if cls.rect.colliderect(bg.rect):
-                ret += fondo.blit(bg.image, bg.rect)
+            dist = euclidean(cls.current_map.adress.center, bg.adress.center)
+            if dist < 4:
+                close.append(bg)
+            else:
+                far.append(bg)
+
+        for bg in far:
+            bg.parent.chunks.rem(bg)
+            cls.bgs.remove(bg)
+            bg.on_elimination()
+
+        for bg in close:
+            ret += fondo.blit(bg.image, bg.rect)
 
         shadow_mask = mask_module.Mask(fondo.get_size())
         real_sprites = []

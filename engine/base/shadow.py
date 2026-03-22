@@ -34,6 +34,11 @@ class Sombra(AzoeSprite):
     def __repr__(self):
         return self.nombre
 
+    def on_elimination(self):
+        super().on_elimination()
+        self.parent = None
+        Renderer.camara.remove_obj(self)
+
 
 class ShadowSprite(AzoeSprite):
     _sombras = None
@@ -60,8 +65,6 @@ class ShadowSprite(AzoeSprite):
         self._prevLuces = [0] * 9  # distinguir una lista de 0s de otra
         self.sombra = None
         self.registerd_shadows = {}
-        self.dark_overlays = {}
-        self.no_overlays = {}
         self.can_overlay = True
         EventDispatcher.register(self.set_fading, 'ShadowFade', 'MinuteFlag')
         # las luces 1 y 5 (este y oeste) producen sombras erroneas.
@@ -89,12 +92,10 @@ class ShadowSprite(AzoeSprite):
     def add_overlay(self):
         step = self.step if hasattr(self, 'step') else 'S'
         key = step + self.direccion
-
-        if self.image is not self.images[key]['dark']:
-            self.image = self.images[key]['dark']
-            self.in_shadows = True
-        # if self.image in self.no_overlays:
-        #     self.image = self.dark_overlays[self.image]
+        if self.images is not None:
+            if self.image is not self.images[key]['dark']:
+                self.image = self.images[key]['dark']
+                self.in_shadows = True
 
     def exit_overlay(self):
         self.in_shadows = False

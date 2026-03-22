@@ -1,5 +1,6 @@
 from .config import Config
 from pygame import quit
+from math import sqrt
 from sys import exit
 
 
@@ -21,3 +22,10 @@ def salir_handler(event):
     if event.data:
         data = event.data['status']
     salir(output=data)
+
+
+def euclidean(p: tuple, q: tuple):
+    x1, y1 = p
+    x2, y2 = q
+
+    return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)

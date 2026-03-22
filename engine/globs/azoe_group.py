@@ -74,6 +74,12 @@ class ChunkGroup:
             adress = chunk.adress.center
             self[adress] = chunk
 
+    def rem(self, chunk):
+        adress = tuple(chunk.adress)
+        if self[adress] is not None:
+            self[adress].flagged = True
+            del self[adress]
+
     def sprs(self):
         return self._list
 

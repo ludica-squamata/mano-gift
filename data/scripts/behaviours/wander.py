@@ -76,9 +76,12 @@ class GetRoute(Leaf):
         if pd_x is not None or pd_y is not None:
             pd = Nodo(pd_x, pd_y, 32)
             self.tree.set_context('punto_final', pd)
-        if pd_y == 224:
-            return Failure  # for some reason, this point provokes an infinite loop.
-        ruta = a_star(pi, pd, mapa, others)
+        try:
+            ruta = a_star(pi, pd, mapa, others)
+
+        except RuntimeError:
+            return Failure
+
         if ruta is None or len(ruta) == 1:
             return Failure
         if pre_x is not None or pre_y is not None:

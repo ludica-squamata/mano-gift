@@ -16,3 +16,7 @@ class Node:
 
     def reset(self):
         pass
+
+    def on_elimination(self):
+        self.parent = None
+        self.tree = None

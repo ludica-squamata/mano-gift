@@ -167,8 +167,8 @@ class Trade(EventAware):
                 timestamp = Tiempo.clock.timestamp()
 
                 transactions = [
-                    {'trader': buyer.nombre, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
-                    {'trader': seller.nombre, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}]
+                    {'trader': buyer.uuid, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
+                    {'trader': seller.uuid, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}]
                 EngineData.extend_trades(transactions)
 
             else:

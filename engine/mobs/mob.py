@@ -1,6 +1,7 @@
 from .CompoMob import Combativo, Autonomo, Parlante, Comerciante, Lector, Aventajado
 from engine.misc import cargar_imagen, split_spritesheet, cargar_head_anims
 from engine.globs import Mob_Group, ModData
+from engine.globs.renderer import Renderer
 from engine.base import ShadowSprite
 
 
@@ -54,8 +55,8 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
         self.estado = 'idle'
         image = self.images['S' + self.direccion]['light']
         mask = self.mascaras['S' + self.direccion]
+        self.uuid = ModData.next_uuid('M')
         super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
-        self.uuid = ModData.next_uuid()
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
         self['species'] = data.get('species', 'human')
         self['hashed'] = data.get('hashed')  # hash value de todas las características menos el nombre.
@@ -73,3 +74,11 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
 
     def __str__(self):
         return self.nombre
+
+    def on_elimination(self):
+        super().on_elimination()
+        self.parent = None
+        del Mob_Group[self.uuid]
+        Renderer.camara.remove_obj(self)
+        self['AI'].on_elimination()
+        self.post_elimination()
