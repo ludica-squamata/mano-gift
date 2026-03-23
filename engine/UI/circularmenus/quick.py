@@ -1,4 +1,5 @@
 from engine.globs import ModData, Mob_Group, Game_State
+from engine.misc.resources import cargar_imagen
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import CommandElement, InventoryElement, DialogTopicElement, LetterElement
@@ -15,14 +16,21 @@ class QuickCircularMenu(RenderedCircularMenu):
         inv = e.inventario
         self.nombre = 'Quick'
 
+        icons = {
+            'G': cargar_imagen(ModData.graphs + 'journal.png'),
+            'I': cargar_imagen(ModData.graphs + 'bag_brown.png'),
+            'T': cargar_imagen(ModData.graphs + 'themeglob left mini.png'),
+            'P': cargar_imagen(ModData.graphs + 'colocar.png')
+        }
+
         if ModData.QMC is None:
             cascadas = {
                 'inicial': [
-                    CommandElement(self, {'name': 'Estado', 'icon': 'S', 'cmd': e.cambiar_estado}),
-                    CommandElement(self, {'name': 'Guardar', 'icon': 'G', 'cmd': self.save}),
-                    LetterElement(self, "Items", "I"),
-                    LetterElement(self, 'Temas', 'T'),
-                    LetterElement(self, 'Colocar', 'P')
+                    StanceElement(self, e),
+                    CommandElement(self, {'name': 'Guardar', 'icon': icons['G'], 'cmd': self.save}),
+                    LetterElement(self, "Items", icons['I']),
+                    LetterElement(self, 'Temas', icons['T']),
+                    LetterElement(self, 'Colocar', icons['P'])
                 ],
                 "Items": [
                     LetterElement(self, 'Consumibles', 'C'),
@@ -66,3 +74,17 @@ class QuickCircularMenu(RenderedCircularMenu):
     @staticmethod
     def save():
         EventDispatcher.trigger('Save', 'Menu Rápido', {})
+
+
+class StanceElement(CommandElement):
+    def __init__(self, parent, entity):
+        self.entity = entity
+        icono = 'S'
+        if entity.estado == 'cmb':
+            icono = cargar_imagen(ModData.graphs + 'sword_folded.png')
+        elif entity.estado == 'idle':
+            icono = cargar_imagen(ModData.graphs + 'sword_raised.png')
+
+        item = {'name': 'Postura', 'icon': icono, 'cmd': entity.cambiar_estado}
+
+        super().__init__(parent, item)

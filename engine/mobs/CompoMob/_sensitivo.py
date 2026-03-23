@@ -178,7 +178,7 @@ class Touch(AzoeBaseSprite):
             if self.rect.colliderect(obj.rect):
                 if not passive:
                     self.parent.perceived['touched'].append(obj)
-                    if obj.accionable:
+                    if obj.accionable and self.parent.estado == 'idle':
                         # should Movible Props have an action?
                         obj.action(self.parent)
                 else:
