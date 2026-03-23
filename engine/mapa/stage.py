@@ -420,7 +420,7 @@ class ChunkMap(AzoeBaseSprite):
         self.interactives.clear()
 
         for point in self.points_of_interest:
-            point.on_elimination()
+            self.points_of_interest[point].on_elimination()
         self.points_of_interest.clear()
 
         if self.salidas is not None:

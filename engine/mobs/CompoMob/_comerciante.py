@@ -25,7 +25,7 @@ class Comerciante(Equipado):
                 named_trader = self.uuid
                 break
             elif trader == data["nombre"]:
-                named_trader = trader
+                named_trader = self.uuid
                 break
 
         if named_trader is not None:
@@ -36,9 +36,11 @@ class Comerciante(Equipado):
 
         if not path.exists(ruta2):
             file_2 = open(ruta2, 'xt', encoding='utf-8', newline='\r\n')
+            reader_2 = []
         else:
             file_2 = open(ruta2, 'r', encoding='utf-8')
-        reader_2 = list(csv.DictReader(file_2, ['uuid', 'item', 'cant', "desde"], delimiter=";"))
+            reader_2 = list(csv.DictReader(file_2, ['uuid', 'item', 'cant', "desde"], delimiter=";"))
+
         file_2.close()
         reader = reader_1 + reader_2
         rows = [row for row in reader if row['uuid'] == self.uuid]

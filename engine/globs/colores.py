@@ -192,11 +192,11 @@ class Colores:
 
     @classmethod
     def load(cls, event):
-        data = event.data['savegame']['colores']
-        if 'theme' in data:
+        data = event.data['savegame'].get('colores', {})
+        if 'theme' in data and data['theme'] is not None:
             cls.set_theme(data['theme'])
 
-        for color_name in data['changes']:
+        for color_name in data.get('changes', {}):
             color = data['changes'][color_name]
             cls.set_color(color_name, Color(cls._hex_to_rgb(color[1:])))
 

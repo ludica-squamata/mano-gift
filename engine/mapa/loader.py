@@ -319,9 +319,10 @@ def cargar_salidas(chunk, all_data: list):
 
 
 def load_points_of_interest(parent, alldata):
-    points_of_interest = []
+    points_of_interest = {}
     for datapoint in alldata.get('puntos_de_interes_para_la_IA', {}):
         if list(parent.adress.center) == datapoint['adress']:
-            points_of_interest.append(PointOfInterest(parent, datapoint['point']))
+            name = datapoint['point']['name']
+            points_of_interest[name] = PointOfInterest(parent, datapoint['point'])
 
     return points_of_interest

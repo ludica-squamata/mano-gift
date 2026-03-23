@@ -8,7 +8,7 @@ def init_game(event):
     if len(event.data['savegame']) == 1:
         data = {"mapa": "new",
                 "entrada": "center",
-                "tiempo": [0, 13, 0],
+                "tiempo": "00:00:13:00:00",
                 "focus": "heroe"}
         data.update(event.data['savegame'])
 

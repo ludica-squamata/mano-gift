@@ -56,7 +56,7 @@ class IsThereABed(Leaf):
         if e.last_map is None:
             return Failure
         points_of_interest = e.last_map.points_of_interest
-        point = [point for point in points_of_interest if point.name == 'bed']
+        point = [points_of_interest[point] for point in points_of_interest if point == 'bed']
 
         if len(point):
             self.tree.set_context('bed', point[0].nodo)

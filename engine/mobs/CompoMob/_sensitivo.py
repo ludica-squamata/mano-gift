@@ -79,7 +79,8 @@ class Sight(AzoeBaseSprite):
         lista = []
         if Camara.current_map is not None:
             lista = Camara.current_map.properties.sprs()
-            lista.extend(Camara.current_map.points_of_interest)
+            poi = Camara.current_map.points_of_interest
+            lista.extend([poi[point] for point in poi])
 
         if self.parent in lista:
             idx = lista.index(self.parent)
