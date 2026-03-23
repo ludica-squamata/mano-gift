@@ -1,3 +1,4 @@
+from engine.UI.circularmenus.elements.descriptive_area import EmptyMobWarning
 from engine.globs.event_dispatcher import EventDispatcher, AzoeEvent
 from engine.globs.event_aware import EventAware
 from engine.UI.circularmenus.quick import QuickCircularMenu
@@ -90,21 +91,15 @@ class ControllableAI(EventAware):
     def set_target(self, sprite):
         self.target = sprite
 
+    def empty_mob_warning(self):
+        self.deregister()
+        descrip = EmptyMobWarning(self, 'No tiene nada')
+        descrip.show()
+
     def update(self):
         self.entity.update_sombra()
         if self.accion:
             self.entity.accion()
-            # preception = self.entity.perceived
-            # sprites = set(preception['touched'] + preception['felt'] + preception['close'])
-            # # a set because it filters repeated units.
-            # ex, ey = self.entity.rect.center
-            # close = [[q, sqrt((q.rect.x - ex) ** 2 + (q.rect.y - ey) ** 2)] for q in sprites]
-            # sprite = None
-            # if len(close):
-            #     distances = [i[1] for i in close]
-            #     mobs = [i[0] for i in close]
-            #     dist_idx = distances.index(min(distances))
-            #     sprite = mobs[dist_idx]
             if self.target is not None:
                 if self.entity.estado == 'cmb':
                     self.entity.atacar(self.target)
@@ -115,6 +110,8 @@ class ControllableAI(EventAware):
                     elif self.target.dead and len(self.target.inventario):
                         self.deregister()
                         LootingCircularMenu(self, self.target)
+                    else:
+                        self.empty_mob_warning()
 
                 elif hasattr(self.target, 'show_description') and self.target.accionable is False:
                     self.target.show_description()
