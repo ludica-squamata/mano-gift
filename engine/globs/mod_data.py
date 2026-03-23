@@ -63,7 +63,7 @@ class ModData:
             cls.pkg_scripts = '.'.join([ini_data['folder'], data['folders']['scripts']])
             cls.class_dialogs_by_topic()
 
-            cls.counters = {'M': 0, 'I': 0, 'P': 0}  # M for mobs, I for Items, P for Props
+            cls.counters = {}
 
             loaded = []
             cls.custommenus = {}
@@ -165,11 +165,11 @@ class ModData:
         return now
 
     @classmethod
-    def next_uuid(cls, prefix: str, suffix_len: int = 3) -> str:
+    def next_uuid(cls, prefix: str) -> str:
+        if prefix not in cls.counters:
+            cls.counters[prefix] = 0
         cls.counters[prefix] += 1
-        base = f"{prefix}{cls.counters[prefix]}"
-        # suffix = ''.join(py_random.choices(ascii_uppercase + digits, k=suffix_len))
-        return f"{base}"
+        return f"{prefix}{cls.counters[prefix]}"
 
     @classmethod
     def _find_mod_folder(cls, ini):

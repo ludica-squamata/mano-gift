@@ -1,6 +1,7 @@
 from engine.mobs.scripts.a_star import Nodo
 from engine.globs.renderer import Camara
 from engine.base import AzoeSprite
+from engine.globs import ModData
 from pygame import mask, font
 
 
@@ -15,6 +16,7 @@ class PointOfInterest(AzoeSprite):
         mascara = mask.Mask([size, size], fill=True)
         super().__init__(parent, imagen=self._create(), x=x, y=y, z=5000, alpha=mascara)
         Camara.add_real(self)
+        self.uuid = ModData.next_uuid('X')
 
     @staticmethod
     def _create():
