@@ -76,8 +76,7 @@ def heuristica_estimada(node, goal, method):
 
 def mirar_vecinos(nodo, mascara, others):
     cuadros = []
-    test = mask.Mask((32, 32))
-    test.fill()
+    test = mask.Mask((32, 32), fill=True)
     direcciones = ((0, -1), (1, 0), (0, 1), (-1, 0))
     mascara_actual = mascara.copy()
     for other in others:
@@ -89,6 +88,9 @@ def mirar_vecinos(nodo, mascara, others):
 
         if x < 0 or y < 0:
             continue
+        if x > 800 or y > 800:  # acá había otro cuello de botella.
+            continue  # la multiplicación estaba dando resultados por encima de mil, cuando lo máximo debería ser 800.
+            # aunque esto hace más todavía que los mobs nunca puedan salir del chunk.
 
         vecino = get_nodo(x, y, 32)  # CLAVE
 

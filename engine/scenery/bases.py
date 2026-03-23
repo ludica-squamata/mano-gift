@@ -53,6 +53,12 @@ class Escenografia(ShadowSprite):
             self.luz = LightSource(self, self.nombre, data, x, y)
         self.descripcion = data.get('descripcion', "Esto es un ejemplo")
 
+        if 'máscara' in data:
+            mask = mask_module.Mask(data['máscara'][-2:], fill=True)
+            m_x = data['máscara'][0] + x
+            m_y = data['máscara'][1] + y
+            parent.mask.draw(mask, [m_x, m_y])
+
         self.event_handlers = {}
         self.add_listeners()  # carga de event listeners
         self.uuid = ModData.next_uuid('P')
