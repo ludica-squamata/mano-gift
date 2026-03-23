@@ -19,7 +19,7 @@ class QuickCircularMenu(RenderedCircularMenu):
         icons = {
             'G': cargar_imagen(ModData.graphs + 'journal.png'),
             'I': cargar_imagen(ModData.graphs + 'bag_brown.png'),
-            'T': cargar_imagen(ModData.graphs + 'themeglob left mini.png'),
+            'T': cargar_imagen(ModData.graphs + 'menuglob left mini.png'),
             'P': cargar_imagen(ModData.graphs + 'colocar.png')
         }
 
