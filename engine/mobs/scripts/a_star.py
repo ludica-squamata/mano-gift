@@ -113,21 +113,13 @@ def determinar_direccion(curr_p, next_p):
     px, py = curr_p
     nx, ny = next_p
 
-    dx = px - nx
-    dy = py - ny
+    dx = nx - px
+    dy = ny - py
 
-    if dx > dy:
-        if dy < 0:
-            direccion = 'abajo'
-        else:
-            direccion = 'izquierda'
+    if abs(dx) > abs(dy):
+        return 'derecha' if dx > 0 else 'izquierda'
     else:
-        if dx < 0:
-            direccion = 'derecha'
-        else:
-            direccion = 'arriba'
-
-    return direccion
+        return 'abajo' if dy > 0 else 'arriba'
 
 
 class Nodo:

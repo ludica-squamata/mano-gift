@@ -3,5 +3,9 @@
   "tipo": "transisional",
   "spritesheet": "props/arbol escalado estaciones.png",
   "propiedades": [],
-  "colisión": [32,110,32,32]
+  "colisión": [32,110,32,32],
+  "examinar": {
+    "imagen": "props/tronco_arbol_89.png",
+    "descripción": "Se trata de un árbol caducifolio. Probablemente un manzano, dadas todas las manzanas que hay alrededor, aunque no hay ninguna entre sus ramas."
+  }
 }

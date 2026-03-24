@@ -4,6 +4,7 @@ from engine.UI.prop_description import PropDescription
 from engine.mapa.light_source import LightSource
 from engine.base import ShadowSprite, AzoeSprite
 from engine.globs.renderer import Camara
+from pygame import mask as mask_module
 from engine.misc import cargar_imagen
 from importlib import import_module
 from os.path import join
@@ -51,7 +52,12 @@ class Escenografia(ShadowSprite):
             Tagged_Items.add_item(self, *keys)
         if data.get('proyecta_luz', False):
             self.luz = LightSource(self, self.nombre, data, x, y)
-        self.descripcion = data.get('descripcion', "Esto es un ejemplo")
+        if 'examinar' in data:
+            self.locutor = cargar_imagen(ModData.graphs + data['examinar']['imagen'])
+            self.descripcion = data['examinar']['descripción']
+        else:
+            self.locutor = cargar_imagen(ModData.graphs + 'props/No disponible.png')
+            self.descripcion = 'Esto es un ejemplo.'
 
         if 'máscara' in data:
             mask = mask_module.Mask(data['máscara'][-2:], fill=True)

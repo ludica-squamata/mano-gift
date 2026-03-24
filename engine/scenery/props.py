@@ -224,7 +224,10 @@ class Contenedor(Operable):
                 pass  # acá iria la interacción con mobs mediante AI.
 
     def close(self):
-        self.operar(estado=0)
+        if len(self.inventario):
+            self.operar(estado=0)
+        else:
+            self.operar(estado=2)
 
     def _fill(self, contenido):
         from .new_prop import new_item
@@ -255,6 +258,8 @@ class Transicional(Escenografia):
     spring_cycler = None
 
     enabled = True
+
+    accionable = False
 
     def __init__(self, parent, x, y, data):
         self.prop_type = 'Transisional'

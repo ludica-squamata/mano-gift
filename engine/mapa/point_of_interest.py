@@ -1,4 +1,3 @@
-from engine.mobs.scripts.a_star import Nodo
 from engine.globs.renderer import Camara
 from engine.base import AzoeSprite
 from engine.globs import ModData
@@ -12,7 +11,7 @@ class PointOfInterest(AzoeSprite):
     def __init__(self, parent, data):
         self.name = data['name']
         x, y, size = data['node']
-        self.nodo = Nodo(x, y, size)
+        self.nodo = [x, y]
         mascara = mask.Mask([size, size], fill=True)
         super().__init__(parent, imagen=self._create(), x=x, y=y, z=5000, alpha=mascara)
         Camara.add_real(self)
