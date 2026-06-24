@@ -1,0 +1,27 @@
+{
+  "entradas": {
+    "inside": {"chunk": "single","pos": [184,320],"adress": [0,0]}
+  },
+  "salidas": [
+    {
+      "stage": "new","rect": [184,384,32,16],"accion": "caminar","entrada": "house",
+      "chunk_adress": [0,0],"nombre": "salida_house","direcciones": ["abajo"]
+    }
+  ],
+  "chunks": {
+    "single": {
+      "fondo": "maps/fondos/house_inside.png",
+      "colisiones": "maps/colisiones/house_inside.png",
+      "props": {},
+      "mobs": {},
+      "adress": [0,0],
+      "refs": {},
+      "limites": {}
+    }
+  },
+  "puntos_de_interes_para_la_IA": [],
+  "world_stage": false,
+  "zoom_level": "local",
+  "ambiente": "interior",
+  "size": [1,1]
+}

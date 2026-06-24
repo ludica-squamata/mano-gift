@@ -9,6 +9,11 @@
       "chunk": "special",
       "pos": [432,400],
       "adress": [0,-15]
+    },
+    "house":{
+      "chunk": "white",
+      "pos": [32,32],
+      "adress": [0,0]
     }
   },
   "salidas": [],

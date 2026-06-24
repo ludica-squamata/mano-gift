@@ -45,38 +45,40 @@ def load_props(parent, alldata: dict):
 
     loaded_props = []
     img = None
-    for ref in pos:
-        data = None
-        if ref in imgs:
-            if imgs[ref].endswith('.json'):
-                data = abrir_json(ModData.mod_folder + alldata['refs'][ref])
+    if (list(parent.adress) == pos.get('chunk', list(parent.adress))) or "chunk" not in pos:
+        pos.pop('chunk', None)
+        for ref in pos:
+            data = None
+            if ref in imgs:
+                if imgs[ref].endswith('.json'):
+                    data = abrir_json(ModData.mod_folder + alldata['refs'][ref])
+                else:
+                    img = cargar_imagen(ModData.graphs + imgs[ref])  # because it points to a .png file instead.
+            elif path.exists(ModData.mod_folder + ref + '.json'):
+                # use ref as filename, if it exists.
+                data = abrir_json(ModData.mod_folder + ref + '.json')
             else:
-                img = cargar_imagen(ModData.graphs + imgs[ref])  # because it points to a .png file instead.
-        elif path.exists(ModData.mod_folder + ref + '.json'):
-            # use ref as filename, if it exists.
-            data = abrir_json(ModData.mod_folder + ref + '.json')
-        else:
-            img = None  # resets the image to None to prevent wrong item duplication.
+                img = None  # resets the image to None to prevent wrong item duplication.
 
-        for item in pos[ref]:
-            x, y = alldata['entradas'][item]['pos'] if type(item) is str else item
-            is_interactive = False
+            for item in pos[ref]:
+                x, y = alldata['entradas'][item]['pos'] if type(item) is str else item
+                is_interactive = False
 
-            if data is not None:
-                prop = new_prop(parent, x, y, data=data)
-                is_interactive = hasattr(prop, 'accionable') and prop.accionable
-            elif img is not None:
-                prop = new_prop(parent, x, y, nombre=ref, img=img)
-            else:
-                print(f'Prop "{ref}" is invalid. Declare its path on the map "refs" to load.')
-                prop = None
+                if data is not None:
+                    prop = new_prop(parent, x, y, data=data)
+                    is_interactive = hasattr(prop, 'accionable') and prop.accionable
+                elif img is not None:
+                    prop = new_prop(parent, x, y, nombre=ref, img=img)
+                else:
+                    print(f'Prop "{ref}" is invalid. Declare its path on the map "refs" to load.')
+                    prop = None
 
-            if type(prop) is list:
-                for p in prop:
-                    is_interactive = p.accionable
-                    loaded_props.append((p, is_interactive))
-            elif prop is not None:
-                loaded_props.append((prop, is_interactive))
+                if type(prop) is list:
+                    for p in prop:
+                        is_interactive = p.accionable
+                        loaded_props.append((p, is_interactive))
+                elif prop is not None:
+                    loaded_props.append((prop, is_interactive))
 
     return loaded_props
 
@@ -87,6 +89,8 @@ def load_mobs(parent, alldata: dict):
 
     mob = None
     mob_values = None
+    adress = alldata.get('mobs').get('chunk', list(parent.adress))
+    alldata['mobs'].pop('chunk', None)
     for name in alldata.get('mobs', []):
         mob_data = [[i, row] for i, row in enumerate(csv_file) if name.lower() in csv_file[i].values()]
         if len(mob_data):
@@ -109,56 +113,57 @@ def load_mobs(parent, alldata: dict):
 
         if mob is None:
             pos = alldata['mobs'][name]
-            for i, item in enumerate(pos):
-                data = None
-                if type(item) is str:
-                    x, y = alldata['entradas'][item]['pos']
-                else:
-                    x, y = item
+            if list(parent.adress) == adress:
+                for i, item in enumerate(pos):
+                    data = None
+                    if type(item) is str:
+                        x, y = alldata['entradas'][item]['pos']
+                    else:
+                        x, y = item
 
-                if name in alldata['refs']:
-                    data = abrir_json(alldata['refs'][name])
-                elif name in ModData.character_generator:
-                    data = ModData.character_generator[name](i)
-                elif path.exists(ModData.fd_player + name + '.json'):
-                    data = abrir_json(ModData.fd_player + name + '.json')
-                    alldata['focus'] = name
-                elif path.exists(path.join(ModData.mobs, name.lower() + '.json')):
-                    data = abrir_json(ModData.mobs + name.lower() + '.json')
-                elif name.lower() in mob_values:
-                    if path.exists(path.join(ModData.mobs, mob_data['archetype'] + '.json')):
-                        data = abrir_json(path.join(ModData.mobs, mob_data['archetype'] + '.json'))
-                    elif path.exists(path.join(ModData.mobs, mob_data['occupation'] + '.json')):
-                        data = abrir_json(path.join(ModData.mobs, mob_data['occupation'] + '.json'))
-                else:
-                    data = abrir_json(ModData.mobs + name + '.json')
+                    if name in alldata['refs']:
+                        data = abrir_json(alldata['refs'][name])
+                    elif name in ModData.character_generator:
+                        data = ModData.character_generator[name](i)
+                    elif path.exists(ModData.fd_player + name + '.json'):
+                        data = abrir_json(ModData.fd_player + name + '.json')
+                        alldata['focus'] = name
+                    elif path.exists(path.join(ModData.mobs, name.lower() + '.json')):
+                        data = abrir_json(ModData.mobs + name.lower() + '.json')
+                    elif name.lower() in mob_values:
+                        if path.exists(path.join(ModData.mobs, mob_data['archetype'] + '.json')):
+                            data = abrir_json(path.join(ModData.mobs, mob_data['archetype'] + '.json'))
+                        elif path.exists(path.join(ModData.mobs, mob_data['occupation'] + '.json')):
+                            data = abrir_json(path.join(ModData.mobs, mob_data['occupation'] + '.json'))
+                    else:
+                        data = abrir_json(ModData.mobs + name + '.json')
 
-                if NamedNPCs.npcs_with_ids is not None:
-                    ids, names = NamedNPCs.npcs_with_ids
-                    if name in names:
-                        idx = names.index(data['nombre'])
-                        data['id'] = ids[idx]
-                        del names[idx], ids[idx]
+                    if NamedNPCs.npcs_with_ids is not None:
+                        ids, names = NamedNPCs.npcs_with_ids
+                        if name in names:
+                            idx = names.index(data['nombre'])
+                            data['id'] = ids[idx]
+                            del names[idx], ids[idx]
 
-                if mob_data is not None and mob_data['class'] == 'unique':
-                    generator = name_generator("PERSON", gender=data['gender'], just_name=True)
-                    name = next(generator)  # aquí generamos un nombre para el mob.
-                    mob_data['name'] = name
-                elif mob_data is not None:
-                    mob_data['occupation'] = None
-                    mob_data['name'] = mob_data['species'].replace('_', ' ').capitalize()
+                    if mob_data is not None and mob_data['class'] == 'unique':
+                        generator = name_generator("PERSON", gender=data['gender'], just_name=True)
+                        name = next(generator)  # aquí generamos un nombre para el mob.
+                        mob_data['name'] = name
+                    elif mob_data is not None:
+                        mob_data['occupation'] = None
+                        mob_data['name'] = mob_data['species'].replace('_', ' ').capitalize()
 
-                if mob_data is not None:
-                    chars = [char for char in ModData.data['caracteristicas']]
-                    data.update({'atributos': {char: int(mob_data[char.lower()]) for char in chars}})
-                    data.update(
-                        {'occupation': mob_data['occupation'], 'species': mob_data['species'],
-                         "nombre": mob_data['name'], "hashed": hashed})
-                else:
-                    data['hashed'] = 0  # el héroe es el único con hashed == 0.
+                    if mob_data is not None:
+                        chars = [char for char in ModData.data['caracteristicas']]
+                        data.update({'atributos': {char: int(mob_data[char.lower()]) for char in chars}})
+                        data.update(
+                            {'occupation': mob_data['occupation'], 'species': mob_data['species'],
+                             "nombre": mob_data['name'], "hashed": hashed})
+                    else:
+                        data['hashed'] = 0  # el héroe es el único con hashed == 0.
 
-                mob = Mob(parent, x, y, data, focus=alldata.get('focus', False))
-                loaded_mobs.append(mob)
+                    mob = Mob(parent, x, y, data, focus=alldata.get('focus', False))
+                    loaded_mobs.append(mob)
 
     return loaded_mobs
 

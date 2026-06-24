@@ -167,6 +167,7 @@ class EstructuraCompuesta(Escenografia):
         self.accion = 'entrar'
 
         super().__init__(parent, x, y, data=data, rect=self.rect)
+        self.cargar_salida()
 
     def build_props(self, parent, data, dx, dy):
         from engine.scenery import new_prop
@@ -175,20 +176,21 @@ class EstructuraCompuesta(Escenografia):
             ruta = data['referencias'][nombre]
             imagen = None
             propdata = {'propiedades': []}
+            prop = None
             for x, y, z in data['componentes'][nombre]:
                 if type(ruta) is dict:
                     propdata = ruta.copy()
 
                 elif ruta.endswith('.json'):
-                    propdata = abrir_json(ModData.items + ruta)
+                    propdata = abrir_json(ModData.props + ruta)
 
                 elif ruta.endswith('.png'):
                     imagen = ruta
 
                 if nombre == 'colisiones':
                     ruta = ModData.graphs + imagen
-                    self.mask = mask_module.from_threshold(cargar_imagen(ruta), Colores.COLOR_COLISION, [1, 1, 1, 255])
-                    parent.mask.draw(self.mask, [x, y])
+                    mask = mask_module.from_threshold(cargar_imagen(ruta), Colores.COLOR_COLISION, (1, 1, 1, 255))
+                    parent.mask.draw(mask, [self.x+x, self.y+y])
                     imagen = None
 
                 elif not self.proyectaSombra:
@@ -196,10 +198,19 @@ class EstructuraCompuesta(Escenografia):
 
                 if imagen is not None:
                     prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
+
+                elif len(propdata) > 1:
+                    prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, data=propdata)
+
+                if prop is not None:
                     props.append(prop)
 
         return props
 
+    def cargar_salida(self):
+        from engine.mapa.loader import cargar_salidas
+        salida = self.data['salida']
+        self.parent.set_salidas(*cargar_salidas(self.parent, [salida]))
 
 class Contenedor(Operable):
     accionable = True

@@ -59,7 +59,7 @@ class AzoeSprite(sprite.Sprite):
             self.mask = alpha
         elif self.image is not None:
             self.mask = mask.from_surface(self.image)
-        elif self.mask is None:
+        elif not hasattr(self, 'mask') or self.mask is None:
             self.mask = mask.Mask(self.rect.size)
 
         if hasattr(self.parent, 'adress'):
