@@ -1,19 +1,25 @@
 {
   "tipo": "estructura_compuesta",
   "nombre": "casa_con_puerta",
+  "salida": {
+    "stage": "house_inside","rect": [455,539,16,16],"accion": "caminar","entrada": "inside",
+    "chunk_adress": [0,0],"nombre": "entrada_ciudad","direcciones": ["arriba"]
+  },
   "componentes": {
     "casa_cerrada": [
-      [0,0,0]
+      [0,0,-32]
     ],
     "puerta_cerrada": [
-      [72,128,1]
-    ]
+      [54,57,-20]
+    ],
+    "colisiones":[[0,0,0]]
   },
   "referencias": {
-    "casa_cerrada": "props/casa_corregida.png",
-    "puerta_cerrada": "puerta.json"
+    "casa_cerrada": "props/house_result_piso.png",
+    "puerta_cerrada": "puerta.json",
+    "colisiones":"props/house_result_colisiones.png"
   },
-  "width": 128,
-  "height": 164,
-  "proyecta_sombra": false
+  "width": 143,
+  "height": 89,
+  "proyecta_sombra": true
 }
