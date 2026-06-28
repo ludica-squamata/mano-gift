@@ -1,5 +1,5 @@
 from engine.globs import ModData, Mob_Group, Game_State
-from engine.misc.resources import cargar_imagen
+from engine.misc.resources import cargar_imagen, split_spritesheet
 from engine.globs.event_dispatcher import EventDispatcher
 from .rendered import RenderedCircularMenu
 from .elements import CommandElement, InventoryElement, DialogTopicElement, LetterElement
@@ -9,6 +9,7 @@ from .elements import ColocableInventoryElement
 class QuickCircularMenu(RenderedCircularMenu):
     radius = 18
     first = 0
+    icons = None
 
     def __init__(self):
         self.entity = Mob_Group.get_controlled_mob()
@@ -16,21 +17,14 @@ class QuickCircularMenu(RenderedCircularMenu):
         inv = e.inventario
         self.nombre = 'Quick'
 
-        icons = {
-            'G': cargar_imagen(ModData.graphs + 'journal.png'),
-            'I': cargar_imagen(ModData.graphs + 'bag_brown.png'),
-            'T': cargar_imagen(ModData.graphs + 'menuglob left mini.png'),
-            'P': cargar_imagen(ModData.graphs + 'colocar.png')
-        }
-
         if ModData.QMC is None:
             cascadas = {
                 'inicial': [
-                    StanceElement(self, e),
-                    CommandElement(self, {'name': 'Guardar', 'icon': icons['G'], 'cmd': self.save}),
-                    LetterElement(self, "Items", icons['I']),
-                    LetterElement(self, 'Temas', icons['T']),
-                    LetterElement(self, 'Colocar', icons['P'])
+                    StanceElement(self, e, self.icon_imgs[5:7]),
+                    CommandElement(self, {'name': 'Guardar', 'icon': self.icons['G'], 'cmd': self.save}),
+                    LetterElement(self, "Items", self.icons['I']),
+                    LetterElement(self, 'Temas', self.icons['T']),
+                    LetterElement(self, 'Colocar', self.icons['P'])
                 ],
                 "Items": [
                     LetterElement(self, 'Consumibles', 'C'),
@@ -57,6 +51,13 @@ class QuickCircularMenu(RenderedCircularMenu):
         super().__init__(cascadas)
         self.functions['tap'].update({'contextual': self.back})
 
+    @classmethod
+    def load(cls):
+        if cls.icons is None:
+            icon_imgs = split_spritesheet(ModData.graphs + "qmc_spritesheet.png")
+            cls.icons = dict(zip("I,P,G,T".split(','), [icon_imgs[0]] + icon_imgs[2:5]))
+            cls.icon_imgs = icon_imgs
+
     def back(self):
         if self.cascadaActual == 'inicial':
             self.salir()
@@ -77,14 +78,10 @@ class QuickCircularMenu(RenderedCircularMenu):
 
 
 class StanceElement(CommandElement):
-    def __init__(self, parent, entity):
+    def __init__(self, parent, entity, icons):
         self.entity = entity
-        icono = 'S'
-        if entity.estado == 'cmb':
-            icono = cargar_imagen(ModData.graphs + 'sword_folded.png')
-        elif entity.estado == 'idle':
-            icono = cargar_imagen(ModData.graphs + 'sword_raised.png')
-
+        self.imagenes = {'idle':icons[1], 'cmb':icons[0]}
+        icono = self.imagenes[entity.estado]
         item = {'name': 'Postura', 'icon': icono, 'cmd': entity.cambiar_estado}
 
         super().__init__(parent, item)

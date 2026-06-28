@@ -73,6 +73,7 @@ class ControllableAI(EventAware):
 
     def contextual_event_key(self):
         self.entity.detener_movimiento()
+        QuickCircularMenu.load()
         QuickCircularMenu()
         self.deregister()
 
