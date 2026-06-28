@@ -1,25 +1,55 @@
 {
-  "tipo": "estructura_compuesta",
-  "nombre": "casa_con_puerta",
-  "salida": {
-    "stage": "house_inside","rect": [455,539,16,16],"accion": "caminar","entrada": "inside",
-    "chunk_adress": [0,0],"nombre": "entrada_ciudad","direcciones": ["arriba"]
-  },
   "componentes": {
     "casa_cerrada": [
-      [0,0,-32]
-    ],
+      [
+        0, 
+        0, 
+        -32
+      ]
+    ], 
+    "colisiones": [
+      [
+        0, 
+        0, 
+        0
+      ]
+    ], 
     "puerta_cerrada": [
-      [54,57,-20]
-    ],
-    "colisiones":[[0,0,0]]
-  },
+      [
+        54, 
+        57, 
+        -20
+      ]
+    ]
+  }, 
+  "height": 89, 
+  "nombre": "casa_con_puerta", 
+  "prefix": "226A", 
+  "proyecta_sombra": true, 
   "referencias": {
-    "casa_cerrada": "props/house_result_piso.png",
-    "puerta_cerrada": "puerta.json",
-    "colisiones":"props/house_result_colisiones.png"
-  },
-  "width": 143,
-  "height": 89,
-  "proyecta_sombra": true
+    "casa_cerrada": "props/house_result_piso.png", 
+    "colisiones": "props/house_result_colisiones.png", 
+    "puerta_cerrada": "puerta.json"
+  }, 
+  "salida": {
+    "accion": "caminar", 
+    "chunk_adress": [
+      0, 
+      0
+    ], 
+    "direcciones": [
+      "arriba"
+    ], 
+    "entrada": "inside", 
+    "nombre": "entrada_ciudad", 
+    "rect": [
+      455, 
+      539, 
+      16, 
+      16
+    ], 
+    "stage": "house_inside"
+  }, 
+  "tipo": "estructura_compuesta", 
+  "width": 143
 }

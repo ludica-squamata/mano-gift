@@ -15,7 +15,7 @@ class PointOfInterest(AzoeSprite):
         mascara = mask.Mask([size, size], fill=True)
         super().__init__(parent, imagen=self._create(), x=x, y=y, z=5000, alpha=mascara)
         Camara.add_real(self)
-        self.uuid = ModData.next_uuid('X')
+        self.id = data.get('id', ModData.next_id(data['prefix']))
 
     @staticmethod
     def _create():

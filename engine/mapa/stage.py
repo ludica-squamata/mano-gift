@@ -104,13 +104,13 @@ class Stage:
         EventDispatcher.trigger(event.tipo + 'Data', 'Mapa', data)
 
         ruta = path.join(Config.savedir, 'mobs.csv')
-        fieldnames = ['uuid', 'x', 'y', 'chunk', 'adress']
+        fieldnames = ['id', 'x', 'y', 'chunk', 'adress']
         with open(ruta, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
             for mob in Mob_Group.contents():
                 chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress((0, 0))
-                if mob.uuid in MobCSV:
-                    row = MobCSV[mob.uuid]
+                if mob.id in MobCSV:
+                    row = MobCSV[mob.id]
 
                     row['x'] = str(mob.rel_x)
                     row['y'] = str(mob.rel_y)
@@ -118,9 +118,9 @@ class Stage:
                     row['adress'] = str(chunk.adress)
 
                 else:
-                    row = {'uuid': mob.uuid, 'x': mob.rel_x, 'y': mob.rel_y,
+                    row = {'id': mob.id, 'x': mob.rel_x, 'y': mob.rel_y,
                            'chunk': chunk.nombre, 'adress': str(chunk.adress)}
-                    MobCSV[mob.uuid] = row
+                    MobCSV[mob.id] = row
 
                 writer.writerow(row)
 
@@ -339,8 +339,10 @@ class ChunkMap(AzoeBaseSprite):
                 data['refs'].update({datos['nombre']: datos['imagen']})
 
         if tuple(self.adress) in self.parent.unique_props:
-            uniques = self.parent.unique_props[tuple(self.adress)]
-            data.update(uniques)
+            unique_props = self.parent.unique_props[tuple(self.adress)]['props']
+            unique_keys =  self.parent.unique_props[tuple(self.adress)]['refs']
+            data['props'].update(unique_props)
+            data['refs'].update(unique_keys)
 
         self.cargar_limites(data.get('limites', self.limites))
         data['entradas'] = {}
@@ -406,6 +408,7 @@ class ChunkMap(AzoeBaseSprite):
 
     def reload_properties(self, exclude: list = None):
         exclude = exclude if exclude is not None else []
+        print(self.properties.sprs())
         for sprite in self.properties.sprs():
             if sprite not in exclude:
                 Renderer.camara.add_real(sprite)

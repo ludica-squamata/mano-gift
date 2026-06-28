@@ -1,5 +1,5 @@
 species;occupation;archetype;class;fuerza;agilidad;resistencia;carisma;inteligencia;percepción
-green_blob;monster;green;generic;13;13;14;0;0;10
+green_blob;monster;green;generic;13;2;100;0;0;10
 red_blob;monster;red;generic;4;3;40;0;0;3
 blue_blob;monster;blue;generic;2;8;32;0;0;8
 yell_blob;monster;yellow;generic;12;4;30;0;0;4

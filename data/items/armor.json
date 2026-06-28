@@ -1,24 +1,27 @@
 {
-  "nombre": "Peto de hierro",
-  "tipo": "agarrable",
-  "subtipo": "armadura",
-  "peso": 4,
-  "volumen": 4,
-  "imagenes": {
-    "item": "items/armor.png",
-    "prop": "items/armor.png"
-  },
-  "propiedades": [
-    "stackable","sin_sombra","colocable"
-  ],
   "efecto": {
-    "des": "Es un peto de hierro.",
-    "equipo": "peto",
+    "des": "Es un peto de hierro.", 
+    "equipo": "peto", 
     "proteccion": 2
-  },
+  }, 
+  "imagenes": {
+    "item": "items/armor.png", 
+    "prop": "items/armor.png"
+  }, 
+  "nombre": "Peto de hierro", 
+  "peso": 4, 
+  "prefix": "26E4", 
+  "propiedades": [
+    "stackable", 
+    "sin_sombra", 
+    "colocable"
+  ], 
+  "subtipo": "armadura", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 4
 }

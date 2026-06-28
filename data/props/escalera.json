@@ -1,6 +1,10 @@
 {
-  "tipo": "trepable",
-  "propiedades": ["solido","sin_sombra"],
-  "image": "props/escalera.png",
-  "nombre": "Escalera"
+  "image": "props/escalera.png", 
+  "nombre": "Escalera", 
+  "prefix": "B29B", 
+  "propiedades": [
+    "solido", 
+    "sin_sombra"
+  ], 
+  "tipo": "trepable"
 }

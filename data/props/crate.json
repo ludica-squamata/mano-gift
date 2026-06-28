@@ -1,10 +1,12 @@
 {
-  "nombre": "Crate",
-  "tipo": "movible",
-  "peso": 10,
-  "volumen": 4,
-  "image": "props/crate.png",
+  "image": "props/crate.png", 
+  "nombre": "Crate", 
+  "peso": 10, 
+  "prefix": "007F", 
   "propiedades": [
-    "solido","sin_sombra"
-  ]
+    "solido", 
+    "sin_sombra"
+  ], 
+  "tipo": "movible", 
+  "volumen": 4
 }

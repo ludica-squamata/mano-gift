@@ -78,6 +78,8 @@ class Equipado(Caracterizado):
             self.inventario.remover(item)
         entity.recibir_item(item)
 
+        return item
+
     def recibir_item(self, item):
         self.inventario.agregar(item)
 

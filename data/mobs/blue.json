@@ -1,10 +1,11 @@
 {
+  "AI": "ai", 
+  "alpha": "mobs/colisiones/monster_crawl.png", 
+  "gender": null, 
   "imagenes": {
-    "idle": "mobs/imagenes/blue.png",
-    "atk": "mobs/imagenes/blue_atk.png",
-    "death": "mobs/imagenes/blue_death.png"
-  },
-  "alpha": "mobs/colisiones/monster_crawl.png",
-  "gender": null,
-  "AI": "ai"
+    "atk": "mobs/imagenes/blue_atk.png", 
+    "death": "mobs/imagenes/blue_death.png", 
+    "idle": "mobs/imagenes/blue.png"
+  }, 
+  "prefix": "48D6"
 }

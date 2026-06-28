@@ -103,6 +103,7 @@ class MobGroup:
 
 class ItemGroup:
     _group = {}
+    _ids = {}
     _indexes = []
     _lenght = 0
 
@@ -121,6 +122,7 @@ class ItemGroup:
         else:
             self._group[key].append(value)
 
+        self._ids[value.id] = value
         self._indexes.append(key)
         self._lenght += 1
 
@@ -209,6 +211,10 @@ class ItemGroup:
         if event.origin == self.name:
             obj = event.data['obj']
             del self[obj]
+
+    def get_by_id(self, id):
+        if id in self._ids:
+            return self._ids[id]
 
     def contents(self):
         return [self._group[key][0] for key in self._group]

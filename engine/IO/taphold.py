@@ -13,7 +13,7 @@ pressed_keys = []
 def init():
     event.set_blocked([1, 4, 5, 6, 17])  # all mouse- and video-related events
     for idx in range(joystick.get_count()):
-        joystick.Joystick(idx).init()
+        joystick.Joystick(idx)
 
 
 def filtrar_eventos_teclado(events):

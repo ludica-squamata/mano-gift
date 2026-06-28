@@ -116,6 +116,12 @@ def determinar_direccion(curr_p, next_p):
     dx = nx - px
     dy = ny - py
 
+    # 🔥 primero corregir desalineación
+    if px % 32 != 0:
+        return 'derecha' if dx > 0 else 'izquierda'
+    if py % 32 != 0:
+        return 'abajo' if dy > 0 else 'arriba'
+
     if abs(dx) > abs(dy):
         return 'derecha' if dx > 0 else 'izquierda'
     else:

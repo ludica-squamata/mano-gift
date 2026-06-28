@@ -1,26 +1,29 @@
 {
-  "nombre": "Banana",
-  "tipo": "agarrable",
-  "subtipo": "consumible",
-  "peso": 1,
-  "volumen": 1,
-  "dialog": "banana",
-  "imagenes": {
-    "prop": "items/banana2.png",
-    "item": "items/banana2.png"
-  },
-  "propiedades": [
-    "stackable","sin_sombra","colocable"
-  ],
+  "dialog": "banana", 
   "efecto": {
-    "des": "Es muy dulce.",
-    "stat": "Salud",
-    "mod": 100,
-    "method": "percentage"
-  },
+    "des": "Es muy dulce.", 
+    "method": "percentage", 
+    "mod": 100, 
+    "stat": "Salud"
+  }, 
+  "imagenes": {
+    "item": "items/banana2.png", 
+    "prop": "items/banana2.png"
+  }, 
+  "nombre": "Banana", 
+  "peso": 1, 
+  "prefix": "E6F9", 
+  "propiedades": [
+    "stackable", 
+    "sin_sombra", 
+    "colocable"
+  ], 
+  "subtipo": "consumible", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 1
 }

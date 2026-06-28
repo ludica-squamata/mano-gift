@@ -30,7 +30,7 @@ class AzoeSprite(sprite.Sprite):
     can_overlay = False
     iluminacion = 'light'  # 'light' | 'dark'
 
-    uuid = None
+    id = None
 
     def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'

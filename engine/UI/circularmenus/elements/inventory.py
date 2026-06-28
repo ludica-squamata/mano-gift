@@ -1,8 +1,8 @@
 from engine.globs.event_dispatcher import EventDispatcher
-from engine.globs.renderer import Camara
 from .descriptive_area import DescriptiveArea
+from engine.globs.renderer import Camara
+from engine.globs import Colores, Tiempo
 from .letter import LetterElement
-from engine.globs import Colores
 from pygame import font
 
 
@@ -39,16 +39,22 @@ class InventoryElement(LetterElement):
         return image
 
     def command(self):
+        now = Tiempo.clock.timestamp()
         if self.item is not None and self.item.tipo == 'consumible':
             value = self.item.usar(self.parent.entity)
             self.img_sel = self._create_icon_stack(33, 33, True, self.parent.entity)
             self.image = self.img_sel
             if value == 0:
                 self.parent.del_item_from_cascade(self.nombre, 'Consumibles')
+            EventDispatcher.trigger('RecordHistory', self, {
+                'when': now, 'what': self.item.id, 'event': 'consumed', 'to': self.parent.entity.id})
         elif self.item.tipo == 'equipable':
             self.parent.overwritten = True
             self.parent.salir()
             EventDispatcher.trigger('OpenMenu', 'Item', {'value': 'Equipo', "select": self.item.espacio})
+
+            EventDispatcher.trigger('RecordHistory', self, {
+                'when': now, 'what': self.item.id, 'event': 'equiped', 'to': self.parent.entity.id})
 
     def do_hold_action(self):
         if self.item.subtipo == 'libro':
@@ -111,3 +117,7 @@ class ContainedInventoryElement(InventoryElement):
             self.parent.salir()
             EventDispatcher.trigger('Register', self, {'mob': entity})
             # entity['AI'].register()
+        now = Tiempo.clock.timestamp()
+        EventDispatcher.trigger('RecordHistory', self,
+                                {'when': now, 'what': item.id,
+                                 'event': 'transfer', 'to': entity.id})

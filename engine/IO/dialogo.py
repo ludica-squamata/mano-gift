@@ -4,6 +4,7 @@ from engine.IO.arbol_de_dialogo import Elemento, BranchArray, ArboldeDialogo
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.globs.event_aware import EventAware
 from engine.misc.resources import abrir_json
+from engine.globs import Tiempo
 from os import path
 
 
@@ -317,7 +318,13 @@ class Dialogo(Discurso):
             if self.sel.item is not None:
                 loc = self.locutores[self.sel.emisor]
                 rec = self.locutores[self.sel.receptor]
-                loc.enviar_item(self.sel.item, rec)
+                item = loc.enviar_item(self.sel.item, rec)
+
+                now = Tiempo.clock.timestamp()
+                EventDispatcher.trigger('RecordHistory', self, {
+                    'when': now, 'what': item.id,
+                    'event': 'transfer', 'to': rec.id})
+
             if self.next is not None and self.next.is_exclusive:
                 self.arbol._future = self.next
             else:
@@ -365,7 +372,12 @@ class Dialogo(Discurso):
                 if choice.item is not None:
                     loc = self.locutores[choice.emisor]
                     rec = self.locutores[choice.receptor]
-                    loc.enviar_item(choice.item, rec)
+                    item = loc.enviar_item(choice.item, rec)
+
+                    now = Tiempo.clock.timestamp()
+                    EventDispatcher.trigger('RecordHistory', self, {
+                        'when': now, 'what': item.id,
+                        'event': 'transfer', 'to': rec.id})
 
                 self.hablar()
                 self.emit_sound_event(self.locutores[actual.emisor])
@@ -414,8 +426,13 @@ class Dialogo(Discurso):
             elif actual.item is not None:
                 loc = self.locutores[actual.emisor]
                 rec = self.locutores[actual.receptor]
-                loc.enviar_item(actual.item, rec)
+                item = loc.enviar_item(actual.item, rec)
                 self.mostrar_nodo(actual)
+
+                now = Tiempo.clock.timestamp()
+                EventDispatcher.trigger('RecordHistory', self, {
+                    'when': now, 'what': item.id,
+                    'event': 'transfer', 'to': rec.id})
 
             else:
                 self.mostrar_nodo(actual)

@@ -136,7 +136,6 @@ class PerksImage(Sprite):
             elif selected.rect.bottom > self.parent.perks_area.bottom:
                 dy = -(selected.rect.bottom - self.parent.perks_area.bottom)
 
-            # if self.rect.top + dy <= 30 and self.rect.bottom + dy >= 332 and self.rect.left + dx <= 3 and self.rect.right + dx >= 610:
             self.scroll(dx=dx, dy=dy)
         selected.select()
         self.selected = selected

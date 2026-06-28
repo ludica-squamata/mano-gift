@@ -2,7 +2,7 @@ from pygame import image, Rect, Surface, SRCALPHA, PixelArray, mask, Color, BLEN
 import json
 
 __all__ = ['cargar_imagen', 'split_spritesheet', 'abrir_json', 'guardar_json', 'combine_mob_spritesheets',
-           'cargar_head_anims']
+           'cargar_head_anims', "dark_overlay"]
 
 _images = {}
 

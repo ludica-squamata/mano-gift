@@ -166,9 +166,14 @@ class Trade(EventAware):
                 seller.recibir_dinero(coin, value)
                 timestamp = Tiempo.clock.timestamp()
 
+                EventDispatcher.trigger('RecordHistory', self, {
+                    'when': timestamp, 'what': item.id, 'event': 'sold', 'to': buyer.id})
+                EventDispatcher.trigger('RecordHistory', self, {
+                    'when': timestamp, 'what': item.id, 'event': 'bought', 'to': seller.id})
+
                 transactions = [
-                    {'trader': buyer.uuid, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
-                    {'trader': seller.uuid, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}]
+                    {'trader': buyer.id, 'item': item.nombre, 'delta': self.delta, 'tiempo': timestamp},
+                    {'trader': seller.id, 'item': item.nombre, 'delta': -self.delta, 'tiempo': timestamp}]
                 EngineData.extend_trades(transactions)
 
             else:

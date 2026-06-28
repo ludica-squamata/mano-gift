@@ -1,17 +1,20 @@
 {
-  "nombre": "Montón de baba verde",
-  "tipo": "agarrable",
-  "subtipo": "utilizable",
-  "peso": 0,
-  "volumen": 0,
   "imagenes": {
-    "prop": "items/montón de baba verde.png",
-    "item": "items/montón de baba verde.png"
-  },
-  "propiedades": ["sin_sombra"],
+    "item": "items/montón de baba verde.png", 
+    "prop": "items/montón de baba verde.png"
+  }, 
+  "nombre": "Montón de baba verde", 
+  "peso": 0, 
+  "prefix": "47C4", 
+  "propiedades": [
+    "sin_sombra"
+  ], 
+  "subtipo": "utilizable", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 0
 }

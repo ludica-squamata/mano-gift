@@ -22,25 +22,35 @@ class Agarrable(Escenografia):
         super().__init__(parent, x, y, z=z, data=data)
         self.subtipo = data['subtipo']
         self.grupo = GRUPO_AGARRABLES
+        EventDispatcher.trigger('RecordHistory', self,
+                                {'when': 'inicio', 'what': self.id,
+                                 'event': 'worldgen', 'to': 'ground'})
         Prop_Group.add(self.nombre, self, self.grupo)
 
-    def action(self, entity):
+    def action(self, entity, from_history=False):
         from .new_prop import new_item
-        item = new_item(self.parent, self.data)
+        data = self.data.copy()
+        data['id'] = self.id
+        item = new_item(self.parent, data)
+        now = Tiempo.clock.timestamp()
         if entity.tipo == 'Mob':
             entity.inventario.agregar(item)
             # removes the prop from the map, but not the item from the world.
             EventDispatcher.trigger('DeleteItem', 'Prop', {'obj': self})
+            if not from_history:
+                EventDispatcher.trigger('RecordHistory', self,
+                                        {'when': now, 'what': self.id,
+                                         'event': 'pickup', 'to': entity.id})
 
             # plays the pick up sound (WIP).
-            sound = choice(['pick up 4', 'pick up g'])
-            EventDispatcher.trigger('PlaySound', self, {'sound': sound})
+                sound = choice(['pick up 4', 'pick up g'])
+                EventDispatcher.trigger('PlaySound', self, {'sound': sound})
 
         if "dialog" in self.data:
             ref = self.data['dialog']
             EventDispatcher.trigger('TookItem', 'Prop', {'who': entity,
                                                          'what': item,
-                                                         'when': Tiempo.clock.timestamp(),
+                                                         'when': now,
                                                          'about': ref})
 
 
@@ -175,7 +185,7 @@ class EstructuraCompuesta(Escenografia):
         for nombre in data['componentes']:
             ruta = data['referencias'][nombre]
             imagen = None
-            propdata = {'propiedades': []}
+            propdata = {'propiedades': [],'prefix':data['prefix']}
             prop = None
             for x, y, z in data['componentes'][nombre]:
                 if type(ruta) is dict:
@@ -199,7 +209,7 @@ class EstructuraCompuesta(Escenografia):
                 if imagen is not None:
                     prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, img=imagen, data=propdata)
 
-                elif len(propdata) > 1:
+                elif len(propdata) > 2:
                     prop = new_prop(parent, dx + x, dy + y, z=z, nombre=nombre, data=propdata)
 
                 if prop is not None:
@@ -211,6 +221,7 @@ class EstructuraCompuesta(Escenografia):
         from engine.mapa.loader import cargar_salidas
         salida = self.data['salida']
         self.parent.set_salidas(*cargar_salidas(self.parent, [salida]))
+
 
 class Contenedor(Operable):
     accionable = True

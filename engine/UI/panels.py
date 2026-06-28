@@ -56,7 +56,8 @@ class DialogObjectsPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mostrar {}>'.format(self.menu.actual.item.nombre), True, Colores.TEXT_FG, Colores.CANVAS_BG)
+            nombre = self.menu.actual.item.nombre
+            render = self.f.render('<mostrar {}>'.format(nombre), True, Colores.TEXT_FG, Colores.CANVAS_BG)
             self.image.blit(render, (3, 23))
 
 
@@ -87,5 +88,6 @@ class DialogThemesPanel(BasePanel):
     def update(self):
         super().update()
         if self.menu.actual is not None:
-            render = self.f.render('<mencionar {}>'.format(self.menu.actual.item), True, Colores.TEXT_FG, Colores.CANVAS_BG)
+            item = self.menu.actual.item
+            render = self.f.render('<mencionar {}>'.format(item), True, Colores.TEXT_FG, Colores.CANVAS_BG)
             self.image.blit(render, (3, 23))

@@ -1,17 +1,20 @@
 {
-  "nombre": "Colmillo de monstruo",
-  "tipo": "agarrable",
-  "subtipo": "utilizable",
-  "peso": 0,
-  "volumen": 0,
   "imagenes": {
-    "prop": "items/colmillo de monstruo.png",
-    "item": "items/colmillo de monstruo.png"
-  },
-  "propiedades": ["sin_sombra"],
+    "item": "items/colmillo de monstruo.png", 
+    "prop": "items/colmillo de monstruo.png"
+  }, 
+  "nombre": "Colmillo de monstruo", 
+  "peso": 0, 
+  "prefix": "556E", 
+  "propiedades": [
+    "sin_sombra"
+  ], 
+  "subtipo": "utilizable", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 0
 }

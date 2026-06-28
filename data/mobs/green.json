@@ -1,10 +1,11 @@
 {
+  "AI": "brain", 
+  "alpha": "mobs/colisiones/monster_crawl.png", 
+  "gender": null, 
   "imagenes": {
-    "idle": "mobs/imagenes/green.png",
-    "atk": "mobs/imagenes/green_atk.png",
-    "death": "mobs/imagenes/green_death.png"
-  },
-  "alpha": "mobs/colisiones/monster_crawl.png",
-  "gender": null,
-  "AI": "brain"
+    "atk": "mobs/imagenes/green_atk.png", 
+    "death": "mobs/imagenes/green_death.png", 
+    "idle": "mobs/imagenes/green.png"
+  }, 
+  "prefix": "9F27"
 }

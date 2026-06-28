@@ -1,11 +1,29 @@
 {
-  "tipo": "pueblo",
-  "nombre": "ciudad",
-  "imagen": "props/ciudad.png",
-  "colisiones": "props/ciudad_colisiones.png",
+  "colisiones": "props/ciudad_colisiones.png", 
+  "imagen": "props/ciudad.png", 
+  "nombre": "ciudad", 
+  "prefix": "F0C1", 
+  "propiedades": [
+    "sin_sombra"
+  ], 
   "salida": {
-    "stage": "ciudad","rect": [294,560,60,64],"accion": "caminar","entrada": "inside",
-    "chunk_adress": [10,14],"nombre": "entrada_ciudad","direcciones": ["arriba"]
-  },
-  "propiedades": ["sin_sombra"]
+    "accion": "caminar", 
+    "chunk_adress": [
+      10, 
+      14
+    ], 
+    "direcciones": [
+      "arriba"
+    ], 
+    "entrada": "inside", 
+    "nombre": "entrada_ciudad", 
+    "rect": [
+      294, 
+      560, 
+      60, 
+      64
+    ], 
+    "stage": "ciudad"
+  }, 
+  "tipo": "pueblo"
 }

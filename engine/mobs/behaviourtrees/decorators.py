@@ -93,10 +93,11 @@ class Failer(Decorator):
     name = 'Failer'
 
     def get_child_status(self, status):
-        if self.parent is not None:
-            self.parent.get_child_status(Failure)
-        else:
-            self.tree.set_status(Failure)
+        if status: # just to use it for something.
+            if self.parent is not None:
+                self.parent.get_child_status(Failure)
+            else:
+                self.tree.set_status(Failure)
 
 
 class UntilSuccess(Decorator):

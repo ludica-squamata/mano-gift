@@ -1,25 +1,29 @@
 {
-  "nombre": "Estrella",
-  "tipo": "agarrable",
-  "subtipo": "consumible",
-  "peso": 2,
-  "volumen": 0,
-  "des": "Aumenta tu carisma en 2.",
-  "imagenes": {
-    "prop": "items/star.png",
-    "item": "items/star2.png",
-    "high": null
-  },
-  "propiedades": ["sin_sombra","colocable"],
-  "dialog": "star",
+  "des": "Aumenta tu carisma en 2.", 
+  "dialog": "star", 
   "efecto": {
-    "stat": "Carisma",
-    "mod": 2,
-    "method": "incremental"
-  },
+    "method": "incremental", 
+    "mod": 2, 
+    "stat": "Carisma"
+  }, 
+  "imagenes": {
+    "high": null, 
+    "item": "items/star2.png", 
+    "prop": "items/star.png"
+  }, 
+  "nombre": "Estrella", 
+  "peso": 2, 
+  "prefix": "67DF", 
+  "propiedades": [
+    "sin_sombra", 
+    "colocable"
+  ], 
+  "subtipo": "consumible", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 0
 }

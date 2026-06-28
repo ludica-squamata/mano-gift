@@ -44,7 +44,7 @@ class DoIHearIt(Leaf):
 
 class SwichBehaviour(Leaf):
     def process(self):
-        e = self.get_entity()
+        # e = self.get_entity()
         # e.switch_behaviour('ai')
         return Success
 

@@ -85,7 +85,7 @@ def creditos_introduccion():
     # contador para el efecto de parpadeo (placa 4)
     j = 0
     fondo = pantalla.get_surface()
-    while running is True:
+    while running:
         Tiempo.FPS.tick(60)
 
         for _event in event.get():

@@ -1,11 +1,17 @@
 {
-  "nombre": "Árbol Escalado",
-  "tipo": "transisional",
-  "spritesheet": "props/arbol escalado estaciones.png",
-  "propiedades": [],
-  "colisión": [32,110,32,32],
+  "colisión": [
+    32, 
+    110, 
+    32, 
+    32
+  ], 
   "examinar": {
-    "imagen": "props/tronco_arbol_89.png",
-    "descripción": "Se trata de un árbol caducifolio. Probablemente un manzano, dadas todas las manzanas que hay alrededor, aunque no hay ninguna entre sus ramas."
-  }
+    "descripción": "Se trata de un árbol caducifolio. Probablemente un manzano, dadas todas las manzanas que hay alrededor, aunque no hay ninguna entre sus ramas.", 
+    "imagen": "props/tronco_arbol_89.png"
+  }, 
+  "nombre": "Árbol Escalado", 
+  "prefix": "8E42", 
+  "propiedades": [], 
+  "spritesheet": "props/arbol escalado estaciones.png", 
+  "tipo": "transisional"
 }

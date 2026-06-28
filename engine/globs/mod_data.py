@@ -165,11 +165,11 @@ class ModData:
         return now
 
     @classmethod
-    def next_uuid(cls, prefix: str) -> str:
+    def next_id(cls, prefix: str) -> str:
         if prefix not in cls.counters:
             cls.counters[prefix] = 0
         cls.counters[prefix] += 1
-        return f"{prefix}{cls.counters[prefix]}"
+        return f"{prefix}#{cls.counters[prefix]}"
 
     @classmethod
     def _find_mod_folder(cls, ini):

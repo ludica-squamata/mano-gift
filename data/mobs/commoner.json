@@ -1,12 +1,13 @@
 {
+  "AI": "brain", 
+  "alpha": "mobs/colisiones/human_walk.png", 
+  "gender": "masculine", 
   "imagenes": {
-    "heads": "mobs/imagenes/heads_commoner.png",
-    "atk": null,
-    "death": "mobs/imagenes/dead human.png",
-    "idle": "mobs/imagenes/commoner_idle_walk_body.png",
-    "diag_face": "mobs/imagenes/npc_face.png"
-  },
-  "gender": "masculine",
-  "alpha": "mobs/colisiones/human_walk.png",
-  "AI": "brain"
+    "atk": null, 
+    "death": "mobs/imagenes/dead human.png", 
+    "diag_face": "mobs/imagenes/npc_face.png", 
+    "heads": "mobs/imagenes/heads_commoner.png", 
+    "idle": "mobs/imagenes/commoner_idle_walk_body.png"
+  }, 
+  "prefix": "982E"
 }

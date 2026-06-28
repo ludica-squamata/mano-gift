@@ -1,25 +1,28 @@
 {
-  "nombre": "Pera",
-  "tipo": "agarrable",
-  "subtipo": "consumible",
-  "peso": 1,
-  "volumen": 0.0075,
-  "des": "No te dejes engañar por su color.",
-  "imagenes": {
-    "prop": "items/pera_32.png",
-    "item": "items/pera_32.png"
-  },
-  "propiedades": [
-    "stackable","sin_sombra","colocable"
-  ],
+  "des": "No te dejes engañar por su color.", 
   "efecto": {
-    "stat": "Salud",
-    "mod": 100,
-    "method": "percentage"
-  },
+    "method": "percentage", 
+    "mod": 100, 
+    "stat": "Salud"
+  }, 
+  "imagenes": {
+    "item": "items/pera_32.png", 
+    "prop": "items/pera_32.png"
+  }, 
+  "nombre": "Pera", 
+  "peso": 1, 
+  "prefix": "8178", 
+  "propiedades": [
+    "stackable", 
+    "sin_sombra", 
+    "colocable"
+  ], 
+  "subtipo": "consumible", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 0.0075
 }

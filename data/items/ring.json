@@ -1,25 +1,28 @@
 {
-  "nombre": "Anillo Esmeralda",
-  "tipo": "agarrable",
-  "subtipo": "accesorio",
-  "peso": 1,
-  "volumen": 0,
-  "des": "Tiene engarzado una esmeralda.",
-  "imagenes": {
-    "prop": "items/anillo.png",
-    "item": "items/anillo.png",
-    "high": "items/anillo esmeralda-24.png"
-  },
-  "propiedades": ["colocable"],
+  "des": "Tiene engarzado una esmeralda.", 
   "efecto": {
-    "stat": "Carisma",
-    "equipo": "anillo",
-    "mod": 2,
-    "method": "incremental"
-  },
+    "equipo": "anillo", 
+    "method": "incremental", 
+    "mod": 2, 
+    "stat": "Carisma"
+  }, 
+  "imagenes": {
+    "high": "items/anillo esmeralda-24.png", 
+    "item": "items/anillo.png", 
+    "prop": "items/anillo.png"
+  }, 
+  "nombre": "Anillo Esmeralda", 
+  "peso": 1, 
+  "prefix": "65A2", 
+  "propiedades": [
+    "colocable"
+  ], 
+  "subtipo": "accesorio", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 0
 }

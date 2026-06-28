@@ -1,6 +1,8 @@
+from engine.globs.event_dispatcher import EventDispatcher
 from .elements.descriptive_area import DescriptiveArea
 from engine.libs import render_tagged_text
 from .rendered import RenderedCircularMenu
+from engine.globs.tiempo import Tiempo
 from .elements import LetterElement
 
 
@@ -44,7 +46,7 @@ class LooteableElement(LetterElement):
         self.image = self.img_sel
 
     def extirpar(self):
-        if self.parent.last_on_spot is self:
+        if self.selected:
             item = self.parent.mob.inventario[self.item.nombre]
             self.parent.mob.inventario.remover(item)
             self.parent.parent.entity.inventario.agregar(item)
@@ -54,6 +56,10 @@ class LooteableElement(LetterElement):
                 self.parent.del_item_from_cascade(self.item.nombre, 'inicial')
             if len(self.parent.cascadas['inicial']) == 0:
                 self.parent.salir()
+
+            now = Tiempo.clock.timestamp()
+            EventDispatcher.trigger('RecordHistory', self, {
+                'when': now, 'what': item.id, 'event': 'looted', 'to': self.parent.parent.entity.id})
 
     def update(self):
         super().update()

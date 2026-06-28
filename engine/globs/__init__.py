@@ -8,3 +8,4 @@ from .game_state import Game_State
 from .colores import Colores
 from .noche import Noche
 from .sun import Sun
+from .item_history_registry import ItemHistoryRegistry

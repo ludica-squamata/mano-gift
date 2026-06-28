@@ -1,38 +1,45 @@
 {
-  "nombre": "Cofre",
-  "tipo": "contenedor",
-  "peso": 10,
-  "volumen": 4,
-  "máscara": [-1,16,34,30],
-  "propiedades": [
-    "solido","sin_sombra"
-  ],
+  "contenido": {
+    "Banana": 10, 
+    "Egg": 10, 
+    "Manzana": 10, 
+    "Pear": 10
+  }, 
+  "máscara": [
+    -1, 
+    16, 
+    34, 
+    30
+  ], 
+  "nombre": "Cofre", 
   "operable": [
     {
-      "ID": 0,
-      "image": "props/cofre_00.png",
+      "ID": 0, 
+      "image": "props/cofre_00.png", 
       "next": 1
-    },
+    }, 
     {
-      "ID": 1,
-      "image": "props/cofre_01.png",
+      "ID": 1, 
+      "image": "props/cofre_01.png", 
       "next": 0
-    },
+    }, 
     {
-      "ID": 2,
-      "image": "props/cofre_00.png",
+      "ID": 2, 
+      "image": "props/cofre_00.png", 
       "next": 3
-    },
+    }, 
     {
-      "ID": 3,
-      "image": "props/cofre_02.png",
+      "ID": 3, 
+      "image": "props/cofre_02.png", 
       "next": 2
     }
-  ],
-  "contenido": {
-    "Manzana": 10,
-    "Banana": 10,
-    "Pear": 10,
-    "Egg": 10
-  }
+  ], 
+  "peso": 10, 
+  "prefix": "B9C2", 
+  "propiedades": [
+    "solido", 
+    "sin_sombra"
+  ], 
+  "tipo": "contenedor", 
+  "volumen": 4
 }

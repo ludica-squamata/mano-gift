@@ -11,7 +11,8 @@
         "Move",
         "Wait",
         "LookAround",
-        "KeepLooking"
+        "KeepLooking",
+        "RecibirDanio"
       ],
       "behaviours/ai": [
         "HasSetLocation",

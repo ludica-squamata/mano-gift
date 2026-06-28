@@ -55,15 +55,14 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
         self.estado = 'idle'
         image = self.images['S' + self.direccion]['light']
         mask = self.mascaras['S' + self.direccion]
-        self.uuid = ModData.next_uuid('M')
-        super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', None))
+        super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', ModData.next_id(data['prefix'])))
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
         self['species'] = data.get('species', 'human')
         self['hashed'] = data.get('hashed')  # hash value de todas las características menos el nombre.
 
         self.chunk_adresses = {self.parent.parent.nombre: self.parent.adress.center}
-        if self.uuid not in Mob_Group:
-            Mob_Group[self.uuid] = self
+        if self.id not in Mob_Group:
+            Mob_Group[self.id] = self
         if 'occupation' in data:
             self['occupation'] = data['occupation']
         if self['raza'] == 'human':
@@ -78,7 +77,7 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
     def on_elimination(self):
         super().on_elimination()
         self.parent = None
-        del Mob_Group[self.uuid]
+        del Mob_Group[self.id]
         Renderer.camara.remove_obj(self)
         self['AI'].on_elimination()
         self.post_elimination()

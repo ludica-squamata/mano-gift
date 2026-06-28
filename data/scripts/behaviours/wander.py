@@ -123,26 +123,45 @@ class GetRoute(Leaf):
         self.tree.set_context('punto_proximo', ruta[prox])
         return Success
 
+def direccion_alinear(e):
+    dx = e.x % 32
+    dy = e.y % 32
+
+    if dx != 0:
+        return 'izquierda' if dx > 16 else 'derecha'
+    if dy != 0:
+        return 'arriba' if dy > 16 else 'abajo'
+
+    return None
 
 class NextPosition(Leaf):
     def process(self):
-        e = self.get_entity()
+        entity = self.get_entity()
         camino = self.tree.get_context('camino')
         proximo = self.tree.get_context('next')
         punto_final = self.tree.get_context('punto_final')
         punto = camino[proximo] if proximo < len(camino) else punto_final
-        curr_p = [e.x, e.y]
+        curr_p = [entity.x, entity.y]
+
+        def esta_alineado(e):
+            return e.x % 32 == 0 and e.y % 32 == 0
+
+
+
+        if not esta_alineado(entity):
+            entity.direccion = direccion_alinear(entity)
+            return Success
 
         if curr_p == punto:
             if proximo + 1 < len(camino):
                 self.tree.set_context('next', proximo + 1)
-                e.direccion = determinar_direccion(curr_p, punto)
+                entity.direccion = determinar_direccion(curr_p, punto)
 
         if curr_p == punto_final:
             self.tree.erase_keys('punto_final', 'camino', 'next')
             return Failure
         else:
-            e.direccion = determinar_direccion(curr_p, punto_final)
+            entity.direccion = determinar_direccion(curr_p, punto_final)
             return Success
 
 
@@ -155,10 +174,13 @@ class Move(Leaf):
         self.tree.set_context('ticks', ticks)
         e.mover(x, y)
         if e.x % 32 == 0 and e.y % 32 == 0:
-            return Success
-        elif ticks == 32:
             self.tree.set_context('ticks', 0)
             return Success
+        if ticks >= 32:
+            # 🔥 forzar realineación, no éxito
+            e.direccion = direccion_alinear(e)
+            self.tree.set_context('ticks', 0)
+            return Running
         else:
             return Running
 

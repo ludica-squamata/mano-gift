@@ -22,15 +22,15 @@ class Comerciante(Equipado):
         for trader in file_1:
             named_trader = None
             if trader.lower() == data['occupation']:
-                named_trader = self.uuid
+                named_trader = self.id
                 break
             elif trader == data["nombre"]:
-                named_trader = self.uuid
+                named_trader = self.id
                 break
 
         if named_trader is not None:
             for item in file_1[trader]:
-                entry = {'uuid': named_trader, 'item': item, 'cant': file_1[trader][item], 'desde': "inicio"}
+                entry = {'id': named_trader, 'item': item, 'cant': file_1[trader][item], 'desde': "inicio"}
 
                 reader_1.append(entry)
 
@@ -39,11 +39,11 @@ class Comerciante(Equipado):
             reader_2 = []
         else:
             file_2 = open(ruta2, 'r', encoding='utf-8')
-            reader_2 = list(csv.DictReader(file_2, ['uuid', 'item', 'cant', "desde"], delimiter=";"))
+            reader_2 = list(csv.DictReader(file_2, ['id', 'item', 'cant', "desde"], delimiter=";"))
 
         file_2.close()
         reader = reader_1 + reader_2
-        rows = [row for row in reader if row['uuid'] == self.uuid]
+        rows = [row for row in reader if row['id'] == self.id]
         for row in rows:
             item = None
             now = Tiempo.clock.timestamp()

@@ -2,6 +2,7 @@ from engine.misc import abrir_json, guardar_json, salir_handler, Config
 from .constantes import CAPA_OVERLAYS_MENUS
 from .event_dispatcher import EventDispatcher, AzoeEvent
 from .game_groups import Mob_Group, Prop_Group, MobCSV
+from .item_history_registry import ItemHistoryRegistry
 from .renderer import Renderer
 from .tiempo import Tiempo, SeasonalYear
 from .mod_data import ModData
@@ -149,11 +150,11 @@ class EngineData:
 
         ruta = path.join(Config.savedir, 'mobs.csv')
         if path.exists(ruta):
-            fieldnames = ['uuid', 'x', 'y', 'chunk', 'adress']
+            fieldnames = ['id', 'x', 'y', 'chunk', 'adress']
             with open(ruta, 'r', newline='') as csvfile:
                 reader = DictReader(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
                 for row in reader:
-                    name = row['uuid']
+                    name = row['id']
                     MobCSV[name] = row
 
         cls.save_data.update(data)
@@ -209,6 +210,7 @@ class EngineData:
 
             chunk.add_property(focus, grupo)
 
+        ItemHistoryRegistry.rewind()
         Renderer.set_focus(focus)
         Sun.update()
 

@@ -1,9 +1,13 @@
 {
-  "nombre": "Poste",
-  "tipo": "escenografia",
-  "peso": 10,
-  "volumen": 4,
-  "image": "props/poste_luz.png",
-  "proyecta_luz": 60,
-  "origen": [5,15]
+  "image": "props/poste_luz.png", 
+  "nombre": "Poste", 
+  "origen": [
+    5, 
+    15
+  ], 
+  "peso": 10, 
+  "prefix": "AE51", 
+  "proyecta_luz": 60, 
+  "tipo": "escenografia", 
+  "volumen": 4
 }

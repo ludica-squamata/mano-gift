@@ -1,26 +1,29 @@
 {
-  "nombre": "Manzana",
-  "tipo": "agarrable",
-  "subtipo": "consumible",
-  "peso": 1,
-  "volumen": 0.0075,
-  "des": "Deliciosa y brillante.",
-  "imagenes": {
-    "prop": "items/Manzana-10.png",
-    "item": "items/Manzana-24.png",
-    "high": null
-  },
-  "propiedades": [
-    "stackable","sin_sombra","colocable"
-  ],
+  "des": "Deliciosa y brillante.", 
   "efecto": {
-    "stat": "Salud",
-    "mod": 100,
-    "method": "percentage"
-  },
+    "method": "percentage", 
+    "mod": 100, 
+    "stat": "Salud"
+  }, 
+  "imagenes": {
+    "high": null, 
+    "item": "items/Manzana-24.png", 
+    "prop": "items/Manzana-10.png"
+  }, 
+  "nombre": "Manzana", 
+  "peso": 1, 
+  "prefix": "97A9", 
+  "propiedades": [
+    "stackable", 
+    "sin_sombra", 
+    "colocable"
+  ], 
+  "subtipo": "consumible", 
+  "tipo": "agarrable", 
   "trading": {
-    "sell_price": 1,
-    "buy_price": 1,
-    "coin_symbol": "$"
-  }
+    "buy_price": 1, 
+    "coin_symbol": "$", 
+    "sell_price": 1
+  }, 
+  "volumen": 0.0075
 }
