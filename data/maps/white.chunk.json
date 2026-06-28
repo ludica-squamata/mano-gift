@@ -1,11 +1,17 @@
 {
   "fondo": "maps/fondos/pasto.png",
   "colisiones": null,
-  "props": {},
+  "props": {
+    "chunk": [0, 0],
+    "house": [[400, 500]]
+  },
   "mobs": {
+    "chunk": [0, 0],
     "Green": [[32,0]],
     "Shopkeeper": [[64,128]],
     "Commoner": [[96,96]]
   },
-  "refs": {}
+  "refs": {
+    "house": "props/casa_con_puerta.json"
+  }
 }

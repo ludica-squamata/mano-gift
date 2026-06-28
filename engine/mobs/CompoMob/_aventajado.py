@@ -8,11 +8,11 @@ class Aventajado(Caracterizado):
         super().__init__(parent, *args, **kwargs)
         self.perk_data = self.perks_file_loader('perks.csv')
         self.perks = []
-        for id in self.perk_data:
-            cumple = self.check_reqs(id)
-            if cumple:
-                print(self.nombre, self.perk_data[id]['name'])
-        print()
+        # for id in self.perk_data:
+        #     cumple = self.check_reqs(id)
+        #     if cumple:
+        #         print(self.nombre, self.perk_data[id]['name'])
+        # print()
 
     @staticmethod
     def perks_file_loader(csv_file):
