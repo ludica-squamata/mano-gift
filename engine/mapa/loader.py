@@ -181,7 +181,7 @@ def load_mob_csv(parent, loaded):
             if len(_invalid_mobs):
                 raise RuntimeError(f'the following IDs are invalid: {[i.id for i in _invalid_mobs]}')
             if len(reader):
-                for row in [row for row in reader if row['chunk_name'] == parent.nombre]:
+                for row in [row for row in reader if row['chunk'] == parent.nombre]:
                     id = row['id']
                     x, y = int(row['x']), int(row['y'])
                     a, b = row['adress'].split(',')

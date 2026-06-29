@@ -105,10 +105,10 @@ class Stage:
 
         ruta = path.join(Config.savedir, 'mobs.csv')
         fieldnames = ['id', 'x', 'y', 'chunk', 'adress']
-        with open(ruta, 'w', newline='') as csvfile:
+        with open(ruta, 'w', newline='\n') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+            writer.writeheader()
             for mob in Mob_Group.contents():
-                writer.writeheader()
                 chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress((0, 0))
                 if mob.id in MobCSV:
                     row = MobCSV[mob.id]

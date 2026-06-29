@@ -9,6 +9,8 @@ from .tiempo import Tiempo
 
 class ItemHistoryRegistry:
 
+    rows = []
+
     @classmethod
     def init(cls):
         cls.events = []
@@ -47,7 +49,7 @@ class ItemHistoryRegistry:
         cls.delta = []
         if len(d):
             ruta = path.join(getcwd(), Config.savedir, 'item_history_list.csv')
-            with open(ruta, 'wt', encoding='utf-8') as csv_file:
+            with open(ruta, 'wt', encoding='utf-8', newline='\n') as csv_file:
                 fieldnames = ['when', 'what', 'event', 'to']
                 writer = DictWriter(csv_file, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
                 writer.writeheader()

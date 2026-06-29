@@ -34,14 +34,13 @@ class Comerciante(Equipado):
 
                 reader_1.append(entry)
 
-        if not path.exists(ruta2):
-            file_2 = open(ruta2, 'xt', encoding='utf-8', newline='\r\n')
-            reader_2 = []
-        else:
-            file_2 = open(ruta2, 'r', encoding='utf-8')
+        if path.exists(ruta2):
+            file_2 = open(ruta2, 'xt', encoding='utf-8', newline='\n')
             reader_2 = list(csv.DictReader(file_2, ['id', 'item', 'cant', "desde"], delimiter=";"))
+            file_2.close()
+        else:
+            reader_2 = []
 
-        file_2.close()
         reader = reader_1 + reader_2
         rows = [row for row in reader if row['id'] == self.id]
         for row in rows:

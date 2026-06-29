@@ -233,9 +233,10 @@ class EngineData:
     def record_transactions(cls):
         ruta = path.join(Config.savedir, 'trading_list.csv')
         if len(cls._concreted_trades):
-            with open(ruta, 'at', encoding='utf-8', newline='') as csv_file:
+            with open(ruta, 'at', encoding='utf-8', newline='\n') as csv_file:
                 field_names = ['trader', 'item', 'cant', 'desde']
-                writer = DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\r\n')
+                writer = DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\n')
+                writer.writeheader()
                 for transaction in cls._concreted_trades:
                     row = {
                         'trader': transaction['trader'], 'item': transaction['item'],
