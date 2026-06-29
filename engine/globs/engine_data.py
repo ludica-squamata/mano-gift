@@ -133,6 +133,7 @@ class EngineData:
         data.update(event.data)
         guardar_json(Config.savedir + '/' + name + '.json', data)
         cls.record_transactions()
+        ItemHistoryRegistry.flush_delta()
 
     @classmethod
     def new_game(cls, char_name):
@@ -231,15 +232,16 @@ class EngineData:
     @classmethod
     def record_transactions(cls):
         ruta = path.join(Config.savedir, 'trading_list.csv')
-        with open(ruta, 'at', encoding='utf-8', newline='') as csv_file:
-            field_names = ['trader', 'item', 'cant', 'desde']
-            writer = DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\r\n')
-            for transaction in cls._concreted_trades:
-                row = {
-                    'trader': transaction['trader'], 'item': transaction['item'],
-                    'cant': transaction['delta'], 'desde': transaction['tiempo']
-                }
-                writer.writerow(row)
+        if len(cls._concreted_trades):
+            with open(ruta, 'at', encoding='utf-8', newline='') as csv_file:
+                field_names = ['trader', 'item', 'cant', 'desde']
+                writer = DictWriter(csv_file, fieldnames=field_names, delimiter=';', lineterminator='\r\n')
+                for transaction in cls._concreted_trades:
+                    row = {
+                        'trader': transaction['trader'], 'item': transaction['item'],
+                        'cant': transaction['delta'], 'desde': transaction['tiempo']
+                    }
+                    writer.writerow(row)
 
     @classmethod
     def compound_save_data(cls, event):

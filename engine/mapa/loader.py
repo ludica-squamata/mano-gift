@@ -173,9 +173,8 @@ def load_mob_csv(parent, loaded):
     loaded_mobs = []
     if path.exists(path.join(Config.savedir, 'mobs.csv')):
         ruta = path.join(Config.savedir, 'mobs.csv')
-        fieldnames = ['id', 'x', 'y', 'chunk_name', 'adress']
         with open(ruta) as csvfile:
-            reader = list(csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=';'))
+            reader = list(csv.DictReader(csvfile, delimiter=';'))
             row_values = [list(row.values()) for row in reader]
             _valid_mobs = [mob for mob in loaded if str(mob.id) in [row[0] for row in row_values]]
             _invalid_mobs = [mob for mob in loaded if str(mob.id) not in [row[0] for row in row_values]]
@@ -213,8 +212,7 @@ def load_chunks_csv(csv_file, silently=False):
     references to mobs or props, but due to the nature of dicts, such info could be added later.
     """
     with open(path.join(getcwd(), 'data', 'maps', csv_file)) as cvsfile:
-        reader = csv.DictReader(cvsfile, fieldnames=['adress', 'id', 'sup', 'inf', 'izq', 'der',
-                                                     'fondo', 'colisiones', 'terrain', 'latitude'], delimiter=';')
+        reader = csv.DictReader(cvsfile, delimiter=';')
         chunks_data = {}
         silently = True if 'debug' not in sys.argv else silently
         for i, row in enumerate(reader):

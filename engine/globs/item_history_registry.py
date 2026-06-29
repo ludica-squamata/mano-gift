@@ -14,12 +14,12 @@ class ItemHistoryRegistry:
         cls.events = []
         cls.delta = []
         EventDispatcher.register(cls.record, 'RecordHistory')
-        EventDispatcher.register(cls.flush_delta, 'SaveDataFile')
 
         ruta = path.join(getcwd(), Config.savedir, 'item_history_list.csv')
-        with open(ruta, 'rt', encoding='utf-8') as csv_file:
-            reader = DictReader(csv_file, delimiter=';')
-            cls.rows = list(reader)
+        if path.exists(ruta):
+            with open(ruta, 'rt', encoding='utf-8') as csv_file:
+                reader = DictReader(csv_file, delimiter=';')
+                cls.rows = list(reader)
 
     @classmethod
     def record(cls, event):
@@ -42,10 +42,10 @@ class ItemHistoryRegistry:
                                 item.action(mob, from_history=True)
 
     @classmethod
-    def flush_delta(cls, event):
+    def flush_delta(cls):
         d = cls.delta
         cls.delta = []
-        if event.origin:
+        if len(d):
             ruta = path.join(getcwd(), Config.savedir, 'item_history_list.csv')
             with open(ruta, 'wt', encoding='utf-8') as csv_file:
                 fieldnames = ['when', 'what', 'event', 'to']

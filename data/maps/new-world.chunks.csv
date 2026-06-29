@@ -1,3 +1,4 @@
+adress;id;sup;inf;izq;der;fondo;colisiones;terrain;latitude
 [0,0];000;null;036;035;001;maps/fondos/snow-tile.png;null;snow;90
 [1,0];001;null;037;000;002;maps/fondos/snow-tile.png;null;snow;90
 [2,0];002;null;038;001;003;maps/fondos/snow-tile.png;null;snow;90
