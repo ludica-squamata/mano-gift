@@ -41,7 +41,10 @@ class ItemHistoryRegistry:
                         if evento['event'] != 'worldgen':
                             if evento['event'] == 'pickup':
                                 mob = Mob_Group[evento['to']]
-                                item.action(mob, from_history=True)
+                                if hasattr(item,'action'): # for props
+                                    item.action(mob, from_history=True)
+                                else: # for items
+                                    mob.inventario.agregar(item)
 
     @classmethod
     def flush_delta(cls):
@@ -49,7 +52,7 @@ class ItemHistoryRegistry:
         cls.delta = []
         if len(d):
             ruta = path.join(getcwd(), Config.savedir, 'item_history_list.csv')
-            with open(ruta, 'wt', encoding='utf-8', newline='\n') as csv_file:
+            with open(ruta, 'wt', encoding='utf-8', newline='\r\n') as csv_file:
                 fieldnames = ['when', 'what', 'event', 'to']
                 writer = DictWriter(csv_file, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
                 writer.writeheader()

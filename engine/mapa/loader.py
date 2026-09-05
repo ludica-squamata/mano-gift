@@ -55,9 +55,13 @@ def load_props(parent, alldata: dict):
                     data = abrir_json(ModData.mod_folder + alldata['refs'][ref])
                 else:
                     img = cargar_imagen(ModData.graphs + imgs[ref])  # because it points to a .png file instead.
-            elif path.exists(ModData.mod_folder + ref + '.json'):
-                # use ref as filename, if it exists.
-                data = abrir_json(ModData.mod_folder + ref + '.json')
+            # use ref as filename, if it exists.
+            elif path.exists(ModData.props + ref + '.json'):
+                # it might be a prop or an item.
+                data = abrir_json(ModData.props + ref + '.json')
+            elif path.exists(ModData.items + ref +'.json'):
+                # They are not the same anymore.
+                data = abrir_json(ModData.items + ref + '.json')
             else:
                 img = None  # resets the image to None to prevent wrong item duplication.
 

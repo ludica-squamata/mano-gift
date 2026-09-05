@@ -1,36 +1,64 @@
 {
-  "head": {
-    "class": "scripted",
-    "conditional_tags": {},
-    "style": "",
-    "locutors": ["heroe","commoner"],
-    "about": "star",
-    "icon": "S",
-    "keywords": [],
-    "events": {},
-    "reqs": {"has": {"who": "heroe","what": "Estrella"}}
-  },
   "body": {
     "0": {
-      "leads": [1,2],"from": "commoner","to": "heroe",
+      "from": "commoner", 
+      "leads": [
+        1, 
+        2
+      ], 
+      "to": "heroe", 
       "txt": "Hey! tenés la estrella! Me la das?"
-    },
+    }, 
     "1": {
-      "from": "heroe","to": "commoner",
+      "from": "heroe", 
+      "to": "commoner", 
       "txt": "No, es mía."
-    },
+    }, 
     "2": {
-      "leads": 3,"from": "heroe","to": "commoner","item": "star",
-      "reqs": [{"objects": ["Estrella"]}],
+      "from": "heroe", 
+      "item": "star", 
+      "leads": 3, 
+      "reqs": [
+        {
+          "objects": [
+            "Estrella"
+          ]
+        }
+      ], 
+      "to": "commoner", 
       "txt": "Aquí tienes."
-    },
+    }, 
     "3": {
-      "leads": 4,"from": "commoner","to": "heroe",
+      "from": "commoner", 
+      "leads": 4, 
+      "to": "heroe", 
       "txt": "Oh, muchas gracias, héroe!"
-    },
+    }, 
     "4": {
-      "from": "commoner","to": "heroe","item": "ring",
+      "from": "commoner", 
+      "item": "ring", 
+      "to": "heroe", 
       "txt": "Ten, esto es para tí."
     }
+  }, 
+  "head": {
+    "about": "star", 
+    "class": "scripted", 
+    "conditional_tags": {}, 
+    "events": {}, 
+    "icon": "S", 
+    "keywords": [], 
+    "locutors": [
+      "heroe", 
+      "commoner"
+    ], 
+    "prefix": "DC64", 
+    "reqs": {
+      "has": {
+        "what": "Estrella", 
+        "who": "heroe"
+      }
+    }, 
+    "style": ""
   }
 }

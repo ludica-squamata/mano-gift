@@ -38,6 +38,7 @@ class Noche(AzoeBaseSprite):
         if light in self.lights:
             self.lights.remove(light)
 
+    # noinspection PyUnresolvedReferences
     def draw_lights(self):
         if Sun.alpha in self.images:
             self.image = self.images[Sun.alpha]

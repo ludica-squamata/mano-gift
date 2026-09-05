@@ -224,6 +224,7 @@ class ShadowSprite(AzoeSprite):
 
         return h_2, t_surface, mascara, ensombrece
 
+    # noinspection PyUnresolvedReferences
     @staticmethod
     def orientar_sombra(surface, arg=None, _mask=None):
         h = surface.get_height()

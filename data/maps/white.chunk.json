@@ -7,9 +7,7 @@
   },
   "mobs": {
     "chunk": [0, 0],
-    "Green": [[32,0]],
-    "Shopkeeper": [[64,128]],
-    "Commoner": [[96,96]]
+    "Green": [[32,0]]
   },
   "refs": {
     "house": "props/casa_con_puerta.json"

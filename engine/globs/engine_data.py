@@ -153,7 +153,7 @@ class EngineData:
         if path.exists(ruta):
             fieldnames = ['id', 'x', 'y', 'chunk', 'adress']
             with open(ruta, 'r', newline='') as csvfile:
-                reader = DictReader(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+                reader = DictReader(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\r\n')
                 for row in reader:
                     name = row['id']
                     MobCSV[name] = row

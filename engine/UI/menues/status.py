@@ -23,23 +23,24 @@ class MenuStatus(Menu):
 
         idx = 0
         base_rect = Rect(0, 0, 32, 32)
+        text_fg, canvas_bg = Colores.TEXT_FG, Colores.CANVAS_BG # abreviaturas
         for i, char in enumerate(chars):
             idx = i
             if char != '':
                 value = self.entity[char]
-                render_char = fuente_1.render(char, True, Colores.TEXT_FG, Colores.CANVAS_BG)
+                render_char = fuente_1.render(char, True, text_fg, canvas_bg)
                 render_rect = render_char.get_rect(left=305, y=rect.y + i * 23)
 
-                render_value = render_textrect(str(value), fuente_2, base_rect, Colores.TEXT_FG, Colores.CANVAS_BG, 2)
+                render_value = render_textrect(str(value), fuente_2, base_rect, text_fg, canvas_bg, 2)
                 value_rect = render_value.get_rect(left=render_rect.left + 100, y=rect.y + i * 23)
 
                 self.image.blit(render_char, render_rect)
                 self.image.blit(render_value, value_rect)
 
-        wallet_text = fuente_1.render("Dinero", True, Colores.TEXT_FG, Colores.CANVAS_BG)
+        wallet_text = fuente_1.render("Dinero", True, text_fg, canvas_bg)
         rect_wallet = wallet_text.get_rect(left=305, y=rect.y + (idx + 2) * 23)
 
-        wallet_value = render_textrect(f'${self.entity.wallet['$']}', fuente_2, base_rect, Colores.TEXT_FG, Colores.CANVAS_BG, 2)
+        wallet_value = render_textrect(f'${self.entity.wallet['$']}', fuente_2, base_rect, text_fg, canvas_bg, 2)
         rect_value = wallet_value.get_rect(left=rect_wallet.left + 100, y=rect.y + (idx + 2) * 23)
 
         self.image.blit(wallet_text, rect_wallet)

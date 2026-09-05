@@ -1,49 +1,80 @@
 {
+  "body": {
+    "0": {
+      "from": "heroe", 
+      "leads": 1, 
+      "to": "commoner", 
+      "txt": "¿qué <r>puedes</r> decirme acerca <b>de las bananas</b>?"
+    }, 
+    "1": {
+      "from": "commoner", 
+      "leads": 2, 
+      "to": "heroe", 
+      "txt": "No mucho, solo que los monos se alimentan de ellas."
+    }, 
+    "2": {
+      "from": "heroe", 
+      "leads": 3, 
+      "to": "commoner", 
+      "txt": "Nosotros los humanos también podemos"
+    }, 
+    "3": {
+      "from": "heroe", 
+      "leads": 4, 
+      "reqs": [
+        {
+          "flags": [
+            "dialog.banana.uno"
+          ]
+        }
+      ], 
+      "to": "commoner", 
+      "txt": "Este nodo tiene una flag como requisito, y si no se cumple, no se muestra"
+    }, 
+    "4": {
+      "from": "commoner", 
+      "leads": 5, 
+      "to": "heroe", 
+      "txt": "Sí, pero es el alimento preferido de los monos"
+    }, 
+    "5": {
+      "from": "heroe", 
+      "leads": 6, 
+      "to": "commoner", 
+      "txt": "¿Hay <b>monos</b> por aquí?"
+    }, 
+    "6": {
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "No que yo sepa. Deberías <b>buscar más al</b> norte."
+    }
+  }, 
   "head": {
-    "class": "",
+    "about": "banana", 
+    "class": "", 
     "conditional_tags": {
       "0": {
         "b": {
-          "objects": ["Estrella"],
-          "attrs": {"Carisma": [">",9]}
+          "attrs": {
+            "Carisma": [
+              ">", 
+              9
+            ]
+          }, 
+          "objects": [
+            "Estrella"
+          ]
         }
       }
-    },
-    "style": "tagarrays/estilo.json",
-    "locutors": ["heroe","commoner"],
-    "about": "banana",
-    "icon": "props/banana.png",
-    "keywords": [],
-    "events": {}
-  },
-  "body": {
-    "0": {
-      "leads": 1,"from": "heroe","to": "commoner",
-      "txt": "¿qué <r>puedes</r> decirme acerca <b>de las bananas</b>?"
-    },
-    "1": {
-      "leads": 2,"from": "commoner","to": "heroe",
-      "txt": "No mucho, solo que los monos se alimentan de ellas."
-    },
-    "2": {
-      "leads": 3,"from": "heroe","to": "commoner",
-      "txt": "Nosotros los humanos también podemos"
-    },
-    "3": {
-      "leads": 4,"from": "heroe","to": "commoner","reqs": [{"flags": ["dialog.banana.uno"]}],
-      "txt": "Este nodo tiene una flag como requisito, y si no se cumple, no se muestra"
-    },
-    "4": {
-      "leads": 5,"from": "commoner","to": "heroe",
-      "txt": "Sí, pero es el alimento preferido de los monos"
-    },
-    "5": {
-      "leads": 6,"from": "heroe","to": "commoner",
-      "txt": "¿Hay <b>monos</b> por aquí?"
-    },
-    "6": {
-      "from": "commoner","to": "heroe",
-      "txt": "No que yo sepa. Deberías <b>buscar más al</b> norte."
-    }
+    }, 
+    "events": {}, 
+    "icon": "props/banana.png", 
+    "keywords": [], 
+    "locutors": [
+      "heroe", 
+      "commoner"
+    ], 
+    "prefix": "DC64", 
+    "style": "tagarrays/estilo.json"
   }
 }

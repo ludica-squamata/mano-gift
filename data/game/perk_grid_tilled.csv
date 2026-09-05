@@ -1,61 +1,61 @@
-id;arriba;abajo;izquierda;derecha;rect;nombre
-0;4;null;45;1;11,743,74,74;Golpe Potenciado
-1;3;null;0;2;120,748,64,64;Esquiva Instintiva
-2;7;null;1;null;205,742,76,76;Aguante Prolongado
-3;5;1;4;7;104,625,80,80;Anticipaci贸n
-4;8;0;48;3;20,629,72,72;Cazador de Monstruos
-5;11;3;8;6;89,523,56,56;Ejecutar Bestias
-6;10;7;5;14;163,514,78,78;Contraataque
-7;6;2;3;9;215,637,56,56;Guardia Perfecta
-8;11;4;49;5;4,517,68,68;Golpe Perforante
-9;14;null;7;null;286,634,62,62;Segundo Aliento
-10;null;6;11;24;172,412,58,58;Desarme
-11;null;8;null;10;57,414,54,54;Maestro Duelista
-12;13;null;2;null;583,744,80,80;Sensibilidad al Mana
-13;18;12;9;null;583,631,78,78;Canalizaci贸n B谩sica
-14;null;13;6;15;252,534,54,54;Ignici贸n
-15;null;13;14;16;323,526,70,70;Criomancia
-16;null;13;15;17;412,527,68,68;Geomancia
-17;24;13;16;18;496,524,74,74;Electrofon铆a
-18;24;13;17;19;586,525,74,74;Aeromancia
-19;25;13;18;20;681,521,78,78;Manipulaci贸n del Vac铆o
-20;null;13;19;21;786,523,76,76;Umbramancia
-21;null;13;20;22;879,523,76,76;Fotomancia
-22;23;13;21;37;969,529,64,64;S铆ntesis Elemental
-23;26;22;25;38;968,419,62,62;Ritualista
-24;null;18;10;25;541,414,70,70;Alteraci贸n Clim谩tica
-25;null;19;24;23;692,423,52,52;Portal Menor
-26;null;23;25;56;959,306,76,76;Invocaci贸n Menor
-27;28;null;35;null;1315,781,62,62;Presencia
-28;29;27;36;32;1269,663,70,70;Lectura Emocional
-29;30;28;null;null;1280,555,62,62;Manipulaci贸n Ps铆quica
-30;31;29;43;33;1275,443,60,60;Dominio Mental
-31;41;30;39;34;1271,326,68,68;Subyugar Entidades
-32;33;27;28;47;1354,664,68,68;Aura de Liderazgo
-33;34;32;30;50;1350,438,70,70;Juramento Vinculante;
-34;44;33;31;55;1351,326,68,68;Comando Absoluto;
-35;36;null;null;null;1135,761,74,74;Conocimiento T茅cnico;
-36;37;35;null;null;1130,641,84,84;Manipulaci贸n Zeon
-37;38;36;36;32;1138,536,68,68;Tolerancia al Vac铆o;
-38;39;37;23;43;1113,421,72,72;Armamento Zeon
-39;40;38;56;31;1188,290,72,72;Reactor de Compresi贸n
-40;null;39;57;41;1158,174,82,82;Red de Compresi贸n
-41;42;39;40;44;1251,178,78,78;Supresi贸n de Mana Local
-42;null;41;58;null;1253,74,74,74;Anulaci贸n Regional;
-43;39;37;38;30;1200,428,62,62;Blindaje Zeon;
-44;null;39;41;null;1348,182,70,70;Aut贸matas
-45;46;null;null;null;1534,766,62,62;Forja B谩sica;
-46;53;45;47;48;1531,651,68,68;Metalurgia;
-47;52;45;32;46;1447,653,64,64;Alquimia;
-48;49;45;46;null;1614,649,72,72;Carpinter铆a;
-49;54;48;53;null;1619,539,62,62;Ingenier铆a Civil;
-50;55;52;33;51;1450,417,84,84;Arquitectura Militar;
-51;55;53;50;54;1547,424,70,70;Ingenier铆a Hidr谩ulica;
-52;50;47;null;53;1440,535,74,74;Destilaci贸n Avanzada;
-53;51;46;52;49;1528,534,72,72;Metalurgia Zeon;
-54;55;49;51;null;1632,417,84,84;Construcci贸n Monumental
-55;null;54;34;null;1539,309,74,74;Producci贸n Industrial;
-56;57;38;26;39;1058,317,76,76;Hibridaci贸n Forzada
-57;58;56;null;40;1059,215,74,74;Cat谩lisis Mana-Zeon
-58;59;57;null;42;1053,104,86,86;Biotecnolog铆a Arcana
-59;null;58;null;null;1059,3,74,74;Ascensi贸n Artificial
+id;arriba;abajo;izquierda;derecha;rect;nombre;notes
+0;4;null;45;1;11,743,74,74;Golpe Potenciado;Ataque fuerte b醩ico
+1;3;null;0;2;120,748,64,64;Esquiva Instintiva;Reduce probabilidad de impacto enemigo
+2;7;null;1;null;205,742,76,76;Aguante Prolongado;Reduce fatiga
+3;5;1;4;7;104,625,80,80;Anticipaci髇;Reduce sorpresa
+4;8;0;48;3;20,629,72,72;Cazador de Monstruos;Bonus contra criaturas grandes
+5;11;3;8;6;89,523,56,56;Ejecutar Bestias;Remate de enemigos debilitados
+6;10;7;5;14;163,514,78,78;Contraataque;Responde autom醫icamente tras esquivar
+7;6;2;3;9;215,637,56,56;Guardia Perfecta;Bloqueo sin da駉 residual
+8;11;4;49;5;4,517,68,68;Impacto Perforante;Ignora parte de la armadura
+9;14;null;7;null;286,634,62,62;Segundo Aliento;Recuperaci髇 r醦ida tras agotamiento
+10;null;6;11;24;172,412,58,58;Desarme;Puede desarmar enemigos humanoides
+11;null;8;null;10;57,414,54,54;Maestro Duelista;Mejor rendimiento en combate individual
+12;13;null;2;null;583,744,80,80;Sensibilidad al Mana;Detecta flujo m醙ico
+13;18;12;9;null;583,631,78,78;Canalizaci髇 B醩ica;Permite lanzar magia simple
+14;null;13;6;15;252,534,54,54;Ignici髇;Magia de fuego
+15;null;13;14;16;323,526,70,70;Criomancia;Magia de hielo
+16;null;13;15;17;412,527,68,68;Geomancia;Manipulaci髇 de tierra
+17;24;13;16;18;496,524,74,74;Electrofon韆;Electricidad y sonido
+18;24;13;17;19;586,525,74,74;Aeromancia;Viento y presi髇
+19;25;13;18;20;681,521,78,78;Manipulaci髇 del Vac韔;Distorsi髇 espacial
+20;null;13;19;21;786,523,76,76;Umbramancia;Sombras y silencio
+21;null;13;20;22;879,523,76,76;Fotomancia;Luz y energ韆
+22;23;13;21;37;969,529,64,64;S韓tesis Elemental;Combina elementos
+23;26;22;25;38;968,419,62,62;Ritualista;Permite rituales complejos
+24;null;18;10;25;541,414,70,70;Alteraci髇 Clim醫ica;Modifica clima
+25;null;19;24;23;692,423,52,52;Portal Menor;Teletransporte corto
+26;null;23;25;56;959,306,76,76;Invocaci髇 Menor;Invoca entidades menores
+27;28;null;35;null;1315,781,62,62;Presencia;Mayor influencia social
+28;29;27;36;32;1269,663,70,70;Lectura Emocional;Detecta estados emocionales
+29;30;28;null;null;1280,555,62,62;Manipulaci髇 Ps韖uica;Influencia mental directa
+30;31;29;43;33;1275,443,60,60;Dominio Mental;Control cognitivo avanzado
+31;41;30;39;34;1271,326,68,68;Subyugar Entidades;Permite domesticar criaturas poderosas
+32;33;27;28;47;1354,664,68,68;Aura de Liderazgo;Mejora moral de aliados
+33;34;32;30;50;1350,438,70,70;Juramento Vinculante;Pactos sobrenaturales
+34;44;33;31;55;1351,326,68,68;Comando Absoluto;觬denes dif韈iles de resistir
+35;36;null;null;null;1135,761,74,74;Conocimiento T閏nico;Comprensi髇 tecnol骻ica
+36;37;35;null;null;1130,641,84,84;Manipulaci髇 Zeon;Uso b醩ico de Zeon
+37;38;36;36;32;1138,536,68,68;Tolerancia al Vac韔;Reduce da駉 por Zeon
+38;39;37;23;43;1113,421,72,72;Armamento Zeon;Armas energizadas
+39;40;38;56;31;1188,290,72,72;Reactor de Compresi髇;Construcci髇 de reactores
+40;null;39;57;41;1158,174,82,82;Red de Compresi髇;Permite interconectar m鷏tiples reactores Zeon y compartir energ韆 y recursos entre regiones.
+41;42;39;40;44;1251,178,78,78;Supresi髇 de Mana Local;Anulaci髇 m醙ica local
+42;null;41;58;null;1253,74,74,74;Anulaci髇 Regional;Colapso m醙ico regional
+43;39;37;38;30;1200,428,62,62;Blindaje Zeon;Protecci髇 tecnol骻ica
+44;null;39;41;null;1348,182,70,70;Aut髆atas;Construcci髇 de m醧uinas aut髇omas
+45;46;null;null;0;1534,766,62,62;Forja B醩ica;Permite fabricar equipamiento simple
+46;53;45;47;48;1531,651,68,68;Metalurgia;Permite trabajar metales
+47;52;45;32;46;1447,653,64,64;Alquimia;Permite fabricar pociones
+48;49;45;46;4;1614,649,72,72;Carpinter韆;Construcci髇 de objetos de madera
+49;54;48;53;8;1619,539,62,62;Ingenier韆 Civil;Construcciones grandes
+50;55;52;33;51;1450,417,84,84;Arquitectura Militar;Fortificaciones y murallas
+51;55;53;50;54;1547,424,70,70;Ingenier韆 Hidr醬lica;Canales y acueductos
+52;50;47;null;53;1440,535,74,74;Destilaci髇 Avanzada;Pociones complejas
+53;51;46;52;49;1528,534,72,72;Metalurgia Zeon;Aleaciones avanzadas
+54;55;49;51;null;1632,417,84,84;Construcci髇 Monumental;Megaproyectos
+55;null;54;34;null;1539,309,74,74;Producci髇 Industrial;Producci髇 masiva
+56;57;38;26;39;1058,317,76,76;Hibridaci髇 Forzada;Interacci髇 Mana-Zeon
+57;58;56;null;40;1059,215,74,74;Cat醠isis Mana-Zeon;Conversi髇 energ閠ica
+58;59;57;null;42;1053,104,86,86;Biotecnolog韆 Arcana;Alteraci髇 de seres vivos
+59;null;58;null;null;1059,3,74,74;Ascensi髇 Artificial;Sustituci髇 tecnol骻ica de funciones divinas

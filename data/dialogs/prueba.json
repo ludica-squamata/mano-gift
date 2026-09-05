@@ -1,113 +1,203 @@
 {
+  "body": {
+    "0": {
+      "from": "commoner", 
+      "leads": 1, 
+      "to": "heroe", 
+      "txt": "Saludos, héroe. Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."
+    }, 
+    "1": {
+      "from": "commoner", 
+      "leads": [
+        2, 
+        3, 
+        4, 
+        5, 
+        6, 
+        7
+      ], 
+      "to": "heroe", 
+      "txt": "A continuación deberías ver 6 opciones si cumples todos los requisitos."
+    }, 
+    "10": {
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "¡Correcto! ¡esta es la opción oculta!"
+    }, 
+    "11": {
+      "event": "Flag", 
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."
+    }, 
+    "12": {
+      "exclusive": [
+        13, 
+        14, 
+        15
+      ], 
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrás que ver un fragmento distinto."
+    }, 
+    "13": {
+      "from": "commoner", 
+      "leads": 17, 
+      "pre": 2, 
+      "reqs": [
+        {
+          "attrs": {
+            "Carisma": [
+              ">", 
+              9
+            ]
+          }, 
+          "loc": "heroe"
+        }
+      ], 
+      "to": "heroe", 
+      "txt": "Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."
+    }, 
+    "14": {
+      "from": "commoner", 
+      "leads": 17, 
+      "pre": 1, 
+      "reqs": [
+        {
+          "attrs": {
+            "Carisma": [
+              ">", 
+              9
+            ]
+          }, 
+          "loc": "heroe"
+        }
+      ], 
+      "to": "heroe", 
+      "txt": "Este es el segundo bloque de texto, que no deberías poder ver nunca."
+    }, 
+    "15": {
+      "from": "commoner", 
+      "leads": 17, 
+      "to": "heroe", 
+      "txt": "Este es el segundo bloque de texto, que solo deberías poder ver si tu carisma es <b>menor</b> que 9."
+    }, 
+    "16": {
+      "from": "commoner", 
+      "leads": 17, 
+      "to": "heroe", 
+      "txt": "¡Es cierto! ¡Tu <b>carisma</b> ha aumentado!"
+    }, 
+    "17": {
+      "from": "commoner", 
+      "leads": [
+        18, 
+        19, 
+        20
+      ], 
+      "to": "heroe", 
+      "txt": "Acá habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"
+    }, 
+    "18": {
+      "from": "heroe", 
+      "to": "commoner", 
+      "txt": "Opcion 1"
+    }, 
+    "19": {
+      "from": "heroe", 
+      "to": "commoner", 
+      "txt": "Opcion 2"
+    }, 
+    "2": {
+      "from": "heroe", 
+      "leads": 8, 
+      "to": "commoner", 
+      "txt": "Hmm, supongo que será esta opción."
+    }, 
+    "20": {
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "Final del dialogo"
+    }, 
+    "3": {
+      "from": "heroe", 
+      "leads": 9, 
+      "to": "commoner", 
+      "txt": "O quizás esta otra."
+    }, 
+    "4": {
+      "from": "heroe", 
+      "leads": 10, 
+      "reqs": [
+        {
+          "attrs": {
+            "Carisma": [
+              ">", 
+              9
+            ]
+          }
+        }
+      ], 
+      "to": "commoner", 
+      "txt": "¿Es esta la opción oculta por mi <b>carisma</b>?"
+    }, 
+    "5": {
+      "from": "heroe", 
+      "leads": 11, 
+      "reqs": [
+        {
+          "objects": [
+            "Estrella"
+          ]
+        }
+      ], 
+      "to": "commoner", 
+      "txt": "Aquí tengo una <b>estrella</b> que encontré"
+    }, 
+    "6": {
+      "from": "heroe", 
+      "leads": 12, 
+      "to": "commoner", 
+      "txt": "¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."
+    }, 
+    "7": {
+      "event": "Boost", 
+      "from": "heroe", 
+      "leads": 16, 
+      "to": "commoner", 
+      "txt": "Esta opción incrementará mi Carisma directamente"
+    }, 
+    "8": {
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "No, esta no es la opción."
+    }, 
+    "9": {
+      "from": "commoner", 
+      "to": "heroe", 
+      "txt": "Mm, me temo que te has equivocado."
+    }
+  }, 
   "head": {
-    "class": "",
-    "conditional_tags": [],
-    "style": "",
-    "locutors": [
-      "heroe",
-      "commoner"
-    ],
-    "about": "tags",
-    "icon": null,
-    "keywords": [],
+    "about": "tags", 
+    "class": "", 
+    "conditional_tags": [], 
     "events": {
       "Boost": {
-        "attr": "Carisma",
+        "attr": "Carisma", 
         "value": 3
-      },
+      }, 
       "Flag": {
         "value": false
       }
-    }
-  },
-  "body": {
-    "0": {
-      "leads": 1,"from": "commoner","to": "heroe",
-      "txt": "Saludos, héroe. Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."
-    },
-    "1": {
-      "leads": [2,3,4,5,6,7],"from": "commoner","to": "heroe",
-      "txt": "A continuación deberías ver 6 opciones si cumples todos los requisitos."
-    },
-    "2": {
-      "leads": 8,"from": "heroe","to": "commoner",
-      "txt": "Hmm, supongo que será esta opción."
-    },
-    "3": {
-      "leads": 9,"from": "heroe","to": "commoner",
-      "txt": "O quizás esta otra."
-    },
-    "4": {
-      "leads": 10,"from": "heroe","to": "commoner",
-      "reqs": [{"attrs": {"Carisma": [">",9]}}],
-      "txt": "¿Es esta la opción oculta por mi <b>carisma</b>?"
-    },
-    "5": {
-      "leads": 11,"from": "heroe","to": "commoner",
-      "reqs": [{"objects": ["Estrella"]}],
-      "txt": "Aquí tengo una <b>estrella</b> que encontré"
-    },
-    "6": {
-      "leads": 12,"from": "heroe","to": "commoner",
-      "txt": "¿Qué puedes decirme de este <b>texto marcado</b>? Este bloque de texto pretende ser extremadadamente largo, lo suficiente como para hacer que el bloque sea a mayor a cuatro líneas, y así ver el tema del paneo o el scrolling del texto. Al parecer no es lo suficientemente largo aún, a ver ahora."
-    },
-    "7": {
-      "leads": 16,"from": "heroe","to": "commoner","event": "Boost",
-      "txt": "Esta opción incrementará mi Carisma directamente"
-    },
-    "8": {
-      "from": "commoner","to": "heroe",
-      "txt": "No, esta no es la opción."
-    },
-    "9": {
-      "from": "commoner","to": "heroe",
-      "txt": "Mm, me temo que te has equivocado."
-    },
-    "10": {
-      "from": "commoner","to": "heroe",
-      "txt": "¡Correcto! ¡esta es la opción oculta!"
-    },
-    "11": {
-      "from": "commoner","to": "heroe","event": "Flag",
-      "txt": "Oh, tienes la estrella. Úsala para aumentar tu carisma en 2, y asi desbloquear nuevas opciones de mi diálogo."
-    },
-    "12": {
-      "exclusive": [13,14,15],"from": "commoner","to": "heroe",
-      "txt": "Bien, has seleccionado el texto marcado. A continuación deberías ver otro fragmento de diálogo si tu carisma, nuevamente, es mayor a 9. De otro modo, tendrás que ver un fragmento distinto."
-    },
-    "13": {
-      "leads": 17,"from": "commoner","to": "heroe",
-      "reqs": [{"loc": "heroe","attrs": {"Carisma": [">",9]}}],"pre": 2,
-      "txt": "Este es el primer bloque de texto, que solo deberías poder ver si <b>tu carisma</b> es mayor 9."
-    },
-    "14": {
-      "leads": 17,"from": "commoner","to": "heroe",
-      "reqs": [{"loc": "heroe","attrs": {"Carisma": [">",9]}}],"pre": 1,
-      "txt": "Este es el segundo bloque de texto, que no deberías poder ver nunca."
-    },
-    "15": {
-      "leads": 17,"from": "commoner","to": "heroe",
-      "txt": "Este es el segundo bloque de texto, que solo deberías poder ver si tu carisma es <b>menor</b> que 9."
-    },
-    "16": {
-      "leads": 17,"from": "commoner","to": "heroe",
-      "txt": "¡Es cierto! ¡Tu <b>carisma</b> ha aumentado!"
-    },
-    "17": {
-      "leads": [18,19,20],"from": "commoner","to": "heroe",
-      "txt": "Acá habia terminado de hablar, pero ahora te pongo unas opciones nuevas para probar otra cosa"
-    },
-    "18": {
-      "from": "heroe","to": "commoner",
-      "txt": "Opcion 1"
-    },
-    "19": {
-      "from": "heroe","to": "commoner",
-      "txt": "Opcion 2"
-    },
-    "20": {
-      "from": "commoner","to": "heroe",
-      "txt": "Final del dialogo"
-    }
+    }, 
+    "icon": null, 
+    "keywords": [], 
+    "locutors": [
+      "heroe", 
+      "commoner"
+    ], 
+    "prefix": "DC64", 
+    "style": ""
   }
 }

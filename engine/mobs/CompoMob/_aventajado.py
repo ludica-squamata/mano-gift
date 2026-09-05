@@ -30,8 +30,18 @@ class Aventajado(Caracterizado):
         else:
             perk = self.perk_data[id]
             if "|" in perk['hab_req']:
-                reqs = [int(x) for x in perk['hab_req'].split('|')]
-                valid = valid and any([x in self.perks for x in reqs])
+                try:
+                    reqs = [int(x) for x in perk['hab_req'].split('|')]
+                    valid = valid and any([x in self.perks for x in reqs])
+                except ValueError: # perk 24
+                    hab_reqs = perk['hab_req'].split('|')
+                    for req in hab_reqs:
+                        if "&" in req:
+                            reqs = [int(x) for x in req.split('&')]
+                            valid = valid and all([x in self.perks for x in reqs])
+                        else:
+                            reqs = [int(x) for x in req]
+                            valid = valid and any([x in self.perks for x in reqs])
 
             elif "&" in perk['hab_req']:
                 reqs = [int(x) for x in perk['hab_req'].split('&')]
@@ -59,5 +69,19 @@ class Aventajado(Caracterizado):
                 char, req = perk['char_req'].split('<>')
                 valid = valid and self[char] != int(req)
 
-            # affinity requirements are not checked, yet.
+            if perk['affinity_requirements'] != 'null':
+                colors = 'Rojo,Azul,Verde,Amarillo,Cian,Magenta'.split(',')
+                char, req = perk['affinity_requirements'].split('>=')
+                if char != "Multi" and char != 'Any':
+                    valid = valid and self[char] >= int(req)
+                elif char == 'Any':
+                    valid = valid and any([self[char]>=int(req) for char in colors])
+                elif char == 'Multi': # el requito de multi es doble.
+                    # Por un lado varias afinidades tienen que ser mayores que el requisito,
+                    # y también cuenta la cantidad de afinidades que superen el requito.
+                    # aunque puede ser overkill.
+                    affinities = [self[color] for color in colors]
+                    valid = valid and len([aff >= req for aff in affinities]) >= req
+
+            # resource_requirements are not checked, yet
         return valid

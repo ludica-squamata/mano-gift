@@ -1,52 +1,59 @@
 {
+  "body": {
+    "0": {
+      "from": "", 
+      "leads": 1, 
+      "to": "", 
+      "txt": ""
+    }, 
+    "1": {
+      "from": "", 
+      "leads": [
+        2, 
+        3
+      ], 
+      "to": "", 
+      "txt": ""
+    }, 
+    "2": {
+      "#": "leads might be exclusive if their name is exclusive, else they are just a branch.", 
+      "exclusive": [
+        3, 
+        4
+      ], 
+      "from": "", 
+      "to": "", 
+      "txt": ""
+    }, 
+    "3": {
+      "from": "", 
+      "to": "", 
+      "txt": ""
+    }
+  }, 
   "head": {
-    "class": "",
-    "conditional_tags": {},
-    "style": "",
-    "locutors": [],
-    "name": "",
-    "about": "",
-    "icon": "",
-    "keywords": [],
-    "events": {},
+    "about": "", 
+    "class": "", 
+    "conditional_tags": {}, 
+    "events": {}, 
+    "icon": "", 
+    "keywords": [], 
+    "locutors": [], 
+    "name": "", 
     "panels": {
       "objects": {
         "default": "N/A"
-      },
+      }, 
       "themes": {
         "default": "N/A"
       }
-    },
+    }, 
+    "prefix": "DC64", 
+    "style": "", 
     "trading": {
       "<Vendor>": {
         "<item>": "<price>"
       }
-    }
-  },
-  "body": {
-    "0": {
-      "leads": 1,
-      "from": "",
-      "to": "",
-      "txt": ""
-    },
-    "1": {
-      "leads": [2,3],
-      "from": "",
-      "to": "",
-      "txt": ""
-    },
-    "2": {
-      "exclusive": [3,4],
-      "#": "leads might be exclusive if their name is exclusive, else they are just a branch.",
-      "from": "",
-      "to": "",
-      "txt": ""
-    },
-    "3": {
-      "from": "",
-      "to": "",
-      "txt": ""
     }
   }
 }

@@ -1,40 +1,41 @@
 {
-  "head": {
-    "class": "scripted",
-    "conditional_tags": {},
-    "style": "",
-    "locutors": [
-      "heroe",
-      "commoner"
-    ],
-    "about": "salida",
-    "icon": "",
-    "keywords": [],
-    "events": {
-      "Exit": {
-        "mob": "<locutor>",
-        "pos": "bed"
-      }
-    }
-  },
   "body": {
     "0": {
-      "leads": 1,
-      "from": "commoner",
-      "to": "heroe",
+      "from": "commoner", 
+      "leads": 1, 
+      "to": "heroe", 
       "txt": "¿Qué se te ofrece, heroe?"
-    },
+    }, 
     "1": {
-      "leads": 2,
-      "from": "heroe",
-      "to": "commoner",
+      "from": "heroe", 
+      "leads": 2, 
+      "to": "commoner", 
       "txt": "Necesito que vayas a tu casa para probar unas nuevas funcionalidades"
-    },
+    }, 
     "2": {
-      "from": "commoner",
-      "to": "heroe",
-      "event": "Exit",
+      "event": "Exit", 
+      "from": "commoner", 
+      "to": "heroe", 
       "txt": "Entendido."
     }
+  }, 
+  "head": {
+    "about": "salida", 
+    "class": "scripted", 
+    "conditional_tags": {}, 
+    "events": {
+      "Exit": {
+        "mob": "<locutor>", 
+        "pos": "bed"
+      }
+    }, 
+    "icon": "", 
+    "keywords": [], 
+    "locutors": [
+      "heroe", 
+      "commoner"
+    ], 
+    "prefix": "DC64", 
+    "style": ""
   }
 }

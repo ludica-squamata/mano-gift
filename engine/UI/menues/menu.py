@@ -45,7 +45,7 @@ class Menu(EventAware, BaseWidget):
         fuente = font.Font('engine/libs/Verdana.ttf', 16)
         self.titulo = titulo
         fuente.set_underline(True)
-        ttl_rect = Rect((3, 3), (self.w - 7, 30))
+        ttl_rect = Rect((0, 0), (self.w, 30))
         ttl_txt = render_textrect(titulo, fuente, ttl_rect, Colores.TEXT_SEL, Colores.CANVAS_BG, 1)
         self.canvas.blit(ttl_txt, ttl_rect.topleft)
 

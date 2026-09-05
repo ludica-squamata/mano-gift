@@ -106,7 +106,7 @@ class Stage:
         ruta = path.join(Config.savedir, 'mobs.csv')
         fieldnames = ['id', 'x', 'y', 'chunk', 'adress']
         with open(ruta, 'w', newline='\n') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\n')
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';', lineterminator='\r\n')
             writer.writeheader()
             for mob in Mob_Group.contents():
                 chunk = mob.last_map if mob.last_map is not None else self.get_chunk_by_adress((0, 0))
@@ -429,7 +429,8 @@ class ChunkMap(AzoeBaseSprite):
 
         if self.salidas is not None:
             for salida in self.salidas.values():
-                salida.sprite.parent = None
+                if salida.sprite is not None:
+                    salida.sprite.parent = None
                 Renderer.camara.remove_obj(salida.sprite)
             self.unset_salidas()
 
@@ -540,6 +541,8 @@ class ChunkMap(AzoeBaseSprite):
         return True
 
     def __eq__(self, other):
+        if type(other) is not ChunkMap:
+            return False
         if other.adress is not None:
             test_1 = self.id == other.id
             test_2 = self.adress.center == other.adress.center
@@ -554,14 +557,15 @@ class ChunkMap(AzoeBaseSprite):
     def __hash__(self):
         return hash((self.nombre, self.id, self.adress.center))
 
-    # noinspection PyUnresolvedReferences
     def on_elimination(self):
         self.delete_everything()
 
         for limite in ['sup', 'inf', 'izq', 'der']:
             other = 'inf' if limite == 'sup' else 'sup' if limite == 'inf' else 'izq' if limite == 'der' else 'der'
             if type(self.limites[limite]) is ChunkMap:
+                # noinspection PyUnresolvedReferences
                 if self.limites[limite].limites[other] == self:
+                    # noinspection PyUnresolvedReferences
                     self.limites[limite].limites[other] = self.nombre
 
         self.adress = None

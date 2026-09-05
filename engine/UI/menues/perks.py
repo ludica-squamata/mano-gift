@@ -1,8 +1,10 @@
+from engine.globs.event_dispatcher import EventDispatcher
+from engine.libs.textrect import render_textrect
 from engine.misc.resources import cargar_imagen
 from engine.globs.azoe_group import AzoeGroup
 from engine.globs import ModData,Colores
+from pygame import Rect, Surface, font
 from pygame.sprite import Sprite
-from pygame import Rect, Surface
 from csv import DictReader
 from .menu import Menu
 from random import choice
@@ -15,11 +17,12 @@ class PerksMenu(Menu):
     def __init__(self, parent):
         super().__init__(parent,'Perks','Perks')
         self.images = AzoeGroup('Imagenes')
+        self.perk_descrip_area = self.create_sunken_canvas(self.w, 125)
+        self.perk_descrip_rect = self.perk_descrip_area.get_rect(x=0, bottom=self.h)
+        self.image.blit(self.perk_descrip_area,self.perk_descrip_rect)
         self.perks = PerksImage(self)
         self.area_rect = Rect(3,self.h-128, self.w-7, self.h)
         self.right = self.w-3
-        self.sunken =self.create_sunken_canvas(self.w,128)
-        self.sunken_rect = self.sunken.get_rect(bottom=self.h)
         self.marco = self.crear_marco(self.w, self.h)
         self.perks_area = Rect(3, 32, 617, 300)
 
@@ -51,11 +54,12 @@ class PerksMenu(Menu):
             self.perks.scroll(dx=x, dy=y)
 
     def update(self, *args, **kwargs):
-        self.image.fill(Colores.CANVAS_BG)
+        self.image.fill(Colores.CANVAS_BG,[0,0,self.w,32])
         self.images.draw(self.image)
-        self.image.fill(Colores.CANVAS_BG,[3,self.h-128,self.w-6,128])
-        self.image.blit(self.sunken,self.sunken_rect)
-        self.image.blit(self.marco,[0,0])
+        self.image.blit(self.perk_descrip_area, self.perk_descrip_rect)
+        selected = self.perks.selected
+        if selected is not None:
+            self.image.blit(selected.text, selected.text_rect)
         self.crear_titulo(self.nombre)
 
     def select_adjacent(self, direccion):
@@ -93,6 +97,7 @@ class PerksImage(Sprite):
                 ab = int(row['abajo']) if row['abajo'] != 'null' else None
                 iz = int(row['izquierda']) if row['izquierda'] != 'null' else None
                 de = int(row['derecha']) if row['derecha'] != 'null' else None
+                des = row['notes']
 
                 rect = Rect([int(i) for i in row['rect'].split(',')])
                 img_uns = self.img_neu.subsurface(rect).copy()
@@ -100,7 +105,7 @@ class PerksImage(Sprite):
                 img_adq = self.img_adq.subsurface(rect).copy()
 
                 spr = IndividualPerk(self,id,nombre, img_uns, img_sel,img_adq,[ar,ab,iz,de],
-                                     rect.move(self.rect.x, self.rect.y).copy())
+                                     rect.move(self.rect.x, self.rect.y).copy(),des)
                 self.perks.append(spr)
                 spr.show()
 
@@ -143,8 +148,10 @@ class PerksImage(Sprite):
 
 class IndividualPerk(Sprite):
     selected = False
+    text = None
+    text_rect = None
 
-    def __init__(self, parent, id, nombre, img_uns, img_sel, img_adq, direcciones, rect):
+    def __init__(self, parent, id, nombre, img_uns, img_sel, img_adq, direcciones, rect, text):
         super().__init__()
         self.parent = parent
         self.nombre = nombre
@@ -154,8 +161,20 @@ class IndividualPerk(Sprite):
         self.image = self.img_uns
         self.rect = rect
 
+        self._base_text = text
+        self.render_text()
+        EventDispatcher.register(self.recolor,'AlterColor')
+
         self.direcciones = dict(zip(['arriba','abajo','izquierda','derecha'],direcciones))
         self.id = id
+
+    def render_text(self):
+        text = self._base_text
+        fuente = font.Font('engine/libs/Verdana.ttf', 14)
+        text_rect = self.parent.parent.perk_descrip_rect.inflate(-6, -6)
+        render = render_textrect(text, fuente, text_rect, Colores.TEXT_FG, Colores.CANVAS_BG)
+        x, y = self.parent.parent.perk_descrip_rect.topleft
+        self.text, self.text_rect = render, render.get_rect(x=x + 3, y=y + 3)
 
     def show(self):
         self.parent.parent.images.add(self)
@@ -182,3 +201,7 @@ class IndividualPerk(Sprite):
 
     def __repr__(self):
         return f'Perk #{str(self.id)} ({self.nombre})'
+
+    def recolor(self, event):
+        if event.data['name'] in ['CANVAS_BG', 'TEXT_FG']:
+            self.render_text()

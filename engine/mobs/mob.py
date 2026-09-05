@@ -55,7 +55,8 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
         self.estado = 'idle'
         image = self.images['S' + self.direccion]['light']
         mask = self.mascaras['S' + self.direccion]
-        super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=data.get('id', ModData.next_id(data['prefix'])))
+        mob_id = data.get('id', ModData.next_id(data['prefix']))
+        super().__init__(parent, data, imagen=image, x=x, y=y, alpha=mask, center=focus, id=mob_id)
         self['nombre'] = data['nombre']  # nombre y raza se añaden al mob vía Caracterizado.__setitem__()
         self['species'] = data.get('species', 'human')
         self['hashed'] = data.get('hashed')  # hash value de todas las características menos el nombre.

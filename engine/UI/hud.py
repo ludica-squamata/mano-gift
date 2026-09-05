@@ -335,6 +335,7 @@ class Minimap(Sprite):
                     color = Color('#ffd966')
                 else:  # land
                     color = Color('#679553')
+                # noinspection PyUnresolvedReferences
                 px_array[px * 4:4 + px * 4, py * 4:4 + py * 4] = color
                 self.map_array[types[x, y]['key']] = Rect(px * 4, py * 4, 4, 4)
 
