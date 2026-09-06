@@ -32,18 +32,24 @@ class GetRandomDir(Leaf):
     def process(self):
         e = self.get_entity()
         camino = []
-        if e.x % 32 != 0 or e.y % 32 != 0:  # alinear con celda si se guardó en cualquier lado
-            x = trunc(e.x / 32) * 32
-            y = trunc(e.y / 32) * 32
-            camino.append([x, y])
-        else:
-            x = randrange(32, 32 * 23, 32)
-            y = randrange(32, 32 * 23, 32)
+        if e.rel_x % 32 != 0 or e.rel_y % 32 != 0:  # alinear con celda si se guardó en cualquier lado
+            x = trunc(e.rel_x / 32) * 32
+            y = trunc(e.rel_y / 32) * 32
+            camino.append(Nodo(x, y,32))
 
-        camino.append([x, y])
-        e.direccion = determinar_direccion([e.x, e.y], [x, y])
+        x = 256
+        if 0 <= e.rel_y <= 400:
+            y = 768
+        else:
+            y = 0
+        # x = randrange(32, 32 * 23, 32)
+            # y = randrange(32, 32 * 23, 32)
+
+        nodo = Nodo(x,y,32)
+        camino.append(nodo)
+        e.direccion = determinar_direccion([e.rel_x, e.rel_y], [x, y])
         self.tree.set_context('ticks', 0)
-        self.tree.set_context('punto_final', [x, y])
+        self.tree.set_context('punto_final', nodo)
         self.tree.set_context('camino', camino)
 
         return Success
@@ -58,17 +64,17 @@ class GetRoute(Leaf):
         others = self.tree.get_context('others')
         others = others if others is not False else []
         pre_x, pre_y = None, None
-        if (e.x / 32).is_integer():
-            pi_x = e.x
+        if (e.rel_x / 32).is_integer():
+            pi_x = e.rel_x
         else:
-            pi_x = round((e.x / 32)) * 32
-            pre_x = e.x
+            pi_x = round((e.rel_x / 32)) * 32
+            pre_x = e.rel_x
 
-        if (e.y / 32).is_integer():
-            pi_y = e.y
+        if (e.rel_y / 32).is_integer():
+            pi_y = e.rel_y
         else:
-            pi_y = round((e.y / 32)) * 32
-            pre_y = e.y
+            pi_y = round((e.rel_y / 32)) * 32
+            pre_y = e.rel_y
 
         pi = Nodo(pi_x, pi_y, 32)
 
@@ -143,22 +149,13 @@ class NextPosition(Leaf):
         punto = camino[proximo] if proximo < len(camino) else punto_final
         curr_p = [entity.x, entity.y]
 
-        def esta_alineado(e):
-            return e.x % 32 == 0 and e.y % 32 == 0
-
-
-
-        if not esta_alineado(entity):
-            entity.direccion = direccion_alinear(entity)
-            return Success
-
         if curr_p == punto:
             if proximo + 1 < len(camino):
                 self.tree.set_context('next', proximo + 1)
                 entity.direccion = determinar_direccion(curr_p, punto)
 
-        if curr_p == punto_final:
-            self.tree.erase_keys('punto_final', 'camino', 'next')
+        if punto_final.compare(*curr_p):
+            self.tree.erase_keys('punto_final', 'punto_pxoximo', 'camino', 'next')
             return Failure
         else:
             entity.direccion = determinar_direccion(curr_p, punto_final)

@@ -47,12 +47,16 @@
               "16": {"name": "Wait"},
               "17": {"name": "LookAround"},
               "18": {"name": "KeepLooking"},
-            "19": {"name": "UntilFail","child": 20},
-              "20": {"name": "Sequence","children": [21,23,24,25]},
-                "21": {"name": "Inverter","child": 22},
-                  "22": {"name": "IsTalking"},
-                "23": {"name": "NextPosition"},
-                "24": {"name": "Move"},
-                "25": {"name": "ReachExit"}
+            "19": {"name": "Sequence","children": [20,23]},
+              "20": {"name": "Sequence","children": [21,22]},
+                "21": {"name": "WhereAreOthers"},
+                "22": {"name": "GetRoute"},
+              "23": {"name": "UntilFail","child": 24},
+                "24": {"name": "Sequence","children": [25,27,28,29]},
+                  "25": {"name": "Inverter","child": 26},
+                    "26": {"name": "IsTalking"},
+                  "27": {"name": "NextPosition"},
+                  "28": {"name": "ReachExit"},
+                  "29": {"name": "Move"}
     }
 }

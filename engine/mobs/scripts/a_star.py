@@ -93,6 +93,7 @@ def mirar_vecinos(nodo, mascara, others):
             # aunque esto hace más todavía que los mobs nunca puedan salir del chunk.
 
         vecino = get_nodo(x, y, 32)  # CLAVE
+        vecino.reset_node()
 
         if not mascara_actual.overlap(test, (x, y)):
             cuadros.append(vecino)
@@ -148,13 +149,28 @@ class Nodo:
     def __eq__(self, other):
         return isinstance(other, Nodo) and self.x == other.x and self.y == other.y
 
+    def compare(self, x, y):
+        return self.x == x and self.y == y
+
     def __lt__(self, other):
         if self.f == other.f:
             return (self.f - self.g) < (other.f - other.g)
         return self.f < other.f
+
+    def __getitem__(self, item:int):
+        if item == 0:
+            return self.x
+        elif item == 1:
+            return self.y
+        else:
+            raise IndexError
 
     def __hash__(self):
         return hash((self.x, self.y, self.s))
 
     def distancia_a(self, other):
         return heuristica_estimada(self, other, 'euclidean')
+
+    def reset_node(self):
+        self.g = float('inf')
+        self.f = float('inf')
