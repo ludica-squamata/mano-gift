@@ -26,6 +26,7 @@ class AzoeSprite(sprite.Sprite):
     _last_map = None
 
     rel_x, rel_y = 0, 0
+    rel_cx, rel_cy = 0, 0 # relative (to the chunk) center of the sprite.
 
     can_overlay = False
     iluminacion = 'light'  # 'light' | 'dark'
@@ -49,11 +50,16 @@ class AzoeSprite(sprite.Sprite):
             raise TypeError('Imagen debe ser una ruta, un Surface o None')
 
         if center:
+            # noinspection unresolved-references
             self.rect = self.image.get_rect(center=(ANCHO // 2, ALTO // 2))
         elif imagen is not None:
+            # noinspection unresolved-references
             self.rect = self.image.get_rect(center=(x, y))
         else:
             self.rect = rect
+
+        # noinspection unresolved-references
+        self.w, self.h = self.rect.size
 
         if alpha:
             self.mask = alpha
@@ -67,6 +73,8 @@ class AzoeSprite(sprite.Sprite):
             self.y = y
             self.rel_x = x % 800
             self.rel_y = y % 800
+            self.rel_cx = self.rel_x + (self.w // 2) % 800
+            self.rel_cy = self.rel_y + (self.h // 2) % 800
 
         if z:
             self.z = z
@@ -88,6 +96,10 @@ class AzoeSprite(sprite.Sprite):
         w, h = self._last_map.rect.size
         self.rel_x = self.x % w  # Después de tanto trabajo, era cuestión de usar módulo de x e y, y voilà,
         self.rel_y = self.y % h  # ahora funciona con perfección matemática.
+
+        self.rel_cx = (self.x+(self.w // 2)) % w # for when most of the sprite is in one map but its topleft point
+        self.rel_cy = (self.y+(self.h // 2)) % h # is in another map. This should correct the issue.
+
         self.z = self.rel_y + 16
 
     def set_parent_map(self, chunk):

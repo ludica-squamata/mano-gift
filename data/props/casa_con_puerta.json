@@ -25,7 +25,7 @@
   "height": 89, 
   "nombre": "casa_con_puerta", 
   "prefix": "226A", 
-  "proyecta_sombra": true, 
+  "proyecta_sombra": false,
   "referencias": {
     "casa_cerrada": "props/house_result_piso.png", 
     "colisiones": "props/house_result_colisiones.png", 

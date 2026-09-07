@@ -1,7 +1,10 @@
 {
   "fondo": "maps/fondos/pasto.png",
   "colisiones": null,
-  "props": {},
+  "props": {
+    "chunk": [0, 0],
+    "house": [[400, 500]]
+  },
   "mobs": {
     "chunk": [0, 0],
     "Green": [[32,0]]

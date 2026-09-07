@@ -35,5 +35,7 @@ class Parlante(Movil):
             elif hasattr(sprite, 'diag_face'):
                 Monologo(sprite, self)
             else:
+                for loc in locutores:
+                    loc.hablando = False
                 return False
             return True

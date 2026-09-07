@@ -1,6 +1,7 @@
 # A* module
 from math import sqrt
 from pygame import mask
+from itertools import cycle
 import heapq
 
 # CACHE GLOBAL DE NODOS
@@ -76,11 +77,13 @@ def heuristica_estimada(node, goal, method):
 
 def mirar_vecinos(nodo, mascara, others):
     cuadros = []
+    obstaculos = []
     test = mask.Mask((32, 32), fill=True)
-    direcciones = ((0, -1), (1, 0), (0, 1), (-1, 0))
+    direcciones = ((0, -1), (0, 1), (-1, 0), (1, 0))
     mascara_actual = mascara.copy()
     for other in others:
-        mascara_actual.draw(other.mask, other.rect.topleft)
+        obs = Nodo(other.rel_cx // 32 * 32, other.rel_cy // 32 * 32, 32)
+        obstaculos.append(obs)
 
     for dx, dy in direcciones:
         x = nodo.x + dx * 32
@@ -88,14 +91,13 @@ def mirar_vecinos(nodo, mascara, others):
 
         if x < 0 or y < 0:
             continue
-        if x > 800 or y > 800:  # acá había otro cuello de botella.
-            continue  # la multiplicación estaba dando resultados por encima de mil, cuando lo máximo debería ser 800.
-            # aunque esto hace más todavía que los mobs nunca puedan salir del chunk.
+        if x > 800 or y > 800:
+            continue
 
         vecino = get_nodo(x, y, 32)  # CLAVE
-        vecino.reset_node()
+        vecino.reset_node()  # only resets g and f values
 
-        if not mascara_actual.overlap(test, (x, y)):
+        if vecino.transitable and vecino not in obstaculos and not mascara_actual.overlap(test, (x, y)):
             cuadros.append(vecino)
 
     return cuadros
@@ -110,23 +112,24 @@ def reconstruir_camino(camino, nodo_actual):
     return path
 
 
-def determinar_direccion(curr_p, next_p):
+def determinar_direccion(actual, curr_p, next_p):
     px, py = curr_p
     nx, ny = next_p
 
     dx = nx - px
     dy = ny - py
 
-    # 🔥 primero corregir desalineación
-    if px % 32 != 0:
-        return 'derecha' if dx > 0 else 'izquierda'
-    if py % 32 != 0:
-        return 'abajo' if dy > 0 else 'arriba'
+    direccion = actual
+    if dx < 0:
+        direccion = "izquierda"
+    elif dx > 0:
+        direccion = "derecha"
+    if dy < 0:
+        direccion = "arriba"
+    elif dy > 0:
+        direccion = "abajo"
 
-    if abs(dx) > abs(dy):
-        return 'derecha' if dx > 0 else 'izquierda'
-    else:
-        return 'abajo' if dy > 0 else 'arriba'
+    return direccion
 
 
 class Nodo:
@@ -157,7 +160,10 @@ class Nodo:
             return (self.f - self.g) < (other.f - other.g)
         return self.f < other.f
 
-    def __getitem__(self, item:int):
+    def __str__(self):
+        return '(' + str(self.x) + ',' + str(self.y) + ')'
+
+    def __getitem__(self, item: int):
         if item == 0:
             return self.x
         elif item == 1:

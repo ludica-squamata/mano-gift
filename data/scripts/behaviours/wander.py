@@ -37,17 +37,12 @@ class GetRandomDir(Leaf):
             y = trunc(e.rel_y / 32) * 32
             camino.append(Nodo(x, y,32))
 
-        x = 256
-        if 0 <= e.rel_y <= 400:
-            y = 768
-        else:
-            y = 0
-        # x = randrange(32, 32 * 23, 32)
-            # y = randrange(32, 32 * 23, 32)
+        x = randrange(32, 32 * 23, 32)
+        y = randrange(32, 32 * 23, 32)
 
         nodo = Nodo(x,y,32)
         camino.append(nodo)
-        e.direccion = determinar_direccion([e.rel_x, e.rel_y], [x, y])
+        e.direccion = determinar_direccion(e.direccion, [e.rel_x, e.rel_y], [x, y])
         self.tree.set_context('ticks', 0)
         self.tree.set_context('punto_final', nodo)
         self.tree.set_context('camino', camino)
@@ -149,16 +144,17 @@ class NextPosition(Leaf):
         punto = camino[proximo] if proximo < len(camino) else punto_final
         curr_p = [entity.x, entity.y]
 
-        if curr_p == punto:
+        if punto.compare(*curr_p):
             if proximo + 1 < len(camino):
                 self.tree.set_context('next', proximo + 1)
-                entity.direccion = determinar_direccion(curr_p, punto)
+                entity.direccion = determinar_direccion(entity.direccion, curr_p, camino[proximo + 1])
+                return Success
 
         if punto_final.compare(*curr_p):
-            self.tree.erase_keys('punto_final', 'punto_pxoximo', 'camino', 'next')
+            self.tree.erase_keys('punto_final', 'punto_proximo', 'camino', 'next')
             return Failure
         else:
-            entity.direccion = determinar_direccion(curr_p, punto_final)
+            entity.direccion = determinar_direccion(entity.direccion, curr_p, punto_final)
             return Success
 
 
@@ -169,7 +165,11 @@ class Move(Leaf):
         ticks = self.tree.get_context('ticks')
         ticks += 1
         self.tree.set_context('ticks', ticks)
-        e.mover(x, y)
+        if not e.detectar_colisiones():
+            e.mover(x, y)
+        else:
+            self.tree.erase_keys('punto_final', 'punto_proximo', 'camino', 'next', "ticks")
+            return Failure
         if e.x % 32 == 0 and e.y % 32 == 0:
             self.tree.set_context('ticks', 0)
             return Success
@@ -189,7 +189,6 @@ class GetMap(Leaf):
             self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
             self.tree.set_context('mapa', cuadros)
             self.tree.set_context('next', 0)
-            self.tree.set_context('movement', [0, 0])
             return Success
         else:
             return Failure

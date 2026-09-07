@@ -21,7 +21,7 @@ class DoISeeIt(Leaf):
     def process(self):
         e = self.get_entity()
         target = self.tree.get_context('target')
-        print(e.perceived)
+        # print(e.perceived)
         if target in e.perceived['seen']:
             print('objetivo a la vista')
             return Success
@@ -55,7 +55,7 @@ class TurnToTarget(Leaf):
         t = self.tree.get_context('target')
         e_on_map_pos = e.rel_x, e.rel_y
         t_on_map_pos = t.rel_x, t.rel_y
-        direccion = determinar_direccion(e_on_map_pos, t_on_map_pos)
+        direccion = determinar_direccion(e.direccion, e_on_map_pos, t_on_map_pos)
         if direccion != e.direccion:
             e.cambiar_direccion(direccion)
             self.parent.parent.reset()

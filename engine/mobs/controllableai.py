@@ -111,7 +111,7 @@ class ControllableAI(EventAware):
                     elif self.target.dead and len(self.target.inventario):
                         self.deregister()
                         LootingCircularMenu(self, self.target)
-                    else:
+                    elif self.target.dead:
                         self.empty_mob_warning()
 
                 elif hasattr(self.target, 'show_description') and self.target.accionable is False:

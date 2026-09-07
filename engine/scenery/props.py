@@ -7,6 +7,7 @@ from engine.libs.mersenne_twister import choice
 from pygame import Rect, mask as mask_module
 from .bases import Escenografia
 from itertools import cycle
+from os import path
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
            'EstructuraCompuesta', 'Escenografia', 'Contenedor', 'Transicional',
@@ -232,7 +233,10 @@ class Contenedor(Operable):
         from engine.mobs.inventory import Inventory
         super().__init__(parent, x, y, z, data=data)
         self.inventario = Inventory(self)
-        self._fill(data['contenido'])
+        ruta1 = path.join(ModData.game_fd, 'world_setup.json')
+        file_1 = abrir_json(ruta1)['inventario_inicial']
+        if self.nombre in file_1:
+            self._fill(file_1[self.nombre])
         self.menu = None
 
     def action(self, mob):

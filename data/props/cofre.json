@@ -1,10 +1,4 @@
 {
-  "contenido": {
-    "Banana": 10, 
-    "Egg": 10, 
-    "Manzana": 10, 
-    "Pear": 10
-  }, 
   "máscara": [
     -1, 
     16, 

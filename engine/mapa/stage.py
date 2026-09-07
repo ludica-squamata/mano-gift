@@ -407,9 +407,8 @@ class ChunkMap(AzoeBaseSprite):
         if Renderer.camara.is_focus(obj):
             self.houses_focus = False
 
-    def reload_properties(self, exclude: list = None):
-        exclude = exclude if exclude is not None else []
-        print(self.properties.sprs())
+    def reload_properties(self, excluded: list = None):
+        exclude = excluded if excluded is not None else []
         for sprite in self.properties.sprs():
             if sprite not in exclude:
                 Renderer.camara.add_real(sprite)
@@ -563,9 +562,7 @@ class ChunkMap(AzoeBaseSprite):
         for limite in ['sup', 'inf', 'izq', 'der']:
             other = 'inf' if limite == 'sup' else 'sup' if limite == 'inf' else 'izq' if limite == 'der' else 'der'
             if type(self.limites[limite]) is ChunkMap:
-                # noinspection PyUnresolvedReferences
                 if self.limites[limite].limites[other] == self:
-                    # noinspection PyUnresolvedReferences
                     self.limites[limite].limites[other] = self.nombre
 
         self.adress = None
