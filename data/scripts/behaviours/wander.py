@@ -40,7 +40,7 @@ class GetRandomDir(Leaf):
         x = randrange(32, 32 * 23, 32)
         y = randrange(32, 32 * 23, 32)
 
-        nodo = Nodo(x,y,32)
+        nodo = Nodo(x,y,tuple(e.parent.adress))
         camino.append(nodo)
         e.direccion = determinar_direccion(e.direccion, [e.rel_x, e.rel_y], [x, y])
         self.tree.set_context('ticks', 0)
@@ -71,7 +71,7 @@ class GetRoute(Leaf):
             pi_y = round((e.rel_y / 32)) * 32
             pre_y = e.rel_y
 
-        pi = Nodo(pi_x, pi_y, 32)
+        pi = Nodo(pi_x, pi_y, tuple(e.parent.adress))
 
         post_x, post_y = None, None
         if not (pd.x / 32).is_integer():
@@ -87,14 +87,10 @@ class GetRoute(Leaf):
             pd_y = pd.y
 
         if pd_x is not None or pd_y is not None:
-            pd = Nodo(pd_x, pd_y, 32)
+            pd = Nodo(pd_x, pd_y, tuple(pd.adress))
             self.tree.set_context('punto_final', pd)
-        try:
-            ruta = a_star(pi, pd, mapa, others)
 
-        except RuntimeError:
-            self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
-            return Failure
+        ruta = a_star(pi, pd, mapa, others)
 
         if ruta is None or len(ruta) == 1:
             self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
@@ -105,7 +101,7 @@ class GetRoute(Leaf):
                 pre_x = pi_x
             if pre_y is None:
                 pre_y = pi_y
-            punto = Nodo(pre_x, pre_y, 32)
+            punto = Nodo(pre_x, pre_y, tuple(e.parent.adress))
             ruta.insert(0, punto)
 
         if post_x is not None or post_y is not None:
@@ -113,7 +109,7 @@ class GetRoute(Leaf):
                 post_x = pi_x
             if pre_y is None:
                 post_y = pi_y
-            punto = Nodo(post_x, post_y, 32)
+            punto = Nodo(post_x, post_y, tuple(pd.adress))
             ruta.append(punto)
 
         if ruta is None or len(ruta) == 1:
@@ -185,7 +181,7 @@ class Move(Leaf):
 class GetMap(Leaf):
     def process(self):
         if Camara.current_map is not None:
-            cuadros = Camara.current_map.mask
+            cuadros = Camara.current_map.parent
             self.tree.erase_keys('mapa', 'next', 'camino', 'punto_proximo', 'punto_final')
             self.tree.set_context('mapa', cuadros)
             self.tree.set_context('next', 0)

@@ -8,10 +8,10 @@ import heapq
 nodos_cache = {}
 
 
-def get_nodo(x, y, size):
-    key = (x, y, size)
+def get_nodo(x, y, adress):
+    key = (x, y, adress)
     if key not in nodos_cache:
-        nodos_cache[key] = Nodo(x, y, size)
+        nodos_cache[key] = Nodo(x, y, adress)
     return nodos_cache[key]
 
 
@@ -25,14 +25,7 @@ def a_star(inicio, destino, mapa, others, heuristica='euclidean'):
 
     heapq.heappush(abierta, inicio)
 
-    w, h = mapa.get_size()
-    MAX_ITER = w * h * 4
-    iteraciones = 0
-
     while abierta:
-        iteraciones += 1
-        if iteraciones > MAX_ITER:
-            raise RuntimeError("A* excedió iteraciones")
 
         actual = heapq.heappop(abierta)
 
@@ -75,26 +68,47 @@ def heuristica_estimada(node, goal, method):
         return int(sqrt((node.x - goal.x) ** 2 + (node.y - goal.y) ** 2))
 
 
-def mirar_vecinos(nodo, mascara, others):
+def mirar_vecinos(nodo, mapa, others):
     cuadros = []
     obstaculos = []
     test = mask.Mask((32, 32), fill=True)
     direcciones = ((0, -1), (0, 1), (-1, 0), (1, 0))
-    mascara_actual = mascara.copy()
     for other in others:
-        obs = Nodo(other.rel_cx // 32 * 32, other.rel_cy // 32 * 32, 32)
+        obs = Nodo(other.rel_cx // 32 * 32, other.rel_cy // 32 * 32, tuple(other.parent.adress))
         obstaculos.append(obs)
 
     for dx, dy in direcciones:
-        x = nodo.x + dx * 32
-        y = nodo.y + dy * 32
+        x = nodo.x + dx * nodo.size
+        y = nodo.y + dy * nodo.size
 
         if x < 0 or y < 0:
-            continue
-        if x > 800 or y > 800:
-            continue
+            adress = (nodo.adress[0]+dx, nodo.adress[1]+dy)
+            chunk = mapa.get_chunk_by_adress(adress)
+            if chunk is None:
+                # this means that the chunk was not yet generated. There is no point that mobs,
+                # other than the one controlled by the player, load maps when the player isn't seeing them.
+                continue
+            else:
+                mascara_actual = chunk.mask
+            x += 800 * abs(dx)
+            y += 800 * abs(dy)
 
-        vecino = get_nodo(x, y, 32)  # CLAVE
+        elif x >= 800 or y >= 800:
+            adress = (nodo.adress[0] + dx, nodo.adress[1] + dy)
+            chunk = mapa.get_chunk_by_adress(adress)
+            if chunk is None:
+                # It can happen in this other extreme as well.
+                continue
+            else:
+                mascara_actual = chunk.mask
+            x -= 800 * abs(dx)
+            y -= 800 * abs(dy)
+
+        else:
+            mascara_actual = mapa.get_chunk_by_adress(nodo.adress).mask
+            adress = nodo.adress
+
+        vecino = get_nodo(x, y, adress)  # CLAVE
         vecino.reset_node()  # only resets g and f values
 
         if vecino.transitable and vecino not in obstaculos and not mascara_actual.overlap(test, (x, y)):
@@ -139,10 +153,11 @@ class Nodo:
     g = 0
     transitable = True
 
-    def __init__(self, x, y, size):
-        self.s = size
+    def __init__(self, x, y, adress):
+        self.size = 32
         self.x = x
         self.y = y
+        self.adress = adress
         self.g = float('inf')
         self.f = float('inf')
 
@@ -150,7 +165,7 @@ class Nodo:
         return '(' + str(self.x) + ',' + str(self.y) + ') f: ' + str(self.f)
 
     def __eq__(self, other):
-        return isinstance(other, Nodo) and self.x == other.x and self.y == other.y
+        return isinstance(other, Nodo) and self.x == other.x and self.y == other.y and other.adress == self.adress
 
     def compare(self, x, y):
         return self.x == x and self.y == y
@@ -172,7 +187,7 @@ class Nodo:
             raise IndexError
 
     def __hash__(self):
-        return hash((self.x, self.y, self.s))
+        return hash((self.x, self.y, self.adress))
 
     def distancia_a(self, other):
         return heuristica_estimada(self, other, 'euclidean')
