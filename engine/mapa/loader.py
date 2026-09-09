@@ -163,7 +163,7 @@ def load_mobs(parent, alldata: dict):
                         data.update({'atributos': {char: int(mob_data[char.lower()]) for char in chars}})
                         data.update(
                             {'occupation': mob_data['occupation'], 'species': mob_data['species'],
-                             "nombre": mob_data['name'], "hashed": hashed})
+                             "nombre": mob_data['name'], "hashed": hashed, 'literate':bool(int(mob_data['literate']))})
                     else:
                         data['hashed'] = 0  # el héroe es el único con hashed == 0.
 

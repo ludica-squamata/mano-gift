@@ -1,0 +1,11 @@
+{
+  "AI": "brain", 
+  "alpha": "mobs/colisiones/human_walk.png", 
+  "gender": null, 
+  "imagenes": {
+    "atk": null, 
+    "death": "mobs/imagenes/dead human.png", 
+    "idle": "mobs/imagenes/hombre gordo.png"
+  }, 
+  "prefix": "1DC4"
+}

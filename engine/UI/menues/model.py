@@ -86,6 +86,11 @@ class MenuModel(Menu):
                         key = 'diag_face'
                     elif name.startswith('heads'):
                         key = 'heads'
+                    elif 'reading' in name and 'body' in name:
+                        key = 'reading_body'
+                    elif 'reading' in name and 'heads' in name:
+                        key = 'reading_heads'
+
                     imgs['imagenes'][key] = 'mobs/imagenes/' + filename
 
             elif modelo == 'ella':
@@ -130,7 +135,7 @@ class MenuModel(Menu):
 
     def update(self):
         self.animar_sprite()
-        self.canvas.blit(self.anim_img, self.anim_rect.topleft)
-        self.canvas.blit(self.anim_img2, self.anim_rect2.topleft)
+        self.canvas.blit(self.anim_img['light'], self.anim_rect.topleft)
+        self.canvas.blit(self.anim_img2['light'], self.anim_rect2.topleft)
         self.botones.update()
         self.botones.draw(self.canvas)

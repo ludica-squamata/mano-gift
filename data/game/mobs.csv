@@ -1,8 +1,9 @@
-species;occupation;archetype;class;fuerza;agilidad;resistencia;carisma;inteligencia;percepción
-green_blob;monster;green;generic;13;2;100;0;0;10
-red_blob;monster;red;generic;4;3;40;0;0;3
-blue_blob;monster;blue;generic;2;8;32;0;0;8
-yell_blob;monster;yellow;generic;12;4;30;0;0;4
-human;commoner;commoner;unique;4;8;20;7;5;6
-human;shopkeeper;commoner;unique;4;6;20;7;5;8
-human;null;girl;unique;2;4;20;10;8;6
+species;occupation;archetype;class;literate;fuerza;agilidad;resistencia;carisma;inteligencia;percepción
+green_blob;monster;green;generic;0;13;2;100;0;0;10
+red_blob;monster;red;generic;0;4;3;40;0;0;3
+blue_blob;monster;blue;generic;0;2;8;32;0;0;8
+yell_blob;monster;yellow;generic;0;12;4;30;0;0;4
+human;commoner;commoner;unique;1;4;8;20;7;5;6
+human;shopkeeper;commoner;unique;1;4;6;20;7;5;8
+human;null;girl;unique;1;2;4;20;10;8;6
+human;null;gordo;unique;1;10;5;20;5;5;5

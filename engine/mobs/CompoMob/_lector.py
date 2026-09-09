@@ -5,20 +5,23 @@ from engine.globs.tiempo import Tiempo
 
 
 class Lector(Animado):
+    reading_head = None
+    reading_body = None
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.focus = 80
-        self.interest = 70
-        self.language_skill = 0
-        self.related_skill = 4
-        self.current_skill = 0
-        self.reading_progress = {}  # {book_id: words_read}
+    def __init__(self, parent, data, **kwargs):
+        super().__init__(parent, data, **kwargs)
+        if data['literate']:
+            self.focus = 80
+            self.interest = 70
+            self.language_skill = 0
+            self.related_skill = 4
+            self.current_skill = 0
+            self.reading_progress = {}  # {book_id: words_read}
 
-        heads = ModData.graphs + 'mobs/imagenes/heads_reading_heroe.png'
-        bodies = ModData.graphs + 'mobs/imagenes/heroe_reading_body.png'
-        self.reading_anims = dict(zip(['abajo', 'arriba', 'izquierda', 'derecha'],
-                                      combine_mob_spritesheets(heads, bodies)))
+            heads = ModData.graphs + data['reading_heads']
+            bodies = ModData.graphs + data['reading_body']
+            self.reading_anims = dict(zip(['abajo', 'arriba', 'izquierda', 'derecha'],
+                                          combine_mob_spritesheets(heads, bodies)))
 
     # -------------------------
     # VELOCIDAD DE LECTURA

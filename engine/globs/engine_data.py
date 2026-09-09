@@ -295,6 +295,8 @@ class EngineData:
         cls.character.update(event.data)
         ruta = path.join(getcwd(), ModData.fd_player)
         if final:
+            extras = {'prefix':"HERO", 'occupation':"hero","literate":True}
+            cls.character.update(extras)
             name = cls.character['nombre']
             if not path.exists(ruta):
                 mkdir(ruta)
