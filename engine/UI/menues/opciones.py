@@ -446,6 +446,7 @@ class EspacioColor(AzoeBaseSprite):
             Col.set_color(self.keyname, self.new_color)
             EventDispatcher.trigger('AlterColor', self, {'name': self.keyname, 'color': self.new_color})
 
+            # noinspection unresolved-references
             self.image.fill(self.new_color, [1, 1, self.w - 2, self.h - 2])
 
             if self.new_color != self.base_color:
@@ -453,6 +454,7 @@ class EspacioColor(AzoeBaseSprite):
 
     def restore(self):
         self.new_color = self.base_color
+        # noinspection unresolved-references
         self.image.fill(self.base_color, [1, 1, self.w - 2, self.h - 2])
 
     def __repr__(self):
@@ -462,6 +464,7 @@ class EspacioColor(AzoeBaseSprite):
         # this is because setting a theme doesn't trigger self.alter_color()
         if event.data['name'] == self.keyname:
             self.new_color = event.data['color']
+            # noinspection unresolved-references
             self.image.fill(event.data['color'], [1, 1, self.w - 2, self.h - 2])
 
 

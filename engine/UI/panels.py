@@ -14,6 +14,7 @@ class BasePanel(BaseWidget):
         self.nombre = nombre
         super().__init__(parent, imagen=image)
         self.ubicar(0, ALTO - int(ALTO / 5))
+        # noinspection unresolved-references
         self.marco = self.crear_marco(*self.rect.size)
 
     def show(self):
@@ -24,6 +25,7 @@ class BasePanel(BaseWidget):
         self.active = False
         Renderer.del_overlay(self)
 
+    # noinspection unresolved-references
     def update(self, *args):
         self.image.fill(Colores.CANVAS_BG)
         self.image.blit(self.marco, (0, 0))
@@ -58,6 +60,7 @@ class DialogObjectsPanel(BasePanel):
         if self.menu.actual is not None:
             nombre = self.menu.actual.item.nombre
             render = self.f.render('<mostrar {}>'.format(nombre), True, Colores.TEXT_FG, Colores.CANVAS_BG)
+            # noinspection unresolved-references
             self.image.blit(render, (3, 23))
 
 
@@ -90,4 +93,5 @@ class DialogThemesPanel(BasePanel):
         if self.menu.actual is not None:
             item = self.menu.actual.item
             render = self.f.render('<mencionar {}>'.format(item), True, Colores.TEXT_FG, Colores.CANVAS_BG)
+            # noinspection unresolved-references
             self.image.blit(render, (3, 23))

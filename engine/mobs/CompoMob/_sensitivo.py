@@ -175,6 +175,7 @@ class Touch(AzoeBaseSprite):
         while self.parent in lista:
             lista.remove(self.parent)
         for obj in lista:
+            # noinspection unresolved-references
             if self.rect.colliderect(obj.rect):
                 if not passive:
                     self.parent.perceived['touched'].append(obj)
@@ -221,6 +222,7 @@ class Sensitivo(Caracterizado):
 class SightSprite(AzoeSprite):
     """The mobs' field of view. Transforms on it's own when the mob rotates its head."""
 
+    # noinspection unresolved-references
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         EventDispatcher.register(self.supress, 'MobDeath')
@@ -242,6 +244,7 @@ class SightSprite(AzoeSprite):
         self.image = None
         EventDispatcher.deregister(self.supress, 'MobDeath')
 
+    # noinspection unresolved-references
     def collide(self, entity):
         """Detects whenever entities fall within the field of vision."""
         x = entity.rect.x - self.rect.x
@@ -267,6 +270,7 @@ class SightSprite(AzoeSprite):
             self.mask = self.mascaras['abajo']
 
             if direccion not in self.rects:
+                # noinspection unresolved-references
                 self.rects['abajo'] = self.image.get_rect(midtop=[16, 16])
             rect = self.rects['abajo']
 
@@ -280,6 +284,7 @@ class SightSprite(AzoeSprite):
             self.mask = self.mascaras['izquierda']
 
             if direccion not in self.rects:
+                # noinspection unresolved-references
                 self.rects['izquierda'] = self.image.get_rect(midright=[16, 16])
             rect = self.rects['izquierda']
 
@@ -293,6 +298,7 @@ class SightSprite(AzoeSprite):
             self.mask = self.mascaras['derecha']
 
             if direccion not in self.rects:
+                # noinspection unresolved-references
                 self.rects['derecha'] = self.image.get_rect(midleft=[16, 16])
             rect = self.rects['derecha']
 

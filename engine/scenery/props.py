@@ -28,6 +28,7 @@ class Agarrable(Escenografia):
                                  'event': 'worldgen', 'to': 'ground'})
         Prop_Group.add(self.nombre, self, self.grupo)
 
+    # noinspection unresolved-references
     def action(self, entity, from_history=False):
         from .new_prop import new_item
         data = self.data.copy()
@@ -131,6 +132,7 @@ class Operable(Escenografia):
                 elif attr == 'next':
                     self.estados[idx].update({'next': estado[attr]})
                 elif attr == 'event':
+                    # noinspection unresolved-references
                     f = ModData.get_script_method(self.data['script'], estado[attr])
                     self.estados[idx].update({'event': f})
                 else:
@@ -218,6 +220,7 @@ class EstructuraCompuesta(Escenografia):
 
         return props
 
+    # noinspection unresolved-references
     def cargar_salida(self):
         from engine.mapa.loader import cargar_salidas
         salida = self.data['salida']
@@ -258,7 +261,8 @@ class Contenedor(Operable):
     def _fill(self, contenido):
         from .new_prop import new_item
         for item_name in contenido:
-            data = abrir_json(ModData.items + '/' + item_name + '.json')
+            ruta = ModData.items + item_name.lower().replace(" ", "_") + '.json'
+            data = abrir_json(ruta)
             for _ in range(contenido[item_name]):
                 item = new_item(self, data)
                 self.inventario.agregar(item)
@@ -377,6 +381,7 @@ class Pueblo(Escenografia):
         super().__init__(parent, x, y, nombre=nombre, imagen=imagen, data=data)
         self.cargar_salida()
 
+    # noinspection unresolved-references
     def cargar_salida(self):
         from engine.mapa.loader import cargar_salidas
         salida = self.data['salida']

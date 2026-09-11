@@ -23,6 +23,7 @@ class PropDescription(EventAware, BaseWidget):
         super().__init__(item, imagen=image)
         self.w, self.h = image.get_size()
 
+        # noinspection unresolved-references
         self.marco = self.crear_marco(*self.rect.size)
         self.draw_space_rect = Rect((3, 3), (self.w - 6, self.h - 7))
         self.erase_area = Rect(3, 3, self.w - 7, self.h - 7)
@@ -76,6 +77,7 @@ class PropDescription(EventAware, BaseWidget):
         self.deregister()
         EventDispatcher.trigger('EndDialog', self, {'layer': CAPA_OVERLAYS_DIALOGOS})
 
+    # noinspection unresolved-references
     def update(self):
         self.image.fill(Colores.CANVAS_BG, self.erase_area)
         self.image.blit(self.parent.locutor, self.loc_rect)

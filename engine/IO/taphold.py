@@ -178,6 +178,7 @@ def get_events(holding=100):
     # por si fueran a provocar errores
 
     for tcl in teclas:
+        # noinspection unresolved-references
         key = teclas[tcl]
         if key.get('pressed', False):
             key['holding'] += 10

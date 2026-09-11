@@ -10,6 +10,7 @@ from .menu import Menu
 class MenuStatus(Menu):
     entity = None
 
+    # noinspection unresolved-references
     def __init__(self, parent):
         super().__init__(parent, 'status', 'Status')
         self.entity = Mob_Group.get_controlled_mob()
@@ -73,6 +74,7 @@ class MenuStatus(Menu):
     def cancelar(self):
         super().cancelar()
         for sprite in self.properties.sprites():
+            # noinspection unresolved-references
             sprite.force_hide()
 
     def recolor(self, event):

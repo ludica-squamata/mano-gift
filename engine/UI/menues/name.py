@@ -26,6 +26,7 @@ class MenuName(Menu):
 
         # generar teclado y cursor
         self.area_teclas = self.create_sunken_canvas(448 + 12, 224 + 12)  # marco y parte del fondo del teclado
+        # noinspection unresolved-references
         self.area_rect = self.area_teclas.get_rect(center=(self.rect.centerx - 20, self.rect.centery + 50))
         self.crear_teclas(6, 6)  # genera el teclado en pantalla
 
@@ -107,6 +108,7 @@ class MenuName(Menu):
             rect.bottom = espacio.top - 2
             rect.centerx = espacio.centerx
             spr = AzoeBaseSprite(self, key, image, rect)
+            # noinspection unresolved-references
             spr.key = key
 
             self.area_input.add(spr)
@@ -277,9 +279,11 @@ class LineaChr(BaseWidget):
         self.idx = idx
 
     def animar(self):
+        # noinspection unresolved-references
         self.image.fill((255, 0, 0))
 
     def desanimar(self):
+        # noinspection unresolved-references
         self.image.fill((255, 255, 255))
 
     def update(self):

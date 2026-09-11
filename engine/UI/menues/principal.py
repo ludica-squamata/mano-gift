@@ -5,6 +5,7 @@ from engine.globs.event_dispatcher import EventDispatcher
 class MenuPrincipal(Menu):
     def __init__(self, parent):
         super().__init__(parent, 'Principal', "Azoe's Gifts")
+        # noinspection unresolved-references
         x = self.rect.centerx - (32 * 3) - 10
 
         nombres = []

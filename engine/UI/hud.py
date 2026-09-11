@@ -35,6 +35,7 @@ class ProgressBar(Sprite):
         self.w, self.h = w, h
         self.draw_area_rect = Rect(1, 1, self.w - 2, self.h - 2)
         self.image = Surface((self.w, self.h))
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
         EventDispatcher.register(self.toggle, "TogglePause")
         if focus is not None:
@@ -92,6 +93,7 @@ class ProgressBar(Sprite):
     def set_focus(self, focus):
         self.focus = focus
 
+    # noinspection unresolved-references
     def actualizar(self):
         self.image.blit(self._dibujar_fondo(), self.draw_area_rect)
         self.image.fill(self.colorAct, self._actual())
@@ -111,6 +113,7 @@ class CharacterName(Sprite):
         super().__init__()
         self.text = focus['nombre']
         self.image = self.generate()
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(topleft=(x, y))
         EventDispatcher.register(self.toggle, "TogglePause")
         EventDispatcher.register(self.recolor, 'AlterColor')
@@ -189,7 +192,7 @@ class MiniBar(ProgressBar):
     def show(self):
         self.maximo = self.focus['SaludMax']
         self.actual = self.focus['Salud']
-
+        # noinspection unresolved-references
         self.rect = self.image.get_rect()
         self.actualizar()
 
@@ -234,6 +237,7 @@ class FloatingNumber(Sprite):
         else:
             color = 0, 255, 0
 
+        # noinspection string-conversion-without-dunder-method
         string = str(abs(factor))
         self.image = self.fuente.render(string, True, color)
         self.rect = self.image.get_rect(midbottom=mob_rect.midtop)
@@ -296,6 +300,7 @@ class Minimap(Sprite):
     def __init__(self):
         super().__init__()
         self.image = Surface([0, 0])
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(bottom=ALTO, right=ANCHO)
 
         Renderer.add_overlay(self, CAPA_OVERLAYS_HUD)
@@ -308,8 +313,10 @@ class Minimap(Sprite):
                 self.created = False
                 self.stage = mapa_actual.parent
                 if self.icon is None:
+                    # noinspection unresolved-references
                     self.icon = PlayerIcon(self, *self.rect.topleft)
 
+    # noinspection unresolved-references
     def create(self):
         if self.stage.data['chunks_csv'] in ModData.preloaded_chunk_csv:
             datos = ModData.preloaded_chunk_csv[self.stage.data['chunks_csv']]
@@ -335,7 +342,6 @@ class Minimap(Sprite):
                     color = Color('#ffd966')
                 else:  # land
                     color = Color('#679553')
-                # noinspection PyUnresolvedReferences
                 px_array[px * 4:4 + px * 4, py * 4:4 + py * 4] = color
                 self.map_array[types[x, y]['key']] = Rect(px * 4, py * 4, 4, 4)
 
@@ -349,12 +355,14 @@ class Minimap(Sprite):
         elif not self.created:
             self.create()
         else:
+            # noinspection unresolved-references
             self.icon.locate(*self.rect.topleft)
 
 
 class PlayerIcon(Sprite):
     active = True
 
+    # noinspection unresolved-references
     def __init__(self, parent, x, y):
         super().__init__()
         self.parent = parent

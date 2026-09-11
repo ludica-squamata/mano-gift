@@ -392,6 +392,7 @@ class Renderer:
         if obj in cls.overlays:
             cls.overlays.remove(obj)
 
+    # noinspection unresolved-references
     @classmethod
     def get_debug_text(cls, event):
         if 'debug' in sys.argv:
@@ -407,6 +408,7 @@ class Renderer:
             spr.active = True
             cls.add_overlay(spr, CAPA_OVERLAYS_DEBUG)
 
+    # noinspection unresolved-references
     @classmethod
     def update(cls):
         fondo = display.get_surface()

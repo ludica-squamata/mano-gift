@@ -26,6 +26,7 @@ class EspacioEquipable(BaseWidget):
             self.ocupar(item)
         self.accepts = acepta
         self.nombre = nombre
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(topleft=(x, y))
 
     @staticmethod

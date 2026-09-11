@@ -87,7 +87,7 @@ def load_props(parent, alldata: dict):
 
     return loaded_props
 
-
+# noinspection unresolved-references
 def load_mobs(parent, alldata: dict):
     loaded_mobs = []
     csv_file = list(csv.DictReader(open(path.join(ModData.game_fd, 'mobs.csv'), 'rt', encoding='utf-8'), delimiter=";"))

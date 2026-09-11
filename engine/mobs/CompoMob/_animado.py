@@ -312,8 +312,10 @@ class Animado(Movil):  # necesita Movil para tener dirección
         if len(direccion):
             if full_command in self.blinking_eyes[direccion]:
                 image = self.blinking_eyes[direccion][full_command]
+                # noinspection unresolved-references
                 self.image.blit(image, [0, 0])
 
+    # noinspection unresolved-references
     def cargar_parpadeo(self):
         front_names = ['front_open', 'left_squint', 'left_blink', 'right_squint', 'right_blink', 'front_blink']
         front_index = [0, 1, 2, 3, 7, 11]
@@ -330,6 +332,7 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 break
         if spritesheet is not None:
             for i, key in enumerate(front_names):
+
                 self.blinking_eyes['front'][key] = spritesheet[front_index[i]]
 
             squint = Surface([32, 32], SRCALPHA)

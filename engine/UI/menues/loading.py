@@ -11,6 +11,7 @@ class LoadingMenu(Menu):
 
         self.progress = Surface([300, 32])
         self.progress.fill([0, 255, 0])
+        # noinspection unresolved-references
         self.progress_rect = self.progress.get_rect(center=self.rect.center)
         self.canvas.blit(self.progress, self.progress_rect)
         self.functions['tap'].update({'contextual': lambda: None})  # to prevent a crash with the "cancel" key.

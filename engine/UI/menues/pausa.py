@@ -11,6 +11,7 @@ class MenuPausa(Menu):
         self.timer_animacion = 0
         self.frame_animacion = 1000 / 6
 
+        # noinspection unresolved-references
         x = self.rect.centerx - (32 * 3) - 10
 
         names = []

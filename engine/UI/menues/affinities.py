@@ -10,6 +10,7 @@ class AffinitiesMenu(Menu):
     def __init__(self, parent):
         super().__init__(parent, 'Afinidades de Mana', 'Affinties')
         self.bg_img = cargar_imagen(ModData.game_fd + '/magic_affinitiesv4_blank.png')
+        # noinspection unresolved-references
         self.bg_rect = self.bg_img.get_rect(centerx=self.rect.centerx-12, centery=self.rect.centery)
 
         self.circles = AzoeGroup('Imagenes')
@@ -54,6 +55,7 @@ class AffinitiesMenu(Menu):
         else:
             self.current = 0
 
+    # noinspection unresolved-references
     def update(self, *args, **kwargs):
         self.image.fill(Colores.CANVAS_BG)
         self.image.blit(self.bg_img, self.bg_rect)
@@ -70,6 +72,7 @@ class AffinityCircle(Sprite):
         self.image = Surface([(radius*2)-1,(radius*2)-1])
         draw.circle(self.image,color,[radius, radius],radius)
         draw.circle(self.image,stroke,[radius, radius],radius+1,width=1)
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(center=[x, y])
         self.visible = False
 

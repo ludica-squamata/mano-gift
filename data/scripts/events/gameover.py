@@ -18,11 +18,13 @@ class FadingScreen(AzoeBaseSprite):
         self.msg = fuente.render(text, 1, [255, 0, 0])
         self.m_r = self.msg.get_rect(center=rect.center)
         super().__init__(None, text, image, rect)
+        # noinspection unresolved-references
         self.image.blit(self.msg, self.m_r)
 
     def update(self):
         self.a += 1
         if self.a <= 255:
+            # noinspection unresolved-references
             self.image.set_alpha(self.a)
         elif self.a > 600:
             salir('gameover')

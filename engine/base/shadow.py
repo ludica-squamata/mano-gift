@@ -117,10 +117,12 @@ class ShadowSprite(AzoeSprite):
         else:
             s = self.registerd_shadows[self.image][idx]
 
+        # noinspection unresolved-references
         s.image.set_alpha(self.alpha)
         self.sombra = s
         Renderer.camara.add_visible(self.sombra)
 
+    # noinspection unresolved-references
     def crear_sombras(self):
 
         h = self.rect.h
@@ -314,6 +316,7 @@ class ShadowSprite(AzoeSprite):
     def filtrar_luces(i):
         return i not in (1, 5)
 
+    # noinspection unresolved-references
     def recibir_luz_especular(self, source):
         """
         :param source:

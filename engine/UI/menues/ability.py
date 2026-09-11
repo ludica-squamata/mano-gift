@@ -17,6 +17,7 @@ class MenuAbility(Menu):
     current_idx = 0
     posicion_horizontal = 'izquierda'
 
+    # noinspection unresolved-references
     def __init__(self, parent):
         super().__init__(parent, 'Atributos', 'Atributos')
 
@@ -209,6 +210,7 @@ class Counter(BaseWidget):
     def render_value(self):
         string = '{:+}'.format(self.value)
         render = render_textrect(string, self.fuente, self.rect, Colores.TEXT_FG, Colores.CANVAS_BG, 1)
+        # noinspection unresolved-references
         self.image.blit(render, (0, 0))
 
     def elegir(self, posicion):
@@ -272,4 +274,5 @@ class PuntosDisponibles(BaseWidget):
     def update(self):
         self.update_text()
         self.image = self.f.render(self.t, True, Colores.TEXT_FG, Colores.CANVAS_BG)
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(topleft=self.pos)

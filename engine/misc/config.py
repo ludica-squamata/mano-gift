@@ -37,6 +37,7 @@ class Config:
 
         return cls.data
 
+    # noinspection unresolved-references
     @classmethod
     def defaults(cls, clave=None):
         dato = cls.__defaults
@@ -50,6 +51,7 @@ class Config:
                     dato = None
         return dato
 
+    # noinspection unresolved-references
     @classmethod
     def dato(cls, clave=None):
         dato = cls.cargar()
@@ -64,6 +66,7 @@ class Config:
                     break
         return dato
 
+    # noinspection unresolved-references
     @classmethod
     def asignar(cls, clave, valor):
         dato = cls.cargar()

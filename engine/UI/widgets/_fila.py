@@ -42,6 +42,7 @@ class Fila(BaseWidget):
             self.tagged = True
 
         super().__init__(parent, imagen=self.img_uns)
+        # noinspection unresolved-references
         self.rect = self.image.get_rect(topleft=(x, y))
 
         EventDispatcher.register(self.recolor, 'AlterColor')

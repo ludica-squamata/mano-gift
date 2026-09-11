@@ -19,6 +19,7 @@ class PerksMenu(Menu):
         self.images = AzoeGroup('Imagenes')
         self.perk_descrip_area = self.create_sunken_canvas(self.w, 125)
         self.perk_descrip_rect = self.perk_descrip_area.get_rect(x=0, bottom=self.h)
+        # noinspection unresolved-references
         self.image.blit(self.perk_descrip_area,self.perk_descrip_rect)
         self.perks = PerksImage(self)
         self.area_rect = Rect(3,self.h-128, self.w-7, self.h)
@@ -50,9 +51,11 @@ class PerksMenu(Menu):
             x = +3
 
         rect = self.perks.rect
+        # noinspection unresolved-references
         if rect.top + y <= 30 and rect.bottom + y >= 332 and rect.left + x <=3 and rect.right + x >=610:
             self.perks.scroll(dx=x, dy=y)
 
+    # noinspection unresolved-references
     def update(self, *args, **kwargs):
         self.image.fill(Colores.CANVAS_BG,[0,0,self.w,32])
         self.images.draw(self.image)
@@ -73,6 +76,7 @@ class PerksMenu(Menu):
 class PerksImage(Sprite):
     selected = None
 
+    # noinspection unresolved-references
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
@@ -109,6 +113,7 @@ class PerksImage(Sprite):
                 self.perks.append(spr)
                 spr.show()
 
+    # noinspection unresolved-references
     def scroll(self, dx=0, dy=0):
 
         self.rect.x += dx

@@ -32,6 +32,7 @@ class DialogInterface(BaseWidget):
 
     cycler = None  # itertools.cycle
 
+    # noinspection unresolved-references
     def __init__(self, parent, custom_tags=''):
         image = Surface((int(ANCHO), int(ALTO / 5)))
         image.fill(Colores.CANVAS_BG)
@@ -128,6 +129,7 @@ class DialogInterface(BaseWidget):
             self.ticks = 0
 
     def borrar_todo(self):
+        # noinspection unresolved-references
         self.image.fill(Colores.CANVAS_BG)
         self.rendered_text = None
         self.sel = 0
@@ -143,6 +145,7 @@ class DialogInterface(BaseWidget):
         self.active = False
         Renderer.del_overlay(self)
 
+    # noinspection unresolved-references
     def update(self):
         self.ticks += 1
         self.image.fill(Colores.CANVAS_BG, self.erase_area)

@@ -6,7 +6,7 @@ from engine.globs import Tiempo
 from engine.libs.textrect import render_textrect
 from engine.misc import salir
 
-
+# noinspection unresolved-references
 def creditos_introduccion():
     color = {
         "rojo": (255, 0, 0),

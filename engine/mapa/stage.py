@@ -91,6 +91,7 @@ class Stage:
             (self.del_interactive, 'DeleteItem')
         )
 
+    # noinspection unresolved-references
     def save_map(self, event):
         # abreviaturas
         sprs = self.chunks.sprs
@@ -178,6 +179,7 @@ class Stage:
 
         mapa = self.get_chunk_by_adress(mob.chunk_adresses[self.nombre])
         if self.is_this_adress_special(ax, ay):
+            # noinspection unresolved-references
             mapa.ubicar(-ax * 800, -ay * 800)
             mob.reubicar(-ax * 800, -ay * 800)
             name, chunk_data = self.get_special_adress_at(ax, ay)
@@ -374,6 +376,7 @@ class ChunkMap(AzoeBaseSprite):
     @property
     def mascara_salidas(self):
         if self.mask_salidas is None:
+            # noinspection unresolved-references
             self.mask_salidas = mask.Mask(self.image.get_size())
 
         return self.mask_salidas

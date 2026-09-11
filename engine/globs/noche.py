@@ -68,6 +68,7 @@ class Noche(AzoeBaseSprite):
             self.set_transparency()
 
     def set_transparency(self):
+        # noinspection unresolved-references
         self.image.fill((0, 0, 0, Sun.alpha))
 
     def update(self):

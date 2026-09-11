@@ -16,7 +16,7 @@ class LightSource(Sprite):
     can_overlay = False
 
     # animacion???
-
+    # noinspection unresolved-references
     def __init__(self, parent, nombre, data, x, y):
         super().__init__()
         self.parent = parent
@@ -54,6 +54,7 @@ class LightSource(Sprite):
             self.encendido = False
             noche.unset_light(self)
 
+    # noinspection unresolved-references
     def colisiona(self, other, off_x=0, off_y=0):
         if self.nombre != other.nombre:
             x = self.rect.x + off_x - other.rect.x

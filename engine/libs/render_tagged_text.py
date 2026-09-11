@@ -62,7 +62,7 @@ tags = {
 
 }
 
-
+# noinspection unresolved-references
 def render_tagged_text(text, w, h=0, custom_tags=None, omitted_tags=None, bgcolor=None,
                        _defaultspace=4, line_spacing=1, justification=0):
     actual_lines = []

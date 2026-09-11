@@ -33,7 +33,7 @@ class MenuModel(Menu):
         self.anim_img2 = self.images2['Sabajo']
         self.anim_rect = Rect(0, 0, 32, 32)
         self.anim_rect2 = Rect(0, 0, 32, 32)
-
+        # noinspection unresolved-references
         x1 = self.rect.w // 5
         x2 = x1 * 3
         n, d, c = 'nombre', 'direcciones', 'comando'
@@ -69,6 +69,7 @@ class MenuModel(Menu):
             }
         }
 
+    # noinspection unresolved-references
     def set_model(self, modelo):
         imgs = {'alpha': 'mobs/colisiones/human_walk.png', 'imagenes': {}, 'final': False}
         for filename in listdir(path.join(ModData.graphs, 'mobs/imagenes')):

@@ -10,6 +10,7 @@ class DescriptiveArea(BaseWidget):
     active = True
     parent = None
 
+    # noinspection unresolved-references
     def __init__(self, parent, description):
         w, h = ANCHO, int(ALTO / 5)
         megacanvas = self.create_raised_canvas(w, h)
@@ -27,6 +28,7 @@ class DescriptiveArea(BaseWidget):
     def recolor(self, event):
         if event.data['name'] in ['CANVAS_BG']:
             render = render_tagged_text(self.des, ANCHO - 16, int(ALTO / 5) - 14, Colores.CANVAS_BG)
+            # noinspection unresolved-references
             self.image.blit(render, (10, 8))
 
 

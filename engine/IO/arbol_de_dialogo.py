@@ -233,6 +233,7 @@ class ArboldeDialogo:
         else:
             self.set_actual(int(choice))
 
+    # noinspection unresolved-references
     def update(self):
         """Devuelve el nodo actual, y se prepara para devolver el siguiente nodo."""
 
