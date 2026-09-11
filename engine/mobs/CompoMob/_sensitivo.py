@@ -166,6 +166,7 @@ class Touch(AzoeBaseSprite):
     def __init__(self, parent):
         super().__init__(parent, 'Tacto', rect=parent.rect)
 
+    # noinspection unresolved-references
     def __call__(self, passive=True):
         lista = []
         if Camara.current_map is not None:
@@ -174,19 +175,42 @@ class Touch(AzoeBaseSprite):
 
         while self.parent in lista:
             lista.remove(self.parent)
-        for obj in lista:
-            # noinspection unresolved-references
-            if self.rect.colliderect(obj.rect):
-                if not passive:
-                    self.parent.perceived['touched'].append(obj)
-                    if obj.accionable and self.parent.estado == 'idle':
-                        # should Movible Props have an action?
-                        obj.action(self.parent)
-                else:
-                    self.parent.perceived['felt'].append(obj)
+
+        ex, ey = self.parent.rect.center
+        if self.parent.body_direction == 'abajo':
+            ex, ey = self.parent.rect.midbottom
+        elif self.parent.body_direction == 'derecha':
+            ex, ey = self.parent.rect.midright
+        elif self.parent.body_direction == 'arriba':
+            ex, ey = self.parent.rect.midtop
+        elif self.parent.body_direction == 'izquierda':
+            ex, ey = self.parent.rect.midleft
+
+        targets =[obj for obj in lista if obj.is_touchable]
+        close = [[q, round(sqrt((q.rect.x - ex) ** 2 + (q.rect.y - ey) ** 2))] for q in targets]
+        if len(close):
+            distances = [i[1] for i in close]
+            close_targets = [i[0] for i in close]
+            dist_idx = distances.index(min(distances))
+            sprite = close_targets[dist_idx]
+
+            if self.rect.colliderect(sprite.rect) and not passive:
+                self.parent.perceived['touched'].append(sprite)
+                if sprite.accionable and self.parent.estado == 'idle':
+                    # should Movible Props have an action?
+                    sprite.action(self.parent)
+                elif hasattr(sprite, 'show_description'):
+                    sprite.show_description()
+                    self.parent.detener_movimiento()
+                    self.parent["AI"].get_context('base_ai_set').deregister()
+            else:
+                self.parent.perceived['felt'].append(sprite)
 
     def touch(self):
         self.__call__(passive=False)
+
+    def inspect(self):
+        pass
 
 
 class Sensitivo(Caracterizado):
@@ -205,7 +229,6 @@ class Sensitivo(Caracterizado):
         for sense in self.perceived:
             self.perceived[sense].clear()
         self.vista()
-        self.tacto()
 
     def on_elimination(self):
         super().on_elimination()

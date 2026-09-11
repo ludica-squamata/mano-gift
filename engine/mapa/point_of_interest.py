@@ -10,6 +10,8 @@ class PointOfInterest(AzoeSprite):
     tipo = 'nodo'
     prop_type = 'None'
 
+    is_touchable = False
+
     def __init__(self, parent, data):
         self.name = data['name']
         x, y, size = data['node']

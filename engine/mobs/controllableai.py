@@ -25,12 +25,14 @@ class ControllableAI(EventAware):
             'derecha': lambda: self.entity.cambiar_direccion2('right')
         })
         self.functions['hold'].update({
+            'accion': self.set_held_action,
             'arriba': lambda: self.mover('arriba'),
             'abajo': lambda: self.mover('abajo'),
             'izquierda': lambda: self.mover('izquierda'),
             'derecha': lambda: self.mover('derecha')
         })
         self.functions['release'].update({
+            'accion': self.set_released_action,
             'arriba': self.entity.detener_movimiento,
             'abajo': self.entity.detener_movimiento,
             'izquierda': self.entity.detener_movimiento,
@@ -70,6 +72,12 @@ class ControllableAI(EventAware):
     def set_action(self):
         self.entity.touch()
         self.accion = True
+
+    def set_held_action(self):
+        pass
+
+    def set_released_action(self):
+        pass
 
     def contextual_event_key(self):
         self.entity.detener_movimiento()
@@ -113,11 +121,6 @@ class ControllableAI(EventAware):
                         LootingCircularMenu(self, self.target)
                     elif self.target.dead:
                         self.empty_mob_warning()
-
-                elif hasattr(self.target, 'show_description') and self.target.accionable is False:
-                    self.target.show_description()
-                    self.entity.detener_movimiento()
-                    self.deregister()
 
         self.accion = False
 

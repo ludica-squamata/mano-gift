@@ -19,6 +19,8 @@ class Escenografia(ShadowSprite):
     grupo = GRUPO_ITEMS
     luz = None
 
+    is_touchable = True
+
     def __init__(self, parent, x, y, z=0, nombre=None, data=None, imagen=None, rect=None):
         """
         :param imagen:

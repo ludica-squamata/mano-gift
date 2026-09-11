@@ -10,6 +10,8 @@ class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Shadow
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
     race = None  # for now, "human" or "blob". This tag allow the engine to select a mob by it's "class".
 
+    is_touchable = True
+
     def __init__(self, parent, x, y, data, focus=False):
         self.tipo = "Mob"
         self.images = {}

@@ -17,6 +17,8 @@ class Salida:
     sprite = None
     solido = False
 
+    is_touchable = False
+
     def __init__(self, nombre, id, stage, rect, chunk, entrada, direcciones, accion, color):
         self.nombre = self.tipo + '.' + nombre
         self.flag_name = self.nombre + '.triggered'
@@ -65,6 +67,8 @@ class SpriteSalida(AzoeSprite):
     """Intented only for debugging"""
 
     accionable = False
+
+    is_touchable = False
 
     def __init__(self, parent, nombre, x, y, w, h, color):
         img = Surface((w, h))

@@ -18,6 +18,8 @@ __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
 class Agarrable(Escenografia):
     accionable = True
 
+    is_touchable = True
+
     def __init__(self, parent, x, y, z, data):
         self.prop_type = 'Agarrable'
         data.setdefault('proyecta_sombra', False)
@@ -60,6 +62,8 @@ class Agarrable(Escenografia):
 class Movible(Escenografia):
     accionable = False
 
+    is_touchable = True
+
     def __init__(self, parent, x, y, z, data):
         self.prop_type = 'Movible'
         super().__init__(parent, x, y, z=z, data=data)
@@ -87,6 +91,8 @@ class Trepable(Escenografia):
     accionable = True
     salida = None
 
+    is_touchable = True
+
     def __init__(self, parent, x, y, z, data):
         self.prop_type = 'Trepable'
         super().__init__(parent, x, y, z=z, data=data)
@@ -105,6 +111,8 @@ class Operable(Escenografia):
     estado_actual = 0
     enabled = True
     accionable = True
+
+    is_touchable = True
 
     def __init__(self, parent, x, y, z, data):
         self.prop_type = 'Operable'
@@ -159,6 +167,8 @@ class Operable(Escenografia):
 
 
 class Destruible(Escenografia):
+    is_touchable = True
+
     def __init__(self, parent, x, y, z, data):
         self.prop_type = 'Destruible'
         super().__init__(parent, x, y, z=z, data=data)
@@ -169,6 +179,8 @@ class Destruible(Escenografia):
 
 class EstructuraCompuesta(Escenografia):
     accionable = True
+
+    is_touchable = True
 
     def __init__(self, parent, x, y, data):
         self.prop_type = 'EstructuraCompuesta'
@@ -235,6 +247,8 @@ class Contenedor(Operable):
     accionable = True
     entity = None
 
+    is_touchable = True
+
     def __init__(self, parent, x, y, z, data):
         self.prop_type = 'Contenedor'
         from engine.mobs.inventory import Inventory
@@ -294,6 +308,8 @@ class Transicional(Escenografia):
     enabled = True
 
     accionable = False
+
+    is_touchable = True
 
     def __init__(self, parent, x, y, data):
         self.prop_type = 'Transisional'
@@ -373,6 +389,8 @@ class Transicional(Escenografia):
 
 class Pueblo(Escenografia):
     accionable = True
+
+    is_touchable = False
 
     def __init__(self, parent, x, y, data):
         imagen = cargar_imagen(ModData.graphs + data['imagen'])
