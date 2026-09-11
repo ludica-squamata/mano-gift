@@ -1,8 +1,9 @@
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.mobs.behaviourtrees import Leaf, Failure, Success
-from engine.mobs.scripts.a_star import Nodo
+from engine.mobs.scripts.a_star import Nodo, a_star
 from engine.globs.game_state import Game_State
 from engine import Mob_Group
+from math import trunc
 
 
 class HasSetLocation(Leaf):
@@ -103,5 +104,42 @@ class WhereAreOthers(Leaf):
             mob_routes[mob_id] = ruta
 
         self.tree.set_context('other_routes', mob_routes)
+
+        return Success
+
+
+class CheckRoute(Leaf):
+    def process(self):
+        entity = self.get_entity()
+        camino = self.tree.get_context('camino')
+        mapa = self.tree.get_context('mapa')
+        proximo = self.tree.get_context('next')
+        others = self.tree.get_context('others')
+        evaded = self.tree.get_context('evaded')
+
+        m_g = Mob_Group.contents()
+
+        nodos = [Nodo(trunc(m.rel_x / 32) * 32, trunc(m.rel_y / 32) * 32, m.current_adress) for m in m_g if m != entity]
+        restante = camino[proximo:]
+        occupied = [i for i, nodo in enumerate(restante) if nodo in nodos]
+
+        if len(occupied) and not evaded:
+            print('aca')
+            oc = occupied[0] # Posición del obstáculo dentro de "restante"; por ahora es solo 1.
+
+            rango = 2 # Dos nodos antes y dos nodos después; "2" podría ser configurable segun la visión del mob.
+            inicio = max(0, oc - rango)
+            fin = min(len(restante) - 1, oc + rango)
+
+            nuevo_inicio = restante[inicio]
+            nuevo_objetivo = restante[fin]
+
+            nuevo_camino = a_star(nuevo_inicio, nuevo_objetivo, mapa, others)
+            restante[inicio:fin + 1] = nuevo_camino
+
+            camino[proximo:] = restante # reemplazamos el segmento del camino ocupado
+
+            self.tree.set_context('camino', camino)
+            self.tree.set_context('evaded', True)
 
         return Success

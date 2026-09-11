@@ -22,7 +22,8 @@
         "IsItNightTime",
         "IsInBed",
         "DoNothing",
-        "WhereAreOthers"
+        "WhereAreOthers",
+        "CheckRoute"
       ]
     },
     "special": {}
@@ -52,11 +53,12 @@
                 "21": {"name": "WhereAreOthers"},
                 "22": {"name": "GetRoute"},
               "23": {"name": "UntilFail","child": 24},
-                "24": {"name": "Sequence","children": [25,27,28,29]},
+                "24": {"name": "Sequence","children": [25,27,28,29, 30]},
                   "25": {"name": "Inverter","child": 26},
                     "26": {"name": "IsTalking"},
                   "27": {"name": "NextPosition"},
-                  "28": {"name": "ReachExit"},
-                  "29": {"name": "Move"}
+                  "28": {"name": "CheckRoute"},
+                  "29": {"name": "ReachExit"},
+                  "30": {"name": "Move"}
     }
 }
