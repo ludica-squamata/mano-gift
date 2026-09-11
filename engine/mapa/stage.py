@@ -270,7 +270,7 @@ class ChunkMap(AzoeBaseSprite):
     flagged = False
     points_of_interest = None
 
-    def __init__(self, parent, nombre, off_x=0, off_y=0, trnsnt_mb=None, data=False, requested=None, adress=None):
+    def __init__(self, parent, nombre, off_x=0, off_y=0, trnsnt_mb=None, data:dict=False, requested=None, adress=None):
         self.id = ModData.generate_id()
         self.properties = AzoeGroup('Chunk ' + nombre + ' properties', self.id)
         self.interactives = []
@@ -384,6 +384,12 @@ class ChunkMap(AzoeBaseSprite):
     def ubicar(self, x, y):
         self.rect.x = x
         self.rect.y = y
+
+    def update(self):
+        for mob in Mob_Group.contents():
+            # noinspection unresolved-references
+            if self.rect.colliderect(mob.rect):
+                mob.current_adress = tuple(self.adress)
 
     def add_property(self, obj, _layer):
         add_interactive = False
@@ -630,6 +636,9 @@ class ChunkAdress:
 
     def __bool__(self):
         return False
+
+    def __len__(self):
+        return 2
 
     def __eq__(self, other):
         if len(other) == 2:

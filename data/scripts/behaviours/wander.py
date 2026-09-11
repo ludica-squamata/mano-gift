@@ -35,14 +35,17 @@ class GetRandomDir(Leaf):
         if e.rel_x % 32 != 0 or e.rel_y % 32 != 0:  # alinear con celda si se guardó en cualquier lado
             x = trunc(e.rel_x / 32) * 32
             y = trunc(e.rel_y / 32) * 32
-            camino.append(Nodo(x, y,32))
+            camino.append(Nodo(x, y,e.parent.adress))
 
-        x = randrange(32, 32 * 23, 32)
-        y = randrange(32, 32 * 23, 32)
+        # x = randrange(32, 32 * 23, 32)
+        # y = randrange(32, 32 * 23, 32)
 
-        nodo = Nodo(x,y,tuple(e.parent.adress))
+        if e.current_adress == (0, 0):
+            nodo = Nodo(0,0,(1,0))
+        else:
+            nodo = Nodo(0,0, (0, 0))
         camino.append(nodo)
-        e.direccion = determinar_direccion(e.direccion, [e.rel_x, e.rel_y], [x, y])
+        self.tree.erase_keys('regresar')
         self.tree.set_context('ticks', 0)
         self.tree.set_context('punto_final', nodo)
         self.tree.set_context('camino', camino)
@@ -71,7 +74,7 @@ class GetRoute(Leaf):
             pi_y = round((e.rel_y / 32)) * 32
             pre_y = e.rel_y
 
-        pi = Nodo(pi_x, pi_y, tuple(e.parent.adress))
+        pi = Nodo(pi_x, pi_y, e.current_adress)
 
         post_x, post_y = None, None
         if not (pd.x / 32).is_integer():
@@ -87,7 +90,7 @@ class GetRoute(Leaf):
             pd_y = pd.y
 
         if pd_x is not None or pd_y is not None:
-            pd = Nodo(pd_x, pd_y, tuple(pd.adress))
+            pd = Nodo(pd_x, pd_y, pd.adress)
             self.tree.set_context('punto_final', pd)
 
         ruta = a_star(pi, pd, mapa, others)
@@ -101,7 +104,7 @@ class GetRoute(Leaf):
                 pre_x = pi_x
             if pre_y is None:
                 pre_y = pi_y
-            punto = Nodo(pre_x, pre_y, tuple(e.parent.adress))
+            punto = Nodo(pre_x, pre_y, e.current_adress)
             ruta.insert(0, punto)
 
         if post_x is not None or post_y is not None:
@@ -120,16 +123,6 @@ class GetRoute(Leaf):
         self.tree.set_context('punto_proximo', ruta[prox])
         return Success
 
-def direccion_alinear(e):
-    dx = e.x % 32
-    dy = e.y % 32
-
-    if dx != 0:
-        return 'izquierda' if dx > 16 else 'derecha'
-    if dy != 0:
-        return 'arriba' if dy > 16 else 'abajo'
-
-    return None
 
 class NextPosition(Leaf):
     def process(self):
@@ -138,19 +131,37 @@ class NextPosition(Leaf):
         proximo = self.tree.get_context('next')
         punto_final = self.tree.get_context('punto_final')
         punto = camino[proximo] if proximo < len(camino) else punto_final
-        curr_p = [entity.x, entity.y]
+        curr_p = Nodo(entity.rel_x, entity.rel_y, entity.current_adress)
 
-        if punto.compare(*curr_p):
+        if punto == curr_p:
             if proximo + 1 < len(camino):
                 self.tree.set_context('next', proximo + 1)
-                entity.direccion = determinar_direccion(entity.direccion, curr_p, camino[proximo + 1])
+                g_x1 = camino[proximo].adress[0] * 800 + camino[proximo].x
+                g_y1 = camino[proximo].adress[1] * 800 + camino[proximo].y
+
+                g_x2 = camino[proximo+1].adress[0] * 800 + camino[proximo+1].x
+                g_y2 = camino[proximo+1].adress[1] * 800 + camino[proximo+1].y
+                entity.direccion = determinar_direccion(entity.direccion, [g_x1, g_y1], [g_x2,g_y2])
+                # hace que el mob no se detenga en el frame donde calcula el siguiente nodo al que ir
+                x, y = entity.direcciones[entity.direccion]
+                if not entity.detectar_colisiones():
+                    entity.mover(x, y)
                 return Success
 
-        if punto_final.compare(*curr_p):
-            self.tree.erase_keys('punto_final', 'punto_proximo', 'camino', 'next')
+        if punto_final == curr_p:
+            self.tree.erase_keys('punto_final', 'punto_proximo', 'camino', 'next', 'adress')
             return Failure
         else:
-            entity.direccion = determinar_direccion(entity.direccion, curr_p, punto_final)
+            g_x1 = camino[proximo].adress[0] * 800 + camino[proximo].x
+            g_y1 = camino[proximo].adress[1] * 800 + camino[proximo].y
+
+            g_x2 = punto_final.adress[0] * 800 + punto_final.x
+            g_y2 = punto_final.adress[1] * 800 + punto_final.y
+            entity.direccion = determinar_direccion(entity.direccion, [g_x1, g_y1], [g_x2,g_y2])
+            # hace que el mob no se detenga en el frame donde calcula el siguiente nodo al que ir
+            x, y = entity.direcciones[entity.direccion]
+            if not entity.detectar_colisiones():
+                entity.mover(x, y)
             return Success
 
 
@@ -164,16 +175,12 @@ class Move(Leaf):
         if not e.detectar_colisiones():
             e.mover(x, y)
         else:
+            e.detener_movimiento()
             self.tree.erase_keys('punto_final', 'punto_proximo', 'camino', 'next', "ticks")
             return Failure
-        if e.x % 32 == 0 and e.y % 32 == 0:
+        if e.rel_x % 32 == 0 and e.rel_y % 32 == 0:
             self.tree.set_context('ticks', 0)
             return Success
-        if ticks >= 32:
-            # 🔥 forzar realineación, no éxito
-            e.direccion = direccion_alinear(e)
-            self.tree.set_context('ticks', 0)
-            return Running
         else:
             return Running
 

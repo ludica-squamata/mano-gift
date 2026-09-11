@@ -33,6 +33,8 @@ class AzoeSprite(sprite.Sprite):
 
     id = None
 
+    current_adress = None # the adress of the chunk the mob is currently on.
+
     def __init__(self, parent, imagen=None, rect=None, alpha=False, center=False, x=0, y=0, z=0, dz=0, id=None):
         assert imagen is not None or rect is not None, 'AzoeSprite debe tener bien una imagen, bien un rect'
         super().__init__()
@@ -66,19 +68,21 @@ class AzoeSprite(sprite.Sprite):
         elif self.image is not None:
             self.mask = mask.from_surface(self.image)
         elif not hasattr(self, 'mask') or self.mask is None:
+            # noinspection unresolved-references
             self.mask = mask.Mask(self.rect.size)
 
-        if hasattr(self.parent, 'adress'):
-            self.x = x
-            self.y = y
-            self.rel_x = x % 800
-            self.rel_y = y % 800
-            self.rel_cx = self.rel_x + (self.w // 2) % 800
-            self.rel_cy = self.rel_y + (self.h // 2) % 800
+        # if hasattr(self.parent, 'adress'):
+        self.x = x
+        self.y = y
+        self.rel_x = x % 800
+        self.rel_y = y % 800
+        self.rel_cx = self.rel_x + (self.w // 2) % 800
+        self.rel_cy = self.rel_y + (self.h // 2) % 800
 
         if z:
             self.z = z
         else:
+            # noinspection unresolved-references
             self.z = self.y + self.rect.h  # bottom
 
         self.z += dz
@@ -124,6 +128,7 @@ class AzoeSprite(sprite.Sprite):
     def ubicar_en_mapa(self, x, y, w=800, h=800):
         self.x = x
         self.y = y
+        # noinspection unresolved-references
         self.z = self.y + self.rect.h  # bottom
         self.rel_x = x % w
         self.rel_y = y % h

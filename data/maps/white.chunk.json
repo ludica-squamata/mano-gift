@@ -7,7 +7,7 @@
   },
   "mobs": {
     "chunk": [0, 0],
-    "Green": [[32,0]]
+    "Green": [[0,0]]
   },
   "refs": {
     "house": "props/casa_con_puerta.json"
