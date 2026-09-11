@@ -3,13 +3,15 @@
   "colisiones": null,
   "props": {
     "chunk": [0, 0],
-    "house": [[400, 500]]
+    "house": [[400, 500]],
+    "stand": [[308, 270]]
   },
   "mobs": {
     "chunk": [0, 0],
     "Green": [[0,0]]
   },
   "refs": {
-    "house": "props/casa_con_puerta.json"
+    "house": "props/casa_con_puerta.json",
+    "stand": "props/stand.json"
   }
 }

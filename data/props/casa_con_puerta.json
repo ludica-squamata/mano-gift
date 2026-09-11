@@ -41,10 +41,10 @@
       "arriba"
     ], 
     "entrada": "inside", 
-    "nombre": "entrada_ciudad", 
+    "nombre": "bed",
     "rect": [
-      455, 
-      539, 
+      56,
+      40,
       16, 
       16
     ], 

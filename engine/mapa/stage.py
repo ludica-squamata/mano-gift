@@ -4,7 +4,7 @@ from engine.globs.azoe_group import AzoeGroup, AzoeBaseSprite, ChunkGroup
 from engine.globs.event_dispatcher import EventDispatcher
 from engine.misc import abrir_json, cargar_imagen, Config
 from engine.globs.renderer import Renderer
-from pygame import mask
+from pygame import Surface, mask
 from os import path
 import csv
 
@@ -45,8 +45,8 @@ class Stage:
         self.zoom_level = self.data.get('zoom_level', "local")
 
         self.special_adresses = {}
-        for special_chunk_key in self.data.get('chunks', {}):
-            special_chunk_data = self.data['chunks'][special_chunk_key]
+        for special_chunk_key in self.data.get('special_chunks', {}):
+            special_chunk_data = self.data['special_chunks'][special_chunk_key]
             adress = tuple(special_chunk_data['adress'])
             self.special_adresses[adress] = [special_chunk_key, special_chunk_data]
 
@@ -329,7 +329,7 @@ class ChunkMap(AzoeBaseSprite):
 
         super().__init__(parent, nombre, image, rect)
 
-        self.points_of_interest = load_points_of_interest(self, self.parent.data)
+        self.points_of_interest:dict = load_points_of_interest(self, self.parent.data)
 
         self.adress.set_maxs()
         if tuple(self.adress) in self.parent.props_csv:
@@ -363,10 +363,21 @@ class ChunkMap(AzoeBaseSprite):
 
         EventDispatcher.register(self.del_interactive, 'DeleteItem')
 
-    def set_salidas(self, sld, masc, img):
-        self.salidas = sld
-        self.imagen_salidas = img
-        self.mask_salidas = masc
+    def set_salidas(self, sld:dict, masc:mask.Mask, img:Surface):
+        if self.salidas is not None:
+            self.salidas.update(sld)
+        else:
+            self.salidas = sld
+
+        if self.imagen_salidas is not None:
+            self.imagen_salidas.blit(img, [0,0])
+        else:
+            self.imagen_salidas = img
+
+        if self.mask_salidas is not None:
+            self.mask_salidas.draw(masc, [0,0])
+        else:
+            self.mask_salidas = masc
 
     def unset_salidas(self):
         self.salidas.clear()

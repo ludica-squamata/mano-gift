@@ -1,8 +1,10 @@
 from engine.globs.event_dispatcher import EventDispatcher
+from .point_of_interest import PointOfInterest
 from engine.globs.game_state import Game_State
 from engine.globs.renderer import Renderer
 from pygame import Mask, Surface
 from engine.base import AzoeSprite
+from math import trunc
 import sys
 
 
@@ -29,6 +31,12 @@ class Salida:
         if 'pydevd' in sys.modules and bool(chunk):
             self.sprite = SpriteSalida(chunk, self.nombre, *rect, color)
             chunk.add_property(self.sprite, 10000)
+
+        name  = nombre
+        node = trunc(rect[0]/32*32), trunc(rect[1]//32*32), 32
+        self.point = PointOfInterest(chunk, {'name': name, 'node': node, 'id': id})
+        if chunk.points_of_interest is not None:
+            chunk.points_of_interest.update({name: self.point})
 
     def trigger(self, mob, accion='caminar'):
         # este método, que antes era update(), toma los datos de la salida

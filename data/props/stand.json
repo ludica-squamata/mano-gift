@@ -1,0 +1,9 @@
+{
+  "image": "props/stand.png", 
+  "nombre": "Stand", 
+  "prefix": "F5E5", 
+  "propiedades": [], 
+  "tipo": "escenografía",
+  "máscara": "props/stand_colisiones.png",
+  "z": -20
+}

@@ -43,8 +43,8 @@
       "instances": [[64,64]]
     }
   },
-  "chunks": {
-    "special": {
+  "special_chunks": {
+    "far": {
       "fondo": "maps/fondos/pasto.png",
       "colisiones": null,
       "props": {
@@ -65,7 +65,7 @@
   "puntos_de_interes_para_la_IA": [
     {
       "adress": [0,0],
-      "point": {"name": "bed","node": [620,610,32]}
+      "point": {"name": "stand","node": [320, 288, 32]}
     }
   ],
   "refs": {

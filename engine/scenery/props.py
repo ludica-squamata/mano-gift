@@ -7,6 +7,7 @@ from engine.libs.mersenne_twister import choice
 from pygame import Rect, mask as mask_module
 from .bases import Escenografia
 from itertools import cycle
+from hashlib import md5
 from os import path
 
 __all__ = ['Agarrable', 'Movible', 'Trepable', 'Operable', 'Destruible',
@@ -224,6 +225,9 @@ class EstructuraCompuesta(Escenografia):
     def cargar_salida(self):
         from engine.mapa.loader import cargar_salidas
         salida = self.data['salida']
+        salida['rect'][0]+= self.rect.x # la posición de la salida es ahora
+        salida['rect'][1]+= self.rect.y # relativa a la posición del prop.
+        salida['prefix'] = md5('Point_of_Interest'.encode()).hexdigest()[:4].upper()
         self.parent.set_salidas(*cargar_salidas(self.parent, [salida]))
 
 

@@ -11,6 +11,7 @@ def new_prop(parent, x, y, z=0, nombre=None, data=None, img=None):
 
     tipo = data.get('tipo')
     data['nombre'] = nombre if 'nombre' not in data else data['nombre']
+    z = data.get('z') if 'z' in data else z
     if tipo == 'agarrable':
         prop = Agarrable(parent, x, y, z, data)
     elif tipo == 'movible':

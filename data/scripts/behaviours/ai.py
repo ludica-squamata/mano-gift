@@ -13,7 +13,7 @@ class HasSetLocation(Leaf):
         loc = Game_State.get2(e.nombre)
 
         if loc:
-            nodo = Nodo(*loc, 32)
+            nodo = Nodo(*loc, tuple(loc.current_adress))
             self.tree.set_context('punto_final', nodo)
             # reset the flag to prevent infinite loop
             Game_State.del2(e.nombre)
