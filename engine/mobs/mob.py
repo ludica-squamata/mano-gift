@@ -1,11 +1,11 @@
-from .CompoMob import Combativo, Autonomo, Parlante, Comerciante, Lector, Aventajado
+from .CompoMob import Combativo, Autonomo, Parlante, Comerciante, Lector, Aventajado, Magico
 from engine.misc import cargar_imagen, split_spritesheet, cargar_head_anims
 from engine.globs import Mob_Group, ModData
 from engine.globs.renderer import Renderer
 from engine.base import ShadowSprite
 
 
-class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, ShadowSprite):
+class Mob(Combativo, Autonomo, Parlante, Aventajado, Comerciante, Lector, Magico, ShadowSprite):
     accionable = False
     has_hud = False  # by default, non-controlled mobs don't have a HUD.
     race = None  # for now, "human" or "blob". This tag allow the engine to select a mob by it's "class".

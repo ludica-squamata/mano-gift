@@ -175,9 +175,11 @@ class Animado(Movil):  # necesita Movil para tener dirección
                 self.images = self.cmb_walk_img
                 self.image = self.images['S' + self.direccion][self.iluminacion]
 
-    def set_reading_position(self):
-        direccion = self.body_direction
-        self.image = self.reading_anims[direccion]
+    def read_book_animation(self, book):
+        d = self.direccion
+        image = self.reading_anims[d].copy()
+        image.blit(book.data['imagenes'][d],book.posisiones[d])
+        self.image = image
         self.is_reading = True
 
     def accion(self):

@@ -8,8 +8,8 @@
     "words": 12000
   }, 
   "des": "Esta escrito en lenguaje desconocido.", 
-  "nombre": "Libro Rojo",
-  "color": "rojo",
+  "nombre": "Libro Azul",
+  "color": "azul",
   "peso": 0, 
   "prefix": "A68D", 
   "propiedades": [
@@ -26,7 +26,7 @@
   "volumen": 0,
   "effects": {
     "on_open": null,
-    "on_read_tick": ["rojo", 1],
+    "on_read_tick":  ["azul", 3],
     "on_finish": null
   }
 }

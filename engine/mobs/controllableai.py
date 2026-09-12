@@ -8,7 +8,8 @@ from math import sqrt
 
 class ControllableAI(EventAware):
     accion = None
-    target = None
+    held = False
+    released = False
 
     def __init__(self, entity):
         self.entity = entity
@@ -74,10 +75,23 @@ class ControllableAI(EventAware):
         self.accion = True
 
     def set_held_action(self):
-        pass
+        if not self.held:
+            del self.functions['hold']['arriba']
+            del self.functions['hold']['abajo']
+            del self.functions['hold']['izquierda']
+            del self.functions['hold']['derecha']
+            self.held = True
 
     def set_released_action(self):
-        pass
+        if not self.released:
+            self.functions['release'].update({
+            'arriba': lambda: self.mover('arriba'),
+            'abajo': lambda: self.mover('abajo'),
+            'izquierda': lambda: self.mover('izquierda'),
+            'derecha': lambda: self.mover('derecha')
+            })
+            self.released = True
+
 
     def contextual_event_key(self):
         self.entity.detener_movimiento()

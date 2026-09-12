@@ -58,7 +58,7 @@ class InventoryElement(LetterElement):
 
     def do_hold_action(self):
         if self.item.subtipo == 'libro':
-            self.parent.entity.set_reading_position()
+            self.parent.entity.read_book_animation(self.item)
             self.parent.entity.open_book(self.item)
             EventDispatcher.trigger('EndDialog', self, {'layer': self.parent.layer})
             self.timer += 1

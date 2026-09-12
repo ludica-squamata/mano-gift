@@ -10,3 +10,4 @@ from ._suertudo import Suertudo
 from ._comerciante import Comerciante
 from ._lector import Lector
 from ._aventajado import Aventajado
+from ._magico import Magico

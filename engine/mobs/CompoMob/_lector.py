@@ -18,8 +18,8 @@ class Lector(Animado):
             self.current_skill = 0
             self.reading_progress = {}  # {book_id: words_read}
 
-            heads = ModData.graphs + data['reading_heads']
-            bodies = ModData.graphs + data['reading_body']
+            heads = ModData.graphs + data['imagenes']['reading_heads']
+            bodies = ModData.graphs + data['imagenes']['reading_body']
             self.reading_anims = dict(zip(['abajo', 'arriba', 'izquierda', 'derecha'],
                                           combine_mob_spritesheets(heads, bodies)))
 
